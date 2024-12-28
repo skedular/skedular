@@ -13,6 +13,7 @@ using OrganizationMember = Team.Shared.Models.OrganizationMember;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions;
 using TeamEdge = Team.Api.GraphQL.TeamEdge;
 using TeamMember = Team.Shared.Models.TeamMember;
+using TeamMemberStatus = Api.Shared.Services.Models.TeamMemberStatus;
 
 namespace Team.Api.Mappers;
 
@@ -85,6 +86,12 @@ public class Mapper : IMapper
                 TeamMembershipTypeConstants.Owner => TeamMembershipType.Owner,
                 TeamMembershipTypeConstants.Administrator => TeamMembershipType.Administrator,
                 TeamMembershipTypeConstants.Member => TeamMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                TeamMemberStatusConstants.Active => TeamMemberStatus.Active,
+                TeamMemberStatusConstants.Inactive => TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer)!,
@@ -191,6 +198,12 @@ public class Mapper : IMapper
                 TeamMembershipTypeConstants.Member => TeamMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            Status = src.Status switch
+            {
+                TeamMemberStatusConstants.Active => TeamMemberStatus.Active,
+                TeamMemberStatusConstants.Inactive => TeamMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = MapTo(src.Customer)!,
             Team = team,
             OrganizationMember = MapTo(src.OrganizationMember)
@@ -201,6 +214,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             MembershipType = src.MembershipType,
+            Status = src.Status,
             Customer = MapTo(src.Customer),
             OrganizationMember = MapTo(src.OrganizationMember)
         };
@@ -401,6 +415,12 @@ public class Mapper : IMapper
             TeamMembershipType.Member => TeamMembershipTypeConstants.Member,
             _ => throw new ArgumentOutOfRangeException()
         };
+        dest.Status = src.Status switch
+        {
+            TeamMemberStatus.Active => TeamMemberStatusConstants.Active,
+            TeamMemberStatus.Inactive => TeamMemberStatusConstants.Inactive,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         dest.Team = team;
         dest.Customer = customer;
         dest.OrganizationMember = organizationMember;
@@ -441,6 +461,13 @@ public class Mapper : IMapper
                 TeamMembershipType.Owner => MembershipType.Owner,
                 TeamMembershipType.Administrator => MembershipType.Administrator,
                 TeamMembershipType.Member => MembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                TeamMemberStatus.Active => global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Active,
+                TeamMemberStatus.Inactive => global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus
+                    .Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapToGrpcResponse(src.Customer),
@@ -491,6 +518,13 @@ public class Mapper : IMapper
                 MembershipType.Owner => TeamMembershipType.Owner,
                 MembershipType.Administrator => TeamMembershipType.Administrator,
                 MembershipType.Member => TeamMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Active => TeamMemberStatus.Active,
+                global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive =>
+                    TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = src.Customer.Id },

@@ -156,7 +156,7 @@ type Mutation {
   bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload @cost(weight: "10")
   updateDesk(input: UpdateDeskInput!): DeskPayload @cost(weight: "10")
   deleteDesk(input: DeleteDeskInput!): DeskPayload @cost(weight: "10")
-  changeLocationMemberOwnershipType(input: ChangeLocationMemberOwnershipTypeInput!): LocationMemberDetailsPayload @cost(weight: "10")
+  changeLocationMembershipType(input: ChangeLocationMembershipTypeInput!): LocationMemberDetailsPayload @cost(weight: "10")
   inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
   acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
   rejectInvitationToJoinLocation(input: RejectInvitationToJoinLocationInput!): RejectInvitationToJoinLocationPayload @cost(weight: "10")
@@ -240,7 +240,7 @@ input CancelInvitationToJoinLocationInput {
   id: String!
 }
 
-input ChangeLocationMemberOwnershipTypeInput {
+input ChangeLocationMembershipTypeInput {
   clientMutationId: String
   id: String!
   membershipType: LocationMembershipType!

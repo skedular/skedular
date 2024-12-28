@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dbbab1963a1bc3243d47ce2862ae1d77>>
+ * @generated SignedSource<<4f8c9a69fdbd36b45570b2380bcf4121>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "PhoneNumber" | "Status" | "%future added value";
-export type TeamMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "%future added value";
+export type TeamMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "Status" | "%future added value";
 export type TeamMemberOrderInput = {
   direction: OrderDirection;
   field: TeamMemberOrderField;

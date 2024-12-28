@@ -25,12 +25,12 @@ public interface IOrganizationMemberService
         CancellationToken cancellationToken);
 
     Task<ICollection<OrganizationMember>> ChangeStatusAsync(
-        ICollection<string> organizationMemberIds,
-        string status,
+        ICollection<string> ids,
+        OrganizationMemberStatus status,
         CancellationToken cancellationToken);
 
     Task<ICollection<OrganizationMember>> RemoveAsync(
-        ICollection<string> organizationMemberIds,
+        ICollection<string> ids,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization> UpdateMembersAsync(
@@ -166,12 +166,12 @@ public class OrganizationMemberService(
     }
 
     public async Task<ICollection<OrganizationMember>> ChangeStatusAsync(
-        ICollection<string> organizationMemberIds,
-        string status,
+        ICollection<string> ids,
+        OrganizationMemberStatus status,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var distinctOrganizationMemberIds = organizationMemberIds.Distinct().ToList();
+        var distinctOrganizationMemberIds = ids.Distinct().ToList();
         var organizationMembers =
             await repositoryFactory.OrganizationMemberRepository.GetByIdsAsync(
                 distinctOrganizationMemberIds,
@@ -206,9 +206,16 @@ public class OrganizationMemberService(
             repositoryFactory.OrganizationMemberRepository.UnitOfWork,
             cancellationToken);
 
+        var mappedStatus = status switch
+        {
+            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
+            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
         foreach (var organizationMember in organizationMembers)
         {
-            organizationMember.Status = status;
+            organizationMember.Status = mappedStatus;
             repositoryFactory.OrganizationMemberRepository.Update(organizationMember);
         }
 
@@ -225,11 +232,11 @@ public class OrganizationMemberService(
     }
 
     public async Task<ICollection<OrganizationMember>> RemoveAsync(
-        ICollection<string> organizationMemberIds,
+        ICollection<string> ids,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var distinctOrganizationMemberIds = organizationMemberIds.Distinct().ToList();
+        var distinctOrganizationMemberIds = ids.Distinct().ToList();
         var organizationMembers =
             await repositoryFactory.OrganizationMemberRepository.GetByIdsAsync(
                 distinctOrganizationMemberIds,

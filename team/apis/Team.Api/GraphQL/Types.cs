@@ -50,8 +50,8 @@ public class CancelInvitationToJoinTeamPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("ChangeTeamMemberOwnershipTypeInput")]
-public class ChangeTeamMemberOwnershipTypeInput
+[GraphQLName("ChangeTeamMembershipTypeInput")]
+public class ChangeTeamMembershipTypeInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
@@ -145,6 +145,7 @@ public class TeamMemberConnection : Connection<TeamMemberEdge>;
 public class TeamMemberDetails : Node
 {
     [GraphQLName("membershipType")] public TeamMembershipType? MembershipType { get; set; }
+    [GraphQLName("status")] public TeamMemberStatus Status { get; set; }
     [GraphQLName("customer")] public TeamCustomerDetails Customer { get; set; }
     [GraphQLName("organizationMember")] public TeamOrganizationMemberDetails? OrganizationMember { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
@@ -258,4 +259,19 @@ public class TeamLocationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+}
+
+[GraphQLName("ChangeTeamMembersStatusInput")]
+public class ChangeTeamMembersStatusInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; }
+    [GraphQLName("status")] public TeamMemberStatus Status { get; set; }
+}
+
+[GraphQLName("TeamMembersDetailsPayload")]
+public class TeamMembersDetailsPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("members")] public TeamMemberDetails[] Members { get; set; } = [];
 }

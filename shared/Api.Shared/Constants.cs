@@ -60,8 +60,6 @@ public static class Constants
 
     public const int MaxBookingNotesLength = 1000;
 
-    public const int MaxTenantPrincipalLength = 64 + 1 + 255; // RFC 5321 and RFC 5322
-
     public const int MaxOutboxProcessingErrorsLength = 102400;
 
     public const int MaxSlackChannelNameLength = 1000;
@@ -84,7 +82,8 @@ public static class Constants
     public const int MaxNotificationTypeLength = 128;
     public const int MaxBookingTypeLength = 32;
 
-    public const int MaxMemberStatusLength = 64;
+    public const int MaxOrganizationMemberStatusLength = 64;
+    public const int MaxTeamMemberStatusLength = 64;
     
     public const int MaxFeedbackLength = 10240;
     public const int MaxFeedbackChannelLength = 32;

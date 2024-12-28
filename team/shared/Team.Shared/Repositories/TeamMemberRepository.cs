@@ -14,6 +14,7 @@ namespace Team.Shared.Repositories;
 public interface ITeamMemberRepository : IRepository<TeamMember>
 {
     Task<TeamMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<TeamMember>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     TeamMember Add(TeamMember teamMember);
     void AddRange(ICollection<TeamMember> teamMembers);
     TeamMember Update(TeamMember teamMember);
@@ -80,6 +81,9 @@ internal static class TeamMemberExtensions
             TeamMemberOrderField.MembershipType => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.MembershipType)
                 : originalQuery.OrderByDescending(x => x.MembershipType),
+            TeamMemberOrderField.Status => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Status)
+                : originalQuery.OrderByDescending(x => x.Status),
             TeamMemberOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Customer.Name)
                 : originalQuery.OrderByDescending(x => x.Customer.Name),
@@ -99,6 +103,9 @@ internal static class TeamMemberExtensions
                 TeamMemberOrderField.MembershipType => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.MembershipType)
                     : query.ThenByDescending(x => x.MembershipType),
+                TeamMemberOrderField.Status => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Status)
+                    : query.ThenByDescending(x => x.Status),
                 TeamMemberOrderField.Name => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Customer.Name)
                     : query.ThenByDescending(x => x.Customer.Name),
@@ -126,6 +133,17 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
             .Include(query => query.OrganizationMember)
             .ThenInclude(query => query.Customer)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<TeamMember>> GetByIdsAsync(
+        ICollection<string> ids,
+        CancellationToken cancellationToken) =>
+        await DbContext.TeamMember
+            .Where(query => ids.Contains(query.Id))
+            .Include(query => query.Team)
+            .Include(query => query.Customer)
+            .Include(query => query.OrganizationMember)
+            .ThenInclude(query => query.Customer)
+            .ToListAsync(cancellationToken);
 
     public TeamMember Add(TeamMember teamMember)
     {

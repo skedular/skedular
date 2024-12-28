@@ -22,7 +22,8 @@ type Mutation {
   updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload @cost(weight: "10")
   deleteTeam(input: DeleteTeamInput!): TeamPayload @cost(weight: "10")
   removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
-  changeTeamMemberOwnershipType(input: ChangeTeamMemberOwnershipTypeInput!): TeamMemberDetailsPayload @cost(weight: "10")
+  changeTeamMembershipType(input: ChangeTeamMembershipTypeInput!): TeamMemberDetailsPayload @cost(weight: "10")
+  changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload @cost(weight: "10")
   inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload @cost(weight: "10")
   acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload @cost(weight: "10")
   rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): RejectInvitationToJoinTeamPayload @cost(weight: "10")
@@ -103,6 +104,7 @@ type TeamMemberConnection {
 
 type TeamMemberDetails {
   membershipType: TeamMembershipType
+  status: TeamMemberStatus!
   customer: TeamCustomerDetails!
   organizationMember: TeamOrganizationMemberDetails
   id: ID!
@@ -121,6 +123,11 @@ type TeamMemberEdge {
 type TeamMemberPayload {
   clientMutationId: String
   teamMember: TeamMemberDetails!
+}
+
+type TeamMembersDetailsPayload {
+  clientMutationId: String
+  members: [TeamMemberDetails!]!
 }
 
 type TeamOrganizationDetails {
@@ -168,7 +175,13 @@ input CancelInvitationToJoinTeamInput {
   id: String!
 }
 
-input ChangeTeamMemberOwnershipTypeInput {
+input ChangeTeamMembersStatusInput {
+  clientMutationId: String
+  ids: [String!]!
+  status: TeamMemberStatus!
+}
+
+input ChangeTeamMembershipTypeInput {
   clientMutationId: String
   id: String!
   membershipType: TeamMembershipType!
@@ -252,10 +265,16 @@ enum OrderDirection {
 
 enum TeamMemberOrderField {
   MembershipType
+  Status
   Name
   GivenName
   MiddleName
   FamilyName
+}
+
+enum TeamMemberStatus {
+  Active
+  Inactive
 }
 
 enum TeamMembershipType {

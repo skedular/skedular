@@ -65,8 +65,8 @@ public class CancelOrganizationOfferingPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("ChangeOrganizationMemberOwnershipTypeInput")]
-public class ChangeOrganizationMemberOwnershipTypeInput
+[GraphQLName("ChangeOrganizationMembershipTypeInput")]
+public class ChangeOrganizationMembershipTypeInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }

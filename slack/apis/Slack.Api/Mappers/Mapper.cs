@@ -23,6 +23,7 @@ using OrganizationPermissions = Slack.Shared.Models.OrganizationPermissions;
 using OrganizationTag = Slack.Shared.Models.OrganizationTag;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
 using Team = Slack.Shared.Models.Team;
+using TeamMemberStatus = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus;
 using TeamPermissions = Slack.Shared.Models.TeamPermissions;
 using UpdateInput = Api.Shared.Services.Grpc.Skedular.Booking.V1.UpdateInput;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
@@ -645,6 +646,12 @@ public class Mapper : IMapper
                 global::Api.Shared.Services.Grpc.Skedular.Team.V1.MembershipType.Administrator => TeamMembershipType
                     .Administrator,
                 global::Api.Shared.Services.Grpc.Skedular.Team.V1.MembershipType.Member => TeamMembershipType.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = src.Status switch
+            {
+                TeamMemberStatus.Active => global::Api.Shared.Services.Models.TeamMemberStatus.Active,
+                TeamMemberStatus.Inactive => global::Api.Shared.Services.Models.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer),

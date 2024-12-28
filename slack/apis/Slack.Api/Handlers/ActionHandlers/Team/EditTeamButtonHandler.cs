@@ -15,6 +15,7 @@ using Slack.Shared.Context;
 using Slack.Shared.Repositories;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
+using TeamMemberStatus = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus;
 using TeamService = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Team;
@@ -197,6 +198,7 @@ public class EditTeamButtonHandler(
                                         TeamMembershipType.Member => MembershipType.Member,
                                         _ => throw new ArgumentOutOfRangeException()
                                     },
+                                Status = TeamMemberStatus.Active,
                                 Customer = new Customer { Id = customerId },
                                 OrganizationMember = new OrganizationMember
                                 {

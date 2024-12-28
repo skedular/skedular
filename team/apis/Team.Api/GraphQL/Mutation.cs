@@ -76,8 +76,8 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamMemberDetailsPayload?> ChangeTeamMemberOwnershipTypeAsync(
-        ChangeTeamMemberOwnershipTypeInput input,
+    public async Task<TeamMemberDetailsPayload?> ChangeTeamMembershipTypeAsync(
+        ChangeTeamMembershipTypeInput input,
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
@@ -89,6 +89,23 @@ public class Mutation(IMapper mapper)
         return new TeamMemberDetailsPayload
         {
             ClientMutationId = input.ClientMutationId, Member = mapper.MapTo(teamMember)
+        };
+    }
+
+    [UseResolverScope]
+    public async Task<TeamMembersDetailsPayload?> ChangeTeamMembersStatusAsync(
+        ChangeTeamMembersStatusInput input,
+        [Service] ITeamMemberService organizationMemberService,
+        CancellationToken cancellationToken)
+    {
+        var organizationMembers =
+            await organizationMemberService.ChangeStatusAsync(
+                input.Ids,
+                input.Status,
+                cancellationToken);
+        return new TeamMembersDetailsPayload
+        {
+            ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
         };
     }
 

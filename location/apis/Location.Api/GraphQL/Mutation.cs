@@ -90,8 +90,8 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<LocationMemberDetailsPayload?> ChangeLocationMemberOwnershipTypeAsync(
-        ChangeLocationMemberOwnershipTypeInput input,
+    public async Task<LocationMemberDetailsPayload?> ChangeLocationMembershipTypeAsync(
+        ChangeLocationMembershipTypeInput input,
         [Service] ILocationMemberService locationMemberService,
         CancellationToken cancellationToken)
     {

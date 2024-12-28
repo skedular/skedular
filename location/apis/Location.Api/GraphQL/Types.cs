@@ -71,8 +71,8 @@ public class CancelInvitationToJoinLocationPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("ChangeLocationMemberOwnershipTypeInput")]
-public class ChangeLocationMemberOwnershipTypeInput
+[GraphQLName("ChangeLocationMembershipTypeInput")]
+public class ChangeLocationMembershipTypeInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }

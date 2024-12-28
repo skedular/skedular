@@ -62,9 +62,9 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
     locationMemberDetailsRelay,
   );
 
-  const [commitChangeLocationMemberOwnershipType] = useMutation<locationMemberCard_changeLocationMemberOwnershipTypeMutation>(graphql`
-    mutation locationMemberCard_changeLocationMemberOwnershipTypeMutation($input: ChangeLocationMemberOwnershipTypeInput!) @raw_response_type {
-      changeLocationMemberOwnershipType(input: $input) {
+  const [commitChangeLocationMembershipType] = useMutation<locationMemberCard_changeLocationMemberOwnershipTypeMutation>(graphql`
+    mutation locationMemberCard_changeLocationMemberOwnershipTypeMutation($input: ChangeLocationMembershipTypeInput!) @raw_response_type {
+      changeLocationMembershipType(input: $input) {
         member {
           id
           membershipType
@@ -91,7 +91,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
     const membershipType = membershipTypeStr as unknown as LocationMembershipType;
     const toastId = themedToast(<NotificationContent content={`Updating location membership...`} />, infoNotificationOptions);
 
-    commitChangeLocationMemberOwnershipType({
+    commitChangeLocationMembershipType({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -123,7 +123,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
         });
       },
       optimisticResponse: {
-        changeLocationMemberOwnershipType: {
+        changeLocationMembershipType: {
           member: {
             id: locationMemberDetails.id,
             membershipType,

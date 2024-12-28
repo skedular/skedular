@@ -37,29 +37,31 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             "Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEoCRIdCgdt",
             "ZW1iZXJzGAUgAygLMgwudGVhbS5NZW1iZXISFgoOb3JnYW5pemF0aW9uSWQY",
             "BiABKAkSEAoIdGltZXpvbmUYByABKAkSGQoRcHJpbWFyeUxvY2F0aW9uSWQY",
-            "CCABKAkijAEKBk1lbWJlchIKCgJpZBgBIAEoCRIsCg5tZW1iZXJzaGlwVHlw",
+            "CCABKAkiqgEKBk1lbWJlchIKCgJpZBgBIAEoCRIsCg5tZW1iZXJzaGlwVHlw",
             "ZRgCIAEoDjIULnRlYW0uTWVtYmVyc2hpcFR5cGUSEgoKY3VzdG9tZXJJZBgD",
             "IAEoCRI0ChJvcmdhbml6YXRpb25NZW1iZXIYBCABKAsyGC50ZWFtLk9yZ2Fu",
-            "aXphdGlvbk1lbWJlciJeChJPcmdhbml6YXRpb25NZW1iZXISEgoKY3VzdG9t",
-            "ZXJJZBgBIAEoCRIcChRvcmdhbml6YXRpb25NZW1iZXJJZBgCIAEoCRIWCg5v",
-            "cmdhbml6YXRpb25JZBgDIAEoCSKJAQoUSW52aXRhdGlvblRvSm9pblRlYW0S",
-            "CgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3Rv",
-            "YnVmLlRpbWVzdGFtcBIOCgZ0ZWFtSWQYAyABKAkSEwoLaW52aXRlZEJ5SWQY",
-            "BCABKAkSEQoJaW52aXRlZUlkGAUgASgJKmwKBFR5cGUSEAoMVGVhbVVwc2Vy",
-            "dGVkEAASDwoLVGVhbURlbGV0ZWQQARIgChxJbnZpdGF0aW9uVG9Kb2luVGVh",
-            "bVVwc2VydGVkEAISHwobSW52aXRhdGlvblRvSm9pblRlYW1EZWxldGVkEAMq",
-            "ZAoOTWVtYmVyc2hpcFR5cGUSFwoTTWVtYmVyc2hpcFR5cGVPd25lchAAEh8K",
-            "G01lbWJlcnNoaXBUeXBlQWRtaW5pc3RyYXRvchABEhgKFE1lbWJlcnNoaXBU",
-            "eXBlTWVtYmVyEAJCM6oCMEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tl",
-            "ZHVsYXIuVGVhbS5WMS5WYWx1ZWIGcHJvdG8z"));
+            "aXphdGlvbk1lbWJlchIcCgZzdGF0dXMYBSABKA4yDC50ZWFtLlN0YXR1cyJe",
+            "ChJPcmdhbml6YXRpb25NZW1iZXISEgoKY3VzdG9tZXJJZBgBIAEoCRIcChRv",
+            "cmdhbml6YXRpb25NZW1iZXJJZBgCIAEoCRIWCg5vcmdhbml6YXRpb25JZBgD",
+            "IAEoCSKJAQoUSW52aXRhdGlvblRvSm9pblRlYW0SCgoCaWQYASABKAkSLQoJ",
+            "ZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIO",
+            "CgZ0ZWFtSWQYAyABKAkSEwoLaW52aXRlZEJ5SWQYBCABKAkSEQoJaW52aXRl",
+            "ZUlkGAUgASgJKmwKBFR5cGUSEAoMVGVhbVVwc2VydGVkEAASDwoLVGVhbURl",
+            "bGV0ZWQQARIgChxJbnZpdGF0aW9uVG9Kb2luVGVhbVVwc2VydGVkEAISHwob",
+            "SW52aXRhdGlvblRvSm9pblRlYW1EZWxldGVkEAMqZAoOTWVtYmVyc2hpcFR5",
+            "cGUSFwoTTWVtYmVyc2hpcFR5cGVPd25lchAAEh8KG01lbWJlcnNoaXBUeXBl",
+            "QWRtaW5pc3RyYXRvchABEhgKFE1lbWJlcnNoaXBUeXBlTWVtYmVyEAIqIgoG",
+            "U3RhdHVzEgoKBkFjdGl2ZRAAEgwKCEluYWN0aXZlEAFCM6oCMEFwaS5TaGFy",
+            "ZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuVGVhbS5WMS5WYWx1ZWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType), typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Data.Parser, new[]{ "Team", "InvitationToJoinTeam" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "PrimaryLocationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Member), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Member.Parser, new[]{ "Id", "MembershipType", "CustomerId", "OrganizationMember" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Member), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Member.Parser, new[]{ "Id", "MembershipType", "CustomerId", "OrganizationMember", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember.Parser, new[]{ "CustomerId", "OrganizationMemberId", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.InvitationToJoinTeam.Parser, new[]{ "Id", "DeletedAt", "TeamId", "InvitedById", "InviteeId" }, null, null, null, null)
           }));
@@ -79,6 +81,11 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
     [pbr::OriginalName("MembershipTypeOwner")] Owner = 0,
     [pbr::OriginalName("MembershipTypeAdministrator")] Administrator = 1,
     [pbr::OriginalName("MembershipTypeMember")] Member = 2,
+  }
+
+  public enum Status {
+    [pbr::OriginalName("Active")] Active = 0,
+    [pbr::OriginalName("Inactive")] Inactive = 1,
   }
 
   #endregion
@@ -1517,6 +1524,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       membershipType_ = other.membershipType_;
       customerId_ = other.customerId_;
       organizationMember_ = other.organizationMember_ != null ? other.organizationMember_.Clone() : null;
+      status_ = other.status_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1574,6 +1582,18 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 5;
+    private global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status status_ = global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Active;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1593,6 +1613,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       if (MembershipType != other.MembershipType) return false;
       if (CustomerId != other.CustomerId) return false;
       if (!object.Equals(OrganizationMember, other.OrganizationMember)) return false;
+      if (Status != other.Status) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1604,6 +1625,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       if (MembershipType != global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Owner) hash ^= MembershipType.GetHashCode();
       if (CustomerId.Length != 0) hash ^= CustomerId.GetHashCode();
       if (organizationMember_ != null) hash ^= OrganizationMember.GetHashCode();
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Active) hash ^= Status.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1638,6 +1660,10 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
         output.WriteRawTag(34);
         output.WriteMessage(OrganizationMember);
       }
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Active) {
+        output.WriteRawTag(40);
+        output.WriteEnum((int) Status);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1664,6 +1690,10 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
         output.WriteRawTag(34);
         output.WriteMessage(OrganizationMember);
       }
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Active) {
+        output.WriteRawTag(40);
+        output.WriteEnum((int) Status);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1685,6 +1715,9 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       }
       if (organizationMember_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationMember);
+      }
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Active) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1712,6 +1745,9 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
           OrganizationMember = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember();
         }
         OrganizationMember.MergeFrom(other.OrganizationMember);
+      }
+      if (other.Status != global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Active) {
+        Status = other.Status;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1751,6 +1787,10 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             input.ReadMessage(OrganizationMember);
             break;
           }
+          case 40: {
+            Status = (global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status) input.ReadEnum();
+            break;
+          }
         }
       }
     #endif
@@ -1787,6 +1827,10 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
               OrganizationMember = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember();
             }
             input.ReadMessage(OrganizationMember);
+            break;
+          }
+          case 40: {
+            Status = (global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status) input.ReadEnum();
             break;
           }
         }

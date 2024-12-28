@@ -35,7 +35,7 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
             .HasMaxLength(Constants.MaxMembershipTypeLength);
         builder
             .Property(item => item.Status)
-            .HasMaxLength(Constants.MaxMemberStatusLength)
+            .HasMaxLength(Constants.MaxOrganizationMemberStatusLength)
             .HasDefaultValue(OrganizationMemberStatusConstants.Active);
 
         builder

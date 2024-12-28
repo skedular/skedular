@@ -55,6 +55,12 @@ message Member {
   MembershipType membershipType = 2;
   string customerId = 3;
   OrganizationMember organizationMember = 4;
+  Status status = 5;
+}
+
+enum Status {
+  Active = 0;
+  Inactive = 1;
 }
 
 message OrganizationMember {

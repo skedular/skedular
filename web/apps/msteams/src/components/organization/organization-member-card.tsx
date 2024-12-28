@@ -27,8 +27,8 @@ import { object, string } from 'yup';
 import type { organizationMemberCard_OrganizationMemberDetails$key } from './__generated__/organizationMemberCard_OrganizationMemberDetails.graphql';
 import type {
   OrganizationMembershipType,
-  organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation,
-} from './__generated__/organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation.graphql';
+  organizationMemberCard_changeOrganizationMembershipMutation,
+} from './__generated__/organizationMemberCard_changeOrganizationMembershipMutation.graphql';
 import type { organizationSingleChoiceMembershipType_query$key } from './__generated__/organizationSingleChoiceMembershipType_query.graphql';
 
 type Props = {
@@ -63,10 +63,10 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     organizationMemberDetailsRelay,
   );
 
-  const [commitChangeOrganizationMemberOwnershipType] = useMutation<organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation>(graphql`
-    mutation organizationMemberCard_changeOrganizationMemberOwnershipTypeMutation($input: ChangeOrganizationMemberOwnershipTypeInput!)
+  const [commitChangeOrganizationMembership] = useMutation<organizationMemberCard_changeOrganizationMembershipMutation>(graphql`
+    mutation organizationMemberCard_changeOrganizationMembershipMutation($input: ChangeOrganizationMembershipTypeInput!)
     @raw_response_type {
-      changeOrganizationMemberOwnershipType(input: $input) {
+      changeOrganizationMembership(input: $input) {
         member {
           id
           membershipType
@@ -93,7 +93,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     const membershipType = membershipTypeStr as unknown as OrganizationMembershipType;
     const toastId = themedToast(<NotificationContent content={`Updating organization membership...`} />, infoNotificationOptions);
 
-    commitChangeOrganizationMemberOwnershipType({
+    commitChangeOrganizationMembership({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -125,7 +125,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
         });
       },
       optimisticResponse: {
-        changeOrganizationMemberOwnershipType: {
+        changeOrganizationMembership: {
           member: {
             id: organizationMemberDetails.id,
             membershipType,

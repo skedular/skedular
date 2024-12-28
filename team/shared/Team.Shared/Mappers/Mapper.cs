@@ -39,6 +39,12 @@ public class Mapper : IMapper
                     TeamMembershipType.Member => MembershipType.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
+                Status = item.Status switch
+                {
+                    TeamMemberStatus.Active => Status.Active,
+                    TeamMemberStatus.Inactive => Status.Inactive,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
                 OrganizationMember = item.OrganizationMember is null
                     ? null
                     : new OrganizationMember

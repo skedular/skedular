@@ -591,6 +591,13 @@ namespace Customer.Shared.Database.Migrations
                     b.Property<string>("OrganizationMemberId")
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasDefaultValue("ACTIVE");
+
                     b.Property<string>("TeamId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
@@ -608,6 +615,8 @@ namespace Customer.Shared.Database.Migrations
                     b.HasIndex("MembershipType");
 
                     b.HasIndex("OrganizationMemberId");
+
+                    b.HasIndex("Status");
 
                     b.HasIndex("TeamId");
 

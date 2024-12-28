@@ -172,6 +172,7 @@ public class TeamInvitationService(
             {
                 Id = randomHelper.Generate(),
                 MembershipType = joinInvitation.MembershipType,
+                Status = TeamMemberStatusConstants.Active,
                 Team = team,
                 Customer = customerEntity
             });

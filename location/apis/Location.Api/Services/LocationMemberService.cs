@@ -20,7 +20,7 @@ public interface ILocationMemberService
         CancellationToken cancellationToken);
 
     Task<LocationMember> ChangeMembershipTypeAsync(
-        string locationMemberId,
+        string id,
         LocationMembershipType membershipType,
         CancellationToken cancellationToken);
 }
@@ -66,13 +66,13 @@ public class LocationMemberService(
     }
 
     public async Task<LocationMember> ChangeMembershipTypeAsync(
-        string locationMemberId,
+        string id,
         LocationMembershipType membershipType,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var locationMember =
-            await repositoryFactory.LocationMemberRepository.GetByIdAsync(locationMemberId, cancellationToken);
+            await repositoryFactory.LocationMemberRepository.GetByIdAsync(id, cancellationToken);
         if (locationMember is null)
         {
             throw new LocationMemberNotFound();

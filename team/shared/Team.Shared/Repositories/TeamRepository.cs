@@ -13,6 +13,10 @@ public interface ITeamRepository : IRepository<Database.Entities.Team>
 {
     Task<Database.Entities.Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
+    Task<ICollection<Database.Entities.Team>> GetByIdsAsync(
+        ICollection<string> ids,
+        CancellationToken cancellationToken);
+
     Task<IEnumerable<Database.Entities.Team>> GetByCustomerIdAsync(
         string customerId,
         string? organizationId,
@@ -147,6 +151,14 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
         await DbContext.Team
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Team>> GetByIdsAsync(
+        ICollection<string> ids,
+        CancellationToken cancellationToken) =>
+        await DbContext.Team
+            .Where(query => ids.Contains(query.Id))
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
 
     public async Task<IEnumerable<Database.Entities.Team>> GetByCustomerIdAsync(
         string customerId,

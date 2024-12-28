@@ -223,6 +223,12 @@ public class Mapper : IMapper
                 Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Member => TeamMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            Status = item.Status switch
+            {
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Active => TeamMemberStatus.Active,
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Inactive => TeamMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = new Shared.Models.Customer { Id = item.CustomerId },
             OrganizationMember =
                 string.IsNullOrWhiteSpace(item.OrganizationMember?.OrganizationId) ||
@@ -414,6 +420,12 @@ public class Mapper : IMapper
             TeamMembershipType.Owner => TeamMembershipTypeConstants.Owner,
             TeamMembershipType.Administrator => TeamMembershipTypeConstants.Administrator,
             TeamMembershipType.Member => TeamMembershipTypeConstants.Member,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        dest.Status = src.Status switch
+        {
+            TeamMemberStatus.Active => TeamMemberStatusConstants.Active,
+            TeamMemberStatus.Inactive => TeamMemberStatusConstants.Inactive,
             _ => throw new ArgumentOutOfRangeException()
         };
         dest.Team = team;

@@ -29,6 +29,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
+                Status: TeamMemberStatusConstants.Active,
                 MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
                 or TeamMembershipTypeConstants.Member
             };
@@ -43,6 +44,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
+                Status: TeamMemberStatusConstants.Active,
                 MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
                 or TeamMembershipTypeConstants.Member
             };
@@ -57,6 +59,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
+                Status: TeamMemberStatusConstants.Active,
                 MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
                 or TeamMembershipTypeConstants.Member
             };
@@ -71,6 +74,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
+                Status: TeamMemberStatusConstants.Active,
                 MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
                 or TeamMembershipTypeConstants.Member
             };
@@ -85,6 +89,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
+                Status: TeamMemberStatusConstants.Active,
                 MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
                 or TeamMembershipTypeConstants.Member
             };
@@ -99,6 +104,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
+                Status: TeamMemberStatusConstants.Active,
                 MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
                 or TeamMembershipTypeConstants.Member
             };
@@ -113,6 +119,7 @@ public class TeamAuthorizationService(
         {
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
+                Status: TeamMemberStatusConstants.Active,
                 MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
                 or TeamMembershipTypeConstants.Member
             };

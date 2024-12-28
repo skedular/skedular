@@ -1,4 +1,5 @@
 using Api.Shared;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,6 +11,7 @@ namespace Team.Shared.Database.Entities;
 public class TeamMember : EntityBaseWithDeleted
 {
     public string MembershipType { get; set; }
+    public string Status { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string TeamId { get; set; } = string.Empty;
@@ -32,6 +34,10 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
         builder
             .Property(item => item.MembershipType)
             .HasMaxLength(Constants.MaxMembershipTypeLength);
+        builder
+            .Property(item => item.Status)
+            .HasMaxLength(Constants.MaxTeamMemberStatusLength)
+            .HasDefaultValue(TeamMemberStatusConstants.Active);
 
         builder
             .HasOne(item => item.Team)
@@ -48,6 +54,7 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
             .WithMany(item => item.TeamMembers);
 
         builder.HasIndex(item => item.MembershipType);
+        builder.HasIndex(item => item.Status);
         builder.HasIndex(item => new { item.CustomerId, item.TeamId }).IsUnique();
     }
 }

@@ -146,6 +146,13 @@ message Member {
     Customer customer = 2;
     MembershipType membershipType = 3;
     OrganizationMember organizationMember = 4;
+    TeamMemberStatus status = 5;
+}
+
+enum TeamMemberStatus
+{
+    Active = 0;
+    Inactive = 1;
 }
 
 enum MembershipType {

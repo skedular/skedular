@@ -399,6 +399,12 @@ public class Mapper : IMapper
                 TeamMembershipTypeConstants.Member => TeamMembershipType.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            Status = src.Status switch
+            {
+                TeamMemberStatusConstants.Active => TeamMemberStatus.Active,
+                TeamMemberStatusConstants.Inactive => TeamMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = MapTo(src.Customer)!,
             Team = team
         };

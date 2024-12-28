@@ -22,8 +22,13 @@ public interface ITeamMemberService
         CancellationToken cancellationToken);
 
     Task<TeamMember> ChangeMembershipTypeAsync(
-        string teamMemberId,
+        string id,
         TeamMembershipType membershipType,
+        CancellationToken cancellationToken);
+
+    Task<ICollection<TeamMember>> ChangeStatusAsync(
+        ICollection<string> ids,
+        TeamMemberStatus status,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Team> UpdateAsync(
@@ -84,12 +89,12 @@ public class TeamMemberService(
     }
 
     public async Task<TeamMember> ChangeMembershipTypeAsync(
-        string teamMemberId,
+        string id,
         TeamMembershipType membershipType,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var teamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(teamMemberId, cancellationToken);
+        var teamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken);
         if (teamMember is null)
         {
             throw new TeamMemberNotFound();
@@ -151,6 +156,72 @@ public class TeamMemberService(
         await repositoryFactory.TeamMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return mapper.MapTo(teamMember, mapper.MapTo(team));
+    }
+
+    public async Task<ICollection<TeamMember>> ChangeStatusAsync(
+        ICollection<string> ids,
+        TeamMemberStatus status,
+        CancellationToken cancellationToken)
+    {
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var distinctTeamMemberIds = ids.Distinct().ToList();
+        var teamMembers =
+            await repositoryFactory.TeamMemberRepository.GetByIdsAsync(
+                distinctTeamMemberIds,
+                cancellationToken);
+        if (teamMembers.Count != distinctTeamMemberIds.Count)
+        {
+            throw new TeamMemberNotFound();
+        }
+
+        // Exclude calling customer from the list
+        teamMembers = teamMembers.Where(item => item.Customer.Id != customer.Id).ToList();
+
+        if (teamMembers.Count == 0)
+        {
+            return [];
+        }
+
+        var teamIds = teamMembers.Select(item => item.Team.Id).Distinct().ToList();
+        var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(
+            teamIds,
+            cancellationToken);
+
+        if (!teamMembers.All(
+                item => teamAuthorizationService.CanModify(
+                    teams.Single(organization => organization.Id == item.Team.Id),
+                    customer)))
+        {
+            throw new Unauthorized();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.TeamMemberRepository.UnitOfWork,
+            cancellationToken);
+
+        var mappedStatus = status switch
+        {
+            TeamMemberStatus.Active => TeamMemberStatusConstants.Active,
+            TeamMemberStatus.Inactive => TeamMemberStatusConstants.Inactive,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        foreach (var organizationMember in teamMembers)
+        {
+            organizationMember.Status = mappedStatus;
+            repositoryFactory.TeamMemberRepository.Update(organizationMember);
+        }
+
+        await teamOutboxPublisher.PublishTeamAsync(
+            teams.Select(mapper.MapTo),
+            repositoryFactory.TeamRepository.UnitOfWork,
+            cancellationToken);
+
+        await repositoryFactory.TeamMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return teamMembers.Select(item => mapper.MapTo(item,
+            mapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id)))).ToList();
     }
 
     public async Task<Shared.Models.Team> UpdateAsync(

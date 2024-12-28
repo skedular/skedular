@@ -73,8 +73,8 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationMemberDetailsPayload?> ChangeOrganizationMemberOwnershipTypeAsync(
-        ChangeOrganizationMemberOwnershipTypeInput input,
+    public async Task<OrganizationMemberDetailsPayload?> ChangeOrganizationMembershipAsync(
+        ChangeOrganizationMembershipTypeInput input,
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
@@ -98,12 +98,7 @@ public class Mutation(IMapper mapper)
         var organizationMembers =
             await organizationMemberService.ChangeStatusAsync(
                 input.Ids,
-                input.Status switch
-                {
-                    OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
-                    OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
+                input.Status,
                 cancellationToken);
         return new OrganizationMembersDetailsPayload
         {
