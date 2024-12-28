@@ -28,7 +28,7 @@ import { object, string } from 'yup';
 import type { locationMemberCard_LocationMemberDetails$key } from './__generated__/locationMemberCard_LocationMemberDetails.graphql';
 import type {
   LocationMembershipType,
-  locationMemberCard_changeLocationMemberOwnershipTypeMutation
+  locationMemberCard_changeLocationMemberOwnershipTypeMutation,
 } from './__generated__/locationMemberCard_changeLocationMemberOwnershipTypeMutation.graphql';
 
 type Props = {

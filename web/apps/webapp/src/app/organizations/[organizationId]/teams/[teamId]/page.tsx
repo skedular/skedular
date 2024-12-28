@@ -40,16 +40,21 @@ const TeamPage = () => {
     throw new Error('teamId is required');
   }
 
-  const breadcrumbs = (
-    <Breadcrumbs>
-      <BodyIconTypography label="Team Settings" />
-    </Breadcrumbs>
-  );
+  if (switchToModernUI) {
+    const breadcrumbs = (
+      <Breadcrumbs>
+        <BodyIconTypography label="Team Settings" />
+      </Breadcrumbs>
+    );
+
+    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+      <OrganizationTeam organizationId={finalOrganizationId} teamId={finalTeamId} />
+    </RootShell>;
+  }
 
   return (
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      {!switchToModernUI && <Team organizationId={finalOrganizationId} teamId={finalTeamId} />}
-      {switchToModernUI && <OrganizationTeam organizationId={finalOrganizationId} teamId={finalTeamId} />}
+    <RootShell>
+      <Team organizationId={finalOrganizationId} teamId={finalTeamId} />
     </RootShell>
   );
 };

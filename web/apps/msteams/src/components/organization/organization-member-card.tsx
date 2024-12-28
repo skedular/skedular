@@ -64,8 +64,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
   );
 
   const [commitChangeOrganizationMembership] = useMutation<organizationMemberCard_changeOrganizationMembershipMutation>(graphql`
-    mutation organizationMemberCard_changeOrganizationMembershipMutation($input: ChangeOrganizationMembershipTypeInput!)
-    @raw_response_type {
+    mutation organizationMemberCard_changeOrganizationMembershipMutation($input: ChangeOrganizationMembershipTypeInput!) @raw_response_type {
       changeOrganizationMembership(input: $input) {
         member {
           id
