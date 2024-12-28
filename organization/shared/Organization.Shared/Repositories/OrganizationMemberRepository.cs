@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Organization.Shared.Database;
 using Organization.Shared.Models;
-using Customer = Organization.Shared.Database.Entities.Customer;
+using Identity = Organization.Shared.Database.Entities.Identity;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 
 namespace Organization.Shared.Repositories;
@@ -29,11 +29,12 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 
 internal static class OrganizationMemberExtensions
 {
-    internal static IIncludableQueryable<OrganizationMember, Customer> AddDependentObjects(
+    internal static IIncludableQueryable<OrganizationMember, ICollection<Identity>> AddDependentObjects(
         this IQueryable<OrganizationMember> originalQuery) =>
         originalQuery
             .Include(query => query.Organization)
-            .Include(query => query.Customer);
+            .Include(query => query.Customer)
+            .ThenInclude(query => query.Identities);
 
     internal static IQueryable<OrganizationMember> AddSearchCriteria(
         this IQueryable<OrganizationMember> query,

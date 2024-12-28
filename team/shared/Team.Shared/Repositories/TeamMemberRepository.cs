@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Team.Shared.Database;
 using Team.Shared.Models;
-using Customer = Team.Shared.Database.Entities.Customer;
+using Identity = Team.Shared.Database.Entities.Identity;
 using TeamMember = Team.Shared.Database.Entities.TeamMember;
 
 namespace Team.Shared.Repositories;
@@ -34,15 +34,17 @@ public interface ITeamMemberRepository : IRepository<TeamMember>
 
 internal static class TeamMemberExtensions
 {
-    internal static IIncludableQueryable<TeamMember, Customer> AddDependentObjects(
+    internal static IIncludableQueryable<TeamMember, ICollection<Identity>> AddDependentObjects(
         this IQueryable<TeamMember> originalQuery) =>
         originalQuery
             .Include(query => query.Team)
             .Include(query => query.Customer)
+            .ThenInclude(query => query.Identities)
             .Include(query => query.OrganizationMember)
             .ThenInclude(query => query.Organization)
             .Include(query => query.OrganizationMember)
-            .ThenInclude(query => query.Customer);
+            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query.Identities);
 
     internal static IQueryable<TeamMember> AddSearchCriteria(
         this IQueryable<TeamMember> query,

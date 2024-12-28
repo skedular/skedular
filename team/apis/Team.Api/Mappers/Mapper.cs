@@ -601,6 +601,11 @@ public class Mapper : IMapper
         new()
         {
             UniqueId = src.Id,
+            Email = src.Identities
+                .Where(identity => !string.IsNullOrWhiteSpace(identity.Email))
+                .Select(item => item.Email!.ToLowerInvariant())
+                .Distinct()
+                .FirstOrDefault(),
             Name = src.Name,
             GivenName = src.GivenName,
             MiddleName = src.MiddleName,

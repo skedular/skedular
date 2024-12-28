@@ -808,6 +808,7 @@ type TeamConnection {
 }
 
 type TeamCustomerDetails {
+  email: String
   familyName: String
   givenName: String
   middleName: String

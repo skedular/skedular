@@ -59,6 +59,7 @@ type TeamConnection {
 
 type TeamCustomerDetails {
   uniqueId: ID!
+  email: String
   name: String
   givenName: String
   middleName: String
