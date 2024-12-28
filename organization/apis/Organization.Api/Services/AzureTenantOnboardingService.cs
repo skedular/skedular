@@ -39,10 +39,9 @@ public class AzureTenantOnboardingService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.AzureTenantRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.AzureTenantRepository.UnitOfWork,
+            cancellationToken);
 
         var location = new Location { Id = randomHelper.Generate() };
         var now = timeProvider.GetUtcNow();

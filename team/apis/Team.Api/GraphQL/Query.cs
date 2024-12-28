@@ -138,7 +138,7 @@ public class Query(IMapper mapper)
         }
 
         var (paginatedInfo, edges, totalCount) =
-            await teamMemberService.GetPaginatedTeamMembersAsync(
+            await teamMemberService.GetPaginatedMembersAsync(
                 new PaginationInputParam(after, first, before, last),
                 new TeamMemberSearchCriteria(where.TeamId, where.NameContains),
                 orderBy is null

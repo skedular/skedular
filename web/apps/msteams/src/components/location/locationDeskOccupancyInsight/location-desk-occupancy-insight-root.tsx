@@ -7,7 +7,6 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { LocationLink } from 'components/location';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -18,29 +17,21 @@ import LocationDeskOccupancyInsight from './location-desk-occupancy-insight';
 type Props = {
   queryReference: PreloadedQuery<locationDeskOccupancyInsightRoot_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
-  locationId: string;
   hideLocationDetails?: boolean;
 };
 
 const RootQuery = graphql`
-  query locationDeskOccupancyInsightRoot_rootQuery($locationId: String!, $locationExists: Boolean!, $from: DateTime!, $to: DateTime!) {
+  query locationDeskOccupancyInsightRoot_rootQuery($locationId: String!, $from: DateTime!, $to: DateTime!) {
     ...locationDeskOccupancyInsight_query
     ...locationDeskOccupancyInsight_locationAnalytics_query
   }
 `;
 
-const LocationDeskOccupancyInsightRoot = ({ queryReference, onReloadRequired, organizationId, locationId, hideLocationDetails }: Props) => {
+const LocationDeskOccupancyInsightRoot = ({ queryReference, hideLocationDetails }: Props) => {
   const rootData = usePreloadedQuery<locationDeskOccupancyInsightRoot_rootQuery>(RootQuery, queryReference);
 
   return (
-    <LocationDeskOccupancyInsight
-      rootDataRelay={rootData}
-      rootDataLocationAnalyticsRelay={rootData}
-      organizationId={organizationId}
-      locationId={locationId}
-      hideLocationDetails={hideLocationDetails}
-    />
+    <LocationDeskOccupancyInsight rootDataRelay={rootData} rootDataLocationAnalyticsRelay={rootData} hideLocationDetails={hideLocationDetails} />
   );
 };
 
@@ -48,19 +39,11 @@ const MemoLocationDeskOccupancyInsightRoot = memo(LocationDeskOccupancyInsightRo
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationId: string;
   locationId: string;
-  locationName?: string;
   hideLocationDetails?: boolean;
 };
 
-const LocationDeskOccupancyInsightRootWithRelay = ({
-  organizationId,
-  onReloadRequired,
-  locationId,
-  locationName,
-  hideLocationDetails,
-}: RelayProps) => {
+const LocationDeskOccupancyInsightRootWithRelay = ({ onReloadRequired, locationId, hideLocationDetails }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationDeskOccupancyInsightRoot_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -72,7 +55,6 @@ const LocationDeskOccupancyInsightRootWithRelay = ({
     loadQuery(
       {
         locationId,
-        locationExists: !!locationId,
         from: from.toISOString(),
         to: to.toISOString(),
       },
@@ -93,14 +75,7 @@ const LocationDeskOccupancyInsightRootWithRelay = ({
   if (!queryReference) {
     return (
       <Card sx={{ maxWidth: 500, height: '100%' }}>
-        <CardHeader
-          title={
-            <>
-              <SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />
-              {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={locationName} analayticsLink />}
-            </>
-          }
-        />
+        <CardHeader title={<SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />} />
         <CardContent>
           <Skeleton variant="rounded" width={470} height={350} />
         </CardContent>
@@ -113,8 +88,6 @@ const LocationDeskOccupancyInsightRootWithRelay = ({
       <MemoLocationDeskOccupancyInsightRoot
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
-        locationId={locationId}
         hideLocationDetails={hideLocationDetails}
       />
     </ErrorBoundary>

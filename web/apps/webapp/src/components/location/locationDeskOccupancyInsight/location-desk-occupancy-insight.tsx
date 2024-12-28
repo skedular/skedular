@@ -16,17 +16,19 @@ import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 type Props = {
   rootDataRelay: locationDeskOccupancyInsight_query$key;
   rootDataLocationAnalyticsRelay: locationDeskOccupancyInsight_locationAnalytics_query$key;
-  organizationId?: string;
-  locationId: string;
   hideLocationDetails?: boolean;
 };
 
-const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay, organizationId, locationId, hideLocationDetails }: Props) => {
+const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay, hideLocationDetails }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment locationDeskOccupancyInsight_query on Query {
         location(id: $locationId) {
+          id
           name
+          organization {
+            uniqueId
+          }
         }
       }
     `,
@@ -37,7 +39,7 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
     graphql`
       fragment locationDeskOccupancyInsight_locationAnalytics_query on Query
       @refetchable(queryName: "locationDeskOccupancyInsight_locationAnalytics_refetchableFragment") {
-        locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {
+        locationAnalytics(locationId: $locationId, from: $from, until: $to) {
           desksOccupancyPercentage {
             date
             percentage
@@ -55,8 +57,6 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
       startTransition(() => {
         refetch(
           {
-            locationId,
-            locationExists: !!locationId,
             from: from.toISOString(),
             to: to.toISOString(),
           },
@@ -66,14 +66,14 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
         );
       });
     },
-    [refetch, locationId],
+    [refetch],
   );
 
   const handleDateRangeChange = (from: Dayjs, until: Dayjs) => {
     handleRefetch(from, until);
   };
 
-  if (!rootDataLocationAnalytics.locationAnalytics) {
+  if (!rootDataLocationAnalytics.locationAnalytics || !rootData.location) {
     return <></>;
   }
 
@@ -107,7 +107,14 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
         title={
           <>
             <SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />
-            {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={rootData.location?.name} analayticsLink />}
+            {!hideLocationDetails && (
+              <LocationLink
+                organizationId={rootData.location.organization?.uniqueId}
+                id={rootData.location.id}
+                name={rootData.location?.name}
+                analayticsLink
+              />
+            )}
           </>
         }
       />

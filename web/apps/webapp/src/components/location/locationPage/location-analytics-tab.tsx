@@ -8,22 +8,15 @@ type Props = {
   onReloadRequired: () => void;
   organizationId?: string;
   locationId: string;
-  locationName?: string;
 };
 
-const LocationAnalyticsTab = ({ onReloadRequired, organizationId, locationId, locationName }: Props) => (
+const LocationAnalyticsTab = ({ onReloadRequired, locationId }: Props) => (
   <GridContainer>
     <Grid>
-      <LocationBookingInsightRoot onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} hideLocationDetails />
+      <LocationBookingInsightRoot onReloadRequired={onReloadRequired} locationId={locationId} hideLocationDetails />
     </Grid>
     <Grid>
-      <LocationDeskOccupancyInsightRoot
-        onReloadRequired={onReloadRequired}
-        organizationId={organizationId}
-        locationId={locationId}
-        locationName={locationName}
-        hideLocationDetails
-      />
+      <LocationDeskOccupancyInsightRoot onReloadRequired={onReloadRequired} locationId={locationId} hideLocationDetails />
     </Grid>
   </GridContainer>
 );

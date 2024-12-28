@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ca4091ac3ff58c53f98dddb4aaa1d4d9>>
+ * @generated SignedSource<<abfd908b5137ea571268aaef3ba11ef9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,11 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationDeskOccupancyInsight_query$data = {
   readonly location: {
+    readonly id: string;
     readonly name: string;
+    readonly organization: {
+      readonly uniqueId: string;
+    } | null | undefined;
   } | null | undefined;
   readonly " $fragmentType": "locationDeskOccupancyInsight_query";
 };
@@ -50,7 +54,32 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "name",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LocationOrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "uniqueId",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -61,6 +90,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a3fef42f518d0c2769cc38221bd2bef2";
+(node as any).hash = "eb2b3944167b37815d5b2592e3bdcbc6";
 
 export default node;

@@ -157,9 +157,9 @@ public class DeskService(
                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.LocationRepository.UnitOfWork,
+            cancellationToken);
 
         var deskEntity = mapper.MapTo(desk, existingLocation, organizationTags);
         _ = repositoryFactory.DeskRepository.Add(deskEntity);
@@ -220,9 +220,9 @@ public class DeskService(
                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.LocationRepository.UnitOfWork,
+            cancellationToken);
 
         var desks = new List<Desk>();
         for (var idx = 1; idx <= count; idx++)
@@ -308,9 +308,9 @@ public class DeskService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.DeskRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.DeskRepository.UnitOfWork,
+            cancellationToken);
 
         var deletedDesk = mapper.MapTo(repositoryFactory.DeskRepository.Remove(desk), mapper.MapTo(existingLocation));
 
@@ -409,9 +409,9 @@ public class DeskService(
                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.DeskRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.DeskRepository.UnitOfWork,
+            cancellationToken);
 
         desk =
             mapper.MapTo(

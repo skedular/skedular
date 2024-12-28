@@ -49,7 +49,6 @@ type Props = {
 const RootQuery = graphql`
   query locationMembersTab_rootQuery(
     $locationId: String!
-    $locationExists: Boolean!
     $peopleNameSearchText: String
     $locationMembersSortingValues: [LocationMemberOrderInput!]
   ) {
@@ -75,7 +74,7 @@ const peopleToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Props) => {
+const LocationMembersTab = ({ queryReference, locationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<locationMembersTab_rootQuery>(RootQuery, queryReference);
   const rootData = useFragment<locationMembersTab_query$key>(
     graphql`
@@ -104,7 +103,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
           after: $cursor
           where: { locationId: $locationId, nameContains: $peopleNameSearchText }
           orderBy: $locationMembersSortingValues
-        ) @connection(key: "locationMembersTab_locationMembers") @include(if: $locationExists) {
+        ) @connection(key: "locationMembersTab_locationMembers") {
           __id
           totalCount
           edges {
@@ -160,7 +159,6 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
             count: pageSize,
             locationMembersSortingValues: [locationMemberOrder],
             peopleNameSearchText,
-            locationExists: !!locationId,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -171,7 +169,7 @@ const LocationMembersTab = ({ queryReference, onReloadRequired, locationId }: Pr
         );
       });
     },
-    [refetchLocationMembers, locationId],
+    [refetchLocationMembers],
   );
 
   const loadNextPage = useCallback(() => {
@@ -371,7 +369,6 @@ const LocationMembersTabWithRelay = ({ onReloadRequired, locationId }: RelayProp
     loadQuery(
       {
         locationId,
-        locationExists: !!locationId,
         locationMembersSortingValues: [
           {
             direction: 'Descending',

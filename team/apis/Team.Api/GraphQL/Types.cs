@@ -28,10 +28,10 @@ public class AddTeamInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public required string Name { get; set; }
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("customerIds")] public string[] CustomerIds { get; set; } = [];
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
+    [GraphQLName("customerIds")] public string[] CustomerIds { get; set; } = [];
     [GraphQLName("organizationMemberIds")] public string[] OrganizationMemberIds { get; set; } = [];
 }
 
@@ -58,6 +58,13 @@ public class ChangeTeamMemberOwnershipTypeInput
 
 [GraphQLName("DeleteTeamInput")]
 public class DeleteTeamInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("DeleteTeamMemberInput")]
+public class DeleteTeamMemberInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
@@ -216,6 +223,13 @@ public class TeamPayload
     [GraphQLName("team")] public TeamDetails Team { get; set; }
 }
 
+[GraphQLName("TeamMemberPayload")]
+public class TeamMemberPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("teamMember")] public TeamMemberDetails TeamMember { get; set; }
+}
+
 [GraphQLName("TeamWhereInput")]
 public class TeamWhereInput
 {
@@ -231,10 +245,31 @@ public class UpdateTeamInput
     [GraphQLName("id")] public required string Id { get; set; }
     [GraphQLName("name")] public required string Name { get; set; }
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("customerIds")] public string[] CustomerIds { get; set; } = [];
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
+}
+
+[GraphQLName("UpdateTeamAndTeamMembersInput")]
+public class UpdateTeamAndTeamMembersInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("name")] public required string Name { get; set; }
+    [GraphQLName("about")] public string? About { get; set; }
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
+    [GraphQLName("timezone")] public string? Timezone { get; set; }
+    [GraphQLName("customerIds")] public string[] CustomerIds { get; set; } = [];
+    [GraphQLName("organizationMemberIds")] public string[] OrganizationMemberIds { get; set; } = [];
+}
+
+[GraphQLName("UpdateTeamMembersInput")]
+public class UpdateTeamMembersInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("customerIds")] public string[] CustomerIds { get; set; } = [];
     [GraphQLName("organizationMemberIds")] public string[] OrganizationMemberIds { get; set; } = [];
 }
 

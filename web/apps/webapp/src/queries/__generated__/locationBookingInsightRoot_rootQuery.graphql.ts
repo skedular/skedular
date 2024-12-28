@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d1302536213b7d5db0e63069428c5312>>
+ * @generated SignedSource<<45072f31a2a23a17919ee3449eb4c417>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,6 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationBookingInsightRoot_rootQuery$variables = {
   from: any;
-  locationExists: boolean;
   locationId: string;
   to: any;
 };
@@ -33,14 +32,9 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "locationExists"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
   "name": "locationId"
 },
-v3 = {
+v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
   "name": "to"
@@ -50,8 +44,7 @@ return {
     "argumentDefinitions": [
       (v0/*: any*/),
       (v1/*: any*/),
-      (v2/*: any*/),
-      (v3/*: any*/)
+      (v2/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -74,10 +67,9 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v2/*: any*/),
       (v1/*: any*/),
       (v0/*: any*/),
-      (v3/*: any*/)
+      (v2/*: any*/)
     ],
     "kind": "Operation",
     "name": "locationBookingInsightRoot_rootQuery",
@@ -100,91 +92,102 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "name",
+            "name": "id",
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "id",
+            "name": "name",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "LocationOrganizationDetails",
+            "kind": "LinkedField",
+            "name": "organization",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "uniqueId",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
         ],
         "storageKey": null
       },
       {
-        "condition": "locationExists",
-        "kind": "Condition",
-        "passingValue": true,
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "from",
+            "variableName": "from"
+          },
+          {
+            "kind": "Variable",
+            "name": "locationId",
+            "variableName": "locationId"
+          },
+          {
+            "kind": "Variable",
+            "name": "until",
+            "variableName": "to"
+          }
+        ],
+        "concreteType": "LocationAnalytics",
+        "kind": "LinkedField",
+        "name": "locationAnalytics",
+        "plural": false,
         "selections": [
           {
             "alias": null,
-            "args": [
-              {
-                "kind": "Variable",
-                "name": "from",
-                "variableName": "from"
-              },
-              {
-                "kind": "Variable",
-                "name": "locationId",
-                "variableName": "locationId"
-              },
-              {
-                "kind": "Variable",
-                "name": "until",
-                "variableName": "to"
-              }
-            ],
-            "concreteType": "LocationAnalytics",
+            "args": null,
+            "concreteType": "LocationDailyBookingsTotal",
             "kind": "LinkedField",
-            "name": "locationAnalytics",
-            "plural": false,
+            "name": "dailyBookingsTotals",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "LocationDailyBookingsTotal",
-                "kind": "LinkedField",
-                "name": "dailyBookingsTotals",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "date",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "total",
-                    "storageKey": null
-                  }
-                ],
+                "kind": "ScalarField",
+                "name": "date",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "total",
                 "storageKey": null
               }
             ],
             "storageKey": null
           }
-        ]
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "0a3b042089f3212639df88cf649ccbcc",
+    "cacheID": "fd2e76d86fc1f965fbe755022a68bee7",
     "id": null,
     "metadata": {},
     "name": "locationBookingInsightRoot_rootQuery",
     "operationKind": "query",
-    "text": "query locationBookingInsightRoot_rootQuery(\n  $locationId: String!\n  $locationExists: Boolean!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...locationBookingInsight_query\n  ...locationBookingInsight_locationAnalytics_query\n}\n\nfragment locationBookingInsight_locationAnalytics_query on Query {\n  locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n}\n\nfragment locationBookingInsight_query on Query {\n  location(id: $locationId) {\n    name\n    id\n  }\n}\n"
+    "text": "query locationBookingInsightRoot_rootQuery(\n  $locationId: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...locationBookingInsight_query\n  ...locationBookingInsight_locationAnalytics_query\n}\n\nfragment locationBookingInsight_locationAnalytics_query on Query {\n  locationAnalytics(locationId: $locationId, from: $from, until: $to) {\n    dailyBookingsTotals {\n      date\n      total\n    }\n  }\n}\n\nfragment locationBookingInsight_query on Query {\n  location(id: $locationId) {\n    id\n    name\n    organization {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a7aceba826bf3c331bc50ef47e517854";
+(node as any).hash = "192dce347a057b79742eb68aa9d1d92f";
 
 export default node;

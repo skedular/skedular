@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<95f9ff0a50fb50584ecf4d41d01b1f51>>
+ * @generated SignedSource<<7eac723790b247ff62aafb2366366efd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,11 +12,9 @@ import { ConcreteRequest } from 'relay-runtime';
 export type UpdateTeamInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
-  customerIds: ReadonlyArray<string>;
   id: string;
   name: string;
   organizationId?: string | null | undefined;
-  organizationMemberIds: ReadonlyArray<string>;
   primaryLocationId?: string | null | undefined;
   timezone?: string | null | undefined;
 };

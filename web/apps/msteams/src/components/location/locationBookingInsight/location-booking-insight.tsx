@@ -16,17 +16,19 @@ import type { locationBookingInsight_query$key } from './__generated__/locationB
 type Props = {
   rootDataRelay: locationBookingInsight_query$key;
   rootDataLocationAnalyticsRelay: locationBookingInsight_locationAnalytics_query$key;
-  organizationId: string;
-  locationId: string;
   hideLocationDetails?: boolean;
 };
 
-const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay, organizationId, locationId, hideLocationDetails }: Props) => {
+const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay, hideLocationDetails }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment locationBookingInsight_query on Query {
         location(id: $locationId) {
+          id
           name
+          organization {
+            uniqueId
+          }
         }
       }
     `,
@@ -37,7 +39,7 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay,
     graphql`
       fragment locationBookingInsight_locationAnalytics_query on Query
       @refetchable(queryName: "locationBookingInsight_locationAnalytics_refetchableFragment") {
-        locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {
+        locationAnalytics(locationId: $locationId, from: $from, until: $to) {
           dailyBookingsTotals {
             date
             total
@@ -55,8 +57,6 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay,
       startTransition(() => {
         refetch(
           {
-            locationId,
-            locationExists: !!locationId,
             from: from.toISOString(),
             to: to.toISOString(),
           },
@@ -66,14 +66,14 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay,
         );
       });
     },
-    [refetch, locationId],
+    [refetch],
   );
 
   const handleDateRangeChange = (from: Dayjs, until: Dayjs) => {
     handleRefetch(from, until);
   };
 
-  if (!rootDataLocationAnalytics.locationAnalytics) {
+  if (!rootDataLocationAnalytics.locationAnalytics || !rootData.location || !rootData.location.organization) {
     return <></>;
   }
 
@@ -101,7 +101,14 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay,
         title={
           <>
             <SectionIconTypography label="Booking Insights" invertDefaultColor />
-            {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={rootData.location?.name} analayticsLink />}
+            {!hideLocationDetails && (
+              <LocationLink
+                organizationId={rootData.location.organization.uniqueId}
+                id={rootData.location.id}
+                name={rootData.location?.name}
+                analayticsLink
+              />
+            )}
           </>
         }
       />

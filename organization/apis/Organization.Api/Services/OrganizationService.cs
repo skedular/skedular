@@ -121,10 +121,9 @@ public class OrganizationService(
                 .AddInclude(query => query.IndustryMainCategory))
             .ToListAsync(cancellationToken);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationRepository.UnitOfWork,
+            cancellationToken);
 
         var organizationEntity = mapper.MapTo(organization, termsOfUse, industrySubCategories);
 
@@ -212,10 +211,9 @@ public class OrganizationService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationRepository.UnitOfWork,
+            cancellationToken);
 
         var deletedOrganization = mapper.MapTo(repositoryFactory.OrganizationRepository.Remove(organization));
 
@@ -325,10 +323,9 @@ public class OrganizationService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationRepository.UnitOfWork,
+            cancellationToken);
 
         var industrySubCategoryIds = organization.IndustrySubCategories.Select(item => item.Id).ToList();
         var industrySubCategoryEntities = industrySubCategoryIds.Count == 0

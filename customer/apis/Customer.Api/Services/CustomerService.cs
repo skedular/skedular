@@ -241,9 +241,9 @@ public class CustomerService(
         await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.CustomerRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.CustomerRepository.UnitOfWork,
+            cancellationToken);
 
         if (existingCustomer is null)
         {
@@ -351,9 +351,9 @@ public class CustomerService(
 
         if (identityChanged)
         {
-            await using var transaction =
-                await transactionBuilder.BeginTransactionAsync(repositoryFactory.CustomerRepository.UnitOfWork,
-                    cancellationToken);
+            await using var transaction = await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.CustomerRepository.UnitOfWork,
+                cancellationToken);
 
             var identityToUpdate = mapper.MergeTo(identity, matchingIdentityToUpdate, existingCustomer);
             repositoryFactory.IdentityRepository.Update(identityToUpdate);

@@ -124,12 +124,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
           <LocationDesksTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />
         )}
         {tabIndex === analyticsTabIndex && rootData.location.canViewAnalytics && (
-          <LocationAnalyticsTab
-            onReloadRequired={onReloadRequired}
-            organizationId={organizationId}
-            locationId={locationId}
-            locationName={rootData.location.name}
-          />
+          <LocationAnalyticsTab onReloadRequired={onReloadRequired} locationId={locationId} />
         )}
       </>
     </>

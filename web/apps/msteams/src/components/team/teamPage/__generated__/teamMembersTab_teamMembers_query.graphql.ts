@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ad23a11855931d576ae2870d80b0ba0e>>
+ * @generated SignedSource<<d7b4120389105faef740f52cab81cff9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type teamMembersTab_teamMembers_query$data = {
-  readonly teamMembers?: {
+  readonly teamMembers: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -50,10 +50,6 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "teamExists"
-    },
-    {
-      "kind": "RootArgument",
       "name": "teamId"
     },
     {
@@ -87,136 +83,129 @@ return {
   "name": "teamMembersTab_teamMembers_query",
   "selections": [
     {
-      "condition": "teamExists",
-      "kind": "Condition",
-      "passingValue": true,
-      "selections": [
+      "alias": "teamMembers",
+      "args": [
         {
-          "alias": "teamMembers",
-          "args": [
+          "kind": "Variable",
+          "name": "orderBy",
+          "variableName": "teamMembersSortingValues"
+        },
+        {
+          "fields": [
             {
               "kind": "Variable",
-              "name": "orderBy",
-              "variableName": "teamMembersSortingValues"
+              "name": "nameContains",
+              "variableName": "peopleNameSearchText"
             },
             {
-              "fields": [
-                {
-                  "kind": "Variable",
-                  "name": "nameContains",
-                  "variableName": "peopleNameSearchText"
-                },
-                {
-                  "kind": "Variable",
-                  "name": "teamId",
-                  "variableName": "teamId"
-                }
-              ],
-              "kind": "ObjectValue",
-              "name": "where"
+              "kind": "Variable",
+              "name": "teamId",
+              "variableName": "teamId"
             }
           ],
-          "concreteType": "TeamMemberConnection",
+          "kind": "ObjectValue",
+          "name": "where"
+        }
+      ],
+      "concreteType": "TeamMemberConnection",
+      "kind": "LinkedField",
+      "name": "__teamMembersTab_teamMembers_connection",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "totalCount",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "TeamMemberEdge",
           "kind": "LinkedField",
-          "name": "__teamMembersTab_teamMembers_connection",
-          "plural": false,
+          "name": "edges",
+          "plural": true,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "totalCount",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "TeamMemberEdge",
+              "concreteType": "TeamMemberDetails",
               "kind": "LinkedField",
-              "name": "edges",
-              "plural": true,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "TeamMemberDetails",
-                  "kind": "LinkedField",
-                  "name": "node",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "id",
-                      "storageKey": null
-                    },
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "teamMemberCard_TeamMemberDetails"
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "__typename",
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "cursor",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "PageInfo",
-              "kind": "LinkedField",
-              "name": "pageInfo",
+              "name": "node",
               "plural": false,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "endCursor",
+                  "name": "id",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "teamMemberCard_TeamMemberDetails"
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "hasNextPage",
+                  "name": "__typename",
                   "storageKey": null
                 }
               ],
               "storageKey": null
             },
             {
-              "kind": "ClientExtension",
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__id",
-                  "storageKey": null
-                }
-              ]
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
-      ]
+      ],
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -224,6 +213,6 @@ return {
 };
 })();
 
-(node as any).hash = "b4a6cdbc0eee1ec83ea7d30b9ddef048";
+(node as any).hash = "2e77cd2f8f60b5bc9b6827c774355ef7";
 
 export default node;

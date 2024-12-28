@@ -106,9 +106,9 @@ public class BookingService(
 
         var bookingEntity = mapper.MapTo(booking, customerEntity!, organization, location, team, desks);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.BookingRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.BookingRepository.UnitOfWork,
+            cancellationToken);
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
@@ -217,9 +217,9 @@ public class BookingService(
 
         existingBooking.Desks = [];
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.BookingRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.BookingRepository.UnitOfWork,
+            cancellationToken);
         _ = repositoryFactory.BookingRepository.Update(existingBooking);
         var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
 
@@ -776,9 +776,9 @@ public class BookingService(
             team,
             desks);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.BookingRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.BookingRepository.UnitOfWork,
+            cancellationToken);
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
         booking = mapper.MapTo(bookingEntity);

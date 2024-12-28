@@ -25,7 +25,11 @@ public interface ITeamService
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, CancellationToken cancellationToken);
+    Task<Shared.Models.Team> UpdateAsync(
+        Shared.Models.Team team,
+        bool updateTeamMembers,
+        CancellationToken cancellationToken);
+
     Task<Shared.Models.Team> DeleteAsync(string teamId, CancellationToken cancellationToken);
 
     Task<Shared.Models.Team?> GetByIdAsync(
@@ -55,7 +59,8 @@ public class TeamService(
     IOrganizationOfferingService organizationOfferingService,
     ITeamOutboxPublisher teamOutboxPublisher,
     IMapper mapper,
-    TimeProvider timeProvider) : ITeamService
+    TimeProvider timeProvider,
+    ITeamMemberService teamMemberService) : ITeamService
 {
     public async Task<Shared.Models.Team> AddAsync(
         Shared.Models.Team team,
@@ -135,6 +140,7 @@ public class TeamService(
                     customer,
                     organization,
                     primaryLocation,
+                    true,
                     cancellationToken);
             }
         }
@@ -145,16 +151,21 @@ public class TeamService(
 
         var teamEntity = mapper.MapTo(team, organization, primaryLocation);
         teamEntity.PrimaryLocation = primaryLocation;
-        var teamMembers = await BuildTeamMembersAsync(team, teamEntity, customer, organization, cancellationToken);
+        var rebuiltTeamMembers = await teamMemberService.BuildMembersAsync(
+            team.TeamMembers,
+            teamEntity,
+            customer,
+            organization,
+            cancellationToken);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.TeamRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.TeamRepository.UnitOfWork,
+            cancellationToken);
 
-        teamEntity.TeamMembers = teamMembers;
+        teamEntity.TeamMembers = rebuiltTeamMembers;
         teamEntity = repositoryFactory.TeamRepository.Add(teamEntity);
 
-        repositoryFactory.TeamMemberRepository.AddRange(teamMembers);
+        repositoryFactory.TeamMemberRepository.AddRange(rebuiltTeamMembers);
         team = mapper.MapTo(teamEntity);
 
         await teamOutboxPublisher.PublishTeamAsync(
@@ -169,6 +180,7 @@ public class TeamService(
 
     public async Task<Shared.Models.Team> UpdateAsync(
         Shared.Models.Team team,
+        bool updateTeamMembers,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(team.Id);
@@ -226,6 +238,7 @@ public class TeamService(
             customer,
             organization,
             primaryLocation,
+            updateTeamMembers,
             cancellationToken);
     }
 
@@ -253,9 +266,9 @@ public class TeamService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.TeamRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.TeamRepository.UnitOfWork,
+            cancellationToken);
 
         var deletedTeam = mapper.MapTo(repositoryFactory.TeamRepository.Remove(existingTeam));
 
@@ -357,6 +370,7 @@ public class TeamService(
         Customer? customer,
         Organization? organization,
         Location? primaryLocation,
+        bool updateTeamMembers,
         CancellationToken cancellationToken)
     {
         if (customer is not null && !teamAuthorizationService.CanModify(existingTeam, customer))
@@ -364,33 +378,45 @@ public class TeamService(
             throw new Unauthorized();
         }
 
-        var teamMembers = await BuildTeamMembersAsync(team, existingTeam, customer, organization, cancellationToken);
+        var rebuiltTeamMembers = updateTeamMembers
+            ? await teamMemberService.BuildMembersAsync(
+                team.TeamMembers,
+                existingTeam,
+                customer,
+                organization,
+                cancellationToken)
+            : [];
+        var teamMembers = updateTeamMembers ? await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(
+            existingTeam.Id,
+            cancellationToken) : null;
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.TeamRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.TeamRepository.UnitOfWork,
+            cancellationToken);
 
-        var itemsToRemove = existingTeam.TeamMembers
-            .Where(teamMember => teamMembers.All(item => item.Customer.Id != teamMember.Customer.Id))
-            .ToList();
-        var updatedItems = existingTeam.TeamMembers
-            .Where(teamMember => teamMembers.Any(item => item.Customer.Id == teamMember.Customer.Id))
-            .Select(teamMember =>
-            {
-                teamMember.DeletedAt = null;
-                return repositoryFactory.TeamMemberRepository.Update(teamMember);
-            }).ToList();
-        var addedItems = teamMembers
-            .Where(teamMember => existingTeam.TeamMembers.All(item => item.Customer.Id != teamMember.Customer.Id))
-            .Select(teamMember => repositoryFactory.TeamMemberRepository.Add(teamMember)).ToList();
+        if (updateTeamMembers)
+        {
+            var itemsToRemove = teamMembers!
+                .Where(teamMember => rebuiltTeamMembers.All(item => item.Customer.Id != teamMember.Customer.Id))
+                .ToList();
+            var updatedItems = teamMembers!
+                .Where(teamMember => rebuiltTeamMembers.Any(item => item.Customer.Id == teamMember.Customer.Id))
+                .Select(teamMember =>
+                {
+                    teamMember.DeletedAt = null;
+                    return repositoryFactory.TeamMemberRepository.Update(teamMember);
+                }).ToList();
+            var addedItems = rebuiltTeamMembers
+                .Where(teamMember => teamMembers!.All(item => item.Customer.Id != teamMember.Customer.Id))
+                .Select(teamMember => repositoryFactory.TeamMemberRepository.Add(teamMember)).ToList();
 
-        repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
-        existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+            repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
+            existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        }
 
-        team =
-            mapper.MapTo(
-                repositoryFactory.TeamRepository.Update(
-                    mapper.MergeTo(team, existingTeam, organization, primaryLocation)));
+        team = mapper.MapTo(
+            repositoryFactory.TeamRepository.Update(
+                mapper.MergeTo(team, existingTeam, organization, primaryLocation)));
 
         await teamOutboxPublisher.PublishTeamAsync(
             [team],
@@ -399,63 +425,6 @@ public class TeamService(
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return team;
-    }
-
-    private async Task<List<TeamMember>> BuildTeamMembersAsync(
-        Shared.Models.Team team,
-        Shared.Database.Entities.Team existingTeam,
-        Customer? customer,
-        Organization? organization,
-        CancellationToken cancellationToken)
-    {
-        var now = timeProvider.GetUtcNow();
-        var teamMembers = new List<TeamMember>();
-        if (organization is null)
-        {
-            var customersToAdd = await repositoryFactory.CustomerRepository.GetByIdsAsync(
-                team.TeamMembers
-                    // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-                    .Where(item => item.Customer is not null)
-                    .Select(item => item.Customer.Id)
-                    .ToList(),
-                cancellationToken);
-
-            teamMembers.AddRange(customersToAdd.Select(item => new TeamMember
-            {
-                Id = randomHelper.Generate(),
-                CreatedAt = now,
-                MembershipType =
-                    customer is not null && item.Id == customer.Id
-                        ? TeamMembershipType.Owner
-                        : TeamMembershipType.Member,
-                Customer = item,
-                Team = existingTeam
-            }));
-        }
-        else
-        {
-            var organizationMemberIds = team.TeamMembers
-                .Where(item => item.OrganizationMember is not null)
-                .Select(item => item.OrganizationMember!.Id)
-                .ToList();
-            var organizationMembersToAdd =
-                organization.OrganizationMembers
-                    .Where(item => organizationMemberIds.Contains(item.Id)).ToList();
-
-            teamMembers.AddRange(organizationMembersToAdd.Select(item => new TeamMember
-            {
-                Id = randomHelper.Generate(),
-                CreatedAt = now,
-                MembershipType = customer is not null && item.Customer.Id == customer.Id
-                    ? TeamMembershipType.Owner
-                    : TeamMembershipType.Member,
-                Customer = item.Customer,
-                Team = existingTeam,
-                OrganizationMember = item
-            }));
-        }
-
-        return teamMembers;
     }
 
     private async Task<Shared.Models.Team> EnrichTeamAsync(

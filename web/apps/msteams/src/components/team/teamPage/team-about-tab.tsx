@@ -98,14 +98,6 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
             uniqueId
             name
           }
-          members {
-            customer {
-              uniqueId
-            }
-            organizationMember {
-              uniqueId
-            }
-          }
         }
       }
     }
@@ -131,11 +123,7 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
           name,
           about,
           timezone,
-          customerIds: rootData.team.members.filter((member) => member.customer).map((member) => member.customer.uniqueId),
           organizationId,
-          organizationMemberIds: rootData.team.members
-            .filter((member) => member.organizationMember)
-            .map((member) => member.organizationMember!.uniqueId),
           primaryLocationId,
         },
       },
@@ -168,7 +156,6 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
             about,
             timezone,
             organization: null,
-            members: [],
             primaryLocation: null,
           },
         },

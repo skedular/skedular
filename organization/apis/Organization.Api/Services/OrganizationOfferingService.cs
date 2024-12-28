@@ -68,9 +68,9 @@ public class OrganizationOfferingService(
                     query.End >= now
             }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
+            cancellationToken);
 
         if (activeOffering is not null && activeOffering.Code != offeringCode)
         {

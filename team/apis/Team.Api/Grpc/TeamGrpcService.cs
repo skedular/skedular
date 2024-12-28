@@ -122,8 +122,7 @@ public class TeamGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
-        var permissions =
-            await teamAuthorizationService.GetPermissionsAsync(request.Id, context.CancellationToken);
+        var permissions = await teamAuthorizationService.GetPermissionsAsync(request.Id, context.CancellationToken);
         return new Permissions
         {
             CanView = permissions.CanView,
@@ -151,7 +150,7 @@ public class TeamGrpcService(
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(
-            await teamMemberService.UpdateMembersAsync(
+            await teamMemberService.UpdateAsync(
                 request.Id,
                 mapper.MapTo(request),
                 true,
@@ -175,7 +174,7 @@ public class TeamGrpcService(
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(
-            await teamService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+            await teamService.UpdateAsync(mapper.MapTo(request), true, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Remove(
@@ -183,21 +182,6 @@ public class TeamGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await teamService.DeleteAsync(request.Id, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> UpdateMembers(
-        UpdateMembersInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await teamMemberService.UpdateMembersAsync(
-                request.Id,
-                mapper.MapTo(request),
-                false,
-                context.CancellationToken));
+        return mapper.MapToGrpcResponse(await teamService.DeleteAsync(request.Id, context.CancellationToken));
     }
 }

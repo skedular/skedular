@@ -7,7 +7,6 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { LocationLink } from 'components/location';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -18,43 +17,31 @@ import LocationBookingInsight from './location-booking-insight';
 type Props = {
   queryReference: PreloadedQuery<locationBookingInsightRoot_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId: string;
-  locationId: string;
   hideLocationDetails?: boolean;
 };
 
 const RootQuery = graphql`
-  query locationBookingInsightRoot_rootQuery($locationId: String!, $locationExists: Boolean!, $from: DateTime!, $to: DateTime!) {
+  query locationBookingInsightRoot_rootQuery($locationId: String!, $from: DateTime!, $to: DateTime!) {
     ...locationBookingInsight_query
     ...locationBookingInsight_locationAnalytics_query
   }
 `;
 
-const LocationBookingInsightRoot = ({ queryReference, onReloadRequired, organizationId, locationId, hideLocationDetails }: Props) => {
+const LocationBookingInsightRoot = ({ queryReference, hideLocationDetails }: Props) => {
   const rootData = usePreloadedQuery<locationBookingInsightRoot_rootQuery>(RootQuery, queryReference);
 
-  return (
-    <LocationBookingInsight
-      rootDataRelay={rootData}
-      rootDataLocationAnalyticsRelay={rootData}
-      organizationId={organizationId}
-      locationId={locationId}
-      hideLocationDetails={hideLocationDetails}
-    />
-  );
+  return <LocationBookingInsight rootDataRelay={rootData} rootDataLocationAnalyticsRelay={rootData} hideLocationDetails={hideLocationDetails} />;
 };
 
 const MemoLocationBookingInsightRoot = memo(LocationBookingInsightRoot);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationId: string;
   locationId: string;
-  locationName?: string;
   hideLocationDetails?: boolean;
 };
 
-const LocationBookingInsightRootWithRelay = ({ onReloadRequired, organizationId, locationId, locationName, hideLocationDetails }: RelayProps) => {
+const LocationBookingInsightRootWithRelay = ({ onReloadRequired, locationId, hideLocationDetails }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationBookingInsightRoot_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -66,7 +53,6 @@ const LocationBookingInsightRootWithRelay = ({ onReloadRequired, organizationId,
     loadQuery(
       {
         locationId,
-        locationExists: !!locationId,
         from: from.toISOString(),
         to: to.toISOString(),
       },
@@ -87,14 +73,7 @@ const LocationBookingInsightRootWithRelay = ({ onReloadRequired, organizationId,
   if (!queryReference) {
     return (
       <Card sx={{ maxWidth: 500, height: '100%' }}>
-        <CardHeader
-          title={
-            <>
-              <SectionIconTypography label="Booking Insights" invertDefaultColor />
-              {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={locationName} analayticsLink />}
-            </>
-          }
-        />
+        <CardHeader title={<SectionIconTypography label="Booking Insights" invertDefaultColor />} />
         <CardContent>
           <Skeleton variant="rounded" width={470} height={350} />
         </CardContent>
@@ -107,8 +86,6 @@ const LocationBookingInsightRootWithRelay = ({ onReloadRequired, organizationId,
       <MemoLocationBookingInsightRoot
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
-        locationId={locationId}
         hideLocationDetails={hideLocationDetails}
       />
     </ErrorBoundary>

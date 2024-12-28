@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3ecd1d9e69d7d87520a2df400753bd3b>>
+ * @generated SignedSource<<6938fde8e141f62b831706a84fe3abeb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,22 +9,17 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type UpdateTeamInput = {
-  about?: string | null | undefined;
+export type UpdateTeamMembersInput = {
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
   id: string;
-  name: string;
-  organizationId?: string | null | undefined;
   organizationMemberIds: ReadonlyArray<string>;
-  primaryLocationId?: string | null | undefined;
-  timezone?: string | null | undefined;
 };
-export type teamMembersTab_updateTeamMutation$variables = {
-  input: UpdateTeamInput;
+export type teamMembersTab_updateTeamMembersMutation$variables = {
+  input: UpdateTeamMembersInput;
 };
-export type teamMembersTab_updateTeamMutation$data = {
-  readonly updateTeam: {
+export type teamMembersTab_updateTeamMembersMutation$data = {
+  readonly updateTeamMembers: {
     readonly team: {
       readonly about: string | null | undefined;
       readonly id: string;
@@ -43,8 +38,8 @@ export type teamMembersTab_updateTeamMutation$data = {
     };
   } | null | undefined;
 };
-export type teamMembersTab_updateTeamMutation$rawResponse = {
-  readonly updateTeam: {
+export type teamMembersTab_updateTeamMembersMutation$rawResponse = {
+  readonly updateTeamMembers: {
     readonly team: {
       readonly about: string | null | undefined;
       readonly id: string;
@@ -64,10 +59,10 @@ export type teamMembersTab_updateTeamMutation$rawResponse = {
     };
   } | null | undefined;
 };
-export type teamMembersTab_updateTeamMutation = {
-  rawResponse: teamMembersTab_updateTeamMutation$rawResponse;
-  response: teamMembersTab_updateTeamMutation$data;
-  variables: teamMembersTab_updateTeamMutation$variables;
+export type teamMembersTab_updateTeamMembersMutation = {
+  rawResponse: teamMembersTab_updateTeamMembersMutation$rawResponse;
+  response: teamMembersTab_updateTeamMembersMutation$data;
+  variables: teamMembersTab_updateTeamMembersMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -152,14 +147,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "teamMembersTab_updateTeamMutation",
+    "name": "teamMembersTab_updateTeamMembersMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "TeamPayload",
         "kind": "LinkedField",
-        "name": "updateTeam",
+        "name": "updateTeamMembers",
         "plural": false,
         "selections": [
           {
@@ -201,14 +196,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "teamMembersTab_updateTeamMutation",
+    "name": "teamMembersTab_updateTeamMembersMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "TeamPayload",
         "kind": "LinkedField",
-        "name": "updateTeam",
+        "name": "updateTeamMembers",
         "plural": false,
         "selections": [
           {
@@ -246,16 +241,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6a3ff83e12d0e5a1a2ce1230b71b1ad1",
+    "cacheID": "9057733ea805786fb68dc8bdcd6ece7d",
     "id": null,
     "metadata": {},
-    "name": "teamMembersTab_updateTeamMutation",
+    "name": "teamMembersTab_updateTeamMembersMutation",
     "operationKind": "mutation",
-    "text": "mutation teamMembersTab_updateTeamMutation(\n  $input: UpdateTeamInput!\n) {\n  updateTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      organization {\n        name\n      }\n      members {\n        customer {\n          uniqueId\n        }\n        organizationMember {\n          uniqueId\n        }\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation teamMembersTab_updateTeamMembersMutation(\n  $input: UpdateTeamMembersInput!\n) {\n  updateTeamMembers(input: $input) {\n    team {\n      id\n      name\n      about\n      organization {\n        name\n      }\n      members {\n        customer {\n          uniqueId\n        }\n        organizationMember {\n          uniqueId\n        }\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0694f97196c8a6ea712dce280a4f1844";
+(node as any).hash = "3d875c05c633c0b9c56dd7c58b45ef9d";
 
 export default node;

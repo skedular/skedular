@@ -140,10 +140,9 @@ public class OrganizationMemberService(
             return mapper.MapTo(organizationMember, mapper.MapTo(organization));
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+            cancellationToken);
 
         organizationMember.MembershipType = membershipType;
         repositoryFactory.OrganizationMemberRepository.Update(organizationMember);
@@ -195,10 +194,9 @@ public class OrganizationMemberService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+            cancellationToken);
 
         foreach (var organizationMember in organizationMembers)
         {
@@ -254,10 +252,9 @@ public class OrganizationMemberService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+            cancellationToken);
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(organizationMembers);
 
@@ -292,10 +289,9 @@ public class OrganizationMemberService(
             throw new OrganizationNotFound();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+            cancellationToken);
 
         var updatedItems = new List<Shared.Database.Entities.OrganizationMember>();
         foreach (var organizationMember in organization.OrganizationMembers
@@ -356,10 +352,9 @@ public class OrganizationMemberService(
             return mapper.MapTo(organization);
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+            cancellationToken);
 
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
             member.Customer.Id,
@@ -379,7 +374,7 @@ public class OrganizationMemberService(
             repositoryFactory.OrganizationMemberRepository.Update(
                 mapper.MergeToEntity(member, organizationMember, organization, customer));
         }
-        
+
         await organizationOutboxPublisher.PublishOrganizationAsync(
             [mapper.MapTo(organization)],
             repositoryFactory.OrganizationRepository.UnitOfWork,
@@ -404,10 +399,9 @@ public class OrganizationMemberService(
             throw new OrganizationNotFound();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationMemberRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+            cancellationToken);
 
         var matchingOrganizationMember =
             organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customer.Id);

@@ -87,9 +87,9 @@ public class OrganizationInternalSubscriber(
             return;
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
+            cancellationToken);
 
         var expiredOfferingRequireAutoRenew = expiredOfferingsRequireAutoRenew.First();
         var offering = expiredOfferingRequireAutoRenew.Code.GetOffering();

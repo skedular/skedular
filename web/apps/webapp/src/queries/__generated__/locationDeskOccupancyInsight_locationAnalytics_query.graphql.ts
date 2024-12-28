@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<41aaef7a44fe70110139b1b116f743d1>>
+ * @generated SignedSource<<8bcc46e07e85fd8a733bdb1ac1848b43>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationDeskOccupancyInsight_locationAnalytics_query$data = {
-  readonly locationAnalytics?: {
+  readonly locationAnalytics: {
     readonly desksOccupancyPercentage: ReadonlyArray<{
       readonly date: any;
       readonly percentage: number;
@@ -29,10 +29,6 @@ const node: ReaderFragment = {
     {
       "kind": "RootArgument",
       "name": "from"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "locationExists"
     },
     {
       "kind": "RootArgument",
@@ -54,69 +50,62 @@ const node: ReaderFragment = {
   "name": "locationDeskOccupancyInsight_locationAnalytics_query",
   "selections": [
     {
-      "condition": "locationExists",
-      "kind": "Condition",
-      "passingValue": true,
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "from",
+          "variableName": "from"
+        },
+        {
+          "kind": "Variable",
+          "name": "locationId",
+          "variableName": "locationId"
+        },
+        {
+          "kind": "Variable",
+          "name": "until",
+          "variableName": "to"
+        }
+      ],
+      "concreteType": "LocationAnalytics",
+      "kind": "LinkedField",
+      "name": "locationAnalytics",
+      "plural": false,
       "selections": [
         {
           "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "from",
-              "variableName": "from"
-            },
-            {
-              "kind": "Variable",
-              "name": "locationId",
-              "variableName": "locationId"
-            },
-            {
-              "kind": "Variable",
-              "name": "until",
-              "variableName": "to"
-            }
-          ],
-          "concreteType": "LocationAnalytics",
+          "args": null,
+          "concreteType": "LocationDesksOccupancyPercentage",
           "kind": "LinkedField",
-          "name": "locationAnalytics",
-          "plural": false,
+          "name": "desksOccupancyPercentage",
+          "plural": true,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "LocationDesksOccupancyPercentage",
-              "kind": "LinkedField",
-              "name": "desksOccupancyPercentage",
-              "plural": true,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "date",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "percentage",
-                  "storageKey": null
-                }
-              ],
+              "kind": "ScalarField",
+              "name": "date",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "percentage",
               "storageKey": null
             }
           ],
           "storageKey": null
         }
-      ]
+      ],
+      "storageKey": null
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "2d5210f0bc90e9268b2dcd5ac5feb420";
+(node as any).hash = "ec5590930e3eb17f96cd8094253dab87";
 
 export default node;

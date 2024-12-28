@@ -25,7 +25,31 @@ public class Mutation(IMapper mapper)
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        var team = await teamService.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        var team = await teamService.UpdateAsync(mapper.MapTo(input), false, cancellationToken);
+        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
+    }
+
+    [UseResolverScope]
+    public async Task<TeamPayload?> UpdateTeamAndTeamMembersAsync(
+        UpdateTeamAndTeamMembersInput input,
+        [Service] ITeamService teamService,
+        CancellationToken cancellationToken)
+    {
+        var team = await teamService.UpdateAsync(mapper.MapTo(input), true, cancellationToken);
+        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
+    }
+
+    [UseResolverScope]
+    public async Task<TeamPayload?> UpdateTeamMembersAsync(
+        UpdateTeamMembersInput input,
+        [Service] ITeamMemberService teamMemberService,
+        CancellationToken cancellationToken)
+    {
+        var team = await teamMemberService.UpdateAsync(
+            input.Id,
+            mapper.MapToTeamMembers(input),
+            false,
+            cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
@@ -37,6 +61,19 @@ public class Mutation(IMapper mapper)
     {
         var team = await teamService.DeleteAsync(input.Id, cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
+    }
+
+    [UseResolverScope]
+    public async Task<TeamMemberPayload?> DeleteTeamMemberAsync(
+        DeleteTeamMemberInput input,
+        [Service] ITeamMemberService teamMemberService,
+        CancellationToken cancellationToken)
+    {
+        var teamMember = await teamMemberService.DeleteAsync(input.Id, cancellationToken);
+        return new TeamMemberPayload
+        {
+            ClientMutationId = input.ClientMutationId, TeamMember = mapper.MapTo(teamMember)
+        };
     }
 
     [UseResolverScope]

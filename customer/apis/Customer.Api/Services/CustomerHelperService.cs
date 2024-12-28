@@ -60,9 +60,9 @@ public class CustomerHelperService(
         Shared.Database.Entities.Customer existingCustomer,
         CancellationToken cancellationToken)
     {
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.CustomerRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.CustomerRepository.UnitOfWork,
+            cancellationToken);
         var customer = mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer));
         await customerOutboxPublisher.PublishCustomerAsync(
             [customer],

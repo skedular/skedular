@@ -15,7 +15,6 @@ service TeamService {
     rpc Add (AddInput) returns (Team);
     rpc Update (UpdateInput) returns (Team);
     rpc Remove (RemoveInput) returns (Team);
-    rpc UpdateMembers (UpdateMembersInput) returns (Team);
 }
 
 message VersionInput {
@@ -174,11 +173,6 @@ message Customer {
     string photoUrl72 = 10;
     string photoUrl192 = 11;
     string photoUrl512 = 12;
-}
-
-message UpdateMembersInput {
-    string id = 1;
-    repeated Member members = 2;
 }
 
 message Admin_UpdateMembersInput {

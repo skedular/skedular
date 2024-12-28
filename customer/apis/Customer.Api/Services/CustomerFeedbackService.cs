@@ -32,9 +32,9 @@ public class CustomerFeedbackService(
             feedback.Id = randomHelper.Generate();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.CustomerRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.CustomerRepository.UnitOfWork,
+            cancellationToken);
 
         var customerFeedback =
             mapper.MapTo(

@@ -93,13 +93,14 @@ public class PaymentService(
                 Criteria = query => query.SetupIntentId == setupIntentId && query.ClientSecret == clientSecret
             }.AddInclude(query => query.Organization)).FirstAsync(cancellationToken);
 
-        var redirectUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, "organizations",
+        var redirectUrl = Url.Combine(
+            applicationConfiguration.WebAppBaseDomain,
+            "organizations",
             organizationStripePaymentMethod.Organization.Id);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork,
+            cancellationToken);
 
         redirectUrl = redirectUrl.SetQueryParam("tab", "billing");
 
@@ -180,10 +181,9 @@ public class PaymentService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork,
+            cancellationToken);
 
         _ = repositoryFactory.OrganizationStripePaymentMethodRepository.Remove(organizationStripePaymentMethod);
         _ = await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork

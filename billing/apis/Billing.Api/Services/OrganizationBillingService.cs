@@ -78,10 +78,9 @@ public class OrganizationBillingService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationRepository.UnitOfWork,
+            cancellationToken);
 
         existingOrganization.BillingContactEmail = email;
         existingOrganization.BillingContactAddressLine1 = addressLine1;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c785c3d274dc23159dc74d70ab75ad7c>>
+ * @generated SignedSource<<f611154e48b33dae9d43e8a378c6ef46>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type teamMembersTab_query$data = {
       readonly customer: {
         readonly uniqueId: string;
       };
+      readonly id: string;
       readonly organizationMember: {
         readonly uniqueId: string;
       } | null | undefined;
@@ -42,10 +43,17 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v1 = [
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -58,11 +66,29 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
+      "name": "bookingPeopleNameSearchText"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationMemberSelectorOrganizationMembersSortingValues"
+    },
+    {
+      "kind": "RootArgument",
       "name": "teamId"
     }
   ],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "refetch": {
+      "connection": null,
+      "fragmentPathInResult": [],
+      "operation": require('./teamMembersTab_refetchableFragment.graphql')
+    }
+  },
   "name": "teamMembersTab_query",
   "selections": [
     {
@@ -79,14 +105,8 @@ return {
       "name": "team",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
         (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -109,7 +129,7 @@ return {
           "name": "organization",
           "plural": false,
           "selections": [
-            (v0/*: any*/)
+            (v1/*: any*/)
           ],
           "storageKey": null
         },
@@ -128,6 +148,7 @@ return {
           "name": "members",
           "plural": true,
           "selections": [
+            (v0/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -135,7 +156,7 @@ return {
               "kind": "LinkedField",
               "name": "customer",
               "plural": false,
-              "selections": (v1/*: any*/),
+              "selections": (v2/*: any*/),
               "storageKey": null
             },
             {
@@ -145,7 +166,7 @@ return {
               "kind": "LinkedField",
               "name": "organizationMember",
               "plural": false,
-              "selections": (v1/*: any*/),
+              "selections": (v2/*: any*/),
               "storageKey": null
             }
           ],
@@ -170,6 +191,6 @@ return {
 };
 })();
 
-(node as any).hash = "475f7b08caef5983648a221913bb7a0a";
+(node as any).hash = "5cc74900fa9bfa3d9c61c278d6b7bb9c";
 
 export default node;

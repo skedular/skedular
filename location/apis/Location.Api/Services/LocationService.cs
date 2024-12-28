@@ -115,9 +115,9 @@ public class LocationService(
             location.Id = randomHelper.Generate();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.LocationRepository.UnitOfWork,
+            cancellationToken);
 
         var locationEntity = mapper.MapTo(location, organization);
         var physicalAddress = location.PhysicalAddress is null
@@ -209,9 +209,9 @@ public class LocationService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.LocationRepository.UnitOfWork,
+            cancellationToken);
 
         var deletedLocation = mapper.MapTo(repositoryFactory.LocationRepository.Remove(existingLocation));
 
@@ -330,9 +330,9 @@ public class LocationService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.LocationRepository.UnitOfWork,
+            cancellationToken);
 
         Address? physicalAddress = null;
 

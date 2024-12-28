@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<873dbe2558f159c431e148e026459be7>>
+ * @generated SignedSource<<da0997d603e8f2d9ea131e367e94fdc5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,6 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationDeskOccupancyInsight_locationAnalytics_refetchableFragment$variables = {
   from: any;
-  locationExists: boolean;
   locationId: string;
   to: any;
 };
@@ -30,11 +29,6 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "from"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "locationExists"
   },
   {
     "defaultValue": null,
@@ -70,77 +64,70 @@ return {
     "name": "locationDeskOccupancyInsight_locationAnalytics_refetchableFragment",
     "selections": [
       {
-        "condition": "locationExists",
-        "kind": "Condition",
-        "passingValue": true,
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "from",
+            "variableName": "from"
+          },
+          {
+            "kind": "Variable",
+            "name": "locationId",
+            "variableName": "locationId"
+          },
+          {
+            "kind": "Variable",
+            "name": "until",
+            "variableName": "to"
+          }
+        ],
+        "concreteType": "LocationAnalytics",
+        "kind": "LinkedField",
+        "name": "locationAnalytics",
+        "plural": false,
         "selections": [
           {
             "alias": null,
-            "args": [
-              {
-                "kind": "Variable",
-                "name": "from",
-                "variableName": "from"
-              },
-              {
-                "kind": "Variable",
-                "name": "locationId",
-                "variableName": "locationId"
-              },
-              {
-                "kind": "Variable",
-                "name": "until",
-                "variableName": "to"
-              }
-            ],
-            "concreteType": "LocationAnalytics",
+            "args": null,
+            "concreteType": "LocationDesksOccupancyPercentage",
             "kind": "LinkedField",
-            "name": "locationAnalytics",
-            "plural": false,
+            "name": "desksOccupancyPercentage",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "LocationDesksOccupancyPercentage",
-                "kind": "LinkedField",
-                "name": "desksOccupancyPercentage",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "date",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "percentage",
-                    "storageKey": null
-                  }
-                ],
+                "kind": "ScalarField",
+                "name": "date",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "percentage",
                 "storageKey": null
               }
             ],
             "storageKey": null
           }
-        ]
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "5b65fec03993a49d43cd9894645c3108",
+    "cacheID": "a8f2a01a1bfd94971fb55130bdfd9f2b",
     "id": null,
     "metadata": {},
     "name": "locationDeskOccupancyInsight_locationAnalytics_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationDeskOccupancyInsight_locationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $locationExists: Boolean!\n  $locationId: String!\n  $to: DateTime!\n) {\n  ...locationDeskOccupancyInsight_locationAnalytics_query\n}\n\nfragment locationDeskOccupancyInsight_locationAnalytics_query on Query {\n  locationAnalytics(locationId: $locationId, from: $from, until: $to) @include(if: $locationExists) {\n    desksOccupancyPercentage {\n      date\n      percentage\n    }\n  }\n}\n"
+    "text": "query locationDeskOccupancyInsight_locationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $locationId: String!\n  $to: DateTime!\n) {\n  ...locationDeskOccupancyInsight_locationAnalytics_query\n}\n\nfragment locationDeskOccupancyInsight_locationAnalytics_query on Query {\n  locationAnalytics(locationId: $locationId, from: $from, until: $to) {\n    desksOccupancyPercentage {\n      date\n      percentage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2d5210f0bc90e9268b2dcd5ac5feb420";
+(node as any).hash = "ec5590930e3eb17f96cd8094253dab87";
 
 export default node;

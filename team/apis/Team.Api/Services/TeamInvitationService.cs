@@ -85,9 +85,9 @@ public class TeamInvitationService(
                     query.Status == InvitationStatus.Pending
             }).ToListAsync(cancellationToken);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.JoinInvitationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            cancellationToken);
 
         foreach (var email in emails)
         {
@@ -162,9 +162,9 @@ public class TeamInvitationService(
             throw new TeamNotFound();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.JoinInvitationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            cancellationToken);
 
         if (team.TeamMembers.All(item => item.Customer.Id != customer.Id))
         {
@@ -209,9 +209,9 @@ public class TeamInvitationService(
 
         EnsureCustomerAuthorizedToChangeJoinInvitationStatus(joinInvitation, customer);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.JoinInvitationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            cancellationToken);
 
         joinInvitation.Status = InvitationStatus.Rejected;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
@@ -249,9 +249,9 @@ public class TeamInvitationService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.JoinInvitationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            cancellationToken);
 
         joinInvitation.Status = InvitationStatus.Cancelled;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);

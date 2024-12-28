@@ -133,10 +133,9 @@ public class AzureTenantService(
         }
         else
         {
-            await using var transaction =
-                await transactionBuilder.BeginTransactionAsync(
-                    repositoryFactory.AzureTenantRepository.UnitOfWork,
-                    cancellationToken);
+            await using var transaction = await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.AzureTenantRepository.UnitOfWork,
+                cancellationToken);
 
             repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(installStateUserIdLookup);
 

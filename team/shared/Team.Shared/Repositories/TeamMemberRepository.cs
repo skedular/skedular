@@ -17,12 +17,17 @@ public interface ITeamMemberRepository : IRepository<TeamMember>
     TeamMember Add(TeamMember teamMember);
     void AddRange(ICollection<TeamMember> teamMembers);
     TeamMember Update(TeamMember teamMember);
+    TeamMember Remove(TeamMember teamMember);
     void RemoveRange(ICollection<TeamMember> teamMembers);
 
     Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)> GetPaginatedTeamMembersAsync(
         PaginationInputParam paginationInputParam,
         TeamMemberSearchCriteria searchCriteria,
         ICollection<TeamMemberOrder> orderByFields,
+        CancellationToken cancellationToken);
+
+    Task<ICollection<TeamMember>> GetByTeamIdAsync(
+        string teamId,
         CancellationToken cancellationToken);
 }
 
@@ -117,6 +122,9 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
     public async Task<TeamMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.TeamMember
             .Include(query => query.Team)
+            .Include(query => query.Customer)
+            .Include(query => query.OrganizationMember)
+            .ThenInclude(query => query.Customer)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public TeamMember Add(TeamMember teamMember)
@@ -131,6 +139,13 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
         var now = TimeProvider.GetUtcNow();
         teamMembers.ForEach(teamMember => teamMember.CreatedAt = now);
         DbContext.TeamMember.AddRange(teamMembers);
+    }
+
+    public TeamMember Remove(TeamMember teamMember)
+    {
+        var now = TimeProvider.GetUtcNow();
+        teamMember.DeletedAt = now;
+        return DbContext.TeamMember.Update(teamMember).Entity;
     }
 
     public void RemoveRange(ICollection<TeamMember> teamMembers)
@@ -159,4 +174,12 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
             .AddDependentObjects()
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
+
+    public async Task<ICollection<TeamMember>> GetByTeamIdAsync(
+        string teamId,
+        CancellationToken cancellationToken) =>
+        await DbContext.TeamMember
+            .Where(query => query.Team.Id == teamId)
+            .Include(query => query.Customer)
+            .ToListAsync(cancellationToken);
 }

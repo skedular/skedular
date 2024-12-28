@@ -18,7 +18,10 @@ type InviteCustomersToJoinTeamPayload {
 type Mutation {
   addTeam(input: AddTeamInput!): TeamPayload @cost(weight: "10")
   updateTeam(input: UpdateTeamInput!): TeamPayload @cost(weight: "10")
+  updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload @cost(weight: "10")
+  updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload @cost(weight: "10")
   deleteTeam(input: DeleteTeamInput!): TeamPayload @cost(weight: "10")
+  deleteTeamMember(input: DeleteTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   changeTeamMemberOwnershipType(input: ChangeTeamMemberOwnershipTypeInput!): TeamMemberDetailsPayload @cost(weight: "10")
   inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload @cost(weight: "10")
   acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload @cost(weight: "10")
@@ -115,6 +118,11 @@ type TeamMemberEdge {
   cursor: String!
 }
 
+type TeamMemberPayload {
+  clientMutationId: String
+  teamMember: TeamMemberDetails!
+}
+
 type TeamOrganizationDetails {
   uniqueId: ID!
   name: String!
@@ -148,10 +156,10 @@ input AddTeamInput {
   id: String
   name: String!
   about: String
-  customerIds: [String!]!
   organizationId: String
   primaryLocationId: String
   timezone: String
+  customerIds: [String!]!
   organizationMemberIds: [String!]!
 }
 
@@ -167,6 +175,11 @@ input ChangeTeamMemberOwnershipTypeInput {
 }
 
 input DeleteTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteTeamMemberInput {
   clientMutationId: String
   id: String!
 }
@@ -203,15 +216,32 @@ input TeamWhereInput {
   primaryLocationIds: [String!]
 }
 
+input UpdateTeamAndTeamMembersInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  organizationId: String
+  primaryLocationId: String
+  timezone: String
+  customerIds: [String!]!
+  organizationMemberIds: [String!]!
+}
+
 input UpdateTeamInput {
   clientMutationId: String
   id: String!
   name: String!
   about: String
-  customerIds: [String!]!
   organizationId: String
   primaryLocationId: String
   timezone: String
+}
+
+input UpdateTeamMembersInput {
+  clientMutationId: String
+  id: String!
+  customerIds: [String!]!
   organizationMemberIds: [String!]!
 }
 

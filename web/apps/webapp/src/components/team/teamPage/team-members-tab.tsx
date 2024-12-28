@@ -1,6 +1,7 @@
 import { OrganizationMemberSelector } from '@/components/organization';
 import type { teamMembersTab_inviteCustomersToJoinTeamMutation } from '@/queries/__generated__/teamMembersTab_inviteCustomersToJoinTeamMutation.graphql';
 import type { teamMembersTab_query$key } from '@/queries/__generated__/teamMembersTab_query.graphql';
+import type { teamMembersTab_refetchableFragment } from '@/queries/__generated__/teamMembersTab_refetchableFragment.graphql';
 import type { teamMembersTab_rootQuery } from '@/queries/__generated__/teamMembersTab_rootQuery.graphql';
 import type { teamMembersTab_teamMembers_query$key } from '@/queries/__generated__/teamMembersTab_teamMembers_query.graphql';
 import type {
@@ -8,7 +9,7 @@ import type {
   TeamMemberOrderInput,
   teamMembersTab_teamMembers_refetchableFragment,
 } from '@/queries/__generated__/teamMembersTab_teamMembers_refetchableFragment.graphql';
-import type { teamMembersTab_updateTeamMutation } from '@/queries/__generated__/teamMembersTab_updateTeamMutation.graphql';
+import type { teamMembersTab_updateTeamMembersMutation } from '@/queries/__generated__/teamMembersTab_updateTeamMembersMutation.graphql';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -38,7 +39,7 @@ import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { PreloadedQuery, graphql, useFragment, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { PreloadedQuery, graphql, useMutation, usePaginationFragment, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 import TeamMemberCard from './team-member-card';
@@ -47,7 +48,6 @@ type Props = {
   queryReference: PreloadedQuery<teamMembersTab_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId?: string;
-  teamId: string;
 };
 
 const RootQuery = graphql`
@@ -55,7 +55,6 @@ const RootQuery = graphql`
     $organizationId: String!
     $organizationExists: Boolean!
     $teamId: String!
-    $teamExists: Boolean!
     $bookingPeopleNameSearchText: String
     $teamMembersSortingValues: [TeamMemberOrderInput!]
     $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
@@ -91,11 +90,11 @@ const peopleToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
+const TeamMembersTab = ({ queryReference, organizationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<teamMembersTab_rootQuery>(RootQuery, queryReference);
-  const rootData = useFragment<teamMembersTab_query$key>(
+  const [rootData, refetch] = useRefetchableFragment<teamMembersTab_refetchableFragment, teamMembersTab_query$key>(
     graphql`
-      fragment teamMembersTab_query on Query {
+      fragment teamMembersTab_query on Query @refetchable(queryName: "teamMembersTab_refetchableFragment") {
         team(id: $teamId) {
           id
           name
@@ -106,6 +105,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
           }
           canModify
           members {
+            id
             customer {
               uniqueId
             }
@@ -124,7 +124,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     data: rootDataPaginatedTeamMembers,
     loadNext,
     isLoadingNext,
-    refetch,
+    refetch: refetchTeamMembers,
   } = usePaginationFragment<teamMembersTab_teamMembers_refetchableFragment, teamMembersTab_teamMembers_query$key>(
     graphql`
       fragment teamMembersTab_teamMembers_query on Query
@@ -135,7 +135,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
           after: $cursor
           where: { teamId: $teamId, nameContains: $peopleNameSearchText }
           orderBy: $teamMembersSortingValues
-        ) @connection(key: "teamMembersTab_teamMembers") @include(if: $teamExists) {
+        ) @connection(key: "teamMembersTab_teamMembers") {
           __id
           totalCount
           edges {
@@ -150,9 +150,9 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     rootDataRelay,
   );
 
-  const [commitUpdateTeam] = useMutation<teamMembersTab_updateTeamMutation>(graphql`
-    mutation teamMembersTab_updateTeamMutation($input: UpdateTeamInput!) @raw_response_type {
-      updateTeam(input: $input) {
+  const [commitUpdateTeamMembers] = useMutation<teamMembersTab_updateTeamMembersMutation>(graphql`
+    mutation teamMembersTab_updateTeamMembersMutation($input: UpdateTeamMembersInput!) @raw_response_type {
+      updateTeamMembers(input: $input) {
         team {
           id
           name
@@ -197,6 +197,14 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
   const [invitePeopleDialogOpen, setInvitePeopleDialogOpen] = useState(false);
   const validateMembersToInvite = makeValidate(peopleToInviteSchema);
   const requiredMembersToInviteFields = makeRequired(peopleToInviteSchema);
+  const connectionIds = useMemo(
+    () => (rootDataPaginatedTeamMembers.teamMembers ? [rootDataPaginatedTeamMembers.teamMembers.__id] : []),
+    [rootDataPaginatedTeamMembers.teamMembers],
+  );
+  const teamMemberEdges = useMemo(
+    () => (rootDataPaginatedTeamMembers.teamMembers ? rootDataPaginatedTeamMembers.teamMembers.edges : []),
+    [rootDataPaginatedTeamMembers.teamMembers],
+  );
 
   const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     if (newPage > page) {
@@ -211,18 +219,31 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
 
     setPageSize(parseInt(event.target.value, 10));
 
-    handleRefetch(pageSize, sortingOrder, peopleNameSearchText);
+    handleRefetchTeamMembers(pageSize, sortingOrder, peopleNameSearchText);
   };
 
-  const handleRefetch = useCallback(
+  const handleRefetch = useCallback(() => {
+    startTransition(() => {
+      refetch(
+        {},
+        {
+          fetchPolicy: 'store-and-network',
+          onComplete: () => {
+            setPage(0);
+          },
+        },
+      );
+    });
+  }, [refetch]);
+
+  const handleRefetchTeamMembers = useCallback(
     (pageSize: number, order: TeamMemberOrderInput, peopleNameSearchText: string) => {
       startTransition(() => {
-        refetch(
+        refetchTeamMembers(
           {
             count: pageSize,
             teamMembersSortingValues: [order],
             peopleNameSearchText,
-            teamExists: !!teamId,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -233,7 +254,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
         );
       });
     },
-    [refetch, teamId],
+    [refetchTeamMembers],
   );
 
   const loadNextPage = useCallback(() => {
@@ -243,11 +264,6 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
 
     loadNext(pageSize);
   }, [loadNext, isLoadingNext, pageSize]);
-
-  useMemo(
-    () => (rootDataPaginatedTeamMembers.teamMembers ? [rootDataPaginatedTeamMembers.teamMembers.__id] : []),
-    [rootDataPaginatedTeamMembers.teamMembers],
-  );
 
   const handleEditOrganizationMembersClick = () => {
     setEditingOrganizationMembers(true);
@@ -260,16 +276,12 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
 
     const toastId = themedToast(<NotificationContent content={`Updating team '${rootData.team.name}' members...`} />, infoNotificationOptions);
 
-    commitUpdateTeam({
+    commitUpdateTeamMembers({
       variables: {
         input: {
           clientMutationId: nanoid(),
           id: rootData.team.id,
-          name: rootData.team.name,
-          about: rootData.team.about,
-          timezone: rootData.team.timezone,
           customerIds: [],
-          organizationId,
           organizationMemberIds: [...new Set(organizationMemberIds)],
         },
       },
@@ -289,7 +301,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
         });
 
         setEditingOrganizationMembers(false);
-        handleRefetch(pageSize, sortingOrder, peopleNameSearchText);
+        handleRefetchTeamMembers(pageSize, sortingOrder, peopleNameSearchText);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -298,7 +310,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
         });
       },
       optimisticResponse: {
-        updateTeam: {
+        updateTeamMembers: {
           team: {
             id: rootData.team.id,
             name: rootData.team.name,
@@ -376,7 +388,6 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
     return <></>;
   }
 
-  const teamMemberEdges = rootDataPaginatedTeamMembers.teamMembers.edges;
   const count = rootDataPaginatedTeamMembers.teamMembers.totalCount ? rootDataPaginatedTeamMembers.teamMembers.totalCount : 0;
   const slicedrEdges = teamMemberEdges.slice(
     page * pageSize,
@@ -389,7 +400,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
       field: value as unknown as TeamMemberOrderField,
     });
 
-    handleRefetch(
+    handleRefetchTeamMembers(
       pageSize,
       {
         direction,
@@ -402,7 +413,7 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
   const handleSearchTextChange = (str: string) => {
     setPeopleNameSearchText(str);
 
-    handleRefetch(pageSize, sortingOrder, str);
+    handleRefetchTeamMembers(pageSize, sortingOrder, str);
   };
   return (
     <>
@@ -450,8 +461,8 @@ const TeamMembersTab = ({ queryReference, organizationId, teamId }: Props) => {
                 <TeamMemberCard
                   teamMemberDetailsRelay={edge.node}
                   rootDataRelay={rootData}
-                  organizationId={organizationId}
-                  onRefetchNeeded={() => handleRefetch(pageSize, sortingOrder, peopleNameSearchText)}
+                  connectionIds={connectionIds}
+                  onRefetchNeeded={handleRefetch}
                 />
               </Grid>
             ))}
@@ -535,7 +546,6 @@ const TeamMembersTabWithRelay = ({ onReloadRequired, organizationId, teamId }: R
     loadQuery(
       {
         teamId,
-        teamExists: !!teamId,
         organizationId: organizationId ?? '',
         organizationExists: !!organizationId,
         teamMembersSortingValues: [
@@ -571,7 +581,7 @@ const TeamMembersTabWithRelay = ({ onReloadRequired, organizationId, teamId }: R
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeamMembersTab queryReference={queryReference} onReloadRequired={handleReloadRequired} teamId={teamId} organizationId={organizationId} />
+      <MemoTeamMembersTab queryReference={queryReference} onReloadRequired={handleReloadRequired}  organizationId={organizationId} />
     </ErrorBoundary>
   );
 };

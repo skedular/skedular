@@ -117,9 +117,9 @@ public class LocationMemberService(
             return mapper.MapTo(locationMember, mapper.MapTo(location));
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationMemberRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.LocationMemberRepository.UnitOfWork,
+            cancellationToken);
 
         locationMember.MembershipType = membershipType;
         repositoryFactory.LocationMemberRepository.Update(locationMember);
@@ -157,9 +157,9 @@ public class LocationMemberService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.LocationMemberRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.LocationMemberRepository.UnitOfWork,
+            cancellationToken);
 
         var itemsToRemove = location.LocationMembers
             .Where(teamMember => members.All(item => item.Id != teamMember.Id))
@@ -172,7 +172,7 @@ public class LocationMemberService(
         {
             var customerToAdd = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
                 teamMember.Customer.Id,
-                    cancellationToken);
+                cancellationToken);
             var updatedLocationMember = mapper.MergeToEntity(
                 members.Single(item => item.Id == teamMember.Id),
                 teamMember,

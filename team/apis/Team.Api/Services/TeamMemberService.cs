@@ -3,18 +3,19 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Random;
 using Team.Api.Mappers;
 using Team.Api.Services.Authorization;
 using Team.Shared.Models;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
-using OrganizationMember = Team.Shared.Database.Entities.OrganizationMember;
+using Organization = Team.Shared.Database.Entities.Organization;
 
 namespace Team.Api.Services;
 
 public interface ITeamMemberService
 {
-    Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)> GetPaginatedTeamMembersAsync(
+    Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)> GetPaginatedMembersAsync(
         PaginationInputParam paginationInputParam,
         TeamMemberSearchCriteria searchCriteria,
         ICollection<TeamMemberOrder> orderByFields,
@@ -25,11 +26,20 @@ public interface ITeamMemberService
         string membershipType,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Team> UpdateMembersAsync(
+    Task<Shared.Models.Team> UpdateAsync(
         string teamId,
         ICollection<TeamMember> members,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
+
+    public Task<List<Shared.Database.Entities.TeamMember>> BuildMembersAsync(
+        ICollection<TeamMember> members,
+        Shared.Database.Entities.Team existingTeam,
+        Customer? customer,
+        Organization? organization,
+        CancellationToken cancellationToken);
+
+    Task<TeamMember> DeleteAsync(string id, CancellationToken cancellationToken);
 }
 
 public class TeamMemberService(
@@ -38,11 +48,14 @@ public class TeamMemberService(
     ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     ITeamAuthorizationService teamAuthorizationService,
+    IOrganizationOfferingService organizationOfferingService,
     ITeamOutboxPublisher teamOutboxPublisher,
-    IMapper mapper) : ITeamMemberService
+    IMapper mapper,
+    IRandomHelper randomHelper,
+    TimeProvider timeProvider) : ITeamMemberService
 {
     public async Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)>
-        GetPaginatedTeamMembersAsync(
+        GetPaginatedMembersAsync(
             PaginationInputParam paginationInputParam,
             TeamMemberSearchCriteria searchCriteria,
             ICollection<TeamMemberOrder> orderByFields,
@@ -115,9 +128,9 @@ public class TeamMemberService(
             return mapper.MapTo(teamMember, mapper.MapTo(team));
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.TeamMemberRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.TeamMemberRepository.UnitOfWork,
+            cancellationToken);
 
         teamMember.MembershipType = membershipType;
         repositoryFactory.TeamMemberRepository.Update(teamMember);
@@ -132,7 +145,7 @@ public class TeamMemberService(
         return mapper.MapTo(teamMember, mapper.MapTo(team));
     }
 
-    public async Task<Shared.Models.Team> UpdateMembersAsync(
+    public async Task<Shared.Models.Team> UpdateAsync(
         string teamId,
         ICollection<TeamMember> members,
         bool ignoreAuthorizationCheck,
@@ -144,107 +157,186 @@ public class TeamMemberService(
             (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         }
 
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
-        if (team is null)
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
+        if (existingTeam is null)
         {
             throw new TeamNotFound();
         }
 
-        if (customer is not null && !teamAuthorizationService.CanModify(team, customer))
+        if (customer is not null && !teamAuthorizationService.CanModify(existingTeam, customer))
         {
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.TeamMemberRepository.UnitOfWork,
+        Organization? organization = null;
+        if (existingTeam.Organization is not null)
+        {
+            organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                existingTeam.Organization.Id,
                 cancellationToken);
+            ArgumentNullException.ThrowIfNull(organization);
+            if (!ignoreAuthorizationCheck &&
+                !organizationOfferingService.IsMoreInteractionAllowed(organization, customer!))
+            {
+                throw new NoMoreInteractionAllowed();
+            }
+        }
 
-        var itemsToRemove = team.TeamMembers
-            .Where(teamMember => members.All(item => item.Id != teamMember.Id))
+        var rebuiltTeamMembers = await BuildMembersAsync(
+            members,
+            existingTeam,
+            customer,
+            organization,
+            cancellationToken);
+        var teamMembers = await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(
+            existingTeam.Id,
+            cancellationToken);
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.TeamMemberRepository.UnitOfWork,
+            cancellationToken);
+
+        var itemsToRemove = teamMembers
+            .Where(teamMember => rebuiltTeamMembers.All(item => item.Customer.Id != teamMember.Customer.Id))
             .ToList();
-
-        var updatedItems = new List<Shared.Database.Entities.TeamMember>();
-        foreach (var teamMember in team.TeamMembers
-                     .Where(teamMember =>
-                         members.Any(item => item.Id == teamMember.Id)))
-        {
-            var customerToAdd =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id,
-                    cancellationToken);
-
-            OrganizationMember? organizationMember = null;
-            if (teamMember.OrganizationMember is not null)
+        var updatedItems = teamMembers
+            .Where(teamMember => rebuiltTeamMembers.Any(item => item.Customer.Id == teamMember.Customer.Id))
+            .Select(teamMember =>
             {
-                var organization =
-                    await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                        teamMember.OrganizationMember.Organization.Id,
-                        cancellationToken);
-
-                var organizationMemberCustomer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                    teamMember.OrganizationMember.Customer.Id,
-                    cancellationToken);
-
-                organizationMember =
-                    await repositoryFactory.OrganizationMemberRepository.UpsertNakedAsync(
-                        teamMember.OrganizationMember.Id,
-                        organization,
-                        organizationMemberCustomer,
-                        cancellationToken);
-            }
-
-            var updatedTeamMember = mapper.MergeToEntity(
-                members.Single(item => item.Id == teamMember.Id),
-                teamMember,
-                team,
-                customerToAdd,
-                organizationMember);
-            updatedTeamMember.DeletedAt = null;
-            updatedItems.Add(repositoryFactory.TeamMemberRepository.Update(updatedTeamMember));
-        }
-
-        var addedItems = new List<Shared.Database.Entities.TeamMember>();
-        foreach (var teamMember in members.Where(teamMember =>
-                     team.TeamMembers.All(item => item.Id != teamMember.Id)))
-        {
-            var customerToAdd =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id,
-                    cancellationToken);
-
-            OrganizationMember? organizationMember = null;
-            if (teamMember.OrganizationMember is not null)
-            {
-                var organization =
-                    await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                        teamMember.OrganizationMember.Organization.Id,
-                        cancellationToken);
-
-                var organizationMemberCustomer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                    teamMember.OrganizationMember.Customer.Id,
-                    cancellationToken);
-
-                organizationMember =
-                    await repositoryFactory.OrganizationMemberRepository.UpsertNakedAsync(
-                        teamMember.OrganizationMember.Id,
-                        organization,
-                        organizationMemberCustomer,
-                        cancellationToken);
-            }
-
-            addedItems.Add(repositoryFactory.TeamMemberRepository.Add(
-                mapper.MapToEntity(teamMember, team, customerToAdd, organizationMember)));
-        }
+                teamMember.DeletedAt = null;
+                return repositoryFactory.TeamMemberRepository.Update(teamMember);
+            }).ToList();
+        var addedItems = rebuiltTeamMembers
+            .Where(teamMember => teamMembers.All(item => item.Customer.Id != teamMember.Customer.Id))
+            .Select(teamMember => repositoryFactory.TeamMemberRepository.Add(teamMember)).ToList();
 
         repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
-        team.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         await teamOutboxPublisher.PublishTeamAsync(
-            [mapper.MapTo(team)],
+            [mapper.MapTo(existingTeam)],
             repositoryFactory.TeamRepository.UnitOfWork,
             cancellationToken);
 
         await repositoryFactory.TeamMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        return mapper.MapTo(team);
+        return mapper.MapTo(existingTeam);
+    }
+
+    public async Task<List<Shared.Database.Entities.TeamMember>> BuildMembersAsync(
+        ICollection<TeamMember> members,
+        Shared.Database.Entities.Team existingTeam,
+        Customer? customer,
+        Organization? organization,
+        CancellationToken cancellationToken)
+    {
+        var now = timeProvider.GetUtcNow();
+        var rebuiltTeamMembers = new List<Shared.Database.Entities.TeamMember>();
+        if (organization is null)
+        {
+            var customersToAdd = await repositoryFactory.CustomerRepository.GetByIdsAsync(
+                members
+                    // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+                    .Where(item => item.Customer is not null)
+                    .Select(item => item.Customer.Id)
+                    .ToList(),
+                cancellationToken);
+
+            rebuiltTeamMembers.AddRange(customersToAdd.Select(item => new Shared.Database.Entities.TeamMember
+            {
+                Id = randomHelper.Generate(),
+                CreatedAt = now,
+                MembershipType =
+                    customer is not null && item.Id == customer.Id
+                        ? TeamMembershipType.Owner
+                        : TeamMembershipType.Member,
+                Customer = item,
+                Team = existingTeam
+            }));
+        }
+        else
+        {
+            var organizationMemberIds = members
+                .Where(item => item.OrganizationMember is not null)
+                .Select(item => item.OrganizationMember!.Id)
+                .ToList();
+            var organizationMembersToAdd =
+                organization.OrganizationMembers
+                    .Where(item => organizationMemberIds.Contains(item.Id)).ToList();
+
+            rebuiltTeamMembers.AddRange(organizationMembersToAdd.Select(item => new Shared.Database.Entities.TeamMember
+            {
+                Id = randomHelper.Generate(),
+                CreatedAt = now,
+                MembershipType = customer is not null && item.Customer.Id == customer.Id
+                    ? TeamMembershipType.Owner
+                    : TeamMembershipType.Member,
+                Customer = item.Customer,
+                Team = existingTeam,
+                OrganizationMember = item
+            }));
+        }
+
+        return rebuiltTeamMembers;
+    }
+
+    public async Task<TeamMember> DeleteAsync(
+        string id,
+        CancellationToken cancellationToken)
+    {
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var existingTeamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken);
+        if (existingTeamMember is null)
+        {
+            throw new TeamMemberNotFound();
+        }
+
+        var existingTeam =
+            await repositoryFactory.TeamRepository.GetByIdAsync(existingTeamMember.Team.Id, cancellationToken);
+        if (existingTeam is null)
+        {
+            throw new TeamNotFound();
+        }
+
+        if (!teamAuthorizationService.CanModify(existingTeam, customer))
+        {
+            throw new Unauthorized();
+        }
+
+        if (existingTeam.Organization is not null)
+        {
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                existingTeam.Organization.Id,
+                cancellationToken);
+            ArgumentNullException.ThrowIfNull(organization);
+
+            if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
+            {
+                throw new NoMoreInteractionAllowed();
+            }
+        }
+
+        var teamMemberToRemove = existingTeam.TeamMembers.FirstOrDefault(item => item.Id == id);
+        if (teamMemberToRemove is null)
+        {
+            return mapper.MapTo(existingTeamMember);
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.TeamMemberRepository.UnitOfWork,
+            cancellationToken);
+
+        repositoryFactory.TeamMemberRepository.Remove(teamMemberToRemove);
+
+        await teamOutboxPublisher.PublishTeamAsync(
+            [mapper.MapTo(existingTeam)],
+            repositoryFactory.TeamRepository.UnitOfWork,
+            cancellationToken);
+
+        await repositoryFactory.TeamMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        return mapper.MapTo(existingTeamMember);
     }
 }

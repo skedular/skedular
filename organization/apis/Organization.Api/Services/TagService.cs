@@ -133,9 +133,9 @@ public class TagService(
             throw new OrganizationTagWithSameNameExist();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationRepository.UnitOfWork,
+            cancellationToken);
 
         var tagEntity = mapper.MapTo(tag, existingOrganization);
         _ = repositoryFactory.TagRepository.Add(tagEntity);
@@ -188,9 +188,9 @@ public class TagService(
             throw new Unauthorized();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.TagRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.TagRepository.UnitOfWork,
+            cancellationToken);
 
         var deletedTag = mapper.MapTo(repositoryFactory.TagRepository.Remove(tag));
 
@@ -283,9 +283,9 @@ public class TagService(
             throw new OrganizationTagWithSameNameExist();
         }
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(repositoryFactory.TagRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.TagRepository.UnitOfWork,
+            cancellationToken);
 
         tag =
             mapper.MapTo(

@@ -396,6 +396,7 @@ type Mutation {
   deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
   deleteTeam(input: DeleteTeamInput!): TeamPayload @cost(weight: "10")
+  deleteTeamMember(input: DeleteTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
   inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
   inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InviteCustomersToJoinOrganizationPayload @cost(weight: "10")
@@ -420,6 +421,8 @@ type Mutation {
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
   updateTeam(input: UpdateTeamInput!): TeamPayload @cost(weight: "10")
+  updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload @cost(weight: "10")
+  updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload @cost(weight: "10")
   updateZone(input: UpdateZoneInput!): OrganizationTagPayload @cost(weight: "10")
 }
 
@@ -865,6 +868,11 @@ type TeamMemberEdge {
   node: TeamMemberDetails!
 }
 
+type TeamMemberPayload {
+  clientMutationId: String
+  teamMember: TeamMemberDetails!
+}
+
 type TeamOrganizationDetails {
   logoUrl: String
   name: String!
@@ -1172,6 +1180,11 @@ input DeleteTeamInput {
   id: String!
 }
 
+input DeleteTeamMemberInput {
+  clientMutationId: String
+  id: String!
+}
+
 input DeleteZoneInput {
   clientMutationId: String
   id: String!
@@ -1431,7 +1444,7 @@ input UpdateOrganizationOfferingInput {
   offeringCode: String!
 }
 
-input UpdateTeamInput {
+input UpdateTeamAndTeamMembersInput {
   about: String
   clientMutationId: String
   customerIds: [String!]!
@@ -1441,6 +1454,23 @@ input UpdateTeamInput {
   organizationMemberIds: [String!]!
   primaryLocationId: String
   timezone: String
+}
+
+input UpdateTeamInput {
+  about: String
+  clientMutationId: String
+  id: String!
+  name: String!
+  organizationId: String
+  primaryLocationId: String
+  timezone: String
+}
+
+input UpdateTeamMembersInput {
+  clientMutationId: String
+  customerIds: [String!]!
+  id: String!
+  organizationMemberIds: [String!]!
 }
 
 input UpdateZoneInput {

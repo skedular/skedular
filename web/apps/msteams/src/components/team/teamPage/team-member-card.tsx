@@ -24,17 +24,17 @@ import { memo, useContext, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import type { teamMemberCard_TeamMemberDetails$key } from './__generated__/teamMemberCard_TeamMemberDetails.graphql';
+import type { teamMemberCard_deleteTeamMemberMutation } from './__generated__/teamMemberCard_deleteTeamMemberMutation.graphql';
 import type { teamMemberCard_query$key } from './__generated__/teamMemberCard_query.graphql';
-import type { teamMemberCard_updateTeamMutation } from './__generated__/teamMemberCard_updateTeamMutation.graphql';
 
 type Props = {
   rootDataRelay: teamMemberCard_query$key;
   teamMemberDetailsRelay: teamMemberCard_TeamMemberDetails$key;
-  organizationId: string;
+  connectionIds: string[];
   onRefetchNeeded: () => void;
 };
 
-const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId, onRefetchNeeded }: Props) => {
+const TeamMemberCard = ({ rootDataRelay, teamMemberDetailsRelay, connectionIds, onRefetchNeeded }: Props) => {
   const rootData = useFragment<teamMemberCard_query$key>(
     graphql`
       fragment teamMemberCard_query on Query {
@@ -83,11 +83,11 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
     teamMemberDetailsRelay,
   );
 
-  const [commitUpdateTeam] = useMutation<teamMemberCard_updateTeamMutation>(graphql`
-    mutation teamMemberCard_updateTeamMutation($input: UpdateTeamInput!) @raw_response_type {
-      updateTeam(input: $input) {
-        team {
-          id
+  const [commitDeleteTeamMember] = useMutation<teamMemberCard_deleteTeamMemberMutation>(graphql`
+    mutation teamMemberCard_deleteTeamMemberMutation($connectionIds: [ID!]!, $input: DeleteTeamMemberInput!) {
+      deleteTeamMember(input: $input) {
+        teamMember {
+          id @deleteEdge(connections: $connectionIds)
         }
       }
     }
@@ -125,20 +125,12 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
 
     const toastId = themedToast(<NotificationContent content={`Removing team member...`} />, infoNotificationOptions);
 
-    commitUpdateTeam({
+    commitDeleteTeamMember({
       variables: {
+        connectionIds,
         input: {
           clientMutationId: nanoid(),
-          id: rootData.team.id,
-          name: rootData.team.name,
-          about: rootData.team.about,
-          customerIds: rootData.team.members
-            .filter((member) => member.customer && member.id !== teamMemberDetails.id)
-            .map((member) => member.customer.uniqueId),
-          organizationId,
-          organizationMemberIds: rootData.team.members
-            .filter((member) => member.organizationMember && member.id !== teamMemberDetails.id)
-            .map((member) => member.organizationMember!.uniqueId),
+          id: teamMemberDetails.id,
         },
       },
       onCompleted: (_, errors) => {
@@ -163,13 +155,6 @@ const TeamMemberCard = ({ teamMemberDetailsRelay, rootDataRelay, organizationId,
           ...errorNotificationOptions,
           render: <NotificationContent content={`Failed to remove team member. Error: ${error.message}.`} />,
         });
-      },
-      optimisticResponse: {
-        updateTeam: {
-          team: {
-            id: rootData.team.id,
-          },
-        },
       },
     });
   };

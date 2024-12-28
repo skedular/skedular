@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e390d51ac918cf0e5d4fcc28807cd246>>
+ * @generated SignedSource<<20b27846b6abdce95da5883fd8659f96>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,6 @@ export type LocationMemberOrderInput = {
 export type locationMembersTab_locationMembers_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  locationExists: boolean;
   locationId: string;
   locationMembersSortingValues?: ReadonlyArray<LocationMemberOrderInput> | null | undefined;
   peopleNameSearchText?: string | null | undefined;
@@ -43,11 +42,6 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "cursor"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "locationExists"
   },
   {
     "defaultValue": null,
@@ -132,106 +126,91 @@ return {
     "name": "locationMembersTab_locationMembers_refetchableFragment",
     "selections": [
       {
-        "condition": "locationExists",
-        "kind": "Condition",
-        "passingValue": true,
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "LocationMemberConnection",
+        "kind": "LinkedField",
+        "name": "locationMembers",
+        "plural": false,
         "selections": [
           {
             "alias": null,
-            "args": (v1/*: any*/),
-            "concreteType": "LocationMemberConnection",
+            "args": null,
+            "kind": "ScalarField",
+            "name": "totalCount",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "LocationMemberEdge",
             "kind": "LinkedField",
-            "name": "locationMembers",
-            "plural": false,
+            "name": "edges",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "totalCount",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "LocationMemberEdge",
+                "concreteType": "LocationMemberDetails",
                 "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
+                "name": "node",
+                "plural": false,
                 "selections": [
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "LocationMemberDetails",
+                    "kind": "ScalarField",
+                    "name": "id",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "membershipType",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "LocationCustomerDetails",
                     "kind": "LinkedField",
-                    "name": "node",
+                    "name": "customer",
                     "plural": false,
                     "selections": [
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "id",
+                        "name": "name",
                         "storageKey": null
                       },
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "membershipType",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "LocationCustomerDetails",
-                        "kind": "LinkedField",
-                        "name": "customer",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "name",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "givenName",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "middleName",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "familyName",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "photoUrl",
-                            "storageKey": null
-                          }
-                        ],
+                        "name": "givenName",
                         "storageKey": null
                       },
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "__typename",
+                        "name": "middleName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "familyName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "photoUrl",
                         "storageKey": null
                       }
                     ],
@@ -241,7 +220,7 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "cursor",
+                    "name": "__typename",
                     "storageKey": null
                   }
                 ],
@@ -250,70 +229,78 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "PageInfo",
-                "kind": "LinkedField",
-                "name": "pageInfo",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "endCursor",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "hasNextPage",
-                    "storageKey": null
-                  }
-                ],
+                "kind": "ScalarField",
+                "name": "cursor",
                 "storageKey": null
-              },
-              {
-                "kind": "ClientExtension",
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__id",
-                    "storageKey": null
-                  }
-                ]
               }
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v1/*: any*/),
-            "filters": [
-              "where",
-              "orderBy"
+            "args": null,
+            "concreteType": "PageInfo",
+            "kind": "LinkedField",
+            "name": "pageInfo",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "endCursor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "hasNextPage",
+                "storageKey": null
+              }
             ],
-            "handle": "connection",
-            "key": "locationMembersTab_locationMembers",
-            "kind": "LinkedHandle",
-            "name": "locationMembers"
+            "storageKey": null
+          },
+          {
+            "kind": "ClientExtension",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__id",
+                "storageKey": null
+              }
+            ]
           }
-        ]
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "filters": [
+          "where",
+          "orderBy"
+        ],
+        "handle": "connection",
+        "key": "locationMembersTab_locationMembers",
+        "kind": "LinkedHandle",
+        "name": "locationMembers"
       }
     ]
   },
   "params": {
-    "cacheID": "d74f0aa1673ea26c20843b10e99c507b",
+    "cacheID": "2e986e49956756772578bdc2df54e95d",
     "id": null,
     "metadata": {},
     "name": "locationMembersTab_locationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationMembersTab_locationMembers_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationExists: Boolean!\n  $locationId: String!\n  $locationMembersSortingValues: [LocationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...locationMembersTab_locationMembers_query_1G22uz\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationMembersTab_locationMembers_query_1G22uz on Query {\n  locationMembers(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationMembersSortingValues) @include(if: $locationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query locationMembersTab_locationMembers_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationId: String!\n  $locationMembersSortingValues: [LocationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...locationMembersTab_locationMembers_query_1G22uz\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationMembersTab_locationMembers_query_1G22uz on Query {\n  locationMembers(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "72ab886bbbc05bc784cd7aac26f6b33b";
+(node as any).hash = "e130672c85744a808563f877f384d112";
 
 export default node;

@@ -18,6 +18,7 @@ namespace Team.Api.Mappers;
 
 public interface IMapper
 {
+    Shared.Models.TeamMember MapTo(Shared.Database.Entities.TeamMember src);
     Shared.Models.Team MapTo(Shared.Database.Entities.Team src);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
 
@@ -38,6 +39,8 @@ public interface IMapper
     IEnumerable<TeamDetails> MapTo(IEnumerable<Shared.Models.Team> src);
     Shared.Models.Team MapTo(AddTeamInput src);
     Shared.Models.Team MapTo(UpdateTeamInput src);
+    Shared.Models.Team MapTo(UpdateTeamAndTeamMembersInput src);
+    ICollection<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src);
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
     global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team MapToGrpcResponse(Shared.Models.Team src);
     Shared.Models.Team MapTo(AddInput src);
@@ -57,7 +60,6 @@ public interface IMapper
         Shared.Database.Entities.Customer customer,
         Shared.Database.Entities.OrganizationMember? organizationMember);
 
-    ICollection<TeamMember> MapTo(UpdateMembersInput src);
     ICollection<TeamMember> MapTo(Admin_UpdateMembersInput src);
     TeamEdge MapTo(Edge<Shared.Models.Team> src);
     global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src);
@@ -71,6 +73,19 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
+    public TeamMember MapTo(Shared.Database.Entities.TeamMember src)=>
+    new()
+    {
+        Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        DeletedAt = src.DeletedAt,
+        ModifiedAt = src.ModifiedAt,
+        MembershipType = src.MembershipType,
+        Customer = MapTo(src.Customer)!,
+        OrganizationMember = MapTo(src.OrganizationMember)
+    };
+
+
     public Shared.Models.Team MapTo(Shared.Database.Entities.Team src)
     {
         var team = new Shared.Models.Team
@@ -214,11 +229,6 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            TeamMembers = src.CustomerIds
-                .Select(item => new TeamMember { Customer = new Customer { Id = item } })
-                .Concat(src.OrganizationMemberIds.Select(item =>
-                    new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
-                .ToList(),
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
                 ? null
                 : new Shared.Models.Organization { Id = src.OrganizationId },
@@ -227,6 +237,32 @@ public class Mapper : IMapper
                 : new Shared.Models.Location { Id = src.PrimaryLocationId }
         };
 
+    public Shared.Models.Team MapTo(UpdateTeamAndTeamMembersInput src) =>
+        new()
+        {
+            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Name = src.Name,
+            About = src.About,
+            Timezone = src.Timezone,
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
+                ? null
+                : new Shared.Models.Organization { Id = src.OrganizationId },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
+                ? null
+                : new Shared.Models.Location { Id = src.PrimaryLocationId },
+            TeamMembers = src.CustomerIds
+                .Select(item => new TeamMember { Customer = new Customer { Id = item } })
+                .Concat(src.OrganizationMemberIds.Select(item =>
+                    new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
+                .ToList()
+        };
+
+    public ICollection<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src) =>
+        src.CustomerIds
+            .Select(item => new TeamMember {Customer = new Customer { Id = item } })
+            .Concat(src.OrganizationMemberIds.Select(item =>
+                new TeamMember {OrganizationMember = new OrganizationMember { Id = item } }))
+            .ToList();
 
     public JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
         new()
@@ -345,9 +381,6 @@ public class Mapper : IMapper
         dest.OrganizationMember = organizationMember;
         return dest;
     }
-
-    public ICollection<TeamMember> MapTo(UpdateMembersInput src) =>
-        src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList();
 
     public ICollection<TeamMember> MapTo(Admin_UpdateMembersInput src) =>
         src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList();

@@ -1,4 +1,3 @@
-import { LocationLink } from '@/components/location';
 import type { locationDeskOccupancyInsightRoot_rootQuery } from '@/queries/__generated__/locationDeskOccupancyInsightRoot_rootQuery.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -17,29 +16,21 @@ import LocationDeskOccupancyInsight from './location-desk-occupancy-insight';
 type Props = {
   queryReference: PreloadedQuery<locationDeskOccupancyInsightRoot_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId?: string;
-  locationId: string;
   hideLocationDetails?: boolean;
 };
 
 const RootQuery = graphql`
-  query locationDeskOccupancyInsightRoot_rootQuery($locationId: String!, $locationExists: Boolean!, $from: DateTime!, $to: DateTime!) {
+  query locationDeskOccupancyInsightRoot_rootQuery($locationId: String!, $from: DateTime!, $to: DateTime!) {
     ...locationDeskOccupancyInsight_query
     ...locationDeskOccupancyInsight_locationAnalytics_query
   }
 `;
 
-const LocationDeskOccupancyInsightRoot = ({ queryReference, onReloadRequired, organizationId, locationId, hideLocationDetails }: Props) => {
+const LocationDeskOccupancyInsightRoot = ({ queryReference, hideLocationDetails }: Props) => {
   const rootData = usePreloadedQuery<locationDeskOccupancyInsightRoot_rootQuery>(RootQuery, queryReference);
 
   return (
-    <LocationDeskOccupancyInsight
-      rootDataRelay={rootData}
-      rootDataLocationAnalyticsRelay={rootData}
-      organizationId={organizationId}
-      locationId={locationId}
-      hideLocationDetails={hideLocationDetails}
-    />
+    <LocationDeskOccupancyInsight rootDataRelay={rootData} rootDataLocationAnalyticsRelay={rootData} hideLocationDetails={hideLocationDetails} />
   );
 };
 
@@ -71,7 +62,6 @@ const LocationDeskOccupancyInsightRootWithRelay = ({
     loadQuery(
       {
         locationId,
-        locationExists: !!locationId,
         from: from.toISOString(),
         to: to.toISOString(),
       },
@@ -92,14 +82,7 @@ const LocationDeskOccupancyInsightRootWithRelay = ({
   if (!queryReference) {
     return (
       <Card sx={{ maxWidth: 500, height: '100%' }}>
-        <CardHeader
-          title={
-            <>
-              <SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />
-              {!hideLocationDetails && <LocationLink organizationId={organizationId} id={locationId} name={locationName} analayticsLink />}
-            </>
-          }
-        />
+        <CardHeader title={<SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />} />
         <CardContent>
           <Skeleton variant="rounded" width={470} height={350} />
         </CardContent>
@@ -112,8 +95,6 @@ const LocationDeskOccupancyInsightRootWithRelay = ({
       <MemoLocationDeskOccupancyInsightRoot
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
-        locationId={locationId}
         hideLocationDetails={hideLocationDetails}
       />
     </ErrorBoundary>
