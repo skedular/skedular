@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
-import { FormStackColumn, GridContainer, PushToRight, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, GridContainer, PushToRight, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { EditIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -386,14 +386,17 @@ const TeamMembersTab = ({ queryReference, organizationId }: Props) => {
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
                 {rootData.team?.organization && (
-                  <OrganizationMemberSelector
-                    rootDataRelay={rootData}
-                    name="organizationMemberIds"
-                    required={requiredTeamFields.organizationMemberIds}
-                    multiple={true}
-                    useMemberId={true}
-                  />
+                  <FormFieldLabel label="Organization Member">
+                    <OrganizationMemberSelector
+                      rootDataRelay={rootData}
+                      name="organizationMemberIds"
+                      required={requiredTeamFields.organizationMemberIds}
+                      multiple={true}
+                      useMemberId={true}
+                    />
+                  </FormFieldLabel>
                 )}
+
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}

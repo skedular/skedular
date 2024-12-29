@@ -27,7 +27,6 @@ const SingleChoinceTimezone = ({ name, required }: Props) => {
 
   return (
     <Autocomplete
-      label="Timezone"
       name={name}
       multiple={false}
       required={required}

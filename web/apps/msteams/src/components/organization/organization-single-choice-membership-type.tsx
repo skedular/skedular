@@ -32,7 +32,6 @@ const OrganizationSingleChoiceMembershipType = ({ rootDataRelay, name, required 
 
   return (
     <Autocomplete
-      label="Membership"
       name={name}
       multiple={false}
       required={required}

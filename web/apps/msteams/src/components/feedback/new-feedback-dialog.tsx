@@ -2,7 +2,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BodyIconTypography, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -106,7 +106,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
       <DialogTitle>Send us feedback</DialogTitle>
       <DialogContent>
         <Form
@@ -122,23 +122,10 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
                 <span style={{ fontWeight: 'bold' }}>{' ' + getCustomerShortName(rootData.me)}</span>, what feedback would you like to share with us?
               </Typography>
 
-              <TextField
-                label="Feedback"
-                name="feedback"
-                required={requiredFields.feedback}
-                multiline={true}
-                sx={{
-                  textAlign: 'center',
-                }}
-                rows={10}
-              />
+              <TextField label="Feedback" name="feedback" required={requiredFields.feedback} multiline={true} rows={10} />
+              <BodyIconTypography label="A note from the team:" sx={{ fontStyle: 'italic' }} />
+              <BodyIconTypography label="We value your feedback, whether it's big or small. Sometimes, it's the smallest details that distinguish a great product from a mediocre one. If you notice something missing or something that bothers you, please let us know, and we'll address it promptly!" />
 
-              <Typography sx={{ fontStyle: 'italic' }}>A note from the team:</Typography>
-              <Typography>
-                We value your feedback, whether it&apos;s big or small. Sometimes, it&apos;s the smallest details that distinguish a great product
-                from a mediocre one. If you notice something missing or something that bothers you, please let us know, and we&apos;ll address it
-                promptly!
-              </Typography>
               <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Send" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}

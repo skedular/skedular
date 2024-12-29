@@ -2,7 +2,7 @@ import type { newZoneDialog_addZoneMutation } from '@/queries/__generated__/newZ
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -10,10 +10,9 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { ZoneName } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
-import { makeRequired, makeValidate } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
@@ -103,7 +102,7 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
       <DialogTitle>Add desk type</DialogTitle>
       <DialogContent>
         <Form
@@ -114,7 +113,10 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
-              <ZoneName name="name" required={requiredFields.name} />
+              <FormFieldLabel label="Name" useWiderSpace>
+                <TextField name="name" required={requiredFields.name} helperText="Add your zone name" />
+              </FormFieldLabel>
+
               <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}

@@ -12,7 +12,7 @@ import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, FormStackColumn, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { DeskTypes } from '@repo/shared/components/deskType';
 import { DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, InfoIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
@@ -36,7 +36,7 @@ import graphql from 'babel-plugin-relay/macro';
 import { MultipleChoicesDeskTypes, MultipleChoicesZones } from 'components/organization';
 import type { multipleChoicesDeskTypes_query$key } from 'components/organization/__generated__/multipleChoicesDeskTypes_query.graphql';
 import type { multipleChoicesZones_query$key } from 'components/organization/__generated__/multipleChoicesZones_query.graphql';
-import { makeRequired, makeValidate } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -49,7 +49,6 @@ import type { deskCard_deleteLocationMutation } from './__generated__/deskCard_d
 import type { deskCard_query$key } from './__generated__/deskCard_query.graphql';
 import type { deskCard_removeCustomerDefaultDeskMutation } from './__generated__/deskCard_removeCustomerDefaultDeskMutation.graphql';
 import type { deskCard_updateDeskMutation } from './__generated__/deskCard_updateDeskMutation.graphql';
-import DeskName from './desk-name';
 
 type Props = {
   rootDataRelay: deskCard_query$key;
@@ -820,9 +819,18 @@ const DeskCard = ({
             validate={validate}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <DeskName name="name" required={requiredFields.name} />
-                <MultipleChoicesDeskTypes rootDataRelay={multipleChoicesDeskTypesData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
-                <MultipleChoicesZones rootDataRelay={multipleChoicesZonesData} name="zoneIds" required={requiredFields.zoneIds} />
+                <FormFieldLabel label="Name">
+                  <TextField name="name" required={requiredFields.name} helperText="Add your desk name" />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Desk Types">
+                  <MultipleChoicesDeskTypes rootDataRelay={multipleChoicesDeskTypesData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Zones">
+                  <MultipleChoicesZones rootDataRelay={multipleChoicesZonesData} name="zoneIds" required={requiredFields.zoneIds} />
+                </FormFieldLabel>
+
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}

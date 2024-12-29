@@ -1,4 +1,4 @@
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -184,15 +184,24 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
       validate={validate}
       render={({ handleSubmit }) => (
         <FormStackColumn onSubmit={handleSubmit}>
-          <TextField label="Name" name="name" required={requiredFields.name} />
-          <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-          <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-          <SingleChoiceLocation
-            rootDataRelay={rootData}
-            id="primaryLocationId"
-            required={requiredFields.primaryLocationId}
-            label="Primary Location"
-          />
+          <FormFieldLabel label="Name">
+            <TextField name="name" required={requiredFields.name} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="About">
+            <TextField name="about" required={requiredFields.about} multiline={true} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="Timezone">
+            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+          </FormFieldLabel>
+
+          {organizationId && (
+            <FormFieldLabel label="Primary Location">
+              <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
+            </FormFieldLabel>
+          )}
+
           <TwoButtonsDialogActions primaryLabel="Update" hideSecondary />
         </FormStackColumn>
       )}

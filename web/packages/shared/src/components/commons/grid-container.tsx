@@ -14,4 +14,5 @@ const GridContainer = ({ children, sx, spacing }: PropsWithChildren<Props>) => (
     {children}
   </Grid>
 );
+
 export default GridContainer;

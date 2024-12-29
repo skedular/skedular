@@ -19,7 +19,6 @@ const SingleChoiceCountry = ({ name, required }: Props) => {
 
   return (
     <Autocomplete
-      label="Country"
       name={name}
       multiple={false}
       required={required}

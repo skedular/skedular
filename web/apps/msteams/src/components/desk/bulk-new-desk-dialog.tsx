@@ -1,7 +1,7 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -129,7 +129,7 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
       <DialogTitle>Add Desk</DialogTitle>
       <DialogContent>
         <Form
@@ -143,10 +143,22 @@ const BulkNewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddCl
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
-              <TextField label="Optional name prefix" name="namePrefix" required={requiredFields.namePrefix} helperText="Add your desk name prefix" />
-              <TextField label="Count" name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
-              <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
-              <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
+              <FormFieldLabel label="Optional name prefix" useWiderSpace>
+                <TextField name="namePrefix" required={requiredFields.namePrefix} helperText="Add your desk name prefix" />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Count" useWiderSpace>
+                <TextField name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Desk Types" useWiderSpace>
+                <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Zones" useWiderSpace>
+                <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
+              </FormFieldLabel>
+
               <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}

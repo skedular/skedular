@@ -1,7 +1,7 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -111,7 +111,7 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
       <DialogTitle>Make a booking</DialogTitle>
       <DialogContent>
         <Form
@@ -122,13 +122,10 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
-              <TextField
-                label="Emails"
-                name="emails"
-                required={requiredFields.emails}
-                multiline={true}
-                helperText="member1@example.com,member2@example.com"
-              />
+              <FormFieldLabel label="Emails" useWiderSpace>
+                <TextField name="emails" required={requiredFields.emails} multiline={true} helperText="member1@example.com,member2@example.com" />
+              </FormFieldLabel>
+
               <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Invite" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}

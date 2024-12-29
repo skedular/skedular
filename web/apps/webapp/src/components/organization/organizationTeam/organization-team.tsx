@@ -15,8 +15,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
+  FormFieldLabel,
   FormStackColumn,
-  LeadIconTypography,
   PushToRight,
   SectionIconTypography,
   SmallHeadingIconTypography,
@@ -565,16 +565,21 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
                 </StackColumn>
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <LeadIconTypography label="Team" />
-                  <TextField label="Name" name="name" required={requiredFields.name} />
-                  <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-                  <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-                  <SingleChoiceLocation
-                    rootDataRelay={rootData}
-                    id="primaryLocationId"
-                    required={requiredFields.primaryLocationId}
-                    label="Primary Location"
-                  />
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredFields.name} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="About">
+                    <TextField name="about" required={requiredFields.about} multiline={true} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Timezone">
+                    <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Primary Location">
+                    <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
+                  </FormFieldLabel>
                 </StackColumn>
 
                 <StackColumn

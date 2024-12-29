@@ -21,7 +21,7 @@ import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, FormStackColumn, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { DeskTypes } from '@repo/shared/components/deskType';
 import { DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, InfoIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
@@ -41,14 +41,13 @@ import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, sandstone } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
-import { makeRequired, makeValidate } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
-import DeskName from './desk-name';
 
 type Props = {
   rootDataRelay: deskCard_query$key;
@@ -818,9 +817,18 @@ const DeskCard = ({
             validate={validate}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <DeskName name="name" required={requiredFields.name} />
-                <MultipleChoicesDeskTypes rootDataRelay={multipleChoicesDeskTypesData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
-                <MultipleChoicesZones rootDataRelay={multipleChoicesZonesData} name="zoneIds" required={requiredFields.zoneIds} />
+                <FormFieldLabel label="Name">
+                  <TextField name="name" required={requiredFields.name} helperText="Add your desk name" />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Desk Types">
+                  <MultipleChoicesDeskTypes rootDataRelay={multipleChoicesDeskTypesData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Zones">
+                  <MultipleChoicesZones rootDataRelay={multipleChoicesZonesData} name="zoneIds" required={requiredFields.zoneIds} />
+                </FormFieldLabel>
+
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}

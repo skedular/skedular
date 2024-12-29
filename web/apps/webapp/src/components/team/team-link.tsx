@@ -82,7 +82,7 @@ const TeamLink = ({
         )}
       </StackRow>
 
-      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
+      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
         <DialogContent>
           <TeamBookingsCard organizationId={organizationId} organizationName={organizationName} teamId={id} teamName={name} teamsConnectionIds={[]} />
         </DialogContent>

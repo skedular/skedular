@@ -8,8 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
-import { BodyIconTypography, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import { DeskTypeName } from '@repo/shared/components/deskType';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { DeleteIcon, DeskTypeIcon, EditIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -21,7 +20,7 @@ import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { makeRequired, makeValidate } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -411,7 +410,10 @@ const DeskTypeCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionId
             validate={validate}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <DeskTypeName name="name" required={requiredFields.name} />
+                <FormFieldLabel label="Name" useWiderSpace>
+                  <TextField name="name" required={requiredFields.name} helperText="Add your desk type name" />
+                </FormFieldLabel>
+
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}

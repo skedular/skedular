@@ -1,7 +1,7 @@
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import type { teamAboutTab_rootQuery } from '@/queries/__generated__/teamAboutTab_rootQuery.graphql';
 import type { teamAboutTab_updateTeamMutation } from '@/queries/__generated__/teamAboutTab_updateTeamMutation.graphql';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -181,16 +181,22 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
       validate={validate}
       render={({ handleSubmit }) => (
         <FormStackColumn onSubmit={handleSubmit}>
-          <TextField label="Name" name="name" required={requiredFields.name} />
-          <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-          <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+          <FormFieldLabel label="Name">
+            <TextField name="name" required={requiredFields.name} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="About">
+            <TextField name="about" required={requiredFields.about} multiline={true} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="Timezone">
+            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+          </FormFieldLabel>
+
           {organizationId && (
-            <SingleChoiceLocation
-              rootDataRelay={rootData}
-              id="primaryLocationId"
-              required={requiredFields.primaryLocationId}
-              label="Primary Location"
-            />
+            <FormFieldLabel label="Primary Location">
+              <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
+            </FormFieldLabel>
           )}
           <TwoButtonsDialogActions primaryLabel="Update" hideSecondary />
         </FormStackColumn>

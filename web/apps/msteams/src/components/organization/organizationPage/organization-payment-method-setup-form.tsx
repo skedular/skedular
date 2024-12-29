@@ -46,6 +46,7 @@ const OrganizationPaymentMethodSetupForm = ({ onCancelClick }: Props) => {
       render={({ handleSubmit }) => (
         <FormStackColumn onSubmit={handleSubmit}>
           <PaymentElement id="payment-element" />
+
           <TwoButtonsDialogActions
             onSecondaryClicked={handleCancelClick}
             primaryLabel="Add"

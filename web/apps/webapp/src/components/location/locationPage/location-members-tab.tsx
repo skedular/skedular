@@ -14,7 +14,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
-import { FormStackColumn, GridContainer, PushToRight, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, GridContainer, PushToRight, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -336,13 +336,15 @@ const LocationMembersTab = ({ queryReference, locationId }: Props) => {
             validate={validateMembersToInvite}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <TextField
-                  label="Emails"
-                  name="emails"
-                  required={requiredMembersToInviteFields.emails}
-                  multiline={true}
-                  helperText="member1@example.com,member2@example.com"
-                />
+                <FormFieldLabel label="Emails" useWiderSpace>
+                  <TextField
+                    name="emails"
+                    required={requiredMembersToInviteFields.emails}
+                    multiline={true}
+                    helperText="member1@example.com,member2@example.com"
+                  />
+                </FormFieldLabel>
+
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelInvitingPeopleClick} primaryLabel="Invite" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}

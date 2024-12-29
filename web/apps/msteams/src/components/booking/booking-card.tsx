@@ -6,7 +6,14 @@ import CardHeader from '@mui/material/CardHeader';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, FormStackColumn, LeadIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  BodyIconTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  StackRow,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import {
   CustomerIcon,
   DeleteIcon,
@@ -30,7 +37,7 @@ import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/li
 import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import dayjs, { Dayjs } from 'dayjs';
-import { makeRequired, makeValidate } from 'mui-rff';
+import { DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -44,9 +51,7 @@ import type { bookingCard_deleteBookingMutation } from './__generated__/bookingC
 import type { bookingCard_query$key } from './__generated__/bookingCard_query.graphql';
 import type { bookingCard_removeCustomerDefaultDeskMutation } from './__generated__/bookingCard_removeCustomerDefaultDeskMutation.graphql';
 import type { bookingCard_updateBookingMutation } from './__generated__/bookingCard_updateBookingMutation.graphql';
-import BookingDate from './booking-date';
 import BookingDetailsSelector from './booking-details-selector';
-import BookingNotes from './booking-notes';
 
 type Props = {
   rootDataRelay: bookingCard_query$key;
@@ -741,8 +746,19 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
-                  <BookingDate name="date" required={requiredFields.date} />
-                  <BookingNotes name="notes" required={requiredFields.notes} />
+                  <FormFieldLabel label="Date" useWiderSpace>
+                    <DatePicker name="date" required={requiredFields.date} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Notes" useWiderSpace>
+                    <TextField
+                      name="notes"
+                      required={requiredFields.notes}
+                      helperText="e.g. I will be half an hour late this morning"
+                      multiline={true}
+                    />
+                  </FormFieldLabel>
+
                   <BookingDetailsSelector
                     rootDataRelay={rootData}
                     rootDataPaginatedOrganizationMembersRelay={rootData}

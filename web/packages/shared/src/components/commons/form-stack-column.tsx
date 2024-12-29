@@ -15,8 +15,9 @@ type Props = {
 };
 
 const FormStackColumn = ({ children, sx, spacing, onSubmit }: PropsWithChildren<Props>) => (
-  <Stack direction="column" spacing={spacing ?? 1} sx={{ paddingTop: 1, ...sx }} component="form" noValidate onSubmit={onSubmit}>
+  <Stack direction="column" spacing={spacing ?? 1} sx={{ padding: 2, ...sx }} component="form" noValidate onSubmit={onSubmit}>
     {children}
   </Stack>
 );
+
 export default FormStackColumn;

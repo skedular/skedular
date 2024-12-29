@@ -1,6 +1,6 @@
 import type { customerSettingsPersonalTab_query$key } from '@/queries/__generated__/customerSettingsPersonalTab_query.graphql';
 import type { customerSettingsPersonalTab_updateMyCustomerDetailsMutation } from '@/queries/__generated__/customerSettingsPersonalTab_updateMyCustomerDetailsMutation.graphql';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import {
   errorNotificationOptions,
@@ -167,14 +167,38 @@ const CustomerSettingsPersonalTab = ({ rootDataRelay }: Props) => {
       validate={validate}
       render={({ handleSubmit }) => (
         <FormStackColumn onSubmit={handleSubmit}>
-          <TextField label="Designation" name="designation" required={requiredFields.designation} />
-          <TextField label="Title" name="title" required={requiredFields.title} />
-          <TextField label="Name" name="name" required={requiredFields.name} />
-          <TextField label="Given Name" name="givenName" required={requiredFields.givenName} />
-          <TextField label="Middle Name" name="middleName" required={requiredFields.middleName} />
-          <TextField label="Family Name" name="familyName" required={requiredFields.familyName} />
-          <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-          <TextField label="Phone Number" name="phoneNumber" required={requiredFields.phoneNumber} />
+          <FormFieldLabel label="Designation">
+            <TextField name="designation" required={requiredFields.designation} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="Title">
+            <TextField name="title" required={requiredFields.title} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="Name">
+            <TextField name="name" required={requiredFields.name} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="Given Name">
+            <TextField name="givenName" required={requiredFields.givenName} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="Middle Name">
+            <TextField name="middleName" required={requiredFields.middleName} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="Family Name">
+            <TextField name="familyName" required={requiredFields.familyName} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="Timezone">
+            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+          </FormFieldLabel>
+
+          <FormFieldLabel label="Phone Number">
+            <TextField name="phoneNumber" required={requiredFields.phoneNumber} />
+          </FormFieldLabel>
+
           <TwoButtonsDialogActions primaryLabel="Update" hideSecondary />
         </FormStackColumn>
       )}

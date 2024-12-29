@@ -31,7 +31,6 @@ const LocationSingleChoiceMembershipType = ({ rootDataRelay, name, required }: P
 
   return (
     <Autocomplete
-      label="Membership"
       name={name}
       multiple={false}
       required={required}

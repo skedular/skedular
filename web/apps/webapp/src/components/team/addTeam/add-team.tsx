@@ -4,7 +4,7 @@ import type { addTeam_addTeamMutation } from '@/queries/__generated__/addTeam_ad
 import type { addTeam_completeTeamOnboardingMutation } from '@/queries/__generated__/addTeam_completeTeamOnboardingMutation.graphql';
 import type { addTeam_rootQuery } from '@/queries/__generated__/addTeam_rootQuery.graphql';
 import Paper from '@mui/material/Paper';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -216,28 +216,35 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
         validate={validate}
         render={({ handleSubmit }) => (
           <FormStackColumn onSubmit={handleSubmit}>
-            <TextField label="Name" name="name" required={requiredFields.name} />
-            <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+            <FormFieldLabel label="Name">
+              <TextField name="name" required={requiredFields.name} />
+            </FormFieldLabel>
+
+            <FormFieldLabel label="About">
+              <TextField name="about" required={requiredFields.about} multiline={true} />
+            </FormFieldLabel>
+
+            <FormFieldLabel label="Timezone">
+              <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+            </FormFieldLabel>
 
             {organizationId && (
-              <SingleChoiceLocation
-                rootDataRelay={rootData}
-                id="primaryLocationId"
-                required={requiredFields.primaryLocationId}
-                label="Primary Location"
-              />
+              <FormFieldLabel label="Primary Location">
+                <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
+              </FormFieldLabel>
             )}
 
             {organizationId && (
-              <OrganizationMemberSelector
-                rootDataRelay={rootData}
-                organizationId={organizationId}
-                name="organizationMemberIds"
-                required={requiredFields.organizationMemberIds}
-                multiple={true}
-                useMemberId={true}
-              />
+              <FormFieldLabel label="Organization Member">
+                <OrganizationMemberSelector
+                  rootDataRelay={rootData}
+                  organizationId={organizationId}
+                  name="organizationMemberIds"
+                  required={requiredFields.organizationMemberIds}
+                  multiple={true}
+                  useMemberId={true}
+                />
+              </FormFieldLabel>
             )}
             <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Create" secondaryLabel="Cancel" />
           </FormStackColumn>

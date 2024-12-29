@@ -109,7 +109,7 @@ const OrganizationLink = ({
           </Button>
         )}
       </StackRow>
-      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
+      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
         <DialogContent>
           <OrganizationBookingsCard organizationId={id} organizationName={name} organizationsConnectionIds={[]} />
         </DialogContent>

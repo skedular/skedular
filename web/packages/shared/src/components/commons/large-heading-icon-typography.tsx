@@ -28,4 +28,5 @@ const LargeHeadingIconTypography = ({ startElement, endElement, stackMode, label
     color={color}
   />
 );
+
 export default LargeHeadingIconTypography;

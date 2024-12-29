@@ -52,7 +52,6 @@ const MultipleChoicesDeskTypes = ({ rootDataRelay, name, required }: Props) => {
 
   return (
     <Autocomplete
-      label="Desk types"
       name={name}
       multiple={true}
       required={required}

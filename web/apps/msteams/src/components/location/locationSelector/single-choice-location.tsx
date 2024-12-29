@@ -10,7 +10,6 @@ type Props = {
   rootDataRelay: singleChoiceLocation_locations_query$key;
   id: string;
   required?: boolean;
-  label?: string;
 };
 
 interface LocationDetails {
@@ -18,7 +17,7 @@ interface LocationDetails {
   name: string;
 }
 
-const SingleChoiceLocation = ({ rootDataRelay, id, required, label }: Props) => {
+const SingleChoiceLocation = ({ rootDataRelay, id, required }: Props) => {
   const rootData = useFragment<singleChoiceLocation_locations_query$key>(
     graphql`
       fragment singleChoiceLocation_locations_query on Query {
@@ -42,7 +41,6 @@ const SingleChoiceLocation = ({ rootDataRelay, id, required, label }: Props) => 
 
   return (
     <Autocomplete
-      label={label ?? 'Location'}
       name={id}
       multiple={false}
       required={required}

@@ -186,7 +186,7 @@ const TeamMemberCard = ({ rootDataRelay, teamMemberDetailsRelay, connectionIds, 
       </Card>
 
       <Dialog TransitionComponent={DialogTransition} open={teamMemberRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamMemberClick}>
-        <DialogTitle>Remove desk</DialogTitle>
+        <DialogTitle>Remove Member</DialogTitle>
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove "${getCustomerFullName(customer)}"?`}</DialogContentText>
           <TwoButtonsDialogActions

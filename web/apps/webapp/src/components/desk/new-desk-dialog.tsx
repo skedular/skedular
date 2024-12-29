@@ -4,7 +4,7 @@ import type { newDeskDialog_query$key } from '@/queries/__generated__/newDeskDia
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -14,14 +14,13 @@ import {
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
-import { makeRequired, makeValidate } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
-import DeskName from './desk-name';
 
 type Props = {
   rootDataRelay: newDeskDialog_query$key;
@@ -131,7 +130,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
       <DialogTitle>Add Desk</DialogTitle>
       <DialogContent>
         <Form
@@ -144,9 +143,18 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
-              <DeskName name="name" required={requiredFields.name} />
-              <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
-              <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
+              <FormFieldLabel label="Name" useWiderSpace>
+                <TextField name="name" required={requiredFields.name} helperText="Add your desk name" />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Desk Types" useWiderSpace>
+                <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Zones" useWiderSpace>
+                <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
+              </FormFieldLabel>
+
               <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}

@@ -94,7 +94,7 @@ const LocationLink = ({
           </Button>
         )}
       </StackRow>
-      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
+      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
         <DialogContent>
           <LocationBookingsCard
             organizationId={organizationId}

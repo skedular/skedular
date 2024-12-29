@@ -5,7 +5,7 @@ import type { bookingDetailsSelector_organizationMembers_refetchableFragment } f
 import type { bookingDetailsSelector_query$key } from '@/queries/__generated__/bookingDetailsSelector_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, StackRow } from '@repo/shared/components/commons';
+import { BodyIconTypography, FormFieldLabel, StackRow } from '@repo/shared/components/commons';
 import { Zones } from '@repo/shared/components/zone';
 import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
@@ -312,127 +312,131 @@ const BookingDetailsSelector = ({
   return (
     <>
       {!hideOrganizationControl && (
-        <Autocomplete
-          label="Organization"
-          name={organizationName}
-          multiple={false}
-          required={organizationRequired}
-          options={organizations}
-          getOptionValue={(option) => (option as OrganizationDetails).id}
-          getOptionLabel={(option: string | OrganizationDetails) => (option as OrganizationDetails).name}
-          renderOption={(props, option) => {
-            const castedOption = option as OrganizationDetails;
+        <FormFieldLabel label="Organization" useWiderSpace>
+          <Autocomplete
+            name={organizationName}
+            multiple={false}
+            required={organizationRequired}
+            options={organizations}
+            getOptionValue={(option) => (option as OrganizationDetails).id}
+            getOptionLabel={(option: string | OrganizationDetails) => (option as OrganizationDetails).name}
+            renderOption={(props, option) => {
+              const castedOption = option as OrganizationDetails;
 
-            return (
-              <li {...props}>
-                <BodyIconTypography label={castedOption.name} />
-              </li>
-            );
-          }}
-          disableCloseOnSelect={false}
-          freeSolo={true}
-          filterOptions={(options, params) => filterOrganization(options as OrganizationDetails[], params)}
-          selectOnFocus
-          clearOnBlur
-          handleHomeEndKeys
-          onChange={(_, option) => handleOrganizationChange(option as OrganizationDetails)}
-        />
+              return (
+                <li {...props}>
+                  <BodyIconTypography label={castedOption.name} />
+                </li>
+              );
+            }}
+            disableCloseOnSelect={false}
+            freeSolo={true}
+            filterOptions={(options, params) => filterOrganization(options as OrganizationDetails[], params)}
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+            onChange={(_, option) => handleOrganizationChange(option as OrganizationDetails)}
+          />
+        </FormFieldLabel>
       )}
 
       {!hideOrganizationMemberControl && (
-        <Autocomplete
-          label="Organization Member"
-          name={organizationMemberName}
-          multiple={false}
-          required={organizationMemberRequired}
-          options={customers}
-          getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
-          getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
-          renderOption={(props, option) => {
-            const castedOption = (option as OrganizationMemberDetails).customer;
+        <FormFieldLabel label="Organization Member" useWiderSpace>
+          <Autocomplete
+            name={organizationMemberName}
+            multiple={false}
+            required={organizationMemberRequired}
+            options={customers}
+            getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
+            getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
+            renderOption={(props, option) => {
+              const castedOption = (option as OrganizationMemberDetails).customer;
 
-            return (
-              <li {...props}>
-                <BodyIconTypography
-                  label={getCustomerFullName(castedOption)}
-                  startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
-                />
-              </li>
-            );
-          }}
-          disableCloseOnSelect={false}
-          freeSolo={true}
-          filterOptions={(options, params) => {
-            if (params.inputValue !== bookingPeopleNameSearchText) {
-              debounceSearchTextChange(params.inputValue);
-            }
+              return (
+                <li {...props}>
+                  <BodyIconTypography
+                    label={getCustomerFullName(castedOption)}
+                    startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
+                  />
+                </li>
+              );
+            }}
+            disableCloseOnSelect={false}
+            freeSolo={true}
+            filterOptions={(options, params) => {
+              if (params.inputValue !== bookingPeopleNameSearchText) {
+                debounceSearchTextChange(params.inputValue);
+              }
 
-            return options;
-          }}
-          selectOnFocus
-          clearOnBlur
-          handleHomeEndKeys
-        />
+              return options;
+            }}
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+          />
+        </FormFieldLabel>
       )}
 
       {!hideLocationControl && (
-        <Autocomplete
-          label="Location"
-          name={locationName}
-          multiple={false}
-          required={locationRequired}
-          options={locations}
-          getOptionValue={(option) => (option as LocationDetails).id}
-          getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
-          renderOption={(props, option) => {
-            const castedOption = option as LocationDetails;
+        <FormFieldLabel label="Location" useWiderSpace>
+          <Autocomplete
+            name={locationName}
+            multiple={false}
+            required={locationRequired}
+            options={locations}
+            getOptionValue={(option) => (option as LocationDetails).id}
+            getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
+            renderOption={(props, option) => {
+              const castedOption = option as LocationDetails;
 
-            return (
-              <li {...props}>
-                <BodyIconTypography label={castedOption.name} />
-              </li>
-            );
-          }}
-          disableCloseOnSelect={false}
-          freeSolo={true}
-          filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
-          selectOnFocus
-          clearOnBlur
-          handleHomeEndKeys
-          onChange={(_, option) => handleLocationChange(option as LocationDetails)}
-        />
+              return (
+                <li {...props}>
+                  <BodyIconTypography label={castedOption.name} />
+                </li>
+              );
+            }}
+            disableCloseOnSelect={false}
+            freeSolo={true}
+            filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+            onChange={(_, option) => handleLocationChange(option as LocationDetails)}
+          />
+        </FormFieldLabel>
       )}
 
       {!hideDesksControl && (
         <>
           {desks.length !== 0 && (
-            <Autocomplete
-              label="Desks"
-              name={deskName}
-              multiple={true}
-              required={deskRequired}
-              options={desks}
-              getOptionValue={(option) => (option as DeskDetails).uniqueId}
-              getOptionLabel={(option: string | DeskDetails) => (option as DeskDetails).name}
-              renderOption={(props, option) => {
-                const castedOption = option as DeskDetails;
+            <FormFieldLabel label="Desks" useWiderSpace>
+              <Autocomplete
+                name={deskName}
+                multiple={true}
+                required={deskRequired}
+                options={desks}
+                getOptionValue={(option) => (option as DeskDetails).uniqueId}
+                getOptionLabel={(option: string | DeskDetails) => (option as DeskDetails).name}
+                renderOption={(props, option) => {
+                  const castedOption = option as DeskDetails;
 
-                return (
-                  <li {...props}>
-                    <StackRow sx={{ alignItems: 'center' }}>
-                      <BodyIconTypography label={castedOption.name} />
-                      <Zones zones={castedOption.zones} />
-                    </StackRow>
-                  </li>
-                );
-              }}
-              disableCloseOnSelect={true}
-              freeSolo={true}
-              filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
-              selectOnFocus
-              clearOnBlur
-              handleHomeEndKeys
-            />
+                  return (
+                    <li {...props}>
+                      <StackRow sx={{ alignItems: 'center' }}>
+                        <BodyIconTypography label={castedOption.name} />
+                        <Zones zones={castedOption.zones} />
+                      </StackRow>
+                    </li>
+                  );
+                }}
+                disableCloseOnSelect={true}
+                freeSolo={true}
+                filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+              />
+            </FormFieldLabel>
           )}
 
           {locationId && desks.length === 0 && (

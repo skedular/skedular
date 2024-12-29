@@ -3,7 +3,7 @@ import type { addOrganization_addOrganizationMutation } from '@/queries/__genera
 import type { addOrganization_completeOrganizationOnboardingMutation } from '@/queries/__generated__/addOrganization_completeOrganizationOnboardingMutation.graphql';
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
 import Paper from '@mui/material/Paper';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -175,14 +175,26 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
         validate={validate}
         render={({ handleSubmit }) => (
           <FormStackColumn onSubmit={handleSubmit}>
-            <TextField label="Name" name="name" required={requiredFields.name} />
-            <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
-            <TextField label="Website" name="website" required={requiredFields.about} helperText="https://" />
-            <OrganizationMultipleChoicesIndustries
-              rootDataRelay={rootData}
-              name="industrySubCategoryIds"
-              required={requiredFields.industrySubCategoryIds}
-            />
+            <FormFieldLabel label="Name">
+              <TextField name="name" required={requiredFields.name} />
+            </FormFieldLabel>
+
+            <FormFieldLabel label="About">
+              <TextField name="about" required={requiredFields.about} multiline={true} />
+            </FormFieldLabel>
+
+            <FormFieldLabel label="Industry">
+              <TextField name="website" required={requiredFields.about} helperText="https://" />
+            </FormFieldLabel>
+
+            <FormFieldLabel label="Industry">
+              <OrganizationMultipleChoicesIndustries
+                rootDataRelay={rootData}
+                name="industrySubCategoryIds"
+                required={requiredFields.industrySubCategoryIds}
+              />
+            </FormFieldLabel>
+
             <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
             <TwoButtonsDialogActions onSecondaryClicked={onCancelled} primaryLabel="Create" secondaryLabel="Cancel" hideSecondary={!showCancel} />
           </FormStackColumn>

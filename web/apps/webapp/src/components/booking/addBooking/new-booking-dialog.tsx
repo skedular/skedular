@@ -1,10 +1,10 @@
-import { BookingDate, BookingDetailsSelector, BookingNotes } from '@/components/booking';
+import { BookingDetailsSelector } from '@/components/booking';
 import type { newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
 import type { newBookingDialog_query$key } from '@/queries/__generated__/newBookingDialog_query.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -15,7 +15,7 @@ import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import dayjs, { Dayjs } from 'dayjs';
-import { makeRequired, makeValidate } from 'mui-rff';
+import { DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -279,7 +279,7 @@ const NewBookingDialog = ({
   }
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
       <DialogTitle>Make a booking</DialogTitle>
       <DialogContent>
         <Form
@@ -298,8 +298,19 @@ const NewBookingDialog = ({
 
             return (
               <FormStackColumn onSubmit={handleSubmit}>
-                <BookingDate name="date" required={requiredFields.date} />
-                <BookingNotes name="notes" required={requiredFields.notes} />
+                <FormFieldLabel label="Date" useWiderSpace>
+                  <DatePicker name="date" required={requiredFields.date} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Notes" useWiderSpace>
+                  <TextField
+                    name="notes"
+                    required={requiredFields.notes}
+                    helperText="e.g. I will be half an hour late this morning"
+                    multiline={true}
+                  />
+                </FormFieldLabel>
+
                 <BookingDetailsSelector
                   rootDataRelay={rootData}
                   rootDataPaginatedOrganizationMembersRelay={rootData}

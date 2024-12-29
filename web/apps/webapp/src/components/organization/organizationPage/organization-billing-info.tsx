@@ -3,7 +3,14 @@ import type { organizationBillingInfo_refetchableFragment } from '@/queries/__ge
 import type { organizationBillingInfo_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationBillingInfo_setOrganizationBillingInfoMutation.graphql';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import { BodyIconTypography, FormStackColumn, LeadIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  BodyIconTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  StackRow,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import { SingleChoiceCountry } from '@repo/shared/components/forms';
 import { EditIcon } from '@repo/shared/components/icons';
 import {
@@ -262,14 +269,38 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
             validate={validate}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
-                <TextField label="Email" name="email" required={requiredFields.email} helperText="Email to send invoice to" />
-                <TextField label="Address line 1" name="addressLine1" required={requiredFields.addressLine1} />
-                <TextField label="Address line 2" name="addressLine2" required={requiredFields.addressLine2} />
-                <TextField label="Suburb" name="suburb" required={requiredFields.suburb} />
-                <TextField label="City" name="city" required={requiredFields.city} />
-                <TextField label="Province" name="province" required={requiredFields.province} />
-                <TextField label="Zipcode" name="zipcode" required={requiredFields.zipcode} />
-                <SingleChoiceCountry name="country" required={requiredFields.country} />
+                <FormFieldLabel label="Email">
+                  <TextField name="email" required={requiredFields.email} helperText="Email to send invoice to" />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Address line 1">
+                  <TextField name="addressLine1" required={requiredFields.addressLine1} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Address line 2">
+                  <TextField name="addressLine2" required={requiredFields.addressLine2} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Suburb">
+                  <TextField name="suburb" required={requiredFields.suburb} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="City">
+                  <TextField name="city" required={requiredFields.city} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Province">
+                  <TextField name="province" required={requiredFields.province} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Zipcode">
+                  <TextField name="zipcode" required={requiredFields.zipcode} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Country">
+                  <SingleChoiceCountry name="country" required={requiredFields.country} />
+                </FormFieldLabel>
+
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}

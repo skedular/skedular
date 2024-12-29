@@ -112,7 +112,6 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
 
   return (
     <Autocomplete
-      label="Organization Member"
       name={name}
       multiple={multiple}
       required={required}

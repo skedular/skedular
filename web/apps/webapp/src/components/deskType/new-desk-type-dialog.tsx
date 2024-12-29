@@ -2,8 +2,7 @@ import type { newDeskTypeDialog_addDeskTypeMutation } from '@/queries/__generate
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import { DeskTypeName } from '@repo/shared/components/deskType';
+import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -13,7 +12,7 @@ import {
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
-import { makeRequired, makeValidate } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
@@ -103,7 +102,7 @@ const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen}>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
       <DialogTitle>Add desk type</DialogTitle>
       <DialogContent>
         <Form
@@ -114,7 +113,10 @@ const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
-              <DeskTypeName name="name" required={requiredFields.name} />
+              <FormFieldLabel label="Name" useWiderSpace>
+                <TextField name="name" required={requiredFields.name} helperText="Add your desk type name" />
+              </FormFieldLabel>
+
               <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}

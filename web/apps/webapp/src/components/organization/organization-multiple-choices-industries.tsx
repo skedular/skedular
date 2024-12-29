@@ -49,7 +49,6 @@ const OrganizationMultipleChoicesIndustries = ({ rootDataRelay, name, required }
 
   return (
     <Autocomplete
-      label="Industry"
       name={name}
       multiple={true}
       groupBy={(option) => (option as SubCategoryDetails).mainCategoryName}

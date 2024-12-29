@@ -3,9 +3,8 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Paper from '@mui/material/Paper';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { EditIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
@@ -135,54 +134,52 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
   };
 
   return (
-    <>
-      {!editing && (
-        <Card sx={{ minWidth: 200, height: '100%' }}>
+    <Form
+      onSubmit={handleSaveClick}
+      initialValues={{
+        membershipType: locationMemberDetails.membershipType,
+      }}
+      validate={validate}
+      render={({ handleSubmit }) => (
+        <Card sx={{ minWidth: 300, height: '100%' }}>
           <CardHeader
             title={
               <BodyIconTypography
                 label={getCustomerFullName(locationMemberDetails.customer)}
-                startElement={<CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />}
+                startElement={
+                  <CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} showFullName />
+                }
                 invertDefaultColor
               />
             }
           />
+
           <CardContent>
-            {locationMemberDetails.membershipType && (
+            {!editing && locationMemberDetails.membershipType && (
               <BodyIconTypography label={convertStringToLowercaseExceptFirstLetter(locationMemberDetails.membershipType)} />
             )}
+            {editing && (
+              <FormFieldLabel label="Role" useWiderSpace>
+                <LocationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />
+              </FormFieldLabel>
+            )}
+          </CardContent>
 
-            <CardActions sx={{ justifyContent: 'flex-end' }}>
+          <CardActions sx={{ justifyContent: 'flex-end' }}>
+            {!editing && (
               <Button size="small" color="primary" onClick={handleEditClick}>
                 <EditIcon />
               </Button>
-            </CardActions>
-          </CardContent>
-        </Card>
-      )}
-
-      {editing && (
-        <Paper sx={{ padding: 2 }}>
-          <Form
-            onSubmit={handleSaveClick}
-            initialValues={{
-              membershipType: locationMemberDetails.membershipType,
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
+            )}
+            {editing && (
               <FormStackColumn onSubmit={handleSubmit}>
-                <BodyIconTypography
-                  label={getCustomerFullName(locationMemberDetails.customer)}
-                  startElement={<CustomerAvatar name={locationMemberDetails.customer} photo={{ url: locationMemberDetails.customer?.photoUrl }} />}
-                />
-                <LocationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />
               </FormStackColumn>
             )}
-          />
-        </Paper>
+          </CardActions>
+        </Card>
       )}
-    </>
+    />
   );
 };
 
