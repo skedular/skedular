@@ -7,7 +7,6 @@ option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Organization.V1";
 
 service OrganizationService {
     rpc Admin_Add (Admin_AddInput) returns (Organization);
-    rpc Admin_UpdateMembers (Admin_UpdateMembersInput) returns (Organization);
     rpc Admin_AddMember (Admin_AddMemberInput) returns (Organization);
 
     rpc GetVersion (VersionInput) returns (Version);
@@ -106,11 +105,6 @@ message Offering {
 
 message GetInput {
     string id = 1;
-}
-
-message Admin_UpdateMembersInput {
-    string id = 1;
-    repeated Member members = 2;
 }
 
 enum MembershipType {

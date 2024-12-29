@@ -80,19 +80,6 @@ public class OrganizationGrpcService(
         return mapper.MapToGrpcResponse(organization);
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization>
-        Admin_UpdateMembers(
-            Admin_UpdateMembersInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await organizationMemberService.UpdateMembersAsync(
-                request.Id,
-                mapper.MapTo(request),
-                context.CancellationToken));
-    }
-
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Admin_AddMember(
         Admin_AddMemberInput request, ServerCallContext context)
     {

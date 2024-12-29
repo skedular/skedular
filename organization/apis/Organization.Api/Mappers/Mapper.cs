@@ -81,7 +81,6 @@ public interface IMapper
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
 
-    ICollection<OrganizationMember> MapTo(Admin_UpdateMembersInput src);
     OrganizationMember MapTo(Admin_AddMemberInput src);
     OrganizationEdge MapTo(Edge<Shared.Models.Organization> src);
 
@@ -484,9 +483,6 @@ public class Mapper : IMapper
         dest.Customer = customer;
         return dest;
     }
-
-    public ICollection<OrganizationMember> MapTo(Admin_UpdateMembersInput src) =>
-        src.Members.Select(item => MapTo(item, new Shared.Models.Organization { Id = src.Id })).ToList();
 
     public OrganizationMember MapTo(Admin_AddMemberInput src) =>
         MapTo(src.Member, new Shared.Models.Organization { Id = src.Id });

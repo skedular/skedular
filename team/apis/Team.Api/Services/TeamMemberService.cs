@@ -293,14 +293,19 @@ public class TeamMemberService(
         repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
         existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
+        var mappedTeam = mapper.MapTo(existingTeam);
+        mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
+        
         await teamOutboxPublisher.PublishTeamAsync(
-            [mapper.MapTo(existingTeam)],
+            [mappedTeam],
             repositoryFactory.TeamRepository.UnitOfWork,
             cancellationToken);
 
         await repositoryFactory.TeamMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        existingTeam.TeamMembers = existingTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
         return mapper.MapTo(existingTeam);
     }
 
@@ -409,8 +414,11 @@ public class TeamMemberService(
 
         repositoryFactory.TeamMemberRepository.Remove(teamMemberToRemove);
 
+        var mappedTeam = mapper.MapTo(existingTeam);
+        mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
+
         await teamOutboxPublisher.PublishTeamAsync(
-            [mapper.MapTo(existingTeam)],
+            [mappedTeam],
             repositoryFactory.TeamRepository.UnitOfWork,
             cancellationToken);
 

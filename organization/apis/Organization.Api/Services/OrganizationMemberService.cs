@@ -33,11 +33,6 @@ public interface IOrganizationMemberService
         ICollection<string> ids,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Organization> UpdateMembersAsync(
-        string organizationId,
-        ICollection<OrganizationMember> members,
-        CancellationToken cancellationToken);
-
     Task<Shared.Models.Organization> AddMemberAsync(
         string organizationId,
         OrganizationMember member,
@@ -288,64 +283,6 @@ public class OrganizationMemberService(
 
         return organizationMembers.Select(item => mapper.MapTo(item,
             mapper.MapTo(organizations.Single(organization => organization.Id == item.Organization.Id)))).ToList();
-    }
-
-    public async Task<Shared.Models.Organization> UpdateMembersAsync(
-        string organizationId,
-        ICollection<OrganizationMember> members,
-        CancellationToken cancellationToken)
-    {
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationMemberRepository.UnitOfWork,
-            cancellationToken);
-
-        var updatedItems = new List<Shared.Database.Entities.OrganizationMember>();
-        foreach (var organizationMember in organization.OrganizationMembers
-                     .Where(organizationMember =>
-                         members.Any(item => item.Id == organizationMember.Id)))
-        {
-            var customer =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                    organizationMember.Customer.Id,
-                    cancellationToken);
-            updatedItems.Add(repositoryFactory.OrganizationMemberRepository.Update(
-                mapper.MergeToEntity(
-                    members.Single(item => item.Id == organizationMember.Id),
-                    organizationMember,
-                    organization,
-                    customer)));
-        }
-
-        var addedItems = new List<Shared.Database.Entities.OrganizationMember>();
-        foreach (var organizationMember in members.Where(organizationMember =>
-                     organization.OrganizationMembers.All(item => item.Id != organizationMember.Id)))
-        {
-            var customer =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                    organizationMember.Customer.Id,
-                    cancellationToken);
-            addedItems.Add(repositoryFactory.OrganizationMemberRepository.Add(
-                mapper.MapToEntity(organizationMember, organization, customer)));
-        }
-
-        organization.OrganizationMembers = addedItems.Concat(updatedItems).ToList();
-
-        await organizationOutboxPublisher.PublishOrganizationAsync(
-            [mapper.MapTo(organization)],
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
-
-        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        return mapper.MapTo(organization);
     }
 
     public async Task<Shared.Models.Organization> AddMemberAsync(
