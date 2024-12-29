@@ -48,6 +48,7 @@ import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
+import { getModernOrganizationTeamsBaseLink } from '../organization-link';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
 
@@ -147,20 +148,9 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
           name
           about
           timezone
-          organization {
-            name
-          }
           primaryLocation {
             uniqueId
             name
-          }
-          members {
-            customer {
-              uniqueId
-            }
-            organizationMember {
-              uniqueId
-            }
           }
         }
       }
@@ -273,10 +263,64 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
     setSeledctedMembers(newRowSelectionModel);
   };
 
-  const handleDetailUpdateClick = () => {};
+  const handleDetailUpdateClick = ({ name, about, timezone, primaryLocationId }: TeamDetails) => {
+    if (!rootData.team) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Updating team '${rootData.team.name}'...`} />, infoNotificationOptions);
+
+    commitUpdateTeam({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: rootData.team.id,
+          name,
+          about,
+          timezone,
+          organizationId,
+          primaryLocationId,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update team '${rootData.team?.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team ${name} details updated.`} />,
+        });
+
+        router.push(getModernOrganizationTeamsBaseLink(organizationId));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update team '${rootData.team?.name}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateTeam: {
+          team: {
+            id: rootData.team.id,
+            name,
+            about,
+            timezone,
+            primaryLocation: null,
+          },
+        },
+      },
+    });
+  };
 
   const handleCancelClick = () => {
-    router.back();
+    router.push(getModernOrganizationTeamsBaseLink(organizationId));
   };
 
   const handleDeactivateMembersClick = () => {
@@ -465,63 +509,63 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
     <Box sx={{ display: 'flex' }}>
       <OrganizationTeamLeftSideNavigationMenuContent organizationId={organizationId} teamId={teamId} hideIcons />
       <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-        <AppBar position="sticky">
-          <Toolbar
-            sx={{
-              backgroundColor: paletteMode === 'dark' ? sandstone : coal,
-              borderBottom: paletteMode === 'dark' ? 1 : undefined,
-              borderColor: (theme) => theme.palette.divider,
-            }}
-          >
-            <SmallHeadingIconTypography label="Edit Team Information" invertDefaultColor />
+        <Form
+          onSubmit={handleDetailUpdateClick}
+          initialValues={{
+            name: team.name,
+            about: team.about,
+          }}
+          validate={validate}
+          render={({ handleSubmit }) => (
+            <FormStackColumn onSubmit={handleSubmit} spacing={0} sx={{ padding: 0 }}>
+              <AppBar position="sticky">
+                <Toolbar
+                  sx={{
+                    backgroundColor: paletteMode === 'dark' ? sandstone : coal,
+                    borderBottom: paletteMode === 'dark' ? 1 : undefined,
+                    borderColor: (theme) => theme.palette.divider,
+                  }}
+                >
+                  <SmallHeadingIconTypography label="Edit Team Information" invertDefaultColor />
 
-            <PushToRight />
-            <StackRow>
-              <Button
-                sx={{
-                  border: 1,
-                  borderColor: paletteMode === 'dark' ? coal : sandstone,
-                  textTransform: 'none',
-                  '&:hover': {
-                    backgroundColor: 'inherit',
-                  },
-                }}
-                variant="contained"
-                color="inherit"
-                onClick={handleCancelClick}
-              >
-                <SmallIconTypography label="Cancel" invertDefaultColor />
-              </Button>
+                  <PushToRight />
+                  <StackRow>
+                    <Button
+                      sx={{
+                        border: 1,
+                        borderColor: paletteMode === 'dark' ? coal : sandstone,
+                        textTransform: 'none',
+                        '&:hover': {
+                          backgroundColor: 'inherit',
+                        },
+                      }}
+                      variant="contained"
+                      color="inherit"
+                      onClick={handleCancelClick}
+                    >
+                      <SmallIconTypography label="Cancel" invertDefaultColor />
+                    </Button>
 
-              <Button variant="contained" color="primary" sx={{ textTransform: 'none' }}>
-                <SmallIconTypography label="Save & Exit" />
-              </Button>
-            </StackRow>
-          </Toolbar>
-        </AppBar>
-        <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-          <StackColumn
-            sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-            ref={(divElement) => {
-              sectionRefs.current['setup'] = divElement;
-            }}
-          >
-            <SectionIconTypography label="Team Setup" />
-            <BodyIconTypography label="Edit your team name and details" />
-            <Divider />
-          </StackColumn>
+                    <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                      <SmallIconTypography label="Save & Exit" />
+                    </Button>
+                  </StackRow>
+                </Toolbar>
+              </AppBar>
+              <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+                <StackColumn
+                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                  ref={(divElement) => {
+                    sectionRefs.current['setup'] = divElement;
+                  }}
+                >
+                  <SectionIconTypography label="Team Setup" />
+                  <BodyIconTypography label="Edit your team name and details" />
+                  <Divider />
+                </StackColumn>
 
-          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-            <LeadIconTypography label="Team" />
-            <Form
-              onSubmit={handleDetailUpdateClick}
-              initialValues={{
-                name: team.name,
-                about: team.about,
-              }}
-              validate={validate}
-              render={({ handleSubmit }) => (
-                <FormStackColumn onSubmit={handleSubmit}>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <LeadIconTypography label="Team" />
                   <TextField label="Name" name="name" required={requiredFields.name} />
                   <TextField label="About" name="about" required={requiredFields.about} multiline={true} />
                   <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
@@ -531,99 +575,99 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
                     required={requiredFields.primaryLocationId}
                     label="Primary Location"
                   />
-                </FormStackColumn>
-              )}
-            />
-          </StackColumn>
+                </StackColumn>
 
-          <StackColumn
-            sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-            ref={(divElement) => {
-              sectionRefs.current['members'] = divElement;
-            }}
-          >
-            <SectionIconTypography label="Team Members" />
-            <BodyIconTypography label="Manage your team members" />
-            <Divider />
-          </StackColumn>
-
-          <StackRow sx={{ padding: defaultPadding }}>
-            <PushToRight />
-            <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-          </StackRow>
-
-          <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-            <Box
-              sx={{
-                backgroundColor: (theme) => theme.palette.background.paper,
-                padding: defaultGridActionPadding,
-                border: 1,
-                borderColor: (theme) => theme.palette.divider,
-                borderRadius: 2,
-                flexGrow: 1,
-              }}
-            >
-              <StackRow sx={{ alignItems: 'center' }}>
-                <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
-                <PushToRight />
-                <Button
-                  size="medium"
-                  variant="contained"
-                  color="secondary"
-                  disabled={seledctedMembers.length === 0}
-                  onClick={handleDeactivateMembersClick}
+                <StackColumn
+                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                  ref={(divElement) => {
+                    sectionRefs.current['members'] = divElement;
+                  }}
                 >
-                  Deactuvate Member
-                </Button>
-                <Button
-                  size="medium"
-                  variant="contained"
-                  color="secondary"
-                  disabled={seledctedMembers.length === 0}
-                  onClick={handleActivateMembersClick}
-                >
-                  Activate Member
-                </Button>
-                <Button
-                  size="medium"
-                  variant="contained"
-                  color="warning"
-                  startIcon={<DeleteIcon />}
-                  disabled={seledctedMembers.length === 0}
-                  onClick={handleRemoveMembersClick}
-                >
-                  Remove Member
-                </Button>
-              </StackRow>
-            </Box>
-          </StackRow>
+                  <SectionIconTypography label="Team Members" />
+                  <BodyIconTypography label="Manage your team members" />
+                  <Divider />
+                </StackColumn>
 
-          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-            <DataGrid
-              checkboxSelection
-              rowSelectionModel={seledctedMembers}
-              onRowSelectionModelChange={handleSelectedMembersChanged}
-              rows={rows}
-              columns={columns}
-              hideFooterPagination={rows.length <= 10}
-              initialState={{
-                pagination: {
-                  rowCount: rows.length,
-                  paginationModel: {
-                    pageSize: 10,
-                  },
-                },
-              }}
-              pageSizeOptions={[10]}
-              ignoreDiacritics
-              disableRowSelectionOnClick
-              getRowHeight={() => 'auto'}
-              rowSpacingType="margin"
-              getRowSpacing={() => ({ top: 3, bottom: 3 })}
-              sx={defaultGridStyle}
-            />
-          </StackColumn>
-        </StackColumn>
+                <StackRow sx={{ padding: defaultPadding }}>
+                  <PushToRight />
+                  <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+                </StackRow>
+
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <Box
+                    sx={{
+                      backgroundColor: (theme) => theme.palette.background.paper,
+                      padding: defaultGridActionPadding,
+                      border: 1,
+                      borderColor: (theme) => theme.palette.divider,
+                      borderRadius: 2,
+                      flexGrow: 1,
+                    }}
+                  >
+                    <StackRow sx={{ alignItems: 'center' }}>
+                      <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
+                      <PushToRight />
+                      <Button
+                        size="medium"
+                        variant="contained"
+                        color="secondary"
+                        disabled={seledctedMembers.length === 0}
+                        onClick={handleDeactivateMembersClick}
+                      >
+                        Deactuvate Member
+                      </Button>
+                      <Button
+                        size="medium"
+                        variant="contained"
+                        color="secondary"
+                        disabled={seledctedMembers.length === 0}
+                        onClick={handleActivateMembersClick}
+                      >
+                        Activate Member
+                      </Button>
+                      <Button
+                        size="medium"
+                        variant="contained"
+                        color="warning"
+                        startIcon={<DeleteIcon />}
+                        disabled={seledctedMembers.length === 0}
+                        onClick={handleRemoveMembersClick}
+                      >
+                        Remove Member
+                      </Button>
+                    </StackRow>
+                  </Box>
+                </StackRow>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <DataGrid
+                    checkboxSelection
+                    rowSelectionModel={seledctedMembers}
+                    onRowSelectionModelChange={handleSelectedMembersChanged}
+                    rows={rows}
+                    columns={columns}
+                    hideFooterPagination={rows.length <= 10}
+                    initialState={{
+                      pagination: {
+                        rowCount: rows.length,
+                        paginationModel: {
+                          pageSize: 10,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[10]}
+                    ignoreDiacritics
+                    disableRowSelectionOnClick
+                    getRowHeight={() => 'auto'}
+                    rowSpacingType="margin"
+                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                    sx={defaultGridStyle}
+                  />
+                </StackColumn>
+              </StackColumn>
+            </FormStackColumn>
+          )}
+        />
       </Box>
     </Box>
   );
