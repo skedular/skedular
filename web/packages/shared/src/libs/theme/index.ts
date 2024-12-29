@@ -1,5 +1,6 @@
 export {
   default as createTheme,
+  defaultGridActionPadding,
   defaultGridStyle,
   defaultOldGridStyle,
   defaultPadding,

@@ -10,7 +10,7 @@ import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { GridContainer, SectionIconTypography, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { EllipseMenuIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -253,8 +253,8 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
       field: 'team',
       headerName: 'Team',
       editable: false,
-      renderCell: (params) => params.value.name,
-      display: 'text',
+      renderCell: (params) => <SmallIconTypography label={params.value.name} />,
+      display: 'flex',
       minWidth: 200,
     },
     {

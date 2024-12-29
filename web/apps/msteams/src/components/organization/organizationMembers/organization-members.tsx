@@ -17,7 +17,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultGridStyle, defaultPadding, emerald, flame, maxScreenWidth } from '@repo/shared/libs/theme';
+import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, maxScreenWidth } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { TeamSelector } from 'components/team/teamSelector';
@@ -364,32 +364,32 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
       field: 'name',
       headerName: 'Name',
       editable: false,
-      renderCell: (params) => params.value,
-      display: 'text',
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
       minWidth: 200,
     },
     {
       field: 'teams',
       headerName: 'Team',
       editable: false,
-      renderCell: (params) => params.value,
-      display: 'text',
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
       minWidth: 350,
     },
     {
       field: 'email',
       headerName: 'Email',
       editable: false,
-      renderCell: (params) => params.value,
-      display: 'text',
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
       minWidth: 300,
     },
     {
       field: 'phoneNumber',
       headerName: 'Phone',
       editable: false,
-      renderCell: (params) => params.value,
-      display: 'text',
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
       minWidth: 300,
     },
     {
@@ -433,11 +433,11 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
             <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
           </StackRow>
 
-          <StackRow sx={{ padding: defaultPadding }}>
+          <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
             <Box
               sx={{
                 backgroundColor: (theme) => theme.palette.background.paper,
-                padding: defaultPadding,
+                padding: defaultGridActionPadding,
                 border: 1,
                 borderColor: (theme) => theme.palette.divider,
                 borderRadius: 2,

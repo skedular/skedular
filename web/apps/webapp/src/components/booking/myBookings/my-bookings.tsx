@@ -10,7 +10,7 @@ import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { GridContainer, SectionIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { EllipseMenuIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -334,16 +334,16 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       field: 'location',
       headerName: 'Location',
       editable: false,
-      renderCell: (params) => params.value?.name ?? 'N/A',
-      display: 'text',
+      renderCell: (params) => <SmallIconTypography label={params.value?.name ?? 'N/A'} />,
+      display: 'flex',
       minWidth: 200,
     },
     {
       field: 'team',
       headerName: 'Team',
       editable: false,
-      renderCell: (params) => params.value?.name ?? 'N/A',
-      display: 'text',
+      renderCell: (params) => <SmallIconTypography label={params.value?.name ?? 'N/A'} />,
+      display: 'flex',
       minWidth: 200,
     },
     {
@@ -356,9 +356,9 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
         }
 
         const desks = params.value?.map((item: DeskDetails) => item.name).join(', ');
-        return desks.length === 0 ? 'N/A' : desks;
+        return <SmallIconTypography label={desks.length === 0 ? 'N/A' : desks} />;
       },
-      display: 'text',
+      display: 'flex',
       minWidth: 200,
     },
     {
@@ -388,7 +388,8 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       headerName: 'Date',
       editable: false,
       sortable: true,
-      display: 'text',
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
       minWidth: 300,
     },
     {
