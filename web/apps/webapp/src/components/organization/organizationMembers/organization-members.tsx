@@ -2,7 +2,7 @@ import { TeamSelector } from '@/components/team/teamSelector';
 import type { organizationMembers_changeOrganizationMembersStatusMutation } from '@/queries/__generated__/organizationMembers_changeOrganizationMembersStatusMutation.graphql';
 import type { organizationMembers_organizationMembers_query$key } from '@/queries/__generated__/organizationMembers_organizationMembers_query.graphql';
 import type { organizationMembers_organizationMembers_refetchableFragment } from '@/queries/__generated__/organizationMembers_organizationMembers_refetchableFragment.graphql';
-import type { organizationMembers_removeOrganizationMembersInputMutation } from '@/queries/__generated__/organizationMembers_removeOrganizationMembersInputMutation.graphql';
+import type { organizationMembers_removeOrganizationMembersMutation } from '@/queries/__generated__/organizationMembers_removeOrganizationMembersMutation.graphql';
 import type { organizationMembers_rootQuery } from '@/queries/__generated__/organizationMembers_rootQuery.graphql';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -77,6 +77,7 @@ type CustomerDetails = {
   photoUrl?: string | null | undefined;
   phoneNumber?: string | null | undefined;
 };
+
 type RowType = {
   id: string;
   avatar: CustomerDetails;
@@ -144,9 +145,9 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
-  const [commitRemoveOrganizationMembersInput] = useMutation<organizationMembers_removeOrganizationMembersInputMutation>(graphql`
-    mutation organizationMembers_removeOrganizationMembersInputMutation($connectionIds: [ID!]!, $input: RemoveOrganizationMembersInput!) {
-      removeOrganizationMembersInput(input: $input) {
+  const [commitRemoveOrganizationMembers] = useMutation<organizationMembers_removeOrganizationMembersMutation>(graphql`
+    mutation organizationMembers_removeOrganizationMembersMutation($connectionIds: [ID!]!, $input: RemoveOrganizationMembersInput!) {
+      removeOrganizationMembers(input: $input) {
         members {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -305,7 +306,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   const handleRemoveMembersClick = () => {
     const toastId = themedToast(<NotificationContent content={'Removing members...'} />, infoNotificationOptions);
 
-    commitRemoveOrganizationMembersInput({
+    commitRemoveOrganizationMembers({
       variables: {
         connectionIds,
         input: {

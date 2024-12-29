@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4794c690c1e3c58003abb89d5620c69b>>
+ * @generated SignedSource<<1b6177d037d87047ecc57c1f1c18a9f8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,24 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type RemoveOrganizationMembersInput = {
+export type RemoveTeamMembersInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationMembers_removeOrganizationMembersInputMutation$variables = {
+export type organizationTeam_removeTeamMembersMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: RemoveOrganizationMembersInput;
+  input: RemoveTeamMembersInput;
 };
-export type organizationMembers_removeOrganizationMembersInputMutation$data = {
-  readonly removeOrganizationMembersInput: {
+export type organizationTeam_removeTeamMembersMutation$data = {
+  readonly removeTeamMembers: {
     readonly members: ReadonlyArray<{
       readonly id: string;
     }>;
   } | null | undefined;
 };
-export type organizationMembers_removeOrganizationMembersInputMutation = {
-  response: organizationMembers_removeOrganizationMembersInputMutation$data;
-  variables: organizationMembers_removeOrganizationMembersInputMutation$variables;
+export type organizationTeam_removeTeamMembersMutation = {
+  response: organizationTeam_removeTeamMembersMutation$data;
+  variables: organizationTeam_removeTeamMembersMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,20 +61,20 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMembers_removeOrganizationMembersInputMutation",
+    "name": "organizationTeam_removeTeamMembersMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "OrganizationMembersDetailsPayload",
+        "concreteType": "TeamMembersDetailsPayload",
         "kind": "LinkedField",
-        "name": "removeOrganizationMembersInput",
+        "name": "removeTeamMembers",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "OrganizationMemberDetails",
+            "concreteType": "TeamMemberDetails",
             "kind": "LinkedField",
             "name": "members",
             "plural": true,
@@ -94,20 +94,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMembers_removeOrganizationMembersInputMutation",
+    "name": "organizationTeam_removeTeamMembersMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "OrganizationMembersDetailsPayload",
+        "concreteType": "TeamMembersDetailsPayload",
         "kind": "LinkedField",
-        "name": "removeOrganizationMembersInput",
+        "name": "removeTeamMembers",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "OrganizationMemberDetails",
+            "concreteType": "TeamMemberDetails",
             "kind": "LinkedField",
             "name": "members",
             "plural": true,
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e5240821ecf191ea600ad2beaff49996",
+    "cacheID": "2270b5bb2b77ea1418fec54125dd1679",
     "id": null,
     "metadata": {},
-    "name": "organizationMembers_removeOrganizationMembersInputMutation",
+    "name": "organizationTeam_removeTeamMembersMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMembers_removeOrganizationMembersInputMutation(\n  $input: RemoveOrganizationMembersInput!\n) {\n  removeOrganizationMembersInput(input: $input) {\n    members {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationTeam_removeTeamMembersMutation(\n  $input: RemoveTeamMembersInput!\n) {\n  removeTeamMembers(input: $input) {\n    members {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a4be97dca8bc154fcc6223a6f31708f3";
+(node as any).hash = "40e8fd85e713dafb311cb03fe23700c8";
 
 export default node;

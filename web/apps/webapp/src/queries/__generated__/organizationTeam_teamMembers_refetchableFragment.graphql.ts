@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bd13339ac2fc2d8f6c147025889d3963>>
+ * @generated SignedSource<<6ae413554ac3d6f0493e64e8943625b9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,87 +10,54 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationTeam_rootQuery$variables = {
-  organizationExists: boolean;
-  organizationId: string;
+export type organizationTeam_teamMembers_refetchableFragment$variables = {
+  count?: number | null | undefined;
+  cursor?: string | null | undefined;
   peopleNameSearchText?: string | null | undefined;
   teamId: string;
 };
-export type organizationTeam_rootQuery$data = {
-  readonly team: {
-    readonly about: string | null | undefined;
-    readonly id: string;
-    readonly name: string;
-  } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationTeam_teamMembers_query" | "singleChoiceLocation_locations_query">;
+export type organizationTeam_teamMembers_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationTeam_teamMembers_query">;
 };
-export type organizationTeam_rootQuery = {
-  response: organizationTeam_rootQuery$data;
-  variables: organizationTeam_rootQuery$variables;
+export type organizationTeam_teamMembers_refetchableFragment = {
+  response: organizationTeam_teamMembers_refetchableFragment$data;
+  variables: organizationTeam_teamMembers_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationExists"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationId"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "peopleNameSearchText"
-},
-v3 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "teamId"
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": [
-    {
-      "kind": "Variable",
-      "name": "id",
-      "variableName": "teamId"
-    }
-  ],
-  "concreteType": "TeamDetails",
-  "kind": "LinkedField",
-  "name": "team",
-  "plural": false,
-  "selections": [
-    (v4/*: any*/),
-    (v5/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "about",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v7 = [
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "count"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "peopleNameSearchText"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "teamId"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "cursor"
+  },
+  {
+    "kind": "Variable",
+    "name": "first",
+    "variableName": "count"
+  },
   {
     "fields": [
       {
@@ -107,48 +74,29 @@ v7 = [
     "kind": "ObjectValue",
     "name": "where"
   }
-],
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "totalCount",
-  "storageKey": null
-},
-v9 = {
-  "kind": "ClientExtension",
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "__id",
-      "storageKey": null
-    }
-  ]
-};
+];
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/),
-      (v3/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationTeam_rootQuery",
+    "name": "organizationTeam_teamMembers_refetchableFragment",
     "selections": [
-      (v6/*: any*/),
       {
-        "args": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "count",
+            "variableName": "count"
+          },
+          {
+            "kind": "Variable",
+            "name": "cursor",
+            "variableName": "cursor"
+          }
+        ],
         "kind": "FragmentSpread",
         "name": "organizationTeam_teamMembers_query"
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "singleChoiceLocation_locations_query"
       }
     ],
     "type": "Query",
@@ -156,25 +104,25 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/),
-      (v3/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationTeam_rootQuery",
+    "name": "organizationTeam_teamMembers_refetchableFragment",
     "selections": [
-      (v6/*: any*/),
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "TeamMemberConnection",
         "kind": "LinkedField",
         "name": "teamMembers",
         "plural": false,
         "selections": [
-          (v8/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "totalCount",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -191,7 +139,13 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "id",
+                    "storageKey": null
+                  },
                   {
                     "alias": null,
                     "args": null,
@@ -214,7 +168,13 @@ return {
                         "name": "email",
                         "storageKey": null
                       },
-                      (v5/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "name",
+                        "storageKey": null
+                      },
                       {
                         "alias": null,
                         "args": null,
@@ -305,13 +265,24 @@ return {
             ],
             "storageKey": null
           },
-          (v9/*: any*/)
+          {
+            "kind": "ClientExtension",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "__id",
+                "storageKey": null
+              }
+            ]
+          }
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v1/*: any*/),
         "filters": [
           "where"
         ],
@@ -319,76 +290,20 @@ return {
         "key": "teamMembers_teamMembers",
         "kind": "LinkedHandle",
         "name": "teamMembers"
-      },
-      {
-        "condition": "organizationExists",
-        "kind": "Condition",
-        "passingValue": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": [
-              {
-                "fields": [
-                  {
-                    "kind": "Variable",
-                    "name": "organizationId",
-                    "variableName": "organizationId"
-                  }
-                ],
-                "kind": "ObjectValue",
-                "name": "where"
-              }
-            ],
-            "concreteType": "LocationConnection",
-            "kind": "LinkedField",
-            "name": "locations",
-            "plural": false,
-            "selections": [
-              (v8/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "LocationEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "LocationDetails",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v4/*: any*/),
-                      (v5/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              (v9/*: any*/)
-            ],
-            "storageKey": null
-          }
-        ]
       }
     ]
   },
   "params": {
-    "cacheID": "573f5d765843ce1426e1bacb154f4d78",
+    "cacheID": "768523fc2a8e0bd4eab96538b7c1d1ac",
     "id": null,
     "metadata": {},
-    "name": "organizationTeam_rootQuery",
+    "name": "organizationTeam_teamMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationTeam_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $teamId: String!\n  $peopleNameSearchText: String\n) {\n  team(id: $teamId) {\n    id\n    name\n    about\n  }\n  ...organizationTeam_teamMembers_query\n  ...singleChoiceLocation_locations_query\n}\n\nfragment organizationTeam_teamMembers_query on Query {\n  teamMembers(where: {teamId: $teamId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceLocation_locations_query on Query {\n  locations(where: {organizationId: $organizationId}) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query organizationTeam_teamMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $peopleNameSearchText: String\n  $teamId: String!\n) {\n  ...organizationTeam_teamMembers_query_1G22uz\n}\n\nfragment organizationTeam_teamMembers_query_1G22uz on Query {\n  teamMembers(first: $count, after: $cursor, where: {teamId: $teamId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "724e4dacfb1d95cc1be96a3034fe8466";
+(node as any).hash = "0b458b29b5686e736755697d8479068e";
 
 export default node;

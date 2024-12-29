@@ -45,6 +45,7 @@ public interface ITeamMemberService
         CancellationToken cancellationToken);
 
     Task<TeamMember> RemoveAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<TeamMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken);
 }
 
 public class TeamMemberService(
@@ -417,5 +418,60 @@ public class TeamMemberService(
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return mapper.MapTo(existingTeamMember);
+    }
+
+    public async Task<ICollection<TeamMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    {
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var distinctTeamMemberIds = ids.Distinct().ToList();
+        var teamMembers = await repositoryFactory.TeamMemberRepository.GetByIdsAsync(
+            distinctTeamMemberIds,
+            cancellationToken);
+        if (teamMembers.Count != distinctTeamMemberIds.Count)
+        {
+            throw new TeamMemberNotFound();
+        }
+
+        if (teamMembers.Count == 0)
+        {
+            return [];
+        }
+
+        var teamIds = teamMembers.Select(item => item.Team.Id).Distinct().ToList();
+        var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(
+            teamIds,
+            cancellationToken);
+
+        if (!teamMembers.All(
+                item => teamAuthorizationService.CanModify(
+                    teams.Single(team => team.Id == item.Team.Id),
+                    customer)))
+        {
+            throw new Unauthorized();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationMemberRepository.UnitOfWork,
+            cancellationToken);
+
+        repositoryFactory.TeamMemberRepository.RemoveRange(teamMembers);
+
+        await teamOutboxPublisher.PublishTeamAsync(
+            teams.Select(item =>
+            {
+                var mapped = mapper.MapTo(item);
+                mapped.TeamMembers = mapped.TeamMembers
+                    .Where(organizationMember => organizationMember.DeletedAt is null).ToList();
+
+                return mapped;
+            }),
+            repositoryFactory.OrganizationRepository.UnitOfWork,
+            cancellationToken);
+
+        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return teamMembers.Select(item => mapper.MapTo(item,
+            mapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id)))).ToList();
     }
 }

@@ -24,6 +24,7 @@ type Mutation {
   removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   changeTeamMembershipType(input: ChangeTeamMembershipTypeInput!): TeamMemberDetailsPayload @cost(weight: "10")
   changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload @cost(weight: "10")
+  removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload @cost(weight: "10")
   inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload @cost(weight: "10")
   acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload @cost(weight: "10")
   rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): RejectInvitationToJoinTeamPayload @cost(weight: "10")
@@ -208,6 +209,11 @@ input RejectInvitationToJoinTeamInput {
 input RemoveTeamMemberInput {
   clientMutationId: String
   id: String!
+}
+
+input RemoveTeamMembersInput {
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input TeamMemberOrderInput {

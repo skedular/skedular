@@ -110,6 +110,19 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
+    public async Task<TeamMembersDetailsPayload?> RemoveTeamMembersAsync(
+        RemoveTeamMembersInput input,
+        [Service] ITeamMemberService teamMemberService,
+        CancellationToken cancellationToken)
+    {
+        var organizationMembers = await teamMemberService.RemoveAsync(input.Ids, cancellationToken);
+        return new TeamMembersDetailsPayload
+        {
+            ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
+        };
+    }
+
+    [UseResolverScope]
     public async Task<InviteCustomersToJoinTeamPayload?> InviteCustomersToJoinTeamAsync(
         InviteCustomersToJoinTeamInput input,
         [Service] ITeamInvitationService teamInvitationService,

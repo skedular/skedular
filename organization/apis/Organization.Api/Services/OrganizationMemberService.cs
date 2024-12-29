@@ -237,10 +237,9 @@ public class OrganizationMemberService(
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var distinctOrganizationMemberIds = ids.Distinct().ToList();
-        var organizationMembers =
-            await repositoryFactory.OrganizationMemberRepository.GetByIdsAsync(
-                distinctOrganizationMemberIds,
-                cancellationToken);
+        var organizationMembers = await repositoryFactory.OrganizationMemberRepository.GetByIdsAsync(
+            distinctOrganizationMemberIds,
+            cancellationToken);
         if (organizationMembers.Count != distinctOrganizationMemberIds.Count)
         {
             throw new OrganizationMemberNotFound();
@@ -248,7 +247,6 @@ public class OrganizationMemberService(
 
         // Exclude calling customer from the list
         organizationMembers = organizationMembers.Where(item => item.Customer.Id != customer.Id).ToList();
-
         if (organizationMembers.Count == 0)
         {
             return [];

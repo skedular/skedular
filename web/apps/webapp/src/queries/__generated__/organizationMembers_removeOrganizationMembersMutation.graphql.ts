@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4794c690c1e3c58003abb89d5620c69b>>
+ * @generated SignedSource<<e1d3c943dba364a319361057e831919e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,20 +13,20 @@ export type RemoveOrganizationMembersInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationMembers_removeOrganizationMembersInputMutation$variables = {
+export type organizationMembers_removeOrganizationMembersMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: RemoveOrganizationMembersInput;
 };
-export type organizationMembers_removeOrganizationMembersInputMutation$data = {
-  readonly removeOrganizationMembersInput: {
+export type organizationMembers_removeOrganizationMembersMutation$data = {
+  readonly removeOrganizationMembers: {
     readonly members: ReadonlyArray<{
       readonly id: string;
     }>;
   } | null | undefined;
 };
-export type organizationMembers_removeOrganizationMembersInputMutation = {
-  response: organizationMembers_removeOrganizationMembersInputMutation$data;
-  variables: organizationMembers_removeOrganizationMembersInputMutation$variables;
+export type organizationMembers_removeOrganizationMembersMutation = {
+  response: organizationMembers_removeOrganizationMembersMutation$data;
+  variables: organizationMembers_removeOrganizationMembersMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,14 +61,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMembers_removeOrganizationMembersInputMutation",
+    "name": "organizationMembers_removeOrganizationMembersMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "OrganizationMembersDetailsPayload",
         "kind": "LinkedField",
-        "name": "removeOrganizationMembersInput",
+        "name": "removeOrganizationMembers",
         "plural": false,
         "selections": [
           {
@@ -94,14 +94,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMembers_removeOrganizationMembersInputMutation",
+    "name": "organizationMembers_removeOrganizationMembersMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "OrganizationMembersDetailsPayload",
         "kind": "LinkedField",
-        "name": "removeOrganizationMembersInput",
+        "name": "removeOrganizationMembers",
         "plural": false,
         "selections": [
           {
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e5240821ecf191ea600ad2beaff49996",
+    "cacheID": "7eb34bb98be471cef79397d13c287836",
     "id": null,
     "metadata": {},
-    "name": "organizationMembers_removeOrganizationMembersInputMutation",
+    "name": "organizationMembers_removeOrganizationMembersMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMembers_removeOrganizationMembersInputMutation(\n  $input: RemoveOrganizationMembersInput!\n) {\n  removeOrganizationMembersInput(input: $input) {\n    members {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationMembers_removeOrganizationMembersMutation(\n  $input: RemoveOrganizationMembersInput!\n) {\n  removeOrganizationMembers(input: $input) {\n    members {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a4be97dca8bc154fcc6223a6f31708f3";
+(node as any).hash = "475d3e6e7f00b616d1e2d91777184491";
 
 export default node;

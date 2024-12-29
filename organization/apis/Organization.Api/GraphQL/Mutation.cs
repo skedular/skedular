@@ -107,7 +107,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationMembersDetailsPayload?> RemoveOrganizationMembersInputAsync(
+    public async Task<OrganizationMembersDetailsPayload?> RemoveOrganizationMembersAsync(
         RemoveOrganizationMembersInput input,
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
