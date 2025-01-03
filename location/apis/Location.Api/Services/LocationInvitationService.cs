@@ -106,7 +106,7 @@ public class LocationInvitationService(
                     Location = location,
                     Email = email,
                     Status = InvitationStatusConstants.Pending,
-                    MembershipType = LocationMembershipTypeConstants.Member,
+                    Role = LocationRoleConstants.Member,
                     CreatedBy = customerEntity,
                     Invitee = matchingCustomerByEmail
                 })
@@ -171,7 +171,7 @@ public class LocationInvitationService(
             repositoryFactory.LocationMemberRepository.Add(new LocationMember
             {
                 Id = randomHelper.Generate(),
-                MembershipType = joinInvitation.MembershipType,
+                Role = joinInvitation.Role,
                 Location = location,
                 Customer = customerEntity
             });

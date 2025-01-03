@@ -71,12 +71,12 @@ public class CancelInvitationToJoinLocationPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("ChangeLocationMembershipTypeInput")]
-public class ChangeLocationMembershipTypeInput
+[GraphQLName("ChangeLocationMemberRoleInput")]
+public class ChangeLocationMemberRoleInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("membershipType")] public LocationMembershipType MembershipType { get; set; }
+    [GraphQLName("role")] public LocationMemberRole Role { get; set; }
 }
 
 [GraphQLName("DeleteLocationInput")]
@@ -213,7 +213,7 @@ public class LocationMemberConnection : Connection<LocationMemberEdge>;
 [GraphQLName("LocationMemberDetails")]
 public class LocationMemberDetails : Node
 {
-    [GraphQLName("membershipType")] public LocationMembershipType? MembershipType { get; set; }
+    [GraphQLName("role")] public LocationMemberRole? Role { get; set; }
     [GraphQLName("customer")] public LocationCustomerDetails Customer { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }

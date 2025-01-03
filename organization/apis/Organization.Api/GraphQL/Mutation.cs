@@ -73,15 +73,15 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationMemberDetailsPayload?> ChangeOrganizationMembershipAsync(
-        ChangeOrganizationMembershipTypeInput input,
+    public async Task<OrganizationMemberDetailsPayload?> ChangeOrganizationMemberRoleAsync(
+        ChangeOrganizationMemberRoleInput input,
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
         var organizationMember =
-            await organizationMemberService.ChangeMembershipTypeAsync(
+            await organizationMemberService.ChangeRoleAsync(
                 input.Id,
-                input.MembershipType,
+                input.Role,
                 cancellationToken);
         return new OrganizationMemberDetailsPayload
         {

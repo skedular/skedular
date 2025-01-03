@@ -5,7 +5,7 @@ namespace MsTeams.Shared.Models;
 
 public class OrganizationMember : ReplicatedModelBaseWithDeleted
 {
-    public OrganizationMembershipType? MembershipType { get; set; }
+    public OrganizationMemberRole? Role { get; set; }
     public OrganizationMemberStatus Status { get; set; }
     public Organization Organization { get; set; }
     public Customer Customer { get; set; }

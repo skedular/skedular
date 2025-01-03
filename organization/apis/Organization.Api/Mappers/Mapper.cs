@@ -27,6 +27,7 @@ using Team = Organization.Shared.Models.Team;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 using UpdateDeskTypeInput = Organization.Api.GraphQL.UpdateDeskTypeInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
+using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
 
 namespace Organization.Api.Mappers;
 
@@ -163,11 +164,11 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                OrganizationMembershipTypeConstants.Owner => OrganizationMembershipType.Owner,
-                OrganizationMembershipTypeConstants.Administrator => OrganizationMembershipType.Administrator,
-                OrganizationMembershipTypeConstants.Member => OrganizationMembershipType.Member,
+                OrganizationMemberRoleConstants.Owner => OrganizationMemberRole.Owner,
+                OrganizationMemberRoleConstants.Administrator => OrganizationMemberRole.Administrator,
+                OrganizationMemberRoleConstants.Member => OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch
@@ -197,11 +198,11 @@ public class Mapper : IMapper
                 InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                OrganizationMembershipTypeConstants.Owner => OrganizationMembershipType.Owner,
-                OrganizationMembershipTypeConstants.Administrator => OrganizationMembershipType.Administrator,
-                OrganizationMembershipTypeConstants.Member => OrganizationMembershipType.Member,
+                OrganizationMemberRoleConstants.Owner => OrganizationMemberRole.Owner,
+                OrganizationMemberRoleConstants.Administrator => OrganizationMemberRole.Administrator,
+                OrganizationMemberRoleConstants.Member => OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Organization = MapTo(src.Organization),
@@ -344,7 +345,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            MembershipType = src.MembershipType,
+            Role = src.Role,
             Status = src.Status,
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             Customer = MapTo(src.Customer)
@@ -465,11 +466,11 @@ public class Mapper : IMapper
         Shared.Database.Entities.Customer customer)
     {
         dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType switch
+        dest.Role = src.Role switch
         {
-            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
-            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
-            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            OrganizationMemberRole.Owner => OrganizationMemberRoleConstants.Owner,
+            OrganizationMemberRole.Administrator => OrganizationMemberRoleConstants.Administrator,
+            OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
             _ => throw new ArgumentOutOfRangeException()
         };
         dest.Status = src.Status switch
@@ -643,11 +644,11 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                OrganizationMembershipType.Owner => MembershipType.Owner,
-                OrganizationMembershipType.Administrator => MembershipType.Administrator,
-                OrganizationMembershipType.Member => MembershipType.Member,
+                OrganizationMemberRole.Owner => Role.Owner,
+                OrganizationMemberRole.Administrator => Role.Administrator,
+                OrganizationMemberRole.Member => Role.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch
@@ -701,11 +702,11 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                MembershipType.Owner => OrganizationMembershipType.Owner,
-                MembershipType.Administrator => OrganizationMembershipType.Administrator,
-                MembershipType.Member => OrganizationMembershipType.Member,
+                Role.Owner => OrganizationMemberRole.Owner,
+                Role.Administrator => OrganizationMemberRole.Administrator,
+                Role.Member => OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch

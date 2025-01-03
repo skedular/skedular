@@ -11,11 +11,10 @@ using Customer = Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer;
 using LocationConfiguration = Slack.Shared.Configurations.LocationConfiguration;
 using CustomerConfiguration = Slack.Shared.Configurations.CustomerConfiguration;
 using Location = Slack.Shared.Database.Entities.Location;
-using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.Member;
-using MembershipType = Api.Shared.Services.Grpc.Skedular.Organization.V1.MembershipType;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationConfiguration = Slack.Shared.Configurations.OrganizationConfiguration;
+using Role = Api.Shared.Services.Grpc.Skedular.Organization.V1.Role;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 
@@ -194,30 +193,30 @@ public class WorkspaceMemberService(
             return;
         }
 
-        MembershipType membershipType;
+        Role role;
         if (workspaceMember.IsPrimaryOwner || workspaceMember.IsOwner)
         {
-            membershipType = MembershipType.Owner;
+            role = Role.Owner;
         }
         else if (workspaceMember.IsAdmin)
         {
-            membershipType = MembershipType.Administrator;
+            role = Role.Administrator;
         }
         else
         {
-            membershipType = MembershipType.Member;
+            role = Role.Member;
         }
 
         await organizationServiceClient.Admin_AddMemberAsync(
             new Admin_AddMemberInput
             {
                 Id = workspace.Organization.Id,
-                Member = new Member
+                Member = new OrganizationMember
                 {
                     Id = randomHelper.Generate(),
                     Customer =
                         new Customer { Id = customerId },
-                    MembershipType = membershipType
+                    Role = role
                 }
             },
             organizationConfiguration.ApiKey.CreateMetadata(),

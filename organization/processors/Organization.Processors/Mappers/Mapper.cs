@@ -400,11 +400,11 @@ public class Mapper : IMapper
         Shared.Database.Entities.Customer customer)
     {
         dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType switch
+        dest.Role = src.Role switch
         {
-            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
-            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
-            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            OrganizationMemberRole.Owner => OrganizationMemberRoleConstants.Owner,
+            OrganizationMemberRole.Administrator => OrganizationMemberRoleConstants.Administrator,
+            OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
             _ => throw new ArgumentOutOfRangeException()
         };
         dest.Status = src.Status switch
@@ -452,11 +452,11 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                OrganizationMembershipTypeConstants.Owner => OrganizationMembershipType.Owner,
-                OrganizationMembershipTypeConstants.Administrator => OrganizationMembershipType.Administrator,
-                OrganizationMembershipTypeConstants.Member => OrganizationMembershipType.Member,
+                OrganizationMemberRoleConstants.Owner => OrganizationMemberRole.Owner,
+                OrganizationMemberRoleConstants.Administrator => OrganizationMemberRole.Administrator,
+                OrganizationMemberRoleConstants.Member => OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch

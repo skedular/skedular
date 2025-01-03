@@ -15,9 +15,10 @@ using Desk = Slack.Shared.Models.Desk;
 using Identity = Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity;
 using Location = Slack.Shared.Database.Entities.Location;
 using LocationPermissions = Slack.Shared.Models.LocationPermissions;
-using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.Member;
-using MembershipType = Api.Shared.Services.Grpc.Skedular.Organization.V1.MembershipType;
+using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
+using Role = Api.Shared.Services.Grpc.Skedular.Organization.V1.Role;
 using Organization = Slack.Shared.Database.Entities.Organization;
+using OrganizationMember = Slack.Shared.Models.OrganizationMember;
 using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationPermissions = Slack.Shared.Models.OrganizationPermissions;
 using OrganizationTag = Slack.Shared.Models.OrganizationTag;
@@ -315,16 +316,15 @@ public class Mapper : IMapper
         CanCancelPeopleExistingInvitations = src.CanCancelPeopleExistingInvitations
     };
 
-    public OrganizationMember
-        MapTo(Member src) =>
+    public OrganizationMember MapTo(Member src) =>
         new()
         {
             Id = src.Id,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                MembershipType.Owner => OrganizationMembershipType.Owner,
-                MembershipType.Administrator => OrganizationMembershipType.Administrator,
-                MembershipType.Member => OrganizationMembershipType.Member,
+                Role.Owner => OrganizationMemberRole.Owner,
+                Role.Administrator => OrganizationMemberRole.Administrator,
+                Role.Member => OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch
@@ -632,20 +632,20 @@ public class Mapper : IMapper
     }
 
     private IEnumerable<TeamMember> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Member> src,
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember> src,
         Team team) =>
         src.Select(item => MapTo(item, team));
 
-    private TeamMember MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Member src, Team team) =>
+    private TeamMember MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember src, Team team) =>
         new()
         {
             Id = src.Id,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Team.V1.MembershipType.Owner => TeamMembershipType.Owner,
-                global::Api.Shared.Services.Grpc.Skedular.Team.V1.MembershipType.Administrator => TeamMembershipType
+                global::Api.Shared.Services.Grpc.Skedular.Team.V1.Role.Owner => TeamMemberRole.Owner,
+                global::Api.Shared.Services.Grpc.Skedular.Team.V1.Role.Administrator => TeamMemberRole
                     .Administrator,
-                global::Api.Shared.Services.Grpc.Skedular.Team.V1.MembershipType.Member => TeamMembershipType.Member,
+                global::Api.Shared.Services.Grpc.Skedular.Team.V1.Role.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch

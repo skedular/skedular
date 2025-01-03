@@ -9,7 +9,7 @@ namespace Location.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class LocationMember : EntityBaseWithDeleted
 {
-    public string MembershipType { get; set; }
+    public string Role { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string LocationId { get; set; } = string.Empty;
@@ -27,9 +27,7 @@ public class LocationMemberConfiguration : IEntityTypeConfiguration<LocationMemb
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder
-            .Property(item => item.MembershipType)
-            .HasMaxLength(Constants.MaxMembershipTypeLength);
+        builder.Property(item => item.Role).HasMaxLength(Constants.MaxRoleLength);
 
         builder
             .HasOne(item => item.Location)
@@ -41,7 +39,7 @@ public class LocationMemberConfiguration : IEntityTypeConfiguration<LocationMemb
             .WithMany(item => item.LocationMembers)
             .HasForeignKey(item => item.CustomerId);
 
-        builder.HasIndex(item => item.MembershipType);
+        builder.HasIndex(item => item.Role);
         builder.HasIndex(item => new { item.CustomerId, item.LocationId }).IsUnique();
     }
 }

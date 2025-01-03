@@ -10,7 +10,7 @@ namespace Customer.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class TeamMember : ReplicatedEntityBaseWithDeleted
 {
-    public string? MembershipType { get; set; }
+    public string? Role { get; set; }
     public string Status { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
@@ -31,9 +31,7 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder
-            .Property(item => item.MembershipType)
-            .HasMaxLength(Constants.MaxMembershipTypeLength);
+        builder.Property(item => item.Role).HasMaxLength(Constants.MaxRoleLength);
         builder
             .Property(item => item.Status)
             .HasMaxLength(Constants.MaxTeamMemberStatusLength)
@@ -46,14 +44,14 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
 
         builder
             .HasOne(item => item.Customer)
-            .WithMany(item => item.TeamMemberships)
+            .WithMany(item => item.TeamMembers)
             .HasForeignKey(item => item.CustomerId);
 
         builder
             .HasOne(item => item.OrganizationMember)
             .WithMany(item => item.TeamMembers);
 
-        builder.HasIndex(item => item.MembershipType);
+        builder.HasIndex(item => item.Role);
         builder.HasIndex(item => item.Status);
         builder.HasIndex(item => new { item.CustomerId, item.TeamId }).IsUnique();
     }

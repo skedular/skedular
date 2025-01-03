@@ -68,7 +68,7 @@ public class LocationAuthorizationService(
     public bool IsLocationMember(Location location, Shared.Database.Entities.Customer customer) =>
         location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
-            MembershipType: LocationMembershipTypeConstants.Owner or LocationMembershipTypeConstants.Administrator
-            or LocationMembershipTypeConstants.Member
+            Role: LocationRoleConstants.Owner or LocationRoleConstants.Administrator
+            or LocationRoleConstants.Member
         };
 }

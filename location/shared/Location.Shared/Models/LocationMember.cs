@@ -5,7 +5,7 @@ namespace Location.Shared.Models;
 
 public class LocationMember : ModelBaseWithDeleted
 {
-    public LocationMembershipType MembershipType { get; set; }
+    public LocationMemberRole Role { get; set; }
     public Location Location { get; set; }
     public Customer Customer { get; set; }
 }

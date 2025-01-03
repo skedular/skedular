@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b1d06abe7043b047832054d04770568>>
+ * @generated SignedSource<<fd87dfd40da1ad89dde3605694d65fea>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "PhoneNumber" | "Status" | "%future added value";
+export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MiddleName" | "Name" | "PhoneNumber" | "Role" | "Status" | "%future added value";
 export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
   field: OrganizationMemberOrderField;
@@ -152,7 +152,7 @@ return {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "organizationMembershipTypes",
+        "name": "organizationMemberRoles",
         "storageKey": null
       },
       {
@@ -191,7 +191,7 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "membershipType",
+                    "name": "role",
                     "storageKey": null
                   },
                   {
@@ -309,12 +309,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "24aa5fbbc9be44c4f05f668d8f7941cc",
+    "cacheID": "39db2523e63278d5355f98aa3a8e81fc",
     "id": null,
     "metadata": {},
     "name": "organizationMembersTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMembersTab_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMembersTab_query\n  ...organizationMembersTab_organizationMembers_query\n}\n\nfragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment organizationMembersTab_organizationMembers_query on Query {\n  organizationMembers(first: 50, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationMemberCard_OrganizationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMembersTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    canInvitePeople\n  }\n  ...organizationSingleChoiceMembershipType_query\n}\n\nfragment organizationSingleChoiceMembershipType_query on Query {\n  organizationMembershipTypes\n}\n"
+    "text": "query organizationMembersTab_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMembersTab_query\n  ...organizationMembersTab_organizationMembers_query\n}\n\nfragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {\n  id\n  role\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment organizationMembersTab_organizationMembers_query on Query {\n  organizationMembers(first: 50, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationMemberCard_OrganizationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMembersTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    canInvitePeople\n  }\n  ...organizationSingleChoiceMemberRole_query\n}\n\nfragment organizationSingleChoiceMemberRole_query on Query {\n  organizationMemberRoles\n}\n"
   }
 };
 })();

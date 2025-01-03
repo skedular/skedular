@@ -50,12 +50,12 @@ public class CancelInvitationToJoinTeamPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("ChangeTeamMembershipTypeInput")]
-public class ChangeTeamMembershipTypeInput
+[GraphQLName("ChangeTeamMemberRoleInput")]
+public class ChangeTeamMemberRoleInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("membershipType")] public TeamMembershipType MembershipType { get; set; }
+    [GraphQLName("role")] public TeamMemberRole Role { get; set; }
 }
 
 [GraphQLName("DeleteTeamInput")]
@@ -146,7 +146,7 @@ public class TeamMemberConnection : Connection<TeamMemberEdge>;
 [GraphQLName("TeamMemberDetails")]
 public class TeamMemberDetails : Node
 {
-    [GraphQLName("membershipType")] public TeamMembershipType? MembershipType { get; set; }
+    [GraphQLName("role")] public TeamMemberRole? Role { get; set; }
     [GraphQLName("status")] public TeamMemberStatus Status { get; set; }
     [GraphQLName("customer")] public TeamCustomerDetails Customer { get; set; }
     [GraphQLName("organizationMember")] public TeamOrganizationMemberDetails? OrganizationMember { get; set; }

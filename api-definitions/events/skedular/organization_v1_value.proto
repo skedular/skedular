@@ -42,22 +42,22 @@ message Organization {
   string about = 4;
   string logoUrl = 5;
   string website = 6;
-  repeated Member members = 7;
+  repeated OrganizationMember members = 7;
   Offering Offering = 8;
   repeated string azureTenantIds = 9;
   repeated Tag tags = 10;
 }
 
-enum MembershipType {
-  MembershipTypeOwner = 0;
-  MembershipTypeAdministrator = 1;
-  MembershipTypeMember = 2;
+enum Role {
+  Owner = 0;
+  Administrator = 1;
+  Member = 2;
 }
 
-message Member {
+message OrganizationMember {
   string id = 1;
   string customerId = 2;
-  MembershipType membershipType = 3;
+  Role role = 3;
   Status status = 4;
 }
 

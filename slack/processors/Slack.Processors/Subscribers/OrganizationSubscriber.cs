@@ -5,6 +5,7 @@ using Slack.Processors.Mappers;
 using Slack.Shared.Database.Entities;
 using Slack.Shared.Repositories;
 using Organization = Slack.Shared.Database.Entities.Organization;
+using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Slack.Processors.Subscribers;

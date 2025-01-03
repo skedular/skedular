@@ -56,7 +56,7 @@ message Team {
     string about = 3;
     string organizationId = 4;
     string timezone = 5;
-    repeated Member members = 6;
+    repeated TeamMember members = 6;
     bool hasFutureBooking = 7;
     Permissions permissions = 8;
     Location primaryLocation = 9;
@@ -113,7 +113,7 @@ message Admin_AddInput {
     string about = 3;
     string organizationId = 4;
     string timezone = 5;
-    repeated Member members = 6;
+    repeated TeamMember members = 6;
     string primaryLocationId = 7;
 }
 
@@ -123,7 +123,7 @@ message AddInput {
     string about = 3;
     string organizationId = 4;
     string timezone = 5;
-    repeated Member members = 6;
+    repeated TeamMember members = 6;
     string primaryLocationId = 7;
 }
 
@@ -133,7 +133,7 @@ message UpdateInput {
     string about = 3;
     string organizationId = 4;
     string timezone = 5;
-    repeated Member members = 6;
+    repeated TeamMember members = 6;
     string primaryLocationId = 7;
 }
 
@@ -141,10 +141,10 @@ message RemoveInput {
     string id = 1;
 }
 
-message Member {
+message TeamMember {
     string id = 1;
     Customer customer = 2;
-    MembershipType membershipType = 3;
+    Role role = 3;
     OrganizationMember organizationMember = 4;
     TeamMemberStatus status = 5;
 }
@@ -155,16 +155,10 @@ enum TeamMemberStatus
     Inactive = 1;
 }
 
-enum MembershipType {
-    MembershipTypeOwner = 0;
-    MembershipTypeAdministrator = 1;
-    MembershipTypeMember = 2;
-}
-
-message OrganizationMember {
-    string id = 1;
-    Customer customer = 2;
-    MembershipType membershipType = 3;
+enum Role {
+    Owner = 0;
+    Administrator = 1;
+    Member = 2;
 }
 
 message Customer {
@@ -185,10 +179,22 @@ message Customer {
 
 message Admin_UpdateMembersInput {
     string id = 1;
-    repeated Member members = 2;
+    repeated TeamMember members = 2;
 }
 
 message Location {
     string id = 1;
     string name = 2;
+}
+
+message OrganizationMember {
+    string id = 1;
+    Customer customer = 2;
+    Role role = 3;
+}
+
+enum OrganizationMemberRole {
+    OrganizationMemberRoleOwner = 0;
+    OrganizationMemberRoleAdministrator = 1;
+    OrganizationMemberRoleMember = 2;
 }

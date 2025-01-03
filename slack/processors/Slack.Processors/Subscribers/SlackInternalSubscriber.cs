@@ -31,11 +31,11 @@ using Icons = Slack.Shared.Constants.Icons;
 using OrganizationConfiguration = Slack.Shared.Configurations.OrganizationConfiguration;
 using Location = Slack.Shared.Database.Entities.Location;
 using LocationConfiguration = Slack.Shared.Configurations.LocationConfiguration;
-using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.Member;
-using MembershipType = Api.Shared.Services.Grpc.Skedular.Organization.V1.MembershipType;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 using Organization = Slack.Shared.Database.Entities.Organization;
+using OrganizationMember = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
 using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
+using Role = Api.Shared.Services.Grpc.Skedular.Organization.V1.Role;
 using TeamConfiguration = Slack.Shared.Configurations.TeamConfiguration;
 using Type = Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
@@ -341,38 +341,38 @@ public class SlackInternalSubscriber(
 
             if (organizationMember is null)
             {
-                MembershipType membershipType;
+                Role role;
                 if (workspaceMember.IsPrimaryOwner || workspaceMember.IsOwner)
                 {
-                    membershipType = MembershipType.Owner;
+                    role = Role.Owner;
                 }
                 else if (workspaceMember.IsAdmin)
                 {
-                    membershipType = MembershipType.Administrator;
+                    role = Role.Administrator;
                 }
                 else
                 {
-                    membershipType = MembershipType.Member;
+                    role = Role.Member;
                 }
 
-                return new Member
+                return new OrganizationMember
                 {
                     Id = randomHelper.Generate(),
                     Customer = new Customer { Id = customerId },
-                    MembershipType = membershipType,
+                    Role = role,
                     IsOrganizationOnboardingDone = true
                 };
             }
 
-            return new Member
+            return new OrganizationMember
             {
                 Id = organizationMember.Id,
                 Customer = new Customer { Id = customerId },
-                MembershipType = organizationMember.MembershipType switch
+                Role = organizationMember.Role switch
                 {
-                    OrganizationMembershipTypeConstants.Owner => MembershipType.Owner,
-                    OrganizationMembershipTypeConstants.Administrator => MembershipType.Administrator,
-                    OrganizationMembershipTypeConstants.Member => MembershipType.Member,
+                    OrganizationMemberRoleConstants.Owner => Role.Owner,
+                    OrganizationMemberRoleConstants.Administrator => Role.Administrator,
+                    OrganizationMemberRoleConstants.Member => Role.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 Status = organizationMember.Status switch

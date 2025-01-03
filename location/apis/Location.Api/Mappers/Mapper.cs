@@ -229,11 +229,11 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                LocationMembershipTypeConstants.Owner => LocationMembershipType.Owner,
-                LocationMembershipTypeConstants.Administrator => LocationMembershipType.Administrator,
-                LocationMembershipTypeConstants.Member => LocationMembershipType.Member,
+                LocationRoleConstants.Owner => LocationMemberRole.Owner,
+                LocationRoleConstants.Administrator => LocationMemberRole.Administrator,
+                LocationRoleConstants.Member => LocationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer)!,
@@ -241,7 +241,7 @@ public class Mapper : IMapper
         };
 
     public LocationMemberDetails MapTo(LocationMember src) =>
-        new() { Id = src.Id, MembershipType = src.MembershipType, Customer = MapTo(src.Customer) };
+        new() { Id = src.Id, Role = src.Role, Customer = MapTo(src.Customer) };
 
     public DeskEdge MapTo(Edge<Shared.Models.Desk> src) =>
         new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
@@ -380,11 +380,11 @@ public class Mapper : IMapper
                 InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                LocationMembershipTypeConstants.Owner => LocationMembershipType.Owner,
-                LocationMembershipTypeConstants.Administrator => LocationMembershipType.Administrator,
-                LocationMembershipTypeConstants.Member => LocationMembershipType.Member,
+                LocationRoleConstants.Owner => LocationMemberRole.Owner,
+                LocationRoleConstants.Administrator => LocationMemberRole.Administrator,
+                LocationRoleConstants.Member => LocationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Location = MapTo(src.Location),

@@ -3,6 +3,7 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Location.Shared.Models;
 using Desk = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk;
+using LocationMember = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember;
 
 namespace Location.Shared.Mappers;
 
@@ -25,18 +26,17 @@ public class Mapper : IMapper
             OrganizationId = src.Organization is null ? string.Empty : src.Organization.Id
         };
 
-        location.Members.AddRange(src.LocationMembers.Select(item =>
+        location.Members.AddRange(src.LocationMembers.Select(item => new LocationMember
         {
-            var membershipType =
-                item.MembershipType switch
-                {
-                    LocationMembershipType.Owner => MembershipType.Owner,
-                    LocationMembershipType.Administrator => MembershipType.Administrator,
-                    LocationMembershipType.Member => MembershipType.Member,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-            return new Member { Id = item.Id, CustomerId = item.Customer.Id, MembershipType = membershipType };
+            Id = item.Id,
+            CustomerId = item.Customer.Id,
+            Role = item.Role switch
+            {
+                LocationMemberRole.Owner => Role.Owner,
+                LocationMemberRole.Administrator => Role.Administrator,
+                LocationMemberRole.Member => Role.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         }));
 
         location.Desks.AddRange(src.Desks.Select(item =>

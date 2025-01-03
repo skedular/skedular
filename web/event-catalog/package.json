@@ -18,7 +18,7 @@
     "@astrojs/mdx": "^4.0.3",
     "@parcel/watcher": "2.5.0",
     "@types/lodash.merge": "4.6.9",
-    "concurrently": "9.1.0",
+    "concurrently": "9.1.2",
     "cross-env": "7.0.3"
   }
 }

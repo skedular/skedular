@@ -16,15 +16,15 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
         };
 
     public bool CanManagePaymentMethod(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
         };
 }

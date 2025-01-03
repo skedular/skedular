@@ -5,7 +5,7 @@ namespace Slack.Shared.Models;
 
 public class TeamMember : ReplicatedModelBaseWithDeleted
 {
-    public TeamMembershipType? MembershipType { get; set; }
+    public TeamMemberRole? Role { get; set; }
     public TeamMemberStatus Status { get; set; }
 
     public Team Team { get; set; }

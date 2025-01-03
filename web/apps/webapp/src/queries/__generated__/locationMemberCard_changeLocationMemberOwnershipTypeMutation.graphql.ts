@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f3247229787f97e9c482c96fbb36ce35>>
+ * @generated SignedSource<<9b0f0f8b62f7b8309d3b83a79c67bb78>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,28 +9,28 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type LocationMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
-export type ChangeLocationMembershipTypeInput = {
+export type LocationMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
+export type ChangeLocationMemberRoleInput = {
   clientMutationId?: string | null | undefined;
   id: string;
-  membershipType: LocationMembershipType;
+  role: LocationMemberRole;
 };
 export type locationMemberCard_changeLocationMemberOwnershipTypeMutation$variables = {
-  input: ChangeLocationMembershipTypeInput;
+  input: ChangeLocationMemberRoleInput;
 };
 export type locationMemberCard_changeLocationMemberOwnershipTypeMutation$data = {
-  readonly changeLocationMembershipType: {
+  readonly changeLocationMemberRole: {
     readonly member: {
       readonly id: string;
-      readonly membershipType: LocationMembershipType | null | undefined;
+      readonly role: LocationMemberRole | null | undefined;
     } | null | undefined;
   } | null | undefined;
 };
 export type locationMemberCard_changeLocationMemberOwnershipTypeMutation$rawResponse = {
-  readonly changeLocationMembershipType: {
+  readonly changeLocationMemberRole: {
     readonly member: {
       readonly id: string;
-      readonly membershipType: LocationMembershipType | null | undefined;
+      readonly role: LocationMemberRole | null | undefined;
     } | null | undefined;
   } | null | undefined;
 };
@@ -60,7 +60,7 @@ v1 = [
     ],
     "concreteType": "LocationMemberDetailsPayload",
     "kind": "LinkedField",
-    "name": "changeLocationMembershipType",
+    "name": "changeLocationMemberRole",
     "plural": false,
     "selections": [
       {
@@ -82,7 +82,7 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "membershipType",
+            "name": "role",
             "storageKey": null
           }
         ],
@@ -110,16 +110,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "ad2b41a0ef32ac4708ddb1525aa45f70",
+    "cacheID": "f888249f72a0799698e858bdcae71f9d",
     "id": null,
     "metadata": {},
     "name": "locationMemberCard_changeLocationMemberOwnershipTypeMutation",
     "operationKind": "mutation",
-    "text": "mutation locationMemberCard_changeLocationMemberOwnershipTypeMutation(\n  $input: ChangeLocationMembershipTypeInput!\n) {\n  changeLocationMembershipType(input: $input) {\n    member {\n      id\n      membershipType\n    }\n  }\n}\n"
+    "text": "mutation locationMemberCard_changeLocationMemberOwnershipTypeMutation(\n  $input: ChangeLocationMemberRoleInput!\n) {\n  changeLocationMemberRole(input: $input) {\n    member {\n      id\n      role\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0210366b7166128bd984eefb5c7fcdd8";
+(node as any).hash = "1eea63dd924d85644a85f579fef01afb";
 
 export default node;

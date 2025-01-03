@@ -38,21 +38,21 @@ message Location {
   google.protobuf.Timestamp deletedAt = 2;
   string name = 3;
   string about = 4;
-  repeated Member members = 5;
+  repeated LocationMember members = 5;
   string organizationId = 6;
   string timezone = 7;
   repeated Desk desks = 8;
 }
 
-enum MembershipType {
-  MembershipTypeOwner = 0;
-  MembershipTypeAdministrator = 1;
-  MembershipTypeMember = 2;
+enum Role {
+  Owner = 0;
+  Administrator = 1;
+  Member = 2;
 }
 
-message Member {
+message LocationMember {
   string id = 1;
-  MembershipType membershipType = 2;
+  Role role = 2;
   string customerId = 3;
 }
 

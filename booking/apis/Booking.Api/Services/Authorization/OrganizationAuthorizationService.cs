@@ -27,69 +27,69 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
-            or OrganizationMembershipTypeConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
+            or OrganizationMemberRoleConstants.Member
         };
 
     public bool CanViewBookings(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
-            or OrganizationMembershipTypeConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
+            or OrganizationMemberRoleConstants.Member
         };
 
     public bool CanAddBooking(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
-            or OrganizationMembershipTypeConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
+            or OrganizationMemberRoleConstants.Member
         };
 
     public bool CanUpdateBooking(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
-            or OrganizationMembershipTypeConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
+            or OrganizationMemberRoleConstants.Member
         };
 
     public bool CanDeleteBooking(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
-            or OrganizationMembershipTypeConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
+            or OrganizationMemberRoleConstants.Member
         };
 
     public bool CanAddBookingOnBehalf(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
         };
 
     public bool CanUpdateBookingOnBehalf(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
         };
 
     public bool CanDeleteBookingOnBehalf(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
         };
 
     public async Task<OrganizationPermissions> GetPermissionsAsync(

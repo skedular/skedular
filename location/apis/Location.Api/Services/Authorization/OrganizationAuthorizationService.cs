@@ -20,32 +20,32 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
-            or OrganizationMembershipTypeConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
+            or OrganizationMemberRoleConstants.Member
         };
 
     public bool CanModify(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
         };
 
     public bool CanDelete(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
+            Role: OrganizationMemberRoleConstants.Owner
         };
 
     public bool CanInvitePeople(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
         };
 
     public bool CanCancelPeopleExistingInvitations(
@@ -54,15 +54,15 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
         };
 
     public bool CanViewAnalytics(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
         };
 }

@@ -90,15 +90,15 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<LocationMemberDetailsPayload?> ChangeLocationMembershipTypeAsync(
-        ChangeLocationMembershipTypeInput input,
+    public async Task<LocationMemberDetailsPayload?> ChangeLocationMemberRoleAsync(
+        ChangeLocationMemberRoleInput input,
         [Service] ILocationMemberService locationMemberService,
         CancellationToken cancellationToken)
     {
         var locationMember =
-            await locationMemberService.ChangeMembershipTypeAsync(
+            await locationMemberService.ChangeRoleAsync(
                 input.Id,
-                input.MembershipType,
+                input.Role,
                 cancellationToken);
         return new LocationMemberDetailsPayload
         {

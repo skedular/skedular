@@ -33,7 +33,7 @@ message OrganizationMember {
   google.protobuf.Timestamp deletedAt = 2;
   string organizationId = 3;
   string customerId = 4;
-  MembershipType membershipType = 5;
+  Role role = 5;
   Status status = 6;
 }
 
@@ -42,8 +42,8 @@ enum Status {
   Inactive = 1;
 }
 
-enum MembershipType {
-  MembershipTypeOwner = 0;
-  MembershipTypeAdministrator = 1;
-  MembershipTypeMember = 2;
+enum Role {
+  Owner = 0;
+  Administrator = 1;
+  Member = 2;
 }

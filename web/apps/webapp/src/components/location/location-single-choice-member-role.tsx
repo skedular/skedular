@@ -1,33 +1,28 @@
+import type { locationSingleChoiceMemberRole_query$key } from '@/queries/__generated__/locationSingleChoiceMemberRole_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { convertStringToLowercaseExceptFirstLetter } from '@repo/shared/libs/utils';
-import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
-import { useFragment } from 'react-relay';
-import type { locationSingleChoiceMembershipType_query$key } from './__generated__/locationSingleChoiceMembershipType_query.graphql';
+import { graphql, useFragment } from 'react-relay';
 
 type Props = {
-  rootDataRelay: locationSingleChoiceMembershipType_query$key;
+  rootDataRelay: locationSingleChoiceMemberRole_query$key;
   name: string;
   required?: boolean;
 };
 
-const LocationSingleChoiceMembershipType = ({ rootDataRelay, name, required }: Props) => {
+const LocationSingleChoiceMemberRole = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment(
     graphql`
-      fragment locationSingleChoiceMembershipType_query on Query {
-        locationMembershipTypes
+      fragment locationSingleChoiceMemberRole_query on Query {
+        locationMemberRoles
       }
     `,
     rootDataRelay,
   );
 
-  const locationMembershipTypes = useMemo<string[]>(
-    () => rootData.locationMembershipTypes.map((locationMembershipType) => locationMembershipType),
-    [rootData.locationMembershipTypes],
-  );
-
+  const roles = useMemo<string[]>(() => rootData.locationMemberRoles.map((role) => role), [rootData.locationMemberRoles]);
   const filter = createFilterOptions<string>();
 
   return (
@@ -35,7 +30,7 @@ const LocationSingleChoiceMembershipType = ({ rootDataRelay, name, required }: P
       name={name}
       multiple={false}
       required={required}
-      options={locationMembershipTypes}
+      options={roles}
       getOptionValue={(option) => option as string}
       getOptionLabel={(option: string | string) => convertStringToLowercaseExceptFirstLetter(option as string)}
       renderOption={(props, option) => {
@@ -57,4 +52,4 @@ const LocationSingleChoiceMembershipType = ({ rootDataRelay, name, required }: P
   );
 };
 
-export default memo(LocationSingleChoiceMembershipType);
+export default memo(LocationSingleChoiceMemberRole);

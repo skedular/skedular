@@ -65,12 +65,12 @@ public class CancelOrganizationOfferingPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("ChangeOrganizationMembershipTypeInput")]
-public class ChangeOrganizationMembershipTypeInput
+[GraphQLName("ChangeOrganizationMemberRoleInput")]
+public class ChangeOrganizationMemberRoleInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("membershipType")] public OrganizationMembershipType MembershipType { get; set; }
+    [GraphQLName("role")] public OrganizationMemberRole Role { get; set; }
 }
 
 [GraphQLName("ChangeOrganizationMembersStatusInput")]
@@ -232,7 +232,7 @@ public class OrganizationMemberConnection : Connection<OrganizationMemberEdge>;
 [GraphQLName("OrganizationMemberDetails")]
 public class OrganizationMemberDetails : Node
 {
-    [GraphQLName("membershipType")] public OrganizationMembershipType? MembershipType { get; set; }
+    [GraphQLName("role")] public OrganizationMemberRole? Role { get; set; }
     [GraphQLName("status")] public OrganizationMemberStatus Status { get; set; }
 
     [GraphQLName("isOrganizationOnboardingDone")]

@@ -20,7 +20,7 @@ public record OrganizationMemberOrder(OrderDirection Direction, OrganizationMemb
 
 public enum OrganizationMemberOrderField
 {
-    MembershipType,
+    Role,
     Status,
     Name,
     GivenName,

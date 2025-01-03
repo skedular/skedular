@@ -1,10 +1,10 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Booking.Processors.Mappers;
-using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using Team = Booking.Shared.Database.Entities.Team;
+using TeamMember = Booking.Shared.Database.Entities.TeamMember;
 using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;

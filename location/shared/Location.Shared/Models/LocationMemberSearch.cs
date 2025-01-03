@@ -20,7 +20,7 @@ public record LocationMemberOrder(OrderDirection Direction, LocationMemberOrderF
 
 public enum LocationMemberOrderField
 {
-    MembershipType,
+    Role,
     Name,
     GivenName,
     MiddleName,

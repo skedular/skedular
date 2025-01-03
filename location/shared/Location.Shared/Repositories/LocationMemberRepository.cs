@@ -72,9 +72,9 @@ internal static class LocationMemberExtensions
         var orderByField = orderByFields.First();
         return orderByFields.Skip(1).Aggregate(orderByField.Field switch
         {
-            LocationMemberOrderField.MembershipType => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.MembershipType)
-                : originalQuery.OrderByDescending(x => x.MembershipType),
+            LocationMemberOrderField.Role => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Role)
+                : originalQuery.OrderByDescending(x => x.Role),
             LocationMemberOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Customer.Name)
                 : originalQuery.OrderByDescending(x => x.Customer.Name),
@@ -91,9 +91,9 @@ internal static class LocationMemberExtensions
         }, (query, orderField) =>
             orderField.Field switch
             {
-                LocationMemberOrderField.MembershipType => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.MembershipType)
-                    : query.ThenByDescending(x => x.MembershipType),
+                LocationMemberOrderField.Role => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Role)
+                    : query.ThenByDescending(x => x.Role),
                 LocationMemberOrderField.Name => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Customer.Name)
                     : query.ThenByDescending(x => x.Customer.Name),

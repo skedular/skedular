@@ -10,6 +10,7 @@ using JoinInvitation = Team.Shared.Models.JoinInvitation;
 using Location = Team.Shared.Database.Entities.Location;
 using Organization = Team.Shared.Database.Entities.Organization;
 using OrganizationMember = Team.Shared.Models.OrganizationMember;
+using OrganizationMemberRole = Api.Shared.Services.Models.OrganizationMemberRole;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions;
 using TeamEdge = Team.Api.GraphQL.TeamEdge;
 using TeamMember = Team.Shared.Models.TeamMember;
@@ -47,20 +48,6 @@ public interface IMapper
     Shared.Models.Team MapTo(AddInput src);
     Shared.Models.Team MapTo(Admin_AddInput src);
     Shared.Models.Team MapTo(UpdateInput src);
-
-    Shared.Database.Entities.TeamMember MapToEntity(
-        TeamMember src,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        Shared.Database.Entities.OrganizationMember? organizationMember);
-
-    Shared.Database.Entities.TeamMember MergeToEntity(
-        TeamMember src,
-        Shared.Database.Entities.TeamMember dest,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        Shared.Database.Entities.OrganizationMember? organizationMember);
-
     ICollection<TeamMember> MapTo(Admin_UpdateMembersInput src);
     TeamEdge MapTo(Edge<Shared.Models.Team> src);
     global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src);
@@ -81,11 +68,11 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                TeamMembershipTypeConstants.Owner => TeamMembershipType.Owner,
-                TeamMembershipTypeConstants.Administrator => TeamMembershipType.Administrator,
-                TeamMembershipTypeConstants.Member => TeamMembershipType.Member,
+                TeamMemberRoleConstants.Owner => TeamMemberRole.Owner,
+                TeamMemberRoleConstants.Administrator => TeamMemberRole.Administrator,
+                TeamMemberRoleConstants.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch
@@ -192,11 +179,11 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                TeamMembershipTypeConstants.Owner => TeamMembershipType.Owner,
-                TeamMembershipTypeConstants.Administrator => TeamMembershipType.Administrator,
-                TeamMembershipTypeConstants.Member => TeamMembershipType.Member,
+                TeamMemberRoleConstants.Owner => TeamMemberRole.Owner,
+                TeamMemberRoleConstants.Administrator => TeamMemberRole.Administrator,
+                TeamMemberRoleConstants.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch
@@ -214,7 +201,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            MembershipType = src.MembershipType,
+            Role = src.Role,
             Status = src.Status,
             Customer = MapTo(src.Customer),
             OrganizationMember = MapTo(src.OrganizationMember)
@@ -301,11 +288,11 @@ public class Mapper : IMapper
                 InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                TeamMembershipTypeConstants.Owner => TeamMembershipType.Owner,
-                TeamMembershipTypeConstants.Administrator => TeamMembershipType.Administrator,
-                TeamMembershipTypeConstants.Member => TeamMembershipType.Member,
+                TeamMemberRoleConstants.Owner => TeamMemberRole.Owner,
+                TeamMemberRoleConstants.Administrator => TeamMemberRole.Administrator,
+                TeamMemberRoleConstants.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Team = MapTo(src.Team),
@@ -394,40 +381,6 @@ public class Mapper : IMapper
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
         };
 
-    public Shared.Database.Entities.TeamMember MapToEntity(
-        TeamMember src,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        Shared.Database.Entities.OrganizationMember? organizationMember) =>
-        MergeToEntity(src, new Shared.Database.Entities.TeamMember(), team, customer, organizationMember);
-
-    public Shared.Database.Entities.TeamMember MergeToEntity(
-        TeamMember src,
-        Shared.Database.Entities.TeamMember dest,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        Shared.Database.Entities.OrganizationMember? organizationMember)
-    {
-        dest.Id = src.Id;
-        dest.MembershipType = src.MembershipType switch
-        {
-            TeamMembershipType.Owner => TeamMembershipTypeConstants.Owner,
-            TeamMembershipType.Administrator => TeamMembershipTypeConstants.Administrator,
-            TeamMembershipType.Member => TeamMembershipTypeConstants.Member,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        dest.Status = src.Status switch
-        {
-            TeamMemberStatus.Active => TeamMemberStatusConstants.Active,
-            TeamMemberStatus.Inactive => TeamMemberStatusConstants.Inactive,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        dest.Team = team;
-        dest.Customer = customer;
-        dest.OrganizationMember = organizationMember;
-        return dest;
-    }
-
     public ICollection<TeamMember> MapTo(Admin_UpdateMembersInput src) =>
         src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList();
 
@@ -450,18 +403,18 @@ public class Mapper : IMapper
         Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
-    private IEnumerable<Member> MapToGrpcResponse(IEnumerable<TeamMember> src) =>
+    private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember> MapToGrpcResponse(IEnumerable<TeamMember> src) =>
         src.Select(MapToGrpcResponse);
 
-    private Member MapToGrpcResponse(TeamMember src) =>
+    private global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember MapToGrpcResponse(TeamMember src) =>
         new()
         {
             Id = src.Id,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                TeamMembershipType.Owner => MembershipType.Owner,
-                TeamMembershipType.Administrator => MembershipType.Administrator,
-                TeamMembershipType.Member => MembershipType.Member,
+                TeamMemberRole.Owner => Role.Owner,
+                TeamMemberRole.Administrator => Role.Administrator,
+                TeamMemberRole.Member => Role.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch
@@ -477,11 +430,11 @@ public class Mapper : IMapper
                 : new global::Api.Shared.Services.Grpc.Skedular.Team.V1.OrganizationMember
                 {
                     Id = src.OrganizationMember.Id,
-                    MembershipType = src.OrganizationMember.MembershipType switch
+                    Role = src.OrganizationMember.Role switch
                     {
-                        OrganizationMembershipType.Owner => MembershipType.Owner,
-                        OrganizationMembershipType.Administrator => MembershipType.Administrator,
-                        OrganizationMembershipType.Member => MembershipType.Member,
+                        OrganizationMemberRole.Owner => Role.Owner,
+                        OrganizationMemberRole.Administrator => Role.Administrator,
+                        OrganizationMemberRole.Member => Role.Member,
                         _ => throw new ArgumentOutOfRangeException()
                     },
                     Customer = MapToGrpcResponse(src.OrganizationMember.Customer)
@@ -511,15 +464,15 @@ public class Mapper : IMapper
         return customer;
     }
 
-    private static TeamMember MapTo(Member src, Shared.Models.Team team) =>
+    private static TeamMember MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember src, Shared.Models.Team team) =>
         new()
         {
             Id = src.Id,
-            MembershipType = src.MembershipType switch
+            Role = src.Role switch
             {
-                MembershipType.Owner => TeamMembershipType.Owner,
-                MembershipType.Administrator => TeamMembershipType.Administrator,
-                MembershipType.Member => TeamMembershipType.Member,
+                Role.Owner => TeamMemberRole.Owner,
+                Role.Administrator => TeamMemberRole.Administrator,
+                Role.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch
@@ -565,11 +518,11 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                MembershipType = src.MembershipType switch
+                Role = src.Role switch
                 {
-                    OrganizationMembershipTypeConstants.Owner => OrganizationMembershipType.Owner,
-                    OrganizationMembershipTypeConstants.Administrator => OrganizationMembershipType.Administrator,
-                    OrganizationMembershipTypeConstants.Member => OrganizationMembershipType.Member,
+                    OrganizationMemberRoleConstants.Owner => OrganizationMemberRole.Owner,
+                    OrganizationMemberRoleConstants.Administrator => OrganizationMemberRole.Administrator,
+                    OrganizationMemberRoleConstants.Member => OrganizationMemberRole.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 Status = src.Status switch

@@ -15,8 +15,8 @@ import {
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { convertStringToLowercaseExceptFirstLetter, getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { LocationSingleChoiceMembershipType } from 'components/location';
-import type { locationSingleChoiceMembershipType_query$key } from 'components/location/__generated__/locationSingleChoiceMembershipType_query.graphql';
+import { LocationSingleChoiceMemberRole } from 'components/location';
+import type { locationSingleChoiceMemberRole_query$key } from 'components/location/__generated__/locationSingleChoiceMemberRole_query.graphql';
 import { makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useState } from 'react';
@@ -26,30 +26,30 @@ import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import type { locationMemberCard_LocationMemberDetails$key } from './__generated__/locationMemberCard_LocationMemberDetails.graphql';
 import type {
-  LocationMembershipType,
+  LocationMemberRole,
   locationMemberCard_changeLocationMemberOwnershipTypeMutation,
 } from './__generated__/locationMemberCard_changeLocationMemberOwnershipTypeMutation.graphql';
 
 type Props = {
-  data: locationSingleChoiceMembershipType_query$key;
+  data: locationSingleChoiceMemberRole_query$key;
   locationMemberDetailsRelay: locationMemberCard_LocationMemberDetails$key;
   connectionIds: string[];
 };
 
 type LocationMemberDetails = {
-  membershipType: string;
+  role: string;
 };
 
 const locationMemberSchema = object({
-  membershipType: string().required(),
+  role: string().required(),
 });
 
-const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }: Props) => {
+const LocationMemberCard = ({ data, locationMemberDetailsRelay }: Props) => {
   const locationMemberDetails = useFragment(
     graphql`
       fragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {
         id
-        membershipType
+        role
         customer {
           name
           givenName
@@ -62,12 +62,12 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
     locationMemberDetailsRelay,
   );
 
-  const [commitChangeLocationMembershipType] = useMutation<locationMemberCard_changeLocationMemberOwnershipTypeMutation>(graphql`
-    mutation locationMemberCard_changeLocationMemberOwnershipTypeMutation($input: ChangeLocationMembershipTypeInput!) @raw_response_type {
-      changeLocationMembershipType(input: $input) {
+  const [commitChangeLocationMemberRole] = useMutation<locationMemberCard_changeLocationMemberOwnershipTypeMutation>(graphql`
+    mutation locationMemberCard_changeLocationMemberOwnershipTypeMutation($input: ChangeLocationMemberRoleInput!) @raw_response_type {
+      changeLocationMemberRole(input: $input) {
         member {
           id
-          membershipType
+          role
         }
       }
     }
@@ -87,23 +87,23 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
     setEditing(false);
   };
 
-  const handleSaveClick = ({ membershipType: membershipTypeStr }: LocationMemberDetails) => {
-    const membershipType = membershipTypeStr as unknown as LocationMembershipType;
-    const toastId = themedToast(<NotificationContent content={`Updating location membership...`} />, infoNotificationOptions);
+  const handleSaveClick = ({ role: roleStr }: LocationMemberDetails) => {
+    const role = roleStr as unknown as LocationMemberRole;
+    const toastId = themedToast(<NotificationContent content={`Updating location role...`} />, infoNotificationOptions);
 
-    commitChangeLocationMembershipType({
+    commitChangeLocationMemberRole({
       variables: {
         input: {
           clientMutationId: nanoid(),
           id: locationMemberDetails.id,
-          membershipType,
+          role,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update membership to ${membershipType}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update role to ${role}. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -111,7 +111,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Location membership updated.`} />,
+          render: <NotificationContent content={`Location role updated.`} />,
         });
 
         setEditing(false);
@@ -119,14 +119,14 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update membership to '${membershipType}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update role to '${role}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
-        changeLocationMembershipType: {
+        changeLocationMemberRole: {
           member: {
             id: locationMemberDetails.id,
-            membershipType,
+            role,
           },
         },
       },
@@ -137,7 +137,7 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
     <Form
       onSubmit={handleSaveClick}
       initialValues={{
-        membershipType: locationMemberDetails.membershipType,
+        role: locationMemberDetails.role,
       }}
       validate={validate}
       render={({ handleSubmit }) => (
@@ -155,12 +155,12 @@ const LocationMemberCard = ({ data, locationMemberDetailsRelay, connectionIds }:
           />
 
           <CardContent>
-            {!editing && locationMemberDetails.membershipType && (
-              <BodyIconTypography label={convertStringToLowercaseExceptFirstLetter(locationMemberDetails.membershipType)} />
+            {!editing && locationMemberDetails.role && (
+              <BodyIconTypography label={convertStringToLowercaseExceptFirstLetter(locationMemberDetails.role)} />
             )}
             {editing && (
               <FormFieldLabel label="Role" useWiderSpace>
-                <LocationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />
+                <LocationSingleChoiceMemberRole rootDataRelay={data} name="role" required={requiredFields.role} />
               </FormFieldLabel>
             )}
           </CardContent>

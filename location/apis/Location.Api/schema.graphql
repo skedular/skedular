@@ -122,7 +122,7 @@ type LocationMemberConnection {
 }
 
 type LocationMemberDetails {
-  membershipType: LocationMembershipType
+  role: LocationMemberRole
   customer: LocationCustomerDetails!
   id: ID!
 }
@@ -156,7 +156,7 @@ type Mutation {
   bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload @cost(weight: "10")
   updateDesk(input: UpdateDeskInput!): DeskPayload @cost(weight: "10")
   deleteDesk(input: DeleteDeskInput!): DeskPayload @cost(weight: "10")
-  changeLocationMembershipType(input: ChangeLocationMembershipTypeInput!): LocationMemberDetailsPayload @cost(weight: "10")
+  changeLocationMemberRole(input: ChangeLocationMemberRoleInput!): LocationMemberDetailsPayload @cost(weight: "10")
   inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
   acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
   rejectInvitationToJoinLocation(input: RejectInvitationToJoinLocationInput!): RejectInvitationToJoinLocationPayload @cost(weight: "10")
@@ -179,7 +179,7 @@ type PageInfo {
 type Query {
   locationVersion: Version!
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
-  locationMembershipTypes: [LocationMembershipType!]!
+  locationMemberRoles: [LocationMemberRole!]!
   location(id: String!): LocationDetails @cost(weight: "10")
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): LocationConnection @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
@@ -240,10 +240,10 @@ input CancelInvitationToJoinLocationInput {
   id: String!
 }
 
-input ChangeLocationMembershipTypeInput {
+input ChangeLocationMemberRoleInput {
   clientMutationId: String
   id: String!
-  membershipType: LocationMembershipType!
+  role: LocationMemberRole!
 }
 
 input DeleteDeskInput {
@@ -335,14 +335,14 @@ enum DeskOrderField {
 }
 
 enum LocationMemberOrderField {
-  MembershipType
+  Role
   Name
   GivenName
   MiddleName
   FamilyName
 }
 
-enum LocationMembershipType {
+enum LocationMemberRole {
   Owner
   Administrator
   Member

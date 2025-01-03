@@ -83,7 +83,7 @@ const LocationMembersTab = ({ queryReference, locationId }: Props) => {
           id
           name
         }
-        ...locationSingleChoiceMembershipType_query
+        ...locationSingleChoiceMemberRole_query
       }
     `,
     rootDataRelay,
@@ -307,7 +307,7 @@ const LocationMembersTab = ({ queryReference, locationId }: Props) => {
             { id: 'GivenName', label: 'Given name' },
             { id: 'MiddleName', label: 'Middle name' },
             { id: 'FamilyName', label: 'Family Name' },
-            { id: 'MembershipType', label: 'Membership type' },
+            { id: 'Role', label: 'Role' },
           ]}
           defaultOption={sortingLocationMemberOrder.field}
           defaultSortingDirectionValue={sortingLocationMemberOrder.direction as unknown as Direction}

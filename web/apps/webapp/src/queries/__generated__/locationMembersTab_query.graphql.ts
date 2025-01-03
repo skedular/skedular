@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4930435ab1d4994b857f302825ba2171>>
+ * @generated SignedSource<<62af0166fd3a80399a67eaf075c2a823>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type locationMembersTab_query$data = {
     readonly id: string;
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"locationSingleChoiceMembershipType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"locationSingleChoiceMemberRole_query">;
   readonly " $fragmentType": "locationMembersTab_query";
 };
 export type locationMembersTab_query$key = {
@@ -68,13 +68,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "locationSingleChoiceMembershipType_query"
+      "name": "locationSingleChoiceMemberRole_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "e7758bf8658f4461b256aedea6bade54";
+(node as any).hash = "3e69e064f99080384b012b7900be4fa2";
 
 export default node;

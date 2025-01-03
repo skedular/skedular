@@ -33,26 +33,24 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
             "cmdhbml6YXRpb25tZW1iZXIuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xl",
             "LnByb3RvYnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIkoK",
             "BERhdGESQgoSb3JnYW5pemF0aW9uTWVtYmVyGAEgASgLMiYub3JnYW5pemF0",
-            "aW9ubWVtYmVyLk9yZ2FuaXphdGlvbk1lbWJlciLjAQoST3JnYW5pemF0aW9u",
+            "aW9ubWVtYmVyLk9yZ2FuaXphdGlvbk1lbWJlciLPAQoST3JnYW5pemF0aW9u",
             "TWVtYmVyEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2ds",
             "ZS5wcm90b2J1Zi5UaW1lc3RhbXASFgoOb3JnYW5pemF0aW9uSWQYAyABKAkS",
-            "EgoKY3VzdG9tZXJJZBgEIAEoCRI6Cg5tZW1iZXJzaGlwVHlwZRgFIAEoDjIi",
-            "Lm9yZ2FuaXphdGlvbm1lbWJlci5NZW1iZXJzaGlwVHlwZRIqCgZzdGF0dXMY",
-            "BiABKA4yGi5vcmdhbml6YXRpb25tZW1iZXIuU3RhdHVzKkUKBFR5cGUSHgoa",
-            "T3JnYW5pemF0aW9uTWVtYmVyVXBzZXJ0ZWQQABIdChlPcmdhbml6YXRpb25N",
-            "ZW1iZXJEZWxldGVkEAEqIgoGU3RhdHVzEgoKBkFjdGl2ZRAAEgwKCEluYWN0",
-            "aXZlEAEqZAoOTWVtYmVyc2hpcFR5cGUSFwoTTWVtYmVyc2hpcFR5cGVPd25l",
-            "chAAEh8KG01lbWJlcnNoaXBUeXBlQWRtaW5pc3RyYXRvchABEhgKFE1lbWJl",
-            "cnNoaXBUeXBlTWVtYmVyEAJCQaoCPkFwaS5TaGFyZWQuQ2xpZW50cy5FdmVu",
-            "dHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uTWVtYmVyLlYxLlZhbHVlYgZwcm90",
-            "bzM="));
+            "EgoKY3VzdG9tZXJJZBgEIAEoCRImCgRyb2xlGAUgASgOMhgub3JnYW5pemF0",
+            "aW9ubWVtYmVyLlJvbGUSKgoGc3RhdHVzGAYgASgOMhoub3JnYW5pemF0aW9u",
+            "bWVtYmVyLlN0YXR1cypFCgRUeXBlEh4KGk9yZ2FuaXphdGlvbk1lbWJlclVw",
+            "c2VydGVkEAASHQoZT3JnYW5pemF0aW9uTWVtYmVyRGVsZXRlZBABKiIKBlN0",
+            "YXR1cxIKCgZBY3RpdmUQABIMCghJbmFjdGl2ZRABKjAKBFJvbGUSCQoFT3du",
+            "ZXIQABIRCg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAJCQaoCPkFwaS5T",
+            "aGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uTWVt",
+            "YmVyLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Status), typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Status), typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Data.Parser, new[]{ "OrganizationMember" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.OrganizationMember.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "CustomerId", "MembershipType", "Status" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.OrganizationMember.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "CustomerId", "Role", "Status" }, null, null, null, null)
           }));
     }
     #endregion
@@ -69,10 +67,10 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
     [pbr::OriginalName("Inactive")] Inactive = 1,
   }
 
-  public enum MembershipType {
-    [pbr::OriginalName("MembershipTypeOwner")] Owner = 0,
-    [pbr::OriginalName("MembershipTypeAdministrator")] Administrator = 1,
-    [pbr::OriginalName("MembershipTypeMember")] Member = 2,
+  public enum Role {
+    [pbr::OriginalName("Owner")] Owner = 0,
+    [pbr::OriginalName("Administrator")] Administrator = 1,
+    [pbr::OriginalName("Member")] Member = 2,
   }
 
   #endregion
@@ -969,7 +967,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
       deletedAt_ = other.deletedAt_ != null ? other.deletedAt_.Clone() : null;
       organizationId_ = other.organizationId_;
       customerId_ = other.customerId_;
-      membershipType_ = other.membershipType_;
+      role_ = other.role_;
       status_ = other.status_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1028,15 +1026,15 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "membershipType" field.</summary>
-    public const int MembershipTypeFieldNumber = 5;
-    private global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType membershipType_ = global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType.Owner;
+    /// <summary>Field number for the "role" field.</summary>
+    public const int RoleFieldNumber = 5;
+    private global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role role_ = global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role.Owner;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType MembershipType {
-      get { return membershipType_; }
+    public global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role Role {
+      get { return role_; }
       set {
-        membershipType_ = value;
+        role_ = value;
       }
     }
 
@@ -1071,7 +1069,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
       if (!object.Equals(DeletedAt, other.DeletedAt)) return false;
       if (OrganizationId != other.OrganizationId) return false;
       if (CustomerId != other.CustomerId) return false;
-      if (MembershipType != other.MembershipType) return false;
+      if (Role != other.Role) return false;
       if (Status != other.Status) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1084,7 +1082,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
       if (deletedAt_ != null) hash ^= DeletedAt.GetHashCode();
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
       if (CustomerId.Length != 0) hash ^= CustomerId.GetHashCode();
-      if (MembershipType != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType.Owner) hash ^= MembershipType.GetHashCode();
+      if (Role != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role.Owner) hash ^= Role.GetHashCode();
       if (Status != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Status.Active) hash ^= Status.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1120,9 +1118,9 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
         output.WriteRawTag(34);
         output.WriteString(CustomerId);
       }
-      if (MembershipType != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType.Owner) {
+      if (Role != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role.Owner) {
         output.WriteRawTag(40);
-        output.WriteEnum((int) MembershipType);
+        output.WriteEnum((int) Role);
       }
       if (Status != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Status.Active) {
         output.WriteRawTag(48);
@@ -1154,9 +1152,9 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
         output.WriteRawTag(34);
         output.WriteString(CustomerId);
       }
-      if (MembershipType != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType.Owner) {
+      if (Role != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role.Owner) {
         output.WriteRawTag(40);
-        output.WriteEnum((int) MembershipType);
+        output.WriteEnum((int) Role);
       }
       if (Status != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Status.Active) {
         output.WriteRawTag(48);
@@ -1184,8 +1182,8 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
       if (CustomerId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(CustomerId);
       }
-      if (MembershipType != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType.Owner) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MembershipType);
+      if (Role != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role.Owner) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Role);
       }
       if (Status != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Status.Active) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
@@ -1217,8 +1215,8 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
       if (other.CustomerId.Length != 0) {
         CustomerId = other.CustomerId;
       }
-      if (other.MembershipType != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType.Owner) {
-        MembershipType = other.MembershipType;
+      if (other.Role != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role.Owner) {
+        Role = other.Role;
       }
       if (other.Status != global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Status.Active) {
         Status = other.Status;
@@ -1262,7 +1260,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
             break;
           }
           case 40: {
-            MembershipType = (global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType) input.ReadEnum();
+            Role = (global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role) input.ReadEnum();
             break;
           }
           case 48: {
@@ -1308,7 +1306,7 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value {
             break;
           }
           case 40: {
-            MembershipType = (global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.MembershipType) input.ReadEnum();
+            Role = (global::Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value.Role) input.ReadEnum();
             break;
           }
           case 48: {

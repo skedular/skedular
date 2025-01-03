@@ -106,7 +106,7 @@ public class TeamInvitationService(
                     Team = team,
                     Email = email,
                     Status = InvitationStatusConstants.Pending,
-                    MembershipType = TeamMembershipTypeConstants.Member,
+                    Role = TeamMemberRoleConstants.Member,
                     CreatedBy = customerEntity,
                     Invitee = matchingCustomerByEmail
                 })
@@ -171,7 +171,7 @@ public class TeamInvitationService(
             repositoryFactory.TeamMemberRepository.Add(new TeamMember
             {
                 Id = randomHelper.Generate(),
-                MembershipType = joinInvitation.MembershipType,
+                Role = joinInvitation.Role,
                 Status = TeamMemberStatusConstants.Active,
                 Team = team,
                 Customer = customerEntity

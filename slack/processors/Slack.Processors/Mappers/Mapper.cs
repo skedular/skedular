@@ -15,7 +15,7 @@ using Desk = Slack.Shared.Models.Desk;
 using OrganizationDeskType = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationDeskType;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Slack.Shared.Models.Identity;
-using MembershipType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.MembershipType;
+using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceChannel = Slack.Shared.Database.Entities.WorkspaceChannel;
@@ -193,11 +193,11 @@ public class Mapper : IMapper
             return new Shared.Models.OrganizationMember
             {
                 Id = item.Id,
-                MembershipType = item.MembershipType switch
+                Role = item.Role switch
                 {
-                    MembershipType.Owner => OrganizationMembershipType.Owner,
-                    MembershipType.Administrator => OrganizationMembershipType.Administrator,
-                    MembershipType.Member => OrganizationMembershipType.Member,
+                    Role.Owner => OrganizationMemberRole.Owner,
+                    Role.Administrator => OrganizationMemberRole.Administrator,
+                    Role.Member => OrganizationMemberRole.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 Status = item.Status switch
@@ -265,11 +265,11 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType switch
+        dest.Role = src.Role switch
         {
-            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
-            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
-            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            OrganizationMemberRole.Owner => OrganizationMemberRoleConstants.Owner,
+            OrganizationMemberRole.Administrator => OrganizationMemberRoleConstants.Administrator,
+            OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
             _ => throw new ArgumentOutOfRangeException()
         };
         dest.Status = src.Status switch

@@ -49,7 +49,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
           name
           canInvitePeople
         }
-        ...organizationSingleChoiceMembershipType_query
+        ...organizationSingleChoiceMemberRole_query
       }
     `,
     rootDataRelay,
@@ -202,7 +202,7 @@ const OrganizationMembersTab = ({ queryReference, organizationId }: Props) => {
             { id: 'GivenName', label: 'Given name' },
             { id: 'MiddleName', label: 'Middle name' },
             { id: 'FamilyName', label: 'Family Name' },
-            { id: 'MembershipType', label: 'Membership type' },
+            { id: 'Role', label: 'Role' },
           ]}
           defaultOption={sortingOrder.field}
           defaultSortingDirectionValue={sortingOrder.direction as unknown as Direction}

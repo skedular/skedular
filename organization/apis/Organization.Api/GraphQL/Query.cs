@@ -44,11 +44,11 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public OrganizationMembershipType[] OrganizationMembershipTypes() =>
+    public OrganizationMemberRole[] OrganizationMemberRoles() =>
     [
-        OrganizationMembershipType.Owner,
-        OrganizationMembershipType.Administrator,
-        OrganizationMembershipType.Member
+        OrganizationMemberRole.Owner,
+        OrganizationMemberRole.Administrator,
+        OrganizationMemberRole.Member
     ];
 
     [UseResolverScope]

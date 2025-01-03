@@ -21,9 +21,9 @@ public interface ITeamMemberService
         ICollection<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
-    Task<TeamMember> ChangeMembershipTypeAsync(
+    Task<TeamMember> ChangeRoleAsync(
         string id,
-        TeamMembershipType membershipType,
+        TeamMemberRole memberRole,
         CancellationToken cancellationToken);
 
     Task<ICollection<TeamMember>> ChangeStatusAsync(
@@ -89,9 +89,9 @@ public class TeamMemberService(
         return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(team)).ToList(), totalCount);
     }
 
-    public async Task<TeamMember> ChangeMembershipTypeAsync(
+    public async Task<TeamMember> ChangeRoleAsync(
         string id,
-        TeamMembershipType membershipType,
+        TeamMemberRole memberRole,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -114,30 +114,28 @@ public class TeamMemberService(
             throw new Unauthorized();
         }
 
-        var myMembershipDetails =
-            team.TeamMembers.Single(item => item.Customer.Id == customer.Id);
-
-        if (myMembershipDetails.MembershipType == TeamMembershipTypeConstants.Administrator &&
-            membershipType == TeamMembershipType.Owner)
+        var myMemberDetails = team.TeamMembers.Single(item => item.Customer.Id == customer.Id);
+        if (myMemberDetails.Role == TeamMemberRoleConstants.Administrator &&
+            memberRole == TeamMemberRole.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == TeamMembershipTypeConstants.Member &&
-            membershipType == TeamMembershipType.Administrator)
+        if (myMemberDetails.Role == TeamMemberRoleConstants.Member &&
+            memberRole == TeamMemberRole.Administrator)
         {
             throw new Unauthorized();
         }
 
-        var mappedMembershipType = membershipType switch
+        var mappedRole = memberRole switch
         {
-            TeamMembershipType.Owner => TeamMembershipTypeConstants.Owner,
-            TeamMembershipType.Administrator => TeamMembershipTypeConstants.Administrator,
-            TeamMembershipType.Member => TeamMembershipTypeConstants.Member,
+            TeamMemberRole.Owner => TeamMemberRoleConstants.Owner,
+            TeamMemberRole.Administrator => TeamMemberRoleConstants.Administrator,
+            TeamMemberRole.Member => TeamMemberRoleConstants.Member,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        if (teamMember.MembershipType == mappedMembershipType)
+        if (teamMember.Role == mappedRole)
         {
             return mapper.MapTo(teamMember, mapper.MapTo(team));
         }
@@ -146,7 +144,7 @@ public class TeamMemberService(
             repositoryFactory.TeamMemberRepository.UnitOfWork,
             cancellationToken);
 
-        teamMember.MembershipType = mappedMembershipType;
+        teamMember.Role = mappedRole;
         repositoryFactory.TeamMemberRepository.Update(teamMember);
 
         await teamOutboxPublisher.PublishTeamAsync(
@@ -332,10 +330,10 @@ public class TeamMemberService(
             {
                 Id = randomHelper.Generate(),
                 CreatedAt = now,
-                MembershipType =
+                Role =
                     customer is not null && item.Id == customer.Id
-                        ? TeamMembershipTypeConstants.Owner
-                        : TeamMembershipTypeConstants.Member,
+                        ? TeamMemberRoleConstants.Owner
+                        : TeamMemberRoleConstants.Member,
                 Customer = item,
                 Team = existingTeam
             }));
@@ -354,9 +352,9 @@ public class TeamMemberService(
             {
                 Id = randomHelper.Generate(),
                 CreatedAt = now,
-                MembershipType = customer is not null && item.Customer.Id == customer.Id
-                    ? TeamMembershipTypeConstants.Owner
-                    : TeamMembershipTypeConstants.Member,
+                Role = customer is not null && item.Customer.Id == customer.Id
+                    ? TeamMemberRoleConstants.Owner
+                    : TeamMemberRoleConstants.Member,
                 Customer = item.Customer,
                 Team = existingTeam,
                 OrganizationMember = item

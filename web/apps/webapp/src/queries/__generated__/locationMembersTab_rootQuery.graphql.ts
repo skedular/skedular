@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d37253f47e517044d6c0496aba375ec9>>
+ * @generated SignedSource<<f7909c7a167ef59a8f6e37d66023adba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LocationMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "%future added value";
+export type LocationMemberOrderField = "FamilyName" | "GivenName" | "MiddleName" | "Name" | "Role" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type LocationMemberOrderInput = {
   direction: OrderDirection;
@@ -145,7 +145,7 @@ return {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "locationMembershipTypes",
+        "name": "locationMemberRoles",
         "storageKey": null
       },
       {
@@ -184,7 +184,7 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "membershipType",
+                    "name": "role",
                     "storageKey": null
                   },
                   {
@@ -302,12 +302,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2fc086d979ff930c598ef326a4d243b9",
+    "cacheID": "41950a00ba7943779674cf457fa25e05",
     "id": null,
     "metadata": {},
     "name": "locationMembersTab_rootQuery",
     "operationKind": "query",
-    "text": "query locationMembersTab_rootQuery(\n  $locationId: String!\n  $peopleNameSearchText: String\n  $locationMembersSortingValues: [LocationMemberOrderInput!]\n) {\n  ...locationMembersTab_query\n  ...locationMembersTab_locationMembers_query\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationMembersTab_locationMembers_query on Query {\n  locationMembers(first: 50, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationMembersTab_query on Query {\n  location(id: $locationId) {\n    id\n    name\n  }\n  ...locationSingleChoiceMembershipType_query\n}\n\nfragment locationSingleChoiceMembershipType_query on Query {\n  locationMembershipTypes\n}\n"
+    "text": "query locationMembersTab_rootQuery(\n  $locationId: String!\n  $peopleNameSearchText: String\n  $locationMembersSortingValues: [LocationMemberOrderInput!]\n) {\n  ...locationMembersTab_query\n  ...locationMembersTab_locationMembers_query\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  role\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationMembersTab_locationMembers_query on Query {\n  locationMembers(first: 50, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationMembersTab_query on Query {\n  location(id: $locationId) {\n    id\n    name\n  }\n  ...locationSingleChoiceMemberRole_query\n}\n\nfragment locationSingleChoiceMemberRole_query on Query {\n  locationMemberRoles\n}\n"
   }
 };
 })();

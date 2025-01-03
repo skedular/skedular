@@ -1893,17 +1893,17 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<string>("InviteeId")
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("MembershipType")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -2059,17 +2059,17 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<bool?>("IsOrganizationOnboardingDone")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("MembershipType")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -2088,9 +2088,9 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("MembershipType");
-
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("Role");
 
                     b.HasIndex("Status");
 

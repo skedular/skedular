@@ -8,6 +8,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
 using Location = Customer.Shared.Database.Entities.Location;
+using LocationMember = Customer.Shared.Database.Entities.LocationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 
 namespace Customer.Processors.Subscribers;

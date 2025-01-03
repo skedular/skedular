@@ -340,9 +340,9 @@ public class OrganizationInternalSubscriber(
                     Id = randomHelper.Generate(),
                     Customer = new Customer { Id = customerId },
                     Status = OrganizationMemberStatus.Active,
-                    MembershipType = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
-                        ? OrganizationMembershipType.Owner
-                        : OrganizationMembershipType.Member,
+                    Role = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
+                        ? OrganizationMemberRole.Owner
+                        : OrganizationMemberRole.Member,
                     IsOrganizationOnboardingDone = true
                 };
             }
@@ -352,9 +352,9 @@ public class OrganizationInternalSubscriber(
                 Id = organizationMember.Id,
                 Customer = new Customer { Id = customerId },
                 Status = OrganizationMemberStatus.Active,
-                MembershipType = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
-                    ? OrganizationMembershipType.Owner
-                    : OrganizationMembershipType.Member,
+                Role = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
+                    ? OrganizationMemberRole.Owner
+                    : OrganizationMemberRole.Member,
                 IsOrganizationOnboardingDone = true
             };
         }).ToList();

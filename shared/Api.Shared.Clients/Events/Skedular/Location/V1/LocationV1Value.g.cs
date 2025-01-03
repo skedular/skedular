@@ -33,34 +33,33 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIoEBCgREYXRh",
             "EiYKCGxvY2F0aW9uGAEgASgLMhIubG9jYXRpb24uTG9jYXRpb25IABJGChhp",
             "bnZpdGF0aW9uVG9Kb2luTG9jYXRpb24YAiABKAsyIi5sb2NhdGlvbi5JbnZp",
-            "dGF0aW9uVG9Kb2luTG9jYXRpb25IAEIJCgdwYXlsb2FkIs4BCghMb2NhdGlv",
+            "dGF0aW9uVG9Kb2luTG9jYXRpb25IAEIJCgdwYXlsb2FkItYBCghMb2NhdGlv",
             "bhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJv",
             "dG9idWYuVGltZXN0YW1wEgwKBG5hbWUYAyABKAkSDQoFYWJvdXQYBCABKAkS",
-            "IQoHbWVtYmVycxgFIAMoCzIQLmxvY2F0aW9uLk1lbWJlchIWCg5vcmdhbml6",
-            "YXRpb25JZBgGIAEoCRIQCgh0aW1lem9uZRgHIAEoCRIdCgVkZXNrcxgIIAMo",
-            "CzIOLmxvY2F0aW9uLkRlc2siWgoGTWVtYmVyEgoKAmlkGAEgASgJEjAKDm1l",
-            "bWJlcnNoaXBUeXBlGAIgASgOMhgubG9jYXRpb24uTWVtYmVyc2hpcFR5cGUS",
-            "EgoKY3VzdG9tZXJJZBgDIAEoCSJ7CgREZXNrEgoKAmlkGAEgASgJEgwKBG5h",
-            "bWUYAiABKAkSEwoLZGVhY3RpdmF0ZWQYAyABKAgSHgoWcmVxdWlyZUJvb2tp",
-            "bmdBcHByb3ZhbBgEIAEoCBITCgtkZXNrVHlwZUlkcxgFIAMoCRIPCgd6b25l",
-            "SWRzGAYgAygJIpEBChhJbnZpdGF0aW9uVG9Kb2luTG9jYXRpb24SCgoCaWQY",
-            "ASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
-            "bWVzdGFtcBISCgpsb2NhdGlvbklkGAMgASgJEhMKC2ludml0ZWRCeUlkGAQg",
-            "ASgJEhEKCWludml0ZWVJZBgFIAEoCSp8CgRUeXBlEhQKEExvY2F0aW9uVXBz",
-            "ZXJ0ZWQQABITCg9Mb2NhdGlvbkRlbGV0ZWQQARIkCiBJbnZpdGF0aW9uVG9K",
-            "b2luTG9jYXRpb25VcHNlcnRlZBACEiMKH0ludml0YXRpb25Ub0pvaW5Mb2Nh",
-            "dGlvbkRlbGV0ZWQQAypkCg5NZW1iZXJzaGlwVHlwZRIXChNNZW1iZXJzaGlw",
-            "VHlwZU93bmVyEAASHwobTWVtYmVyc2hpcFR5cGVBZG1pbmlzdHJhdG9yEAES",
-            "GAoUTWVtYmVyc2hpcFR5cGVNZW1iZXIQAkI3qgI0QXBpLlNoYXJlZC5DbGll",
-            "bnRzLkV2ZW50cy5Ta2VkdWxhci5Mb2NhdGlvbi5WMS5WYWx1ZWIGcHJvdG8z"));
+            "KQoHbWVtYmVycxgFIAMoCzIYLmxvY2F0aW9uLkxvY2F0aW9uTWVtYmVyEhYK",
+            "Dm9yZ2FuaXphdGlvbklkGAYgASgJEhAKCHRpbWV6b25lGAcgASgJEh0KBWRl",
+            "c2tzGAggAygLMg4ubG9jYXRpb24uRGVzayJOCg5Mb2NhdGlvbk1lbWJlchIK",
+            "CgJpZBgBIAEoCRIcCgRyb2xlGAIgASgOMg4ubG9jYXRpb24uUm9sZRISCgpj",
+            "dXN0b21lcklkGAMgASgJInsKBERlc2sSCgoCaWQYASABKAkSDAoEbmFtZRgC",
+            "IAEoCRITCgtkZWFjdGl2YXRlZBgDIAEoCBIeChZyZXF1aXJlQm9va2luZ0Fw",
+            "cHJvdmFsGAQgASgIEhMKC2Rlc2tUeXBlSWRzGAUgAygJEg8KB3pvbmVJZHMY",
+            "BiADKAkikQEKGEludml0YXRpb25Ub0pvaW5Mb2NhdGlvbhIKCgJpZBgBIAEo",
+            "CRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
+            "YW1wEhIKCmxvY2F0aW9uSWQYAyABKAkSEwoLaW52aXRlZEJ5SWQYBCABKAkS",
+            "EQoJaW52aXRlZUlkGAUgASgJKnwKBFR5cGUSFAoQTG9jYXRpb25VcHNlcnRl",
+            "ZBAAEhMKD0xvY2F0aW9uRGVsZXRlZBABEiQKIEludml0YXRpb25Ub0pvaW5M",
+            "b2NhdGlvblVwc2VydGVkEAISIwofSW52aXRhdGlvblRvSm9pbkxvY2F0aW9u",
+            "RGVsZXRlZBADKjAKBFJvbGUSCQoFT3duZXIQABIRCg1BZG1pbmlzdHJhdG9y",
+            "EAESCgoGTWVtYmVyEAJCN6oCNEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMu",
+            "U2tlZHVsYXIuTG9jYXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "Location", "InvitationToJoinLocation" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Desks" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Member), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Member.Parser, new[]{ "Id", "MembershipType", "CustomerId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember.Parser, new[]{ "Id", "Role", "CustomerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "DeskTypeIds", "ZoneIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null)
           }));
@@ -76,10 +75,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [pbr::OriginalName("InvitationToJoinLocationDeleted")] InvitationToJoinLocationDeleted = 3,
   }
 
-  public enum MembershipType {
-    [pbr::OriginalName("MembershipTypeOwner")] Owner = 0,
-    [pbr::OriginalName("MembershipTypeAdministrator")] Administrator = 1,
-    [pbr::OriginalName("MembershipTypeMember")] Member = 2,
+  public enum Role {
+    [pbr::OriginalName("Owner")] Owner = 0,
+    [pbr::OriginalName("Administrator")] Administrator = 1,
+    [pbr::OriginalName("Member")] Member = 2,
   }
 
   #endregion
@@ -1126,12 +1125,12 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
 
     /// <summary>Field number for the "members" field.</summary>
     public const int MembersFieldNumber = 5;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Member> _repeated_members_codec
-        = pb::FieldCodec.ForMessage(42, global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Member.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Member> members_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Member>();
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember> _repeated_members_codec
+        = pb::FieldCodec.ForMessage(42, global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember> members_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Member> Members {
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember> Members {
       get { return members_; }
     }
 
@@ -1469,16 +1468,16 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Member : pb::IMessage<Member>
+  public sealed partial class LocationMember : pb::IMessage<LocationMember>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<Member> _parser = new pb::MessageParser<Member>(() => new Member());
+    private static readonly pb::MessageParser<LocationMember> _parser = new pb::MessageParser<LocationMember>(() => new LocationMember());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Member> Parser { get { return _parser; } }
+    public static pb::MessageParser<LocationMember> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1494,7 +1493,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Member() {
+    public LocationMember() {
       OnConstruction();
     }
 
@@ -1502,17 +1501,17 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Member(Member other) : this() {
+    public LocationMember(LocationMember other) : this() {
       id_ = other.id_;
-      membershipType_ = other.membershipType_;
+      role_ = other.role_;
       customerId_ = other.customerId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Member Clone() {
-      return new Member(this);
+    public LocationMember Clone() {
+      return new LocationMember(this);
     }
 
     /// <summary>Field number for the "id" field.</summary>
@@ -1527,15 +1526,15 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "membershipType" field.</summary>
-    public const int MembershipTypeFieldNumber = 2;
-    private global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType membershipType_ = global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Owner;
+    /// <summary>Field number for the "role" field.</summary>
+    public const int RoleFieldNumber = 2;
+    private global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role role_ = global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Owner;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType MembershipType {
-      get { return membershipType_; }
+    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role Role {
+      get { return role_; }
       set {
-        membershipType_ = value;
+        role_ = value;
       }
     }
 
@@ -1554,12 +1553,12 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as Member);
+      return Equals(other as LocationMember);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Member other) {
+    public bool Equals(LocationMember other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -1567,7 +1566,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         return true;
       }
       if (Id != other.Id) return false;
-      if (MembershipType != other.MembershipType) return false;
+      if (Role != other.Role) return false;
       if (CustomerId != other.CustomerId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1577,7 +1576,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (MembershipType != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Owner) hash ^= MembershipType.GetHashCode();
+      if (Role != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Owner) hash ^= Role.GetHashCode();
       if (CustomerId.Length != 0) hash ^= CustomerId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1601,9 +1600,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (MembershipType != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Owner) {
+      if (Role != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Owner) {
         output.WriteRawTag(16);
-        output.WriteEnum((int) MembershipType);
+        output.WriteEnum((int) Role);
       }
       if (CustomerId.Length != 0) {
         output.WriteRawTag(26);
@@ -1623,9 +1622,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (MembershipType != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Owner) {
+      if (Role != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Owner) {
         output.WriteRawTag(16);
-        output.WriteEnum((int) MembershipType);
+        output.WriteEnum((int) Role);
       }
       if (CustomerId.Length != 0) {
         output.WriteRawTag(26);
@@ -1644,8 +1643,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Id.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
       }
-      if (MembershipType != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Owner) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MembershipType);
+      if (Role != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Owner) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Role);
       }
       if (CustomerId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(CustomerId);
@@ -1658,15 +1657,15 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Member other) {
+    public void MergeFrom(LocationMember other) {
       if (other == null) {
         return;
       }
       if (other.Id.Length != 0) {
         Id = other.Id;
       }
-      if (other.MembershipType != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Owner) {
-        MembershipType = other.MembershipType;
+      if (other.Role != global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Owner) {
+        Role = other.Role;
       }
       if (other.CustomerId.Length != 0) {
         CustomerId = other.CustomerId;
@@ -1695,7 +1694,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 16: {
-            MembershipType = (global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType) input.ReadEnum();
+            Role = (global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role) input.ReadEnum();
             break;
           }
           case 26: {
@@ -1726,7 +1725,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 16: {
-            MembershipType = (global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType) input.ReadEnum();
+            Role = (global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role) input.ReadEnum();
             break;
           }
           case 26: {

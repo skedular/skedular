@@ -106,7 +106,7 @@ public class OrganizationInvitationService(
                     Organization = organization,
                     Email = email,
                     Status = InvitationStatusConstants.Pending,
-                    MembershipType = OrganizationMembershipTypeConstants.Member,
+                    Role = OrganizationMemberRoleConstants.Member,
                     CreatedBy = customerEntity,
                     Invitee = matchingCustomerByEmail
                 })
@@ -171,7 +171,7 @@ public class OrganizationInvitationService(
             repositoryFactory.OrganizationMemberRepository.Add(new OrganizationMember
             {
                 Id = randomHelper.Generate(),
-                MembershipType = joinInvitation.MembershipType,
+                Role = joinInvitation.Role,
                 Status = OrganizationMemberStatusConstants.Active,
                 Organization = organization,
                 Customer = customerEntity

@@ -1,10 +1,10 @@
-import { OrganizationSingleChoiceMembershipType } from '@/components/organization';
-import type { organizationMemberCard_OrganizationMemberDetails$key } from '@/queries/__generated__/organizationMemberCard_OrganizationMemberDetails.graphql';
+import { OrganizationSingleChoiceMemberRole } from '@/components/organization';
 import type {
-  OrganizationMembershipType,
-  organizationMemberCard_changeOrganizationMembershipMutation,
-} from '@/queries/__generated__/organizationMemberCard_changeOrganizationMembershipMutation.graphql';
-import type { organizationSingleChoiceMembershipType_query$key } from '@/queries/__generated__/organizationSingleChoiceMembershipType_query.graphql';
+  OrganizationMemberRole,
+  organizationMemberCard_changeOrganizationMemberRoleMutation,
+} from '@/queries/__generated__/organizationMemberCard_changeOrganizationMemberRoleMutation.graphql';
+import type { organizationMemberCard_OrganizationMemberDetails$key } from '@/queries/__generated__/organizationMemberCard_OrganizationMemberDetails.graphql';
+import type { organizationSingleChoiceMemberRole_query$key } from '@/queries/__generated__/organizationSingleChoiceMemberRole_query.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -30,17 +30,17 @@ import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 
 type Props = {
-  data: organizationSingleChoiceMembershipType_query$key;
+  data: organizationSingleChoiceMemberRole_query$key;
   organizationMemberDetailsRelay: organizationMemberCard_OrganizationMemberDetails$key;
   connectionIds: string[];
 };
 
 type OrganizationMemberDetails = {
-  membershipType: string;
+  role: string;
 };
 
 const organizationMemberSchema = object({
-  membershipType: string().required(),
+  role: string().required(),
 });
 
 const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connectionIds }: Props) => {
@@ -48,7 +48,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     graphql`
       fragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {
         id
-        membershipType
+        role
         customer {
           name
           givenName
@@ -61,12 +61,12 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     organizationMemberDetailsRelay,
   );
 
-  const [commitChangeOrganizationMembership] = useMutation<organizationMemberCard_changeOrganizationMembershipMutation>(graphql`
-    mutation organizationMemberCard_changeOrganizationMembershipMutation($input: ChangeOrganizationMembershipTypeInput!) @raw_response_type {
-      changeOrganizationMembership(input: $input) {
+  const [commitChangeOrganizationMemberRole] = useMutation<organizationMemberCard_changeOrganizationMemberRoleMutation>(graphql`
+    mutation organizationMemberCard_changeOrganizationMemberRoleMutation($input: ChangeOrganizationMemberRoleInput!) @raw_response_type {
+      changeOrganizationMemberRole(input: $input) {
         member {
           id
-          membershipType
+          role
         }
       }
     }
@@ -86,23 +86,23 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     setEditing(false);
   };
 
-  const handleSaveClick = ({ membershipType: membershipTypeStr }: OrganizationMemberDetails) => {
-    const membershipType = membershipTypeStr as unknown as OrganizationMembershipType;
-    const toastId = themedToast(<NotificationContent content={`Updating organization membership...`} />, infoNotificationOptions);
+  const handleSaveClick = ({ role: roleStr }: OrganizationMemberDetails) => {
+    const role = roleStr as unknown as OrganizationMemberRole;
+    const toastId = themedToast(<NotificationContent content={`Updating organization role...`} />, infoNotificationOptions);
 
-    commitChangeOrganizationMembership({
+    commitChangeOrganizationMemberRole({
       variables: {
         input: {
           clientMutationId: nanoid(),
           id: organizationMemberDetails.id,
-          membershipType,
+          role,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update membership to ${membershipType}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update role to ${role}. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -110,7 +110,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization membership updated.`} />,
+          render: <NotificationContent content={`Organization role updated.`} />,
         });
 
         setEditing(false);
@@ -118,14 +118,14 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update membership to '${membershipType}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update role to '${role}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
-        changeOrganizationMembership: {
+        changeOrganizationMemberRole: {
           member: {
             id: organizationMemberDetails.id,
-            membershipType,
+            role,
           },
         },
       },
@@ -136,7 +136,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
     <Form
       onSubmit={handleSaveClick}
       initialValues={{
-        membershipType: organizationMemberDetails.membershipType,
+        role: organizationMemberDetails.role,
       }}
       validate={validate}
       render={({ handleSubmit }) => (
@@ -158,12 +158,12 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
           />
 
           <CardContent>
-            {!editing && organizationMemberDetails.membershipType && (
-              <BodyIconTypography label={convertStringToLowercaseExceptFirstLetter(organizationMemberDetails.membershipType)} />
+            {!editing && organizationMemberDetails.role && (
+              <BodyIconTypography label={convertStringToLowercaseExceptFirstLetter(organizationMemberDetails.role)} />
             )}
             {editing && (
               <FormFieldLabel label="Role" useWiderSpace>
-                <OrganizationSingleChoiceMembershipType rootDataRelay={data} name="membershipType" required={requiredFields.membershipType} />
+                <OrganizationSingleChoiceMemberRole rootDataRelay={data} name="role" required={requiredFields.role} />
               </FormFieldLabel>
             )}
           </CardContent>

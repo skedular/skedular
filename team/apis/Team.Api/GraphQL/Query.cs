@@ -35,11 +35,11 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public TeamMembershipType[] TeamMembershipTypes() =>
+    public TeamMemberRole[] TeamMemberRoles() =>
     [
-        TeamMembershipType.Owner,
-        TeamMembershipType.Administrator,
-        TeamMembershipType.Member
+        TeamMemberRole.Owner,
+        TeamMemberRole.Administrator,
+        TeamMemberRole.Member
     ];
 
     [UseResolverScope]

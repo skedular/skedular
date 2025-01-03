@@ -5,6 +5,7 @@ using Billing.Shared.Database.Entities;
 using Billing.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using Organization = Billing.Shared.Database.Entities.Organization;
+using OrganizationMember = Billing.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Billing.Processors.Subscribers;

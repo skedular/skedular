@@ -1,5 +1,4 @@
 export {
-  default as LocationLink,
   getLocationAddLink,
   getLocationAnalyticsLink,
   getLocationBaseLink,
@@ -8,5 +7,6 @@ export {
   getLocationMembersLink,
   getLocationSettingsLink,
   getLocationZonesLink,
+  default as LocationLink,
 } from './location-link';
-export { default as LocationSingleChoiceMembershipType } from './location-single-choice-membership-type';
+export { default as LocationSingleChoiceMemberRole } from './location-single-choice-member-role';

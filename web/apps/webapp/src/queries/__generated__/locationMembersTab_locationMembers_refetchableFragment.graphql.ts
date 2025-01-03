@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<20b27846b6abdce95da5883fd8659f96>>
+ * @generated SignedSource<<123c70ffa90d08d65404f7819c67265b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LocationMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "%future added value";
+export type LocationMemberOrderField = "FamilyName" | "GivenName" | "MiddleName" | "Name" | "Role" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type LocationMemberOrderInput = {
   direction: OrderDirection;
@@ -167,7 +167,7 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "membershipType",
+                    "name": "role",
                     "storageKey": null
                   },
                   {
@@ -291,12 +291,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2e986e49956756772578bdc2df54e95d",
+    "cacheID": "1d178aa4c8d49af37ca9a818f57849f9",
     "id": null,
     "metadata": {},
     "name": "locationMembersTab_locationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationMembersTab_locationMembers_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationId: String!\n  $locationMembersSortingValues: [LocationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...locationMembersTab_locationMembers_query_1G22uz\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationMembersTab_locationMembers_query_1G22uz on Query {\n  locationMembers(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query locationMembersTab_locationMembers_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $locationId: String!\n  $locationMembersSortingValues: [LocationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...locationMembersTab_locationMembers_query_1G22uz\n}\n\nfragment locationMemberCard_LocationMemberDetails on LocationMemberDetails {\n  id\n  role\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment locationMembersTab_locationMembers_query_1G22uz on Query {\n  locationMembers(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $peopleNameSearchText}, orderBy: $locationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...locationMemberCard_LocationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

@@ -28,8 +28,8 @@ public class TeamAuthorizationService(
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
                 Status: TeamMemberStatusConstants.Active,
-                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
-                or TeamMembershipTypeConstants.Member
+                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
+                or TeamMemberRoleConstants.Member
             };
         }
 
@@ -43,7 +43,7 @@ public class TeamAuthorizationService(
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
                 Status: TeamMemberStatusConstants.Active,
-                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
             };
         }
 
@@ -57,7 +57,7 @@ public class TeamAuthorizationService(
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
                 Status: TeamMemberStatusConstants.Active,
-                MembershipType: TeamMembershipTypeConstants.Owner
+                Role: TeamMemberRoleConstants.Owner
             };
         }
 
@@ -71,7 +71,7 @@ public class TeamAuthorizationService(
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
                 Status: TeamMemberStatusConstants.Active,
-                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
             };
         }
 
@@ -87,7 +87,7 @@ public class TeamAuthorizationService(
             return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
                 Status: TeamMemberStatusConstants.Active,
-                MembershipType: TeamMembershipTypeConstants.Owner or TeamMembershipTypeConstants.Administrator
+                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
             };
         }
 

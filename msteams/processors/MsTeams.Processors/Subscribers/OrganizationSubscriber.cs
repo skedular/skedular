@@ -6,6 +6,7 @@ using MsTeams.Shared.Database.Entities;
 using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
 using Organization = MsTeams.Shared.Database.Entities.Organization;
+using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace MsTeams.Processors.Subscribers;

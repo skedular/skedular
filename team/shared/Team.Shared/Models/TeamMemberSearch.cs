@@ -20,7 +20,7 @@ public record TeamMemberOrder(OrderDirection Direction, TeamMemberOrderField Fie
 
 public enum TeamMemberOrderField
 {
-    MembershipType,
+    Role,
     Status,
     Name,
     GivenName,

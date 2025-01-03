@@ -1,33 +1,28 @@
+import type { organizationSingleChoiceMemberRole_query$key } from '@/queries/__generated__/organizationSingleChoiceMemberRole_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { convertStringToLowercaseExceptFirstLetter } from '@repo/shared/libs/utils';
-import graphql from 'babel-plugin-relay/macro';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
-import { useFragment } from 'react-relay';
-import type { organizationSingleChoiceMembershipType_query$key } from './__generated__/organizationSingleChoiceMembershipType_query.graphql';
+import { graphql, useFragment } from 'react-relay';
 
 type Props = {
-  rootDataRelay: organizationSingleChoiceMembershipType_query$key;
+  rootDataRelay: organizationSingleChoiceMemberRole_query$key;
   name: string;
   required?: boolean;
 };
 
-const OrganizationSingleChoiceMembershipType = ({ rootDataRelay, name, required }: Props) => {
+const OrganizationSingleChoiceMemberRole = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment(
     graphql`
-      fragment organizationSingleChoiceMembershipType_query on Query {
-        organizationMembershipTypes
+      fragment organizationSingleChoiceMemberRole_query on Query {
+        organizationMemberRoles
       }
     `,
     rootDataRelay,
   );
 
-  const organizationMembershipTypes = useMemo<string[]>(
-    () => rootData.organizationMembershipTypes.map((organizationMembershipType) => organizationMembershipType),
-    [rootData.organizationMembershipTypes],
-  );
-
+  const roles = useMemo<string[]>(() => rootData.organizationMemberRoles.map((role) => role), [rootData.organizationMemberRoles]);
   const filter = createFilterOptions<string>();
 
   return (
@@ -35,7 +30,7 @@ const OrganizationSingleChoiceMembershipType = ({ rootDataRelay, name, required 
       name={name}
       multiple={false}
       required={required}
-      options={organizationMembershipTypes}
+      options={roles}
       getOptionValue={(option) => option as string}
       getOptionLabel={(option: string | string) => convertStringToLowercaseExceptFirstLetter(option as string)}
       renderOption={(props, option) => {
@@ -57,4 +52,4 @@ const OrganizationSingleChoiceMembershipType = ({ rootDataRelay, name, required 
   );
 };
 
-export default memo(OrganizationSingleChoiceMembershipType);
+export default memo(OrganizationSingleChoiceMemberRole);

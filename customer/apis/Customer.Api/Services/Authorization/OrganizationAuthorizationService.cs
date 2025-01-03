@@ -22,8 +22,8 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            MembershipType: OrganizationMembershipTypeConstants.Owner
-            or OrganizationMembershipTypeConstants.Administrator
-            or OrganizationMembershipTypeConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner
+            or OrganizationMemberRoleConstants.Administrator
+            or OrganizationMemberRoleConstants.Member
         };
 }

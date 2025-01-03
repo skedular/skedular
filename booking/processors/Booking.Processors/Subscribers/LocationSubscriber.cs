@@ -5,6 +5,7 @@ using Booking.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using IMapper = Booking.Processors.Mappers.IMapper;
 using Location = Booking.Shared.Database.Entities.Location;
+using LocationMember = Booking.Shared.Database.Entities.LocationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;

@@ -8,6 +8,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
 using Organization = Customer.Shared.Database.Entities.Organization;
+using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Customer.Processors.Subscribers;

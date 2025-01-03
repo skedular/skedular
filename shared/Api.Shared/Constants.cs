@@ -76,7 +76,7 @@ public static class Constants
 
     public const int MaxSsoEntityIdLength = 200;
 
-    public const int MaxMembershipTypeLength = 32;
+    public const int MaxRoleLength = 32;
 
     public const int MaxInvitationStatusLength = 32;
     public const int MaxNotificationTypeLength = 128;

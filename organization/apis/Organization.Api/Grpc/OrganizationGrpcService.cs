@@ -112,7 +112,7 @@ public class OrganizationGrpcService(
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    MemberOrderField.Membership => OrganizationMemberOrderField.MembershipType,
+                    MemberOrderField.RoleType => OrganizationMemberOrderField.Role,
                     MemberOrderField.Status => OrganizationMemberOrderField.Status,
                     MemberOrderField.Name => OrganizationMemberOrderField.Name,
                     MemberOrderField.GivenName => OrganizationMemberOrderField.GivenName,

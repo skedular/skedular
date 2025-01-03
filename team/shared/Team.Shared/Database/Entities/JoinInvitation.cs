@@ -11,7 +11,7 @@ public class JoinInvitation : EntityBaseWithDeleted
 {
     public string? Email { get; set; }
     public string Status { get; set; }
-    public string MembershipType { get; set; }
+    public string Role { get; set; }
 
     public virtual Team Team { get; set; }
     public virtual Customer CreatedBy { get; set; }
@@ -26,14 +26,8 @@ public class JoinInvitationConfiguration : IEntityTypeConfiguration<JoinInvitati
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
-
-        builder
-            .Property(item => item.Status)
-            .HasMaxLength(Constants.MaxInvitationStatusLength);
-
-        builder
-            .Property(item => item.MembershipType)
-            .HasMaxLength(Constants.MaxMembershipTypeLength);
+        builder.Property(item => item.Status).HasMaxLength(Constants.MaxInvitationStatusLength);
+        builder.Property(item => item.Role).HasMaxLength(Constants.MaxRoleLength);
 
         builder
             .HasOne(item => item.Team)

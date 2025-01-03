@@ -19,9 +19,9 @@ public interface ILocationMemberService
         ICollection<LocationMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
-    Task<LocationMember> ChangeMembershipTypeAsync(
+    Task<LocationMember> ChangeRoleAsync(
         string id,
-        LocationMembershipType membershipType,
+        LocationMemberRole memberRole,
         CancellationToken cancellationToken);
 }
 
@@ -65,9 +65,9 @@ public class LocationMemberService(
         return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(location)).ToList(), totalCount);
     }
 
-    public async Task<LocationMember> ChangeMembershipTypeAsync(
+    public async Task<LocationMember> ChangeRoleAsync(
         string id,
-        LocationMembershipType membershipType,
+        LocationMemberRole memberRole,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -91,30 +91,28 @@ public class LocationMemberService(
             throw new Unauthorized();
         }
 
-        var myMembershipDetails =
-            location.LocationMembers.Single(item => item.Customer.Id == customer.Id);
-
-        if (myMembershipDetails.MembershipType == LocationMembershipTypeConstants.Administrator &&
-            membershipType == LocationMembershipType.Owner)
+        var myMemberDetails = location.LocationMembers.Single(item => item.Customer.Id == customer.Id);
+        if (myMemberDetails.Role == LocationRoleConstants.Administrator &&
+            memberRole == LocationMemberRole.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == LocationMembershipTypeConstants.Member &&
-            membershipType == LocationMembershipType.Administrator)
+        if (myMemberDetails.Role == LocationRoleConstants.Member &&
+            memberRole == LocationMemberRole.Administrator)
         {
             throw new Unauthorized();
         }
 
-        var mappedMembershipType = membershipType switch
+        var mappedRole = memberRole switch
         {
-            LocationMembershipType.Owner => LocationMembershipTypeConstants.Owner,
-            LocationMembershipType.Administrator => LocationMembershipTypeConstants.Administrator,
-            LocationMembershipType.Member => LocationMembershipTypeConstants.Member,
+            LocationMemberRole.Owner => LocationRoleConstants.Owner,
+            LocationMemberRole.Administrator => LocationRoleConstants.Administrator,
+            LocationMemberRole.Member => LocationRoleConstants.Member,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        if (locationMember.MembershipType == mappedMembershipType)
+        if (locationMember.Role == mappedRole)
         {
             return mapper.MapTo(locationMember, mapper.MapTo(location));
         }
@@ -123,7 +121,7 @@ public class LocationMemberService(
             repositoryFactory.LocationMemberRepository.UnitOfWork,
             cancellationToken);
 
-        locationMember.MembershipType = mappedMembershipType;
+        locationMember.Role = mappedRole;
         repositoryFactory.LocationMemberRepository.Update(locationMember);
 
         await locationOutboxPublisher.PublishLocationAsync(

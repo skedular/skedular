@@ -3,6 +3,7 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Team.Shared.Models;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember;
+using TeamMember = Api.Shared.Clients.Events.Skedular.Team.V1.Value.TeamMember;
 
 namespace Team.Shared.Mappers;
 
@@ -26,34 +27,31 @@ public class Mapper : IMapper
             PrimaryLocationId = src.PrimaryLocation is null ? string.Empty : src.PrimaryLocation.Id
         };
 
-        team.Members.AddRange(src.TeamMembers.Select(item =>
+        team.Members.AddRange(src.TeamMembers.Select(item => new TeamMember
         {
-            return new Member
+            Id = item.Id,
+            CustomerId = item.Customer.Id,
+            Role = item.Role switch
             {
-                Id = item.Id,
-                CustomerId = item.Customer.Id,
-                MembershipType = item.MembershipType switch
+                TeamMemberRole.Owner => Role.Owner,
+                TeamMemberRole.Administrator => Role.Administrator,
+                TeamMemberRole.Member => Role.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = item.Status switch
+            {
+                TeamMemberStatus.Active => Status.Active,
+                TeamMemberStatus.Inactive => Status.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            OrganizationMember = item.OrganizationMember is null
+                ? null
+                : new OrganizationMember
                 {
-                    TeamMembershipType.Owner => MembershipType.Owner,
-                    TeamMembershipType.Administrator => MembershipType.Administrator,
-                    TeamMembershipType.Member => MembershipType.Member,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                Status = item.Status switch
-                {
-                    TeamMemberStatus.Active => Status.Active,
-                    TeamMemberStatus.Inactive => Status.Inactive,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                OrganizationMember = item.OrganizationMember is null
-                    ? null
-                    : new OrganizationMember
-                    {
-                        OrganizationMemberId = item.OrganizationMember.Id,
-                        CustomerId = item.OrganizationMember.Customer!.Id,
-                        OrganizationId = item.OrganizationMember.Organization!.Id
-                    }
-            };
+                    OrganizationMemberId = item.OrganizationMember.Id,
+                    CustomerId = item.OrganizationMember.Customer!.Id,
+                    OrganizationId = item.OrganizationMember.Organization!.Id
+                }
         }));
 
         return team;

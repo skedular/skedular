@@ -5,6 +5,7 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using Organization = Booking.Shared.Database.Entities.Organization;
+using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;

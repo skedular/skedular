@@ -42,8 +42,8 @@ public class Customer : EntityBaseWithDeleted
     public virtual ICollection<Team> DefaultTeams { get; set; } = [];
     public virtual ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public virtual ICollection<LocationMember> LocationMemberships { get; set; } = [];
-    public virtual ICollection<TeamMember> TeamMemberships { get; set; } = [];
+    public virtual ICollection<LocationMember> LocationMembers { get; set; } = [];
+    public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

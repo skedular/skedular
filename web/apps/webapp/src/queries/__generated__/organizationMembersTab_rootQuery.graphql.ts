@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<62da2639e6665f39b19c692874a417a0>>
+ * @generated SignedSource<<46e192fff691b360f205c6ad02d5f58d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
-export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MembershipType" | "MiddleName" | "Name" | "PhoneNumber" | "Status" | "%future added value";
+export type OrganizationMemberOrderField = "FamilyName" | "GivenName" | "MiddleName" | "Name" | "PhoneNumber" | "Role" | "Status" | "%future added value";
 export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
   field: OrganizationMemberOrderField;
@@ -160,7 +160,7 @@ return {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "organizationMembershipTypes",
+        "name": "organizationMemberRoles",
         "storageKey": null
       },
       {
@@ -204,7 +204,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "membershipType",
+                        "name": "role",
                         "storageKey": null
                       },
                       {
@@ -324,12 +324,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4395b089930fca6e84a9b6a58fb3b373",
+    "cacheID": "6621d91c5be5e6276a0970779caf207e",
     "id": null,
     "metadata": {},
     "name": "organizationMembersTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMembersTab_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMembersTab_query\n  ...organizationMembersTab_organizationMembers_query\n}\n\nfragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {\n  id\n  membershipType\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment organizationMembersTab_organizationMembers_query on Query {\n  organizationMembers(first: 50, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationMemberCard_OrganizationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMembersTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    canInvitePeople\n  }\n  ...organizationSingleChoiceMembershipType_query\n}\n\nfragment organizationSingleChoiceMembershipType_query on Query {\n  organizationMembershipTypes\n}\n"
+    "text": "query organizationMembersTab_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMembersTab_query\n  ...organizationMembersTab_organizationMembers_query\n}\n\nfragment organizationMemberCard_OrganizationMemberDetails on OrganizationMemberDetails {\n  id\n  role\n  customer {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n}\n\nfragment organizationMembersTab_organizationMembers_query on Query {\n  organizationMembers(first: 50, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        ...organizationMemberCard_OrganizationMemberDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMembersTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    canInvitePeople\n  }\n  ...organizationSingleChoiceMemberRole_query\n}\n\nfragment organizationSingleChoiceMemberRole_query on Query {\n  organizationMemberRoles\n}\n"
   }
 };
 })();

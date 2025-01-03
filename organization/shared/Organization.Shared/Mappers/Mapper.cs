@@ -5,6 +5,7 @@ using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Organization.Shared.Models;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
+using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 
 namespace Organization.Shared.Mappers;
@@ -58,15 +59,15 @@ public class Mapper : IMapper
         organization.Offering.ActiveCustomerIds.AddRange(
             organizationOffering.OrganizationOfferingActiveMembers.Select(item => item.OrganizationMember.Customer.Id));
 
-        organization.Members.AddRange(src.OrganizationMembers.Select(item => new Member
+        organization.Members.AddRange(src.OrganizationMembers.Select(item => new OrganizationMember
         {
             Id = item.Id,
             CustomerId = item.Customer.Id,
-            MembershipType = item.MembershipType switch
+            Role = item.Role switch
             {
-                OrganizationMembershipType.Owner => MembershipType.Owner,
-                OrganizationMembershipType.Administrator => MembershipType.Administrator,
-                OrganizationMembershipType.Member => MembershipType.Member,
+                OrganizationMemberRole.Owner => Role.Owner,
+                OrganizationMemberRole.Administrator => Role.Administrator,
+                OrganizationMemberRole.Member => Role.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = item.Status switch

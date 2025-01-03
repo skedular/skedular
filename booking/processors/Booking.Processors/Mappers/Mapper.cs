@@ -11,6 +11,7 @@ using LocationMember = Booking.Shared.Database.Entities.LocationMember;
 using Offering = Booking.Shared.Models.Offering;
 using Organization = Booking.Shared.Models.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
+using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using Team = Booking.Shared.Models.Team;
 using TeamMember = Booking.Shared.Database.Entities.TeamMember;
 
@@ -207,11 +208,11 @@ public class Mapper : IMapper
             return new Shared.Models.OrganizationMember
             {
                 Id = item.Id,
-                MembershipType = item.MembershipType switch
+                Role = item.Role switch
                 {
-                    MembershipType.Owner => OrganizationMembershipType.Owner,
-                    MembershipType.Administrator => OrganizationMembershipType.Administrator,
-                    MembershipType.Member => OrganizationMembershipType.Member,
+                    Role.Owner => OrganizationMemberRole.Owner,
+                    Role.Administrator => OrganizationMemberRole.Administrator,
+                    Role.Member => OrganizationMemberRole.Member,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 Status = item.Status switch
@@ -265,14 +266,12 @@ public class Mapper : IMapper
             Id = item.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            MembershipType = item.MembershipType switch
+            Role = item.Role switch
             {
-                Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Owner => LocationMembershipType
-                    .Owner,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Administrator =>
-                    LocationMembershipType.Administrator,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Value.MembershipType.Member =>
-                    LocationMembershipType.Member,
+                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Owner => LocationMemberRole.Owner,
+                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Administrator => LocationMemberRole
+                    .Administrator,
+                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Member => LocationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Shared.Models.Customer { Id = item.CustomerId },
@@ -324,14 +323,11 @@ public class Mapper : IMapper
             Id = item.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            MembershipType = item.MembershipType switch
+            Role = item.Role switch
             {
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Owner => TeamMembershipType
-                    .Owner,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Administrator =>
-                    TeamMembershipType.Administrator,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.MembershipType.Member =>
-                    TeamMembershipType.Member,
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role.Owner => TeamMemberRole.Owner,
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role.Administrator => TeamMemberRole.Administrator,
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = item.Status switch
@@ -408,11 +404,11 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType switch
+        dest.Role = src.Role switch
         {
-            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
-            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
-            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            OrganizationMemberRole.Owner => OrganizationMemberRoleConstants.Owner,
+            OrganizationMemberRole.Administrator => OrganizationMemberRoleConstants.Administrator,
+            OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
             _ => throw new ArgumentOutOfRangeException()
         };
         dest.Status = src.Status switch
@@ -440,11 +436,11 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType switch
+        dest.Role = src.Role switch
         {
-            LocationMembershipType.Owner => LocationMembershipTypeConstants.Owner,
-            LocationMembershipType.Administrator => LocationMembershipTypeConstants.Administrator,
-            LocationMembershipType.Member => LocationMembershipTypeConstants.Member,
+            LocationMemberRole.Owner => LocationRoleConstants.Owner,
+            LocationMemberRole.Administrator => LocationRoleConstants.Administrator,
+            LocationMemberRole.Member => LocationRoleConstants.Member,
             _ => throw new ArgumentOutOfRangeException()
         };
         dest.Location = location;
@@ -466,11 +462,11 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.MembershipType = src.MembershipType switch
+        dest.Role = src.Role switch
         {
-            TeamMembershipType.Owner => TeamMembershipTypeConstants.Owner,
-            TeamMembershipType.Administrator => TeamMembershipTypeConstants.Administrator,
-            TeamMembershipType.Member => TeamMembershipTypeConstants.Member,
+            TeamMemberRole.Owner => TeamMemberRoleConstants.Owner,
+            TeamMemberRole.Administrator => TeamMemberRoleConstants.Administrator,
+            TeamMemberRole.Member => TeamMemberRoleConstants.Member,
             _ => throw new ArgumentOutOfRangeException()
         };
         dest.Status = src.Status switch

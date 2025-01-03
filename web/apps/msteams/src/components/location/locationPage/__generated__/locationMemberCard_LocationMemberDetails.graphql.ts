@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2c502b529cbbaaea72447fa7f730e5af>>
+ * @generated SignedSource<<a84ebe9332f42d5bf236f698a81021ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type LocationMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
+export type LocationMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type locationMemberCard_LocationMemberDetails$data = {
   readonly customer: {
@@ -20,7 +20,7 @@ export type locationMemberCard_LocationMemberDetails$data = {
     readonly photoUrl: string | null | undefined;
   };
   readonly id: string;
-  readonly membershipType: LocationMembershipType | null | undefined;
+  readonly role: LocationMemberRole | null | undefined;
   readonly " $fragmentType": "locationMemberCard_LocationMemberDetails";
 };
 export type locationMemberCard_LocationMemberDetails$key = {
@@ -45,7 +45,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "membershipType",
+      "name": "role",
       "storageKey": null
     },
     {
@@ -99,6 +99,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "ce796d628d8fcf2bb93bc58574cd688d";
+(node as any).hash = "8be93580e4952197ccadba67b0546df3";
 
 export default node;

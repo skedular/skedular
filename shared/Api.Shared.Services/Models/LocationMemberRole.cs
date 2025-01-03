@@ -1,13 +1,13 @@
 ﻿namespace Api.Shared.Services.Models;
 
-public enum OrganizationMembershipType
+public enum LocationMemberRole
 {
     Owner,
     Administrator,
     Member
 }
 
-public static class OrganizationMembershipTypeConstants
+public static class LocationRoleConstants
 {
     public const string Owner = "OWNER";
     public const string Administrator = "ADMINISTRATOR";

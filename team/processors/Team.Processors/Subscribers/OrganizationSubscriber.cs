@@ -5,6 +5,7 @@ using Team.Processors.Mappers;
 using Team.Shared.Database.Entities;
 using Team.Shared.Repositories;
 using Organization = Team.Shared.Database.Entities.Organization;
+using OrganizationMember = Team.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Team.Processors.Subscribers;

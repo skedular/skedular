@@ -79,7 +79,7 @@ message Organization {
     bool agreedToTermsOfUse = 6;
     string termsOfUseId = 7;
     repeated IndustrySubCategory industrySubCategories = 8;
-    repeated Member members = 9;
+    repeated OrganizationMember members = 9;
     Offering Offering = 10;
     bool hasAttachedPaymentMethod = 11;
     bool hasFutureBooking = 12;
@@ -107,16 +107,16 @@ message GetInput {
     string id = 1;
 }
 
-enum MembershipType {
-    MembershipTypeOwner = 0;
-    MembershipTypeAdministrator = 1;
-    MembershipTypeMember = 2;
+enum Role {
+    Owner = 0;
+    Administrator = 1;
+    Member = 2;
 }
 
-message Member {
+message OrganizationMember {
     string id = 1;
     Customer customer = 2;
-    MembershipType membershipType = 3;
+    Role role = 3;
     bool isOrganizationOnboardingDone = 4;
     OrganizationMemberStatus status = 5;
 }
@@ -129,7 +129,7 @@ enum OrganizationMemberStatus
 
 message Admin_AddMemberInput {
     string id = 1;
-    Member member = 2;
+    OrganizationMember member = 2;
 }
 
 message GetPaginatedMembersInput {
@@ -152,7 +152,7 @@ message MemberOrderInput {
 }
 
 enum MemberOrderField {
-    Membership = 0;
+    RoleType = 0;
     Status = 1;
     Name= 2;
     GivenName= 3;
@@ -168,7 +168,7 @@ message MemberConnection {
 }
 
 message MemberEdge {
-    Member node = 1;
+    OrganizationMember node = 1;
     string cursor = 2;
 }
 

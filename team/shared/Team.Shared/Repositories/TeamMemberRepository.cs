@@ -80,9 +80,9 @@ internal static class TeamMemberExtensions
         var orderByField = orderByFields.First();
         return orderByFields.Skip(1).Aggregate(orderByField.Field switch
         {
-            TeamMemberOrderField.MembershipType => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.MembershipType)
-                : originalQuery.OrderByDescending(x => x.MembershipType),
+            TeamMemberOrderField.Role => orderByField.Direction == OrderDirection.Ascending
+                ? originalQuery.OrderBy(x => x.Role)
+                : originalQuery.OrderByDescending(x => x.Role),
             TeamMemberOrderField.Status => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Status)
                 : originalQuery.OrderByDescending(x => x.Status),
@@ -105,9 +105,9 @@ internal static class TeamMemberExtensions
         }, (query, orderField) =>
             orderField.Field switch
             {
-                TeamMemberOrderField.MembershipType => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.MembershipType)
-                    : query.ThenByDescending(x => x.MembershipType),
+                TeamMemberOrderField.Role => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.Role)
+                    : query.ThenByDescending(x => x.Role),
                 TeamMemberOrderField.Status => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Status)
                     : query.ThenByDescending(x => x.Status),

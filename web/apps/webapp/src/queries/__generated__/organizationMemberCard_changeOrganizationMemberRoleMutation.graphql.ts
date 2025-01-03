@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<476ef804ce1248912a9cca9ce437cedd>>
+ * @generated SignedSource<<d716e3af9efe38baae2cc427eaed33c2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,35 +9,35 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type OrganizationMembershipType = "Administrator" | "Member" | "Owner" | "%future added value";
-export type ChangeOrganizationMembershipTypeInput = {
+export type OrganizationMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
+export type ChangeOrganizationMemberRoleInput = {
   clientMutationId?: string | null | undefined;
   id: string;
-  membershipType: OrganizationMembershipType;
+  role: OrganizationMemberRole;
 };
-export type organizationMemberCard_changeOrganizationMembershipMutation$variables = {
-  input: ChangeOrganizationMembershipTypeInput;
+export type organizationMemberCard_changeOrganizationMemberRoleMutation$variables = {
+  input: ChangeOrganizationMemberRoleInput;
 };
-export type organizationMemberCard_changeOrganizationMembershipMutation$data = {
-  readonly changeOrganizationMembership: {
+export type organizationMemberCard_changeOrganizationMemberRoleMutation$data = {
+  readonly changeOrganizationMemberRole: {
     readonly member: {
       readonly id: string;
-      readonly membershipType: OrganizationMembershipType | null | undefined;
+      readonly role: OrganizationMemberRole | null | undefined;
     } | null | undefined;
   } | null | undefined;
 };
-export type organizationMemberCard_changeOrganizationMembershipMutation$rawResponse = {
-  readonly changeOrganizationMembership: {
+export type organizationMemberCard_changeOrganizationMemberRoleMutation$rawResponse = {
+  readonly changeOrganizationMemberRole: {
     readonly member: {
       readonly id: string;
-      readonly membershipType: OrganizationMembershipType | null | undefined;
+      readonly role: OrganizationMemberRole | null | undefined;
     } | null | undefined;
   } | null | undefined;
 };
-export type organizationMemberCard_changeOrganizationMembershipMutation = {
-  rawResponse: organizationMemberCard_changeOrganizationMembershipMutation$rawResponse;
-  response: organizationMemberCard_changeOrganizationMembershipMutation$data;
-  variables: organizationMemberCard_changeOrganizationMembershipMutation$variables;
+export type organizationMemberCard_changeOrganizationMemberRoleMutation = {
+  rawResponse: organizationMemberCard_changeOrganizationMemberRoleMutation$rawResponse;
+  response: organizationMemberCard_changeOrganizationMemberRoleMutation$data;
+  variables: organizationMemberCard_changeOrganizationMemberRoleMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -60,7 +60,7 @@ v1 = [
     ],
     "concreteType": "OrganizationMemberDetailsPayload",
     "kind": "LinkedField",
-    "name": "changeOrganizationMembership",
+    "name": "changeOrganizationMemberRole",
     "plural": false,
     "selections": [
       {
@@ -82,7 +82,7 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "membershipType",
+            "name": "role",
             "storageKey": null
           }
         ],
@@ -97,7 +97,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMemberCard_changeOrganizationMembershipMutation",
+    "name": "organizationMemberCard_changeOrganizationMemberRoleMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -106,20 +106,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMemberCard_changeOrganizationMembershipMutation",
+    "name": "organizationMemberCard_changeOrganizationMemberRoleMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "698c79d2fadef87e231762e04fdaa367",
+    "cacheID": "2cd3f48e7b55ec5ea2dedc6a01627395",
     "id": null,
     "metadata": {},
-    "name": "organizationMemberCard_changeOrganizationMembershipMutation",
+    "name": "organizationMemberCard_changeOrganizationMemberRoleMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMemberCard_changeOrganizationMembershipMutation(\n  $input: ChangeOrganizationMembershipTypeInput!\n) {\n  changeOrganizationMembership(input: $input) {\n    member {\n      id\n      membershipType\n    }\n  }\n}\n"
+    "text": "mutation organizationMemberCard_changeOrganizationMemberRoleMutation(\n  $input: ChangeOrganizationMemberRoleInput!\n) {\n  changeOrganizationMemberRole(input: $input) {\n    member {\n      id\n      role\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b37000a8dbeffe465fc4fa2096eef979";
+(node as any).hash = "5ed92dd7da21f6cb710bb9dca479be82";
 
 export default node;

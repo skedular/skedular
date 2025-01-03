@@ -46,16 +46,16 @@ message PageInfo {
     string endCursor =4;
 }
 
-enum MembershipType {
-    MembershipTypeOwner = 0;
-    MembershipTypeAdministrator = 1;
-    MembershipTypeMember = 2;
+enum Role {
+    Owner = 0;
+    Administrator = 1;
+    Member = 2;
 }
 
-message Member {
+message LocationMember {
     string id = 1;
     Customer customer = 2;
-    MembershipType membershipType = 3;
+    Role role = 3;
 }
 
 message Customer {
@@ -108,7 +108,7 @@ message Location {
     repeated Desk desks = 6;
     bool hasFutureBooking = 7;
     Permissions permissions = 8;
-    repeated Member members = 9;
+    repeated LocationMember members = 9;
     repeated OrganizationDeskType deskTypes = 10;
     repeated OrganizationZone zones = 11;
 }

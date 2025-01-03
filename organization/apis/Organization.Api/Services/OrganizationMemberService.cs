@@ -19,9 +19,9 @@ public interface IOrganizationMemberService
         ICollection<OrganizationMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
-    Task<OrganizationMember> ChangeMembershipTypeAsync(
+    Task<OrganizationMember> ChangeRoleAsync(
         string organizationMemberId,
-        OrganizationMembershipType membershipType,
+        OrganizationMemberRole memberRole,
         CancellationToken cancellationToken);
 
     Task<ICollection<OrganizationMember>> ChangeStatusAsync(
@@ -84,9 +84,9 @@ public class OrganizationMemberService(
         return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(organization)).ToList(), totalCount);
     }
 
-    public async Task<OrganizationMember> ChangeMembershipTypeAsync(
+    public async Task<OrganizationMember> ChangeRoleAsync(
         string organizationMemberId,
-        OrganizationMembershipType membershipType,
+        OrganizationMemberRole memberRole,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -110,35 +110,33 @@ public class OrganizationMemberService(
             throw new Unauthorized();
         }
 
-        var myMembershipDetails =
-            organization.OrganizationMembers.Single(item => item.Customer.Id == customer.Id);
-
-        if (myMembershipDetails.Status != OrganizationMemberStatusConstants.Active)
+        var myMemberDetails = organization.OrganizationMembers.Single(item => item.Customer.Id == customer.Id);
+        if (myMemberDetails.Status != OrganizationMemberStatusConstants.Active)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == OrganizationMembershipTypeConstants.Administrator &&
-            membershipType == OrganizationMembershipType.Owner)
+        if (myMemberDetails.Role == OrganizationMemberRoleConstants.Administrator &&
+            memberRole == OrganizationMemberRole.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMembershipDetails.MembershipType == OrganizationMembershipTypeConstants.Member &&
-            membershipType == OrganizationMembershipType.Administrator)
+        if (myMemberDetails.Role == OrganizationMemberRoleConstants.Member &&
+            memberRole == OrganizationMemberRole.Administrator)
         {
             throw new Unauthorized();
         }
 
-        var mappedMembershipType = membershipType switch
+        var mappedRole = memberRole switch
         {
-            OrganizationMembershipType.Owner => OrganizationMembershipTypeConstants.Owner,
-            OrganizationMembershipType.Administrator => OrganizationMembershipTypeConstants.Administrator,
-            OrganizationMembershipType.Member => OrganizationMembershipTypeConstants.Member,
+            OrganizationMemberRole.Owner => OrganizationMemberRoleConstants.Owner,
+            OrganizationMemberRole.Administrator => OrganizationMemberRoleConstants.Administrator,
+            OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        if (organizationMember.MembershipType == mappedMembershipType)
+        if (organizationMember.Role == mappedRole)
         {
             return mapper.MapTo(organizationMember, mapper.MapTo(organization));
         }
@@ -147,7 +145,7 @@ public class OrganizationMemberService(
             repositoryFactory.OrganizationMemberRepository.UnitOfWork,
             cancellationToken);
 
-        organizationMember.MembershipType = mappedMembershipType;
+        organizationMember.Role = mappedRole;
         repositoryFactory.OrganizationMemberRepository.Update(organizationMember);
 
         await organizationOutboxPublisher.PublishOrganizationAsync(

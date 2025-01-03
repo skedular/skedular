@@ -351,12 +351,12 @@ namespace Customer.Shared.Database.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("MembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Role")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -370,7 +370,7 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("MembershipType");
+                    b.HasIndex("Role");
 
                     b.HasIndex("CustomerId", "LocationId")
                         .IsUnique();
@@ -438,16 +438,16 @@ namespace Customer.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("MembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Role")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -466,9 +466,9 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("MembershipType");
-
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("Role");
 
                     b.HasIndex("Status");
 
@@ -581,15 +581,15 @@ namespace Customer.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("MembershipType")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationMemberId")
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Role")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -612,9 +612,9 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
-                    b.HasIndex("MembershipType");
-
                     b.HasIndex("OrganizationMemberId");
+
+                    b.HasIndex("Role");
 
                     b.HasIndex("Status");
 
@@ -785,7 +785,7 @@ namespace Customer.Shared.Database.Migrations
             modelBuilder.Entity("Customer.Shared.Database.Entities.LocationMember", b =>
                 {
                     b.HasOne("Customer.Shared.Database.Entities.Customer", "Customer")
-                        .WithMany("LocationMemberships")
+                        .WithMany("LocationMembers")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -843,7 +843,7 @@ namespace Customer.Shared.Database.Migrations
             modelBuilder.Entity("Customer.Shared.Database.Entities.TeamMember", b =>
                 {
                     b.HasOne("Customer.Shared.Database.Entities.Customer", "Customer")
-                        .WithMany("TeamMemberships")
+                        .WithMany("TeamMembers")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -931,11 +931,11 @@ namespace Customer.Shared.Database.Migrations
 
                     b.Navigation("Identities");
 
-                    b.Navigation("LocationMemberships");
+                    b.Navigation("LocationMembers");
 
                     b.Navigation("OrganizationMembers");
 
-                    b.Navigation("TeamMemberships");
+                    b.Navigation("TeamMembers");
                 });
 
             modelBuilder.Entity("Customer.Shared.Database.Entities.Location", b =>

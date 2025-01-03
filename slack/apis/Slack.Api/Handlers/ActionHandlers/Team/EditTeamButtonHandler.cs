@@ -186,16 +186,16 @@ public class EditTeamButtonHandler(
                                 teamMember.OrganizationMember is not null &&
                                 teamMember.OrganizationMember.Customer.Id == customerId);
 
-                            return new Member
+                            return new global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember
                             {
                                 Id = existingMember is null ? randomHelper.Generate() : existingMember.Id,
-                                MembershipType = existingMember is null
-                                    ? MembershipType.Member
-                                    : existingMember.MembershipType switch
+                                Role = existingMember is null
+                                    ? Role.Member
+                                    : existingMember.Role switch
                                     {
-                                        TeamMembershipType.Owner => MembershipType.Owner,
-                                        TeamMembershipType.Administrator => MembershipType.Administrator,
-                                        TeamMembershipType.Member => MembershipType.Member,
+                                        TeamMemberRole.Owner => Role.Owner,
+                                        TeamMemberRole.Administrator => Role.Administrator,
+                                        TeamMemberRole.Member => Role.Member,
                                         _ => throw new ArgumentOutOfRangeException()
                                     },
                                 Status = TeamMemberStatus.Active,
