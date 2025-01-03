@@ -62,7 +62,7 @@ type Props = {
 type TeamDetails = {
   name: string;
   about: string | null;
-  timezone: string;
+  timezone?: string;
   primaryLocationId?: string;
 };
 
