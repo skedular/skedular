@@ -29,6 +29,12 @@ export enum MoreActionsMenuOptionType {
   SetAsPreferredTeam,
   RemoveAsPreferredTeam,
   RemoveTeam,
+  RemoveOrganizationMember,
+  DeactivateOrganizationMember,
+  ActivateOrganizationMember,
+  RemoveTeamMember,
+  DeactivateTeamMember,
+  ActivateTeamMember,
 }
 
 export type MoreActionsMenuItemType = {
@@ -123,6 +129,32 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.RemoveOrganization,
     label: 'Remove organization',
     icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.RemoveOrganizationMember]: {
+    id: MoreActionsMenuOptionType.RemoveOrganizationMember,
+    label: 'Remove member',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.DeactivateOrganizationMember]: {
+    id: MoreActionsMenuOptionType.DeactivateOrganizationMember,
+    label: 'Deactivate member',
+  },
+  [MoreActionsMenuOptionType.ActivateOrganizationMember]: {
+    id: MoreActionsMenuOptionType.ActivateOrganizationMember,
+    label: 'Activate member',
+  },
+  [MoreActionsMenuOptionType.RemoveTeamMember]: {
+    id: MoreActionsMenuOptionType.RemoveTeamMember,
+    label: 'Remove member',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.DeactivateTeamMember]: {
+    id: MoreActionsMenuOptionType.DeactivateTeamMember,
+    label: 'Deactivate member',
+  },
+  [MoreActionsMenuOptionType.ActivateTeamMember]: {
+    id: MoreActionsMenuOptionType.ActivateTeamMember,
+    label: 'Activate member',
   },
 };
 

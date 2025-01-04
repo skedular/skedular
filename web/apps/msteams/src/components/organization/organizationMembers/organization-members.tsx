@@ -1,12 +1,19 @@
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BodyIconTypography, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
-import { DeleteIcon } from '@repo/shared/components/icons';
+import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -91,6 +98,7 @@ type RowType = {
   phoneNumber: string | null | undefined;
   role: OrganizationMemberRole | null | undefined;
   status: boolean;
+  moreActions: string;
 };
 
 const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
@@ -168,7 +176,20 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>([]);
+  const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
+  const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
 
+  const moreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateOrganizationMember],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateOrganizationMember],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveOrganizationMember],
+  ];
+
+  const memberDetails = useMemo(
+    () => rootDataOrganizationMembers.organizationMembers?.edges.map(({ node }) => node).find((item) => item.id === selectedMemberId),
+    [selectedMemberId, rootDataOrganizationMembers.organizationMembers],
+  );
   const connectionIds = useMemo(
     () => (rootDataOrganizationMembers.organizationMembers ? [rootDataOrganizationMembers.organizationMembers.__id] : []),
     [rootDataOrganizationMembers.organizationMembers],
@@ -346,6 +367,144 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
     });
   };
 
+  const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.DeactivateOrganizationMember:
+        handleDeactivateMemberClick();
+        break;
+
+      case MoreActionsMenuOptionType.ActivateOrganizationMember:
+        handleActivateMemberClick();
+        break;
+
+      case MoreActionsMenuOptionType.RemoveOrganizationMember:
+        handleRemoveMemberClick();
+        break;
+    }
+  };
+
+  const handleDeactivateMemberClick = () => {
+    if (!memberDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Deactivating member...'} />, infoNotificationOptions);
+
+    commitChangeOrganizationMembersStatus({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [memberDetails.id],
+          status: 'Inactive',
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate member. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Member deactivated.'} />,
+        });
+        setSeledctedMembers([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate member. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateMemberClick = () => {
+    if (!memberDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Activating member...'} />, infoNotificationOptions);
+
+    commitChangeOrganizationMembersStatus({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [memberDetails.id],
+          status: 'Active',
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate member. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Member activateed.'} />,
+        });
+        setSeledctedMembers([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate member. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveMemberClick = () => {
+    if (!memberDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Removing member...'} />, infoNotificationOptions);
+
+    commitRemoveOrganizationMembers({
+      variables: {
+        connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: [memberDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove member. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Member removed.'} />,
+        });
+        setSeledctedMembers([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove member. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   const rows: RowType[] = members.map((member) => ({
     id: member.id,
     avatar: member.customer,
@@ -355,6 +514,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
     phoneNumber: member.customer.phoneNumber,
     role: member.role,
     status: member.status === 'Active',
+    moreActions: member.id,
   }));
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
@@ -429,99 +589,125 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
       ),
       display: 'flex',
     },
+    {
+      field: 'moreActions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <IconButton
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            setSelectedMemberId(params.value);
+            setMoreActionsAnchorEl(event.currentTarget);
+          }}
+        >
+          <EllipseMenuIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <OrganizationMembersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
-      <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-        <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-            <SectionIconTypography label="Organization Members" />
-            <BodyIconTypography label="View members in your organization" />
-            <Divider />
-          </StackColumn>
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <OrganizationMembersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
+        <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+          <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <SectionIconTypography label="Organization Members" />
+              <BodyIconTypography label="View members in your organization" />
+              <Divider />
+            </StackColumn>
 
-          <StackRow sx={{ padding: defaultPadding }}>
-            <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
-            <PushToRight />
-            <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-          </StackRow>
+            <StackRow sx={{ padding: defaultPadding }}>
+              <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
+              <PushToRight />
+              <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+            </StackRow>
 
-          <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-            <Box
-              sx={{
-                backgroundColor: (theme) => theme.palette.background.paper,
-                padding: defaultGridActionPadding,
-                border: 1,
-                borderColor: (theme) => theme.palette.divider,
-                borderRadius: 2,
-                flexGrow: 1,
-              }}
-            >
-              <StackRow sx={{ alignItems: 'center' }}>
-                <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
-                <PushToRight />
-                <Button
-                  size="medium"
-                  variant="contained"
-                  color="secondary"
-                  disabled={seledctedMembers.length === 0}
-                  onClick={handleDeactivateMembersClick}
-                >
-                  Deactuvate Member
-                </Button>
-                <Button
-                  size="medium"
-                  variant="contained"
-                  color="secondary"
-                  disabled={seledctedMembers.length === 0}
-                  onClick={handleActivateMembersClick}
-                >
-                  Activate Member
-                </Button>
-                <Button
-                  size="medium"
-                  variant="contained"
-                  color="warning"
-                  startIcon={<DeleteIcon />}
-                  disabled={seledctedMembers.length === 0}
-                  onClick={handleRemoveMembersClick}
-                >
-                  Remove Member
-                </Button>
-              </StackRow>
-            </Box>
-          </StackRow>
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <Box
+                sx={{
+                  backgroundColor: (theme) => theme.palette.background.paper,
+                  padding: defaultGridActionPadding,
+                  border: 1,
+                  borderColor: (theme) => theme.palette.divider,
+                  borderRadius: 2,
+                  flexGrow: 1,
+                }}
+              >
+                <StackRow sx={{ alignItems: 'center' }}>
+                  <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
+                  <PushToRight />
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    color="secondary"
+                    disabled={seledctedMembers.length === 0}
+                    onClick={handleDeactivateMembersClick}
+                  >
+                    Deactuvate Member
+                  </Button>
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    color="secondary"
+                    disabled={seledctedMembers.length === 0}
+                    onClick={handleActivateMembersClick}
+                  >
+                    Activate Member
+                  </Button>
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    color="warning"
+                    startIcon={<DeleteIcon />}
+                    disabled={seledctedMembers.length === 0}
+                    onClick={handleRemoveMembersClick}
+                  >
+                    Remove Member
+                  </Button>
+                </StackRow>
+              </Box>
+            </StackRow>
 
-          <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-            <DataGrid
-              checkboxSelection
-              rowSelectionModel={seledctedMembers}
-              onRowSelectionModelChange={handleSelectedMembersChanged}
-              rows={rows}
-              columns={columns}
-              hideFooterPagination={rows.length <= 10}
-              initialState={{
-                pagination: {
-                  rowCount: rows.length,
-                  paginationModel: {
-                    pageSize: 10,
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedMembers}
+                onRowSelectionModelChange={handleSelectedMembersChanged}
+                rows={rows}
+                columns={columns}
+                hideFooterPagination={rows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: rows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
                   },
-                },
-              }}
-              pageSizeOptions={[10]}
-              ignoreDiacritics
-              disableRowSelectionOnClick
-              getRowHeight={() => 'auto'}
-              rowSpacingType="margin"
-              getRowSpacing={() => ({ top: 3, bottom: 3 })}
-              sx={defaultGridStyle}
-            />
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+              />
+            </StackColumn>
           </StackColumn>
-        </StackColumn>
+        </Box>
       </Box>
-    </Box>
+
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
+      />
+    </>
   );
 };
 
