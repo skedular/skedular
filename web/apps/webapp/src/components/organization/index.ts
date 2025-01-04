@@ -3,6 +3,7 @@ export { default as MultipleChoicesZones } from './multiple-choices-zones';
 export {
   getModernOrganizationLocationsBaseLink,
   getModernOrganizationMembersBaseLink,
+  getModernOrganizationTeamLocationBaseLink,
   getModernOrganizationTeamMembersBaseLink,
   getModernOrganizationTeamSetupBaseLink,
   getOrganizationAddLink,

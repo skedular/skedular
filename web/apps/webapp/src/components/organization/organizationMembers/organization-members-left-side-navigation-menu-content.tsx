@@ -1,3 +1,4 @@
+import { getModernOrganizationMembersBaseLink } from '@/components/organization';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -9,7 +10,6 @@ import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/th
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
-import { getModernOrganizationMembersBaseLink } from '../';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
 
 type Props = {

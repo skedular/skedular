@@ -6,9 +6,9 @@ import { BodyIconTypography } from '@repo/shared/components/commons';
 import { MembersIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
+import { getModernOrganizationMembersBaseLink } from 'components/organization';
 import { memo, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getModernOrganizationMembersBaseLink } from '../';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
 
 type Props = {

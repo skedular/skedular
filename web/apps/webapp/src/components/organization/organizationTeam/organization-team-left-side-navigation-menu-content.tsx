@@ -1,3 +1,8 @@
+import {
+  getModernOrganizationTeamLocationBaseLink,
+  getModernOrganizationTeamMembersBaseLink,
+  getModernOrganizationTeamSetupBaseLink,
+} from '@/components/organization';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -9,7 +14,6 @@ import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/th
 import NextLink from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext } from 'react';
-import { getModernOrganizationTeamMembersBaseLink, getModernOrganizationTeamSetupBaseLink } from '../';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
 
 type Props = {
@@ -56,6 +60,7 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getModernOrganizationTeamSetupBaseLink(organizationId, teamId);
   const memberesLink = getModernOrganizationTeamMembersBaseLink(organizationId, teamId);
+  const locationLink = getModernOrganizationTeamLocationBaseLink(organizationId, teamId);
 
   return (
     <List
@@ -109,6 +114,31 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
                 startElement={!hideIcons && <MembersIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={locationLink}>
+          <ListItemButton
+            selected={fullPath === locationLink}
+            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === locationLink) }}
+          >
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <MembersIcon color="inherit" />}
+                invertDefaultColor={fullPath === locationLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Location Settings"
+                startElement={!hideIcons && <MembersIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === locationLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

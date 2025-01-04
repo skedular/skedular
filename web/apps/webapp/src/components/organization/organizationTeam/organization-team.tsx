@@ -106,6 +106,11 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
           id
           name
           about
+          timezone
+          primaryLocation {
+            uniqueId
+            name
+          }
         }
         ...singleChoiceLocation_locations_query
       }
@@ -702,6 +707,8 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
             initialValues={{
               name: team.name,
               about: team.about,
+              timezone: team.timezone,
+              primaryLocationId: rootData.team.primaryLocation ? rootData.team.primaryLocation.uniqueId : null,
             }}
             validate={validate}
             render={({ handleSubmit }) => (
@@ -740,6 +747,7 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
                     </StackRow>
                   </Toolbar>
                 </AppBar>
+
                 <StackColumn sx={{ maxWidth: maxScreenWidth }}>
                   <StackColumn
                     sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
@@ -763,10 +771,6 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
 
                     <FormFieldLabel label="Timezone">
                       <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Primary Location">
-                      <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
                     </FormFieldLabel>
                   </StackColumn>
 
@@ -857,6 +861,23 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
                       sx={defaultGridStyle}
                     />
                   </StackColumn>
+                </StackColumn>
+
+                <StackColumn
+                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                  ref={(divElement) => {
+                    sectionRefs.current['location'] = divElement;
+                  }}
+                >
+                  <SectionIconTypography label="Location Settings" />
+                  <BodyIconTypography label="Assign team to locations" />
+                  <Divider />
+                </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Primary Location">
+                    <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
+                  </FormFieldLabel>
                 </StackColumn>
               </FormStackColumn>
             )}
