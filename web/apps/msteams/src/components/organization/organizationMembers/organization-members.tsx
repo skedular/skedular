@@ -318,7 +318,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'Members activateed.'} />,
+          render: <NotificationContent content={'Members activated.'} />,
         });
         setSeledctedMembers([]);
       },
@@ -452,7 +452,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'Member activateed.'} />,
+          render: <NotificationContent content={'Member activated.'} />,
         });
         setSeledctedMembers([]);
       },

@@ -1,7 +1,7 @@
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
+import type { organizationTeam_query$key } from '@/queries/__generated__/organizationTeam_query.graphql';
 import type { organizationTeam_removeTeamMembersMutation } from '@/queries/__generated__/organizationTeam_removeTeamMembersMutation.graphql';
-import type { organizationTeam_rootQuery } from '@/queries/__generated__/organizationTeam_rootQuery.graphql';
 import type { organizationTeam_teamMembers_query$key, TeamMemberRole } from '@/queries/__generated__/organizationTeam_teamMembers_query.graphql';
 import type { organizationTeam_teamMembers_refetchableFragment } from '@/queries/__generated__/organizationTeam_teamMembers_refetchableFragment.graphql';
 import type { organizationTeam_updateTeamMutation } from '@/queries/__generated__/organizationTeam_updateTeamMutation.graphql';
@@ -27,7 +27,6 @@ import {
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
-import { Loading } from '@repo/shared/components/loading';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -40,8 +39,6 @@ import {
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, maxScreenWidth, sandstone } from '@repo/shared/libs/theme';
@@ -50,9 +47,8 @@ import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import { getModernOrganizationTeamsBaseLink } from '../organization-link';
@@ -60,7 +56,8 @@ import { expandedDrawerWidthPx } from './commons';
 import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
 
 type Props = {
-  queryReference: PreloadedQuery<organizationTeam_rootQuery, Record<string, unknown>>;
+  rootDataRelay: organizationTeam_query$key;
+  rootDataTeamMembersRelay: organizationTeam_teamMembers_query$key;
   onReloadRequired: () => void;
   organizationId: string;
   teamId: string;
@@ -79,18 +76,6 @@ const teamSchema = object({
   timezone: string().nullable(),
   primaryLocationId: string().nullable(),
 });
-
-const RootQuery = graphql`
-  query organizationTeam_rootQuery($organizationId: String!, $organizationExists: Boolean!, $teamId: String!, $peopleNameSearchText: String) {
-    team(id: $teamId) {
-      id
-      name
-      about
-    }
-    ...organizationTeam_teamMembers_query
-    ...singleChoiceLocation_locations_query
-  }
-`;
 
 type CustomerDetails = {
   uniqueId: string;
@@ -113,8 +98,21 @@ type RowType = {
   moreActions: string;
 };
 
-const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => {
-  const rootData = usePreloadedQuery<organizationTeam_rootQuery>(RootQuery, queryReference);
+const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizationId, teamId }: Props) => {
+  const rootData = useFragment<organizationTeam_query$key>(
+    graphql`
+      fragment organizationTeam_query on Query {
+        team(id: $teamId) {
+          id
+          name
+          about
+        }
+        ...singleChoiceLocation_locations_query
+      }
+    `,
+    rootDataRelay,
+  );
+
   const [rootDataTeamMembers, refetchTeamMembers] = useRefetchableFragment<
     organizationTeam_teamMembers_refetchableFragment,
     organizationTeam_teamMembers_query$key
@@ -147,7 +145,7 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
         }
       }
     `,
-    rootData,
+    rootDataTeamMembersRelay,
   );
 
   const [commitUpdateTeam] = useMutation<organizationTeam_updateTeamMutation>(graphql`
@@ -226,7 +224,7 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
   );
 
   useEffect(() => {
-    if (!section) {
+    if (!section || section === 'setup') {
       return;
     }
 
@@ -407,7 +405,7 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'Members activateed.'} />,
+          render: <NotificationContent content={'Members activated.'} />,
         });
         setSeledctedMembers([]);
       },
@@ -539,7 +537,7 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'Member activateed.'} />,
+          render: <NotificationContent content={'Member activated.'} />,
         });
         setSeledctedMembers([]);
       },
@@ -876,46 +874,4 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
   );
 };
 
-const MemoOrganizationTeam = memo(OrganizationTeam);
-
-type RelayProps = {
-  organizationId: string;
-  teamId: string;
-};
-
-const OrganizationTeamWithRelay = ({ organizationId, teamId }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<organizationTeam_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
-  const [, startTransition] = useTransition();
-
-  useEffect(() => {
-    loadQuery(
-      {
-        organizationId,
-        organizationExists: !!organizationId,
-        teamId,
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReloadId, organizationId, teamId]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReloadId(nanoid());
-    });
-  };
-
-  if (!queryReference) {
-    return <Loading />;
-  }
-
-  return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationTeam queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} teamId={teamId} />
-    </ErrorBoundary>
-  );
-};
-
-export default memo(OrganizationTeamWithRelay);
+export default memo(OrganizationTeam);

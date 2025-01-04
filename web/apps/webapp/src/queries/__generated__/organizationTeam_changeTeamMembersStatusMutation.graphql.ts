@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2bba1a9a46b9178e90d9f5e713c3126d>>
+ * @generated SignedSource<<326d239610df30c90ebec89b0ea6ee32>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type TeamMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
 export type TeamMemberStatus = "Active" | "Inactive" | "%future added value";
 export type ChangeTeamMembersStatusInput = {
   clientMutationId?: string | null | undefined;
@@ -32,6 +33,7 @@ export type organizationTeam_changeTeamMembersStatusMutation$data = {
         readonly uniqueId: string;
       };
       readonly id: string;
+      readonly role: TeamMemberRole | null | undefined;
       readonly status: TeamMemberStatus;
     }>;
   } | null | undefined;
@@ -152,6 +154,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "status",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "role",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -178,16 +187,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "43ef52d0f06b1d0837c6c5ad73f91d1d",
+    "cacheID": "34c0db044529de3dfc9bbd3ec71e7987",
     "id": null,
     "metadata": {},
     "name": "organizationTeam_changeTeamMembersStatusMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationTeam_changeTeamMembersStatusMutation(\n  $input: ChangeTeamMembersStatusInput!\n) {\n  changeTeamMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n    }\n  }\n}\n"
+    "text": "mutation organizationTeam_changeTeamMembersStatusMutation(\n  $input: ChangeTeamMembersStatusInput!\n) {\n  changeTeamMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "31707a66b8f5b738d8375ddf0c4ac2f4";
+(node as any).hash = "8b1168fcaebc2070c46271dda2a754da";
 
 export default node;
