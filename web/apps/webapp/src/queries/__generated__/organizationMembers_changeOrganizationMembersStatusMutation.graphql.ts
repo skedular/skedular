@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f76abdc0cffda5d09f352565dd184e8d>>
+ * @generated SignedSource<<b6acb4385c2d26ac324e8eafd79e21b3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
 export type OrganizationMemberStatus = "Active" | "Inactive" | "%future added value";
 export type ChangeOrganizationMembersStatusInput = {
   clientMutationId?: string | null | undefined;
@@ -32,6 +33,7 @@ export type organizationMembers_changeOrganizationMembersStatusMutation$data = {
         readonly uniqueId: string;
       };
       readonly id: string;
+      readonly role: OrganizationMemberRole | null | undefined;
       readonly status: OrganizationMemberStatus;
     }>;
   } | null | undefined;
@@ -152,6 +154,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "status",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "role",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -178,16 +187,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "9a757ff4f7cffe18052c5719b1eb2281",
+    "cacheID": "de55471ac4b016a74bf9bb3df059923c",
     "id": null,
     "metadata": {},
     "name": "organizationMembers_changeOrganizationMembersStatusMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMembers_changeOrganizationMembersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n    }\n  }\n}\n"
+    "text": "mutation organizationMembers_changeOrganizationMembersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0529ef74b63294468384c38eb6b27cab";
+(node as any).hash = "da17999fb5f45d772251b326b79fc002";
 
 export default node;

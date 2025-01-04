@@ -27,7 +27,10 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import type { organizationMembers_changeOrganizationMembersStatusMutation } from './__generated__/organizationMembers_changeOrganizationMembersStatusMutation.graphql';
-import type { organizationMembers_organizationMembers_query$key } from './__generated__/organizationMembers_organizationMembers_query.graphql';
+import type {
+  OrganizationMemberRole,
+  organizationMembers_organizationMembers_query$key,
+} from './__generated__/organizationMembers_organizationMembers_query.graphql';
 import type { organizationMembers_organizationMembers_refetchableFragment } from './__generated__/organizationMembers_organizationMembers_refetchableFragment.graphql';
 import type { organizationMembers_removeOrganizationMembersMutation } from './__generated__/organizationMembers_removeOrganizationMembersMutation.graphql';
 import type { organizationMembers_rootQuery } from './__generated__/organizationMembers_rootQuery.graphql';
@@ -86,6 +89,7 @@ type RowType = {
   teams: string;
   email: string | null | undefined;
   phoneNumber: string | null | undefined;
+  role: OrganizationMemberRole | null | undefined;
   status: boolean;
 };
 
@@ -117,6 +121,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
                 phoneNumber
               }
               status
+              role
             }
           }
         }
@@ -141,6 +146,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
             phoneNumber
           }
           status
+          role
         }
       }
     }
@@ -347,6 +353,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
     teams: member.teams.map((team) => team.name).join(', '),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
+    role: member.role,
     status: member.status === 'Active',
   }));
 
@@ -390,7 +397,15 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
-      minWidth: 300,
+      minWidth: 250,
+    },
+    {
+      field: 'role',
+      headerName: 'Role',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
     },
     {
       field: 'status',

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<41fd8093f8117ce71feabd56ffa2208b>>
+ * @generated SignedSource<<1f3f6f2a16df103a69440c95528c755b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -224,6 +224,13 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "role",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
                   }
@@ -294,16 +301,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c707845b0d89d0e4145f4c5fc874714b",
+    "cacheID": "4d6aed0ad129ffea2d383a86e3d53e55",
     "id": null,
     "metadata": {},
     "name": "organizationMembers_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMembers_organizationMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...organizationMembers_organizationMembers_query_1G22uz\n}\n\nfragment organizationMembers_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMembers_organizationMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...organizationMembers_organizationMembers_query_1G22uz\n}\n\nfragment organizationMembers_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d6b5392ff2e25ff5f61f594650113c6a";
+(node as any).hash = "f87f33f7d1d4f084a80d74369c644118";
 
 export default node;

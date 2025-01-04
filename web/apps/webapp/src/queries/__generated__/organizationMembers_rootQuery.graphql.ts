@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<503367fbbda0bcaf15c479efaf196731>>
+ * @generated SignedSource<<7d3b68ab8fb52b44a38bcc23d4c468de>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -474,6 +474,13 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "role",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
                   }
@@ -533,12 +540,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5581a9d1f7a29694779d1a9f0eb0e313",
+    "cacheID": "b3fcf9346c26a2177459d75a5a1d28cb",
     "id": null,
     "metadata": {},
     "name": "organizationMembers_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMembers_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    canInvitePeople\n    id\n  }\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n      }\n    }\n  }\n  ...teamSelector_allTeams_query\n  ...organizationMembers_organizationMembers_query\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueId\n  }\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment organizationMembers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query organizationMembers_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    canInvitePeople\n    id\n  }\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n      }\n    }\n  }\n  ...teamSelector_allTeams_query\n  ...organizationMembers_organizationMembers_query\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueId\n  }\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment organizationMembers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
