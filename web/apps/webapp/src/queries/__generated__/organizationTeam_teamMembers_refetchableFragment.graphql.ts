@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6ae413554ac3d6f0493e64e8943625b9>>
+ * @generated SignedSource<<ca91686501e1518975a5b230d1418cf4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -224,6 +224,13 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "role",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
                   }
@@ -294,16 +301,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "768523fc2a8e0bd4eab96538b7c1d1ac",
+    "cacheID": "d4ae747558ce95ed804f2ac6c64866fb",
     "id": null,
     "metadata": {},
     "name": "organizationTeam_teamMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationTeam_teamMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $peopleNameSearchText: String\n  $teamId: String!\n) {\n  ...organizationTeam_teamMembers_query_1G22uz\n}\n\nfragment organizationTeam_teamMembers_query_1G22uz on Query {\n  teamMembers(first: $count, after: $cursor, where: {teamId: $teamId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationTeam_teamMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $peopleNameSearchText: String\n  $teamId: String!\n) {\n  ...organizationTeam_teamMembers_query_1G22uz\n}\n\nfragment organizationTeam_teamMembers_query_1G22uz on Query {\n  teamMembers(first: $count, after: $cursor, where: {teamId: $teamId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0b458b29b5686e736755697d8479068e";
+(node as any).hash = "96e9336d7b3516986ad63cfaf52c3ad4";
 
 export default node;

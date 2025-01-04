@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fe884b5dfb4dfd04c671d9e0210bc38e>>
+ * @generated SignedSource<<86d65911ad78120b1f0bdf7176387f6a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type TeamMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
 export type TeamMemberStatus = "Active" | "Inactive" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationTeam_teamMembers_query$data = {
@@ -27,6 +28,7 @@ export type organizationTeam_teamMembers_query$data = {
           readonly uniqueId: string;
         };
         readonly id: string;
+        readonly role: TeamMemberRole | null | undefined;
         readonly status: TeamMemberStatus;
       };
     }>;
@@ -222,6 +224,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "role",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
                 }
@@ -284,6 +293,6 @@ return {
 };
 })();
 
-(node as any).hash = "0b458b29b5686e736755697d8479068e";
+(node as any).hash = "96e9336d7b3516986ad63cfaf52c3ad4";
 
 export default node;

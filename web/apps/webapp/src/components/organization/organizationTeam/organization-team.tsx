@@ -2,13 +2,14 @@ import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
 import type { organizationTeam_removeTeamMembersMutation } from '@/queries/__generated__/organizationTeam_removeTeamMembersMutation.graphql';
 import type { organizationTeam_rootQuery } from '@/queries/__generated__/organizationTeam_rootQuery.graphql';
-import type { organizationTeam_teamMembers_query$key } from '@/queries/__generated__/organizationTeam_teamMembers_query.graphql';
+import type { organizationTeam_teamMembers_query$key, TeamMemberRole } from '@/queries/__generated__/organizationTeam_teamMembers_query.graphql';
 import type { organizationTeam_teamMembers_refetchableFragment } from '@/queries/__generated__/organizationTeam_teamMembers_refetchableFragment.graphql';
 import type { organizationTeam_updateTeamMutation } from '@/queries/__generated__/organizationTeam_updateTeamMutation.graphql';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
@@ -25,8 +26,14 @@ import {
   StackRow,
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { DeleteIcon } from '@repo/shared/components/icons';
+import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -101,7 +108,9 @@ type RowType = {
   name: string;
   email: string | null | undefined;
   phoneNumber: string | null | undefined;
+  role: TeamMemberRole | null | undefined;
   status: boolean;
+  moreActions: string;
 };
 
 const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => {
@@ -132,6 +141,7 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
                 phoneNumber
               }
               status
+              role
             }
           }
         }
@@ -173,6 +183,7 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
             phoneNumber
           }
           status
+          role
         }
       }
     }
@@ -199,6 +210,20 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
   const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>([]);
   const validate = makeValidate(teamSchema);
   const requiredFields = makeRequired(teamSchema);
+  const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
+  const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
+
+  const moreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateTeamMember],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateTeamMember],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveTeamMember],
+  ];
+
+  const memberDetails = useMemo(
+    () => rootDataTeamMembers.teamMembers?.edges.map(({ node }) => node).find((item) => item.id === selectedMemberId),
+    [selectedMemberId, rootDataTeamMembers.teamMembers],
+  );
 
   useEffect(() => {
     if (!section) {
@@ -397,6 +422,7 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
 
   const handleRemoveMembersClick = () => {
     const toastId = themedToast(<NotificationContent content={'Removing members...'} />, infoNotificationOptions);
+
     commitRemoveTeamMembers({
       variables: {
         connectionIds,
@@ -428,6 +454,142 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
     });
   };
 
+  const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.DeactivateTeamMember:
+        handleDeactivateMemberClick();
+        break;
+
+      case MoreActionsMenuOptionType.ActivateTeamMember:
+        handleActivateMemberClick();
+        break;
+
+      case MoreActionsMenuOptionType.RemoveTeamMember:
+        handleRemoveMemberClick();
+        break;
+    }
+  };
+
+  const handleDeactivateMemberClick = () => {
+    if (!memberDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Deactivating member...'} />, infoNotificationOptions);
+
+    commitChangeTeamMembersStatus({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [memberDetails.id],
+          status: 'Inactive',
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate member. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Member deactivated.'} />,
+        });
+        setSeledctedMembers([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate member. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateMemberClick = () => {
+    if (!memberDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Activating member...'} />, infoNotificationOptions);
+
+    commitChangeTeamMembersStatus({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [memberDetails.id],
+          status: 'Active',
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate member. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Member activateed.'} />,
+        });
+        setSeledctedMembers([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate member. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveMemberClick = () => {
+    if (!memberDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Removing member...'} />, infoNotificationOptions);
+
+    commitRemoveTeamMembers({
+      variables: {
+        connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: [memberDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove member. Error: ${joinErrors(errors)}`} />,
+          });
+          return;
+        }
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Member removed.'} />,
+        });
+        setSeledctedMembers([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove member. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   if (!rootData.team) {
     return null;
   }
@@ -438,7 +600,9 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
     name: getCustomerFullName(member.customer),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
+    role: member.role,
     status: member.status === 'Active',
+    moreActions: member.id,
   }));
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
@@ -473,7 +637,15 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
-      minWidth: 300,
+      minWidth: 250,
+    },
+    {
+      field: 'role',
+      headerName: 'Role',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
     },
     {
       field: 'status',
@@ -497,6 +669,23 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
       ),
       display: 'flex',
     },
+    {
+      field: 'moreActions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <IconButton
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            setSelectedMemberId(params.value);
+            setMoreActionsAnchorEl(event.currentTarget);
+          }}
+        >
+          <EllipseMenuIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   if (!rootData.team) {
@@ -506,175 +695,184 @@ const OrganizationTeam = ({ queryReference, organizationId, teamId }: Props) => 
   const team = rootData.team;
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <OrganizationTeamLeftSideNavigationMenuContent organizationId={organizationId} teamId={teamId} hideIcons />
-      <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-        <Form
-          onSubmit={handleDetailUpdateClick}
-          initialValues={{
-            name: team.name,
-            about: team.about,
-          }}
-          validate={validate}
-          render={({ handleSubmit }) => (
-            <FormStackColumn onSubmit={handleSubmit} spacing={0} sx={{ padding: 0 }}>
-              <AppBar position="sticky">
-                <Toolbar
-                  sx={{
-                    backgroundColor: paletteMode === 'dark' ? sandstone : coal,
-                    borderBottom: paletteMode === 'dark' ? 1 : undefined,
-                    borderColor: (theme) => theme.palette.divider,
-                  }}
-                >
-                  <SmallHeadingIconTypography label="Edit Team Information" invertDefaultColor />
-
-                  <PushToRight />
-                  <StackRow>
-                    <Button
-                      sx={{
-                        border: 1,
-                        borderColor: paletteMode === 'dark' ? coal : sandstone,
-                        textTransform: 'none',
-                        '&:hover': {
-                          backgroundColor: 'inherit',
-                        },
-                      }}
-                      variant="contained"
-                      color="inherit"
-                      onClick={handleCancelClick}
-                    >
-                      <SmallIconTypography label="Cancel" invertDefaultColor />
-                    </Button>
-
-                    <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                      <SmallIconTypography label="Save & Exit" />
-                    </Button>
-                  </StackRow>
-                </Toolbar>
-              </AppBar>
-              <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-                <StackColumn
-                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                  ref={(divElement) => {
-                    sectionRefs.current['setup'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label="Team Setup" />
-                  <BodyIconTypography label="Edit your team name and details" />
-                  <Divider />
-                </StackColumn>
-
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredFields.name} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="About">
-                    <TextField name="about" required={requiredFields.about} multiline={true} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Timezone">
-                    <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Primary Location">
-                    <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
-                  </FormFieldLabel>
-                </StackColumn>
-
-                <StackColumn
-                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                  ref={(divElement) => {
-                    sectionRefs.current['members'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label="Team Members" />
-                  <BodyIconTypography label="Manage your team members" />
-                  <Divider />
-                </StackColumn>
-
-                <StackRow sx={{ padding: defaultPadding }}>
-                  <PushToRight />
-                  <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-                </StackRow>
-
-                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                  <Box
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <OrganizationTeamLeftSideNavigationMenuContent organizationId={organizationId} teamId={teamId} hideIcons />
+        <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+          <Form
+            onSubmit={handleDetailUpdateClick}
+            initialValues={{
+              name: team.name,
+              about: team.about,
+            }}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <FormStackColumn onSubmit={handleSubmit} spacing={0} sx={{ padding: 0 }}>
+                <AppBar position="sticky">
+                  <Toolbar
                     sx={{
-                      backgroundColor: (theme) => theme.palette.background.paper,
-                      padding: defaultGridActionPadding,
-                      border: 1,
+                      backgroundColor: paletteMode === 'dark' ? sandstone : coal,
+                      borderBottom: paletteMode === 'dark' ? 1 : undefined,
                       borderColor: (theme) => theme.palette.divider,
-                      borderRadius: 2,
-                      flexGrow: 1,
                     }}
                   >
-                    <StackRow sx={{ alignItems: 'center' }}>
-                      <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
-                      <PushToRight />
+                    <SmallHeadingIconTypography label="Edit Team Information" invertDefaultColor />
+
+                    <PushToRight />
+                    <StackRow>
                       <Button
-                        size="medium"
+                        sx={{
+                          border: 1,
+                          borderColor: paletteMode === 'dark' ? coal : sandstone,
+                          textTransform: 'none',
+                          '&:hover': {
+                            backgroundColor: 'inherit',
+                          },
+                        }}
                         variant="contained"
-                        color="secondary"
-                        disabled={seledctedMembers.length === 0}
-                        onClick={handleDeactivateMembersClick}
+                        color="inherit"
+                        onClick={handleCancelClick}
                       >
-                        Deactuvate Member
+                        <SmallIconTypography label="Cancel" invertDefaultColor />
                       </Button>
-                      <Button
-                        size="medium"
-                        variant="contained"
-                        color="secondary"
-                        disabled={seledctedMembers.length === 0}
-                        onClick={handleActivateMembersClick}
-                      >
-                        Activate Member
-                      </Button>
-                      <Button
-                        size="medium"
-                        variant="contained"
-                        color="warning"
-                        startIcon={<DeleteIcon />}
-                        disabled={seledctedMembers.length === 0}
-                        onClick={handleRemoveMembersClick}
-                      >
-                        Remove Member
+
+                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                        <SmallIconTypography label="Save & Exit" />
                       </Button>
                     </StackRow>
-                  </Box>
-                </StackRow>
-
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                  <DataGrid
-                    checkboxSelection
-                    rowSelectionModel={seledctedMembers}
-                    onRowSelectionModelChange={handleSelectedMembersChanged}
-                    rows={rows}
-                    columns={columns}
-                    hideFooterPagination={rows.length <= 10}
-                    initialState={{
-                      pagination: {
-                        rowCount: rows.length,
-                        paginationModel: {
-                          pageSize: 10,
-                        },
-                      },
+                  </Toolbar>
+                </AppBar>
+                <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+                  <StackColumn
+                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    ref={(divElement) => {
+                      sectionRefs.current['setup'] = divElement;
                     }}
-                    pageSizeOptions={[10]}
-                    ignoreDiacritics
-                    disableRowSelectionOnClick
-                    getRowHeight={() => 'auto'}
-                    rowSpacingType="margin"
-                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                    sx={defaultGridStyle}
-                  />
+                  >
+                    <SectionIconTypography label="Team Setup" />
+                    <BodyIconTypography label="Edit your team name and details" />
+                    <Divider />
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredFields.name} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="About">
+                      <TextField name="about" required={requiredFields.about} multiline={true} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Timezone">
+                      <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Primary Location">
+                      <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
+                    </FormFieldLabel>
+                  </StackColumn>
+
+                  <StackColumn
+                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    ref={(divElement) => {
+                      sectionRefs.current['members'] = divElement;
+                    }}
+                  >
+                    <SectionIconTypography label="Team Members" />
+                    <BodyIconTypography label="Manage your team members" />
+                    <Divider />
+                  </StackColumn>
+
+                  <StackRow sx={{ padding: defaultPadding }}>
+                    <PushToRight />
+                    <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+                  </StackRow>
+
+                  <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                    <Box
+                      sx={{
+                        backgroundColor: (theme) => theme.palette.background.paper,
+                        padding: defaultGridActionPadding,
+                        border: 1,
+                        borderColor: (theme) => theme.palette.divider,
+                        borderRadius: 2,
+                        flexGrow: 1,
+                      }}
+                    >
+                      <StackRow sx={{ alignItems: 'center' }}>
+                        <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
+                        <PushToRight />
+                        <Button
+                          size="medium"
+                          variant="contained"
+                          color="secondary"
+                          disabled={seledctedMembers.length === 0}
+                          onClick={handleDeactivateMembersClick}
+                        >
+                          Deactuvate Member
+                        </Button>
+                        <Button
+                          size="medium"
+                          variant="contained"
+                          color="secondary"
+                          disabled={seledctedMembers.length === 0}
+                          onClick={handleActivateMembersClick}
+                        >
+                          Activate Member
+                        </Button>
+                        <Button
+                          size="medium"
+                          variant="contained"
+                          color="warning"
+                          startIcon={<DeleteIcon />}
+                          disabled={seledctedMembers.length === 0}
+                          onClick={handleRemoveMembersClick}
+                        >
+                          Remove Member
+                        </Button>
+                      </StackRow>
+                    </Box>
+                  </StackRow>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                    <DataGrid
+                      checkboxSelection
+                      rowSelectionModel={seledctedMembers}
+                      onRowSelectionModelChange={handleSelectedMembersChanged}
+                      rows={rows}
+                      columns={columns}
+                      hideFooterPagination={rows.length <= 10}
+                      initialState={{
+                        pagination: {
+                          rowCount: rows.length,
+                          paginationModel: {
+                            pageSize: 10,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[10]}
+                      ignoreDiacritics
+                      disableRowSelectionOnClick
+                      getRowHeight={() => 'auto'}
+                      rowSpacingType="margin"
+                      getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                      sx={defaultGridStyle}
+                    />
+                  </StackColumn>
                 </StackColumn>
-              </StackColumn>
-            </FormStackColumn>
-          )}
-        />
+              </FormStackColumn>
+            )}
+          />
+        </Box>
       </Box>
-    </Box>
+
+      <MoreActionsMenu
+        anchorEl={moreActionsAnchorEl}
+        open={moreActionsMenuOpen}
+        onMenuItemClick={handleMoreActionsMenuItemClick}
+        options={moreActionsOption}
+      />
+    </>
   );
 };
 
