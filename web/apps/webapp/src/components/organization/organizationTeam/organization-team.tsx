@@ -777,6 +777,23 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
                   <StackColumn
                     sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
                     ref={(divElement) => {
+                      sectionRefs.current['location'] = divElement;
+                    }}
+                  >
+                    <SectionIconTypography label="Location Settings" />
+                    <BodyIconTypography label="Assign team to locations" />
+                    <Divider />
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Primary Location">
+                      <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
+                    </FormFieldLabel>
+                  </StackColumn>
+
+                  <StackColumn
+                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    ref={(divElement) => {
                       sectionRefs.current['members'] = divElement;
                     }}
                   >
@@ -861,23 +878,6 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
                       sx={defaultGridStyle}
                     />
                   </StackColumn>
-                </StackColumn>
-
-                <StackColumn
-                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                  ref={(divElement) => {
-                    sectionRefs.current['location'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label="Location Settings" />
-                  <BodyIconTypography label="Assign team to locations" />
-                  <Divider />
-                </StackColumn>
-
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Primary Location">
-                    <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
-                  </FormFieldLabel>
                 </StackColumn>
               </FormStackColumn>
             )}

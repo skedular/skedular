@@ -59,8 +59,8 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getModernOrganizationTeamSetupBaseLink(organizationId, teamId);
-  const memberesLink = getModernOrganizationTeamMembersBaseLink(organizationId, teamId);
   const locationLink = getModernOrganizationTeamLocationBaseLink(organizationId, teamId);
+  const memberesLink = getModernOrganizationTeamMembersBaseLink(organizationId, teamId);
 
   return (
     <List
@@ -97,31 +97,6 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
       </ListItem>
 
       <ListItem disablePadding>
-        <Link component={NextLink} href={memberesLink}>
-          <ListItemButton
-            selected={fullPath === memberesLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === memberesLink) }}
-          >
-            {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <MembersIcon color="inherit" />}
-                invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
-              />
-            )}
-            {!collapsed && (
-              <BodyIconTypography
-                label="Team Members"
-                startElement={!hideIcons && <MembersIcon color="inherit" />}
-                spacing={3}
-                invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
-                noWrap
-              />
-            )}
-          </ListItemButton>
-        </Link>
-      </ListItem>
-
-      <ListItem disablePadding>
         <Link component={NextLink} href={locationLink}>
           <ListItemButton
             selected={fullPath === locationLink}
@@ -139,6 +114,31 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
                 startElement={!hideIcons && <MembersIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === locationLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={memberesLink}>
+          <ListItemButton
+            selected={fullPath === memberesLink}
+            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === memberesLink) }}
+          >
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <MembersIcon color="inherit" />}
+                invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Team Members"
+                startElement={!hideIcons && <MembersIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
                 noWrap
               />
             )}
