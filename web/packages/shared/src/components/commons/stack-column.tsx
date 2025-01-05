@@ -12,7 +12,7 @@ type Props = {
 };
 
 const StackColumn = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(({ children, sx, spacing, color }, ref) => (
-  <Stack direction="column" spacing={spacing ?? 1} sx={sx} color={color} ref={ref}>
+  <Stack direction="column" spacing={spacing === undefined ? 1 : spacing} sx={sx} color={color} ref={ref}>
     {children}
   </Stack>
 ));

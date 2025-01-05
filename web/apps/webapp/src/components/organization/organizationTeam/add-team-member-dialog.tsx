@@ -4,8 +4,18 @@ import type { addTeamMemberDialog_organizationMembers_refetchableFragment } from
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  BodyIconTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -193,7 +203,12 @@ const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpe
 
   return (
     <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
-      <DialogTitle>Add Team Member</DialogTitle>
+      <DialogTitle sx={{ padding: 0 }}>
+        <StackColumn>
+          <SectionIconTypography label="Add Team Member" sx={{ paddingRight: 2, paddingLeft: 2, paddingTop: 2, paddingBottom: 1 }} />
+          <Divider />
+        </StackColumn>
+      </DialogTitle>
       <DialogContent>
         <Form
           onSubmit={handleAddClick}
@@ -204,7 +219,10 @@ const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpe
           render={({ handleSubmit }) => {
             return (
               <FormStackColumn onSubmit={handleSubmit}>
-                <FormFieldLabel label="Member" useWiderSpace>
+                <LeadIconTypography label="Add member to this team" />
+                <SmallIconTypography label="Enter a name to invite them to this team. Please note, you can only invite members from your organization." />
+
+                <FormFieldLabel label="Member" useWiderSpace sx={{ paddingTop: 2 }}>
                   <Autocomplete
                     name="member"
                     multiple={false}
