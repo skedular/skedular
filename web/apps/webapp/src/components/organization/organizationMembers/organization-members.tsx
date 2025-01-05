@@ -774,7 +774,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
               </Box>
             </StackRow>
 
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
               <DataGrid
                 checkboxSelection
                 rowSelectionModel={seledctedMembers}
@@ -798,7 +798,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
                 getRowSpacing={() => ({ top: 3, bottom: 3 })}
                 sx={defaultGridStyle}
               />
-            </StackColumn>
+            </StackRow>
           </StackColumn>
         </Box>
       </Box>

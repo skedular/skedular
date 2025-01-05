@@ -55,6 +55,7 @@ import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import { getModernOrganizationTeamsBaseLink } from '../organization-link';
+import AddTeamMemberButton from './add-team-member-button';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
 
@@ -106,7 +107,7 @@ type RowType = {
   moreActions: string;
 };
 
-const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizationId, teamId }: Props) => {
+const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembersRelay, organizationId, teamId }: Props) => {
   const rootData = useFragment<organizationTeam_query$key>(
     graphql`
       fragment organizationTeam_query on Query {
@@ -956,7 +957,12 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
                     </Box>
                   </StackRow>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                    <PushToRight />
+                    <AddTeamMemberButton onReloadRequired={onReloadRequired} connectionIds={connectionIds} />
+                  </StackRow>
+
+                  <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                     <DataGrid
                       checkboxSelection
                       rowSelectionModel={seledctedMembers}
@@ -980,7 +986,7 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
                       getRowSpacing={() => ({ top: 3, bottom: 3 })}
                       sx={defaultGridStyle}
                     />
-                  </StackColumn>
+                  </StackRow>
                 </StackColumn>
               </FormStackColumn>
             )}
