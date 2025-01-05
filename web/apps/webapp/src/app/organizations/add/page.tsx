@@ -20,7 +20,7 @@ const AddOrganizationPage = () => {
 
   return (
     <RootShell hideOrganizationSelector>
-      <AddOrganization showCancel={true} onAdded={handleAdded} onCancelled={handleCancelled} onReloadRequired={handleReloadRequired} />
+      <AddOrganization showCancel={true} onAdded={handleAdded} onCancel={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );
 };

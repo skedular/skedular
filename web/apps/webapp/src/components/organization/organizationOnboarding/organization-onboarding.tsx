@@ -72,7 +72,7 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
           organizationId={organizationId}
           onReloadRequired={() => {}}
           onAdded={handleLocationAdded}
-          onCancelled={handleLocationDismissed}
+          onCancel={handleLocationDismissed}
           cancelButtonText="Dismiss"
         />
       )}
@@ -81,7 +81,7 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
           organizationId={organizationId}
           onReloadRequired={() => {}}
           onAdded={handleTeamAdded}
-          onCancelled={handleTeamDismissed}
+          onCancel={handleTeamDismissed}
           cancelButtonText="Dismiss"
         />
       )}

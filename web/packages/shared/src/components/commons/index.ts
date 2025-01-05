@@ -4,6 +4,7 @@ export { default as DefaultDialogTitle } from './default-dialog-title';
 export { default as ExtraLargeHeadingIconTypography } from './extra-large-heading-icon-typography';
 export { default as FormFieldLabel } from './form-field-label';
 export { default as FormStackColumn } from './form-stack-column';
+export { default as FormStackColumnWithSaveCancelExitAppBar } from './form-stack-with-save-cancel-exit-appbar';
 export { default as GridContainer } from './grid-container';
 export { default as LargeHeadingIconTypography } from './large-heading-icon-typography';
 export { default as LeadIconTypography } from './lead-icon-typography';

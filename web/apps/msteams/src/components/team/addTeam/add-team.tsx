@@ -1,5 +1,4 @@
-import Paper from '@mui/material/Paper';
-import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumnWithSaveCancelExitAppBar } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -11,7 +10,6 @@ import {
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { maxScreenWidth } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { SingleChoiceLocation } from 'components/location/locationSelector';
@@ -33,7 +31,7 @@ type Props = {
   onReloadRequired: () => void;
   organizationId: string;
   onAdded: (id: string) => void;
-  onCancelled: () => void;
+  onCancel: () => void;
   cancelButtonText?: string;
 };
 
@@ -71,7 +69,7 @@ const teamSchema = object({
   primaryLocationId: string().nullable(),
 });
 
-const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancelled, cancelButtonText }: Props) => {
+const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel, cancelButtonText }: Props) => {
   const rootData = usePreloadedQuery<addTeam_rootQuery>(RootQuery, queryReference);
   const [commitAddTeam] = useMutation<addTeam_addTeamMutation>(graphql`
     mutation addTeam_addTeamMutation($input: AddTeamInput!) @raw_response_type {
@@ -107,11 +105,11 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
         },
       },
       onCompleted: () => {
-        onCancelled();
+        onCancel();
         onReloadRequired();
       },
       onError: (_) => {
-        onCancelled();
+        onCancel();
         onReloadRequired();
       },
     });
@@ -204,48 +202,44 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   }
 
   return (
-    <Paper sx={{ padding: 2, maxWidth: maxScreenWidth }}>
-      <Form
-        onSubmit={handleTeamCreateClick}
-        initialValues={{
-          name: '',
-          about: null,
-          organizationMemberIds: [],
-        }}
-        validate={validate}
-        render={({ handleSubmit }) => (
-          <FormStackColumn onSubmit={handleSubmit}>
-            <FormFieldLabel label="Name">
-              <TextField name="name" required={requiredFields.name} />
-            </FormFieldLabel>
+    <Form
+      onSubmit={handleTeamCreateClick}
+      initialValues={{
+        name: '',
+        about: null,
+        organizationMemberIds: [],
+      }}
+      validate={validate}
+      render={({ handleSubmit }) => (
+        <FormStackColumnWithSaveCancelExitAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Team">
+          <FormFieldLabel label="Name">
+            <TextField name="name" required={requiredFields.name} />
+          </FormFieldLabel>
 
-            <FormFieldLabel label="About">
-              <TextField name="about" required={requiredFields.about} multiline={true} />
-            </FormFieldLabel>
+          <FormFieldLabel label="About">
+            <TextField name="about" required={requiredFields.about} multiline={true} />
+          </FormFieldLabel>
 
-            <FormFieldLabel label="Timezone">
-              <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-            </FormFieldLabel>
+          <FormFieldLabel label="Timezone">
+            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+          </FormFieldLabel>
 
-            <FormFieldLabel label="Primary Location">
-              <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
-            </FormFieldLabel>
+          <FormFieldLabel label="Primary Location">
+            <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
+          </FormFieldLabel>
 
-            <FormFieldLabel label="Organization Member">
-              <OrganizationMemberSelector
-                rootDataRelay={rootData}
-                name="organizationMemberIds"
-                required={requiredFields.organizationMemberIds}
-                multiple={true}
-                useMemberId={true}
-              />
-            </FormFieldLabel>
-
-            <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Create" secondaryLabel="Cancel" />
-          </FormStackColumn>
-        )}
-      />
-    </Paper>
+          <FormFieldLabel label="Organization Member">
+            <OrganizationMemberSelector
+              rootDataRelay={rootData}
+              name="organizationMemberIds"
+              required={requiredFields.organizationMemberIds}
+              multiple={true}
+              useMemberId={true}
+            />
+          </FormFieldLabel>
+        </FormStackColumnWithSaveCancelExitAppBar>
+      )}
+    />
   );
 };
 
@@ -255,11 +249,11 @@ type RelayProps = {
   organizationId: string;
   onReloadRequired: () => void;
   onAdded: (id: string) => void;
-  onCancelled: () => void;
+  onCancel: () => void;
   cancelButtonText?: string;
 };
 
-const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancelled, cancelButtonText }: RelayProps) => {
+const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancel, cancelButtonText }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addTeam_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -298,7 +292,7 @@ const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancell
         onReloadRequired={handleReloadRequired}
         organizationId={organizationId}
         onAdded={onAdded}
-        onCancelled={onCancelled}
+        onCancel={onCancel}
         cancelButtonText={cancelButtonText}
       />
     </ErrorBoundary>

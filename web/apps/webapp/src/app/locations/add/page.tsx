@@ -20,7 +20,7 @@ const AddLocationPage = () => {
 
   return (
     <RootShell>
-      <AddLocation onAdded={handleAdded} onCancelled={handleCancelled} onReloadRequired={handleReloadRequired} />
+      <AddLocation onAdded={handleAdded} onCancel={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );
 };

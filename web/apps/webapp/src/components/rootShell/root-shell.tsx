@@ -141,15 +141,8 @@ const RootShell = ({
             showBreadcrumps={showBreadcrumps}
             breadcrumbs={breadcrumbs}
           />
-          {!rootData.myOrganizations ||
-            (rootData.myOrganizations.length === 0 && (
-              <Box sx={{ paddingLeft: switchToModernUI ? undefined : 2, paddingTop: switchToModernUI ? undefined : 2 }}>
-                <OrganizationOnboarding onReloadRequired={onReloadRequired} />
-              </Box>
-            ))}
-          {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && (
-            <Box sx={{ paddingLeft: switchToModernUI ? undefined : 2, paddingTop: switchToModernUI ? undefined : 2 }}>{children}</Box>
-          )}
+          {!rootData.myOrganizations || (rootData.myOrganizations.length === 0 && <OrganizationOnboarding onReloadRequired={onReloadRequired} />)}
+          {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <>{children}</>}
         </Box>
       </Box>
     </>

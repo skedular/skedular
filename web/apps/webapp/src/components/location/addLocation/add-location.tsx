@@ -1,7 +1,6 @@
 import type { addLocation_addLocationMutation } from '@/queries/__generated__/addLocation_addLocationMutation.graphql';
 import type { addLocation_completeLocationOnboardingMutation } from '@/queries/__generated__/addLocation_completeLocationOnboardingMutation.graphql';
-import Paper from '@mui/material/Paper';
-import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumnWithSaveCancelExitAppBar } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import {
   errorNotificationOptions,
@@ -10,7 +9,6 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { maxScreenWidth } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -24,7 +22,7 @@ type Props = {
   onReloadRequired: () => void;
   organizationId?: string;
   onAdded: (id: string) => void;
-  onCancelled: () => void;
+  onCancel: () => void;
   cancelButtonText?: string;
 };
 
@@ -42,7 +40,7 @@ const locationSchema = object({
   physicalAddress: string().nullable(),
 });
 
-const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, cancelButtonText }: Props) => {
+const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, cancelButtonText }: Props) => {
   const [commitAddLocation] = useMutation<addLocation_addLocationMutation>(graphql`
     mutation addLocation_addLocationMutation($input: AddLocationInput!) @raw_response_type {
       addLocation(input: $input) {
@@ -80,11 +78,11 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
         },
       },
       onCompleted: () => {
-        onCancelled();
+        onCancel();
         onReloadRequired();
       },
       onError: (_) => {
-        onCancelled();
+        onCancel();
         onReloadRequired();
       },
     });
@@ -171,39 +169,35 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancelled, c
   };
 
   return (
-    <Paper sx={{ padding: 2, maxWidth: maxScreenWidth }}>
-      <Form
-        onSubmit={handleLocationCreateClick}
-        initialValues={{
-          name: '',
-          about: null,
-          organizationId,
-          physicalAddress: null,
-        }}
-        validate={validate}
-        render={({ handleSubmit }) => (
-          <FormStackColumn onSubmit={handleSubmit}>
-            <FormFieldLabel label="Name">
-              <TextField name="name" required={requiredFields.name} />
-            </FormFieldLabel>
+    <Form
+      onSubmit={handleLocationCreateClick}
+      initialValues={{
+        name: '',
+        about: null,
+        organizationId,
+        physicalAddress: null,
+      }}
+      validate={validate}
+      render={({ handleSubmit }) => (
+        <FormStackColumnWithSaveCancelExitAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location">
+          <FormFieldLabel label="Name">
+            <TextField name="name" required={requiredFields.name} />
+          </FormFieldLabel>
 
-            <FormFieldLabel label="About">
-              <TextField name="about" required={requiredFields.about} multiline={true} />
-            </FormFieldLabel>
+          <FormFieldLabel label="About">
+            <TextField name="about" required={requiredFields.about} multiline={true} />
+          </FormFieldLabel>
 
-            <FormFieldLabel label="Timezone">
-              <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-            </FormFieldLabel>
+          <FormFieldLabel label="Timezone">
+            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+          </FormFieldLabel>
 
-            <FormFieldLabel label="Physical Address">
-              <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline={true} />
-            </FormFieldLabel>
-
-            <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Create" secondaryLabel="Cancel" />
-          </FormStackColumn>
-        )}
-      />
-    </Paper>
+          <FormFieldLabel label="Physical Address">
+            <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline={true} />
+          </FormFieldLabel>
+        </FormStackColumnWithSaveCancelExitAppBar>
+      )}
+    />
   );
 };
 

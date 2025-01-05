@@ -119,7 +119,7 @@ const RootShell = ({
         <LeftSideNavigationMenu collapsed={collapsed} />
         <Box sx={{ flexGrow: 1 }}>
           <AppBar rootDataRelay={rootData} hideWelcomeMessage={hideWelcomeMessage} showBreadcrumps={showBreadcrumps} breadcrumbs={breadcrumbs} />
-          <Box sx={{ paddingLeft: switchToModernUI ? undefined : 2, paddingTop: switchToModernUI ? undefined : 2 }}>{children}</Box>
+          {children}
         </Box>
       </Box>
     </>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9d0335376f05ea46d0331a99ca87883b>>
+ * @generated SignedSource<<db6c9641b5752d83a6131a8f1b8f7ef4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,27 +40,7 @@ export type addTeamMemberDialog_addTeamMemberMutation$data = {
     };
   } | null | undefined;
 };
-export type addTeamMemberDialog_addTeamMemberMutation$rawResponse = {
-  readonly addTeamMember: {
-    readonly teamMember: {
-      readonly customer: {
-        readonly email: string | null | undefined;
-        readonly familyName: string | null | undefined;
-        readonly givenName: string | null | undefined;
-        readonly middleName: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly phoneNumber: string | null | undefined;
-        readonly photoUrl: string | null | undefined;
-        readonly uniqueId: string;
-      };
-      readonly id: string;
-      readonly role: TeamMemberRole | null | undefined;
-      readonly status: TeamMemberStatus;
-    };
-  } | null | undefined;
-};
 export type addTeamMemberDialog_addTeamMemberMutation = {
-  rawResponse: addTeamMemberDialog_addTeamMemberMutation$rawResponse;
   response: addTeamMemberDialog_addTeamMemberMutation$data;
   variables: addTeamMemberDialog_addTeamMemberMutation$variables;
 };
@@ -259,6 +239,6 @@ return {
 };
 })();
 
-(node as any).hash = "b0716b75308d8e7f29c0e24a09d10175";
+(node as any).hash = "928be518f13fa9e4f8dab9dc3af0acff";
 
 export default node;

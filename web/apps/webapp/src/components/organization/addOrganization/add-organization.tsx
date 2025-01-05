@@ -2,8 +2,7 @@ import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from '@
 import type { addOrganization_addOrganizationMutation } from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
 import type { addOrganization_completeOrganizationOnboardingMutation } from '@/queries/__generated__/addOrganization_completeOrganizationOnboardingMutation.graphql';
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
-import Paper from '@mui/material/Paper';
-import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { FormFieldLabel, FormStackColumnWithSaveCancelExitAppBar } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -14,7 +13,6 @@ import {
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { maxScreenWidth } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -30,7 +28,7 @@ type Props = {
   onReloadRequired: () => void;
   showCancel: boolean;
   onAdded: (id: string) => void;
-  onCancelled?: () => void;
+  onCancel?: () => void;
 };
 
 const RootQuery = graphql`
@@ -59,7 +57,7 @@ const organizationSchema = object({
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
-const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded, onCancelled }: Props) => {
+const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded, onCancel }: Props) => {
   const rootData = usePreloadedQuery<addOrganization_rootQuery>(RootQuery, queryReference);
   const [commitAddOrganization] = useMutation<addOrganization_addOrganizationMutation>(graphql`
     mutation addOrganization_addOrganizationMutation($input: AddOrganizationInput!) @raw_response_type {
@@ -164,43 +162,39 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   };
 
   return (
-    <Paper sx={{ padding: 2, maxWidth: maxScreenWidth }}>
-      <Form
-        onSubmit={handleOrganizationCreateClick}
-        initialValues={{
-          name: '',
-          about: null,
-          website: null,
-        }}
-        validate={validate}
-        render={({ handleSubmit }) => (
-          <FormStackColumn onSubmit={handleSubmit}>
-            <FormFieldLabel label="Name">
-              <TextField name="name" required={requiredFields.name} />
-            </FormFieldLabel>
+    <Form
+      onSubmit={handleOrganizationCreateClick}
+      initialValues={{
+        name: '',
+        about: null,
+        website: null,
+      }}
+      validate={validate}
+      render={({ handleSubmit }) => (
+        <FormStackColumnWithSaveCancelExitAppBar onSubmit={handleSubmit} onCancel={onCancel} label="Add Organization" hideCancel={!showCancel}>
+          <FormFieldLabel label="Name">
+            <TextField name="name" required={requiredFields.name} />
+          </FormFieldLabel>
 
-            <FormFieldLabel label="About">
-              <TextField name="about" required={requiredFields.about} multiline={true} />
-            </FormFieldLabel>
+          <FormFieldLabel label="About">
+            <TextField name="about" required={requiredFields.about} multiline={true} />
+          </FormFieldLabel>
 
-            <FormFieldLabel label="Industry">
-              <TextField name="website" required={requiredFields.about} helperText="https://" />
-            </FormFieldLabel>
+          <FormFieldLabel label="Industry">
+            <TextField name="website" required={requiredFields.about} helperText="https://" />
+          </FormFieldLabel>
 
-            <FormFieldLabel label="Industry">
-              <OrganizationMultipleChoicesIndustries
-                rootDataRelay={rootData}
-                name="industrySubCategoryIds"
-                required={requiredFields.industrySubCategoryIds}
-              />
-            </FormFieldLabel>
-
-            <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
-            <TwoButtonsDialogActions onSecondaryClicked={onCancelled} primaryLabel="Create" secondaryLabel="Cancel" hideSecondary={!showCancel} />
-          </FormStackColumn>
-        )}
-      />
-    </Paper>
+          <FormFieldLabel label="Industry">
+            <OrganizationMultipleChoicesIndustries
+              rootDataRelay={rootData}
+              name="industrySubCategoryIds"
+              required={requiredFields.industrySubCategoryIds}
+            />
+          </FormFieldLabel>
+          <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
+        </FormStackColumnWithSaveCancelExitAppBar>
+      )}
+    />
   );
 };
 
@@ -210,10 +204,10 @@ type RelayProps = {
   onReloadRequired: () => void;
   showCancel: boolean;
   onAdded: (id: string) => void;
-  onCancelled?: () => void;
+  onCancel?: () => void;
 };
 
-const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCancelled }: RelayProps) => {
+const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addOrganization_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -246,7 +240,7 @@ const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCan
         onReloadRequired={handleReloadRequired}
         showCancel={showCancel}
         onAdded={onAdded}
-        onCancelled={onCancelled}
+        onCancel={onCancel}
       />
     </ErrorBoundary>
   );
