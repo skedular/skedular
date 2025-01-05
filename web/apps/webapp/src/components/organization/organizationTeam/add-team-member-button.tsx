@@ -9,11 +9,12 @@ import { startOfDay } from '@repo/shared/libs/utils';
 import { memo, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import AddTeamMemberDialog from './add-team-member-dialog';
 
 type Props = {
   queryReference: PreloadedQuery<addTeamMemberButton_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
-  connectionIds?: string[];
+  connectionIds: string[];
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -22,14 +23,16 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query addTeamMemberButton_rootQuery {
-    me {
-      id
-    }
+  query addTeamMemberButton_rootQuery(
+    $organizationId: String!
+    $peopleNameSearchText: String
+    $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
+  ) {
+    ...addTeamMemberDialog_organizationMembers_query
   }
 `;
 
-const AddTeamMemberButton = ({ queryReference, onReloadRequired, fullWidth, label, hideIcon, variant, size }: Props) => {
+const AddTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: Props) => {
   const rootData = usePreloadedQuery<addTeamMemberButton_rootQuery>(RootQuery, queryReference);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -62,6 +65,13 @@ const AddTeamMemberButton = ({ queryReference, onReloadRequired, fullWidth, labe
           <LeadIconTypography label={label ?? 'Add Memebr'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
         )}
       </Button>
+      <AddTeamMemberDialog
+        rootDataRelay={rootData}
+        connectionIds={connectionIds}
+        isDialogOpen={isDialogOpen}
+        onAddClicked={handleAddClicked}
+        onCancelClicked={handleCancelClicked}
+      />
     </>
   );
 };
@@ -69,8 +79,9 @@ const AddTeamMemberButton = ({ queryReference, onReloadRequired, fullWidth, labe
 const MemoAddTeamMemberButton = memo(AddTeamMemberButton);
 
 type RelayProps = {
+  organizationId: string;
   onReloadRequired?: () => void;
-  connectionIds?: string[];
+  connectionIds: string[];
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -78,19 +89,27 @@ type RelayProps = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const AddTeamMemberButtonWithRelay = ({ onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: RelayProps) => {
+const AddTeamMemberButtonWithRelay = ({ organizationId, onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addTeamMemberButton_rootQuery>(RootQuery);
 
   useEffect(() => {
     const date = startOfDay().toISOString();
 
     loadQuery(
-      {},
+      {
+        organizationId,
+        addTeamMemberDialogOrganizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+      },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery]);
+  }, [loadQuery, organizationId]);
 
   if (!queryReference) {
     return <Loading />;
@@ -100,6 +119,7 @@ const AddTeamMemberButtonWithRelay = ({ onReloadRequired, connectionIds, fullWid
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
       <MemoAddTeamMemberButton
         queryReference={queryReference}
+        onReloadRequired={onReloadRequired}
         connectionIds={connectionIds}
         fullWidth={fullWidth}
         label={label}

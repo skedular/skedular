@@ -959,7 +959,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
 
                   <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                     <PushToRight />
-                    <AddTeamMemberButton onReloadRequired={onReloadRequired} connectionIds={connectionIds} />
+                    <AddTeamMemberButton onReloadRequired={onReloadRequired} connectionIds={connectionIds} organizationId={organizationId} />
                   </StackRow>
 
                   <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
