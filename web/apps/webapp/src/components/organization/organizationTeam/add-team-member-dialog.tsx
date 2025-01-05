@@ -193,7 +193,7 @@ const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpe
 
   return (
     <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
-      <DialogTitle>Make a booking</DialogTitle>
+      <DialogTitle>Add Team Member</DialogTitle>
       <DialogContent>
         <Form
           onSubmit={handleAddClick}
