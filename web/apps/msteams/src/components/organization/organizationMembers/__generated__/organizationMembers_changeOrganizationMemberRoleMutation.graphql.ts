@@ -1,0 +1,222 @@
+/**
+ * @generated SignedSource<<80b5dc2737c2beb1942ee7a9e7ec40a1>>
+ * @lightSyntaxTransform
+ * @nogrep
+ */
+
+/* tslint:disable */
+/* eslint-disable */
+// @ts-nocheck
+
+import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
+export type OrganizationMemberStatus = "Active" | "Inactive" | "%future added value";
+export type ChangeOrganizationMemberRoleInput = {
+  clientMutationId?: string | null | undefined;
+  id: string;
+  role: OrganizationMemberRole;
+};
+export type organizationMembers_changeOrganizationMemberRoleMutation$variables = {
+  input: ChangeOrganizationMemberRoleInput;
+};
+export type organizationMembers_changeOrganizationMemberRoleMutation$data = {
+  readonly changeOrganizationMemberRole: {
+    readonly member: {
+      readonly customer: {
+        readonly email: string | null | undefined;
+        readonly familyName: string | null | undefined;
+        readonly givenName: string | null | undefined;
+        readonly middleName: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly phoneNumber: string | null | undefined;
+        readonly photoUrl: string | null | undefined;
+        readonly uniqueId: string;
+      };
+      readonly id: string;
+      readonly role: OrganizationMemberRole | null | undefined;
+      readonly status: OrganizationMemberStatus;
+    } | null | undefined;
+  } | null | undefined;
+};
+export type organizationMembers_changeOrganizationMemberRoleMutation$rawResponse = {
+  readonly changeOrganizationMemberRole: {
+    readonly member: {
+      readonly customer: {
+        readonly email: string | null | undefined;
+        readonly familyName: string | null | undefined;
+        readonly givenName: string | null | undefined;
+        readonly middleName: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly phoneNumber: string | null | undefined;
+        readonly photoUrl: string | null | undefined;
+        readonly uniqueId: string;
+      };
+      readonly id: string;
+      readonly role: OrganizationMemberRole | null | undefined;
+      readonly status: OrganizationMemberStatus;
+    } | null | undefined;
+  } | null | undefined;
+};
+export type organizationMembers_changeOrganizationMemberRoleMutation = {
+  rawResponse: organizationMembers_changeOrganizationMemberRoleMutation$rawResponse;
+  response: organizationMembers_changeOrganizationMemberRoleMutation$data;
+  variables: organizationMembers_changeOrganizationMemberRoleMutation$variables;
+};
+
+const node: ConcreteRequest = (function(){
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
+  }
+],
+v1 = [
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "OrganizationMemberDetailsPayload",
+    "kind": "LinkedField",
+    "name": "changeOrganizationMemberRole",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "OrganizationMemberDetails",
+        "kind": "LinkedField",
+        "name": "member",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationCustomerDetails",
+            "kind": "LinkedField",
+            "name": "customer",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "uniqueId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "email",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "name",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "givenName",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "middleName",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "familyName",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "photoUrl",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "phoneNumber",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "status",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "role",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "organizationMembers_changeOrganizationMemberRoleMutation",
+    "selections": (v1/*: any*/),
+    "type": "Mutation",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Operation",
+    "name": "organizationMembers_changeOrganizationMemberRoleMutation",
+    "selections": (v1/*: any*/)
+  },
+  "params": {
+    "cacheID": "52a5da123e07e3bfe4fbf58e5c5d508f",
+    "id": null,
+    "metadata": {},
+    "name": "organizationMembers_changeOrganizationMemberRoleMutation",
+    "operationKind": "mutation",
+    "text": "mutation organizationMembers_changeOrganizationMemberRoleMutation(\n  $input: ChangeOrganizationMemberRoleInput!\n) {\n  changeOrganizationMemberRole(input: $input) {\n    member {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
+  }
+};
+})();
+
+(node as any).hash = "6b73e84102e5eebf990aef9bfd8e87e5";
+
+export default node;

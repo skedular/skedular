@@ -2,6 +2,8 @@ import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
@@ -33,6 +35,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransit
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import type { organizationMembers_changeOrganizationMemberRoleMutation } from './__generated__/organizationMembers_changeOrganizationMemberRoleMutation.graphql';
 import type { organizationMembers_changeOrganizationMembersStatusMutation } from './__generated__/organizationMembers_changeOrganizationMembersStatusMutation.graphql';
 import type {
   OrganizationMemberRole,
@@ -74,6 +77,7 @@ const RootQuery = graphql`
         }
       }
     }
+    organizationMemberRoles
     ...teamSelector_allTeams_query
     ...organizationMembers_organizationMembers_query
   }
@@ -89,6 +93,11 @@ type CustomerDetails = {
   phoneNumber?: string | null | undefined;
 };
 
+type MemberRole = {
+  id: string;
+  role: OrganizationMemberRole | null | undefined;
+};
+
 type RowType = {
   id: string;
   avatar: CustomerDetails;
@@ -96,7 +105,7 @@ type RowType = {
   teams: string;
   email: string | null | undefined;
   phoneNumber: string | null | undefined;
-  role: OrganizationMemberRole | null | undefined;
+  memberRole: MemberRole;
   status: boolean;
   moreActions: string;
 };
@@ -165,6 +174,28 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
       removeOrganizationMembers(input: $input) {
         members {
           id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitChangeOrganizationMemberRole] = useMutation<organizationMembers_changeOrganizationMemberRoleMutation>(graphql`
+    mutation organizationMembers_changeOrganizationMemberRoleMutation($input: ChangeOrganizationMemberRoleInput!) @raw_response_type {
+      changeOrganizationMemberRole(input: $input) {
+        member {
+          id
+          customer {
+            uniqueId
+            email
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
+            phoneNumber
+          }
+          status
+          role
         }
       }
     }
@@ -505,6 +536,57 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
     });
   };
 
+  const handleRoleChanged = (id: string, roleStr: string) => {
+    const member = members.find((member) => member.id === id);
+    if (!member) {
+      return;
+    }
+
+    const role = roleStr as unknown as OrganizationMemberRole;
+    const toastId = themedToast(<NotificationContent content={`Updating role...`} />, infoNotificationOptions);
+
+    commitChangeOrganizationMemberRole({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id,
+          role,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update role to ${role}. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Role updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update role to '${role}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        changeOrganizationMemberRole: {
+          member: {
+            id: member.id,
+            customer: member.customer,
+            status: member.status,
+            role,
+          },
+        },
+      },
+    });
+  };
+
   const rows: RowType[] = members.map((member) => ({
     id: member.id,
     avatar: member.customer,
@@ -512,7 +594,10 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
     teams: member.teams.map((team) => team.name).join(', '),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
-    role: member.role,
+    memberRole: {
+      id: member.id,
+      role: member.role,
+    },
     status: member.status === 'Active',
     moreActions: member.id,
   }));
@@ -541,7 +626,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
-      minWidth: 350,
+      minWidth: 300,
     },
     {
       field: 'email',
@@ -560,12 +645,30 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
       minWidth: 250,
     },
     {
-      field: 'role',
+      field: 'memberRole',
       headerName: 'Role',
       editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      renderCell: (params) => (
+        <Select
+          value={params.value.role}
+          onChange={(event) => handleRoleChanged(params.value.id, event.target.value as string)}
+          size="small"
+          sx={{
+            borderRadius: 2,
+            width: 150,
+            margin: 0.5,
+          }}
+          renderValue={(selectedRole) => <SmallIconTypography label={selectedRole} />}
+        >
+          {rootData.organizationMemberRoles.map((role) => (
+            <MenuItem key={role} value={role}>
+              <SmallIconTypography label={role} />
+            </MenuItem>
+          ))}
+        </Select>
+      ),
       display: 'flex',
-      minWidth: 100,
+      minWidth: 200,
     },
     {
       field: 'status',
