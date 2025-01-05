@@ -89,7 +89,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
 
   const handleSaveClick = ({ role: roleStr }: OrganizationMemberDetails) => {
     const role = roleStr as unknown as OrganizationMemberRole;
-    const toastId = themedToast(<NotificationContent content={`Updating organization role...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating role...`} />, infoNotificationOptions);
 
     commitChangeOrganizationMemberRole({
       variables: {
@@ -111,7 +111,7 @@ const OrganizationMemberCard = ({ data, organizationMemberDetailsRelay, connecti
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization role updated.`} />,
+          render: <NotificationContent content={`Role updated.`} />,
         });
 
         setEditing(false);

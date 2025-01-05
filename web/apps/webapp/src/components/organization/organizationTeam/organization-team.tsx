@@ -1,4 +1,5 @@
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
+import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
 import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
 import type { organizationTeam_query$key } from '@/queries/__generated__/organizationTeam_query.graphql';
 import type { organizationTeam_removeTeamMembersMutation } from '@/queries/__generated__/organizationTeam_removeTeamMembersMutation.graphql';
@@ -10,6 +11,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
@@ -87,13 +90,18 @@ type CustomerDetails = {
   phoneNumber?: string | null | undefined;
 };
 
+type MemberRole = {
+  id: string;
+  role: TeamMemberRole | null | undefined;
+};
+
 type RowType = {
   id: string;
   avatar: CustomerDetails;
   name: string;
   email: string | null | undefined;
   phoneNumber: string | null | undefined;
-  role: TeamMemberRole | null | undefined;
+  memberRole: MemberRole;
   status: boolean;
   moreActions: string;
 };
@@ -112,6 +120,7 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
             name
           }
         }
+        teamMemberRoles
         ...singleChoiceLocation_locations_query
       }
     `,
@@ -197,6 +206,28 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
       removeTeamMembers(input: $input) {
         members {
           id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitChangeTeamMemberRole] = useMutation<organizationTeam_changeTeamMemberRoleMutation>(graphql`
+    mutation organizationTeam_changeTeamMemberRoleMutation($input: ChangeTeamMemberRoleInput!) @raw_response_type {
+      changeTeamMemberRole(input: $input) {
+        member {
+          id
+          customer {
+            uniqueId
+            email
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
+            phoneNumber
+          }
+          status
+          role
         }
       }
     }
@@ -593,6 +624,57 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
     });
   };
 
+  const handleRoleChanged = (id: string, roleStr: string) => {
+    const member = members.find((member) => member.id === id);
+    if (!member) {
+      return;
+    }
+
+    const role = roleStr as unknown as TeamMemberRole;
+    const toastId = themedToast(<NotificationContent content={`Updating role...`} />, infoNotificationOptions);
+
+    commitChangeTeamMemberRole({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id,
+          role,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update role to ${role}. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Role updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update role to '${role}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        changeTeamMemberRole: {
+          member: {
+            id: member.id,
+            customer: member.customer,
+            status: member.status,
+            role,
+          },
+        },
+      },
+    });
+  };
+
   if (!rootData.team) {
     return null;
   }
@@ -603,7 +685,10 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
     name: getCustomerFullName(member.customer),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
-    role: member.role,
+    memberRole: {
+      id: member.id,
+      role: member.role,
+    },
     status: member.status === 'Active',
     moreActions: member.id,
   }));
@@ -643,12 +728,30 @@ const OrganizationTeam = ({ rootDataRelay, rootDataTeamMembersRelay, organizatio
       minWidth: 250,
     },
     {
-      field: 'role',
+      field: 'memberRole',
       headerName: 'Role',
       editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      renderCell: (params) => (
+        <Select
+          value={params.value.role}
+          onChange={(event) => handleRoleChanged(params.value.id, event.target.value as string)}
+          size="small"
+          sx={{
+            borderRadius: 2,
+            width: 150,
+            margin: 0.5,
+          }}
+          renderValue={(selectedRole) => <SmallIconTypography label={selectedRole} />}
+        >
+          {rootData.teamMemberRoles.map((role) => (
+            <MenuItem key={role} value={role}>
+              <SmallIconTypography label={role} />
+            </MenuItem>
+          ))}
+        </Select>
+      ),
       display: 'flex',
-      minWidth: 100,
+      minWidth: 200,
     },
     {
       field: 'status',

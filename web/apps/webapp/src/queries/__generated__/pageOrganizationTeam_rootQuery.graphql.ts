@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7514779129e0877d9202913e05d3ea53>>
+ * @generated SignedSource<<6141d64922ad6eb6fa236d66d7513775>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -200,6 +200,13 @@ return {
             "storageKey": null
           }
         ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "teamMemberRoles",
         "storageKey": null
       },
       {
@@ -416,12 +423,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c2cf5ef0b9ae7b628484470a8aa0c949",
+    "cacheID": "af93213b25a86136e0eae012790e1b47",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationTeam_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationTeam_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $teamId: String!\n  $peopleNameSearchText: String\n) {\n  team(id: $teamId) {\n    name\n    id\n  }\n  ...organizationTeam_query\n  ...organizationTeam_teamMembers_query\n}\n\nfragment organizationTeam_query on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    timezone\n    primaryLocation {\n      uniqueId\n      name\n    }\n  }\n  ...singleChoiceLocation_locations_query\n}\n\nfragment organizationTeam_teamMembers_query on Query {\n  teamMembers(where: {teamId: $teamId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceLocation_locations_query on Query {\n  locations(where: {organizationId: $organizationId}) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationTeam_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n  $teamId: String!\n  $peopleNameSearchText: String\n) {\n  team(id: $teamId) {\n    name\n    id\n  }\n  ...organizationTeam_query\n  ...organizationTeam_teamMembers_query\n}\n\nfragment organizationTeam_query on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    timezone\n    primaryLocation {\n      uniqueId\n      name\n    }\n  }\n  teamMemberRoles\n  ...singleChoiceLocation_locations_query\n}\n\nfragment organizationTeam_teamMembers_query on Query {\n  teamMembers(where: {teamId: $teamId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceLocation_locations_query on Query {\n  locations(where: {organizationId: $organizationId}) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
