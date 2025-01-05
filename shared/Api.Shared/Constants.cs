@@ -84,7 +84,7 @@ public static class Constants
 
     public const int MaxOrganizationMemberStatusLength = 64;
     public const int MaxTeamMemberStatusLength = 64;
-    
+
     public const int MaxFeedbackLength = 10240;
     public const int MaxFeedbackChannelLength = 32;
 }

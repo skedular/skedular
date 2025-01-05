@@ -2,7 +2,6 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Enterprise.Shared.Kafka.Consume;
 using Slack.Processors.Mappers;
-using Slack.Shared.Database.Entities;
 using Slack.Shared.Repositories;
 using Organization = Slack.Shared.Database.Entities.Organization;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;

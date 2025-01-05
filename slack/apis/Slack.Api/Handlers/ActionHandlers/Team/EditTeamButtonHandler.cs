@@ -186,7 +186,7 @@ public class EditTeamButtonHandler(
                                 teamMember.OrganizationMember is not null &&
                                 teamMember.OrganizationMember.Customer.Id == customerId);
 
-                            return new global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember
+                            return new TeamMember
                             {
                                 Id = existingMember is null ? randomHelper.Generate() : existingMember.Id,
                                 Role = existingMember is null

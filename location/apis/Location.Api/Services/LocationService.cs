@@ -356,8 +356,8 @@ public class LocationService(
         }
 
         location = mapper.MapTo(
-                repositoryFactory.LocationRepository.Update(
-                    mapper.MergeTo(location, existingLocation, physicalAddress)));
+            repositoryFactory.LocationRepository.Update(
+                mapper.MergeTo(location, existingLocation, physicalAddress)));
 
         await locationOutboxPublisher.PublishLocationAsync(
             [location],

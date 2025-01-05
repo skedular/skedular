@@ -192,12 +192,7 @@ public class Mapper(IContext context) : IMapper
     };
 
     public CustomerFeedback MapTo(SubmitCustomerFeedbackInput src) =>
-        new()
-        {
-            Id = src.Id.ToSafeString(),
-            Content = src.FeedbackContent,
-            Channel = src.Channel
-        };
+        new() { Id = src.Id.ToSafeString(), Content = src.FeedbackContent, Channel = src.Channel };
 
     public SubmitCustomerFeedbackPayload MapTo(CustomerFeedback src, string? clientMutationId) =>
         new() { Id = src.Id, ClientMutationId = clientMutationId };

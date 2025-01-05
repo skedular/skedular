@@ -332,8 +332,7 @@ public class Mapper : IMapper
                     ? null
                     : new global::Api.Shared.Services.Grpc.Skedular.Team.V1.Location
                     {
-                        Id = src.PrimaryLocation.Id,
-                        Name = src.PrimaryLocation.Name.ToSafeString()
+                        Id = src.PrimaryLocation.Id, Name = src.PrimaryLocation.Name.ToSafeString()
                     },
             Permissions = new Permissions
             {
@@ -423,7 +422,7 @@ public class Mapper : IMapper
         src.Select(item => MapTo(item, team));
 
     private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember>
-     MapToGrpcResponse(IEnumerable<TeamMember> src) => src.Select(MapToGrpcResponse);
+        MapToGrpcResponse(IEnumerable<TeamMember> src) => src.Select(MapToGrpcResponse);
 
     private global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember MapToGrpcResponse(TeamMember src) =>
         new()

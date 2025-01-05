@@ -1,7 +1,6 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Billing.Processors.Mappers;
-using Billing.Shared.Database.Entities;
 using Billing.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using Organization = Billing.Shared.Database.Entities.Organization;

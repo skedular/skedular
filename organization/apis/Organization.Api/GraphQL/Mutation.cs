@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using HotChocolate;
 using HotChocolate.Types;

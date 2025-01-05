@@ -12,5 +12,5 @@ public record NotificationOrder(OrderDirection Direction, NotificationOrderField
 public enum NotificationOrderField
 {
     Date,
-    Type,
+    Type
 }

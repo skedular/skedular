@@ -277,7 +277,7 @@ public class AddTeamButtonHandler(
                             ArgumentException.ThrowIfNullOrWhiteSpace(organizationMemberId);
                             ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
 
-                            return new global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember
+                            return new TeamMember
                             {
                                 Id = randomHelper.Generate(),
                                 Role = Role.Member,

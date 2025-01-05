@@ -116,7 +116,7 @@ public class CustomerRepository(LocationDbContext dbContext, TimeProvider timePr
         customer.DeletedAt = now;
         return DbContext.Customer.Update(customer).Entity;
     }
-    
+
     public async Task<ICollection<Customer>>
         GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Customer

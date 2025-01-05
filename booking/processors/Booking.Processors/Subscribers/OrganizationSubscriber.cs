@@ -1,7 +1,6 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Booking.Processors.Mappers;
-using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using Organization = Booking.Shared.Database.Entities.Organization;
