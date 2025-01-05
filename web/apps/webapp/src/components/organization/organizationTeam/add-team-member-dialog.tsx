@@ -1,3 +1,4 @@
+import type { addTeamMemberDialog_addTeamMemberMutation } from '@/queries/__generated__/addTeamMemberDialog_addTeamMemberMutation.graphql';
 import type { addTeamMemberDialog_organizationMembers_query$key } from '@/queries/__generated__/addTeamMemberDialog_organizationMembers_query.graphql';
 import type { addTeamMemberDialog_organizationMembers_refetchableFragment } from '@/queries/__generated__/addTeamMemberDialog_organizationMembers_refetchableFragment.graphql';
 import Dialog from '@mui/material/Dialog';
@@ -5,13 +6,20 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
-import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
-import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { getCustomerFullName, joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import { Autocomplete, makeRequired, makeValidate } from 'mui-rff';
+import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { graphql, useMutation, usePaginationFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { object, string } from 'yup';
@@ -19,6 +27,7 @@ import { object, string } from 'yup';
 type Props = {
   rootDataRelay: addTeamMemberDialog_organizationMembers_query$key;
   connectionIds: string[];
+  teamId: string;
   isDialogOpen: boolean;
   onAddClicked: () => void;
   onCancelClicked: () => void;
@@ -46,7 +55,7 @@ const schema = object({
   member: string().required('Member is required'),
 });
 
-const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicked, onCancelClicked }: Props) => {
+const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpen, onAddClicked, onCancelClicked }: Props) => {
   const { data: rootData, refetch } = usePaginationFragment<
     addTeamMemberDialog_organizationMembers_refetchableFragment,
     addTeamMemberDialog_organizationMembers_query$key
@@ -82,10 +91,31 @@ const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAdd
     rootDataRelay,
   );
 
+  const [commitAddTeamMember] = useMutation<addTeamMemberDialog_addTeamMemberMutation>(graphql`
+    mutation addTeamMemberDialog_addTeamMemberMutation($connectionIds: [ID!]!, $input: AddTeamMemberInput!) {
+      addTeamMember(input: $input) {
+        teamMember @appendNode(connections: $connectionIds, edgeTypeName: "TeamMemberDetails") {
+          id
+          customer {
+            uniqueId
+            email
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
+            phoneNumber
+          }
+          status
+          role
+        }
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const validate = makeValidate(schema);
   const requiredFields = makeRequired(schema);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
@@ -121,7 +151,43 @@ const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAdd
     handleRefetch(str);
   };
 
-  const handleAddClick = ({ member }: MemberDetails) => {};
+  const handleAddClick = ({ member }: MemberDetails) => {
+    const toastId = themedToast(<NotificationContent content={'Adding team member...'} />, infoNotificationOptions);
+
+    commitAddTeamMember({
+      variables: {
+        connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          id: teamId,
+          organizationMemberId: member,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to add team member. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Team member added.'} />,
+        });
+
+        onAddClicked();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to add team member. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
 
   const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
 
@@ -144,7 +210,7 @@ const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAdd
                     multiple={false}
                     required={requiredFields.member}
                     options={customers}
-                    getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
+                    getOptionValue={(option) => (option as OrganizationMemberDetails).id}
                     getOptionLabel={(option: string | OrganizationMemberDetails) =>
                       getCustomerFullName((option as OrganizationMemberDetails).customer)
                     }

@@ -46,11 +46,7 @@ public interface ITeamMemberService
 
     Task<TeamMember> RemoveAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<TeamMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken);
-
-    Task<TeamMember> AddAsync(
-        string teamId,
-        TeamMember member,
-        CancellationToken cancellationToken);
+    Task<TeamMember> AddAsync(string teamId, TeamMember member, CancellationToken cancellationToken);
 }
 
 public class TeamMemberService(
@@ -486,13 +482,9 @@ public class TeamMemberService(
             mapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id)))).ToList();
     }
 
-    public async Task<TeamMember> AddAsync(
-        string teamId,
-        TeamMember member,
-        CancellationToken cancellationToken)
+    public async Task<TeamMember> AddAsync(string teamId, TeamMember member, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
         if (existingTeam is null)
         {
@@ -539,29 +531,50 @@ public class TeamMemberService(
 
         if (existingTeamMember is not null)
         {
+            if (existingTeamMember.DeletedAt is not null)
+            {
+                existingTeamMember.DeletedAt = null;
+                existingTeamMember.Role = TeamMemberRoleConstants.Member;
+                existingTeamMember.Status = TeamMemberStatusConstants.Active;
+
+                await using var updateTransaction = await transactionBuilder.BeginTransactionAsync(
+                    repositoryFactory.TeamMemberRepository.UnitOfWork,
+                    cancellationToken);
+
+                _ = repositoryFactory.TeamMemberRepository.Update(existingTeamMember);
+                var mappedTeam = mapper.MapTo(existingTeam);
+                mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
+
+                await teamOutboxPublisher.PublishTeamAsync(
+                    [mappedTeam],
+                    repositoryFactory.TeamRepository.UnitOfWork,
+                    cancellationToken);
+
+                await repositoryFactory.TeamMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await updateTransaction.CommitAsync(cancellationToken);
+            }
+
             return mapper.MapTo(existingTeamMember);
         }
 
-
         var now = timeProvider.GetUtcNow();
-
-        var customerToAdd =
-            await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
-        if (customerToAdd is null)
-        {
-            throw new CustomerNotFound();
-        }
 
         Shared.Database.Entities.TeamMember teamMember;
         if (organization is null)
         {
+            var customerToAdd =
+                await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
+            if (customerToAdd is null)
+            {
+                throw new CustomerNotFound();
+            }
+
             teamMember = new Shared.Database.Entities.TeamMember
             {
                 Id = randomHelper.Generate(),
                 CreatedAt = now,
-                Role = customerToAdd.Id == customer.Id
-                    ? TeamMemberRoleConstants.Owner
-                    : TeamMemberRoleConstants.Member,
+                Role = TeamMemberRoleConstants.Member,
                 Customer = customerToAdd,
                 Team = existingTeam
             };
@@ -580,11 +593,8 @@ public class TeamMemberService(
             {
                 Id = randomHelper.Generate(),
                 CreatedAt = now,
-                Role =
-                    customerToAdd.Id == customer.Id
-                        ? TeamMemberRoleConstants.Owner
-                        : TeamMemberRoleConstants.Member,
-                Customer = customerToAdd,
+                Role = TeamMemberRoleConstants.Member,
+                Customer = organizationMemberToAdd.Customer,
                 Team = existingTeam,
                 OrganizationMember = organizationMemberToAdd,
                 Status = TeamMemberStatusConstants.Active
@@ -596,7 +606,6 @@ public class TeamMemberService(
             cancellationToken);
 
         var addedItem = repositoryFactory.TeamMemberRepository.Add(teamMember);
-        existingTeam.TeamMembers = existingTeam.TeamMembers.Concat([addedItem]).ToList();
 
         await teamOutboxPublisher.PublishTeamAsync(
             [mapper.MapTo(existingTeam)],

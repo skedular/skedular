@@ -15,6 +15,7 @@ type Props = {
   queryReference: PreloadedQuery<addTeamMemberButton_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
   connectionIds: string[];
+  teamId: string;
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -32,7 +33,7 @@ const RootQuery = graphql`
   }
 `;
 
-const AddTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: Props) => {
+const AddTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, teamId, fullWidth, label, hideIcon, variant, size }: Props) => {
   const rootData = usePreloadedQuery<addTeamMemberButton_rootQuery>(RootQuery, queryReference);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -68,6 +69,7 @@ const AddTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, 
       <AddTeamMemberDialog
         rootDataRelay={rootData}
         connectionIds={connectionIds}
+        teamId={teamId}
         isDialogOpen={isDialogOpen}
         onAddClicked={handleAddClicked}
         onCancelClicked={handleCancelClicked}
@@ -82,6 +84,7 @@ type RelayProps = {
   organizationId: string;
   onReloadRequired?: () => void;
   connectionIds: string[];
+  teamId: string;
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -89,7 +92,17 @@ type RelayProps = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const AddTeamMemberButtonWithRelay = ({ organizationId, onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: RelayProps) => {
+const AddTeamMemberButtonWithRelay = ({
+  organizationId,
+  onReloadRequired,
+  connectionIds,
+  teamId,
+  fullWidth,
+  label,
+  hideIcon,
+  variant,
+  size,
+}: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addTeamMemberButton_rootQuery>(RootQuery);
 
   useEffect(() => {
@@ -121,6 +134,7 @@ const AddTeamMemberButtonWithRelay = ({ organizationId, onReloadRequired, connec
         queryReference={queryReference}
         onReloadRequired={onReloadRequired}
         connectionIds={connectionIds}
+        teamId={teamId}
         fullWidth={fullWidth}
         label={label}
         hideIcon={hideIcon}
