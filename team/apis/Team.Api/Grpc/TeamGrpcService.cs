@@ -150,7 +150,7 @@ public class TeamGrpcService(
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(
-            await teamMemberService.UpdateAsync(
+            await teamMemberService.UpdateMembersAsync(
                 request.Id,
                 mapper.MapTo(request),
                 true,

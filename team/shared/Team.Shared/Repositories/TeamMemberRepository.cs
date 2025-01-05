@@ -30,6 +30,16 @@ public interface ITeamMemberRepository : IRepository<TeamMember>
     Task<ICollection<TeamMember>> GetByTeamIdAsync(
         string teamId,
         CancellationToken cancellationToken);
+
+    Task<TeamMember?> GetByTeamIdAndCustomerIdAsync(
+        string teamId,
+        string customerId,
+        CancellationToken cancellationToken);
+
+    Task<TeamMember?> GetByTeamIdAndOrganizationMemberIdAsync(
+        string teamId,
+        string organizationMemberId,
+        CancellationToken cancellationToken);
 }
 
 internal static class TeamMemberExtensions
@@ -208,4 +218,26 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
             .Where(query => query.Team.Id == teamId)
             .Include(query => query.Customer)
             .ToListAsync(cancellationToken);
+
+    public async Task<TeamMember?> GetByTeamIdAndCustomerIdAsync(
+        string teamId,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        await DbContext.TeamMember
+            .Include(query => query.Customer)
+            .FirstOrDefaultAsync(
+                query => query.Team.Id == teamId && query.Customer.Id == customerId,
+                cancellationToken);
+
+    public async Task<TeamMember?> GetByTeamIdAndOrganizationMemberIdAsync(
+        string teamId,
+        string organizationMemberId,
+        CancellationToken cancellationToken) =>
+        await DbContext.TeamMember
+            .Include(query => query.Customer)
+            .FirstOrDefaultAsync(
+                query => query.Team.Id == teamId &&
+                         query.OrganizationMember != null &&
+                         query.OrganizationMember.Id == organizationMemberId,
+                cancellationToken);
 }

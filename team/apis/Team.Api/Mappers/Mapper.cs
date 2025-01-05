@@ -42,6 +42,7 @@ public interface IMapper
     Shared.Models.Team MapTo(AddTeamInput src);
     Shared.Models.Team MapTo(UpdateTeamInput src);
     Shared.Models.Team MapTo(UpdateTeamAndTeamMembersInput src);
+    TeamMember MapTo(AddTeamMemberInput src);
     ICollection<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src);
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
     global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team MapToGrpcResponse(Shared.Models.Team src);
@@ -265,6 +266,23 @@ public class Mapper : IMapper
                 .ToList()
         };
 
+    public TeamMember MapTo(AddTeamMemberInput src)
+    {
+        var teamMember = new TeamMember
+        {
+            OrganizationMember = string.IsNullOrWhiteSpace(src.OrganizationMemberId)
+                ? null
+                : new OrganizationMember { Id = src.OrganizationMemberId }
+        };
+
+        if (!string.IsNullOrWhiteSpace(src.CustomerId))
+        {
+            teamMember.Customer = new Customer { Id = src.CustomerId };
+        }
+
+        return teamMember;
+    }
+
     public ICollection<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src) =>
         src.CustomerIds
             .Select(item => new TeamMember { Customer = new Customer { Id = item } })
@@ -314,7 +332,8 @@ public class Mapper : IMapper
                     ? null
                     : new global::Api.Shared.Services.Grpc.Skedular.Team.V1.Location
                     {
-                        Id = src.PrimaryLocation.Id, Name = src.PrimaryLocation.Name.ToSafeString()
+                        Id = src.PrimaryLocation.Id,
+                        Name = src.PrimaryLocation.Name.ToSafeString()
                     },
             Permissions = new Permissions
             {
@@ -403,8 +422,8 @@ public class Mapper : IMapper
         Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
-    private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember> MapToGrpcResponse(IEnumerable<TeamMember> src) =>
-        src.Select(MapToGrpcResponse);
+    private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember>
+     MapToGrpcResponse(IEnumerable<TeamMember> src) => src.Select(MapToGrpcResponse);
 
     private global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember MapToGrpcResponse(TeamMember src) =>
         new()
@@ -464,7 +483,9 @@ public class Mapper : IMapper
         return customer;
     }
 
-    private static TeamMember MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember src, Shared.Models.Team team) =>
+    private static TeamMember MapTo(
+        global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember src,
+        Shared.Models.Team team) =>
         new()
         {
             Id = src.Id,

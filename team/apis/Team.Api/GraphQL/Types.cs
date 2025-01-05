@@ -284,3 +284,12 @@ public class RemoveTeamMembersInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("ids")] public required string[] Ids { get; set; }
 }
+
+[GraphQLName("AddTeamMemberInput")]
+public class AddTeamMemberInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("customerId")] public string? CustomerId { get; set; }
+    [GraphQLName("organizationMemberId")] public string? OrganizationMemberId { get; set; }
+}

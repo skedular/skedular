@@ -371,6 +371,7 @@ type Mutation {
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse @cost(weight: "10")
   addTeam(input: AddTeamInput!): TeamPayload @cost(weight: "10")
+  addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   addZone(input: AddZoneInput!): OrganizationTagPayload @cost(weight: "10")
   bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload @cost(weight: "10")
   cancelInvitationToJoinLocation(input: CancelInvitationToJoinLocationInput!): CancelInvitationToJoinLocationPayload @cost(weight: "10")
@@ -1012,6 +1013,13 @@ input AddTeamInput {
   organizationMemberIds: [String!]!
   primaryLocationId: String
   timezone: String
+}
+
+input AddTeamMemberInput {
+  clientMutationId: String
+  customerId: String
+  id: String!
+  organizationMemberId: String
 }
 
 input AddZoneInput {
