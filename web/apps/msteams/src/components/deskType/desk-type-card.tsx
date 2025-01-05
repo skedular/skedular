@@ -5,10 +5,9 @@ import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { DeleteIcon, DeskTypeIcon, EditIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -422,7 +421,7 @@ const DeskTypeCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionId
       )}
 
       <Dialog TransitionComponent={DialogTransition} open={deskTypeRemoveConfirmationDialogOpen} onClose={handleCancelRemovingDeskTypeClick}>
-        <DialogTitle>Remove desk type</DialogTitle>
+        <DefaultDialogTitle title="Remove Desk Type" />
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove the desk type "${organizationTagDetails.name}"?`}</DialogContentText>
           <TwoButtonsDialogActions

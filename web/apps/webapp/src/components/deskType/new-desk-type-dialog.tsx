@@ -1,8 +1,7 @@
 import type { newDeskTypeDialog_addDeskTypeMutation } from '@/queries/__generated__/newDeskTypeDialog_addDeskTypeMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -103,7 +102,7 @@ const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel
 
   return (
     <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
-      <DialogTitle>Add desk type</DialogTitle>
+      <DefaultDialogTitle title="Add Desk Type" />
       <DialogContent>
         <Form
           onSubmit={handleAddClick}

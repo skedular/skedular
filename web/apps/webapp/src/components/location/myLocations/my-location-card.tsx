@@ -8,13 +8,13 @@ import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
+  DefaultDialogTitle,
   LeadIconTypography,
   PushToRight,
   SmallIconTypography,
@@ -267,7 +267,7 @@ const MyLocationCard = ({
       />
 
       <Dialog TransitionComponent={DialogTransition} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
-        <DialogTitle>Remove Location</DialogTitle>
+        <DefaultDialogTitle title="Remove Location" />
         <DialogContent>
           <DialogContentText>
             {locationDetails.hasFutureBooking

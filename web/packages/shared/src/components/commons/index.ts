@@ -1,5 +1,6 @@
 export { default as BodyIconTypography } from './body-icon-typography';
 export { default as CaptionIconTypography } from './caption-icon-typography';
+export { default as DefaultDialogTitle } from './default-dialog-title';
 export { default as ExtraLargeHeadingIconTypography } from './extra-large-heading-icon-typography';
 export { default as FormFieldLabel } from './form-field-label';
 export { default as FormStackColumn } from './form-stack-column';

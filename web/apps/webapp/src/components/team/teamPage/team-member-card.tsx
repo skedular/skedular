@@ -8,9 +8,8 @@ import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { BodyIconTypography, DefaultDialogTitle, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { DeleteIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
@@ -185,7 +184,7 @@ const TeamMemberCard = ({ rootDataRelay, teamMemberDetailsRelay, connectionIds, 
       </Card>
 
       <Dialog TransitionComponent={DialogTransition} open={teamMemberRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamMemberClick}>
-        <DialogTitle>Remove Member</DialogTitle>
+        <DefaultDialogTitle title="Remove Member" />
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove "${getCustomerFullName(customer)}"?`}</DialogContentText>
           <TwoButtonsDialogActions

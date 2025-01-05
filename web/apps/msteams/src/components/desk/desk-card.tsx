@@ -6,13 +6,19 @@ import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  BodyIconTypography,
+  DefaultDialogTitle,
+  FormFieldLabel,
+  FormStackColumn,
+  StackColumn,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import { DeskTypes } from '@repo/shared/components/deskType';
 import { DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, InfoIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
@@ -846,7 +852,7 @@ const DeskCard = ({
       />
 
       <Dialog TransitionComponent={DialogTransition} open={deskRemoveConfirmationDialogOpen} onClose={handleCancelRemovingDeskClick}>
-        <DialogTitle>Remove desk</DialogTitle>
+        <DefaultDialogTitle title="Remove desk" />
         <DialogContent>
           <DialogContentText>{`Are you sure you want to remove desk "${deskDetails.name}"?`}</DialogContentText>
           <TwoButtonsDialogActions
@@ -858,7 +864,7 @@ const DeskCard = ({
         </DialogContent>
       </Dialog>
       <Dialog TransitionComponent={DialogTransition} open={deskDeactivateConfirmationDialogOpen} onClose={handleCancelDeactivateDeskClick}>
-        <DialogTitle>Deactivate desk</DialogTitle>
+        <DefaultDialogTitle title="Deactivate desk" />
         <DialogContent>
           <DialogContentText>{`Are you sure you want to deactivate desk "${deskDetails.name}"?`}</DialogContentText>
           <TwoButtonsDialogActions
@@ -870,7 +876,7 @@ const DeskCard = ({
         </DialogContent>
       </Dialog>
       <Dialog TransitionComponent={DialogTransition} open={deskActivateConfirmationDialogOpen} onClose={handleCancelActivateDeskClick}>
-        <DialogTitle>Activate desk</DialogTitle>
+        <DefaultDialogTitle title="Activate desk" />
         <DialogContent>
           <DialogContentText>{`Are you sure you want to activate desk "${deskDetails.name}"?`}</DialogContentText>
           <TwoButtonsDialogActions
@@ -886,7 +892,7 @@ const DeskCard = ({
         open={setDeskApprovalRequirementConfirmationDialogOpen}
         onClose={handleCancelSetDeskApprovalRequirementClick}
       >
-        <DialogTitle>Set Desk Approval Requirement</DialogTitle>
+        <DefaultDialogTitle title="Set Desk Approval Requirement" />
         <DialogContent>
           <DialogContentText color="info">{`Are you sure you want to enable approval for desk "${deskDetails.name}"?`}</DialogContentText>
           <TwoButtonsDialogActions
@@ -903,7 +909,7 @@ const DeskCard = ({
         open={removeDeskApprovalRequirementConfirmationDialogOpen}
         onClose={handleCancelRemoveDeskApprovalRequirementDeskClick}
       >
-        <DialogTitle>Remove Approval Requirement for Desk</DialogTitle>
+        <DefaultDialogTitle title="Remove Approval Requirement for Desk" />
         <DialogContent>
           <DialogContentText color="info">{`Are you sure you want to remove approval for desk "${deskDetails.name}"?`}</DialogContentText>
           <TwoButtonsDialogActions

@@ -3,8 +3,7 @@ import type { newBookingDialog_addBookingMutation } from '@/queries/__generated_
 import type { newBookingDialog_query$key } from '@/queries/__generated__/newBookingDialog_query.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import { FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -280,7 +279,7 @@ const NewBookingDialog = ({
 
   return (
     <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
-      <DialogTitle>Make a booking</DialogTitle>
+      <DefaultDialogTitle title="Make a booking" />
       <DialogContent>
         <Form
           onSubmit={handleAddClick}

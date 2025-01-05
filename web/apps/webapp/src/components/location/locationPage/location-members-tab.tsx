@@ -11,10 +11,17 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
-import { FormFieldLabel, FormStackColumn, GridContainer, PushToRight, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  DefaultDialogTitle,
+  FormFieldLabel,
+  FormStackColumn,
+  GridContainer,
+  PushToRight,
+  StackRow,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -324,7 +331,7 @@ const LocationMembersTab = ({ queryReference, locationId }: Props) => {
       </GridContainer>
 
       <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
-        <DialogTitle>Invite people to join your location</DialogTitle>
+        <DefaultDialogTitle title="Invite people to join your location" />
         <DialogContent>
           <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>
 

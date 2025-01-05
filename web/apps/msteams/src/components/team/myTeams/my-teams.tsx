@@ -2,7 +2,6 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
@@ -10,7 +9,14 @@ import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  DefaultDialogTitle,
+  GridContainer,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import { EllipseMenuIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -342,7 +348,7 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
 
       {teamDetails && (
         <Dialog TransitionComponent={DialogTransition} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
-          <DialogTitle>Remove Team</DialogTitle>
+          <DefaultDialogTitle title="Remove Team" />
           <DialogContent>
             <DialogContentText>
               {teamDetails.hasFutureBooking

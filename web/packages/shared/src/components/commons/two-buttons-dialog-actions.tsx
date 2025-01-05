@@ -1,10 +1,12 @@
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
+import type { SxProps, Theme } from '@mui/system';
 import { useContext } from 'react';
 import { PaletteModeContext } from '../../libs/providers';
 import BodyIconTypography from './body-icon-typography';
 
 type Props = {
+  sx?: SxProps<Theme>;
   onPrimaryClicked?: () => void;
   onSecondaryClicked?: () => void;
   primaryLabel: string;
@@ -13,11 +15,11 @@ type Props = {
   disabled?: boolean;
 };
 
-const TwoButtonsDialogActions = ({ onPrimaryClicked, onSecondaryClicked, primaryLabel, secondaryLabel, hideSecondary, disabled }: Props) => {
+const TwoButtonsDialogActions = ({ sx, onPrimaryClicked, onSecondaryClicked, primaryLabel, secondaryLabel, hideSecondary, disabled }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
 
   return (
-    <DialogActions>
+    <DialogActions sx={sx}>
       {!hideSecondary && (
         <Button variant="contained" onClick={onSecondaryClicked} color="secondary" disabled={disabled}>
           <BodyIconTypography label={secondaryLabel} invertDefaultColor={paletteMode === 'dark'} />

@@ -3,17 +3,14 @@ import type { addTeamMemberDialog_organizationMembers_query$key } from '@/querie
 import type { addTeamMemberDialog_organizationMembers_refetchableFragment } from '@/queries/__generated__/addTeamMemberDialog_organizationMembers_refetchableFragment.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Divider from '@mui/material/Divider';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
+  DefaultDialogTitle,
   FormFieldLabel,
   FormStackColumn,
   LeadIconTypography,
-  SectionIconTypography,
   SmallIconTypography,
-  StackColumn,
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
 import {
@@ -203,12 +200,7 @@ const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpe
 
   return (
     <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
-      <DialogTitle sx={{ padding: 0 }}>
-        <StackColumn>
-          <SectionIconTypography label="Add Team Member" sx={{ paddingRight: 2, paddingLeft: 2, paddingTop: 2, paddingBottom: 1 }} />
-          <Divider />
-        </StackColumn>
-      </DialogTitle>
+      <DefaultDialogTitle title="Add Team Member" />
       <DialogContent>
         <Form
           onSubmit={handleAddClick}

@@ -11,13 +11,12 @@ import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/system/Box';
-import { PushToRight, StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { DefaultDialogTitle, PushToRight, StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { BookingIcon, EllipseMenuIcon, SettingsIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -392,7 +391,7 @@ const TeamMembersBookings = ({ rootDataRelay, organizationId, teamId, teamName, 
       />
 
       <Dialog TransitionComponent={DialogTransition} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
-        <DialogTitle>Remove Team</DialogTitle>
+        <DefaultDialogTitle title="Remove Team" />
         <DialogContent>
           <DialogContentText>
             {rootData.team.hasFutureBooking
