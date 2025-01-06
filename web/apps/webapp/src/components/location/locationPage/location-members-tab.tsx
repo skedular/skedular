@@ -10,7 +10,6 @@ import type { locationMembersTab_rootQuery } from '@/queries/__generated__/locat
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
 import {
@@ -18,7 +17,9 @@ import {
   FormFieldLabel,
   FormStackColumn,
   GridContainer,
+  LeadIconTypography,
   PushToRight,
+  SmallIconTypography,
   StackRow,
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
@@ -330,11 +331,9 @@ const LocationMembersTab = ({ queryReference, locationId }: Props) => {
         ))}
       </GridContainer>
 
-      <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick}>
-        <DefaultDialogTitle title="Invite people to join your location" />
+      <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} fullWidth>
+        <DefaultDialogTitle title="Invite Members" />
         <DialogContent>
-          <DialogContentText>You can enter the list of emails separated by comma</DialogContentText>
-
           <Form
             onSubmit={handleInvitePeopleClick}
             initialValues={{
@@ -343,6 +342,9 @@ const LocationMembersTab = ({ queryReference, locationId }: Props) => {
             validate={validateMembersToInvite}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
+                <LeadIconTypography label="Invite members to join this location" />
+                <SmallIconTypography label="Enter email addresses of people to invite them to this location." />
+
                 <FormFieldLabel label="Emails" useWiderSpace>
                   <TextField name="emails" required={requiredMembersToInviteFields.emails} helperText="member1@example.com,member2@example.com" />
                 </FormFieldLabel>

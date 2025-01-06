@@ -33,7 +33,17 @@ const RootQuery = graphql`
   }
 `;
 
-const AddOrganizationTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, teamId, fullWidth, label, hideIcon, variant, size }: Props) => {
+const AddOrganizationTeamMemberButton = ({
+  queryReference,
+  onReloadRequired,
+  connectionIds,
+  teamId,
+  fullWidth,
+  label,
+  hideIcon,
+  variant,
+  size,
+}: Props) => {
   const rootData = usePreloadedQuery<addOrganizationTeamMemberButton_rootQuery>(RootQuery, queryReference);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
