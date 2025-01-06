@@ -120,10 +120,10 @@ const MyLocationCard = ({
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
 
-  let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam]];
+  let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation]];
 
   if (locationDetails.canDelete) {
-    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam]);
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation]);
   }
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -134,10 +134,10 @@ const MyLocationCard = ({
     setMoreActionsAnchorEl(null);
 
     switch (id) {
-      case MoreActionsMenuOptionType.EditTeam:
+      case MoreActionsMenuOptionType.EditLocation:
         break;
 
-      case MoreActionsMenuOptionType.DeleteTeam:
+      case MoreActionsMenuOptionType.DeleteLocation:
         handleRemoveTeamClicked();
         break;
     }
