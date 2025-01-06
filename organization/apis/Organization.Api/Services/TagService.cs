@@ -24,6 +24,7 @@ public interface ITagService
 
     Task<Tag> UpdateAsync(Tag tag, CancellationToken cancellationToken);
     Task<Tag> DeleteAsync(string tagId, CancellationToken cancellationToken);
+    Task<ICollection<Tag>> DeleteAsync(ICollection<string> tagIds, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
@@ -47,8 +48,7 @@ public class TagService(
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var tag =
-            await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken);
+        var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken);
         if (tag is null)
         {
             throw new OrganizationTagNotFound();
@@ -161,8 +161,7 @@ public class TagService(
         ArgumentException.ThrowIfNullOrWhiteSpace(tag.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingTag =
-            await repositoryFactory.TagRepository.GetByIdAsync(tag.Id, cancellationToken);
+        var existingTag = await repositoryFactory.TagRepository.GetByIdAsync(tag.Id, cancellationToken);
         if (existingTag is null)
         {
             throw new OrganizationTagNotFound();
@@ -176,8 +175,7 @@ public class TagService(
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var tag =
-            await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken);
+        var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken);
         if (tag is null)
         {
             throw new OrganizationTagNotFound();
@@ -211,6 +209,47 @@ public class TagService(
         await repositoryFactory.TagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedTag;
+    }
+
+    public async Task<ICollection<Tag>> DeleteAsync(ICollection<string> tagIds, CancellationToken cancellationToken)
+    {
+        if (tagIds.Count == 0)
+        {
+            return [];
+        }
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var tags = await repositoryFactory.TagRepository.GetByIdsAsync(tagIds, cancellationToken);
+        var organizationIds = tags.Select(t => t.Organization.Id).ToList();
+        var existingOrganizations =
+            await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+
+        if (existingOrganizations.Any(existingOrganization =>
+                !organizationAuthorizationService.CanModify(existingOrganization, customer)))
+        {
+            throw new Unauthorized();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.TagRepository.UnitOfWork,
+            cancellationToken);
+
+        repositoryFactory.TagRepository.RemoveRange(tags);
+        var deletedTags = tags.Select(mapper.MapTo).ToList();
+
+        var mappedOrganizations = existingOrganizations.Select(mapper.MapTo).ToList();
+        foreach (var mappedOrganization in mappedOrganizations)
+        {
+            mappedOrganization.Tags = mappedOrganization.Tags.Where(item => !tagIds.Contains(item.Id)).ToList();
+        }
+
+        await organizationOutboxPublisher.PublishOrganizationAsync(
+            mappedOrganizations,
+            repositoryFactory.TagRepository.UnitOfWork,
+            cancellationToken);
+        await repositoryFactory.TagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        return deletedTags;
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)>

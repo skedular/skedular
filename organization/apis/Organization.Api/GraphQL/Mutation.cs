@@ -211,6 +211,19 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
+    public async Task<OrganizationTagsPayload?> DeleteDeskTypesAsync(
+        DeleteDeskTypesInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken)
+    {
+        var tags = await tagService.DeleteAsync(input.Ids, cancellationToken);
+        return new OrganizationTagsPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray()
+        };
+    }
+
+    [UseResolverScope]
     public async Task<OrganizationTagPayload?> AddZoneAsync(
         AddZoneInput input,
         [Service] ITagService tagService,
@@ -246,6 +259,19 @@ public class Mutation(IMapper mapper)
         return new OrganizationTagPayload
         {
             ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)
+        };
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationTagsPayload?> DeleteZonesAsync(
+        DeleteZonesInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken)
+    {
+        var tags = await tagService.DeleteAsync(input.Ids, cancellationToken);
+        return new OrganizationTagsPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray()
         };
     }
 }

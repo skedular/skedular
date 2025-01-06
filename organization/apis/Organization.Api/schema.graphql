@@ -36,9 +36,11 @@ type Mutation {
   addDeskType(input: AddDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
   updateDeskType(input: UpdateDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
   deleteDeskType(input: DeleteDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteDeskTypes(input: DeleteDeskTypesInput!): OrganizationTagsPayload @cost(weight: "10")
   addZone(input: AddZoneInput!): OrganizationTagPayload @cost(weight: "10")
   updateZone(input: UpdateZoneInput!): OrganizationTagPayload @cost(weight: "10")
   deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload @cost(weight: "10")
 }
 
 type OrganizationAnalytics {
@@ -204,6 +206,11 @@ type OrganizationTagPayload {
   organizationTag: OrganizationTagDetails!
 }
 
+type OrganizationTagsPayload {
+  clientMutationId: String
+  organizationTags: [OrganizationTagDetails!]!
+}
+
 type OrganizationTermsOfUse {
   terms: String!
   id: ID!
@@ -313,6 +320,11 @@ input DeleteDeskTypeInput {
   id: String!
 }
 
+input DeleteDeskTypesInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeleteOrganizationInput {
   clientMutationId: String
   id: String!
@@ -321,6 +333,11 @@ input DeleteOrganizationInput {
 input DeleteZoneInput {
   clientMutationId: String
   id: String!
+}
+
+input DeleteZonesInput {
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeskTypeOrganizationTagWhereInput {

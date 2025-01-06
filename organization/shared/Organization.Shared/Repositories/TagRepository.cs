@@ -12,6 +12,7 @@ namespace Organization.Shared.Repositories;
 public interface ITagRepository : IRepository<Tag>
 {
     Task<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Tag>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Tag Add(Tag tag);
     Tag Update(Tag tag);
     void RemoveRange(ICollection<Tag> tags);
@@ -86,6 +87,12 @@ internal static class TagExtensions
 public class TagRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<OrganizationDbContext, Tag>(dbContext, timeProvider), ITagRepository
 {
+    public async Task<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.Tag.AddDependentObjects().FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<Tag>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+        await DbContext.Tag.Where(query => ids.Contains(query.Id)).AddDependentObjects().ToListAsync(cancellationToken);
+
     public Tag Add(Tag tag)
     {
         var now = TimeProvider.GetUtcNow();
@@ -103,9 +110,6 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
         tag.ModifiedAt = now;
         return DbContext.Tag.Update(tag).Entity;
     }
-
-    public async Task<Tag?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Tag.AddDependentObjects().FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,

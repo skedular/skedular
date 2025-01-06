@@ -395,10 +395,12 @@ type Mutation {
   deleteBooking(input: DeleteBookingInput!): BookingPayload @cost(weight: "10")
   deleteDesk(input: DeleteDeskInput!): DeskPayload @cost(weight: "10")
   deleteDeskType(input: DeleteDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteDeskTypes(input: DeleteDeskTypesInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
   deleteTeam(input: DeleteTeamInput!): TeamPayload @cost(weight: "10")
   deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload @cost(weight: "10")
   inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
   inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InviteCustomersToJoinOrganizationPayload @cost(weight: "10")
   inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload @cost(weight: "10")
@@ -693,6 +695,11 @@ type OrganizationTagEdge {
 type OrganizationTagPayload {
   clientMutationId: String
   organizationTag: OrganizationTagDetails!
+}
+
+type OrganizationTagsPayload {
+  clientMutationId: String
+  organizationTags: [OrganizationTagDetails!]!
 }
 
 type OrganizationTermsOfUse {
@@ -1189,6 +1196,11 @@ input DeleteDeskTypeInput {
   id: String!
 }
 
+input DeleteDeskTypesInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeleteLocationInput {
   clientMutationId: String
   id: String!
@@ -1207,6 +1219,11 @@ input DeleteTeamInput {
 input DeleteZoneInput {
   clientMutationId: String
   id: String!
+}
+
+input DeleteZonesInput {
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeskOrderInput {

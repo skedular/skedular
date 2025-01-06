@@ -393,6 +393,13 @@ public class DeleteDeskTypeInput
     [GraphQLName("id")] public required string Id { get; set; }
 }
 
+[GraphQLName("DeleteDeskTypesInput")]
+public class DeleteDeskTypesInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; } = [];
+}
+
 [GraphQLName("AddZoneInput")]
 public class AddZoneInput
 {
@@ -417,6 +424,13 @@ public class DeleteZoneInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("DeleteZonesInput")]
+public class DeleteZonesInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; } = [];
 }
 
 [GraphQLName("OrganizationTagConnection")]
@@ -460,4 +474,11 @@ public class ZoneOrganizationTagWhereInput
 {
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
+}
+
+[GraphQLName("OrganizationTagsPayload")]
+public class OrganizationTagsPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("organizationTags")] public OrganizationTagDetails[] OrganizationTags { get; set; } = [];
 }
