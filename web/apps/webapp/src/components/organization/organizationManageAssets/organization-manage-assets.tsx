@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import { BodyIconTypography, FormStackColumnWithSaveCancelExitAppBar, SectionIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { BodyIconTypography, SectionIconTypography, StackColumn, StackColumnWithSaveExitCancelAppBar } from '@repo/shared/components/commons';
 import { defaultPadding } from '@repo/shared/libs/theme';
 import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useRef } from 'react';
@@ -39,7 +39,7 @@ const OrganizationManageAssets = ({ organizationId }: Props) => {
       <Box sx={{ display: 'flex' }}>
         <OrganizationManageAssetsLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-          <FormStackColumnWithSaveCancelExitAppBar label="Manage Assets" hideCancel hideSaveAndExit>
+          <StackColumnWithSaveExitCancelAppBar label="Manage Assets" hideCancel hideSaveAndExit>
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
               ref={(divElement) => {
@@ -61,7 +61,7 @@ const OrganizationManageAssets = ({ organizationId }: Props) => {
               <BodyIconTypography label="Edit your organization desk types details" />
               <Divider />
             </StackColumn>
-          </FormStackColumnWithSaveCancelExitAppBar>
+          </StackColumnWithSaveExitCancelAppBar>
         </Box>
       </Box>
     </>

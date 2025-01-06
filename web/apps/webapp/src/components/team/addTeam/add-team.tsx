@@ -3,7 +3,7 @@ import { OrganizationMemberSelector } from '@/components/organization';
 import type { addTeam_addTeamMutation } from '@/queries/__generated__/addTeam_addTeamMutation.graphql';
 import type { addTeam_completeTeamOnboardingMutation } from '@/queries/__generated__/addTeam_completeTeamOnboardingMutation.graphql';
 import type { addTeam_rootQuery } from '@/queries/__generated__/addTeam_rootQuery.graphql';
-import { FormFieldLabel, FormStackColumnWithSaveCancelExitAppBar } from '@repo/shared/components/commons';
+import { FormFieldLabel, StackColumnWithSaveExitCancelAppBar } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -212,7 +212,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
       }}
       validate={validate}
       render={({ handleSubmit }) => (
-        <FormStackColumnWithSaveCancelExitAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Team" useChildrenPadding>
+        <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Team" useChildrenPadding>
           <FormFieldLabel label="Name">
             <TextField name="name" required={requiredFields.name} />
           </FormFieldLabel>
@@ -243,7 +243,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
               />
             </FormFieldLabel>
           )}
-        </FormStackColumnWithSaveCancelExitAppBar>
+        </StackColumnWithSaveExitCancelAppBar>
       )}
     />
   );

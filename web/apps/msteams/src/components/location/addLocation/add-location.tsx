@@ -1,4 +1,4 @@
-import { FormFieldLabel, FormStackColumnWithSaveCancelExitAppBar } from '@repo/shared/components/commons';
+import { FormFieldLabel, StackColumnWithSaveExitCancelAppBar } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import {
   errorNotificationOptions,
@@ -180,7 +180,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, canc
       }}
       validate={validate}
       render={({ handleSubmit }) => (
-        <FormStackColumnWithSaveCancelExitAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location" useChildrenPadding>
+        <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location" useChildrenPadding>
           <FormFieldLabel label="Name">
             <TextField name="name" required={requiredFields.name} />
           </FormFieldLabel>
@@ -196,7 +196,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, canc
           <FormFieldLabel label="Physical Address">
             <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
           </FormFieldLabel>
-        </FormStackColumnWithSaveCancelExitAppBar>
+        </StackColumnWithSaveExitCancelAppBar>
       )}
     />
   );

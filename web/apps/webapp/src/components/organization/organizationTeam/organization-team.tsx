@@ -19,11 +19,11 @@ import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
   FormFieldLabel,
-  FormStackColumnWithSaveCancelExitAppBar,
   PushToRight,
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
+  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
@@ -809,7 +809,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             }}
             validate={validate}
             render={({ handleSubmit }) => (
-              <FormStackColumnWithSaveCancelExitAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Edit Team Information">
+              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Edit Team Information">
                 <StackColumn
                   sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
                   ref={(divElement) => {
@@ -949,7 +949,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                     sx={defaultGridStyle}
                   />
                 </StackRow>
-              </FormStackColumnWithSaveCancelExitAppBar>
+              </StackColumnWithSaveExitCancelAppBar>
             )}
           />
         </Box>

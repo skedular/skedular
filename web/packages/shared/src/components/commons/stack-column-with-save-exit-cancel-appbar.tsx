@@ -30,7 +30,7 @@ type Props = {
   useChildrenPadding?: boolean;
 };
 
-const FormStackColumnWithSaveCancelExitAppBar = ({
+const StackColumnWithSaveExitCancelAppBar = ({
   children,
   sx,
   spacing,
@@ -97,4 +97,4 @@ const FormStackColumnWithSaveCancelExitAppBar = ({
   );
 };
 
-export default FormStackColumnWithSaveCancelExitAppBar;
+export default StackColumnWithSaveExitCancelAppBar;

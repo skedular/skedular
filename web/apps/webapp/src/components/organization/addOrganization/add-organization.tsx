@@ -2,7 +2,7 @@ import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from '@
 import type { addOrganization_addOrganizationMutation } from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
 import type { addOrganization_completeOrganizationOnboardingMutation } from '@/queries/__generated__/addOrganization_completeOrganizationOnboardingMutation.graphql';
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
-import { FormFieldLabel, FormStackColumnWithSaveCancelExitAppBar } from '@repo/shared/components/commons';
+import { FormFieldLabel, StackColumnWithSaveExitCancelAppBar } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -171,7 +171,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
       }}
       validate={validate}
       render={({ handleSubmit }) => (
-        <FormStackColumnWithSaveCancelExitAppBar
+        <StackColumnWithSaveExitCancelAppBar
           onSubmit={handleSubmit}
           onCancel={onCancel}
           label="Add Organization"
@@ -198,7 +198,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
             />
           </FormFieldLabel>
           <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
-        </FormStackColumnWithSaveCancelExitAppBar>
+        </StackColumnWithSaveExitCancelAppBar>
       )}
     />
   );
