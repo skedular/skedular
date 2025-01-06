@@ -642,7 +642,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
-      minWidth: 250,
+      minWidth: 200,
     },
     {
       field: 'memberRole',
