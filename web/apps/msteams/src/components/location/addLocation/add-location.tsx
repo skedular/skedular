@@ -180,7 +180,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, canc
       }}
       validate={validate}
       render={({ handleSubmit }) => (
-        <FormStackColumnWithSaveCancelExitAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location">
+        <FormStackColumnWithSaveCancelExitAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location" useChildrenPadding>
           <FormFieldLabel label="Name">
             <TextField name="name" required={requiredFields.name} />
           </FormFieldLabel>

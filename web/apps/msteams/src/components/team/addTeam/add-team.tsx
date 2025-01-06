@@ -211,7 +211,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
       }}
       validate={validate}
       render={({ handleSubmit }) => (
-        <FormStackColumnWithSaveCancelExitAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Team">
+        <FormStackColumnWithSaveCancelExitAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Team" useChildrenPadding>
           <FormFieldLabel label="Name">
             <TextField name="name" required={requiredFields.name} />
           </FormFieldLabel>

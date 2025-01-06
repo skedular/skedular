@@ -23,13 +23,26 @@ type Props = {
   sx?: SxProps<Theme>;
   spacing?: ResponsiveStyleValue<number | string>;
   label: string;
-  onSubmit: (event?: Partial<Pick<React.SyntheticEvent, 'preventDefault' | 'stopPropagation'>>) => Promise<AnyObject | undefined> | undefined;
+  onSubmit?: (event?: Partial<Pick<React.SyntheticEvent, 'preventDefault' | 'stopPropagation'>>) => Promise<AnyObject | undefined> | undefined;
   onCancel?: () => void;
   hideCancel?: boolean;
+  hideSaveAndExit?: boolean;
+  useChildrenPadding?: boolean;
 };
 
-const FormStackColumnWithSaveCancelExitAppBar = ({ children, sx, spacing, label, onSubmit, onCancel, hideCancel }: PropsWithChildren<Props>) => {
+const FormStackColumnWithSaveCancelExitAppBar = ({
+  children,
+  sx,
+  spacing,
+  label,
+  onSubmit,
+  onCancel,
+  hideCancel,
+  hideSaveAndExit,
+  useChildrenPadding,
+}: PropsWithChildren<Props>) => {
   const paletteMode = useContext(PaletteModeContext);
+  const childrenSx = useChildrenPadding ? { maxWidth: maxScreenWidth, padding: defaultPadding } : { maxWidth: maxScreenWidth };
 
   return (
     <Stack
@@ -69,15 +82,17 @@ const FormStackColumnWithSaveCancelExitAppBar = ({ children, sx, spacing, label,
                 <SmallIconTypography label="Cancel" invertDefaultColor />
               </Button>
 
-              <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                <SmallIconTypography label="Save & Exit" />
-              </Button>
+              {!hideSaveAndExit && (
+                <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                  <SmallIconTypography label="Save & Exit" />
+                </Button>
+              )}
             </StackRow>
           )}
         </Toolbar>
       </AppBar>
 
-      <StackColumn sx={{ maxWidth: maxScreenWidth, padding: defaultPadding }}>{children}</StackColumn>
+      <StackColumn sx={childrenSx}>{children}</StackColumn>
     </Stack>
   );
 };

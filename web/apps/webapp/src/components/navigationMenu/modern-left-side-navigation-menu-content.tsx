@@ -1,7 +1,7 @@
 import {
   getModernOrganizationAdminBaseLink,
   getModernOrganizationLocationsBaseLink,
-  getModernOrganizationManageAssetsBaseLink,
+  getModernOrganizationManageAssetsZonesBaseLink,
   getModernOrganizationMembersBaseLink,
   getModernOrganizationTeamsBaseLink,
   getOrganizationBaseLink,
@@ -103,7 +103,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
   const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
   const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
   const organizationMembersBaseLink = getModernOrganizationMembersBaseLink(rootData.organization.id);
-  const organizationManageAssetsBaseLink = getModernOrganizationManageAssetsBaseLink(rootData.organization.id);
+  const organizationManageAssetsBaseLink = getModernOrganizationManageAssetsZonesBaseLink(rootData.organization.id);
   const organizationAdminBaseLink = getModernOrganizationAdminBaseLink(rootData.organization.id);
 
   return (
