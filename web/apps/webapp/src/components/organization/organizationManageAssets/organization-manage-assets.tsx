@@ -10,6 +10,7 @@ import type { organizationManageAssets_zones_refetchableFragment } from '@/queri
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import {
@@ -21,8 +22,14 @@ import {
   StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
-import { DeleteIcon } from '@repo/shared/components/icons';
+import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -60,11 +67,13 @@ const RootQuery = graphql`
 type ZoneRowType = {
   id: string;
   name: string;
+  moreActions: string;
 };
 
 type DeskTypeRowType = {
   id: string;
   name: string;
+  moreActions: string;
 };
 
 const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => {
@@ -151,6 +160,22 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
   const [deskTypeNameSearchText, setDeskTypeNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>([]);
   const [seledctedDeskTypes, setSeledctedDeskTypes] = useState<GridRowSelectionModel>([]);
+  const [selectedZoneId, setSelectedZoneId] = useState<null | string>(null);
+  const [selectedDeskTypeId, setSelectedDeskTypeId] = useState<null | string>(null);
+  const [zoneMoreActionsAnchorEl, setZoneMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const zoneMoreActionsMenuOpen = Boolean(zoneMoreActionsAnchorEl);
+  const [deskTypeMoreActionsAnchorEl, setDeskTypeMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const deskTypeMoreActionsMenuOpen = Boolean(deskTypeMoreActionsAnchorEl);
+
+  const zoneMoreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditZone],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteZone],
+  ];
+
+  const deskTypeMoreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditDeskType],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteDeskType],
+  ];
 
   const zonesConnectionIds = useMemo(() => (rootDataZones.zones ? [rootDataZones.zones.__id] : []), [rootDataZones.zones]);
   const zones = useMemo(() => {
@@ -243,6 +268,32 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
     setSeledctedDeskTypes(newRowSelectionModel);
   };
 
+  const handleZoneMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setZoneMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditZone:
+        break;
+
+      case MoreActionsMenuOptionType.DeleteZone:
+        handleRemoveZoneClick();
+        break;
+    }
+  };
+
+  const handleDeskTypeMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setZoneMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditDeskType:
+        break;
+
+      case MoreActionsMenuOptionType.DeleteDeskType:
+        handleRemoveDeskTypeClick();
+        break;
+    }
+  };
+
   const handleRemoveZonesClick = () => {
     const toastId = themedToast(<NotificationContent content="Removing zones ..." />, infoNotificationOptions);
 
@@ -273,6 +324,45 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
         toast.update(toastId, {
           ...errorNotificationOptions,
           render: <NotificationContent content={`Failed to remove zones. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveZoneClick = () => {
+    if (!selectedZoneId) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content="Removing zone ..." />, infoNotificationOptions);
+
+    commitDeleteZones({
+      variables: {
+        connectionIds: zonesConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: [selectedZoneId],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove zone. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zone removed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove zone. Error: ${error.message}.`} />,
         });
       },
     });
@@ -312,9 +402,52 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
       },
     });
   };
+
+  const handleRemoveDeskTypeClick = () => {
+    if (!selectedDeskTypeId) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content="Removing desk type ..." />, infoNotificationOptions);
+
+    commitDeleteZones({
+      variables: {
+        connectionIds: deskTypesConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: [selectedDeskTypeId],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove desk type. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk type removed.`} />,
+        });
+
+        setSelectedDeskTypeId(null);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove desk type. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   const zoneRows: ZoneRowType[] = zones.map((zone) => ({
     id: zone.id,
     name: zone.name,
+    moreActions: zone.id,
   }));
 
   const zoneColumns: GridColDef<(typeof zoneRows)[number]>[] = [
@@ -326,11 +459,29 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
       display: 'flex',
       minWidth: 200,
     },
+    {
+      field: 'moreActions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <IconButton
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            setSelectedZoneId(params.value);
+            setZoneMoreActionsAnchorEl(event.currentTarget);
+          }}
+        >
+          <EllipseMenuIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   const deskTypeRows: DeskTypeRowType[] = deskTypes.map((deskType) => ({
     id: deskType.id,
     name: deskType.name,
+    moreActions: deskType.id,
   }));
 
   const deskTypeColumns: GridColDef<(typeof deskTypeRows)[number]>[] = [
@@ -341,6 +492,23 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
       minWidth: 200,
+    },
+    {
+      field: 'moreActions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <IconButton
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            setSelectedDeskTypeId(params.value);
+            setDeskTypeMoreActionsAnchorEl(event.currentTarget);
+          }}
+        >
+          <EllipseMenuIcon />
+        </IconButton>
+      ),
     },
   ];
 
@@ -507,6 +675,20 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
           </StackColumnWithSaveExitCancelAppBar>
         </Box>
       </Box>
+
+      <MoreActionsMenu
+        anchorEl={zoneMoreActionsAnchorEl}
+        open={zoneMoreActionsMenuOpen}
+        onMenuItemClick={handleZoneMoreActionsMenuItemClick}
+        options={zoneMoreActionsOption}
+      />
+
+      <MoreActionsMenu
+        anchorEl={deskTypeMoreActionsAnchorEl}
+        open={deskTypeMoreActionsMenuOpen}
+        onMenuItemClick={handleDeskTypeMoreActionsMenuItemClick}
+        options={deskTypeMoreActionsOption}
+      />
     </>
   );
 };

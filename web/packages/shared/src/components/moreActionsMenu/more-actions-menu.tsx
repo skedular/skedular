@@ -35,6 +35,10 @@ export enum MoreActionsMenuOptionType {
   RemoveTeamMember,
   DeactivateTeamMember,
   ActivateTeamMember,
+  EditZone,
+  DeleteZone,
+  EditDeskType,
+  DeleteDeskType,
 }
 
 export type MoreActionsMenuItemType = {
@@ -155,6 +159,26 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.ActivateTeamMember]: {
     id: MoreActionsMenuOptionType.ActivateTeamMember,
     label: 'Activate member',
+  },
+  [MoreActionsMenuOptionType.EditZone]: {
+    id: MoreActionsMenuOptionType.EditZone,
+    label: 'Edit Zone',
+    icon: <EditIcon color="primary" />,
+  },
+  [MoreActionsMenuOptionType.DeleteZone]: {
+    id: MoreActionsMenuOptionType.DeleteZone,
+    label: 'Remove Zone',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.EditDeskType]: {
+    id: MoreActionsMenuOptionType.EditDeskType,
+    label: 'Edit Desk Type',
+    icon: <EditIcon color="primary" />,
+  },
+  [MoreActionsMenuOptionType.DeleteDeskType]: {
+    id: MoreActionsMenuOptionType.DeleteDeskType,
+    label: 'Remove Desk Type',
+    icon: <DeleteIcon color="warning" />,
   },
 };
 
