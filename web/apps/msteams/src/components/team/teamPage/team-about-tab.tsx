@@ -189,7 +189,7 @@ const TeamAboutTab = ({ queryReference, organizationId }: Props) => {
           </FormFieldLabel>
 
           <FormFieldLabel label="About">
-            <TextField name="about" required={requiredFields.about} multiline={true} />
+            <TextField name="about" required={requiredFields.about} multiline rows={3} />
           </FormFieldLabel>
 
           <FormFieldLabel label="Timezone">

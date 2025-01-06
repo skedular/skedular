@@ -177,7 +177,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           </FormFieldLabel>
 
           <FormFieldLabel label="About">
-            <TextField name="about" required={requiredFields.about} multiline={true} />
+            <TextField name="about" required={requiredFields.about} multiline rows={3} />
           </FormFieldLabel>
 
           <FormFieldLabel label="Industry">

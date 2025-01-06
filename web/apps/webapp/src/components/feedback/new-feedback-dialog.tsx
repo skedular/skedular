@@ -120,7 +120,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
                 <span style={{ fontWeight: 'bold' }}>{' ' + getCustomerShortName(rootData.me)}</span>, what feedback would you like to share with us?
               </Typography>
 
-              <TextField label="Feedback" name="feedback" required={requiredFields.feedback} multiline={true} rows={10} />
+              <TextField label="Feedback" name="feedback" required={requiredFields.feedback} multiline rows={10} />
               <BodyIconTypography label="A note from the team:" sx={{ fontStyle: 'italic' }} />
               <BodyIconTypography label="We value your feedback, whether it's big or small. Sometimes, it's the smallest details that distinguish a great product from a mediocre one. If you notice something missing or something that bothers you, please let us know, and we'll address it promptly!" />
               <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Send" secondaryLabel="Cancel" />

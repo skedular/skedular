@@ -186,7 +186,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, canc
           </FormFieldLabel>
 
           <FormFieldLabel label="About">
-            <TextField name="about" required={requiredFields.about} multiline={true} />
+            <TextField name="about" required={requiredFields.about} multiline rows={3} />
           </FormFieldLabel>
 
           <FormFieldLabel label="Timezone">
@@ -194,7 +194,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, canc
           </FormFieldLabel>
 
           <FormFieldLabel label="Physical Address">
-            <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline={true} />
+            <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
           </FormFieldLabel>
         </FormStackColumnWithSaveCancelExitAppBar>
       )}

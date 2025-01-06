@@ -344,12 +344,7 @@ const LocationMembersTab = ({ queryReference, locationId }: Props) => {
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
                 <FormFieldLabel label="Emails" useWiderSpace>
-                  <TextField
-                    name="emails"
-                    required={requiredMembersToInviteFields.emails}
-                    multiline={true}
-                    helperText="member1@example.com,member2@example.com"
-                  />
+                  <TextField name="emails" required={requiredMembersToInviteFields.emails} helperText="member1@example.com,member2@example.com" />
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelInvitingPeopleClick} primaryLabel="Invite" secondaryLabel="Cancel" />

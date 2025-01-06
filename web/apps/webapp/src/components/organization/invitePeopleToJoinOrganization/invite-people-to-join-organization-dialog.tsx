@@ -121,7 +121,7 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
               <FormFieldLabel label="Emails" useWiderSpace>
-                <TextField name="emails" required={requiredFields.emails} multiline={true} helperText="member1@example.com,member2@example.com" />
+                <TextField name="emails" required={requiredFields.emails} helperText="member1@example.com,member2@example.com" />
               </FormFieldLabel>
 
               <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Invite" secondaryLabel="Cancel" />

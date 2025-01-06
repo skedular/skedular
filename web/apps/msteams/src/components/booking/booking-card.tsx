@@ -755,7 +755,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                       name="notes"
                       required={requiredFields.notes}
                       helperText="e.g. I will be half an hour late this morning"
-                      multiline={true}
+                      multiline
+                      rows={2}
                     />
                   </FormFieldLabel>
 
