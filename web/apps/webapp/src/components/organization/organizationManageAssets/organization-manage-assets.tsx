@@ -1,3 +1,5 @@
+import { AddOrganizationDeskTypeButton } from '@/components/organization/addOrganizationDeskType';
+import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
 import type { organizationManageAssets_deleteDeskTypesMutation } from '@/queries/__generated__/organizationManageAssets_deleteDeskTypesMutation.graphql';
 import type { organizationManageAssets_deleteZonesMutation } from '@/queries/__generated__/organizationManageAssets_deleteZonesMutation.graphql';
 import type { organizationManageAssets_deskTypes_query$key } from '@/queries/__generated__/organizationManageAssets_deskTypes_query.graphql';
@@ -393,6 +395,11 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
             </StackRow>
 
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <PushToRight />
+              <AddOrganizationZoneButton organizationId={organizationId} connectionIds={zonesConnectionIds} />
+            </StackRow>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
               <DataGrid
                 checkboxSelection
                 rowSelectionModel={seledctedZones}
@@ -465,6 +472,11 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
                   </Button>
                 </StackRow>
               </Box>
+            </StackRow>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <PushToRight />
+              <AddOrganizationDeskTypeButton organizationId={organizationId} connectionIds={deskTypesConnectionIds} />
             </StackRow>
 
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>

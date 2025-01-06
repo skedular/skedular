@@ -1,6 +1,13 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  DefaultDialogTitle,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  SmallIconTypography,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -18,28 +25,28 @@ import { Form } from 'react-final-form';
 import { useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
-import type { newZoneDialog_addZoneMutation } from './__generated__/newZoneDialog_addZoneMutation.graphql';
+import type { addOrganizationDeskTypeDialog_addDeskTypeMutation } from './__generated__/addOrganizationDeskTypeDialog_addDeskTypeMutation.graphql';
 
 type Props = {
+  organizationId: string;
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
   onCancel: () => void;
-  organizationId: string;
 };
 
-type ZoneDetails = {
+type DeskTypeDetails = {
   name: string;
 };
 
-const zoneSchema = object({
-  name: string().required('Zone name is required'),
+const deskTypeSchema = object({
+  name: string().required('Desk type name is required'),
 });
 
-const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, organizationId }: Props) => {
-  const [commitAddZone] = useMutation<newZoneDialog_addZoneMutation>(graphql`
-    mutation newZoneDialog_addZoneMutation($connectionIds: [ID!]!, $input: AddZoneInput!) @raw_response_type {
-      addZone(input: $input) {
+const AddOrganizationDeskTypeDialog = ({ organizationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+  const [commitAddDeskType] = useMutation<addOrganizationDeskTypeDialog_addDeskTypeMutation>(graphql`
+    mutation addOrganizationDeskTypeDialog_addDeskTypeMutation($connectionIds: [ID!]!, $input: AddDeskTypeInput!) @raw_response_type {
+      addDeskType(input: $input) {
         organizationTag @appendNode(connections: $connectionIds, edgeTypeName: "OrganizationTagDetails") {
           id
           name
@@ -50,14 +57,14 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validate = makeValidate(zoneSchema);
-  const requiredFields = makeRequired(zoneSchema);
+  const validate = makeValidate(deskTypeSchema);
+  const requiredFields = makeRequired(deskTypeSchema);
 
-  const handleAddClick = ({ name }: ZoneDetails) => {
+  const handleAddClick = ({ name }: DeskTypeDetails) => {
     const id = nanoid();
-    const toastId = themedToast(<NotificationContent content={`Adding zone '${name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Adding desk type '${name}'...`} />, infoNotificationOptions);
 
-    commitAddZone({
+    commitAddDeskType({
       variables: {
         connectionIds,
         input: {
@@ -71,7 +78,7 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add zone '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add desk type '${name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -79,7 +86,7 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Zone ${name} added.`} />,
+          render: <NotificationContent content={`Desk type ${name} added.`} />,
         });
 
         onAddClicked();
@@ -87,11 +94,11 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add zone '${name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to add desk type '${name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
-        addZone: {
+        addDeskType: {
           organizationTag: {
             id,
             name,
@@ -103,27 +110,32 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
 
   return (
     <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
-      <DefaultDialogTitle title="Add Zone" />
+      <DefaultDialogTitle title="Add DeskType" />
       <DialogContent>
         <Form
           onSubmit={handleAddClick}
           initialValues={{
-            name: '',
+            member: null,
           }}
           validate={validate}
-          render={({ handleSubmit }) => (
-            <FormStackColumn onSubmit={handleSubmit}>
-              <FormFieldLabel label="Name" useWiderSpace>
-                <TextField name="name" required={requiredFields.name} helperText="Add your zone name" />
-              </FormFieldLabel>
+          render={({ handleSubmit }) => {
+            return (
+              <FormStackColumn onSubmit={handleSubmit}>
+                <LeadIconTypography label="Add desk type to this organization" />
+                <SmallIconTypography label="Enter the name of the desk type to add to this organization." />
 
-              <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
-            </FormStackColumn>
-          )}
+                <FormFieldLabel label="Name" useWiderSpace>
+                  <TextField name="name" required={requiredFields.name} />
+                </FormFieldLabel>
+
+                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
+              </FormStackColumn>
+            );
+          }}
         />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default memo(NewZoneDialog);
+export default memo(AddOrganizationDeskTypeDialog);
