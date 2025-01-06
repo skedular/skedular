@@ -119,7 +119,7 @@ export const DeskTypeIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props
   excludeTooltip ? (
     <LocalOffer fontSize={fontSize} sx={sx} color={color} />
   ) : (
-    <TooltipIcon tip={tip ?? 'Desk type'}>
+    <TooltipIcon tip={tip ?? 'Desk Type'}>
       <LocalOffer fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
@@ -218,7 +218,7 @@ export const WorkingFromOfficeIcon = ({ fontSize, excludeTooltip, tip, sx, color
   excludeTooltip ? (
     <Business fontSize={fontSize} sx={sx} color={color ?? 'primary'} />
   ) : (
-    <TooltipIcon tip={tip ?? 'Working from office'}>
+    <TooltipIcon tip={tip ?? 'Working From Office'}>
       <Business fontSize={fontSize} sx={sx} color={color ?? 'primary'} />
     </TooltipIcon>
   );
@@ -227,7 +227,7 @@ export const WorkingFromHomeIcon = ({ fontSize, excludeTooltip, tip, sx, color }
   excludeTooltip ? (
     <Home fontSize={fontSize} sx={sx} color={color ?? 'action'} />
   ) : (
-    <TooltipIcon tip={tip ?? 'Working from home'}>
+    <TooltipIcon tip={tip ?? 'Working From Home'}>
       <Home fontSize={fontSize} sx={sx} color={color ?? 'action'} />
     </TooltipIcon>
   );
@@ -236,7 +236,7 @@ export const ViewDetailsIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Pr
   excludeTooltip ? (
     <Fullscreen fontSize={fontSize} sx={sx} color={color} />
   ) : (
-    <TooltipIcon tip={tip ?? 'View details'}>
+    <TooltipIcon tip={tip ?? 'View Details'}>
       <Fullscreen fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
@@ -247,5 +247,14 @@ export const HomeIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   ) : (
     <TooltipIcon tip={tip ?? 'Home'}>
       <Home fontSize={fontSize} sx={sx} color={color ?? 'action'} />
+    </TooltipIcon>
+  );
+
+export const ManageAssetsIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
+  excludeTooltip ? (
+    <EventSeat fontSize={fontSize} sx={sx} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'Manage Assets'}>
+      <EventSeat fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
