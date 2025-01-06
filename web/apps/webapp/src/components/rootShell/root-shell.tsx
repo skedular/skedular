@@ -11,12 +11,11 @@ import { LogoutIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { nanoid } from 'nanoid';
 import { signOut } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
-import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -67,7 +66,6 @@ const RootShell = ({
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
 
-  const switchToModernUI = useContext(SwitchToModernUIContext);
   const [reloadCount, setReloadCount] = useState(0);
   const areCustomerRecordsSync = useCallback(
     () =>

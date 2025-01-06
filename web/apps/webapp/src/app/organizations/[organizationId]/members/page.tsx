@@ -3,11 +3,14 @@
 import { OrganizationMembers } from '@/components/organization/organizationMembers';
 import { RootShell } from '@/components/rootShell';
 import { Breadcrumbs } from '@mui/material';
-import { BodyIconTypography } from '@repo/shared/components/commons';
-import { useParams } from 'next/navigation';
+import Button from '@mui/material/Button';
+import Box from '@mui/system/Box';
+import { BodyIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { useParams, useRouter } from 'next/navigation';
 import { memo } from 'react';
 
 const OrganizationsPage = () => {
+  const router = useRouter();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -23,11 +26,21 @@ const OrganizationsPage = () => {
     throw new Error('organizationId is required');
   }
 
+  const handleBackClick = () => {
+    router.back();
+  };
+
   const breadcrumbs = (
-    <Breadcrumbs>
-      <BodyIconTypography label="View Members" />
-      <BodyIconTypography label="Organization" />
-    </Breadcrumbs>
+    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
+      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
+        {'< back'}
+      </Button>
+      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+        <Breadcrumbs>
+          <BodyIconTypography label="View Members" />
+        </Breadcrumbs>
+      </Box>
+    </StackColumn>
   );
 
   return (

@@ -6,7 +6,6 @@ import type { modernAppBar_query$key } from '@/queries/__generated__/modernAppBa
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
@@ -182,10 +181,6 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
     UpdateSwitchToModernUI(false);
   };
 
-  const handleBackClick = () => {
-    router.back();
-  };
-
   const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
     setMobileDrawerOpen(newOpen);
   };
@@ -273,14 +268,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
               <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
             </>
           )}
-          {showBreadcrumps && (
-            <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-              <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-                {'< back'}
-              </Button>
-              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>{breadcrumbs}</Box>
-            </StackColumn>
-          )}
+          {showBreadcrumps && <>{breadcrumbs}</>}
 
           <PushToRight />
           <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' }, paddingRight: 2 }} />

@@ -1,12 +1,10 @@
 import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
-import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
@@ -24,7 +22,6 @@ import { NewFeedbackDialog } from 'components/feedback';
 import { MobileLeftSideNavigationMenu } from 'components/navigationMenu';
 import { memo, useContext, useState } from 'react';
 import { useFragment } from 'react-relay';
-import { useNavigate } from 'react-router-dom';
 import { useInterval } from 'usehooks-ts';
 import type { modernAppBar_query$key } from './__generated__/modernAppBar_query.graphql';
 
@@ -52,7 +49,6 @@ const ModernAppBar = ({ rootDataRelay, hideWelcomeMessage, showBreadcrumps, brea
     rootDataRelay,
   );
 
-  const navigate = useNavigate();
   const [currentTime, setCurrentTime] = useState(localNow());
   const switchToModernUI = useContext(SwitchToModernUIContext);
   const UpdateSwitchToModernUI = useContext(UpdateSwitchToModernUIContext);
@@ -91,10 +87,6 @@ const ModernAppBar = ({ rootDataRelay, hideWelcomeMessage, showBreadcrumps, brea
     UpdateSwitchToModernUI(false);
   };
 
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
   const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
     setMobileDrawerOpen(newOpen);
   };
@@ -117,15 +109,7 @@ const ModernAppBar = ({ rootDataRelay, hideWelcomeMessage, showBreadcrumps, brea
           }}
         >
           {!hideWelcomeMessage && <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' } }} />}
-
-          {showBreadcrumps && (
-            <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-              <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-                {'< back'}
-              </Button>
-              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>{breadcrumbs}</Box>
-            </StackColumn>
-          )}
+          {showBreadcrumps && <>{breadcrumbs}</>}
 
           <PushToRight />
           <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' } }} />
