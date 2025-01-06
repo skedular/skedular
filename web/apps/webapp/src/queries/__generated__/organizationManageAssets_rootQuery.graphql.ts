@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<386b0fa3ca04e07be86459d0fc3c5e78>>
+ * @generated SignedSource<<96acb727923ddb402c95711cf05c3a79>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationManageAssets_rootQuery$variables = {
+  deskTypeNameSearchText?: string | null | undefined;
   organizationId: string;
   zoneNameSearchText?: string | null | undefined;
 };
@@ -23,19 +24,27 @@ export type organizationManageAssets_rootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "organizationId"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "zoneNameSearchText"
-  }
-],
-v1 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "deskTypeNameSearchText"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationId"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "zoneNameSearchText"
+},
+v3 = {
+  "kind": "Variable",
+  "name": "organizationId",
+  "variableName": "organizationId"
+},
+v4 = [
   {
     "fields": [
       {
@@ -43,17 +52,13 @@ v1 = [
         "name": "nameContains",
         "variableName": "zoneNameSearchText"
       },
-      {
-        "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationId"
-      }
+      (v3/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v2 = [
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -149,12 +154,37 @@ v2 = [
     ]
   }
 ],
-v3 = [
-  "where"
+v6 = [
+  {
+    "kind": "Literal",
+    "name": "orderBy",
+    "value": [
+      {
+        "direction": "Ascending",
+        "field": "Name"
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "kind": "Variable",
+        "name": "nameContains",
+        "variableName": "deskTypeNameSearchText"
+      },
+      (v3/*: any*/)
+    ],
+    "kind": "ObjectValue",
+    "name": "where"
+  }
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationManageAssets_rootQuery",
@@ -175,24 +205,30 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v2/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
     "name": "organizationManageAssets_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "zones",
         "plural": false,
-        "selections": (v2/*: any*/),
+        "selections": (v5/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "filters": (v3/*: any*/),
+        "args": (v4/*: any*/),
+        "filters": [
+          "where"
+        ],
         "handle": "connection",
         "key": "organizationManageAssets_zones",
         "kind": "LinkedHandle",
@@ -200,18 +236,21 @@ return {
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v6/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "deskTypes",
         "plural": false,
-        "selections": (v2/*: any*/),
+        "selections": (v5/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "filters": (v3/*: any*/),
+        "args": (v6/*: any*/),
+        "filters": [
+          "where",
+          "orderBy"
+        ],
         "handle": "connection",
         "key": "organizationManageAssets_deskTypes",
         "kind": "LinkedHandle",
@@ -220,16 +259,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2105737a5558d2c6cb829840203e6668",
+    "cacheID": "852d4d3e3a8ed464c741d9b6cd267d50",
     "id": null,
     "metadata": {},
     "name": "organizationManageAssets_rootQuery",
     "operationKind": "query",
-    "text": "query organizationManageAssets_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n) {\n  ...organizationManageAssets_zones_query\n  ...organizationManageAssets_deskTypes_query\n}\n\nfragment organizationManageAssets_deskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationManageAssets_zones_query on Query {\n  zones(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationManageAssets_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $deskTypeNameSearchText: String\n) {\n  ...organizationManageAssets_zones_query\n  ...organizationManageAssets_deskTypes_query\n}\n\nfragment organizationManageAssets_deskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationManageAssets_zones_query on Query {\n  zones(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0f2e5ee7b0e11ef5c371e3a23603f607";
+(node as any).hash = "23f5fb0d0e0e3c45777172949418dfe2";
 
 export default node;

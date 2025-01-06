@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af7e2e2a3c109c718f8061d352e302e1>>
+ * @generated SignedSource<<da498c99d27951ed87e636a8c62639e4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,8 +13,8 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationManageAssets_deskTypes_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
+  deskTypeNameSearchText?: string | null | undefined;
   organizationId: string;
-  zoneNameSearchText?: string | null | undefined;
 };
 export type organizationManageAssets_deskTypes_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationManageAssets_deskTypes_query">;
@@ -39,12 +39,12 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationId"
+    "name": "deskTypeNameSearchText"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "zoneNameSearchText"
+    "name": "organizationId"
   }
 ],
 v1 = [
@@ -59,11 +59,21 @@ v1 = [
     "variableName": "count"
   },
   {
+    "kind": "Literal",
+    "name": "orderBy",
+    "value": [
+      {
+        "direction": "Ascending",
+        "field": "Name"
+      }
+    ]
+  },
+  {
     "fields": [
       {
         "kind": "Variable",
         "name": "nameContains",
-        "variableName": "zoneNameSearchText"
+        "variableName": "deskTypeNameSearchText"
       },
       {
         "kind": "Variable",
@@ -217,7 +227,8 @@ return {
         "alias": null,
         "args": (v1/*: any*/),
         "filters": [
-          "where"
+          "where",
+          "orderBy"
         ],
         "handle": "connection",
         "key": "organizationManageAssets_deskTypes",
@@ -227,16 +238,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ace9093f221157e949f0a18470e02f03",
+    "cacheID": "de8ac1a9d4924a6f20d3f9f811a80f9c",
     "id": null,
     "metadata": {},
     "name": "organizationManageAssets_deskTypes_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationManageAssets_deskTypes_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $zoneNameSearchText: String\n) {\n  ...organizationManageAssets_deskTypes_query_1G22uz\n}\n\nfragment organizationManageAssets_deskTypes_query_1G22uz on Query {\n  deskTypes(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationManageAssets_deskTypes_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskTypeNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationManageAssets_deskTypes_query_1G22uz\n}\n\nfragment organizationManageAssets_deskTypes_query_1G22uz on Query {\n  deskTypes(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0efe5fc5fd5d2775fabac1fc6cd9dd51";
+(node as any).hash = "93e3225be9f1ae657586488d0db1456e";
 
 export default node;

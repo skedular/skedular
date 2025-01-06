@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<de0add50069ce7d30f4180b49e7eb9a3>>
+ * @generated SignedSource<<85abdf2979dc2d20ab7ff5973b4af889>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -46,11 +46,11 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "deskTypeNameSearchText"
     },
     {
       "kind": "RootArgument",
-      "name": "zoneNameSearchText"
+      "name": "organizationId"
     }
   ],
   "kind": "Fragment",
@@ -82,11 +82,21 @@ return {
       "alias": "deskTypes",
       "args": [
         {
+          "kind": "Literal",
+          "name": "orderBy",
+          "value": [
+            {
+              "direction": "Ascending",
+              "field": "Name"
+            }
+          ]
+        },
+        {
           "fields": [
             {
               "kind": "Variable",
               "name": "nameContains",
-              "variableName": "zoneNameSearchText"
+              "variableName": "deskTypeNameSearchText"
             },
             {
               "kind": "Variable",
@@ -206,6 +216,6 @@ return {
 };
 })();
 
-(node as any).hash = "0efe5fc5fd5d2775fabac1fc6cd9dd51";
+(node as any).hash = "93e3225be9f1ae657586488d0db1456e";
 
 export default node;
