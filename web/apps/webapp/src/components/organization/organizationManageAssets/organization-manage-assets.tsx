@@ -1,3 +1,5 @@
+import type { organizationManageAssets_deleteDeskTypesMutation } from '@/queries/__generated__/organizationManageAssets_deleteDeskTypesMutation.graphql';
+import type { organizationManageAssets_deleteZonesMutation } from '@/queries/__generated__/organizationManageAssets_deleteZonesMutation.graphql';
 import type { organizationManageAssets_deskTypes_query$key } from '@/queries/__generated__/organizationManageAssets_deskTypes_query.graphql';
 import type { organizationManageAssets_deskTypes_refetchableFragment } from '@/queries/__generated__/organizationManageAssets_deskTypes_refetchableFragment.graphql';
 import type { organizationManageAssets_rootQuery } from '@/queries/__generated__/organizationManageAssets_rootQuery.graphql';
@@ -19,15 +21,24 @@ import {
 } from '@repo/shared/components/commons';
 import { DeleteIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
+import {
+  errorNotificationOptions,
+  infoNotificationOptions,
+  NotificationContent,
+  successNotificationOptions,
+} from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
+import { joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import { useSearchParams } from 'next/navigation';
-import { memo, useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import { toast } from 'react-toastify';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationManageAssetsLeftSideNavigationMenuContent from './organization-manage-assets-left-side-navigation-menu-content';
 
@@ -108,7 +119,29 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
     rootData,
   );
 
+  const [commitDeleteZones] = useMutation<organizationManageAssets_deleteZonesMutation>(graphql`
+    mutation organizationManageAssets_deleteZonesMutation($connectionIds: [ID!]!, $input: DeleteZonesInput!) {
+      deleteZones(input: $input) {
+        organizationTags {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteDeskTypes] = useMutation<organizationManageAssets_deleteDeskTypesMutation>(graphql`
+    mutation organizationManageAssets_deleteDeskTypesMutation($connectionIds: [ID!]!, $input: DeleteDeskTypesInput!) {
+      deleteDeskTypes(input: $input) {
+        organizationTags {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
+  const paletteMode = useContext(PaletteModeContext);
+  const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -125,6 +158,7 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
 
     return rootDataZones.zones.edges.map(({ node }) => node);
   }, [rootDataZones.zones]);
+
   const deskTypesConnectionIds = useMemo(
     () => (rootDataDeskTypes.deskTypes ? [rootDataDeskTypes.deskTypes.__id] : []),
     [rootDataDeskTypes.deskTypes],
@@ -204,13 +238,78 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
   };
 
   const handleSelectedDeskTypesChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedZones(newRowSelectionModel);
+    setSeledctedDeskTypes(newRowSelectionModel);
   };
 
-  const handleRemoveZonesClick = () => {};
+  const handleRemoveZonesClick = () => {
+    const toastId = themedToast(<NotificationContent content="Removing zones ..." />, infoNotificationOptions);
 
-  const handleRemoveDeskTypesClick = () => {};
+    commitDeleteZones({
+      variables: {
+        connectionIds: zonesConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedZones.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove zones. Error: ${joinErrors(errors)}.`} />,
+          });
 
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zones removed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove zones. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveDeskTypesClick = () => {
+    const toastId = themedToast(<NotificationContent content="Removing desk types ..." />, infoNotificationOptions);
+
+    commitDeleteDeskTypes({
+      variables: {
+        connectionIds: deskTypesConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedDeskTypes.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove desk types. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk types removed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove desk types. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
   const zoneRows: ZoneRowType[] = zones.map((zone) => ({
     id: zone.id,
     name: zone.name,

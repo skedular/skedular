@@ -175,13 +175,6 @@ const DeskTypeCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionId
           render: <NotificationContent content={`Failed to remove desk type '${organizationTagDetails.name}'. Error: ${error.message}.`} />,
         });
       },
-      optimisticResponse: {
-        deleteOrganizationTag: {
-          organizationTag: {
-            id: organizationTagDetails.id,
-          },
-        },
-      },
     });
   };
 

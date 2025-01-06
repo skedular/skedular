@@ -43,7 +43,7 @@ type OrganizationTagDetails = {
 };
 
 const zoneSchema = object({
-  name: string().required('Desk type name is required'),
+  name: string().required('Zone name is required'),
 });
 
 const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }: Props) => {
@@ -143,7 +143,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
   const handleConfirmRemovingZoneClick = () => {
     setZoneRemoveConfirmationDialogOpen(false);
 
-    const toastId = themedToast(<NotificationContent content={`Removing desk type '${organizationTagDetails.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Removing zone '${organizationTagDetails.name}'...`} />, infoNotificationOptions);
 
     commitDeleteZone({
       variables: {
@@ -157,7 +157,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove desk type '${organizationTagDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove zone '${organizationTagDetails.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -165,21 +165,14 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Desk type ${organizationTagDetails.name} removed.`} />,
+          render: <NotificationContent content={`Zone ${organizationTagDetails.name} removed.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove desk type '${organizationTagDetails.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove zone '${organizationTagDetails.name}'. Error: ${error.message}.`} />,
         });
-      },
-      optimisticResponse: {
-        deleteOrganizationTag: {
-          organizationTag: {
-            id: organizationTagDetails.id,
-          },
-        },
       },
     });
   };
@@ -193,7 +186,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
   };
 
   const handleSaveClick = ({ name }: OrganizationTagDetails) => {
-    const toastId = themedToast(<NotificationContent content={`Updating desk type '${organizationTagDetails.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating zone '${organizationTagDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateZone({
       variables: {
@@ -207,7 +200,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update desk type '${organizationTagDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update zone '${organizationTagDetails.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -215,7 +208,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Desk type ${name} updated.`} />,
+          render: <NotificationContent content={`Zone ${name} updated.`} />,
         });
 
         setEditing(false);
@@ -223,7 +216,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update desk type '${organizationTagDetails.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update zone '${organizationTagDetails.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -243,7 +236,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
     }
 
     const toastId = themedToast(
-      <NotificationContent content={`Setting desk type '${organizationTagDetails.name}' as your preferred desk type...`} />,
+      <NotificationContent content={`Setting zone '${organizationTagDetails.name}' as your preferred zone...`} />,
       infoNotificationOptions,
     );
 
@@ -260,7 +253,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
             ...errorNotificationOptions,
             render: (
               <NotificationContent
-                content={`Failed to set desk type '${organizationTagDetails.name}' as your preferred desk type. Error: ${joinErrors(errors)}.`}
+                content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`}
               />
             ),
           });
@@ -270,16 +263,14 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Desk type '${organizationTagDetails.name}' has been set as the preferred desk type.`} />,
+          render: <NotificationContent content={`Zone '${organizationTagDetails.name}' has been set as the preferred zone.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
           render: (
-            <NotificationContent
-              content={`Failed to set desk type '${organizationTagDetails.name}' as your preferred desk type. Error: ${error.message}.`}
-            />
+            <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />
           ),
         });
       },
@@ -304,7 +295,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
     }
 
     const toastId = themedToast(
-      <NotificationContent content={`Removing desk type '${organizationTagDetails.name}' as your preferred desk type...`} />,
+      <NotificationContent content={`Removing zone '${organizationTagDetails.name}' as your preferred zone...`} />,
       infoNotificationOptions,
     );
 
@@ -321,7 +312,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
             ...errorNotificationOptions,
             render: (
               <NotificationContent
-                content={`Failed to remove the desk type '${organizationTagDetails.name}' as your preferred desk type. Error: ${joinErrors(errors)}.`}
+                content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`}
               />
             ),
           });
@@ -331,7 +322,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Desk type '${organizationTagDetails.name}' has been removed as your preferred desk type.`} />,
+          render: <NotificationContent content={`Zone '${organizationTagDetails.name}' has been removed as your preferred zone.`} />,
         });
       },
       onError: (error) => {
@@ -339,7 +330,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
           ...errorNotificationOptions,
           render: (
             <NotificationContent
-              content={`Failed to remove the desk type '${organizationTagDetails.name}' as your preferred desk type. Error: ${error.message}.`}
+              content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`}
             />
           ),
         });
@@ -367,28 +358,28 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
 
           <CardActions sx={{ justifyContent: 'flex-end' }}>
             {rootData.organization.canModify && (
-              <Tooltip title={'Edit desk type'}>
+              <Tooltip title={'Edit zone'}>
                 <Button size="small" color="primary" onClick={handleEditClick}>
                   <EditIcon />
                 </Button>
               </Tooltip>
             )}
             {rootData.organization.canModify && (
-              <Tooltip title={'Remove desk type'}>
+              <Tooltip title={'Remove zone'}>
                 <Button size="small" color="warning" onClick={handleDeleteClick}>
                   <DeleteIcon />
                 </Button>
               </Tooltip>
             )}
             {isPreferredZone && (
-              <Tooltip title={'Remove as preferred desk type'}>
+              <Tooltip title={'Remove as preferred zone'}>
                 <Button size="small" color="primary" onClick={handleRemoveAsPreferredZoneClicked}>
                   <PreferredIcon />
                 </Button>
               </Tooltip>
             )}
             {!isPreferredZone && (
-              <Tooltip title={'Set as preferred desk type'}>
+              <Tooltip title={'Set as preferred zone'}>
                 <Button size="small" color="primary" onClick={handleSetAsPreferredZoneClicked}>
                   <NotPreferredIcon />
                 </Button>
@@ -422,7 +413,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
       <Dialog TransitionComponent={DialogTransition} open={zoneRemoveConfirmationDialogOpen} onClose={handleCancelRemovingZoneClick}>
         <DefaultDialogTitle title="Remove Zone" />
         <DialogContent>
-          <DialogContentText>{`Are you sure you want to remove the desk type "${organizationTagDetails.name}"?`}</DialogContentText>
+          <DialogContentText>{`Are you sure you want to remove the zone "${organizationTagDetails.name}"?`}</DialogContentText>
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmRemovingZoneClick}
             onSecondaryClicked={handleCancelRemovingZoneClick}
