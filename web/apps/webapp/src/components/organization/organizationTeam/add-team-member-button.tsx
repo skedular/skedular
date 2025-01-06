@@ -57,13 +57,13 @@ const AddTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, 
     <>
       <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ textTransform: 'none' }}>
         {size === 'small' && (
-          <SmallIconTypography label={label ?? 'Add Memebr'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
+          <SmallIconTypography label={label ?? 'Add Member'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
         )}
         {size === 'medium' && (
-          <BodyIconTypography label={label ?? 'Add Memebr'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
+          <BodyIconTypography label={label ?? 'Add Member'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
         )}
         {(size === 'large' || !size) && (
-          <LeadIconTypography label={label ?? 'Add Memebr'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
+          <LeadIconTypography label={label ?? 'Add Member'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
         )}
       </Button>
       <AddTeamMemberDialog
@@ -72,7 +72,7 @@ const AddTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, 
         teamId={teamId}
         isDialogOpen={isDialogOpen}
         onAddClicked={handleAddClicked}
-        onCancelClicked={handleCancelClicked}
+        onCancel={handleCancelClicked}
       />
     </>
   );

@@ -23,7 +23,7 @@ type Props = {
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
-  onCancelClicked: () => void;
+  onCancel: () => void;
   organizationId: string;
 };
 
@@ -35,7 +35,7 @@ const zoneSchema = object({
   name: string().required('Desk type name is required'),
 });
 
-const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClicked, organizationId }: Props) => {
+const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, organizationId }: Props) => {
   const [commitAddZone] = useMutation<newZoneDialog_addZoneMutation>(graphql`
     mutation newZoneDialog_addZoneMutation($connectionIds: [ID!]!, $input: AddZoneInput!) @raw_response_type {
       addZone(input: $input) {
@@ -116,7 +116,7 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClic
                 <TextField name="name" required={requiredFields.name} helperText="Add your zone name" />
               </FormFieldLabel>
 
-              <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
+              <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}
         />

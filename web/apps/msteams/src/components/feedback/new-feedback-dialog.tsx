@@ -26,7 +26,7 @@ type Props = {
   rootDataRelay: newFeedbackDialog_query$key;
   isDialogOpen: boolean;
   onSendClicked: () => void;
-  onCancelClicked: () => void;
+  onCancel: () => void;
 };
 
 type FeedbackDetails = {
@@ -37,7 +37,7 @@ const zoneSchema = object({
   feedback: string().required('Feedback is required'),
 });
 
-const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCancelClicked }: Props) => {
+const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCancel }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment newFeedbackDialog_query on Query {
@@ -125,7 +125,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
               <BodyIconTypography label="A note from the team:" sx={{ fontStyle: 'italic' }} />
               <BodyIconTypography label="We value your feedback, whether it's big or small. Sometimes, it's the smallest details that distinguish a great product from a mediocre one. If you notice something missing or something that bothers you, please let us know, and we'll address it promptly!" />
 
-              <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Send" secondaryLabel="Cancel" />
+              <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Send" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}
         />

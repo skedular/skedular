@@ -384,7 +384,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
         rootDataRelay={rootData}
         isDialogOpen={submitFeedbackDialogOpen}
         onSendClicked={handleSubmitFeedbackSendClick}
-        onCancelClicked={handleSubmitFeedbackCancelClick}
+        onCancel={handleSubmitFeedbackCancelClick}
       />
     </>
   );

@@ -37,7 +37,7 @@ type Props = {
   teamId: string;
   isDialogOpen: boolean;
   onAddClicked: () => void;
-  onCancelClicked: () => void;
+  onCancel: () => void;
 };
 
 type CustomerDetails = {
@@ -62,7 +62,7 @@ const schema = object({
   member: string().required('Member is required'),
 });
 
-const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpen, onAddClicked, onCancelClicked }: Props) => {
+const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const { data: rootData, refetch } = usePaginationFragment<
     addTeamMemberDialog_organizationMembers_refetchableFragment,
     addTeamMemberDialog_organizationMembers_query$key
@@ -250,7 +250,7 @@ const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpe
                     handleHomeEndKeys
                   />
                 </FormFieldLabel>
-                <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
+                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
               </FormStackColumn>
             );
           }}

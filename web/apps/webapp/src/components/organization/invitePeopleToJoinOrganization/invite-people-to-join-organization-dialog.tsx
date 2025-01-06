@@ -1,7 +1,14 @@
 import type { invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  DefaultDialogTitle,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  SmallIconTypography,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -22,7 +29,7 @@ import { array, object, string } from 'yup';
 type Props = {
   isDialogOpen: boolean;
   onInviteClicked: () => void;
-  onCancelClicked: () => void;
+  onCancel: () => void;
   organizationId: string;
 };
 
@@ -43,7 +50,7 @@ const peopleToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, onCancelClicked, organizationId }: Props) => {
+const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, onCancel, organizationId }: Props) => {
   const [commitInviteCustomersToJoinOrganization] = useMutation<invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation>(
     graphql`
       mutation invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation($input: InviteCustomersToJoinOrganizationInput!) {
@@ -110,7 +117,7 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
 
   return (
     <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
-      <DefaultDialogTitle title="Invite people to join your organization" />
+      <DefaultDialogTitle title="Invite Members" />
       <DialogContent>
         <Form
           onSubmit={handleInvitePeopleClick}
@@ -120,11 +127,14 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
+              <LeadIconTypography label="Invite members to join this organization" />
+              <SmallIconTypography label="Enter email addresses of people to invite them to this organization." />
+
               <FormFieldLabel label="Emails" useWiderSpace>
                 <TextField name="emails" required={requiredFields.emails} helperText="member1@example.com,member2@example.com" />
               </FormFieldLabel>
 
-              <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Invite" secondaryLabel="Cancel" />
+              <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Invite" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}
         />

@@ -211,7 +211,7 @@ const ModernAppBar = ({ rootDataRelay, hideWelcomeMessage, showBreadcrumps, brea
         rootDataRelay={rootData}
         isDialogOpen={submitFeedbackDialogOpen}
         onSendClicked={handleSubmitFeedbackSendClick}
-        onCancelClicked={handleSubmitFeedbackCancelClick}
+        onCancel={handleSubmitFeedbackCancelClick}
       />
     </>
   );

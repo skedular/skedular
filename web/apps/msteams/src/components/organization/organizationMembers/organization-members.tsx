@@ -29,6 +29,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, maxScreenWidth } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { InvitePeopleToJoinOrganizationButton } from 'components/organization/invitePeopleToJoinOrganization';
 import { TeamSelector } from 'components/team/teamSelector';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
@@ -773,6 +774,11 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
                   </Button>
                 </StackRow>
               </Box>
+            </StackRow>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <PushToRight />
+              <InvitePeopleToJoinOrganizationButton organizationId={organizationId} />
             </StackRow>
 
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>

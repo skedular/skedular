@@ -224,7 +224,7 @@ const OrganizationZonesTab = ({ queryReference, onReloadRequired, organizationId
         connectionIds={connectionIds}
         isDialogOpen={isAddZoneDialogOpen}
         onAddClicked={handleAddZoneDialogAddClick}
-        onCancelClicked={handleAddZoneDialogCancelClick}
+        onCancel={handleAddZoneDialogCancelClick}
         organizationId={organizationId}
       />
     </>

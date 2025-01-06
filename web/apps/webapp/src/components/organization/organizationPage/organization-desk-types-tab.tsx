@@ -228,7 +228,7 @@ const OrganizationDeskTypesTab = ({ queryReference, onReloadRequired, organizati
         connectionIds={connectionIds}
         isDialogOpen={isAddDeskTypeDialogOpen}
         onAddClicked={handleAddDeskTypeDialogAddClick}
-        onCancelClicked={handleAddDeskTypeDialogCancelClick}
+        onCancel={handleAddDeskTypeDialogCancelClick}
         organizationId={organizationId}
       />
     </>

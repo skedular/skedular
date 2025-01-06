@@ -27,7 +27,7 @@ type Props = {
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
-  onCancelClicked: () => void;
+  onCancel: () => void;
   organizationId?: string;
   locationId?: string;
   defaultTeamId?: string;
@@ -67,7 +67,7 @@ const NewBookingDialog = ({
   connectionIds,
   isDialogOpen,
   onAddClicked,
-  onCancelClicked,
+  onCancel,
   organizationId,
   locationId,
   defaultTeamId,
@@ -333,7 +333,7 @@ const NewBookingDialog = ({
                   bookingFrom={from}
                   bookingTo={to}
                 />
-                <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
+                <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
               </FormStackColumn>
             );
           }}

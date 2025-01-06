@@ -30,21 +30,21 @@ const InvitePeopleToJoinOrganizationButton = ({ organizationId, fullWidth, label
 
   return (
     <>
-      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth}>
+      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ textTransform: 'none' }}>
         {size === 'small' && (
-          <SmallIconTypography label={label ?? 'Invite New Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
+          <SmallIconTypography label={label ?? 'Invite Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
         )}
         {size === 'medium' && (
-          <BodyIconTypography label={label ?? 'Invite New Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
+          <BodyIconTypography label={label ?? 'Invite Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
         )}
         {(size === 'large' || !size) && (
-          <LeadIconTypography label={label ?? 'Invite New Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
+          <LeadIconTypography label={label ?? 'Invite Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
         )}
       </Button>
       <InvitePeopleToJoinOrganizationDialog
         isDialogOpen={isDialogOpen}
         onInviteClicked={handleInviteClicked}
-        onCancelClicked={handleCancelClicked}
+        onCancel={handleCancelClicked}
         organizationId={organizationId}
       />
     </>

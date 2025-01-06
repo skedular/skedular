@@ -24,7 +24,7 @@ type Props = {
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
-  onCancelClicked: () => void;
+  onCancel: () => void;
   organizationId: string;
 };
 
@@ -36,7 +36,7 @@ const deskTypeSchema = object({
   name: string().required('Desk type name is required'),
 });
 
-const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancelClicked, organizationId }: Props) => {
+const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, organizationId }: Props) => {
   const [commitAddDeskType] = useMutation<newDeskTypeDialog_addDeskTypeMutation>(graphql`
     mutation newDeskTypeDialog_addDeskTypeMutation($connectionIds: [ID!]!, $input: AddDeskTypeInput!) @raw_response_type {
       addDeskType(input: $input) {
@@ -117,7 +117,7 @@ const NewDeskTypeDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel
                 <TextField name="name" required={requiredFields.name} helperText="Add your desk type name" />
               </FormFieldLabel>
 
-              <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
+              <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}
         />

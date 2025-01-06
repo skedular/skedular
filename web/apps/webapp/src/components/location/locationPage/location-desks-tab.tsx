@@ -333,7 +333,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
         connectionIds={connectionIds}
         isDialogOpen={isAddDeskDialogOpen}
         onAddClicked={handleAddDeskDialogAddClick}
-        onCancelClicked={handleAddDeskDialogCancelClick}
+        onCancel={handleAddDeskDialogCancelClick}
         locationId={locationId}
       />
 
@@ -342,7 +342,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
         connectionIds={connectionIds}
         isDialogOpen={isBulkAddDeskDialogOpen}
         onAddClicked={handleBulkAddDeskDialogAddClick}
-        onCancelClicked={handleBulkAddDeskDialogCancelClick}
+        onCancel={handleBulkAddDeskDialogCancelClick}
         locationId={locationId}
       />
     </>

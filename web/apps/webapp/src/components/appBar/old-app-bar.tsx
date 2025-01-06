@@ -237,7 +237,7 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
         rootDataRelay={rootData}
         isDialogOpen={submitFeedbackDialogOpen}
         onSendClicked={handleSubmitFeedbackSendClick}
-        onCancelClicked={handleSubmitFeedbackCancelClick}
+        onCancel={handleSubmitFeedbackCancelClick}
       />
     </>
   );

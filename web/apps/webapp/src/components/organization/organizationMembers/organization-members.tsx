@@ -1,3 +1,4 @@
+import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import { TeamSelector } from '@/components/team/teamSelector';
 import type { organizationMembers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationMembers_changeOrganizationMemberRoleMutation.graphql';
 import type { organizationMembers_changeOrganizationMembersStatusMutation } from '@/queries/__generated__/organizationMembers_changeOrganizationMembersStatusMutation.graphql';
@@ -772,6 +773,11 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
                   </Button>
                 </StackRow>
               </Box>
+            </StackRow>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <PushToRight />
+              <InvitePeopleToJoinOrganizationButton organizationId={organizationId} />
             </StackRow>
 
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>

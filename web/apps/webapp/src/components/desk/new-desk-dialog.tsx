@@ -26,7 +26,7 @@ type Props = {
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
-  onCancelClicked: () => void;
+  onCancel: () => void;
   locationId: string;
 };
 
@@ -42,7 +42,7 @@ const deskSchema = object({
   zoneIds: array().nullable(),
 });
 
-const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicked, onCancelClicked, locationId }: Props) => {
+const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicked, onCancel, locationId }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment newDeskDialog_query on Query {
@@ -154,7 +154,7 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
                 <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
               </FormFieldLabel>
 
-              <TwoButtonsDialogActions onSecondaryClicked={onCancelClicked} primaryLabel="Add" secondaryLabel="Cancel" />
+              <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}
         />
