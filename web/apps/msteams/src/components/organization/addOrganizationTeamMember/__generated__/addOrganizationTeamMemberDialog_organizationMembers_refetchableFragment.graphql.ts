@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cf7f556191930acf6ebc050b7b54a3f3>>
+ * @generated SignedSource<<ef5cd6d3539cfc8e03e423256f5e2efa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,40 +16,59 @@ export type OrganizationMemberOrderInput = {
   direction: OrderDirection;
   field: OrganizationMemberOrderField;
 };
-export type addTeamMemberButton_rootQuery$variables = {
+export type addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment$variables = {
   addTeamMemberDialogOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
+  count?: number | null | undefined;
+  cursor?: string | null | undefined;
   organizationId: string;
   peopleNameSearchText?: string | null | undefined;
 };
-export type addTeamMemberButton_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"addTeamMemberDialog_organizationMembers_query">;
+export type addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"addOrganizationTeamMemberDialog_organizationMembers_query">;
 };
-export type addTeamMemberButton_rootQuery = {
-  response: addTeamMemberButton_rootQuery$data;
-  variables: addTeamMemberButton_rootQuery$variables;
+export type addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment = {
+  response: addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment$data;
+  variables: addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "addTeamMemberDialogOrganizationMembersSortingValues"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationId"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "peopleNameSearchText"
-},
-v3 = [
+var v0 = [
   {
-    "kind": "Literal",
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "addTeamMemberDialogOrganizationMembersSortingValues"
+  },
+  {
+    "defaultValue": 20,
+    "kind": "LocalArgument",
+    "name": "count"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "peopleNameSearchText"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "cursor"
+  },
+  {
+    "kind": "Variable",
     "name": "first",
-    "value": 20
+    "variableName": "count"
   },
   {
     "kind": "Variable",
@@ -75,19 +94,26 @@ v3 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "addTeamMemberButton_rootQuery",
+    "name": "addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment",
     "selections": [
       {
-        "args": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "count",
+            "variableName": "count"
+          },
+          {
+            "kind": "Variable",
+            "name": "cursor",
+            "variableName": "cursor"
+          }
+        ],
         "kind": "FragmentSpread",
-        "name": "addTeamMemberDialog_organizationMembers_query"
+        "name": "addOrganizationTeamMemberDialog_organizationMembers_query"
       }
     ],
     "type": "Query",
@@ -95,17 +121,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v2/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "addTeamMemberButton_rootQuery",
+    "name": "addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "OrganizationMemberConnection",
         "kind": "LinkedField",
         "name": "organizationMembers",
@@ -256,7 +278,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v1/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -269,16 +291,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "201e2af79f4102733f5289b978d580d5",
+    "cacheID": "67d0543fd09c3ba26588e31f8ce1b9f1",
     "id": null,
     "metadata": {},
-    "name": "addTeamMemberButton_rootQuery",
+    "name": "addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query addTeamMemberButton_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...addTeamMemberDialog_organizationMembers_query\n}\n\nfragment addTeamMemberDialog_organizationMembers_query on Query {\n  organizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment(\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $count: Int = 20\n  $cursor: String\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query_1G22uz\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4ecc7d107e605a6ad4c00f1beaeec1d0";
+(node as any).hash = "0a3a4000f0322508aed1bc3ec6aaeaf8";
 
 export default node;

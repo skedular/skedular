@@ -1,4 +1,4 @@
-import type { addTeamMemberButton_rootQuery } from '@/queries/__generated__/addTeamMemberButton_rootQuery.graphql';
+import type { addOrganizationTeamMemberButton_rootQuery } from '@/queries/__generated__/addOrganizationTeamMemberButton_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
 import { NewIcon } from '@repo/shared/components/icons';
@@ -9,10 +9,10 @@ import { startOfDay } from '@repo/shared/libs/utils';
 import { memo, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import AddTeamMemberDialog from './add-team-member-dialog';
+import AddOrganizationTeamMemberDialog from './add-organization-team-member-dialog';
 
 type Props = {
-  queryReference: PreloadedQuery<addTeamMemberButton_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<addOrganizationTeamMemberButton_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
   connectionIds: string[];
   teamId: string;
@@ -24,17 +24,17 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query addTeamMemberButton_rootQuery(
+  query addOrganizationTeamMemberButton_rootQuery(
     $organizationId: String!
     $peopleNameSearchText: String
     $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
-    ...addTeamMemberDialog_organizationMembers_query
+    ...addOrganizationTeamMemberDialog_organizationMembers_query
   }
 `;
 
-const AddTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, teamId, fullWidth, label, hideIcon, variant, size }: Props) => {
-  const rootData = usePreloadedQuery<addTeamMemberButton_rootQuery>(RootQuery, queryReference);
+const AddOrganizationTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, teamId, fullWidth, label, hideIcon, variant, size }: Props) => {
+  const rootData = usePreloadedQuery<addOrganizationTeamMemberButton_rootQuery>(RootQuery, queryReference);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleButtonClicked = () => {
@@ -66,7 +66,7 @@ const AddTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, 
           <LeadIconTypography label={label ?? 'Add Member'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
         )}
       </Button>
-      <AddTeamMemberDialog
+      <AddOrganizationTeamMemberDialog
         rootDataRelay={rootData}
         connectionIds={connectionIds}
         teamId={teamId}
@@ -78,7 +78,7 @@ const AddTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, 
   );
 };
 
-const MemoAddTeamMemberButton = memo(AddTeamMemberButton);
+const MemoAddOrganizationTeamMemberButton = memo(AddOrganizationTeamMemberButton);
 
 type RelayProps = {
   organizationId: string;
@@ -92,7 +92,7 @@ type RelayProps = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const AddTeamMemberButtonWithRelay = ({
+const AddOrganizationTeamMemberButtonWithRelay = ({
   organizationId,
   onReloadRequired,
   connectionIds,
@@ -103,7 +103,7 @@ const AddTeamMemberButtonWithRelay = ({
   variant,
   size,
 }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<addTeamMemberButton_rootQuery>(RootQuery);
+  const [queryReference, loadQuery] = useQueryLoader<addOrganizationTeamMemberButton_rootQuery>(RootQuery);
 
   useEffect(() => {
     const date = startOfDay().toISOString();
@@ -130,7 +130,7 @@ const AddTeamMemberButtonWithRelay = ({
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAddTeamMemberButton
+      <MemoAddOrganizationTeamMemberButton
         queryReference={queryReference}
         onReloadRequired={onReloadRequired}
         connectionIds={connectionIds}
@@ -145,4 +145,4 @@ const AddTeamMemberButtonWithRelay = ({
   );
 };
 
-export default memo(AddTeamMemberButtonWithRelay);
+export default memo(AddOrganizationTeamMemberButtonWithRelay);

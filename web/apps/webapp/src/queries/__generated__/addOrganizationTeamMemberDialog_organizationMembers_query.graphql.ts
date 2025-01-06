@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a23801d35c8121707c3eb3caa61153c>>
+ * @generated SignedSource<<b09c684b19f398faf3e43501fc71091c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type addTeamMemberDialog_organizationMembers_query$data = {
+export type addOrganizationTeamMemberDialog_organizationMembers_query$data = {
   readonly organizationMembers: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -28,11 +28,11 @@ export type addTeamMemberDialog_organizationMembers_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "addTeamMemberDialog_organizationMembers_query";
+  readonly " $fragmentType": "addOrganizationTeamMemberDialog_organizationMembers_query";
 };
-export type addTeamMemberDialog_organizationMembers_query$key = {
-  readonly " $data"?: addTeamMemberDialog_organizationMembers_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"addTeamMemberDialog_organizationMembers_query">;
+export type addOrganizationTeamMemberDialog_organizationMembers_query$key = {
+  readonly " $data"?: addOrganizationTeamMemberDialog_organizationMembers_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"addOrganizationTeamMemberDialog_organizationMembers_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -84,10 +84,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./addTeamMemberDialog_organizationMembers_refetchableFragment.graphql')
+      "operation": require('./addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment.graphql')
     }
   },
-  "name": "addTeamMemberDialog_organizationMembers_query",
+  "name": "addOrganizationTeamMemberDialog_organizationMembers_query",
   "selections": [
     {
       "alias": "organizationMembers",
@@ -268,6 +268,6 @@ return {
 };
 })();
 
-(node as any).hash = "95b49f61bde07ab039bd9dc1145c459d";
+(node as any).hash = "0a3a4000f0322508aed1bc3ec6aaeaf8";
 
 export default node;

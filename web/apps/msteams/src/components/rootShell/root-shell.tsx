@@ -4,14 +4,13 @@ import { SmallHeadingIconTypography } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import graphql from 'babel-plugin-relay/macro';
 import { AppBar } from 'components/appBar';
 import { LeftSideNavigationMenu } from 'components/navigationMenu';
 import { Observability } from 'components/observability';
 import { nanoid } from 'nanoid';
 import type { PropsWithChildren } from 'react';
-import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { useParams } from 'react-router-dom';
@@ -58,7 +57,6 @@ const RootShell = ({
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
 
-  const switchToModernUI = useContext(SwitchToModernUIContext);
   const [reloadCount, setReloadCount] = useState(0);
   const areCustomerRecordsSync = useCallback(
     () =>

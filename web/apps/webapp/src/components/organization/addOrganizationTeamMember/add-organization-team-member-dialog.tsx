@@ -1,6 +1,6 @@
-import type { addTeamMemberDialog_addTeamMemberMutation } from '@/queries/__generated__/addTeamMemberDialog_addTeamMemberMutation.graphql';
-import type { addTeamMemberDialog_organizationMembers_query$key } from '@/queries/__generated__/addTeamMemberDialog_organizationMembers_query.graphql';
-import type { addTeamMemberDialog_organizationMembers_refetchableFragment } from '@/queries/__generated__/addTeamMemberDialog_organizationMembers_refetchableFragment.graphql';
+import type { addOrganizationTeamMemberDialog_addTeamMemberMutation } from '@/queries/__generated__/addOrganizationTeamMemberDialog_addTeamMemberMutation.graphql';
+import type { addOrganizationTeamMemberDialog_organizationMembers_query$key } from '@/queries/__generated__/addOrganizationTeamMemberDialog_organizationMembers_query.graphql';
+import type { addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment } from '@/queries/__generated__/addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
@@ -32,7 +32,7 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { object, string } from 'yup';
 
 type Props = {
-  rootDataRelay: addTeamMemberDialog_organizationMembers_query$key;
+  rootDataRelay: addOrganizationTeamMemberDialog_organizationMembers_query$key;
   connectionIds: string[];
   teamId: string;
   isDialogOpen: boolean;
@@ -62,15 +62,15 @@ const schema = object({
   member: string().required('Member is required'),
 });
 
-const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const { data: rootData, refetch } = usePaginationFragment<
-    addTeamMemberDialog_organizationMembers_refetchableFragment,
-    addTeamMemberDialog_organizationMembers_query$key
+    addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment,
+    addOrganizationTeamMemberDialog_organizationMembers_query$key
   >(
     graphql`
-      fragment addTeamMemberDialog_organizationMembers_query on Query
+      fragment addOrganizationTeamMemberDialog_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
-      @refetchable(queryName: "addTeamMemberDialog_organizationMembers_refetchableFragment") {
+      @refetchable(queryName: "addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment") {
         organizationMembers(
           first: $count
           after: $cursor
@@ -98,8 +98,8 @@ const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpe
     rootDataRelay,
   );
 
-  const [commitAddTeamMember] = useMutation<addTeamMemberDialog_addTeamMemberMutation>(graphql`
-    mutation addTeamMemberDialog_addTeamMemberMutation($connectionIds: [ID!]!, $input: AddTeamMemberInput!) {
+  const [commitAddTeamMember] = useMutation<addOrganizationTeamMemberDialog_addTeamMemberMutation>(graphql`
+    mutation addOrganizationTeamMemberDialog_addTeamMemberMutation($connectionIds: [ID!]!, $input: AddTeamMemberInput!) {
       addTeamMember(input: $input) {
         teamMember @appendNode(connections: $connectionIds, edgeTypeName: "TeamMemberDetails") {
           id
@@ -260,4 +260,4 @@ const AddTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpe
   );
 };
 
-export default memo(AddTeamMemberDialog);
+export default memo(AddOrganizationTeamMemberDialog);

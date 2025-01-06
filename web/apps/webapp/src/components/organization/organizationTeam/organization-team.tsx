@@ -1,4 +1,5 @@
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
+import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
 import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
 import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
 import type { organizationTeam_query$key } from '@/queries/__generated__/organizationTeam_query.graphql';
@@ -55,7 +56,6 @@ import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import { getModernOrganizationTeamsBaseLink } from '../organization-link';
-import AddTeamMemberButton from './add-team-member-button';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
 
@@ -959,7 +959,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
 
                   <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                     <PushToRight />
-                    <AddTeamMemberButton
+                    <AddOrganizationTeamMemberButton
                       onReloadRequired={onReloadRequired}
                       connectionIds={connectionIds}
                       organizationId={organizationId}

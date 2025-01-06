@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<db6c9641b5752d83a6131a8f1b8f7ef4>>
+ * @generated SignedSource<<3e67b20a01037754185a0379dbfe6fd8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,11 +17,11 @@ export type AddTeamMemberInput = {
   id: string;
   organizationMemberId?: string | null | undefined;
 };
-export type addTeamMemberDialog_addTeamMemberMutation$variables = {
+export type addOrganizationTeamMemberDialog_addTeamMemberMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: AddTeamMemberInput;
 };
-export type addTeamMemberDialog_addTeamMemberMutation$data = {
+export type addOrganizationTeamMemberDialog_addTeamMemberMutation$data = {
   readonly addTeamMember: {
     readonly teamMember: {
       readonly customer: {
@@ -40,9 +40,9 @@ export type addTeamMemberDialog_addTeamMemberMutation$data = {
     };
   } | null | undefined;
 };
-export type addTeamMemberDialog_addTeamMemberMutation = {
-  response: addTeamMemberDialog_addTeamMemberMutation$data;
-  variables: addTeamMemberDialog_addTeamMemberMutation$variables;
+export type addOrganizationTeamMemberDialog_addTeamMemberMutation = {
+  response: addOrganizationTeamMemberDialog_addTeamMemberMutation$data;
+  variables: addOrganizationTeamMemberDialog_addTeamMemberMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -169,7 +169,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "addTeamMemberDialog_addTeamMemberMutation",
+    "name": "addOrganizationTeamMemberDialog_addTeamMemberMutation",
     "selections": [
       {
         "alias": null,
@@ -191,7 +191,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "addTeamMemberDialog_addTeamMemberMutation",
+    "name": "addOrganizationTeamMemberDialog_addTeamMemberMutation",
     "selections": [
       {
         "alias": null,
@@ -229,16 +229,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "78d128df0ca6d9c63eeb2f6cb14f390c",
+    "cacheID": "3401324e8dff88b4383a0ad1a7dac866",
     "id": null,
     "metadata": {},
-    "name": "addTeamMemberDialog_addTeamMemberMutation",
+    "name": "addOrganizationTeamMemberDialog_addTeamMemberMutation",
     "operationKind": "mutation",
-    "text": "mutation addTeamMemberDialog_addTeamMemberMutation(\n  $input: AddTeamMemberInput!\n) {\n  addTeamMember(input: $input) {\n    teamMember {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
+    "text": "mutation addOrganizationTeamMemberDialog_addTeamMemberMutation(\n  $input: AddTeamMemberInput!\n) {\n  addTeamMember(input: $input) {\n    teamMember {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "928be518f13fa9e4f8dab9dc3af0acff";
+(node as any).hash = "6199acd7ffbfe142c7e004174f3a1286";
 
 export default node;
