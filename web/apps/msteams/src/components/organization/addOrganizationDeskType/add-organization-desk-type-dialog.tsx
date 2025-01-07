@@ -114,9 +114,7 @@ const AddOrganizationDeskTypeDialog = ({ organizationId, connectionIds, isDialog
       <DialogContent>
         <Form
           onSubmit={handleAddClick}
-          initialValues={{
-            member: null,
-          }}
+          initialValues={{}}
           validate={validate}
           render={({ handleSubmit }) => {
             return (

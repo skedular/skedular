@@ -39,7 +39,7 @@ type ZoneDetails = {
 };
 
 const zoneSchema = object({
-  name: string().required('Desk type name is required'),
+  name: string().required('Zone name is required'),
 });
 
 const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
@@ -113,9 +113,7 @@ const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen
       <DialogContent>
         <Form
           onSubmit={handleAddClick}
-          initialValues={{
-            member: null,
-          }}
+          initialValues={{}}
           validate={validate}
           render={({ handleSubmit }) => {
             return (

@@ -5,22 +5,31 @@ import type { organizationManageAssets_deleteZonesMutation } from '@/queries/__g
 import type { organizationManageAssets_deskTypes_query$key } from '@/queries/__generated__/organizationManageAssets_deskTypes_query.graphql';
 import type { organizationManageAssets_deskTypes_refetchableFragment } from '@/queries/__generated__/organizationManageAssets_deskTypes_refetchableFragment.graphql';
 import type { organizationManageAssets_rootQuery } from '@/queries/__generated__/organizationManageAssets_rootQuery.graphql';
+import type { organizationManageAssets_updateDeskTypeMutation } from '@/queries/__generated__/organizationManageAssets_updateDeskTypeMutation.graphql';
+import type { organizationManageAssets_updateZoneMutation } from '@/queries/__generated__/organizationManageAssets_updateZoneMutation.graphql';
 import type { organizationManageAssets_zones_query$key } from '@/queries/__generated__/organizationManageAssets_zones_query.graphql';
 import type { organizationManageAssets_zones_refetchableFragment } from '@/queries/__generated__/organizationManageAssets_zones_refetchableFragment.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import {
   BodyIconTypography,
+  DefaultDialogTitle,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
   PushToRight,
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
   StackColumnWithSaveExitCancelAppBar,
   StackRow,
+  TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
@@ -39,15 +48,19 @@ import {
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
+import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { object, string } from 'yup';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationManageAssetsLeftSideNavigationMenuContent from './organization-manage-assets-left-side-navigation-menu-content';
 
@@ -75,6 +88,22 @@ type DeskTypeRowType = {
   name: string;
   moreActions: string;
 };
+
+type ZoneDetails = {
+  name: string;
+};
+
+const zoneSchema = object({
+  name: string().required('Zone name is required'),
+});
+
+type DeskTypeDetails = {
+  name: string;
+};
+
+const deskTypeSchema = object({
+  name: string().required('Desk type name is required'),
+});
 
 const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => {
   const rootData = usePreloadedQuery<organizationManageAssets_rootQuery>(RootQuery, queryReference);
@@ -150,6 +179,28 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
     }
   `);
 
+  const [commitUpdateZone] = useMutation<organizationManageAssets_updateZoneMutation>(graphql`
+    mutation organizationManageAssets_updateZoneMutation($input: UpdateZoneInput!) {
+      updateZone(input: $input) {
+        organizationTag {
+          id
+          name
+        }
+      }
+    }
+  `);
+
+  const [commitUpdateDeskType] = useMutation<organizationManageAssets_updateDeskTypeMutation>(graphql`
+    mutation organizationManageAssets_updateDeskTypeMutation($input: UpdateDeskTypeInput!) {
+      updateDeskType(input: $input) {
+        organizationTag {
+          id
+          name
+        }
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -166,6 +217,12 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
   const zoneMoreActionsMenuOpen = Boolean(zoneMoreActionsAnchorEl);
   const [deskTypeMoreActionsAnchorEl, setDeskTypeMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const deskTypeMoreActionsMenuOpen = Boolean(deskTypeMoreActionsAnchorEl);
+  const validateEditZone = makeValidate(zoneSchema);
+  const editZoneRequiredFields = makeRequired(zoneSchema);
+  const validateEditDeskType = makeValidate(deskTypeSchema);
+  const editDeskTypeRequiredFields = makeRequired(deskTypeSchema);
+  const [isEditZoneDialogOpen, setIsEditZoneDialogOpen] = useState(false);
+  const [isEditDeskTypeDialogOpen, setIsEditDeskTypeDialogOpen] = useState(false);
 
   const zoneMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditZone],
@@ -185,6 +242,7 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
 
     return rootDataZones.zones.edges.map(({ node }) => node);
   }, [rootDataZones.zones]);
+  const zoneDetails = useMemo(() => zones.find((item) => item.id === selectedZoneId), [selectedZoneId, zones]);
 
   const deskTypesConnectionIds = useMemo(
     () => (rootDataDeskTypes.deskTypes ? [rootDataDeskTypes.deskTypes.__id] : []),
@@ -197,6 +255,7 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
 
     return rootDataDeskTypes.deskTypes.edges.map(({ node }) => node);
   }, [rootDataDeskTypes.deskTypes]);
+  const deskTypeDetails = useMemo(() => deskTypes.find((item) => item.id === selectedDeskTypeId), [deskTypes, selectedDeskTypeId]);
 
   useEffect(() => {
     if (!section || section === 'zones-setup') {
@@ -273,9 +332,12 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
 
     switch (id) {
       case MoreActionsMenuOptionType.EditZone:
+        setZoneMoreActionsAnchorEl(null);
+        setIsEditZoneDialogOpen(true);
         break;
 
       case MoreActionsMenuOptionType.DeleteZone:
+        setZoneMoreActionsAnchorEl(null);
         handleRemoveZoneClick();
         break;
     }
@@ -286,9 +348,12 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
 
     switch (id) {
       case MoreActionsMenuOptionType.EditDeskType:
+        setDeskTypeMoreActionsAnchorEl(null);
+        setIsEditDeskTypeDialogOpen(true);
         break;
 
       case MoreActionsMenuOptionType.DeleteDeskType:
+        setDeskTypeMoreActionsAnchorEl(null);
         handleRemoveDeskTypeClick();
         break;
     }
@@ -442,6 +507,96 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
         });
       },
     });
+  };
+
+  const handleEditZoneClick = ({ name }: ZoneDetails) => {
+    if (!zoneDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Updating zone '${zoneDetails.name}'...`} />, infoNotificationOptions);
+
+    commitUpdateZone({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: zoneDetails.id,
+          name,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update zone '${zoneDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zone ${name} updated.`} />,
+        });
+
+        setIsEditZoneDialogOpen(false);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update zone '${zoneDetails.name}'. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const onEditZoneCancel = () => {
+    setIsEditZoneDialogOpen(false);
+  };
+
+  const handleEditDeskTypeClick = ({ name }: DeskTypeDetails) => {
+    if (!deskTypeDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Updating desk type '${deskTypeDetails.name}'...`} />, infoNotificationOptions);
+
+    commitUpdateDeskType({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: deskTypeDetails.id,
+          name,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update desk type '${deskTypeDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk type ${name} updated.`} />,
+        });
+
+        setIsEditDeskTypeDialogOpen(false);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update desk type '${deskTypeDetails.name}'. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const onEditDeskTypeCancel = () => {
+    setIsEditDeskTypeDialogOpen(false);
   };
 
   const zoneRows: ZoneRowType[] = zones.map((zone) => ({
@@ -689,6 +844,60 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
         onMenuItemClick={handleDeskTypeMoreActionsMenuItemClick}
         options={deskTypeMoreActionsOption}
       />
+
+      <Dialog TransitionComponent={DialogTransition} open={isEditZoneDialogOpen} fullWidth>
+        <DefaultDialogTitle title="Edit Zone" />
+        <DialogContent>
+          <Form
+            onSubmit={handleEditZoneClick}
+            initialValues={{
+              name: zoneDetails?.name,
+            }}
+            validate={validateEditZone}
+            render={({ handleSubmit }) => {
+              return (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <LeadIconTypography label="Edit zone details" />
+                  <SmallIconTypography label="Enter the name of the zone to update." />
+
+                  <FormFieldLabel label="Name" useWiderSpace>
+                    <TextField name="name" required={editZoneRequiredFields.name} />
+                  </FormFieldLabel>
+
+                  <TwoButtonsDialogActions onSecondaryClicked={onEditZoneCancel} primaryLabel="Save" secondaryLabel="Cancel" />
+                </FormStackColumn>
+              );
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog TransitionComponent={DialogTransition} open={isEditDeskTypeDialogOpen} fullWidth>
+        <DefaultDialogTitle title="Edit Desk Type" />
+        <DialogContent>
+          <Form
+            onSubmit={handleEditDeskTypeClick}
+            initialValues={{
+              name: deskTypeDetails?.name,
+            }}
+            validate={validateEditDeskType}
+            render={({ handleSubmit }) => {
+              return (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <LeadIconTypography label="Edit desk type details" />
+                  <SmallIconTypography label="Enter the name of the desk type to update." />
+
+                  <FormFieldLabel label="Name" useWiderSpace>
+                    <TextField name="name" required={editDeskTypeRequiredFields.name} />
+                  </FormFieldLabel>
+
+                  <TwoButtonsDialogActions onSecondaryClicked={onEditDeskTypeCancel} primaryLabel="Save" secondaryLabel="Cancel" />
+                </FormStackColumn>
+              );
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
