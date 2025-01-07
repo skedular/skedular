@@ -10,11 +10,12 @@ export type ZoneDetails = {
 
 type Props = {
   zone: ZoneDetails;
+  showFullName?: boolean;
 };
 
-const Zone = ({ zone }: Props) => (
+const Zone = ({ zone, showFullName }: Props) => (
   <Tooltip title={zone.name}>
-    <Chip label={`#${zone.name}`} sx={{ maxWidth: 100, backgroundColor: stringToColor(zone.id) }} />
+    <Chip label={`#${zone.name}`} sx={{ maxWidth: showFullName ? undefined : 100, backgroundColor: stringToColor(zone.id) }} />
   </Tooltip>
 );
 

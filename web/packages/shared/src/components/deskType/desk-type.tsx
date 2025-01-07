@@ -10,11 +10,12 @@ export type DeskTypeDetails = {
 
 type Props = {
   deskType: DeskTypeDetails;
+  showFullName?: boolean;
 };
 
-const DeskType = ({ deskType }: Props) => (
+const DeskType = ({ deskType, showFullName }: Props) => (
   <Tooltip title={deskType.name}>
-    <Chip label={`#${deskType.name}`} sx={{ maxWidth: 100, backgroundColor: stringToColor(deskType.id) }} />
+    <Chip label={`#${deskType.name}`} sx={{ maxWidth: showFullName ? undefined : 100, backgroundColor: stringToColor(deskType.id) }} />
   </Tooltip>
 );
 
