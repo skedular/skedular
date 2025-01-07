@@ -60,7 +60,7 @@ type OrganizationDetails = {
 };
 
 const organizationSchema = object({
-  name: string().min(3, 'Organization name must be at least three charcters long.').required('Organization name is required'),
+  name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().nullable(),
   industrySubCategoryIds: array().nullable(),

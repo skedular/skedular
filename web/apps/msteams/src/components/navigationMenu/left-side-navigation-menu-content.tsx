@@ -21,7 +21,7 @@ type Props = {
 
 const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggleCollapse, hideIcons }: Props) => {
   const location = useLocation();
-  const pathName = location.pathname;
+  const pathname = location.pathname;
   const paletteMode = useContext(PaletteModeContext);
   const maxWidth = collapsed ? collapsedDrawerWidth : expandedDrawerWidth;
   const logoUrl =
@@ -117,13 +117,13 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
         <ListItem disablePadding>
           <Link href={`/organizations/${finalOrganizationId}`}>
             <ListItemButton
-              selected={pathName === `/organizations/${finalOrganizationId}`}
-              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === `/organizations/${finalOrganizationId}`) }}
+              selected={pathname === `/organizations/${finalOrganizationId}`}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathname === `/organizations/${finalOrganizationId}`) }}
             >
               {collapsed && (
                 <BodyIconTypography
                   startElement={!hideIcons && <HomeIcon color="inherit" />}
-                  invertDefaultColor={pathName === `/organizations/${finalOrganizationId}` && paletteMode === 'dark'}
+                  invertDefaultColor={pathname === `/organizations/${finalOrganizationId}` && paletteMode === 'dark'}
                 />
               )}
               {!collapsed && (
@@ -131,7 +131,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
                   label="Home"
                   startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
                   spacing={3}
-                  invertDefaultColor={pathName === `/organizations/${finalOrganizationId}` && paletteMode === 'dark'}
+                  invertDefaultColor={pathname === `/organizations/${finalOrganizationId}` && paletteMode === 'dark'}
                 />
               )}
             </ListItemButton>
@@ -141,16 +141,16 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
         <ListItem disablePadding>
           <Link href={`/organizations/${finalOrganizationId}/locations`}>
             <ListItemButton
-              selected={pathName.startsWith(`/organizations/${finalOrganizationId}/locations`)}
+              selected={pathname.startsWith(`/organizations/${finalOrganizationId}/locations`)}
               sx={{
                 ...styles,
-                borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(`/organizations/${finalOrganizationId}/locations`)),
+                borderRadius: getSelectedListItemBorderRadius(pathname.startsWith(`/organizations/${finalOrganizationId}/locations`)),
               }}
             >
               {collapsed && (
                 <BodyIconTypography
                   startElement={!hideIcons && <LocationIcon color="inherit" />}
-                  invertDefaultColor={pathName.startsWith(`/organizations/${finalOrganizationId}/locations`) && paletteMode === 'dark'}
+                  invertDefaultColor={pathname.startsWith(`/organizations/${finalOrganizationId}/locations`) && paletteMode === 'dark'}
                 />
               )}
               {!collapsed && (
@@ -158,7 +158,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
                   label="Locations"
                   startElement={!hideIcons && <LocationIcon excludeTooltip color="inherit" />}
                   spacing={3}
-                  invertDefaultColor={pathName.startsWith(`/organizations/${finalOrganizationId}/locations`) && paletteMode === 'dark'}
+                  invertDefaultColor={pathname.startsWith(`/organizations/${finalOrganizationId}/locations`) && paletteMode === 'dark'}
                 />
               )}
             </ListItemButton>
@@ -168,13 +168,13 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
         <ListItem disablePadding>
           <Link href={`/organizations/${finalOrganizationId}/teams`}>
             <ListItemButton
-              selected={pathName.startsWith(`/organizations/${finalOrganizationId}/teams`)}
-              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(`/organizations/${finalOrganizationId}/teams`)) }}
+              selected={pathname.startsWith(`/organizations/${finalOrganizationId}/teams`)}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathname.startsWith(`/organizations/${finalOrganizationId}/teams`)) }}
             >
               {collapsed && (
                 <BodyIconTypography
                   startElement={!hideIcons && <TeamIcon color="inherit" />}
-                  invertDefaultColor={pathName.startsWith(`/organizations/${finalOrganizationId}/teams`) && paletteMode === 'dark'}
+                  invertDefaultColor={pathname.startsWith(`/organizations/${finalOrganizationId}/teams`) && paletteMode === 'dark'}
                 />
               )}
               {!collapsed && (
@@ -182,7 +182,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
                   label="Teams"
                   startElement={!hideIcons && <TeamIcon excludeTooltip color="inherit" />}
                   spacing={3}
-                  invertDefaultColor={pathName.startsWith(`/organizations/${finalOrganizationId}/teams`) && paletteMode === 'dark'}
+                  invertDefaultColor={pathname.startsWith(`/organizations/${finalOrganizationId}/teams`) && paletteMode === 'dark'}
                 />
               )}
             </ListItemButton>
@@ -192,13 +192,13 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
         <ListItem disablePadding>
           <Link href={`/${finalOrganizationId}/notifications`}>
             <ListItemButton
-              selected={pathName.startsWith(`/${finalOrganizationId}/notifications`)}
-              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(`/${finalOrganizationId}/notifications`)) }}
+              selected={pathname.startsWith(`/${finalOrganizationId}/notifications`)}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathname.startsWith(`/${finalOrganizationId}/notifications`)) }}
             >
               {collapsed && (
                 <BodyIconTypography
                   startElement={!hideIcons && <NotificationsIcon color="inherit" />}
-                  invertDefaultColor={pathName.startsWith(`/${finalOrganizationId}/notifications`) && paletteMode === 'dark'}
+                  invertDefaultColor={pathname.startsWith(`/${finalOrganizationId}/notifications`) && paletteMode === 'dark'}
                 />
               )}
               {!collapsed && (
@@ -206,7 +206,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
                   label="Notifications"
                   startElement={!hideIcons && <NotificationsIcon excludeTooltip color="inherit" />}
                   spacing={3}
-                  invertDefaultColor={pathName.startsWith(`/${finalOrganizationId}/notifications`) && paletteMode === 'dark'}
+                  invertDefaultColor={pathname.startsWith(`/${finalOrganizationId}/notifications`) && paletteMode === 'dark'}
                 />
               )}
             </ListItemButton>
@@ -216,13 +216,13 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
         <ListItem disablePadding>
           <Link href={`/${finalOrganizationId}/settings`}>
             <ListItemButton
-              selected={pathName.startsWith(`/${finalOrganizationId}/settings`)}
-              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(`/${finalOrganizationId}/settings`)) }}
+              selected={pathname.startsWith(`/${finalOrganizationId}/settings`)}
+              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathname.startsWith(`/${finalOrganizationId}/settings`)) }}
             >
               {collapsed && (
                 <BodyIconTypography
                   startElement={!hideIcons && <SettingsIcon color="inherit" />}
-                  invertDefaultColor={pathName.startsWith(`/${finalOrganizationId}/settings`) && paletteMode === 'dark'}
+                  invertDefaultColor={pathname.startsWith(`/${finalOrganizationId}/settings`) && paletteMode === 'dark'}
                 />
               )}
               {!collapsed && (
@@ -230,7 +230,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
                   label="Settings"
                   startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
                   spacing={3}
-                  invertDefaultColor={pathName.startsWith(`/${finalOrganizationId}/settings`) && paletteMode === 'dark'}
+                  invertDefaultColor={pathname.startsWith(`/${finalOrganizationId}/settings`) && paletteMode === 'dark'}
                 />
               )}
             </ListItemButton>

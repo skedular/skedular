@@ -3,6 +3,7 @@ export { default as MultipleChoicesZones } from './multiple-choices-zones';
 export {
   getModernOrganizationAdminBaseLink,
   getModernOrganizationLocationsBaseLink,
+  getModernOrganizationLocationSetupBaseLink,
   getModernOrganizationManageAssetsDeskTypesBaseLink,
   getModernOrganizationManageAssetsZonesBaseLink,
   getModernOrganizationMembersBaseLink,

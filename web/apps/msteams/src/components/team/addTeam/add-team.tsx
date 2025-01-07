@@ -62,7 +62,7 @@ type TeamDetails = {
 };
 
 const teamSchema = object({
-  name: string().min(3, 'Team name must be at least three charcters long.').required('Team name is required'),
+  name: string().min(3, 'Team name must be at least three characters long.').required('Team name is required'),
   about: string().nullable(),
   timezone: string().nullable(),
   organizationMemberIds: array().nullable(),

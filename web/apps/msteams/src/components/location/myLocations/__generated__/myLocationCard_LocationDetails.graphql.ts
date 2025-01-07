@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3adf13b5b1e8be9ae9aedc248697d0e8>>
+ * @generated SignedSource<<bd2a36fce15c321412c87bbae187376b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,9 @@ export type myLocationCard_LocationDetails$data = {
   readonly hasFutureBooking: boolean;
   readonly id: string;
   readonly name: string;
+  readonly organization: {
+    readonly uniqueId: string;
+  } | null | undefined;
   readonly physicalAddress: {
     readonly formattedAddress: string | null | undefined;
   } | null | undefined;
@@ -52,14 +55,15 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  },
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "uniqueId",
+  "storageKey": null
+},
+v3 = [
+  (v2/*: any*/),
   (v1/*: any*/)
 ];
 return {
@@ -77,7 +81,7 @@ return {
       "kind": "LinkedField",
       "name": "deskTypes",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": (v3/*: any*/),
       "storageKey": null
     },
     {
@@ -87,7 +91,7 @@ return {
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": (v3/*: any*/),
       "storageKey": null
     },
     {
@@ -140,6 +144,18 @@ return {
       "kind": "ScalarField",
       "name": "canDelete",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "LocationOrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": [
+        (v2/*: any*/)
+      ],
+      "storageKey": null
     }
   ],
   "type": "LocationDetails",
@@ -147,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "3104d6f1b7fb9fe0f0f279802314ebba";
+(node as any).hash = "ad228f9906332d103ddbb01ccb747557";
 
 export default node;

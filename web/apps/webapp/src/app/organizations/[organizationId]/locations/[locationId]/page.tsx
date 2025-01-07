@@ -1,11 +1,69 @@
 'use client';
 
 import { Location } from '@/components/location/locationPage';
+import { OrganizationLocation } from '@/components/organization/organizationLocation';
 import { RootShell } from '@/components/rootShell';
+import type { pageOrganizationLocation_rootQuery } from '@/queries/__generated__/pageOrganizationLocation_rootQuery.graphql';
+import { Breadcrumbs } from '@mui/material';
+import { BodyIconTypography } from '@repo/shared/components/commons';
+import { Loading } from '@repo/shared/components/loading';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
+import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
+import { nanoid } from 'nanoid';
 import { useParams } from 'next/navigation';
-import { memo } from 'react';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
-const LocationPage = () => {
+const RootQuery = graphql`
+  query pageOrganizationLocation_rootQuery($locationId: String!) {
+    location(id: $locationId) {
+      name
+    }
+    ...organizationLocation_query
+  }
+`;
+
+type Props = {
+  queryReference: PreloadedQuery<pageOrganizationLocation_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
+  organizationId: string;
+  locationId: string;
+};
+
+const LocationPage = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
+  const rootData = usePreloadedQuery<pageOrganizationLocation_rootQuery>(RootQuery, queryReference);
+  const switchToModernUI = useContext(SwitchToModernUIContext);
+
+  if (switchToModernUI) {
+    const breadcrumbs = (
+      <Breadcrumbs>
+        <BodyIconTypography label="Location Settings" />
+        <BodyIconTypography label={rootData.location?.name} />
+      </Breadcrumbs>
+    );
+
+    return (
+      <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+        <OrganizationLocation rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />
+      </RootShell>
+    );
+  }
+
+  return (
+    <RootShell>
+      <Location organizationId={organizationId} locationId={locationId} />
+    </RootShell>
+  );
+};
+
+const MemoLocationPage = memo(LocationPage);
+
+const LocationPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<pageOrganizationLocation_rootQuery>(RootQuery);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [, startTransition] = useTransition();
   const { organizationId, locationId } = useParams();
   let finalOrganizationId = '';
 
@@ -35,11 +93,37 @@ const LocationPage = () => {
     throw new Error('locationId is required');
   }
 
+  useEffect(() => {
+    loadQuery(
+      {
+        locationId: finalLocationId,
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReloadId, finalOrganizationId, finalLocationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReloadId(nanoid());
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
   return (
-    <RootShell>
-      <Location organizationId={finalOrganizationId} locationId={finalLocationId} />
-    </RootShell>
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoLocationPage
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={finalOrganizationId}
+        locationId={finalLocationId}
+      />
+    </ErrorBoundary>
   );
 };
 
-export default memo(LocationPage);
+export default memo(LocationPageWithRelay);

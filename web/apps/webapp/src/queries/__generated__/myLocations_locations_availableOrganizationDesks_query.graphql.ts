@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dd8e9ec808d12b2439babae3c14be103>>
+ * @generated SignedSource<<9ebdb0eef4bcb8d671980d5edec063bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,6 +32,9 @@ export type myLocations_locations_availableOrganizationDesks_query$data = {
         readonly hasFutureBooking: boolean;
         readonly id: string;
         readonly name: string;
+        readonly organization: {
+          readonly uniqueId: string;
+        } | null | undefined;
         readonly physicalAddress: {
           readonly formattedAddress: string | null | undefined;
         } | null | undefined;
@@ -94,6 +97,9 @@ v6 = {
 v7 = [
   (v6/*: any*/),
   (v5/*: any*/)
+],
+v8 = [
+  (v6/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -273,6 +279,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "LocationOrganizationDetails",
+                  "kind": "LinkedField",
+                  "name": "organization",
+                  "plural": false,
+                  "selections": (v8/*: any*/),
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "myLocationCard_LocationDetails"
@@ -377,9 +393,7 @@ return {
           "kind": "LinkedField",
           "name": "location",
           "plural": false,
-          "selections": [
-            (v6/*: any*/)
-          ],
+          "selections": (v8/*: any*/),
           "storageKey": null
         }
       ],
@@ -391,6 +405,6 @@ return {
 };
 })();
 
-(node as any).hash = "7acb4062aae589d6ce1be2ce8172c8fc";
+(node as any).hash = "b330461725b896ff86d8b99f899bd7f5";
 
 export default node;

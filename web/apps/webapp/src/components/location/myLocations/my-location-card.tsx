@@ -1,4 +1,5 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
+import { getModernOrganizationLocationSetupBaseLink } from '@/components/organization';
 import type { myLocationCard_deleteLocationMutation } from '@/queries/__generated__/myLocationCard_deleteLocationMutation.graphql';
 import type { myLocationCard_LocationDetails$key } from '@/queries/__generated__/myLocationCard_LocationDetails.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -11,6 +12,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
+import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
@@ -42,6 +44,8 @@ import { coal, sandstone } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
+import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -98,6 +102,9 @@ const MyLocationCard = ({
         hasFutureBooking
         canModify
         canDelete
+        organization {
+          uniqueId
+        }
       }
     `,
     locationDetailsRelay,
@@ -113,6 +120,7 @@ const MyLocationCard = ({
     }
   `);
 
+  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
@@ -125,6 +133,8 @@ const MyLocationCard = ({
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation]);
   }
 
+  const editLink = getModernOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id);
+
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
   };
@@ -134,6 +144,7 @@ const MyLocationCard = ({
 
     switch (id) {
       case MoreActionsMenuOptionType.EditLocation:
+        router.push(editLink);
         break;
 
       case MoreActionsMenuOptionType.DeleteLocation:
@@ -194,7 +205,9 @@ const MyLocationCard = ({
         <CardHeader
           title={
             <StackRow>
-              <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
+              <Link component={NextLink} href={editLink}>
+                <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
+              </Link>
               <PushToRight />
               <NewBookingButton
                 hideLocationControl={false}

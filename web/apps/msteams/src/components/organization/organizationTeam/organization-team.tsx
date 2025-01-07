@@ -1,12 +1,3 @@
-import { SingleChoiceLocation } from '@/components/location/locationSelector';
-import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
-import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
-import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
-import type { organizationTeam_query$key } from '@/queries/__generated__/organizationTeam_query.graphql';
-import type { organizationTeam_removeTeamMembersMutation } from '@/queries/__generated__/organizationTeam_removeTeamMembersMutation.graphql';
-import type { organizationTeam_teamMembers_query$key, TeamMemberRole } from '@/queries/__generated__/organizationTeam_teamMembers_query.graphql';
-import type { organizationTeam_teamMembers_refetchableFragment } from '@/queries/__generated__/organizationTeam_teamMembers_refetchableFragment.graphql';
-import type { organizationTeam_updateTeamMutation } from '@/queries/__generated__/organizationTeam_updateTeamMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -44,15 +35,25 @@ import { Search } from '@repo/shared/components/search';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
+import { SingleChoiceLocation } from 'components/location/locationSelector';
+import { AddOrganizationTeamMemberButton } from 'components/organization/addOrganizationTeamMember';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
+import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import { getModernOrganizationTeamsBaseLink } from '../organization-link';
+import type { organizationTeam_changeTeamMemberRoleMutation } from './__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
+import type { organizationTeam_changeTeamMembersStatusMutation } from './__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
+import type { organizationTeam_query$key } from './__generated__/organizationTeam_query.graphql';
+import type { organizationTeam_removeTeamMembersMutation } from './__generated__/organizationTeam_removeTeamMembersMutation.graphql';
+import type { organizationTeam_teamMembers_query$key, TeamMemberRole } from './__generated__/organizationTeam_teamMembers_query.graphql';
+import type { organizationTeam_teamMembers_refetchableFragment } from './__generated__/organizationTeam_teamMembers_refetchableFragment.graphql';
+import type { organizationTeam_updateTeamMutation } from './__generated__/organizationTeam_updateTeamMutation.graphql';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
 
@@ -232,10 +233,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   `);
 
   const [, startTransition] = useTransition();
-  const router = useRouter();
+  const navigate = useNavigate();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
@@ -354,7 +355,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           render: <NotificationContent content={`Team ${name} details updated.`} />,
         });
 
-        router.push(getModernOrganizationTeamsBaseLink(organizationId));
+        navigate(getModernOrganizationTeamsBaseLink(organizationId));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -377,7 +378,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleCancelClick = () => {
-    router.push(getModernOrganizationTeamsBaseLink(organizationId));
+    navigate(getModernOrganizationTeamsBaseLink(organizationId));
   };
 
   const handleDeactivateMembersClick = () => {

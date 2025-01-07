@@ -1,3 +1,4 @@
+import { getModernOrganizationLocationSetupBaseLink } from '@/components/organization';
 import type { myLocations_deleteLocationMutation } from '@/queries/__generated__/myLocations_deleteLocationMutation.graphql';
 import type { myLocations_locations_availableOrganizationDesks_query$key } from '@/queries/__generated__/myLocations_locations_availableOrganizationDesks_query.graphql';
 import type { myLocations_locations_availableOrganizationDesks_refetchableFragment } from '@/queries/__generated__/myLocations_locations_availableOrganizationDesks_refetchableFragment.graphql';
@@ -41,6 +42,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
+import { useRouter } from 'next/navigation';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -152,6 +154,9 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               hasFutureBooking
               canModify
               canDelete
+              organization {
+                uniqueId
+              }
               ...myLocationCard_LocationDetails
             }
           }
@@ -185,6 +190,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     }
   `);
 
+  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const connectionIds = useMemo(() => (rootDataRefetchable.locations ? [rootDataRefetchable.locations.__id] : []), [rootDataRefetchable.locations]);
@@ -241,6 +247,9 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
 
     switch (id) {
       case MoreActionsMenuOptionType.EditLocation:
+        if (locationDetails) {
+          router.push(getModernOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id));
+        }
         break;
 
       case MoreActionsMenuOptionType.DeleteLocation:

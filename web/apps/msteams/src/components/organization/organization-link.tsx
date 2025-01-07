@@ -34,6 +34,17 @@ export const getModernOrganizationTeamsBaseLink = (id: string) => `${getOrganiza
 export const getModernOrganizationTeamSetupBaseLink = (id: string, teamId: string) => `${getOrganizationBaseLink(id)}/teams/${teamId}?section=setup`;
 export const getModernOrganizationTeamMembersBaseLink = (id: string, teamId: string) =>
   `${getOrganizationBaseLink(id)}/teams/${teamId}?section=members`;
+export const getModernOrganizationTeamLocationBaseLink = (id: string, teamId: string) =>
+  `${getOrganizationBaseLink(id)}/teams/${teamId}?section=location`;
+
+export const getModernOrganizationManageAssetsZonesBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/manage-assets?section=zones-setup`;
+export const getModernOrganizationManageAssetsDeskTypesBaseLink = (id: string) =>
+  `${getOrganizationBaseLink(id)}/manage-assets?section=desk-types-setup`;
+
+export const getModernOrganizationLocationSetupBaseLink = (id: string, locationId: string) =>
+  `${getOrganizationBaseLink(id)}/locations/${locationId}?section=setup`;
+
+export const getModernOrganizationAdminBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin`;
 
 export const getOrganizationBookingsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=bookings`;
 export const getOrganizationSettingsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=about`;

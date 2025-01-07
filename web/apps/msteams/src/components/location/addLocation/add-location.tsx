@@ -35,7 +35,7 @@ type LocationDetails = {
 };
 
 const locationSchema = object({
-  name: string().min(3, 'Location name must be at least three charcters long.').required('Location name is required'),
+  name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
   physicalAddress: string().nullable(),

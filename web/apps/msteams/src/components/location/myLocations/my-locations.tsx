@@ -37,9 +37,11 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { getModernOrganizationLocationSetupBaseLink } from 'components/organization';
 import { nanoid } from 'nanoid';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import type { myLocations_deleteLocationMutation } from './__generated__/myLocations_deleteLocationMutation.graphql';
 import type { myLocations_locations_availableOrganizationDesks_query$key } from './__generated__/myLocations_locations_availableOrganizationDesks_query.graphql';
@@ -153,6 +155,9 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               hasFutureBooking
               canModify
               canDelete
+              organization {
+                uniqueId
+              }
               ...myLocationCard_LocationDetails
             }
           }
@@ -186,6 +191,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     }
   `);
 
+  const navigate = useNavigate();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const connectionIds = useMemo(() => (rootDataRefetchable.locations ? [rootDataRefetchable.locations.__id] : []), [rootDataRefetchable.locations]);
@@ -242,6 +248,9 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
 
     switch (id) {
       case MoreActionsMenuOptionType.EditLocation:
+        if (locationDetails) {
+          navigate(getModernOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id));
+        }
         break;
 
       case MoreActionsMenuOptionType.DeleteLocation:
