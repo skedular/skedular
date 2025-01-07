@@ -107,8 +107,8 @@
     "@mui/x-tree-view": "^7.23.2",
     "@mui/x-tree-view-pro": "^7.23.2",
     "@stripe/react-stripe-js": "^3.1.1",
-    "@stripe/stripe-js": "^5.4.0",
-    "@vis.gl/react-google-maps": "^1.4.2",
+    "@stripe/stripe-js": "^5.5.0",
+    "@vis.gl/react-google-maps": "^1.4.3",
     "countries-list": "^3.1.1",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
@@ -126,7 +126,7 @@
     "react-toastify": "^11.0.2",
     "relay-runtime": "^18.2.0",
     "usehooks-ts": "^3.1.0",
-    "uuid": "^11.0.3",
+    "uuid": "^11.0.4",
     "yup": "^1.6.1"
   },
   "devDependencies": {
@@ -149,6 +149,6 @@
     "relay-compiler-language-typescript": "^15.0.1",
     "relay-config": "^12.0.1",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.19.0"
+    "typescript-eslint": "^8.19.1"
   }
 }

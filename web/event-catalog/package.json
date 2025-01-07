@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@eventcatalog/core": "2.18.5"
+    "@eventcatalog/core": "2.18.6"
   },
   "devDependencies": {
     "@astrojs/mdx": "^4.0.3",

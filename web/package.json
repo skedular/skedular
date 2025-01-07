@@ -5,7 +5,7 @@
   "engines": {
     "node": "^20"
   },
-  "packageManager": "pnpm@9.15.2",
+  "packageManager": "pnpm@9.15.3",
   "workspace": [
     "apps/*",
     "packages/*"
