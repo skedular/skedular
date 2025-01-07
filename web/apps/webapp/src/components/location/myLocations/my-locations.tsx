@@ -88,7 +88,6 @@ type RowType = {
   desksAvailability: DesksAvailabilityDetails;
   zones: ZoneDetails[];
   teammates: ReadonlyArray<CustomerDetails>;
-  moreActions: string;
 };
 
 const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, organizationId, deskTypeIds, zoneIds, viewMode }: Props) => {
@@ -324,7 +323,6 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       zones,
       teammates: organizationMembers.map(({ customer }) => customer),
       physicalAddress: location.physicalAddress?.formattedAddress,
-      moreActions: location.id,
     };
   });
 
@@ -397,7 +395,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       renderCell: (params) => (
         <IconButton
           onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedLocationId(params.value);
+            setSelectedLocationId(params.id as string);
             setMoreActionsAnchorEl(event.currentTarget);
           }}
         >

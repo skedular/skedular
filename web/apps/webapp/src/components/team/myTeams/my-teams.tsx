@@ -69,7 +69,6 @@ type RowType = {
   id: string;
   team: TeamDetails;
   teammates: ReadonlyArray<CustomerDetails>;
-  moreActions: string;
 };
 
 const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode }: Props) => {
@@ -240,7 +239,6 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
       id: team.id,
       team,
       teammates: team.members.filter(({ organizationMember }) => !!organizationMember).map(({ organizationMember }) => organizationMember!.customer),
-      moreActions: team.id,
     };
   });
 
@@ -276,7 +274,7 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
       renderCell: (params) => (
         <IconButton
           onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedTeamId(params.value);
+            setSelectedTeamId(params.id as string);
             setMoreActionsAnchorEl(event.currentTarget);
           }}
         >

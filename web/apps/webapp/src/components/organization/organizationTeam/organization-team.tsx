@@ -88,20 +88,14 @@ type CustomerDetails = {
   phoneNumber?: string | null | undefined;
 };
 
-type MemberRole = {
-  id: string;
-  role: TeamMemberRole | null | undefined;
-};
-
 type RowType = {
   id: string;
   avatar: CustomerDetails;
   name: string;
   email: string | null | undefined;
   phoneNumber: string | null | undefined;
-  memberRole: MemberRole;
+  role: TeamMemberRole | null | undefined;
   status: boolean;
-  moreActions: string;
 };
 
 const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembersRelay, organizationId, teamId }: Props) => {
@@ -683,12 +677,8 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     name: getCustomerFullName(member.customer),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
-    memberRole: {
-      id: member.id,
-      role: member.role,
-    },
+    role: member.role,
     status: member.status === 'Active',
-    moreActions: member.id,
   }));
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
@@ -726,13 +716,13 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       minWidth: 200,
     },
     {
-      field: 'memberRole',
+      field: 'role',
       headerName: 'Role',
       editable: false,
       renderCell: (params) => (
         <Select
-          value={params.value.role}
-          onChange={(event) => handleRoleChanged(params.value.id, event.target.value as string)}
+          value={params.value}
+          onChange={(event) => handleRoleChanged(params.id as string, event.target.value as string)}
           size="small"
           sx={{
             borderRadius: 2,
@@ -782,7 +772,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       renderCell: (params) => (
         <IconButton
           onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedMemberId(params.value);
+            setSelectedMemberId(params.id as string);
             setMoreActionsAnchorEl(event.currentTarget);
           }}
         >

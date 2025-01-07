@@ -82,7 +82,6 @@ type RowType = {
   desks: ReadonlyArray<DeskDetails>;
   zones: ReadonlyArray<ZoneDetails>;
   teammates: ReadonlyArray<CustomerDetails>;
-  moreActions: string;
 };
 
 const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, from, to, locationIds, teamIds, viewMode }: Props) => {
@@ -326,7 +325,6 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       zones,
       teammates,
       date: toShortDateWithAdditionalDayInfo(dayjs(myBooking.from)),
-      moreActions: myBooking.id,
     };
   });
 
@@ -402,7 +400,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
       renderCell: (params) => (
         <IconButton
           onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedBookingId(params.value);
+            setSelectedBookingId(params.id as string);
             setMoreActionsAnchorEl(event.currentTarget);
           }}
         >

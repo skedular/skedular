@@ -94,11 +94,6 @@ type CustomerDetails = {
   phoneNumber?: string | null | undefined;
 };
 
-type MemberRole = {
-  id: string;
-  role: OrganizationMemberRole | null | undefined;
-};
-
 type RowType = {
   id: string;
   avatar: CustomerDetails;
@@ -106,9 +101,8 @@ type RowType = {
   teams: string;
   email: string | null | undefined;
   phoneNumber: string | null | undefined;
-  memberRole: MemberRole;
+  role: OrganizationMemberRole | null | undefined;
   status: boolean;
-  moreActions: string;
 };
 
 const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
@@ -595,12 +589,8 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
     teams: member.teams.map((team) => team.name).join(', '),
     email: member.customer.email,
     phoneNumber: member.customer.phoneNumber,
-    memberRole: {
-      id: member.id,
-      role: member.role,
-    },
+    role: member.role,
     status: member.status === 'Active',
-    moreActions: member.id,
   }));
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
@@ -646,13 +636,13 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
       minWidth: 200,
     },
     {
-      field: 'memberRole',
+      field: 'role',
       headerName: 'Role',
       editable: false,
       renderCell: (params) => (
         <Select
-          value={params.value.role}
-          onChange={(event) => handleRoleChanged(params.value.id, event.target.value as string)}
+          value={params.value}
+          onChange={(event) => handleRoleChanged(params.id as string, event.target.value as string)}
           size="small"
           sx={{
             borderRadius: 2,
@@ -702,7 +692,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
       renderCell: (params) => (
         <IconButton
           onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedMemberId(params.value);
+            setSelectedMemberId(params.id as string);
             setMoreActionsAnchorEl(event.currentTarget);
           }}
         >

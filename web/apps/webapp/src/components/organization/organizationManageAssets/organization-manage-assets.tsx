@@ -82,13 +82,11 @@ const RootQuery = graphql`
 type ZoneRowType = {
   id: string;
   name: string;
-  moreActions: string;
 };
 
 type DeskTypeRowType = {
   id: string;
   name: string;
-  moreActions: string;
 };
 
 type ZoneDetails = {
@@ -604,7 +602,6 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
   const zoneRows: ZoneRowType[] = zones.map((zone) => ({
     id: zone.id,
     name: zone.name,
-    moreActions: zone.id,
   }));
 
   const zoneColumns: GridColDef<(typeof zoneRows)[number]>[] = [
@@ -612,7 +609,7 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
       field: 'name',
       headerName: 'Name',
       editable: false,
-      renderCell: (params) => <Zone zone= {{id: params.id as string, name: params.value}}/>,
+      renderCell: (params) => <Zone zone={{ id: params.id as string, name: params.value }} />,
       display: 'flex',
       minWidth: 200,
     },
@@ -625,7 +622,7 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
       renderCell: (params) => (
         <IconButton
           onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedZoneId(params.value);
+            setSelectedZoneId(params.id as string);
             setZoneMoreActionsAnchorEl(event.currentTarget);
           }}
         >
@@ -638,7 +635,6 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
   const deskTypeRows: DeskTypeRowType[] = deskTypes.map((deskType) => ({
     id: deskType.id,
     name: deskType.name,
-    moreActions: deskType.id,
   }));
 
   const deskTypeColumns: GridColDef<(typeof deskTypeRows)[number]>[] = [
@@ -646,7 +642,7 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
       field: 'name',
       headerName: 'Name',
       editable: false,
-      renderCell: (params) => <DeskType deskType= {{id: params.id as string, name: params.value}}/>,
+      renderCell: (params) => <DeskType deskType={{ id: params.id as string, name: params.value }} />,
       display: 'flex',
       minWidth: 200,
     },
@@ -659,7 +655,7 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
       renderCell: (params) => (
         <IconButton
           onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedDeskTypeId(params.value);
+            setSelectedDeskTypeId(params.id as string);
             setDeskTypeMoreActionsAnchorEl(event.currentTarget);
           }}
         >
