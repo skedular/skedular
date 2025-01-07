@@ -31,6 +31,7 @@ import {
   StackRow,
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
+import { DeskType } from '@repo/shared/components/deskType';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -49,6 +50,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { DialogTransition } from '@repo/shared/components/transitions';
+import { Zone } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
@@ -610,7 +612,7 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
       field: 'name',
       headerName: 'Name',
       editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      renderCell: (params) => <Zone zone= {{id: params.id as string, name: params.value}}/>,
       display: 'flex',
       minWidth: 200,
     },
@@ -644,7 +646,7 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
       field: 'name',
       headerName: 'Name',
       editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      renderCell: (params) => <DeskType deskType= {{id: params.id as string, name: params.value}}/>,
       display: 'flex',
       minWidth: 200,
     },
