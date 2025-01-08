@@ -42,9 +42,19 @@ internal static class DeskExtensions
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
         {
+            query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
+        }
+
+        if (searchCriteria.ZoneIds.Count != 0)
+        {
             query = query.Where(item =>
-                EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%") ||
-                item.OrganizationTags.Any(tag => EF.Functions.ILike(tag.Name, $"%{searchCriteria.NameContains}%")));
+                searchCriteria.ZoneIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
+        }
+
+        if (searchCriteria.DeskTypeIds.Count != 0)
+        {
+            query = query.Where(item =>
+                searchCriteria.DeskTypeIds.All(deskTypeId => item.OrganizationTags.Any(tag => tag.Id == deskTypeId)));
         }
 
         return query;

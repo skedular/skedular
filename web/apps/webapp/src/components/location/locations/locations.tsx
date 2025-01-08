@@ -26,10 +26,11 @@ const RootQuery = graphql`
     $organizationId: String!
     $locationsSortingValues: [LocationOrderInput!]!
     $zonesSortingValues: [OrganizationTagOrderInput!]!
+    $deskTypesSortingValues: [OrganizationTagOrderInput!]!
     $todayDate: DateTime!
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $zoneIds: [String!]!
-    $deskTypeIds: [String!]!
+    $zoneIds: [String!]
+    $deskTypeIds: [String!]
   ) {
     organization(id: $organizationId) {
       canModify
@@ -110,6 +111,12 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
             field: 'Name',
           },
         ],
+        deskTypesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
         todayDate: today.toISOString(),
         organizationMembersSortingValues: [
           {
@@ -117,8 +124,6 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
             field: 'Name',
           },
         ],
-        deskTypeIds: [],
-        zoneIds: [],
       },
       {
         fetchPolicy: 'store-and-network',

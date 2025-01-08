@@ -20,7 +20,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
   const rootData = useFragment<deskTypeSelector_allDeskTypes_query$key>(
     graphql`
       fragment deskTypeSelector_allDeskTypes_query on Query {
-        deskTypes(where: { organizationId: $organizationId }) {
+        deskTypes(where: { organizationId: $organizationId }, orderBy: $deskTypesSortingValues) {
           __id
           totalCount
           edges {
@@ -55,7 +55,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
         if (selectedItem) {
           return (
             <StackRow sx={{ alignItems: 'center' }}>
-              <LeadIconTypography label="Desks" startElement={<DeskTypeIcon />} />
+              <LeadIconTypography label="Desk Types" startElement={<DeskTypeIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
               <SmallIconTypography label={selectedItem.name} />
@@ -65,7 +65,7 @@ const DeskTypeSelector = ({ rootDataRelay, onChange }: Props) => {
 
         return (
           <StackRow sx={{ alignItems: 'center' }}>
-            <LeadIconTypography label="Desks" startElement={<DeskTypeIcon />} />
+            <LeadIconTypography label="Desk Types" startElement={<DeskTypeIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
             <SmallIconTypography label="All" />

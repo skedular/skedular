@@ -17,11 +17,20 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 const RootQuery = graphql`
-  query pageOrganizationLocation_rootQuery($locationId: String!) {
+  query pageOrganizationLocation_rootQuery(
+    $organizationId: String!
+    $locationId: String!
+    $deskNameSearchText: String
+    $zonesSortingValues: [OrganizationTagOrderInput!]!
+    $deskTypesSortingValues: [OrganizationTagOrderInput!]!
+    $deskZoneIds: [String!]
+    $deskDeskTypeIds: [String!]
+  ) {
     location(id: $locationId) {
       name
     }
     ...organizationLocation_query
+    ...organizationLocation_desks_query
   }
 `;
 
@@ -46,7 +55,13 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, locati
 
     return (
       <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-        <OrganizationLocation rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />
+        <OrganizationLocation
+          rootDataRelay={rootData}
+          rootDataDesksRelay={rootData}
+          onReloadRequired={onReloadRequired}
+          organizationId={organizationId}
+          locationId={locationId}
+        />
       </RootShell>
     );
   }
@@ -96,7 +111,20 @@ const LocationPageWithRelay = () => {
   useEffect(() => {
     loadQuery(
       {
+        organizationId: finalOrganizationId,
         locationId: finalLocationId,
+        zonesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        deskTypesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
       },
       {
         fetchPolicy: 'store-and-network',

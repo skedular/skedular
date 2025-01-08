@@ -244,7 +244,11 @@ public class LocationGrpcService(
                 request.First.FromNullInt(),
                 request.Before,
                 request.Last.FromNullInt()),
-            new DeskSearchCriteria(request.Where.LocationId, request.Where.NameContains),
+            new DeskSearchCriteria(
+                request.Where.LocationId,
+                request.Where.NameContains, 
+                request.Where.ZoneIds,
+                request.Where.DeskTypeIds),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==

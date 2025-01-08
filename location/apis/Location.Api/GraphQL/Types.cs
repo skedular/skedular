@@ -125,6 +125,8 @@ public class DeskWhereInput
 {
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
+    [GraphQLName("zoneIds")] public string[]? ZoneIds { get; set; }
+    [GraphQLName("deskTypeIds")] public string[]? DeskTypeIds { get; set; }
 }
 
 [GraphQLName("InviteCustomersToJoinLocationInput")]

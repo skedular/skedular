@@ -1,10 +1,10 @@
-import { getModernOrganizationLocationSetupBaseLink } from '@/components/organization';
+import { getModernOrganizationLocationManageDesksBaseLink, getModernOrganizationLocationSetupBaseLink } from '@/components/organization';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
-import { EditIcon } from '@repo/shared/components/icons';
+import { DeskIcon, EditIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
 import NextLink from 'next/link';
@@ -55,6 +55,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getModernOrganizationLocationSetupBaseLink(organizationId, locationId);
+  const manageDesksLink = getModernOrganizationLocationManageDesksBaseLink(organizationId, locationId);
 
   return (
     <List
@@ -83,6 +84,31 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
                 startElement={!hideIcons && <EditIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={manageDesksLink}>
+          <ListItemButton
+            selected={fullPath === manageDesksLink}
+            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageDesksLink) }}
+          >
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <DeskIcon color="inherit" excludeTooltip />}
+                invertDefaultColor={fullPath === manageDesksLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Manage Desks"
+                startElement={!hideIcons && <DeskIcon color="inherit" excludeTooltip />}
+                spacing={3}
+                invertDefaultColor={fullPath === manageDesksLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

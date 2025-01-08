@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b67adae583afb2e389f8e8dd85ade34b>>
+ * @generated SignedSource<<54dba0a3fcf3622cd617c80b440eae33>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,12 +27,13 @@ export type OrganizationMemberOrderInput = {
   field: OrganizationMemberOrderField;
 };
 export type locations_rootQuery$variables = {
-  deskTypeIds: ReadonlyArray<string>;
+  deskTypeIds?: ReadonlyArray<string> | null | undefined;
+  deskTypesSortingValues: ReadonlyArray<OrganizationTagOrderInput>;
   locationsSortingValues: ReadonlyArray<LocationOrderInput>;
   organizationId: string;
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   todayDate: any;
-  zoneIds: ReadonlyArray<string>;
+  zoneIds?: ReadonlyArray<string> | null | undefined;
   zonesSortingValues: ReadonlyArray<OrganizationTagOrderInput>;
 };
 export type locations_rootQuery$data = {
@@ -55,81 +56,86 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "locationsSortingValues"
+  "name": "deskTypesSortingValues"
 },
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "locationsSortingValues"
 },
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationMembersSortingValues"
+  "name": "organizationId"
 },
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "todayDate"
+  "name": "organizationMembersSortingValues"
 },
 v5 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "zoneIds"
+  "name": "todayDate"
 },
 v6 = {
   "defaultValue": null,
   "kind": "LocalArgument",
+  "name": "zoneIds"
+},
+v7 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
   "name": "zonesSortingValues"
 },
-v7 = [
+v8 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "organizationId"
   }
 ],
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "canModify",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v10 = {
+v11 = {
   "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
 },
-v11 = {
+v12 = {
   "fields": [
-    (v10/*: any*/)
+    (v11/*: any*/)
   ],
   "kind": "ObjectValue",
   "name": "where"
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v14 = {
+v15 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -141,8 +147,8 @@ v14 = {
     }
   ]
 },
-v15 = [
-  (v12/*: any*/),
+v16 = [
+  (v13/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -159,34 +165,34 @@ v15 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v9/*: any*/),
-          (v13/*: any*/)
+          (v10/*: any*/),
+          (v14/*: any*/)
         ],
         "storageKey": null
       }
     ],
     "storageKey": null
   },
-  (v14/*: any*/)
+  (v15/*: any*/)
 ],
-v16 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v17 = {
+v18 = {
   "kind": "Variable",
   "name": "deskTypeIds",
   "variableName": "deskTypeIds"
 },
-v18 = {
+v19 = {
   "kind": "Variable",
   "name": "zoneIds",
   "variableName": "zoneIds"
 },
-v19 = [
+v20 = [
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -194,20 +200,20 @@ v19 = [
   },
   {
     "fields": [
-      (v17/*: any*/),
-      (v10/*: any*/),
-      (v18/*: any*/)
+      (v18/*: any*/),
+      (v11/*: any*/),
+      (v19/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v20 = [
-  (v16/*: any*/),
-  (v13/*: any*/)
-],
 v21 = [
-  (v16/*: any*/)
+  (v17/*: any*/),
+  (v14/*: any*/)
+],
+v22 = [
+  (v17/*: any*/)
 ];
 return {
   "fragment": {
@@ -218,7 +224,8 @@ return {
       (v3/*: any*/),
       (v4/*: any*/),
       (v5/*: any*/),
-      (v6/*: any*/)
+      (v6/*: any*/),
+      (v7/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -226,13 +233,13 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v8/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v8/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
@@ -263,12 +270,13 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v2/*: any*/),
-      (v1/*: any*/),
-      (v6/*: any*/),
-      (v4/*: any*/),
       (v3/*: any*/),
+      (v2/*: any*/),
+      (v7/*: any*/),
+      (v1/*: any*/),
       (v5/*: any*/),
+      (v4/*: any*/),
+      (v6/*: any*/),
       (v0/*: any*/)
     ],
     "kind": "Operation",
@@ -276,27 +284,32 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v8/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v8/*: any*/),
-          (v9/*: any*/)
+          (v9/*: any*/),
+          (v10/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
         "args": [
-          (v11/*: any*/)
+          {
+            "kind": "Variable",
+            "name": "orderBy",
+            "variableName": "deskTypesSortingValues"
+          },
+          (v12/*: any*/)
         ],
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "deskTypes",
         "plural": false,
-        "selections": (v15/*: any*/),
+        "selections": (v16/*: any*/),
         "storageKey": null
       },
       {
@@ -307,13 +320,13 @@ return {
             "name": "orderBy",
             "variableName": "zonesSortingValues"
           },
-          (v11/*: any*/)
+          (v12/*: any*/)
         ],
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "zones",
         "plural": false,
-        "selections": (v15/*: any*/),
+        "selections": (v16/*: any*/),
         "storageKey": null
       },
       {
@@ -324,14 +337,14 @@ return {
             "name": "orderBy",
             "variableName": "organizationMembersSortingValues"
           },
-          (v11/*: any*/)
+          (v12/*: any*/)
         ],
         "concreteType": "OrganizationMemberConnection",
         "kind": "LinkedField",
         "name": "organizationMembers",
         "plural": false,
         "selections": [
-          (v12/*: any*/),
+          (v13/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -348,7 +361,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v9/*: any*/),
+                  (v10/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -357,8 +370,8 @@ return {
                     "name": "customer",
                     "plural": false,
                     "selections": [
-                      (v16/*: any*/),
-                      (v13/*: any*/),
+                      (v17/*: any*/),
+                      (v14/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -396,19 +409,19 @@ return {
             ],
             "storageKey": null
           },
-          (v14/*: any*/)
+          (v15/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v19/*: any*/),
+        "args": (v20/*: any*/),
         "concreteType": "LocationConnection",
         "kind": "LinkedField",
         "name": "locations",
         "plural": false,
         "selections": [
-          (v12/*: any*/),
+          (v13/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -425,8 +438,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v9/*: any*/),
-                  (v13/*: any*/),
+                  (v10/*: any*/),
+                  (v14/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -434,7 +447,7 @@ return {
                     "kind": "LinkedField",
                     "name": "deskTypes",
                     "plural": true,
-                    "selections": (v20/*: any*/),
+                    "selections": (v21/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -444,7 +457,7 @@ return {
                     "kind": "LinkedField",
                     "name": "zones",
                     "plural": true,
-                    "selections": (v20/*: any*/),
+                    "selections": (v21/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -455,7 +468,7 @@ return {
                     "name": "desks",
                     "plural": true,
                     "selections": [
-                      (v9/*: any*/)
+                      (v10/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -484,7 +497,7 @@ return {
                     "name": "hasFutureBooking",
                     "storageKey": null
                   },
-                  (v8/*: any*/),
+                  (v9/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -499,7 +512,7 @@ return {
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
-                    "selections": (v21/*: any*/),
+                    "selections": (v22/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -547,13 +560,13 @@ return {
             ],
             "storageKey": null
           },
-          (v14/*: any*/)
+          (v15/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v19/*: any*/),
+        "args": (v20/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -583,9 +596,9 @@ return {
                 "name": "deskIdsToInclude",
                 "value": []
               },
-              (v17/*: any*/),
-              (v10/*: any*/),
-              (v18/*: any*/)
+              (v18/*: any*/),
+              (v11/*: any*/),
+              (v19/*: any*/)
             ],
             "kind": "ObjectValue",
             "name": "where"
@@ -603,7 +616,7 @@ return {
             "kind": "LinkedField",
             "name": "location",
             "plural": false,
-            "selections": (v21/*: any*/),
+            "selections": (v22/*: any*/),
             "storageKey": null
           }
         ],
@@ -612,16 +625,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e7a078dad6e09cd305c99d3939a0193c",
+    "cacheID": "94ce3001712862118e34a6a624de8990",
     "id": null,
     "metadata": {},
     "name": "locations_rootQuery",
     "operationKind": "query",
-    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $zonesSortingValues: [OrganizationTagOrderInput!]!\n  $todayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $zoneIds: [String!]!\n  $deskTypeIds: [String!]!\n) {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n  ...myLocations_query\n  ...myLocations_locations_availableOrganizationDesks_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  deskTypes {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n  desks {\n    id\n  }\n  physicalAddress {\n    formattedAddress\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueId\n  }\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        desks {\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueId\n        }\n        ...myLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableDesks(where: {organizationId: $organizationId, date: $todayDate, deskIdsToInclude: [], zoneIds: $zoneIds, deskTypeIds: $deskTypeIds, combineDeskTypesZones: true}) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment myLocations_query on Query {\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query locations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $zonesSortingValues: [OrganizationTagOrderInput!]!\n  $deskTypesSortingValues: [OrganizationTagOrderInput!]!\n  $todayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $zoneIds: [String!]\n  $deskTypeIds: [String!]\n) {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n  ...myLocations_query\n  ...myLocations_locations_availableOrganizationDesks_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $deskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment myLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  deskTypes {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n  desks {\n    id\n  }\n  physicalAddress {\n    formattedAddress\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueId\n  }\n}\n\nfragment myLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        desks {\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueId\n        }\n        ...myLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableDesks(where: {organizationId: $organizationId, date: $todayDate, deskIdsToInclude: [], zoneIds: $zoneIds, deskTypeIds: $deskTypeIds, combineDeskTypesZones: true}) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment myLocations_query on Query {\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ff72aa495798a6a77f02daceaac525c7";
+(node as any).hash = "ee447f4c31ea3c1a9dd369c69d3cad82";
 
 export default node;

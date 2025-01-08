@@ -264,6 +264,8 @@ input DeskOrderInput {
 input DeskWhereInput {
   locationId: String!
   nameContains: String
+  zoneIds: [String!]
+  deskTypeIds: [String!]
 }
 
 input InviteCustomersToJoinLocationInput {

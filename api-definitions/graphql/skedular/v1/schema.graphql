@@ -1237,8 +1237,10 @@ input DeskTypeOrganizationTagWhereInput {
 }
 
 input DeskWhereInput {
+  deskTypeIds: [String!]
   locationId: String!
   nameContains: String
+  zoneIds: [String!]
 }
 
 input InviteCustomersToJoinLocationInput {

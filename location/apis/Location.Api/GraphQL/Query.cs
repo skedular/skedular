@@ -187,7 +187,7 @@ public class Query(IMapper mapper)
         var (paginatedInfo, edges, totalCount) =
             await deskService.GetPaginatedDesksAsync(
                 new PaginationInputParam(after, first, before, last),
-                new DeskSearchCriteria(where.LocationId, where.NameContains),
+                new DeskSearchCriteria(where.LocationId, where.NameContains, where.ZoneIds, where.DeskTypeIds),
                 orderBy is null
                     ? []
                     : orderBy.Select(item =>

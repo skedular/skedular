@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3020a5012609f6a820fefdec33dbaf85>>
+ * @generated SignedSource<<a050c03be5c1c148d0aa54f677a8ce1c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,7 @@ export type organizationLocation_query$data = {
     } | null | undefined;
     readonly timezone: string | null | undefined;
   } | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"deskTypeSelector_allDeskTypes_query" | "zoneSelector_allZones_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
 export type organizationLocation_query$key = {
@@ -100,12 +101,22 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "deskTypeSelector_allDeskTypes_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "zoneSelector_allZones_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "6e74be5fb7b44c1a401d0cfc9ce49c84";
+(node as any).hash = "db651047a82ad6d015adc8462cf4aa66";
 
 export default node;
