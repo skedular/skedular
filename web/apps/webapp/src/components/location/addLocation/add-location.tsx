@@ -1,6 +1,14 @@
 import type { addLocation_addLocationMutation } from '@/queries/__generated__/addLocation_addLocationMutation.graphql';
 import type { addLocation_completeLocationOnboardingMutation } from '@/queries/__generated__/addLocation_completeLocationOnboardingMutation.graphql';
-import { FormFieldLabel, StackColumnWithSaveExitCancelAppBar } from '@repo/shared/components/commons';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import {
+  BodyIconTypography,
+  FormFieldLabel,
+  SectionIconTypography,
+  StackColumn,
+  StackColumnWithSaveExitCancelAppBar,
+} from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import {
   errorNotificationOptions,
@@ -9,6 +17,7 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -169,35 +178,49 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, canc
   };
 
   return (
-    <Form
-      onSubmit={handleLocationCreateClick}
-      initialValues={{
-        name: '',
-        about: null,
-        organizationId,
-        physicalAddress: null,
-      }}
-      validate={validate}
-      render={({ handleSubmit }) => (
-        <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location" useChildrenPadding>
-          <FormFieldLabel label="Name">
-            <TextField name="name" required={requiredFields.name} />
-          </FormFieldLabel>
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Form
+            onSubmit={handleLocationCreateClick}
+            initialValues={{
+              name: '',
+              about: null,
+              organizationId,
+              physicalAddress: null,
+            }}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location">
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Location Setup" />
+                  <BodyIconTypography label="Edit your location name and details" />
+                  <Divider />
+                </StackColumn>
 
-          <FormFieldLabel label="About">
-            <TextField name="about" required={requiredFields.about} multiline rows={3} />
-          </FormFieldLabel>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredFields.name} />
+                  </FormFieldLabel>
 
-          <FormFieldLabel label="Timezone">
-            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-          </FormFieldLabel>
+                  <FormFieldLabel label="About">
+                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
+                  </FormFieldLabel>
 
-          <FormFieldLabel label="Physical Address">
-            <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
-          </FormFieldLabel>
-        </StackColumnWithSaveExitCancelAppBar>
-      )}
-    />
+                  <FormFieldLabel label="Timezone">
+                    <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Physical Address">
+                    <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
+                  </FormFieldLabel>
+                </StackColumn>
+              </StackColumnWithSaveExitCancelAppBar>
+            )}
+          />
+        </Box>
+      </Box>
+    </>
   );
 };
 

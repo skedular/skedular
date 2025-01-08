@@ -3,7 +3,15 @@ import { OrganizationMemberSelector } from '@/components/organization';
 import type { addTeam_addTeamMutation } from '@/queries/__generated__/addTeam_addTeamMutation.graphql';
 import type { addTeam_completeTeamOnboardingMutation } from '@/queries/__generated__/addTeam_completeTeamOnboardingMutation.graphql';
 import type { addTeam_rootQuery } from '@/queries/__generated__/addTeam_rootQuery.graphql';
-import { FormFieldLabel, StackColumnWithSaveExitCancelAppBar } from '@repo/shared/components/commons';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import {
+  BodyIconTypography,
+  FormFieldLabel,
+  SectionIconTypography,
+  StackColumn,
+  StackColumnWithSaveExitCancelAppBar,
+} from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -15,6 +23,7 @@ import {
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -202,50 +211,82 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   }
 
   return (
-    <Form
-      onSubmit={handleTeamCreateClick}
-      initialValues={{
-        name: '',
-        about: null,
-        organizationMemberIds: [],
-        primaryLocationId: null,
-      }}
-      validate={validate}
-      render={({ handleSubmit }) => (
-        <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Team" useChildrenPadding>
-          <FormFieldLabel label="Name">
-            <TextField name="name" required={requiredFields.name} />
-          </FormFieldLabel>
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Form
+            onSubmit={handleTeamCreateClick}
+            initialValues={{
+              name: '',
+              about: null,
+              organizationMemberIds: [],
+              primaryLocationId: null,
+            }}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Team">
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Team Setup" />
+                  <BodyIconTypography label="Edit your team name and details" />
+                  <Divider />
+                </StackColumn>
 
-          <FormFieldLabel label="About">
-            <TextField name="about" required={requiredFields.about} multiline rows={3} />
-          </FormFieldLabel>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredFields.name} />
+                  </FormFieldLabel>
 
-          <FormFieldLabel label="Timezone">
-            <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-          </FormFieldLabel>
+                  <FormFieldLabel label="About">
+                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
+                  </FormFieldLabel>
 
-          {organizationId && (
-            <FormFieldLabel label="Primary Location">
-              <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
-            </FormFieldLabel>
-          )}
+                  <FormFieldLabel label="Timezone">
+                    <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+                  </FormFieldLabel>
+                </StackColumn>
 
-          {organizationId && (
-            <FormFieldLabel label="Organization Member">
-              <OrganizationMemberSelector
-                rootDataRelay={rootData}
-                organizationId={organizationId}
-                name="organizationMemberIds"
-                required={requiredFields.organizationMemberIds}
-                multiple={true}
-                useMemberId={true}
-              />
-            </FormFieldLabel>
-          )}
-        </StackColumnWithSaveExitCancelAppBar>
-      )}
-    />
+                {organizationId && (
+                  <>
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <SectionIconTypography label="Location Settings" />
+                      <BodyIconTypography label="Assign team to locations" />
+                      <Divider />
+                    </StackColumn>
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Primary Location">
+                        <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </>
+                )}
+
+                {organizationId && (
+                  <>
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <SectionIconTypography label="Team Members" />
+                      <BodyIconTypography label="Manage your team members" />
+                      <Divider />
+                    </StackColumn>
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Organization Members">
+                        <OrganizationMemberSelector
+                          rootDataRelay={rootData}
+                          organizationId={organizationId}
+                          name="organizationMemberIds"
+                          required={requiredFields.organizationMemberIds}
+                          multiple={true}
+                          useMemberId={true}
+                        />
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </>
+                )}
+              </StackColumnWithSaveExitCancelAppBar>
+            )}
+          />
+        </Box>
+      </Box>
+    </>
   );
 };
 

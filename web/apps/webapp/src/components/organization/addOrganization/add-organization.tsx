@@ -2,7 +2,15 @@ import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from '@
 import type { addOrganization_addOrganizationMutation } from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
 import type { addOrganization_completeOrganizationOnboardingMutation } from '@/queries/__generated__/addOrganization_completeOrganizationOnboardingMutation.graphql';
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
-import { FormFieldLabel, StackColumnWithSaveExitCancelAppBar } from '@repo/shared/components/commons';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import {
+  BodyIconTypography,
+  FormFieldLabel,
+  SectionIconTypography,
+  StackColumn,
+  StackColumnWithSaveExitCancelAppBar,
+} from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -13,6 +21,7 @@ import {
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -162,45 +171,53 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   };
 
   return (
-    <Form
-      onSubmit={handleOrganizationCreateClick}
-      initialValues={{
-        name: '',
-        about: null,
-        website: null,
-      }}
-      validate={validate}
-      render={({ handleSubmit }) => (
-        <StackColumnWithSaveExitCancelAppBar
-          onSubmit={handleSubmit}
-          onCancel={onCancel}
-          label="Add Organization"
-          hideCancel={!showCancel}
-          useChildrenPadding
-        >
-          <FormFieldLabel label="Name">
-            <TextField name="name" required={requiredFields.name} />
-          </FormFieldLabel>
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Form
+            onSubmit={handleOrganizationCreateClick}
+            initialValues={{
+              name: '',
+              about: null,
+              website: null,
+            }}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={onCancel} label="Add Organization" hideCancel={!showCancel}>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Organization Setup" />
+                  <BodyIconTypography label="Edit your organization name and details" />
+                  <Divider />
+                </StackColumn>
 
-          <FormFieldLabel label="About">
-            <TextField name="about" required={requiredFields.about} multiline rows={3} />
-          </FormFieldLabel>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredFields.name} />
+                  </FormFieldLabel>
 
-          <FormFieldLabel label="Industry">
-            <TextField name="website" required={requiredFields.about} helperText="https://" />
-          </FormFieldLabel>
+                  <FormFieldLabel label="About">
+                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
+                  </FormFieldLabel>
 
-          <FormFieldLabel label="Industry">
-            <OrganizationMultipleChoicesIndustries
-              rootDataRelay={rootData}
-              name="industrySubCategoryIds"
-              required={requiredFields.industrySubCategoryIds}
-            />
-          </FormFieldLabel>
-          <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
-        </StackColumnWithSaveExitCancelAppBar>
-      )}
-    />
+                  <FormFieldLabel label="Industry">
+                    <TextField name="website" required={requiredFields.about} helperText="https://" />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Industry">
+                    <OrganizationMultipleChoicesIndustries
+                      rootDataRelay={rootData}
+                      name="industrySubCategoryIds"
+                      required={requiredFields.industrySubCategoryIds}
+                    />
+                  </FormFieldLabel>
+                  <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
+                </StackColumn>
+              </StackColumnWithSaveExitCancelAppBar>
+            )}
+          />
+        </Box>
+      </Box>
+    </>
   );
 };
 
