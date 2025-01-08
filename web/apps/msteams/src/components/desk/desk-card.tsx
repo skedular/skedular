@@ -506,7 +506,6 @@ const DeskCard = ({
           render: <NotificationContent content={`Failed to set desk '${deskDetails.name}' as your preferred desk. Error: ${error.message}.`} />,
         });
       },
-
       optimisticResponse: {
         addCustomerDefaultDesk: {
           customer: {
@@ -768,7 +767,7 @@ const DeskCard = ({
                 deskTypes={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))}
                 sx={{ paddingTop: 1, paddingBottom: 1 }}
               />
-              <Zones zones={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+              <Zones zones={deskDetails.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
             </StackColumn>
 
             {extraInfo.length > 0 && <BodyIconTypography label={extraInfo.join(', ')} startElement={<InfoIcon />} />}

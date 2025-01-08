@@ -1,4 +1,4 @@
-import { BulkNewDeskDialog, DeskCard, NewDeskDialog } from '@/components/desk';
+import { AddDeskButton, BulkAddDeskButton, DeskCard } from '@/components/desk';
 import type { locationDesksTab_allBookings_query$key } from '@/queries/__generated__/locationDesksTab_allBookings_query.graphql';
 import type { locationDesksTab_allBookings_refetchableFragment } from '@/queries/__generated__/locationDesksTab_allBookings_refetchableFragment.graphql';
 import type { locationDesksTab_locationDesks_query$key } from '@/queries/__generated__/locationDesksTab_locationDesks_query.graphql';
@@ -9,12 +9,10 @@ import type {
 } from '@/queries/__generated__/locationDesksTab_locationDesks_refetchableFragment.graphql';
 import type { locationDesksTab_query$key } from '@/queries/__generated__/locationDesksTab_query.graphql';
 import type { locationDesksTab_rootQuery } from '@/queries/__generated__/locationDesksTab_rootQuery.graphql';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
 import { GridContainer, PushToRight, StackRow } from '@repo/shared/components/commons';
 import { DayPicker } from '@repo/shared/components/datePickers';
-import { AddIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
@@ -30,6 +28,7 @@ import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreload
 type Props = {
   queryReference: PreloadedQuery<locationDesksTab_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
+  organizationId?: string;
   locationId: string;
 };
 
@@ -41,8 +40,8 @@ const RootQuery = graphql`
     $toToGetBookings: DateTime
     $deskNameSearchText: String
     $deskSortingValues: [DeskOrderInput!]!
-    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
-    $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]!
+    $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]!
   ) {
     ...locationDesksTab_query
     ...locationDesksTab_locationDesks_query
@@ -50,7 +49,7 @@ const RootQuery = graphql`
   }
 `;
 
-const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Props) => {
+const LocationDesksTab = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<locationDesksTab_rootQuery>(RootQuery, queryReference);
   const rootData = useFragment<locationDesksTab_query$key>(
     graphql`
@@ -61,8 +60,6 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
         ...deskCard_query
         ...multipleChoicesDeskTypes_query
         ...multipleChoicesZones_query
-        ...newDeskDialog_query
-        ...bulkNewDeskDialog_query
       }
     `,
     rootDataRelay,
@@ -220,8 +217,6 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
     () => (rootDataRefetchPaginatedLocationDesks.locationDesks ? [rootDataRefetchPaginatedLocationDesks.locationDesks.__id] : []),
     [rootDataRefetchPaginatedLocationDesks.locationDesks],
   );
-  const [isAddDeskDialogOpen, setIsAddDeskDialogOpen] = useState(false);
-  const [isBulkAddDeskDialogOpen, setIsBulkAddDeskDialogOpen] = useState(false);
 
   if (!rootData.location || !rootDataRefetchPaginatedLocationDesks.locationDesks) {
     return <></>;
@@ -229,34 +224,6 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
 
   const desks = rootDataRefetchPaginatedLocationDesks.locationDesks.edges;
   const slicedEdges = desks.slice(page * pageSize, page * pageSize + pageSize > desks.length ? desks.length : page * pageSize + pageSize);
-
-  const handleAddDeskClick = () => {
-    setIsAddDeskDialogOpen(true);
-  };
-
-  const handleAddDeskDialogAddClick = () => {
-    setIsAddDeskDialogOpen(false);
-
-    handleRefetchPaginatedLocationDesks(pageSize, sortingOrder, deskNameSearchText);
-  };
-
-  const handleAddDeskDialogCancelClick = () => {
-    setIsAddDeskDialogOpen(false);
-  };
-
-  const handleBulkAddDeskClick = () => {
-    setIsBulkAddDeskDialogOpen(true);
-  };
-
-  const handleBulkAddDeskDialogAddClick = () => {
-    setIsBulkAddDeskDialogOpen(false);
-
-    handleRefetchPaginatedLocationDesks(pageSize, sortingOrder, deskNameSearchText);
-  };
-
-  const handleBulkAddDeskDialogCancelClick = () => {
-    setIsBulkAddDeskDialogOpen(false);
-  };
 
   const handleSortingChanged = (direction: Direction, value: string) => {
     setSortingOrder({
@@ -277,14 +244,15 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
   return (
     <>
       {rootData.location.canModify && (
-        <StackRow>
-          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddDeskClick}>
-            Add Desk
-          </Button>
-          <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleBulkAddDeskClick}>
-            Bulk Add Desk
-          </Button>
-        </StackRow>
+        <>
+          <AddDeskButton onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} connectionIds={connectionIds} />
+          <BulkAddDeskButton
+            onReloadRequired={onReloadRequired}
+            organizationId={organizationId}
+            locationId={locationId}
+            connectionIds={connectionIds}
+          />
+        </>
       )}
 
       <StackRow>
@@ -327,24 +295,6 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, locationId }: Prop
           );
         })}
       </GridContainer>
-
-      <NewDeskDialog
-        rootDataRelay={rootData}
-        connectionIds={connectionIds}
-        isDialogOpen={isAddDeskDialogOpen}
-        onAddClicked={handleAddDeskDialogAddClick}
-        onCancel={handleAddDeskDialogCancelClick}
-        locationId={locationId}
-      />
-
-      <BulkNewDeskDialog
-        rootDataRelay={rootData}
-        connectionIds={connectionIds}
-        isDialogOpen={isBulkAddDeskDialogOpen}
-        onAddClicked={handleBulkAddDeskDialogAddClick}
-        onCancel={handleBulkAddDeskDialogCancelClick}
-        locationId={locationId}
-      />
     </>
   );
 };
@@ -411,7 +361,12 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, locationId, organizationI
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationDesksTab queryReference={queryReference} onReloadRequired={handleReloadRequired} locationId={locationId} />
+      <MemoLocationDesksTab
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
+        locationId={locationId}
+      />
     </ErrorBoundary>
   );
 };

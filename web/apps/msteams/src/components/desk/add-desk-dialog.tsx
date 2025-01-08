@@ -1,34 +1,59 @@
-import { MultipleChoicesDeskTypes, MultipleChoicesZones } from '@/components/organization';
-import type { newDeskDialog_addDeskMutation } from '@/queries/__generated__/newDeskDialog_addDeskMutation.graphql';
-import type { newDeskDialog_query$key } from '@/queries/__generated__/newDeskDialog_query.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  DefaultDialogTitle,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  SmallIconTypography,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
+import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
+import type { RootError } from '@repo/shared/components/relayError';
+import { RelayError } from '@repo/shared/components/relayError';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
+import { MultipleChoicesDeskTypes, MultipleChoicesZones } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useContext } from 'react';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { graphql, useFragment, useMutation } from 'react-relay';
+import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
+import type { addDeskDialog_addDeskMutation } from './__generated__/addDeskDialog_addDeskMutation.graphql';
+import type { addDeskDialog_rootQuery } from './__generated__/addDeskDialog_rootQuery.graphql';
 
 type Props = {
-  rootDataRelay: newDeskDialog_query$key;
+  queryReference: PreloadedQuery<addDeskDialog_rootQuery, Record<string, unknown>>;
+  onReloadRequired?: () => void;
+  organizationId: string;
+  locationId: string;
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
   onCancel: () => void;
-  locationId: string;
 };
+
+const RootQuery = graphql`
+  query addDeskDialog_rootQuery(
+    $organizationId: String!
+    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]!
+    $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]!
+  ) {
+    ...multipleChoicesDeskTypes_query
+    ...multipleChoicesZones_query
+  }
+`;
 
 type DeskDetails = {
   name: string;
@@ -42,19 +67,11 @@ const deskSchema = object({
   zoneIds: array().nullable(),
 });
 
-const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicked, onCancel, locationId }: Props) => {
-  const rootData = useFragment(
-    graphql`
-      fragment newDeskDialog_query on Query {
-        ...multipleChoicesDeskTypes_query
-        ...multipleChoicesZones_query
-      }
-    `,
-    rootDataRelay,
-  );
+const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+  const rootData = usePreloadedQuery<addDeskDialog_rootQuery>(RootQuery, queryReference);
 
-  const [commitAddDesk] = useMutation<newDeskDialog_addDeskMutation>(graphql`
-    mutation newDeskDialog_addDeskMutation($connectionIds: [ID!]!, $input: AddDeskInput!) @raw_response_type {
+  const [commitAddDesk] = useMutation<addDeskDialog_addDeskMutation>(graphql`
+    mutation addDeskDialog_addDeskMutation($connectionIds: [ID!]!, $input: AddDeskInput!) @raw_response_type {
       addDesk(input: $input) {
         desk @appendNode(connections: $connectionIds, edgeTypeName: "DeskDetails") {
           id
@@ -142,6 +159,9 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
+              <LeadIconTypography label="Add desk to this location" />
+              <SmallIconTypography label="Enter the name of the desk to add to this location." />
+
               <FormFieldLabel label="Name" useWiderSpace>
                 <TextField name="name" required={requiredFields.name} helperText="Add your desk name" />
               </FormFieldLabel>
@@ -163,4 +183,82 @@ const NewDeskDialog = ({ rootDataRelay, connectionIds, isDialogOpen, onAddClicke
   );
 };
 
-export default memo(NewDeskDialog);
+const MemoAddDeskDialog = memo(AddDeskDialog);
+
+type RelayProps = {
+  onReloadRequired?: () => void;
+  organizationId: string;
+  locationId: string;
+  connectionIds: string[];
+  isDialogOpen: boolean;
+  onAddClicked: () => void;
+  onCancel: () => void;
+};
+
+const AddDeskDialogWithRelay = ({
+  onReloadRequired,
+  organizationId,
+  locationId,
+  connectionIds,
+  isDialogOpen,
+  onAddClicked,
+  onCancel,
+}: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<addDeskDialog_rootQuery>(RootQuery);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        organizationId: organizationId ?? '',
+        multipleChoicesDeskTypesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        multipleChoicesZonesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReloadId, organizationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReloadId(nanoid());
+
+      if (onReloadRequired) {
+        onReloadRequired();
+      }
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoAddDeskDialog
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
+        locationId={locationId}
+        connectionIds={connectionIds}
+        isDialogOpen={isDialogOpen}
+        onAddClicked={onAddClicked}
+        onCancel={onCancel}
+      />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(AddDeskDialogWithRelay);

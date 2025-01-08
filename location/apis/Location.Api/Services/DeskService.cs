@@ -164,8 +164,8 @@ public class DeskService(
             repositoryFactory.LocationRepository.UnitOfWork,
             cancellationToken);
 
-        var deskEntity = mapper.MapTo(desk, existingLocation, organizationTags);
-        _ = repositoryFactory.DeskRepository.Add(deskEntity);
+        var mappedDesk =
+            mapper.MapTo(repositoryFactory.DeskRepository.Add(mapper.MapTo(desk, existingLocation, organizationTags)));
 
         await locationOutboxPublisher.PublishLocationAsync(
             [mapper.MapTo(existingLocation)],
@@ -173,7 +173,7 @@ public class DeskService(
             cancellationToken);
         await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        return desk;
+        return mappedDesk;
     }
 
     public async Task<ICollection<Desk>> BulkAddAsync(

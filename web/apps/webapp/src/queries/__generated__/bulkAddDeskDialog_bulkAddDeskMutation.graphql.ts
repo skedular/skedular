@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<05ba8452332746885600a1a9544830bc>>
+ * @generated SignedSource<<e39bfc3e211fc8d899f46a208fc0f4f3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,24 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type AddDeskInput = {
+export type BulkAddDeskInput = {
   clientMutationId?: string | null | undefined;
+  count: number;
+  deactivated: boolean;
   deskTypeIds: ReadonlyArray<string>;
   id?: string | null | undefined;
   locationId: string;
-  name: string;
+  namePrefix?: string | null | undefined;
+  requireBookingApproval: boolean;
   zoneIds: ReadonlyArray<string>;
 };
-export type newDeskDialog_addDeskMutation$variables = {
+export type bulkAddDeskDialog_bulkAddDeskMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: AddDeskInput;
+  input: BulkAddDeskInput;
 };
-export type newDeskDialog_addDeskMutation$data = {
-  readonly addDesk: {
-    readonly desk: {
+export type bulkAddDeskDialog_bulkAddDeskMutation$data = {
+  readonly bulkAddDesk: {
+    readonly desks: ReadonlyArray<{
       readonly deskTypes: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
@@ -32,12 +35,12 @@ export type newDeskDialog_addDeskMutation$data = {
       readonly zones: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
-    };
+    }>;
   } | null | undefined;
 };
-export type newDeskDialog_addDeskMutation$rawResponse = {
-  readonly addDesk: {
-    readonly desk: {
+export type bulkAddDeskDialog_bulkAddDeskMutation$rawResponse = {
+  readonly bulkAddDesk: {
+    readonly desks: ReadonlyArray<{
       readonly deskTypes: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
@@ -46,13 +49,13 @@ export type newDeskDialog_addDeskMutation$rawResponse = {
       readonly zones: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
-    };
+    }>;
   } | null | undefined;
 };
-export type newDeskDialog_addDeskMutation = {
-  rawResponse: newDeskDialog_addDeskMutation$rawResponse;
-  response: newDeskDialog_addDeskMutation$data;
-  variables: newDeskDialog_addDeskMutation$variables;
+export type bulkAddDeskDialog_bulkAddDeskMutation = {
+  rawResponse: bulkAddDeskDialog_bulkAddDeskMutation$rawResponse;
+  response: bulkAddDeskDialog_bulkAddDeskMutation$data;
+  variables: bulkAddDeskDialog_bulkAddDeskMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -89,8 +92,8 @@ v3 = {
   "args": null,
   "concreteType": "DeskDetails",
   "kind": "LinkedField",
-  "name": "desk",
-  "plural": false,
+  "name": "desks",
+  "plural": true,
   "selections": [
     {
       "alias": null,
@@ -134,14 +137,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "newDeskDialog_addDeskMutation",
+    "name": "bulkAddDeskDialog_bulkAddDeskMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "DeskPayload",
+        "concreteType": "BulkDeskPayload",
         "kind": "LinkedField",
-        "name": "addDesk",
+        "name": "bulkAddDesk",
         "plural": false,
         "selections": [
           (v3/*: any*/)
@@ -156,14 +159,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "newDeskDialog_addDeskMutation",
+    "name": "bulkAddDeskDialog_bulkAddDeskMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "DeskPayload",
+        "concreteType": "BulkDeskPayload",
         "kind": "LinkedField",
-        "name": "addDesk",
+        "name": "bulkAddDesk",
         "plural": false,
         "selections": [
           (v3/*: any*/),
@@ -174,7 +177,7 @@ return {
             "handle": "appendNode",
             "key": "",
             "kind": "LinkedHandle",
-            "name": "desk",
+            "name": "desks",
             "handleArgs": [
               {
                 "kind": "Variable",
@@ -194,16 +197,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bcdf2f655a1b6c2e1c30d74cf391a224",
+    "cacheID": "29896e954f61b58dac412342daf104db",
     "id": null,
     "metadata": {},
-    "name": "newDeskDialog_addDeskMutation",
+    "name": "bulkAddDeskDialog_bulkAddDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation newDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      deskTypes {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation bulkAddDeskDialog_bulkAddDeskMutation(\n  $input: BulkAddDeskInput!\n) {\n  bulkAddDesk(input: $input) {\n    desks {\n      id\n      name\n      deskTypes {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2a66b8f87bbd0f51dafd6f01f5ddb90a";
+(node as any).hash = "21740ea8c13d30d5f6518982f9954a09";
 
 export default node;

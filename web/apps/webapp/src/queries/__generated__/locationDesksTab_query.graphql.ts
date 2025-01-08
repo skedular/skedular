@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5afca97c5fcc0fe460171ac94d7a6974>>
+ * @generated SignedSource<<453c0ce87950a7d6f6a2ce402b71ad5d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type locationDesksTab_query$data = {
   readonly location: {
     readonly canModify: boolean;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"bulkNewDeskDialog_query" | "deskCard_query" | "multipleChoicesDeskTypes_query" | "multipleChoicesZones_query" | "newDeskDialog_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"deskCard_query" | "multipleChoicesDeskTypes_query" | "multipleChoicesZones_query">;
   readonly " $fragmentType": "locationDesksTab_query";
 };
 export type locationDesksTab_query$key = {
@@ -71,22 +71,12 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "multipleChoicesZones_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "newDeskDialog_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "bulkNewDeskDialog_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "112d06bd6d1fb6f69c8d267238e851e6";
+(node as any).hash = "e2817aa93884ba072f102f73e8d5aa84";
 
 export default node;
