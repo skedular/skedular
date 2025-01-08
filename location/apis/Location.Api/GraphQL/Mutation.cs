@@ -90,6 +90,45 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
+    public async Task<DesksPayload?> DeleteDesksAsync(
+        DeleteDesksInput input,
+        [Service] IDeskService deskService,
+        CancellationToken cancellationToken)
+    {
+        var desks = await deskService.DeleteAsync(input.Ids, cancellationToken);
+        return new DesksPayload
+        {
+            ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray()
+        };
+    }
+
+    [UseResolverScope]
+    public async Task<DesksPayload?> ActivateDesksAsync(
+        ActivateDesksInput input,
+        [Service] IDeskService deskService,
+        CancellationToken cancellationToken)
+    {
+        var desks = await deskService.ActivateAsync(input.Ids, cancellationToken);
+        return new DesksPayload
+        {
+            ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray()
+        };
+    }
+
+    [UseResolverScope]
+    public async Task<DesksPayload?> DeactivateDesksAsync(
+        DeactivateDesksInput input,
+        [Service] IDeskService deskService,
+        CancellationToken cancellationToken)
+    {
+        var desks = await deskService.DeactivateAsync(input.Ids, cancellationToken);
+        return new DesksPayload
+        {
+            ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray()
+        };
+    }
+
+    [UseResolverScope]
     public async Task<LocationMemberDetailsPayload?> ChangeLocationMemberRoleAsync(
         ChangeLocationMemberRoleInput input,
         [Service] ILocationMemberService locationMemberService,

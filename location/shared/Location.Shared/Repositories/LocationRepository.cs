@@ -14,6 +14,10 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
 {
     Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
+    Task<ICollection<Database.Entities.Location>> GetByIdsAsync(
+        ICollection<string> ids,
+        CancellationToken cancellationToken);
+
     Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
         string customerId,
         string? locationId,
@@ -135,6 +139,19 @@ internal static class LocationExtensions
 public class LocationRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Database.Entities.Location>(dbContext, timeProvider), ILocationRepository
 {
+    public async Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.Location
+            .AddDependentObjects()
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Location>> GetByIdsAsync(
+        ICollection<string> ids,
+        CancellationToken cancellationToken) =>
+        await DbContext.Location
+            .Where(query => ids.Contains(query.Id))
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
+
     public Database.Entities.Location Add(Database.Entities.Location location)
     {
         var now = TimeProvider.GetUtcNow();
@@ -148,11 +165,6 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         location.ModifiedAt = now;
         return DbContext.Location.Update(location).Entity;
     }
-
-    public async Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Location
-            .AddDependentObjects()
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
         string customerId,

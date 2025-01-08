@@ -353,3 +353,31 @@ public class LocationAddressDetails
     [GraphQLName("zipcode")] public string? Zipcode { get; set; }
     [GraphQLName("country")] public string? Country { get; set; }
 }
+
+[GraphQLName("ActivateDesksInput")]
+public class ActivateDesksInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; }
+}
+
+[GraphQLName("DeactivateDesksInput")]
+public class DeactivateDesksInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; }
+}
+
+[GraphQLName("DeleteDesksInput")]
+public class DeleteDesksInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; }
+}
+
+[GraphQLName("DesksPayload")]
+public class DesksPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("desks")] public DeskDetails[] Desks { get; set; } = [];
+}

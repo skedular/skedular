@@ -14,6 +14,7 @@ namespace Location.Shared.Repositories;
 public interface IDeskRepository : IRepository<Desk>
 {
     Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Desk Add(Desk desk);
     Desk Update(Desk desk);
     void RemoveRange(ICollection<Desk> desks);
@@ -90,6 +91,17 @@ internal static class DeskExtensions
 public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Desk>(dbContext, timeProvider), IDeskRepository
 {
+    public async Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.Desk
+            .AddDependentObjects()
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+        await DbContext.Desk
+            .Where(query => ids.Contains(query.Id))
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
+
     public Desk Add(Desk desk)
     {
         var now = TimeProvider.GetUtcNow();
@@ -117,11 +129,6 @@ public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvid
         desk.ModifiedAt = now;
         return DbContext.Desk.Update(desk).Entity;
     }
-
-    public async Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Desk
-            .AddDependentObjects()
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<(PaginatedInfo, ICollection<Edge<Desk>>, int)> GetPaginatedDesksAsync(
         PaginationInputParam paginationInputParam,

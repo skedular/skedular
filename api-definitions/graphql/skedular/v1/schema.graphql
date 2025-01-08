@@ -232,6 +232,11 @@ type DeskPayload {
   desk: DeskDetails!
 }
 
+type DesksPayload {
+  clientMutationId: String
+  desks: [DeskDetails!]!
+}
+
 type InviteCustomersToJoinLocationPayload {
   clientMutationId: String
 }
@@ -360,6 +365,7 @@ type Mutation {
   acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
   acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): AcceptInvitationToJoinOrganizationPayload @cost(weight: "10")
   acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload @cost(weight: "10")
+  activateDesks(input: ActivateDesksInput!): DesksPayload @cost(weight: "10")
   addBooking(input: AddBookingInput!): BookingPayload @cost(weight: "10")
   addCustomerDefaultDesk(input: AddCustomerDefaultDeskInput!): CustomerPayload @cost(weight: "10")
   addCustomerDefaultLocation(input: AddCustomerDefaultLocationInput!): CustomerPayload @cost(weight: "10")
@@ -392,8 +398,10 @@ type Mutation {
   completePreferredDeskOnboarding(input: CompletePreferredDeskOnboardingInput!): CustomerPayload @cost(weight: "10")
   completePreferredZoneOnboarding(input: CompletePreferredZoneOnboardingInput!): CustomerPayload @cost(weight: "10")
   completeTeamOnboarding(input: CompleteTeamOnboardingInput!): CustomerPayload @cost(weight: "10")
+  deactivateDesks(input: DeactivateDesksInput!): DesksPayload @cost(weight: "10")
   deleteBooking(input: DeleteBookingInput!): BookingPayload @cost(weight: "10")
   deleteDesk(input: DeleteDeskInput!): DeskPayload @cost(weight: "10")
+  deleteDesks(input: DeleteDesksInput!): DesksPayload @cost(weight: "10")
   deleteDeskType(input: DeleteDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
   deleteDeskTypes(input: DeleteDeskTypesInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
@@ -933,6 +941,11 @@ input AcceptInvitationToJoinTeamInput {
   id: String!
 }
 
+input ActivateDesksInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input AddBookingInput {
   clientMutationId: String
   customerId: String!
@@ -1181,6 +1194,11 @@ input CustomersByDefaultLocationWhereInput {
   nameContains: String
 }
 
+input DeactivateDesksInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeleteBookingInput {
   clientMutationId: String
   id: String!
@@ -1197,6 +1215,11 @@ input DeleteDeskTypeInput {
 }
 
 input DeleteDeskTypesInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+input DeleteDesksInput {
   clientMutationId: String
   ids: [String!]!
 }

@@ -24,7 +24,7 @@ public interface ITagService
 
     Task<Tag> UpdateAsync(Tag tag, CancellationToken cancellationToken);
     Task<Tag> DeleteAsync(string tagId, CancellationToken cancellationToken);
-    Task<ICollection<Tag>> DeleteAsync(ICollection<string> tagIds, CancellationToken cancellationToken);
+    Task<ICollection<Tag>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)> GetPaginatedTagsAsync(
         PaginationInputParam paginationInputParam,
@@ -211,16 +211,16 @@ public class TagService(
         return deletedTag;
     }
 
-    public async Task<ICollection<Tag>> DeleteAsync(ICollection<string> tagIds, CancellationToken cancellationToken)
+    public async Task<ICollection<Tag>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken)
     {
-        if (tagIds.Count == 0)
+        if (ids.Count == 0)
         {
             return [];
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var tags = await repositoryFactory.TagRepository.GetByIdsAsync(tagIds, cancellationToken);
-        var organizationIds = tags.Select(t => t.Organization.Id).ToList();
+        var tags = await repositoryFactory.TagRepository.GetByIdsAsync(ids, cancellationToken);
+        var organizationIds = tags.Select(item => item.Organization.Id).ToList();
         var existingOrganizations =
             await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
 
@@ -240,7 +240,7 @@ public class TagService(
         var mappedOrganizations = existingOrganizations.Select(mapper.MapTo).ToList();
         foreach (var mappedOrganization in mappedOrganizations)
         {
-            mappedOrganization.Tags = mappedOrganization.Tags.Where(item => !tagIds.Contains(item.Id)).ToList();
+            mappedOrganization.Tags = mappedOrganization.Tags.Where(item => !ids.Contains(item.Id)).ToList();
         }
 
         await organizationOutboxPublisher.PublishOrganizationAsync(

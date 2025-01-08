@@ -41,6 +41,11 @@ type DeskPayload {
   desk: DeskDetails!
 }
 
+type DesksPayload {
+  clientMutationId: String
+  desks: [DeskDetails!]!
+}
+
 type InviteCustomersToJoinLocationPayload {
   clientMutationId: String
 }
@@ -156,6 +161,9 @@ type Mutation {
   bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload @cost(weight: "10")
   updateDesk(input: UpdateDeskInput!): DeskPayload @cost(weight: "10")
   deleteDesk(input: DeleteDeskInput!): DeskPayload @cost(weight: "10")
+  deleteDesks(input: DeleteDesksInput!): DesksPayload @cost(weight: "10")
+  activateDesks(input: ActivateDesksInput!): DesksPayload @cost(weight: "10")
+  deactivateDesks(input: DeactivateDesksInput!): DesksPayload @cost(weight: "10")
   changeLocationMemberRole(input: ChangeLocationMemberRoleInput!): LocationMemberDetailsPayload @cost(weight: "10")
   inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
   acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
@@ -204,6 +212,11 @@ input AcceptInvitationToJoinLocationInput {
   id: String!
 }
 
+input ActivateDesksInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input AddDeskInput {
   clientMutationId: String
   id: String
@@ -246,9 +259,19 @@ input ChangeLocationMemberRoleInput {
   role: LocationMemberRole!
 }
 
+input DeactivateDesksInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeleteDeskInput {
   clientMutationId: String
   id: String!
+}
+
+input DeleteDesksInput {
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeleteLocationInput {

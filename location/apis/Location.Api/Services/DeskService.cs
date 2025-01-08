@@ -33,7 +33,10 @@ public interface IDeskService
         CancellationToken cancellationToken);
 
     Task<Desk> UpdateAsync(Desk desk, CancellationToken cancellationToken);
-    Task<Desk> DeleteAsync(string deskId, CancellationToken cancellationToken);
+    Task<Desk> DeleteAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Desk>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<ICollection<Desk>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<ICollection<Desk>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Desk>>, int )> GetPaginatedDesksAsync(
         PaginationInputParam paginationInputParam,
@@ -278,13 +281,12 @@ public class DeskService(
         return await UpdateInternalAsync(desk, existingDesk, customer, cancellationToken);
     }
 
-    public async Task<Desk> DeleteAsync(string deskId, CancellationToken cancellationToken)
+    public async Task<Desk> DeleteAsync(string id, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(deskId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var desk =
-            await repositoryFactory.DeskRepository.GetByIdAsync(deskId, cancellationToken);
+        var desk = await repositoryFactory.DeskRepository.GetByIdAsync(id, cancellationToken);
         if (desk is null)
         {
             throw new DeskNotFound();
@@ -315,7 +317,7 @@ public class DeskService(
         var deletedDesk = mapper.MapTo(repositoryFactory.DeskRepository.Remove(desk), mapper.MapTo(existingLocation));
 
         var mappedLocation = mapper.MapTo(existingLocation);
-        mappedLocation.Desks = mappedLocation.Desks.Where(item => item.Id != deskId).ToList();
+        mappedLocation.Desks = mappedLocation.Desks.Where(item => item.Id != id).ToList();
 
         await locationOutboxPublisher.PublishLocationAsync(
             [mappedLocation],
@@ -324,6 +326,183 @@ public class DeskService(
         await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedDesk;
+    }
+
+    public async Task<ICollection<Desk>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, cancellationToken);
+        var locationIds = desks.Select(item => item.Location.Id).ToList();
+        var existingLocations =
+            await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
+
+        if (existingLocations
+            .Where(item => item.Organization is not null)
+            .Any(existingLocation =>
+                !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
+        {
+            throw new NoMoreInteractionAllowed();
+        }
+
+        if (existingLocations.Any(existingOrganization =>
+                !locationAuthorizationService.CanModify(existingOrganization, customer)))
+        {
+            throw new Unauthorized();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.DeskRepository.UnitOfWork,
+            cancellationToken);
+
+        repositoryFactory.DeskRepository.RemoveRange(desks);
+
+        var deletedDesks = desks
+            .Select(desk =>
+                mapper.MapTo(desk, mapper.MapTo(existingLocations.Single(item => item.Id == desk.Location.Id))))
+            .ToList();
+
+        var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
+        foreach (var mappedLocation in mappedLocations)
+        {
+            mappedLocation.Desks = mappedLocation.Desks.Where(item => !ids.Contains(item.Id)).ToList();
+        }
+
+        await locationOutboxPublisher.PublishLocationAsync(
+            mappedLocations,
+            repositoryFactory.DeskRepository.UnitOfWork,
+            cancellationToken);
+
+        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return deletedDesks;
+    }
+
+    public async Task<ICollection<Desk>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, cancellationToken);
+        var locationIds = desks.Select(item => item.Location.Id).ToList();
+        var existingLocations =
+            await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
+
+        if (existingLocations
+            .Where(item => item.Organization is not null)
+            .Any(existingLocation =>
+                !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
+        {
+            throw new NoMoreInteractionAllowed();
+        }
+
+        if (existingLocations.Any(existingOrganization =>
+                !locationAuthorizationService.CanModify(existingOrganization, customer)))
+        {
+            throw new Unauthorized();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.DeskRepository.UnitOfWork,
+            cancellationToken);
+
+        foreach (var desk in desks)
+        {
+            desk.Deactivated = false;
+            repositoryFactory.DeskRepository.Update(desk);
+        }
+
+        var updatedDesks = desks
+            .Select(desk =>
+                mapper.MapTo(desk, mapper.MapTo(existingLocations.Single(item => item.Id == desk.Location.Id))))
+            .ToList();
+
+        var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
+        foreach (var desk in mappedLocations
+                     .SelectMany(mappedLocation =>
+                         mappedLocation.Desks.Where(item => !ids.Contains(item.Id))))
+        {
+            desk.Deactivated = false;
+        }
+
+        await locationOutboxPublisher.PublishLocationAsync(
+            mappedLocations,
+            repositoryFactory.DeskRepository.UnitOfWork,
+            cancellationToken);
+
+        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return updatedDesks;
+    }
+
+    public async Task<ICollection<Desk>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, cancellationToken);
+        var locationIds = desks.Select(item => item.Location.Id).ToList();
+        var existingLocations =
+            await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
+
+        if (existingLocations
+            .Where(item => item.Organization is not null)
+            .Any(existingLocation =>
+                !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
+        {
+            throw new NoMoreInteractionAllowed();
+        }
+
+        if (existingLocations.Any(existingOrganization =>
+                !locationAuthorizationService.CanModify(existingOrganization, customer)))
+        {
+            throw new Unauthorized();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.DeskRepository.UnitOfWork,
+            cancellationToken);
+
+        foreach (var desk in desks)
+        {
+            desk.Deactivated = true;
+            repositoryFactory.DeskRepository.Update(desk);
+        }
+
+        var updatedDesks = desks
+            .Select(desk =>
+                mapper.MapTo(desk, mapper.MapTo(existingLocations.Single(item => item.Id == desk.Location.Id))))
+            .ToList();
+
+        var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
+        foreach (var desk in mappedLocations
+                     .SelectMany(mappedLocation =>
+                         mappedLocation.Desks.Where(item => !ids.Contains(item.Id))))
+        {
+            desk.Deactivated = true;
+        }
+
+        await locationOutboxPublisher.PublishLocationAsync(
+            mappedLocations,
+            repositoryFactory.DeskRepository.UnitOfWork,
+            cancellationToken);
+
+        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return updatedDesks;
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Desk>>, int)> GetPaginatedDesksAsync(
