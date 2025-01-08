@@ -1,3 +1,4 @@
+import { AddDeskButton, BulkAddDeskButton } from '@/components/desk';
 import type { organizationLocation_activateDesksMutation } from '@/queries/__generated__/organizationLocation_activateDesksMutation.graphql';
 import type { organizationLocation_deactivateDesksMutation } from '@/queries/__generated__/organizationLocation_deactivateDesksMutation.graphql';
 import type { organizationLocation_deleteDesksMutation } from '@/queries/__generated__/organizationLocation_deleteDesksMutation.graphql';
@@ -95,7 +96,7 @@ const locationSchema = object({
   physicalAddress: string().nullable(),
 });
 
-const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, organizationId, locationId }: Props) => {
+const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequired, organizationId, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
       fragment organizationLocation_query on Query {
@@ -784,7 +785,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, organizationI
                         disabled={seledctedDesks.length === 0}
                         onClick={handleDeactivateDesksClick}
                       >
-                        Deactuvate Member
+                        Deactuvate Desk
                       </Button>
                       <Button
                         size="medium"
@@ -793,7 +794,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, organizationI
                         disabled={seledctedDesks.length === 0}
                         onClick={handleActivateDesksClick}
                       >
-                        Activate Member
+                        Activate Desk
                       </Button>
                       <Button
                         size="medium"
@@ -803,11 +804,28 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, organizationI
                         disabled={seledctedDesks.length === 0}
                         onClick={handleRemoveDesksClick}
                       >
-                        Remove Member
+                        Remove Desk
                       </Button>
                     </StackRow>
                   </Box>
                 </StackRow>
+
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <PushToRight />
+                  <AddDeskButton
+                    onReloadRequired={onReloadRequired}
+                    organizationId={organizationId}
+                    locationId={locationId}
+                    connectionIds={desksConnectionIds}
+                  />
+                  <BulkAddDeskButton
+                    onReloadRequired={onReloadRequired}
+                    organizationId={organizationId}
+                    locationId={locationId}
+                    connectionIds={desksConnectionIds}
+                  />
+                </StackRow>
+
                 <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                   <DataGrid
                     checkboxSelection
