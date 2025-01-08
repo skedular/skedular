@@ -8,6 +8,7 @@ import type { organizationLocation_updateLocationMutation } from '@/queries/__ge
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import {
@@ -22,7 +23,13 @@ import {
 } from '@repo/shared/components/commons';
 import { DeskTypes } from '@repo/shared/components/deskType';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { DeleteIcon } from '@repo/shared/components/icons';
+import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -224,6 +231,15 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, organizationI
   const [deskZoneIds, setDeskZoneIds] = useState<string[]>([]);
   const [selectedDeskId, setSelectedDeskId] = useState<null | string>(null);
   const [seledctedDesks, setSeledctedDesks] = useState<GridRowSelectionModel>([]);
+  const [deskMoreActionsAnchorEl, setDeskMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const deskMoreActionsMenuOpen = Boolean(deskMoreActionsAnchorEl);
+
+  const deskMoreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditDesk],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateDesk],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateDesk],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteDesk],
+  ];
 
   const desksConnectionIds = useMemo(() => (rootDataDesks.locationDesks ? [rootDataDesks.locationDesks.__id] : []), [rootDataDesks.locationDesks]);
   const desks = useMemo(() => {
@@ -359,6 +375,27 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, organizationI
     setSeledctedDesks(newRowSelectionModel);
   };
 
+  const handleDeskMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setDeskMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditDesk:
+        break;
+
+      case MoreActionsMenuOptionType.DeactivateDesk:
+        handleDeactivateDeskClick();
+        break;
+
+      case MoreActionsMenuOptionType.ActivateDesk:
+        handleActivateDeskClick();
+        break;
+
+      case MoreActionsMenuOptionType.DeleteDesk:
+        handleRemoveDeskClick();
+        break;
+    }
+  };
+
   const handleDeactivateDesksClick = () => {
     const toastId = themedToast(<NotificationContent content={'Deactivating desks...'} />, infoNotificationOptions);
 
@@ -465,6 +502,124 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, organizationI
     });
   };
 
+  const handleDeactivateDeskClick = () => {
+    if (!deskDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Deactivating desk...'} />, infoNotificationOptions);
+
+    commitDeactivateDesks({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [deskDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate desk. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Desk deactivated.'} />,
+        });
+        setSeledctedDesks([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate desk. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateDeskClick = () => {
+    if (!deskDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Activating desk...'} />, infoNotificationOptions);
+
+    commitActivateDesks({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [deskDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate desk. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Desk activated.'} />,
+        });
+        setSeledctedDesks([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate desk. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveDeskClick = () => {
+    if (!deskDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Removing desk...'} />, infoNotificationOptions);
+
+    commitDeleteDesks({
+      variables: {
+        connectionIds: desksConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: [deskDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove desk. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Desk removed.'} />,
+        });
+        setSeledctedDesks([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove desk. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   if (!rootData.location) {
     return <></>;
   }
@@ -523,6 +678,23 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, organizationI
         </StackRow>
       ),
       display: 'flex',
+    },
+    {
+      field: 'moreActions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <IconButton
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            setSelectedDeskId(params.id as string);
+            setDeskMoreActionsAnchorEl(event.currentTarget);
+          }}
+        >
+          <EllipseMenuIcon />
+        </IconButton>
+      ),
     },
   ];
 
@@ -666,6 +838,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, organizationI
           />
         </Box>
       </Box>
+
+      <MoreActionsMenu
+        anchorEl={deskMoreActionsAnchorEl}
+        open={deskMoreActionsMenuOpen}
+        onMenuItemClick={handleDeskMoreActionsMenuItemClick}
+        options={deskMoreActionsOption}
+      />
     </>
   );
 };

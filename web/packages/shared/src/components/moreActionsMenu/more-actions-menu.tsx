@@ -15,8 +15,6 @@ export enum MoreActionsMenuOptionType {
   DeleteBooking,
   EditTeam,
   DeleteTeam,
-  ActivateDesk,
-  DeactivateDesk,
   EnableDeskApprovalRequirement,
   RemoveDeskApprovalRequirement,
   SetAsPreferredLocation,
@@ -39,6 +37,10 @@ export enum MoreActionsMenuOptionType {
   DeleteZone,
   EditDeskType,
   DeleteDeskType,
+  EditDesk,
+  DeleteDesk,
+  ActivateDesk,
+  DeactivateDesk,
 }
 
 export type MoreActionsMenuItemType = {
@@ -82,14 +84,6 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.RemoveTeam,
     label: 'Remove team',
     icon: <DeleteIcon color="warning" />,
-  },
-  [MoreActionsMenuOptionType.ActivateDesk]: {
-    id: MoreActionsMenuOptionType.ActivateDesk,
-    label: 'Activate desk',
-  },
-  [MoreActionsMenuOptionType.DeactivateDesk]: {
-    id: MoreActionsMenuOptionType.DeactivateDesk,
-    label: 'Dectivate desk',
   },
   [MoreActionsMenuOptionType.EnableDeskApprovalRequirement]: {
     id: MoreActionsMenuOptionType.EnableDeskApprovalRequirement,
@@ -179,6 +173,24 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.DeleteDeskType,
     label: 'Remove Desk Type',
     icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.EditDesk]: {
+    id: MoreActionsMenuOptionType.EditDesk,
+    label: 'Edit Desk',
+    icon: <EditIcon color="primary" />,
+  },
+  [MoreActionsMenuOptionType.DeleteDesk]: {
+    id: MoreActionsMenuOptionType.DeleteDesk,
+    label: 'Remove Desk',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.ActivateDesk]: {
+    id: MoreActionsMenuOptionType.ActivateDesk,
+    label: 'Activate desk',
+  },
+  [MoreActionsMenuOptionType.DeactivateDesk]: {
+    id: MoreActionsMenuOptionType.DeactivateDesk,
+    label: 'Dectivate desk',
   },
 };
 

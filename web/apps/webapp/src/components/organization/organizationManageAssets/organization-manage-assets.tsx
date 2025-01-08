@@ -332,28 +332,24 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
 
     switch (id) {
       case MoreActionsMenuOptionType.EditZone:
-        setZoneMoreActionsAnchorEl(null);
         setIsEditZoneDialogOpen(true);
         break;
 
       case MoreActionsMenuOptionType.DeleteZone:
-        setZoneMoreActionsAnchorEl(null);
         handleRemoveZoneClick();
         break;
     }
   };
 
   const handleDeskTypeMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
-    setZoneMoreActionsAnchorEl(null);
+    setDeskTypeMoreActionsAnchorEl(null);
 
     switch (id) {
       case MoreActionsMenuOptionType.EditDeskType:
-        setDeskTypeMoreActionsAnchorEl(null);
         setIsEditDeskTypeDialogOpen(true);
         break;
 
       case MoreActionsMenuOptionType.DeleteDeskType:
-        setDeskTypeMoreActionsAnchorEl(null);
         handleRemoveDeskTypeClick();
         break;
     }
@@ -415,7 +411,6 @@ const OrganizationManageAssets = ({ queryReference, organizationId }: Props) => 
             ...errorNotificationOptions,
             render: <NotificationContent content={`Failed to remove zone. Error: ${joinErrors(errors)}.`} />,
           });
-
           return;
         }
 
