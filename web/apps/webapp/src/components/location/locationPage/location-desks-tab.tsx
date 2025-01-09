@@ -3,12 +3,12 @@ import { AddDeskButton } from '@/components/desk/addDesk';
 import { BulkAddDeskButton } from '@/components/desk/bulkAddDesk';
 import type { locationDesksTab_allBookings_query$key } from '@/queries/__generated__/locationDesksTab_allBookings_query.graphql';
 import type { locationDesksTab_allBookings_refetchableFragment } from '@/queries/__generated__/locationDesksTab_allBookings_refetchableFragment.graphql';
-import type { locationDesksTab_locationDesks_query$key } from '@/queries/__generated__/locationDesksTab_locationDesks_query.graphql';
+import type { locationDesksTab_desks_query$key } from '@/queries/__generated__/locationDesksTab_desks_query.graphql';
 import type {
   DeskOrderField,
   DeskOrderInput,
-  locationDesksTab_locationDesks_refetchableFragment,
-} from '@/queries/__generated__/locationDesksTab_locationDesks_refetchableFragment.graphql';
+  locationDesksTab_desks_refetchableFragment,
+} from '@/queries/__generated__/locationDesksTab_desks_refetchableFragment.graphql';
 import type { locationDesksTab_query$key } from '@/queries/__generated__/locationDesksTab_query.graphql';
 import type { locationDesksTab_rootQuery } from '@/queries/__generated__/locationDesksTab_rootQuery.graphql';
 import Grid from '@mui/material/Grid2';
@@ -46,7 +46,7 @@ const RootQuery = graphql`
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
     ...locationDesksTab_query
-    ...locationDesksTab_locationDesks_query
+    ...locationDesksTab_desks_query
     ...locationDesksTab_allBookings_query
   }
 `;
@@ -71,17 +71,13 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, organizationId, lo
     loadNext: loadNextRefetchPaginatedLocationDesks,
     isLoadingNext: isLoadingNextrefetchPaginatedLocationDesks,
     refetch: refetchPaginatedLocationDesks,
-  } = usePaginationFragment<locationDesksTab_locationDesks_refetchableFragment, locationDesksTab_locationDesks_query$key>(
+  } = usePaginationFragment<locationDesksTab_desks_refetchableFragment, locationDesksTab_desks_query$key>(
     graphql`
-      fragment locationDesksTab_locationDesks_query on Query
+      fragment locationDesksTab_desks_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "locationDesksTab_locationDesks_refetchableFragment") {
-        locationDesks(
-          first: $count
-          after: $cursor
-          where: { locationId: $locationId, nameContains: $deskNameSearchText }
-          orderBy: $deskSortingValues
-        ) @connection(key: "locationDesksTab_locationDesks") {
+      @refetchable(queryName: "locationDesksTab_desks_refetchableFragment") {
+        desks(first: $count, after: $cursor, where: { locationId: $locationId, nameContains: $deskNameSearchText }, orderBy: $deskSortingValues)
+          @connection(key: "locationDesksTab_desks") {
           __id
           totalCount
           edges {
@@ -216,15 +212,15 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, organizationId, lo
   };
 
   const connectionIds = useMemo(
-    () => (rootDataRefetchPaginatedLocationDesks.locationDesks ? [rootDataRefetchPaginatedLocationDesks.locationDesks.__id] : []),
-    [rootDataRefetchPaginatedLocationDesks.locationDesks],
+    () => (rootDataRefetchPaginatedLocationDesks.desks ? [rootDataRefetchPaginatedLocationDesks.desks.__id] : []),
+    [rootDataRefetchPaginatedLocationDesks.desks],
   );
 
-  if (!rootData.location || !rootDataRefetchPaginatedLocationDesks.locationDesks) {
+  if (!rootData.location || !rootDataRefetchPaginatedLocationDesks.desks) {
     return <></>;
   }
 
-  const desks = rootDataRefetchPaginatedLocationDesks.locationDesks.edges;
+  const desks = rootDataRefetchPaginatedLocationDesks.desks.edges;
   const slicedEdges = desks.slice(page * pageSize, page * pageSize + pageSize > desks.length ? desks.length : page * pageSize + pageSize);
 
   const handleSortingChanged = (direction: Direction, value: string) => {
@@ -263,7 +259,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, organizationId, lo
         <PushToRight />
         <TablePagination
           component="div"
-          count={rootDataRefetchPaginatedLocationDesks.locationDesks.totalCount ? rootDataRefetchPaginatedLocationDesks.locationDesks.totalCount : 0}
+          count={rootDataRefetchPaginatedLocationDesks.desks.totalCount ? rootDataRefetchPaginatedLocationDesks.desks.totalCount : 0}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={pageSize}

@@ -122,11 +122,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       fragment organizationLocation_desks_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationLocation_desks_refetchableFragment") {
-        locationDesks(
+        desks(
           first: $count
           after: $cursor
           where: { locationId: $locationId, nameContains: $deskNameSearchText, deskTypeIds: $deskDeskTypeIds, zoneIds: $deskZoneIds }
-        ) @connection(key: "organizationLocation_locationDesks") {
+        ) @connection(key: "organizationLocation_desks") {
           __id
           totalCount
           edges {
@@ -243,14 +243,14 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteDesk],
   ];
 
-  const desksConnectionIds = useMemo(() => (rootDataDesks.locationDesks ? [rootDataDesks.locationDesks.__id] : []), [rootDataDesks.locationDesks]);
+  const desksConnectionIds = useMemo(() => (rootDataDesks.desks ? [rootDataDesks.desks.__id] : []), [rootDataDesks.desks]);
   const desks = useMemo(() => {
-    if (!rootDataDesks.locationDesks) {
+    if (!rootDataDesks.desks) {
       return [];
     }
 
-    return rootDataDesks.locationDesks.edges.map(({ node }) => node);
-  }, [rootDataDesks.locationDesks]);
+    return rootDataDesks.desks.edges.map(({ node }) => node);
+  }, [rootDataDesks.desks]);
   const deskDetails = useMemo(() => desks.find((item) => item.id === selectedDeskId), [selectedDeskId, desks]);
 
   useEffect(() => {

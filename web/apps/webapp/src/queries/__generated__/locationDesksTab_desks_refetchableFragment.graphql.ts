@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b381ff8bf6fb82b27fd31a73049b03a6>>
+ * @generated SignedSource<<68c0fb1e0ca692035c9a9761f7d23aa9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,19 +16,19 @@ export type DeskOrderInput = {
   direction: OrderDirection;
   field: DeskOrderField;
 };
-export type locationDesksTab_locationDesks_refetchableFragment$variables = {
+export type locationDesksTab_desks_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   deskNameSearchText?: string | null | undefined;
   deskSortingValues?: ReadonlyArray<DeskOrderInput> | null | undefined;
   locationId: string;
 };
-export type locationDesksTab_locationDesks_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_locationDesks_query">;
+export type locationDesksTab_desks_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_desks_query">;
 };
-export type locationDesksTab_locationDesks_refetchableFragment = {
-  response: locationDesksTab_locationDesks_refetchableFragment$data;
-  variables: locationDesksTab_locationDesks_refetchableFragment$variables;
+export type locationDesksTab_desks_refetchableFragment = {
+  response: locationDesksTab_desks_refetchableFragment$data;
+  variables: locationDesksTab_desks_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -114,7 +114,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "locationDesksTab_locationDesks_refetchableFragment",
+    "name": "locationDesksTab_desks_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -130,7 +130,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "locationDesksTab_locationDesks_query"
+        "name": "locationDesksTab_desks_query"
       }
     ],
     "type": "Query",
@@ -140,14 +140,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "locationDesksTab_locationDesks_refetchableFragment",
+    "name": "locationDesksTab_desks_refetchableFragment",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "DeskConnection",
         "kind": "LinkedField",
-        "name": "locationDesks",
+        "name": "desks",
         "plural": false,
         "selections": [
           {
@@ -283,23 +283,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "locationDesksTab_locationDesks",
+        "key": "locationDesksTab_desks",
         "kind": "LinkedHandle",
-        "name": "locationDesks"
+        "name": "desks"
       }
     ]
   },
   "params": {
-    "cacheID": "11e112ca06ec19d7821eb656041a7d33",
+    "cacheID": "42b6e94a014277d08369c7921758821c",
     "id": null,
     "metadata": {},
-    "name": "locationDesksTab_locationDesks_refetchableFragment",
+    "name": "locationDesksTab_desks_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationDesksTab_locationDesks_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]\n  $locationId: String!\n) {\n  ...locationDesksTab_locationDesks_query_1G22uz\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  deskTypes {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n}\n\nfragment locationDesksTab_locationDesks_query_1G22uz on Query {\n  locationDesks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query locationDesksTab_desks_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]\n  $locationId: String!\n) {\n  ...locationDesksTab_desks_query_1G22uz\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  deskTypes {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n}\n\nfragment locationDesksTab_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7689530ca9f9146c8787540e0409b247";
+(node as any).hash = "2258f2f0d1f0e0a706ea1a2444dc4b8c";
 
 export default node;

@@ -301,7 +301,7 @@ public class Mapper : IMapper
         new()
         {
             DesksOccupancyPercentage = locationDesksOccupancyPercentage.Select(item =>
-                    new GraphQL.LocationDesksOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
+                    new GraphQL.DesksOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
                 .ToArray(),
             DailyBookingsTotals = locationDailyBookingsTotal.Select(item =>
                     new GraphQL.LocationDailyBookingsTotal { Date = item.Date, Total = item.Total })

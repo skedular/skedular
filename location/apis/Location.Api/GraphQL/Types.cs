@@ -147,7 +147,7 @@ public class InviteCustomersToJoinLocationPayload
 public class LocationAnalytics
 {
     [GraphQLName("desksOccupancyPercentage")]
-    public LocationDesksOccupancyPercentage[] DesksOccupancyPercentage { get; set; } = [];
+    public DesksOccupancyPercentage[] DesksOccupancyPercentage { get; set; } = [];
 
     [GraphQLName("dailyBookingsTotals")] public LocationDailyBookingsTotal[] DailyBookingsTotals { get; set; } = [];
 }
@@ -179,8 +179,8 @@ public class LocationDailyBookingsTotal
     [GraphQLName("total")] public int Total { get; set; }
 }
 
-[GraphQLName("LocationDesksOccupancyPercentage")]
-public class LocationDesksOccupancyPercentage
+[GraphQLName("DesksOccupancyPercentage")]
+public class DesksOccupancyPercentage
 {
     [GraphQLName("date")] public DateTimeOffset Date { get; set; }
     [GraphQLName("percentage")] public float Percentage { get; set; }

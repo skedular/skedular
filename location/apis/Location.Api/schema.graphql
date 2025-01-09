@@ -41,6 +41,11 @@ type DeskPayload {
   desk: DeskDetails!
 }
 
+type DesksOccupancyPercentage {
+  date: DateTime!
+  percentage: Float!
+}
+
 type DesksPayload {
   clientMutationId: String
   desks: [DeskDetails!]!
@@ -62,7 +67,7 @@ type LocationAddressDetails {
 }
 
 type LocationAnalytics {
-  desksOccupancyPercentage: [LocationDesksOccupancyPercentage!]!
+  desksOccupancyPercentage: [DesksOccupancyPercentage!]!
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
 }
 
@@ -90,11 +95,6 @@ type LocationCustomerDetails {
 type LocationDailyBookingsTotal {
   date: DateTime!
   total: Int!
-}
-
-type LocationDesksOccupancyPercentage {
-  date: DateTime!
-  percentage: Float!
 }
 
 type LocationDetails {
@@ -192,9 +192,9 @@ type Query {
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): LocationConnection @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   locationMembers(after: String first: Int before: String last: Int where: LocationMemberWhereInput! orderBy: [LocationMemberOrderInput!]): LocationMemberConnection @cost(weight: "10")
-  locationDesks(after: String first: Int before: String last: Int where: DeskWhereInput! orderBy: [DeskOrderInput!]): DeskConnection @cost(weight: "10")
+  desks(after: String first: Int before: String last: Int where: DeskWhereInput! orderBy: [DeskOrderInput!]): DeskConnection @cost(weight: "10")
   locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
-  locationDesk(id: String!): DeskDetails @cost(weight: "10")
+  desk(id: String!): DeskDetails @cost(weight: "10")
 }
 
 type RejectInvitationToJoinLocationPayload {

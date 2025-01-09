@@ -23,7 +23,7 @@ const RootQuery = graphql`
     $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
-    locationDesk(id: $deskId) {
+    desk(id: $deskId) {
       name
     }
     ...editDesk_query
@@ -53,7 +53,7 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, deskId
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Breadcrumbs>
           <BodyIconTypography label="Desk Settings" />
-          <BodyIconTypography label={rootData.locationDesk?.name} />
+          <BodyIconTypography label={rootData.desk?.name} />
         </Breadcrumbs>
       </Box>
     </StackColumn>

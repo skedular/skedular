@@ -8,10 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.29.2"/>
-        <PackageReference Include="Nanoid" Version="3.1.0"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0"/>
+        <PackageReference Include="Google.Protobuf" Version="3.29.3" />
+        <PackageReference Include="Nanoid" Version="3.1.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.12.19">
             <PrivateAssets>all</PrivateAssets>
@@ -20,13 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Api.Shared\Api.Shared.csproj"/>
+        <ProjectReference Include="..\Api.Shared\Api.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Events\"/>
-        <Folder Include="Events\Skedular\"/>
-        <Folder Include="OpenApi\"/>
+        <Folder Include="Events\" />
+        <Folder Include="Events\Skedular\" />
+        <Folder Include="OpenApi\" />
     </ItemGroup>
 
 </Project>

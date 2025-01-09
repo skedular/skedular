@@ -232,6 +232,11 @@ type DeskPayload {
   desk: DeskDetails!
 }
 
+type DesksOccupancyPercentage {
+  date: DateTime!
+  percentage: Float!
+}
+
 type DesksPayload {
   clientMutationId: String
   desks: [DeskDetails!]!
@@ -262,7 +267,7 @@ type LocationAddressDetails {
 
 type LocationAnalytics {
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
-  desksOccupancyPercentage: [LocationDesksOccupancyPercentage!]!
+  desksOccupancyPercentage: [DesksOccupancyPercentage!]!
 }
 
 type LocationBookingPermissions {
@@ -298,11 +303,6 @@ type LocationCustomerDetails {
 type LocationDailyBookingsTotal {
   date: DateTime!
   total: Int!
-}
-
-type LocationDesksOccupancyPercentage {
-  date: DateTime!
-  percentage: Float!
 }
 
 type LocationDetails {
@@ -742,6 +742,8 @@ type Query {
   bookingVersion: Version!
   customersByDefaultLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByDefaultLocationWhereInput!): CustomerConnection @cost(weight: "10")
   customerVersion: Version!
+  desk(id: String!): DeskDetails @cost(weight: "10")
+  desks(after: String before: String first: Int last: Int orderBy: [DeskOrderInput!] where: DeskWhereInput!): DeskConnection @cost(weight: "10")
   deskType(id: String!): OrganizationTagDetails @cost(weight: "10")
   deskTypes(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: DeskTypeOrganizationTagWhereInput!): OrganizationTagConnection @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
@@ -749,8 +751,6 @@ type Query {
   locationAnalytics(from: DateTime! locationId: String! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationBookingPermissions(locationId: String!): LocationBookingPermissions @cost(weight: "10")
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
-  locationDesk(id: String!): DeskDetails @cost(weight: "10")
-  locationDesks(after: String before: String first: Int last: Int orderBy: [DeskOrderInput!] where: DeskWhereInput!): DeskConnection @cost(weight: "10")
   locationMemberRoles: [LocationMemberRole!]!
   locationMembers(after: String before: String first: Int last: Int orderBy: [LocationMemberOrderInput!] where: LocationMemberWhereInput!): LocationMemberConnection @cost(weight: "10")
   locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): LocationConnection @cost(weight: "10")

@@ -168,7 +168,7 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<DeskConnection?> LocationDesksAsync(
+    public async Task<DeskConnection?> DesksAsync(
         string? after,
         int? first,
         string? before,
@@ -221,13 +221,13 @@ public class Query(IMapper mapper)
         [Service] ILocationAnalyticsService locationAnalyticsService,
         CancellationToken cancellationToken)
     {
-        var (locationDesksOccupancyPercentages, locationDailyBookingsTotals) =
+        var (desksOccupancyPercentages, locationDailyBookingsTotals) =
             await locationAnalyticsService.GetAnalyticsAsync(locationId, from, until, cancellationToken);
-        return mapper.MapTo(locationDesksOccupancyPercentages, locationDailyBookingsTotals);
+        return mapper.MapTo(desksOccupancyPercentages, locationDailyBookingsTotals);
     }
 
     [UseResolverScope]
-    public async Task<DeskDetails?> LocationDeskAsync(
+    public async Task<DeskDetails?> DeskAsync(
         string id,
         [Service] IDeskService deskService,
         CancellationToken cancellationToken)

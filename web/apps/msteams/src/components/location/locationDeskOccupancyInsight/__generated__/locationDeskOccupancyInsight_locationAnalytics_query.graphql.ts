@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8bcc46e07e85fd8a733bdb1ac1848b43>>
+ * @generated SignedSource<<86958d6174c77334ec6e6fd6fc901460>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -76,7 +76,7 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationDesksOccupancyPercentage",
+          "concreteType": "DesksOccupancyPercentage",
           "kind": "LinkedField",
           "name": "desksOccupancyPercentage",
           "plural": true,

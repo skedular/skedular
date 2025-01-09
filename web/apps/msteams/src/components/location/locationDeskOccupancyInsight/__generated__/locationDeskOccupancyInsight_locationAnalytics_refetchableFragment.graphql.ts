@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<da0997d603e8f2d9ea131e367e94fdc5>>
+ * @generated SignedSource<<1567d4783d2741eb1a2d1ca10fe65110>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -90,7 +90,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "LocationDesksOccupancyPercentage",
+            "concreteType": "DesksOccupancyPercentage",
             "kind": "LinkedField",
             "name": "desksOccupancyPercentage",
             "plural": true,

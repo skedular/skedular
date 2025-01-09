@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9db742097529e9cd1d373eb0ed08a923>>
+ * @generated SignedSource<<3f03f202b0dc25efd32e466cdab7601e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,7 @@ export type pageOrganizationLocationDesk_rootQuery$variables = {
   organizationId: string;
 };
 export type pageOrganizationLocationDesk_rootQuery$data = {
-  readonly locationDesk: {
+  readonly desk: {
     readonly name: string;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"editDesk_query">;
@@ -158,7 +158,7 @@ return {
         "args": (v4/*: any*/),
         "concreteType": "DeskDetails",
         "kind": "LinkedField",
-        "name": "locationDesk",
+        "name": "desk",
         "plural": false,
         "selections": [
           (v5/*: any*/)
@@ -190,7 +190,7 @@ return {
         "args": (v4/*: any*/),
         "concreteType": "DeskDetails",
         "kind": "LinkedField",
-        "name": "locationDesk",
+        "name": "desk",
         "plural": false,
         "selections": [
           (v5/*: any*/),
@@ -269,16 +269,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f5407d8903bf028f68085a5664d414a2",
+    "cacheID": "f117e3a18f7a274a8a5366961d7594e3",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocationDesk_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocationDesk_rootQuery(\n  $organizationId: String!\n  $deskId: String!\n  $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  locationDesk(id: $deskId) {\n    name\n    id\n  }\n  ...editDesk_query\n}\n\nfragment editDesk_query on Query {\n  locationDesk(id: $deskId) {\n    id\n    name\n    deactivated\n    requireBookingApproval\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n  ...multipleChoicesDeskTypes_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $multipleChoicesDeskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationLocationDesk_rootQuery(\n  $organizationId: String!\n  $deskId: String!\n  $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  desk(id: $deskId) {\n    name\n    id\n  }\n  ...editDesk_query\n}\n\nfragment editDesk_query on Query {\n  desk(id: $deskId) {\n    id\n    name\n    deactivated\n    requireBookingApproval\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n  ...multipleChoicesDeskTypes_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $multipleChoicesDeskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0f216e14979689b5a66205379a30e716";
+(node as any).hash = "24592fc4eba215ea51d9631df891e9ce";
 
 export default node;

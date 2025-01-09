@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8e3a967b8c538211d4fb1724c4c000d9>>
+ * @generated SignedSource<<94f2a662cef10de1e24e81732dbb12b0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,8 +10,8 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type locationDesksTab_locationDesks_query$data = {
-  readonly locationDesks: {
+export type locationDesksTab_desks_query$data = {
+  readonly desks: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -21,16 +21,16 @@ export type locationDesksTab_locationDesks_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "locationDesksTab_locationDesks_query";
+  readonly " $fragmentType": "locationDesksTab_desks_query";
 };
-export type locationDesksTab_locationDesks_query$key = {
-  readonly " $data"?: locationDesksTab_locationDesks_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_locationDesks_query">;
+export type locationDesksTab_desks_query$key = {
+  readonly " $data"?: locationDesksTab_desks_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"locationDesksTab_desks_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "locationDesks"
+  "desks"
 ];
 return {
   "argumentDefinitions": [
@@ -77,13 +77,13 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./locationDesksTab_locationDesks_refetchableFragment.graphql')
+      "operation": require('./locationDesksTab_desks_refetchableFragment.graphql')
     }
   },
-  "name": "locationDesksTab_locationDesks_query",
+  "name": "locationDesksTab_desks_query",
   "selections": [
     {
-      "alias": "locationDesks",
+      "alias": "desks",
       "args": [
         {
           "kind": "Variable",
@@ -109,7 +109,7 @@ return {
       ],
       "concreteType": "DeskConnection",
       "kind": "LinkedField",
-      "name": "__locationDesksTab_locationDesks_connection",
+      "name": "__locationDesksTab_desks_connection",
       "plural": false,
       "selections": [
         {
@@ -213,6 +213,6 @@ return {
 };
 })();
 
-(node as any).hash = "7689530ca9f9146c8787540e0409b247";
+(node as any).hash = "2258f2f0d1f0e0a706ea1a2444dc4b8c";
 
 export default node;

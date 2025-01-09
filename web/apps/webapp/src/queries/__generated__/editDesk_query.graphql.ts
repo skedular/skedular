@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5bf95a4bf916c7e5d275ef91a80abf25>>
+ * @generated SignedSource<<49ce8995b25e12627e36ac4008125c92>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type editDesk_query$data = {
-  readonly locationDesk: {
+  readonly desk: {
     readonly deactivated: boolean;
     readonly deskTypes: ReadonlyArray<{
       readonly name: string | null | undefined;
@@ -73,7 +73,7 @@ return {
       ],
       "concreteType": "DeskDetails",
       "kind": "LinkedField",
-      "name": "locationDesk",
+      "name": "desk",
       "plural": false,
       "selections": [
         {
@@ -137,6 +137,6 @@ return {
 };
 })();
 
-(node as any).hash = "aceb9f81a0bd42828128913327f9df33";
+(node as any).hash = "ecb0bce9cf6343b06259d566aeaed83f";
 
 export default node;

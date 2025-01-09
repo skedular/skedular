@@ -50,7 +50,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
   const rootData = useFragment<editDesk_query$key>(
     graphql`
       fragment editDesk_query on Query {
-        locationDesk(id: $deskId) {
+        desk(id: $deskId) {
           id
           name
           deactivated
@@ -103,21 +103,21 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
   };
 
   const handleSaveClick = ({ name, deskTypeIds, zoneIds }: DeskDetails) => {
-    if (!rootData.locationDesk) {
+    if (!rootData.desk) {
       return;
     }
 
-    const oldName = rootData.locationDesk.name;
+    const oldName = rootData.desk.name;
     const toastId = themedToast(<NotificationContent content={`Updating zone '${oldName}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id: rootData.locationDesk.id,
+          id: rootData.desk.id,
           name,
-          deactivated: rootData.locationDesk.deactivated,
-          requireBookingApproval: rootData.locationDesk.requireBookingApproval,
+          deactivated: rootData.desk.deactivated,
+          requireBookingApproval: rootData.desk.requireBookingApproval,
           deskTypeIds,
           zoneIds,
         },
@@ -148,10 +148,10 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
       optimisticResponse: {
         updateDesk: {
           desk: {
-            id: rootData.locationDesk.id,
+            id: rootData.desk.id,
             name,
-            deactivated: rootData.locationDesk.deactivated,
-            requireBookingApproval: rootData.locationDesk.requireBookingApproval,
+            deactivated: rootData.desk.deactivated,
+            requireBookingApproval: rootData.desk.requireBookingApproval,
             deskTypes: [],
             zones: [],
           },
@@ -160,11 +160,11 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
     });
   };
 
-  if (!rootData.locationDesk) {
+  if (!rootData.desk) {
     return <></>;
   }
 
-  const desk = rootData.locationDesk;
+  const desk = rootData.desk;
 
   return (
     <Box sx={{ display: 'flex' }}>

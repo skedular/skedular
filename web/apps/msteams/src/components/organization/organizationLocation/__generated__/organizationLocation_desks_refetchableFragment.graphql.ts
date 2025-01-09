@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d6ba73fc4c5ef04bb7c1b34c72e738a2>>
+ * @generated SignedSource<<ffe2c4de5f827f9f40bccd424f4ea3f6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -152,7 +152,7 @@ return {
         "args": (v1/*: any*/),
         "concreteType": "DeskConnection",
         "kind": "LinkedField",
-        "name": "locationDesks",
+        "name": "desks",
         "plural": false,
         "selections": [
           {
@@ -287,23 +287,23 @@ return {
           "where"
         ],
         "handle": "connection",
-        "key": "organizationLocation_locationDesks",
+        "key": "organizationLocation_desks",
         "kind": "LinkedHandle",
-        "name": "locationDesks"
+        "name": "desks"
       }
     ]
   },
   "params": {
-    "cacheID": "9057b5543be72fc920a04ba3f331bce6",
+    "cacheID": "24ca336b547092648aed42a5277a094f",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_desks_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationLocation_desks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskDeskTypeIds: [String!]\n  $deskNameSearchText: String\n  $deskZoneIds: [String!]\n  $locationId: String!\n) {\n  ...organizationLocation_desks_query_1G22uz\n}\n\nfragment organizationLocation_desks_query_1G22uz on Query {\n  locationDesks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText, deskTypeIds: $deskDeskTypeIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationLocation_desks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskDeskTypeIds: [String!]\n  $deskNameSearchText: String\n  $deskZoneIds: [String!]\n  $locationId: String!\n) {\n  ...organizationLocation_desks_query_1G22uz\n}\n\nfragment organizationLocation_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText, deskTypeIds: $deskDeskTypeIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7ac03f4d8f99525723afaf039969346c";
+(node as any).hash = "7ed0f3e42f93eeb4de4aeb4bb5b56bbb";
 
 export default node;

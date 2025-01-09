@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b2a19409cc558d6724e94f7f79185b3>>
+ * @generated SignedSource<<848fc5d950e5ef7dacdd827968a69cac>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationLocation_desks_query$data = {
-  readonly locationDesks: {
+  readonly desks: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -40,7 +40,7 @@ export type organizationLocation_desks_query$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "locationDesks"
+  "desks"
 ],
 v1 = {
   "alias": null,
@@ -114,7 +114,7 @@ return {
   "name": "organizationLocation_desks_query",
   "selections": [
     {
-      "alias": "locationDesks",
+      "alias": "desks",
       "args": [
         {
           "fields": [
@@ -145,7 +145,7 @@ return {
       ],
       "concreteType": "DeskConnection",
       "kind": "LinkedField",
-      "name": "__organizationLocation_locationDesks_connection",
+      "name": "__organizationLocation_desks_connection",
       "plural": false,
       "selections": [
         {
@@ -279,6 +279,6 @@ return {
 };
 })();
 
-(node as any).hash = "7ac03f4d8f99525723afaf039969346c";
+(node as any).hash = "7ed0f3e42f93eeb4de4aeb4bb5b56bbb";
 
 export default node;
