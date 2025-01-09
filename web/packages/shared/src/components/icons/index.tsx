@@ -57,6 +57,7 @@ export { default as RemoveIcon } from '@mui/icons-material/Remove';
 export { default as SearchRoundedIcon } from '@mui/icons-material/SearchRounded';
 export { default as PreferredIcon } from '@mui/icons-material/Star';
 export { default as NotPreferredIcon } from '@mui/icons-material/StarOutline';
+export { default as SSOIcon } from '@mui/icons-material/SyncLock';
 export { default as TodayIcon } from '@mui/icons-material/Today';
 export { default as ToggleOffIcon } from '@mui/icons-material/ToggleOff';
 export { default as ToggleOnIcon } from '@mui/icons-material/ToggleOn';

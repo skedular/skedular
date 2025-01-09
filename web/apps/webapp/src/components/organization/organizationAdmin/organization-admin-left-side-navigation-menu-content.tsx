@@ -1,6 +1,7 @@
 import {
   getModernOrganizationAdminDeskTypesBaseLink,
   getModernOrganizationAdminSetupBaseLink,
+  getModernOrganizationAdminSSOBaseLink,
   getModernOrganizationAdminZonesBaseLink,
 } from '@/components/organization';
 import Link from '@mui/material/Link';
@@ -8,7 +9,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
-import { DeskTypeIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { DeskTypeIcon, SSOIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
 import NextLink from 'next/link';
@@ -59,6 +60,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   const fullPath = `${pathname}?${searchParams.toString()}`;
 
   const setupLink = getModernOrganizationAdminSetupBaseLink(organizationId);
+  const ssoLink = getModernOrganizationAdminSSOBaseLink(organizationId);
   const zonesLink = getModernOrganizationAdminZonesBaseLink(organizationId);
   const deskTypesLink = getModernOrganizationAdminDeskTypesBaseLink(organizationId);
 
@@ -89,6 +91,28 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
                 startElement={!hideIcons && <ZoneIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link href={ssoLink}>
+          <ListItemButton selected={fullPath === ssoLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === ssoLink) }}>
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <SSOIcon color="inherit" />}
+                invertDefaultColor={fullPath === ssoLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="SSO Setup"
+                startElement={!hideIcons && <SSOIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === ssoLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

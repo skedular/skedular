@@ -731,6 +731,17 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
                 <StackColumn
                   sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
                   ref={(divElement) => {
+                    sectionRefs.current['sso-setup'] = divElement;
+                  }}
+                >
+                  <SectionIconTypography label="SSO Setup" />
+                  <BodyIconTypography label="Edit your organization SSO settings" />
+                  <Divider />
+                </StackColumn>
+
+                <StackColumn
+                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                  ref={(divElement) => {
                     sectionRefs.current['zones-setup'] = divElement;
                   }}
                 >
