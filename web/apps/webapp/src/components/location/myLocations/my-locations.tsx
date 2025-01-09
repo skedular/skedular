@@ -1,3 +1,4 @@
+import { NewBookingButton } from '@/components/booking/addBooking';
 import { getModernOrganizationLocationSetupBaseLink } from '@/components/organization';
 import type { myLocations_deleteLocationMutation } from '@/queries/__generated__/myLocations_deleteLocationMutation.graphql';
 import type { myLocations_locations_availableOrganizationDesks_query$key } from '@/queries/__generated__/myLocations_locations_availableOrganizationDesks_query.graphql';
@@ -192,6 +193,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const [defaultDate] = useState(startOfDay());
   const connectionIds = useMemo(() => (rootDataRefetchable.locations ? [rootDataRefetchable.locations.__id] : []), [rootDataRefetchable.locations]);
   const [selectedLocationId, setSelectedLocationId] = useState<null | string>(null);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
@@ -203,7 +205,6 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation],
   ];
 
-  const [today] = useState(startOfDay());
   const locations = useMemo(() => {
     if (!rootDataRefetchable.locations) {
       return [];
@@ -384,7 +385,28 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value ? params.value : 'N/A'} sx={{ whiteSpace: 'pre-line' }} />,
       display: 'flex',
-      minWidth: 200,
+      minWidth: 150,
+    },
+    {
+      field: 'bookNow',
+      headerName: '',
+      editable: false,
+      renderCell: (params) => (
+        <NewBookingButton
+          hideLocationControl={false}
+          hideOrganizationControl={true}
+          onReloadRequired={onReloadRequired}
+          defaultDate={defaultDate}
+          organizationId={organizationId}
+          locationId={params.id as string}
+          label="Book Now"
+          hideIcon
+          variant="contained"
+          size="small"
+        />
+      ),
+      display: 'flex',
+      minWidth: 140,
     },
     {
       field: 'moreActions',
@@ -431,7 +453,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
                     locationDetailsRelay={location}
                     onReloadRequired={onReloadRequired}
                     organizationId={organizationId}
-                    defaultDate={today}
+                    defaultDate={defaultDate}
                     connectionIds={connectionIds}
                     availableDesksCount={availableDesksCount}
                     availablePercentage={availablePercentage}
