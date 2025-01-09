@@ -1,7 +1,6 @@
 import {
-  getModernOrganizationAdminBaseLink,
+  getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationLocationsBaseLink,
-  getModernOrganizationManageAssetsZonesBaseLink,
   getModernOrganizationMembersBaseLink,
   getModernOrganizationTeamsBaseLink,
   getOrganizationBaseLink,
@@ -13,7 +12,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
-import { CollpaseDrawerIcon, HomeIcon, LocationIcon, ManageAssetsIcon, MembersIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
+import { CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import Image from 'next/image';
@@ -103,8 +102,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
   const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
   const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
   const organizationMembersBaseLink = getModernOrganizationMembersBaseLink(rootData.organization.id);
-  const organizationManageAssetsBaseLink = getModernOrganizationManageAssetsZonesBaseLink(rootData.organization.id);
-  const organizationAdminBaseLink = getModernOrganizationAdminBaseLink(rootData.organization.id);
+  const organizationAdminSetupBaseLink = getModernOrganizationAdminSetupBaseLink(rootData.organization.id);
 
   return (
     <>
@@ -229,41 +227,17 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
           </Link>
         </ListItem>
 
-        <ListItem disablePadding>
-          <Link component={NextLink} href={organizationManageAssetsBaseLink}>
-            <ListItemButton
-              selected={pathName.startsWith(organizationManageAssetsBaseLink)}
-              sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationManageAssetsBaseLink)) }}
-            >
-              {collapsed && (
-                <BodyIconTypography
-                  startElement={!hideIcons && <ManageAssetsIcon color="inherit" />}
-                  invertDefaultColor={pathName.startsWith(organizationManageAssetsBaseLink) && paletteMode === 'dark'}
-                />
-              )}
-              {!collapsed && (
-                <BodyIconTypography
-                  label="Manage Assets"
-                  startElement={!hideIcons && <ManageAssetsIcon excludeTooltip color="inherit" />}
-                  spacing={3}
-                  invertDefaultColor={pathName.startsWith(organizationManageAssetsBaseLink) && paletteMode === 'dark'}
-                />
-              )}
-            </ListItemButton>
-          </Link>
-        </ListItem>
-
         {rootData.organization.canModify && (
           <ListItem disablePadding>
-            <Link component={NextLink} href={organizationAdminBaseLink}>
+            <Link component={NextLink} href={organizationAdminSetupBaseLink}>
               <ListItemButton
-                selected={pathName.startsWith(organizationAdminBaseLink)}
-                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAdminBaseLink)) }}
+                selected={pathName.startsWith(organizationAdminSetupBaseLink)}
+                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAdminSetupBaseLink)) }}
               >
                 {collapsed && (
                   <BodyIconTypography
                     startElement={!hideIcons && <SettingsIcon color="inherit" />}
-                    invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
+                    invertDefaultColor={pathName.startsWith(organizationAdminSetupBaseLink) && paletteMode === 'dark'}
                   />
                 )}
                 {!collapsed && (
@@ -271,7 +245,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
                     label="Admin"
                     startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
                     spacing={3}
-                    invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
+                    invertDefaultColor={pathName.startsWith(organizationAdminSetupBaseLink) && paletteMode === 'dark'}
                   />
                 )}
               </ListItemButton>

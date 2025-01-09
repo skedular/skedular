@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9647edcda74d66a403ccab975cef649b>>
+ * @generated SignedSource<<15415f2346f531c49f0ec7f897a178aa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,20 +13,20 @@ export type DeleteZonesInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationManageAssets_deleteZonesMutation$variables = {
+export type organizationAdmin_deleteZonesMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: DeleteZonesInput;
 };
-export type organizationManageAssets_deleteZonesMutation$data = {
+export type organizationAdmin_deleteZonesMutation$data = {
   readonly deleteZones: {
     readonly organizationTags: ReadonlyArray<{
       readonly id: string;
     }>;
   } | null | undefined;
 };
-export type organizationManageAssets_deleteZonesMutation = {
-  response: organizationManageAssets_deleteZonesMutation$data;
-  variables: organizationManageAssets_deleteZonesMutation$variables;
+export type organizationAdmin_deleteZonesMutation = {
+  response: organizationAdmin_deleteZonesMutation$data;
+  variables: organizationAdmin_deleteZonesMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationManageAssets_deleteZonesMutation",
+    "name": "organizationAdmin_deleteZonesMutation",
     "selections": [
       {
         "alias": null,
@@ -94,7 +94,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationManageAssets_deleteZonesMutation",
+    "name": "organizationAdmin_deleteZonesMutation",
     "selections": [
       {
         "alias": null,
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f74fce5b7f95995b5eb76dbfdd7b9ad9",
+    "cacheID": "d39f9cc607939899d5fe98f1e7bb144c",
     "id": null,
     "metadata": {},
-    "name": "organizationManageAssets_deleteZonesMutation",
+    "name": "organizationAdmin_deleteZonesMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationManageAssets_deleteZonesMutation(\n  $input: DeleteZonesInput!\n) {\n  deleteZones(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_deleteZonesMutation(\n  $input: DeleteZonesInput!\n) {\n  deleteZones(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ebfcf538d05f5763dad4202357148180";
+(node as any).hash = "0b7bc8bd55161338234087123eec7cc7";
 
 export default node;

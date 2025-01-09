@@ -1,13 +1,3 @@
-import { AddOrganizationDeskTypeButton } from '@/components/organization/addOrganizationDeskType';
-import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
-import { EditOrganizationZoneDialog } from '@/components/organization/editOrganizationZone/';
-import type { organizationManageAssets_deleteDeskTypesMutation } from '@/queries/__generated__/organizationManageAssets_deleteDeskTypesMutation.graphql';
-import type { organizationManageAssets_deleteZonesMutation } from '@/queries/__generated__/organizationManageAssets_deleteZonesMutation.graphql';
-import type { organizationManageAssets_deskTypes_query$key } from '@/queries/__generated__/organizationManageAssets_deskTypes_query.graphql';
-import type { organizationManageAssets_deskTypes_refetchableFragment } from '@/queries/__generated__/organizationManageAssets_deskTypes_refetchableFragment.graphql';
-import type { organizationManageAssets_rootQuery } from '@/queries/__generated__/organizationManageAssets_rootQuery.graphql';
-import type { organizationManageAssets_zones_query$key } from '@/queries/__generated__/organizationManageAssets_zones_query.graphql';
-import type { organizationManageAssets_zones_refetchableFragment } from '@/queries/__generated__/organizationManageAssets_zones_refetchableFragment.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -25,7 +15,6 @@ import {
 } from '@repo/shared/components/commons';
 import { DeskType } from '@repo/shared/components/deskType';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
-import { Loading } from '@repo/shared/components/loading';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -38,35 +27,38 @@ import {
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { Zone } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
+import { AddOrganizationDeskTypeButton } from 'components/organization/addOrganizationDeskType';
+import { AddOrganizationZoneButton } from 'components/organization/addOrganizationZone';
+import { EditOrganizationZoneDialog } from 'components/organization/editOrganizationZone/';
 import { nanoid } from 'nanoid';
-import { useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
+import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
+import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import EditOrganizationDeskTypeDialog from '../editOrganizationDeskType/edit-organization-desk-type-dialog';
+import type { organizationAdmin_deleteDeskTypesMutation } from './__generated__/organizationAdmin_deleteDeskTypesMutation.graphql';
+import type { organizationAdmin_deleteZonesMutation } from './__generated__/organizationAdmin_deleteZonesMutation.graphql';
+import type { organizationAdmin_deskTypes_query$key } from './__generated__/organizationAdmin_deskTypes_query.graphql';
+import type { organizationAdmin_deskTypes_refetchableFragment } from './__generated__/organizationAdmin_deskTypes_refetchableFragment.graphql';
+import type { organizationAdmin_query$key } from './__generated__/organizationAdmin_query.graphql';
+import type { organizationAdmin_zones_query$key } from './__generated__/organizationAdmin_zones_query.graphql';
+import type { organizationAdmin_zones_refetchableFragment } from './__generated__/organizationAdmin_zones_refetchableFragment.graphql';
 import { expandedDrawerWidthPx } from './commons';
-import OrganizationManageAssetsLeftSideNavigationMenuContent from './organization-manage-assets-left-side-navigation-menu-content';
+import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin-left-side-navigation-menu-content';
 
 type Props = {
-  queryReference: PreloadedQuery<organizationManageAssets_rootQuery, Record<string, unknown>>;
+  rootDataRelay: organizationAdmin_query$key;
+  rootDataZonesRelay: organizationAdmin_zones_query$key;
+  rootDataDeskTypesRelay: organizationAdmin_deskTypes_query$key;
   onReloadRequired: () => void;
   organizationId: string;
 };
-
-const RootQuery = graphql`
-  query organizationManageAssets_rootQuery($organizationId: String!, $zoneNameSearchText: String, $deskTypeNameSearchText: String) {
-    ...organizationManageAssets_zones_query
-    ...organizationManageAssets_deskTypes_query
-  }
-`;
 
 type ZoneRowType = {
   id: string;
@@ -80,18 +72,27 @@ type DeskTypeRowType = {
   description: string | null | undefined;
 };
 
-const OrganizationManageAssets = ({ queryReference, onReloadRequired, organizationId }: Props) => {
-  const rootData = usePreloadedQuery<organizationManageAssets_rootQuery>(RootQuery, queryReference);
-  const [rootDataZones, refetchZones] = useRefetchableFragment<
-    organizationManageAssets_zones_refetchableFragment,
-    organizationManageAssets_zones_query$key
-  >(
+const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskTypesRelay, onReloadRequired, organizationId }: Props) => {
+  const rootData = useFragment<organizationAdmin_query$key>(
     graphql`
-      fragment organizationManageAssets_zones_query on Query
+      fragment organizationAdmin_query on Query {
+        organization(id: $organizationId) {
+          id
+          name
+          about
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [rootDataZones, refetchZones] = useRefetchableFragment<organizationAdmin_zones_refetchableFragment, organizationAdmin_zones_query$key>(
+    graphql`
+      fragment organizationAdmin_zones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "organizationManageAssets_zones_refetchableFragment") {
+      @refetchable(queryName: "organizationAdmin_zones_refetchableFragment") {
         zones(first: $count, after: $cursor, where: { organizationId: $organizationId, nameContains: $zoneNameSearchText })
-          @connection(key: "organizationManageAssets_zones") {
+          @connection(key: "organizationAdmin_zones") {
           __id
           totalCount
           edges {
@@ -104,23 +105,23 @@ const OrganizationManageAssets = ({ queryReference, onReloadRequired, organizati
         }
       }
     `,
-    rootData,
+    rootDataZonesRelay,
   );
 
   const [rootDataDeskTypes, refetchDeskTypes] = useRefetchableFragment<
-    organizationManageAssets_deskTypes_refetchableFragment,
-    organizationManageAssets_deskTypes_query$key
+    organizationAdmin_deskTypes_refetchableFragment,
+    organizationAdmin_deskTypes_query$key
   >(
     graphql`
-      fragment organizationManageAssets_deskTypes_query on Query
+      fragment organizationAdmin_deskTypes_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "organizationManageAssets_deskTypes_refetchableFragment") {
+      @refetchable(queryName: "organizationAdmin_deskTypes_refetchableFragment") {
         deskTypes(
           first: $count
           after: $cursor
           where: { organizationId: $organizationId, nameContains: $deskTypeNameSearchText }
           orderBy: [{ direction: Ascending, field: Name }]
-        ) @connection(key: "organizationManageAssets_deskTypes") {
+        ) @connection(key: "organizationAdmin_deskTypes") {
           __id
           totalCount
           edges {
@@ -133,11 +134,11 @@ const OrganizationManageAssets = ({ queryReference, onReloadRequired, organizati
         }
       }
     `,
-    rootData,
+    rootDataDeskTypesRelay,
   );
 
-  const [commitDeleteZones] = useMutation<organizationManageAssets_deleteZonesMutation>(graphql`
-    mutation organizationManageAssets_deleteZonesMutation($connectionIds: [ID!]!, $input: DeleteZonesInput!) {
+  const [commitDeleteZones] = useMutation<organizationAdmin_deleteZonesMutation>(graphql`
+    mutation organizationAdmin_deleteZonesMutation($connectionIds: [ID!]!, $input: DeleteZonesInput!) {
       deleteZones(input: $input) {
         organizationTags {
           id @deleteEdge(connections: $connectionIds)
@@ -146,8 +147,8 @@ const OrganizationManageAssets = ({ queryReference, onReloadRequired, organizati
     }
   `);
 
-  const [commitDeleteDeskTypes] = useMutation<organizationManageAssets_deleteDeskTypesMutation>(graphql`
-    mutation organizationManageAssets_deleteDeskTypesMutation($connectionIds: [ID!]!, $input: DeleteDeskTypesInput!) {
+  const [commitDeleteDeskTypes] = useMutation<organizationAdmin_deleteDeskTypesMutation>(graphql`
+    mutation organizationAdmin_deleteDeskTypesMutation($connectionIds: [ID!]!, $input: DeleteDeskTypesInput!) {
       deleteDeskTypes(input: $input) {
         organizationTags {
           id @deleteEdge(connections: $connectionIds)
@@ -159,7 +160,7 @@ const OrganizationManageAssets = ({ queryReference, onReloadRequired, organizati
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
@@ -207,7 +208,7 @@ const OrganizationManageAssets = ({ queryReference, onReloadRequired, organizati
   }, [rootDataDeskTypes.deskTypes]);
 
   useEffect(() => {
-    if (!section || section === 'zones-setup') {
+    if (!section || section === 'setup') {
       return;
     }
 
@@ -556,9 +557,20 @@ const OrganizationManageAssets = ({ queryReference, onReloadRequired, organizati
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <OrganizationManageAssetsLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
+        <OrganizationAdminLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-          <StackColumnWithSaveExitCancelAppBar label="Manage Assets" hideCancel hideSaveAndExit>
+          <StackColumnWithSaveExitCancelAppBar label="Edit Organization Information" hideCancel hideSaveAndExit>
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['setup'] = divElement;
+              }}
+            >
+              <SectionIconTypography label="Organization Setup" />
+              <BodyIconTypography label="Edit your organization details" />
+              <Divider />
+            </StackColumn>
+
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
               ref={(divElement) => {
@@ -754,43 +766,4 @@ const OrganizationManageAssets = ({ queryReference, onReloadRequired, organizati
   );
 };
 
-const MemoOrganizationManageAssets = memo(OrganizationManageAssets);
-
-type RelayProps = {
-  organizationId: string;
-};
-
-const OrganizationManageAssetsWithRelay = ({ organizationId }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<organizationManageAssets_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
-  const [, startTransition] = useTransition();
-
-  useEffect(() => {
-    loadQuery(
-      {
-        organizationId,
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReloadId, organizationId]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReloadId(nanoid());
-    });
-  };
-
-  if (!queryReference) {
-    return <Loading />;
-  }
-
-  return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationManageAssets queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
-    </ErrorBoundary>
-  );
-};
-
-export default memo(OrganizationManageAssetsWithRelay);
+export default memo(OrganizationAdmin);

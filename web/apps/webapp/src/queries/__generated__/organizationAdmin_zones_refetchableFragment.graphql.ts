@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<32f8d95343ab14ca6e75c81d44a77d41>>
+ * @generated SignedSource<<39879ff9e518019d67c5257af0ee234b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,18 +10,18 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationManageAssets_zones_refetchableFragment$variables = {
+export type organizationAdmin_zones_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationId: string;
   zoneNameSearchText?: string | null | undefined;
 };
-export type organizationManageAssets_zones_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationManageAssets_zones_query">;
+export type organizationAdmin_zones_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_zones_query">;
 };
-export type organizationManageAssets_zones_refetchableFragment = {
-  response: organizationManageAssets_zones_refetchableFragment$data;
-  variables: organizationManageAssets_zones_refetchableFragment$variables;
+export type organizationAdmin_zones_refetchableFragment = {
+  response: organizationAdmin_zones_refetchableFragment$data;
+  variables: organizationAdmin_zones_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -80,7 +80,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationManageAssets_zones_refetchableFragment",
+    "name": "organizationAdmin_zones_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -96,7 +96,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "organizationManageAssets_zones_query"
+        "name": "organizationAdmin_zones_query"
       }
     ],
     "type": "Query",
@@ -106,7 +106,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationManageAssets_zones_refetchableFragment",
+    "name": "organizationAdmin_zones_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -227,23 +227,23 @@ return {
           "where"
         ],
         "handle": "connection",
-        "key": "organizationManageAssets_zones",
+        "key": "organizationAdmin_zones",
         "kind": "LinkedHandle",
         "name": "zones"
       }
     ]
   },
   "params": {
-    "cacheID": "ed2efbab3e2d583b8963326e5b25dd84",
+    "cacheID": "26f518cc23a93cb54e018f1f1fcae0fd",
     "id": null,
     "metadata": {},
-    "name": "organizationManageAssets_zones_refetchableFragment",
+    "name": "organizationAdmin_zones_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationManageAssets_zones_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $zoneNameSearchText: String\n) {\n  ...organizationManageAssets_zones_query_1G22uz\n}\n\nfragment organizationManageAssets_zones_query_1G22uz on Query {\n  zones(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationAdmin_zones_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $zoneNameSearchText: String\n) {\n  ...organizationAdmin_zones_query_1G22uz\n}\n\nfragment organizationAdmin_zones_query_1G22uz on Query {\n  zones(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b469bd19ee48e337923ab23c0f1cb899";
+(node as any).hash = "0b2ad0cd7cb8ff72f8195826f02256fa";
 
 export default node;

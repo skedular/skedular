@@ -249,12 +249,3 @@ export const HomeIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
       <Home fontSize={fontSize} sx={sx} color={color ?? 'action'} />
     </TooltipIcon>
   );
-
-export const ManageAssetsIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
-  excludeTooltip ? (
-    <EventSeat fontSize={fontSize} sx={sx} color={color} />
-  ) : (
-    <TooltipIcon tip={tip ?? 'Manage Assets'}>
-      <EventSeat fontSize={fontSize} sx={sx} color={color} />
-    </TooltipIcon>
-  );

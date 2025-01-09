@@ -6,10 +6,13 @@ import { BodyIconTypography } from '@repo/shared/components/commons';
 import { DeskTypeIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
-import { getModernOrganizationManageAssetsDeskTypesBaseLink, getModernOrganizationManageAssetsZonesBaseLink } from 'components/organization';
-import NextLink from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import {
+  getModernOrganizationAdminDeskTypesBaseLink,
+  getModernOrganizationAdminSetupBaseLink,
+  getModernOrganizationAdminZonesBaseLink,
+} from 'components/organization';
 import { memo, useContext } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
 
 type Props = {
@@ -18,9 +21,10 @@ type Props = {
   hideIcons?: boolean;
 };
 
-const OrganizationManageAssetsLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+  const location = useLocation();
+  const pathname = location.pathname;
+  const [searchParams] = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
   const maxWidth = collapsed ? collapsedDrawerWidth : expandedDrawerWidth;
   const styles = {
@@ -53,8 +57,10 @@ const OrganizationManageAssetsLeftSideNavigationMenuContent = ({ organizationId,
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const zonesLink = getModernOrganizationManageAssetsZonesBaseLink(organizationId);
-  const deskTypesLink = getModernOrganizationManageAssetsDeskTypesBaseLink(organizationId);
+
+  const setupLink = getModernOrganizationAdminSetupBaseLink(organizationId);
+  const zonesLink = getModernOrganizationAdminZonesBaseLink(organizationId);
+  const deskTypesLink = getModernOrganizationAdminDeskTypesBaseLink(organizationId);
 
   return (
     <List
@@ -69,7 +75,29 @@ const OrganizationManageAssetsLeftSideNavigationMenuContent = ({ organizationId,
       }}
     >
       <ListItem disablePadding>
-        <Link component={NextLink} href={zonesLink}>
+        <Link href={setupLink}>
+          <ListItemButton selected={fullPath === setupLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === setupLink) }}>
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <ZoneIcon color="inherit" />}
+                invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Organization Setup"
+                startElement={!hideIcons && <ZoneIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link href={zonesLink}>
           <ListItemButton selected={fullPath === zonesLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === zonesLink) }}>
             {collapsed && (
               <BodyIconTypography
@@ -91,7 +119,7 @@ const OrganizationManageAssetsLeftSideNavigationMenuContent = ({ organizationId,
       </ListItem>
 
       <ListItem disablePadding>
-        <Link component={NextLink} href={deskTypesLink}>
+        <Link href={deskTypesLink}>
           <ListItemButton
             selected={fullPath === deskTypesLink}
             sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === deskTypesLink) }}
@@ -118,4 +146,4 @@ const OrganizationManageAssetsLeftSideNavigationMenuContent = ({ organizationId,
   );
 };
 
-export default memo(OrganizationManageAssetsLeftSideNavigationMenuContent);
+export default memo(OrganizationAdminLeftSideNavigationMenuContent);

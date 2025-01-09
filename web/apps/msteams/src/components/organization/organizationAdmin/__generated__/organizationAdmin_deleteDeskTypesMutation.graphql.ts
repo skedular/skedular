@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0ea74b7ed57eaa0a891982775ae44f11>>
+ * @generated SignedSource<<9330786abbdfa10ef078d768e8b1dc53>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,20 +13,20 @@ export type DeleteDeskTypesInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationManageAssets_deleteDeskTypesMutation$variables = {
+export type organizationAdmin_deleteDeskTypesMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: DeleteDeskTypesInput;
 };
-export type organizationManageAssets_deleteDeskTypesMutation$data = {
+export type organizationAdmin_deleteDeskTypesMutation$data = {
   readonly deleteDeskTypes: {
     readonly organizationTags: ReadonlyArray<{
       readonly id: string;
     }>;
   } | null | undefined;
 };
-export type organizationManageAssets_deleteDeskTypesMutation = {
-  response: organizationManageAssets_deleteDeskTypesMutation$data;
-  variables: organizationManageAssets_deleteDeskTypesMutation$variables;
+export type organizationAdmin_deleteDeskTypesMutation = {
+  response: organizationAdmin_deleteDeskTypesMutation$data;
+  variables: organizationAdmin_deleteDeskTypesMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationManageAssets_deleteDeskTypesMutation",
+    "name": "organizationAdmin_deleteDeskTypesMutation",
     "selections": [
       {
         "alias": null,
@@ -94,7 +94,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationManageAssets_deleteDeskTypesMutation",
+    "name": "organizationAdmin_deleteDeskTypesMutation",
     "selections": [
       {
         "alias": null,
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bbf50b0cffde2d83e473167c343d46de",
+    "cacheID": "4bdf3e6e9481954ff9440e581a3e0ff9",
     "id": null,
     "metadata": {},
-    "name": "organizationManageAssets_deleteDeskTypesMutation",
+    "name": "organizationAdmin_deleteDeskTypesMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationManageAssets_deleteDeskTypesMutation(\n  $input: DeleteDeskTypesInput!\n) {\n  deleteDeskTypes(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_deleteDeskTypesMutation(\n  $input: DeleteDeskTypesInput!\n) {\n  deleteDeskTypes(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b652e7abc3d4deea5bee53155453ae74";
+(node as any).hash = "ed48c9e5b94828f0f5bb5862911cefa8";
 
 export default node;

@@ -27,7 +27,6 @@ type Props = {
 export const getOrganizationBaseLink = (id: string) => `/organizations/${id}`;
 export const getOrganizationAddLink = () => `/organizations/add`;
 
-export const getModernOrganizationLocationsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/locations`;
 export const getModernOrganizationMembersBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/members`;
 
 export const getModernOrganizationTeamsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/teams`;
@@ -37,14 +36,15 @@ export const getModernOrganizationTeamMembersBaseLink = (id: string, teamId: str
 export const getModernOrganizationTeamLocationBaseLink = (id: string, teamId: string) =>
   `${getOrganizationBaseLink(id)}/teams/${teamId}?section=location`;
 
-export const getModernOrganizationManageAssetsZonesBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/manage-assets?section=zones-setup`;
-export const getModernOrganizationManageAssetsDeskTypesBaseLink = (id: string) =>
-  `${getOrganizationBaseLink(id)}/manage-assets?section=desk-types-setup`;
-
+export const getModernOrganizationLocationsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/locations`;
 export const getModernOrganizationLocationSetupBaseLink = (id: string, locationId: string) =>
   `${getOrganizationBaseLink(id)}/locations/${locationId}?section=setup`;
+export const getModernOrganizationLocationManageDesksBaseLink = (id: string, locationId: string) =>
+  `${getOrganizationBaseLink(id)}/locations/${locationId}?section=manage-desks`;
 
-export const getModernOrganizationAdminBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin`;
+export const getModernOrganizationAdminSetupBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=setup`;
+export const getModernOrganizationAdminZonesBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=zones-setup`;
+export const getModernOrganizationAdminDeskTypesBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=desk-types-setup`;
 
 export const getOrganizationBookingsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=bookings`;
 export const getOrganizationSettingsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=about`;

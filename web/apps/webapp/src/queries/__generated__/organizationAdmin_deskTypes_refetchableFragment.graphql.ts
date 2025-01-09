@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8d03959f594387697d2765613ab4cdb2>>
+ * @generated SignedSource<<d6571dbdf72e18ea91acd783715abb8a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,18 +10,18 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationManageAssets_deskTypes_refetchableFragment$variables = {
+export type organizationAdmin_deskTypes_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   deskTypeNameSearchText?: string | null | undefined;
   organizationId: string;
 };
-export type organizationManageAssets_deskTypes_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationManageAssets_deskTypes_query">;
+export type organizationAdmin_deskTypes_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_deskTypes_query">;
 };
-export type organizationManageAssets_deskTypes_refetchableFragment = {
-  response: organizationManageAssets_deskTypes_refetchableFragment$data;
-  variables: organizationManageAssets_deskTypes_refetchableFragment$variables;
+export type organizationAdmin_deskTypes_refetchableFragment = {
+  response: organizationAdmin_deskTypes_refetchableFragment$data;
+  variables: organizationAdmin_deskTypes_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -90,7 +90,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationManageAssets_deskTypes_refetchableFragment",
+    "name": "organizationAdmin_deskTypes_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -106,7 +106,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "organizationManageAssets_deskTypes_query"
+        "name": "organizationAdmin_deskTypes_query"
       }
     ],
     "type": "Query",
@@ -116,7 +116,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationManageAssets_deskTypes_refetchableFragment",
+    "name": "organizationAdmin_deskTypes_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -238,23 +238,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "organizationManageAssets_deskTypes",
+        "key": "organizationAdmin_deskTypes",
         "kind": "LinkedHandle",
         "name": "deskTypes"
       }
     ]
   },
   "params": {
-    "cacheID": "9e3827f362dfa100009fca156d038cf9",
+    "cacheID": "90675e2794e272beada60d1cd9eadc49",
     "id": null,
     "metadata": {},
-    "name": "organizationManageAssets_deskTypes_refetchableFragment",
+    "name": "organizationAdmin_deskTypes_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationManageAssets_deskTypes_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskTypeNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationManageAssets_deskTypes_query_1G22uz\n}\n\nfragment organizationManageAssets_deskTypes_query_1G22uz on Query {\n  deskTypes(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationAdmin_deskTypes_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskTypeNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationAdmin_deskTypes_query_1G22uz\n}\n\nfragment organizationAdmin_deskTypes_query_1G22uz on Query {\n  deskTypes(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e2a2eaeefdeb2b3c9600a1a4cc496443";
+(node as any).hash = "d8bdd9a071b8c204727fd2ea19bd2270";
 
 export default node;

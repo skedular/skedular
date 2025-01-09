@@ -1,4 +1,8 @@
-import { getModernOrganizationManageAssetsDeskTypesBaseLink, getModernOrganizationManageAssetsZonesBaseLink } from '@/components/organization';
+import {
+  getModernOrganizationAdminDeskTypesBaseLink,
+  getModernOrganizationAdminSetupBaseLink,
+  getModernOrganizationAdminZonesBaseLink,
+} from '@/components/organization';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -18,7 +22,7 @@ type Props = {
   hideIcons?: boolean;
 };
 
-const OrganizationManageAssetsLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
@@ -53,8 +57,10 @@ const OrganizationManageAssetsLeftSideNavigationMenuContent = ({ organizationId,
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const zonesLink = getModernOrganizationManageAssetsZonesBaseLink(organizationId);
-  const deskTypesLink = getModernOrganizationManageAssetsDeskTypesBaseLink(organizationId);
+
+  const setupLink = getModernOrganizationAdminSetupBaseLink(organizationId);
+  const zonesLink = getModernOrganizationAdminZonesBaseLink(organizationId);
+  const deskTypesLink = getModernOrganizationAdminDeskTypesBaseLink(organizationId);
 
   return (
     <List
@@ -68,6 +74,28 @@ const OrganizationManageAssetsLeftSideNavigationMenuContent = ({ organizationId,
         width: collapsed ? collapsedDrawerWidthPx : expandedDrawerWidthPx,
       }}
     >
+      <ListItem disablePadding>
+        <Link component={NextLink} href={setupLink}>
+          <ListItemButton selected={fullPath === setupLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === setupLink) }}>
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <ZoneIcon color="inherit" />}
+                invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Organization Setup"
+                startElement={!hideIcons && <ZoneIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
       <ListItem disablePadding>
         <Link component={NextLink} href={zonesLink}>
           <ListItemButton selected={fullPath === zonesLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === zonesLink) }}>
@@ -118,4 +146,4 @@ const OrganizationManageAssetsLeftSideNavigationMenuContent = ({ organizationId,
   );
 };
 
-export default memo(OrganizationManageAssetsLeftSideNavigationMenuContent);
+export default memo(OrganizationAdminLeftSideNavigationMenuContent);

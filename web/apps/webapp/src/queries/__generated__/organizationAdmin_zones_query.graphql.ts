@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f69b772944396972f2ca1060ec945a1d>>
+ * @generated SignedSource<<b38b7adffb9aad702dcb4f5981cf2979>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,8 +10,8 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationManageAssets_deskTypes_query$data = {
-  readonly deskTypes: {
+export type organizationAdmin_zones_query$data = {
+  readonly zones: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -22,16 +22,16 @@ export type organizationManageAssets_deskTypes_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "organizationManageAssets_deskTypes_query";
+  readonly " $fragmentType": "organizationAdmin_zones_query";
 };
-export type organizationManageAssets_deskTypes_query$key = {
-  readonly " $data"?: organizationManageAssets_deskTypes_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationManageAssets_deskTypes_query">;
+export type organizationAdmin_zones_query$key = {
+  readonly " $data"?: organizationAdmin_zones_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_zones_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "deskTypes"
+  "zones"
 ];
 return {
   "argumentDefinitions": [
@@ -47,11 +47,11 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "deskTypeNameSearchText"
+      "name": "organizationId"
     },
     {
       "kind": "RootArgument",
-      "name": "organizationId"
+      "name": "zoneNameSearchText"
     }
   ],
   "kind": "Fragment",
@@ -74,30 +74,20 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationManageAssets_deskTypes_refetchableFragment.graphql')
+      "operation": require('./organizationAdmin_zones_refetchableFragment.graphql')
     }
   },
-  "name": "organizationManageAssets_deskTypes_query",
+  "name": "organizationAdmin_zones_query",
   "selections": [
     {
-      "alias": "deskTypes",
+      "alias": "zones",
       "args": [
-        {
-          "kind": "Literal",
-          "name": "orderBy",
-          "value": [
-            {
-              "direction": "Ascending",
-              "field": "Name"
-            }
-          ]
-        },
         {
           "fields": [
             {
               "kind": "Variable",
               "name": "nameContains",
-              "variableName": "deskTypeNameSearchText"
+              "variableName": "zoneNameSearchText"
             },
             {
               "kind": "Variable",
@@ -111,7 +101,7 @@ return {
       ],
       "concreteType": "OrganizationTagConnection",
       "kind": "LinkedField",
-      "name": "__organizationManageAssets_deskTypes_connection",
+      "name": "__organizationAdmin_zones_connection",
       "plural": false,
       "selections": [
         {
@@ -224,6 +214,6 @@ return {
 };
 })();
 
-(node as any).hash = "e2a2eaeefdeb2b3c9600a1a4cc496443";
+(node as any).hash = "0b2ad0cd7cb8ff72f8195826f02256fa";
 
 export default node;
