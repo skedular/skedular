@@ -25,7 +25,7 @@ type Props = {
 
 const RootQuery = graphql`
   query teamBookingsCard_rootQuery(
-    $peopleSortingValues: [TeamMemberOrderInput!]!
+    $peopleSortingValues: [TeamMemberOrderInput!]
     $organizationId: String!
     $locationId: String!
     $teamId: String!

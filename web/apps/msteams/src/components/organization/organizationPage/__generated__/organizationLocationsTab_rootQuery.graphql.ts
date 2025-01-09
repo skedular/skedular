@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cfc1ec5ac77ffbc5aa96730108d5a7c1>>
+ * @generated SignedSource<<1825d91df1f002c7a6de3ef18f537c23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type LocationOrderInput = {
 export type organizationLocationsTab_rootQuery$variables = {
   locationNameSearchText?: string | null | undefined;
   organizationId: string;
-  organizationLocationsSortingValues: ReadonlyArray<LocationOrderInput>;
+  organizationLocationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
 };
 export type organizationLocationsTab_rootQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationLocationsTab_locations_query" | "organizationLocationsTab_query">;
@@ -274,16 +274,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fd2b4d1ba631785719675a93530040dd",
+    "cacheID": "c91846d83ecabf8d3ce5d7e5339b7ae9",
     "id": null,
     "metadata": {},
     "name": "organizationLocationsTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationLocationsTab_rootQuery(\n  $organizationId: String!\n  $organizationLocationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String\n) {\n  ...organizationLocationsTab_query\n  ...organizationLocationsTab_locations_query\n}\n\nfragment organizationLocationsTab_locations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $organizationLocationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocationsTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    canModify\n  }\n}\n"
+    "text": "query organizationLocationsTab_rootQuery(\n  $organizationId: String!\n  $organizationLocationsSortingValues: [LocationOrderInput!]\n  $locationNameSearchText: String\n) {\n  ...organizationLocationsTab_query\n  ...organizationLocationsTab_locations_query\n}\n\nfragment organizationLocationsTab_locations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $organizationLocationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocationsTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    canModify\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "89da8509ddc4479e87e87c04161cfd19";
+(node as any).hash = "f420aaab2c06fc227f57efe26512b657";
 
 export default node;

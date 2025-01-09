@@ -44,7 +44,7 @@ const RootQuery = graphql`
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
     $bookingPeopleNameSearchText: String
-    $bookingSortingValues: [BookingOrderInput!]!
+    $bookingSortingValues: [BookingOrderInput!]
     $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaTo: DateTime!

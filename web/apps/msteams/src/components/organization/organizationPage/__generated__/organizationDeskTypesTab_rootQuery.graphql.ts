@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<78015509b37c4cb3df0b2ddfe98e2418>>
+ * @generated SignedSource<<4d16b28cd098254dc7fa036af9c1b564>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type OrganizationTagOrderInput = {
 };
 export type organizationDeskTypesTab_rootQuery$variables = {
   deskTypeNameSearchText?: string | null | undefined;
-  deskTypeSortingValues: ReadonlyArray<OrganizationTagOrderInput>;
+  deskTypeSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   organizationId: string;
 };
 export type organizationDeskTypesTab_rootQuery$data = {
@@ -284,16 +284,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0dae794f3eea7cf0a473aa800c59a2a2",
+    "cacheID": "46d99e1d706db75c97ebe8752d2d5183",
     "id": null,
     "metadata": {},
     "name": "organizationDeskTypesTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationDeskTypesTab_rootQuery(\n  $organizationId: String!\n  $deskTypeNameSearchText: String\n  $deskTypeSortingValues: [OrganizationTagOrderInput!]!\n) {\n  ...organizationDeskTypesTab_query\n  ...organizationDeskTypesTab_deskTypes_query\n}\n\nfragment deskTypeCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment deskTypeCard_Query on Query {\n  me {\n    id\n    preferredDeskTypes {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n\nfragment organizationDeskTypesTab_deskTypes_query on Query {\n  deskTypes(first: 50, where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: $deskTypeSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskTypeCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationDeskTypesTab_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...deskTypeCard_Query\n}\n"
+    "text": "query organizationDeskTypesTab_rootQuery(\n  $organizationId: String!\n  $deskTypeNameSearchText: String\n  $deskTypeSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...organizationDeskTypesTab_query\n  ...organizationDeskTypesTab_deskTypes_query\n}\n\nfragment deskTypeCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment deskTypeCard_Query on Query {\n  me {\n    id\n    preferredDeskTypes {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n\nfragment organizationDeskTypesTab_deskTypes_query on Query {\n  deskTypes(first: 50, where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: $deskTypeSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskTypeCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationDeskTypesTab_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...deskTypeCard_Query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fdf1fd2706e902b15bbe0df20c527085";
+(node as any).hash = "e5e32d3118a269e3fe8721a1d0cc10b8";
 
 export default node;

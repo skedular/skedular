@@ -24,7 +24,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query notifications_rootQuery($myNotificationsSortingValues: [NotificationOrderInput!]!) {
+  query notifications_rootQuery($myNotificationsSortingValues: [NotificationOrderInput!]) {
     ...notifications_query
   }
 `;

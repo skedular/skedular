@@ -749,6 +749,7 @@ type Query {
   locationAnalytics(from: DateTime! locationId: String! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationBookingPermissions(locationId: String!): LocationBookingPermissions @cost(weight: "10")
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
+  locationDesk(id: String!): DeskDetails @cost(weight: "10")
   locationDesks(after: String before: String first: Int last: Int orderBy: [DeskOrderInput!] where: DeskWhereInput!): DeskConnection @cost(weight: "10")
   locationMemberRoles: [LocationMemberRole!]!
   locationMembers(after: String before: String first: Int last: Int orderBy: [LocationMemberOrderInput!] where: LocationMemberWhereInput!): LocationMemberConnection @cost(weight: "10")

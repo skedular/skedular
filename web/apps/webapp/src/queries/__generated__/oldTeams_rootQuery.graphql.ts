@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e03ed6262eb0d4954eed36385318a5f1>>
+ * @generated SignedSource<<53b5791dd32ce93f51d9a326a32a4c90>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type TeamOrderInput = {
 };
 export type oldTeams_rootQuery$variables = {
   teamNameSearchText?: string | null | undefined;
-  teamsSortingValues: ReadonlyArray<TeamOrderInput>;
+  teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
 export type oldTeams_rootQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"oldTeams_query">;
@@ -230,16 +230,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2ff542e92616a48412b860f900a0bf79",
+    "cacheID": "a7d7cd15a27056c5c2c2e75f200031ab",
     "id": null,
     "metadata": {},
     "name": "oldTeams_rootQuery",
     "operationKind": "query",
-    "text": "query oldTeams_rootQuery(\n  $teamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String\n) {\n  ...oldTeams_query\n}\n\nfragment oldTeams_query on Query {\n  teams(first: 50, where: {nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query oldTeams_rootQuery(\n  $teamsSortingValues: [TeamOrderInput!]\n  $teamNameSearchText: String\n) {\n  ...oldTeams_query\n}\n\nfragment oldTeams_query on Query {\n  teams(first: 50, where: {nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e2688a0c02125ca9ced6610367f635f0";
+(node as any).hash = "7e4da41eb08ccb1878b23811bc6e112c";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5553b7ee2c975567a943df2db13550b2>>
+ * @generated SignedSource<<8bcf7f8c405a6c075f9d8915287dca5f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type TeamOrderInput = {
 };
 export type organizationTeamsTab_rootQuery$variables = {
   organizationId: string;
-  organizationTeamsSortingValues: ReadonlyArray<TeamOrderInput>;
+  organizationTeamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
   teamNameSearchText?: string | null | undefined;
 };
 export type organizationTeamsTab_rootQuery$data = {
@@ -268,16 +268,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6a19baf2b4de9ae5c3864b1cb3876afb",
+    "cacheID": "96ccbc1d2730ebae2523ce5fdeaf9bc1",
     "id": null,
     "metadata": {},
     "name": "organizationTeamsTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationTeamsTab_rootQuery(\n  $organizationId: String!\n  $organizationTeamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String\n) {\n  ...organizationTeamsTab_query\n  ...organizationTeamsTab_teams_query\n}\n\nfragment organizationTeamsTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    canModify\n  }\n}\n\nfragment organizationTeamsTab_teams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $organizationTeamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationTeamsTab_rootQuery(\n  $organizationId: String!\n  $organizationTeamsSortingValues: [TeamOrderInput!]\n  $teamNameSearchText: String\n) {\n  ...organizationTeamsTab_query\n  ...organizationTeamsTab_teams_query\n}\n\nfragment organizationTeamsTab_query on Query {\n  organization(id: $organizationId) {\n    id\n    canModify\n  }\n}\n\nfragment organizationTeamsTab_teams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $organizationTeamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5c1b046e5369d556a2de26358d5bc177";
+(node as any).hash = "362198f4d6c2d69584c290dfd1788a40";
 
 export default node;

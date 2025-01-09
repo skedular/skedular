@@ -26,7 +26,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query organizations_rootQuery($organizationsSortingValues: [OrganizationOrderInput!]!, $organizationNameSearchText: String) {
+  query organizations_rootQuery($organizationsSortingValues: [OrganizationOrderInput!], $organizationNameSearchText: String) {
     ...organizations_query
   }
 `;

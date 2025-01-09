@@ -171,53 +171,51 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   };
 
   return (
-    <>
-      <Box sx={{ display: 'flex' }}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Form
-            onSubmit={handleOrganizationCreateClick}
-            initialValues={{
-              name: '',
-              about: null,
-              website: null,
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={onCancel} label="Add Organization" hideCancel={!showCancel}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <SectionIconTypography label="Organization Setup" />
-                  <BodyIconTypography label="Edit your organization name and details" />
-                  <Divider />
-                </StackColumn>
+    <Box sx={{ display: 'flex' }}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Form
+          onSubmit={handleOrganizationCreateClick}
+          initialValues={{
+            name: '',
+            about: null,
+            website: null,
+          }}
+          validate={validate}
+          render={({ handleSubmit }) => (
+            <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={onCancel} label="Add Organization" hideCancel={!showCancel}>
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <SectionIconTypography label="Organization Setup" />
+                <BodyIconTypography label="Edit your organization name and details" />
+                <Divider />
+              </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredFields.name} />
-                  </FormFieldLabel>
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <FormFieldLabel label="Name">
+                  <TextField name="name" required={requiredFields.name} />
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="About">
-                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
-                  </FormFieldLabel>
+                <FormFieldLabel label="About">
+                  <TextField name="about" required={requiredFields.about} multiline rows={3} />
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Industry">
-                    <TextField name="website" required={requiredFields.about} helperText="https://" />
-                  </FormFieldLabel>
+                <FormFieldLabel label="Industry">
+                  <TextField name="website" required={requiredFields.about} helperText="https://" />
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Industry">
-                    <OrganizationMultipleChoicesIndustries
-                      rootDataRelay={rootData}
-                      name="industrySubCategoryIds"
-                      required={requiredFields.industrySubCategoryIds}
-                    />
-                  </FormFieldLabel>
-                  <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
-                </StackColumn>
-              </StackColumnWithSaveExitCancelAppBar>
-            )}
-          />
-        </Box>
+                <FormFieldLabel label="Industry">
+                  <OrganizationMultipleChoicesIndustries
+                    rootDataRelay={rootData}
+                    name="industrySubCategoryIds"
+                    required={requiredFields.industrySubCategoryIds}
+                  />
+                </FormFieldLabel>
+                <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
+              </StackColumn>
+            </StackColumnWithSaveExitCancelAppBar>
+          )}
+        />
       </Box>
-    </>
+    </Box>
   );
 };
 

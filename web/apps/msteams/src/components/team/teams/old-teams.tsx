@@ -24,7 +24,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query oldTeams_rootQuery($organizationId: String!, $teamsSortingValues: [TeamOrderInput!]!, $teamNameSearchText: String) {
+  query oldTeams_rootQuery($organizationId: String!, $teamsSortingValues: [TeamOrderInput!], $teamNameSearchText: String) {
     ...oldTeams_query
   }
 `;

@@ -25,8 +25,8 @@ type Props = {
 
 const RootQuery = graphql`
   query locationBookingsCard_rootQuery(
-    $locationPeopleSortingValues: [LocationMemberOrderInput!]!
-    $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]!
+    $locationPeopleSortingValues: [LocationMemberOrderInput!]
+    $organizationPeopleSortingValues: [OrganizationMemberOrderInput!]
     $organizationId: String!
     $organizationExists: Boolean!
     $locationId: String!

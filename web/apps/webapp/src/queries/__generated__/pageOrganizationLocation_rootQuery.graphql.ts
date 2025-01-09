@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<46803a029bdb4f3518442a42e8cc3b6f>>
+ * @generated SignedSource<<b039b3be8cb7f9307ba1cd733e2e8e1f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,11 +19,11 @@ export type OrganizationTagOrderInput = {
 export type pageOrganizationLocation_rootQuery$variables = {
   deskDeskTypeIds?: ReadonlyArray<string> | null | undefined;
   deskNameSearchText?: string | null | undefined;
-  deskTypesSortingValues: ReadonlyArray<OrganizationTagOrderInput>;
+  deskTypesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   deskZoneIds?: ReadonlyArray<string> | null | undefined;
   locationId: string;
   organizationId: string;
-  zonesSortingValues: ReadonlyArray<OrganizationTagOrderInput>;
+  zonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
 };
 export type pageOrganizationLocation_rootQuery$data = {
   readonly location: {
@@ -447,16 +447,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "359a8fccae1076659207939e66adef94",
+    "cacheID": "2a10673647b5325b68cd31ef270c5867",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocation_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocation_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $deskNameSearchText: String\n  $zonesSortingValues: [OrganizationTagOrderInput!]!\n  $deskTypesSortingValues: [OrganizationTagOrderInput!]!\n  $deskZoneIds: [String!]\n  $deskDeskTypeIds: [String!]\n) {\n  location(id: $locationId) {\n    name\n    id\n  }\n  ...organizationLocation_query\n  ...organizationLocation_desks_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $deskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationLocation_desks_query on Query {\n  locationDesks(where: {locationId: $locationId, nameContains: $deskNameSearchText, deskTypeIds: $deskDeskTypeIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocation_query on Query {\n  location(id: $locationId) {\n    id\n    name\n    about\n    timezone\n    physicalAddress {\n      formattedAddress\n    }\n  }\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationLocation_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $deskNameSearchText: String\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $deskTypesSortingValues: [OrganizationTagOrderInput!]\n  $deskZoneIds: [String!]\n  $deskDeskTypeIds: [String!]\n) {\n  location(id: $locationId) {\n    name\n    id\n  }\n  ...organizationLocation_query\n  ...organizationLocation_desks_query\n}\n\nfragment deskTypeSelector_allDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $deskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationLocation_desks_query on Query {\n  locationDesks(where: {locationId: $locationId, nameContains: $deskNameSearchText, deskTypeIds: $deskDeskTypeIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocation_query on Query {\n  location(id: $locationId) {\n    id\n    name\n    about\n    timezone\n    physicalAddress {\n      formattedAddress\n    }\n  }\n  ...deskTypeSelector_allDeskTypes_query\n  ...zoneSelector_allZones_query\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "98fcb0a343d123e12fa83075a01a932c";
+(node as any).hash = "49136b9eadcf76d933f915409927d93a";
 
 export default node;

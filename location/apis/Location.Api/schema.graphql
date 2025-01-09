@@ -194,6 +194,7 @@ type Query {
   locationMembers(after: String first: Int before: String last: Int where: LocationMemberWhereInput! orderBy: [LocationMemberOrderInput!]): LocationMemberConnection @cost(weight: "10")
   locationDesks(after: String first: Int before: String last: Int where: DeskWhereInput! orderBy: [DeskOrderInput!]): DeskConnection @cost(weight: "10")
   locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
+  locationDesk(id: String!): DeskDetails @cost(weight: "10")
 }
 
 type RejectInvitationToJoinLocationPayload {

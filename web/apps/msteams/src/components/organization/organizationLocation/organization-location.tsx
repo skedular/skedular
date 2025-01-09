@@ -1,32 +1,58 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import {
   BodyIconTypography,
   FormFieldLabel,
+  PushToRight,
   SectionIconTypography,
+  SmallIconTypography,
   StackColumn,
   StackColumnWithSaveExitCancelAppBar,
+  StackRow,
 } from '@repo/shared/components/commons';
+import { DeskTypes } from '@repo/shared/components/deskType';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
+import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
+import {
+  MoreActionsMenu,
+  moreActionsMenuAllOptions,
+  MoreActionsMenuItemType,
+  MoreActionsMenuOptionType,
+} from '@repo/shared/components/moreActionsMenu';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
   NotificationContent,
   successNotificationOptions,
 } from '@repo/shared/components/notification';
+import { Search } from '@repo/shared/components/search';
+import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultPadding } from '@repo/shared/libs/theme';
+import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { AddDeskButton } from 'components/desk/addDesk';
+import { BulkAddDeskButton } from 'components/desk/bulkAddDesk';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useContext, useEffect, useRef } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
-import { useFragment, useMutation } from 'react-relay';
+import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
-import { getModernOrganizationLocationsBaseLink } from '../organization-link';
+import DeskTypeSelector from '../deskTypeSelector/desk-type-selector';
+import { getModernOrganizationLocationDeskBaseLink, getModernOrganizationLocationsBaseLink } from '../organization-link';
+import ZoneSelector from '../zoneSelector/zone-selector';
+import type { organizationLocation_activateDesksMutation } from './__generated__/organizationLocation_activateDesksMutation.graphql';
+import type { organizationLocation_deactivateDesksMutation } from './__generated__/organizationLocation_deactivateDesksMutation.graphql';
+import type { organizationLocation_deleteDesksMutation } from './__generated__/organizationLocation_deleteDesksMutation.graphql';
+import type { organizationLocation_desks_query$key } from './__generated__/organizationLocation_desks_query.graphql';
+import type { organizationLocation_desks_refetchableFragment } from './__generated__/organizationLocation_desks_refetchableFragment.graphql';
 import type { organizationLocation_query$key } from './__generated__/organizationLocation_query.graphql';
 import type { organizationLocation_updateLocationMutation } from './__generated__/organizationLocation_updateLocationMutation.graphql';
 import { expandedDrawerWidthPx } from './commons';
@@ -34,6 +60,7 @@ import OrganizationLocationLeftSideNavigationMenuContent from './organization-lo
 
 type Props = {
   rootDataRelay: organizationLocation_query$key;
+  rootDataDesksRelay: organizationLocation_desks_query$key;
   onReloadRequired: () => void;
   organizationId: string;
   locationId: string;
@@ -46,6 +73,24 @@ type LocationDetails = {
   physicalAddress: string;
 };
 
+type DeskTypeDetails = {
+  id: string;
+  name: string | null | undefined;
+};
+
+type ZoneDetails = {
+  id: string;
+  name: string | null | undefined;
+};
+
+type DeskRowType = {
+  id: string;
+  name: string;
+  deskTypes: DeskTypeDetails[];
+  zones: ZoneDetails[];
+  status: boolean;
+};
+
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   about: string().nullable(),
@@ -53,7 +98,7 @@ const locationSchema = object({
   physicalAddress: string().nullable(),
 });
 
-const OrganizationLocation = ({ rootDataRelay, organizationId, locationId }: Props) => {
+const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequired, organizationId, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
       fragment organizationLocation_query on Query {
@@ -66,9 +111,45 @@ const OrganizationLocation = ({ rootDataRelay, organizationId, locationId }: Pro
             formattedAddress
           }
         }
+        ...deskTypeSelector_allDeskTypes_query
+        ...zoneSelector_allZones_query
       }
     `,
     rootDataRelay,
+  );
+
+  const [rootDataDesks, refetchDesks] = useRefetchableFragment<organizationLocation_desks_refetchableFragment, organizationLocation_desks_query$key>(
+    graphql`
+      fragment organizationLocation_desks_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
+      @refetchable(queryName: "organizationLocation_desks_refetchableFragment") {
+        locationDesks(
+          first: $count
+          after: $cursor
+          where: { locationId: $locationId, nameContains: $deskNameSearchText, deskTypeIds: $deskDeskTypeIds, zoneIds: $deskZoneIds }
+        ) @connection(key: "organizationLocation_locationDesks") {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              name
+              deactivated
+              requireBookingApproval
+              deskTypes {
+                uniqueId
+                name
+              }
+              zones {
+                uniqueId
+                name
+              }
+            }
+          }
+        }
+      }
+    `,
+    rootDataDesksRelay,
   );
 
   const [commitUpdateLocation] = useMutation<organizationLocation_updateLocationMutation>(graphql`
@@ -87,6 +168,59 @@ const OrganizationLocation = ({ rootDataRelay, organizationId, locationId }: Pro
     }
   `);
 
+  const [commitDeleteDesks] = useMutation<organizationLocation_deleteDesksMutation>(graphql`
+    mutation organizationLocation_deleteDesksMutation($connectionIds: [ID!]!, $input: DeleteDesksInput!) {
+      deleteDesks(input: $input) {
+        desks {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitActivateDesks] = useMutation<organizationLocation_activateDesksMutation>(graphql`
+    mutation organizationLocation_activateDesksMutation($input: ActivateDesksInput!) {
+      activateDesks(input: $input) {
+        desks {
+          id
+          name
+          deactivated
+          requireBookingApproval
+          deskTypes {
+            uniqueId
+            name
+          }
+          zones {
+            uniqueId
+            name
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitDeactivateDesks] = useMutation<organizationLocation_deactivateDesksMutation>(graphql`
+    mutation organizationLocation_deactivateDesksMutation($input: DeactivateDesksInput!) {
+      deactivateDesks(input: $input) {
+        desks {
+          id
+          name
+          deactivated
+          requireBookingApproval
+          deskTypes {
+            uniqueId
+            name
+          }
+          zones {
+            uniqueId
+            name
+          }
+        }
+      }
+    }
+  `);
+
+  const [, startTransition] = useTransition();
   const navigate = useNavigate();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -95,6 +229,30 @@ const OrganizationLocation = ({ rootDataRelay, organizationId, locationId }: Pro
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const validate = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
+  const [deskNameSearchText, setDeskNameSearchText] = useState<string>('');
+  const [deskDeskTypeIds, setDeskDeskTypeIds] = useState<string[]>([]);
+  const [deskZoneIds, setDeskZoneIds] = useState<string[]>([]);
+  const [selectedDeskId, setSelectedDeskId] = useState<null | string>(null);
+  const [seledctedDesks, setSeledctedDesks] = useState<GridRowSelectionModel>([]);
+  const [deskMoreActionsAnchorEl, setDeskMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const deskMoreActionsMenuOpen = Boolean(deskMoreActionsAnchorEl);
+
+  const deskMoreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditDesk],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateDesk],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateDesk],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteDesk],
+  ];
+
+  const desksConnectionIds = useMemo(() => (rootDataDesks.locationDesks ? [rootDataDesks.locationDesks.__id] : []), [rootDataDesks.locationDesks]);
+  const desks = useMemo(() => {
+    if (!rootDataDesks.locationDesks) {
+      return [];
+    }
+
+    return rootDataDesks.locationDesks.edges.map(({ node }) => node);
+  }, [rootDataDesks.locationDesks]);
+  const deskDetails = useMemo(() => desks.find((item) => item.id === selectedDeskId), [selectedDeskId, desks]);
 
   useEffect(() => {
     if (!section || section === 'setup') {
@@ -113,6 +271,24 @@ const OrganizationLocation = ({ rootDataRelay, organizationId, locationId }: Pro
       behavior: 'smooth',
     });
   }, [section]);
+
+  const handleRefetchDesks = useCallback(
+    (deskNameSearchText: string, deskDeskTypeIds: string[], deskZoneIds: string[]) => {
+      startTransition(() => {
+        refetchDesks(
+          {
+            deskNameSearchText,
+            deskDeskTypeIds,
+            deskZoneIds,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchDesks],
+  );
 
   const handleDetailUpdateClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
     if (!rootData.location) {
@@ -178,9 +354,357 @@ const OrganizationLocation = ({ rootDataRelay, organizationId, locationId }: Pro
     navigate(getModernOrganizationLocationsBaseLink(organizationId));
   };
 
+  const handleDeskNameSearchTextChange = (str: string) => {
+    setDeskNameSearchText(str);
+
+    handleRefetchDesks(str, deskZoneIds, deskDeskTypeIds);
+  };
+
+  const handleDeskTypeChanged = (id?: string) => {
+    const newIds = id ? [id] : [];
+    setDeskDeskTypeIds(newIds);
+
+    handleRefetchDesks(deskNameSearchText, newIds, deskZoneIds);
+  };
+
+  const handleZoneTypeChanged = (id?: string) => {
+    const newIds = id ? [id] : [];
+    setDeskZoneIds(newIds);
+
+    handleRefetchDesks(deskNameSearchText, deskDeskTypeIds, newIds);
+  };
+
+  const handleSelectedDesksChanged = (newRowSelectionModel: GridRowSelectionModel) => {
+    setSeledctedDesks(newRowSelectionModel);
+  };
+
+  const handleDeskMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setDeskMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditDesk:
+        if (deskDetails) {
+          navigate(getModernOrganizationLocationDeskBaseLink(organizationId, locationId, deskDetails.id));
+          return;
+        }
+
+        break;
+
+      case MoreActionsMenuOptionType.DeactivateDesk:
+        handleDeactivateDeskClick();
+        break;
+
+      case MoreActionsMenuOptionType.ActivateDesk:
+        handleActivateDeskClick();
+        break;
+
+      case MoreActionsMenuOptionType.DeleteDesk:
+        handleRemoveDeskClick();
+        break;
+    }
+  };
+
+  const handleDeactivateDesksClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Deactivating desks...'} />, infoNotificationOptions);
+
+    commitDeactivateDesks({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedDesks.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate desks. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Desks deactivated.'} />,
+        });
+        setSeledctedDesks([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate desks. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateDesksClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Activating desks...'} />, infoNotificationOptions);
+
+    commitActivateDesks({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedDesks.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate desks. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Desks activated.'} />,
+        });
+        setSeledctedDesks([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate desks. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveDesksClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Removing desks...'} />, infoNotificationOptions);
+
+    commitDeleteDesks({
+      variables: {
+        connectionIds: desksConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedDesks.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove desks. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Desks removed.'} />,
+        });
+        setSeledctedDesks([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove desks. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleDeactivateDeskClick = () => {
+    if (!deskDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Deactivating desk...'} />, infoNotificationOptions);
+
+    commitDeactivateDesks({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [deskDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate desk. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Desk deactivated.'} />,
+        });
+        setSeledctedDesks([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate desk. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateDeskClick = () => {
+    if (!deskDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Activating desk...'} />, infoNotificationOptions);
+
+    commitActivateDesks({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [deskDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate desk. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Desk activated.'} />,
+        });
+        setSeledctedDesks([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate desk. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveDeskClick = () => {
+    if (!deskDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Removing desk...'} />, infoNotificationOptions);
+
+    commitDeleteDesks({
+      variables: {
+        connectionIds: desksConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: [deskDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove desk. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Desk removed.'} />,
+        });
+        setSeledctedDesks([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove desk. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   if (!rootData.location) {
     return <></>;
   }
+
+  const deskRows: DeskRowType[] = desks.map((desk) => ({
+    id: desk.id,
+    name: desk.name,
+    deskTypes: desk.deskTypes.map((item) => ({ id: item.uniqueId, name: item.name })),
+    zones: desk.zones.map((item) => ({ id: item.uniqueId, name: item.name })),
+    status: !desk.deactivated,
+  }));
+
+  const deskColumns: GridColDef<(typeof deskRows)[number]>[] = [
+    {
+      field: 'name',
+      headerName: 'Name',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 200,
+    },
+    {
+      field: 'deskTypes',
+      headerName: 'Desk Types',
+      editable: false,
+      renderCell: (params) => <DeskTypes deskTypes={params.value} hideIcon />,
+      display: 'flex',
+      minWidth: 250,
+    },
+    {
+      field: 'zones',
+      headerName: 'Zones',
+      editable: false,
+      renderCell: (params) => <Zones zones={params.value} hideIcon />,
+      display: 'flex',
+      minWidth: 250,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      editable: false,
+      renderCell: (params) => (
+        <StackRow>
+          {params.value && (
+            <StackRow sx={{ flexWrap: undefined }}>
+              <SmallIconTypography label="Active" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
+            </StackRow>
+          )}
+          {!params.value && (
+            <StackRow sx={{ flexWrap: undefined }}>
+              <SmallIconTypography label="Deactive" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
+            </StackRow>
+          )}
+        </StackRow>
+      ),
+      display: 'flex',
+    },
+    {
+      field: 'moreActions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <IconButton
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            setSelectedDeskId(params.id as string);
+            setDeskMoreActionsAnchorEl(event.currentTarget);
+          }}
+        >
+          <EllipseMenuIcon />
+        </IconButton>
+      ),
+    },
+  ];
 
   const location = rootData.location;
 
@@ -228,11 +752,124 @@ const OrganizationLocation = ({ rootDataRelay, organizationId, locationId }: Pro
                     <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
                   </FormFieldLabel>
                 </StackColumn>
+
+                <StackColumn
+                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                  ref={(divElement) => {
+                    sectionRefs.current['manage-desks'] = divElement;
+                  }}
+                >
+                  <SectionIconTypography label=" Manage Desks" />
+                  <BodyIconTypography label="Manage your location desks details" />
+                  <Divider />
+                </StackColumn>
+
+                <StackRow sx={{ padding: defaultPadding }}>
+                  <DeskTypeSelector rootDataRelay={rootData} onChange={handleDeskTypeChanged} />
+                  <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
+                  <PushToRight />
+                  <Search size="small" placeholder="Search for desks" defaultValue={deskNameSearchText} onChange={handleDeskNameSearchTextChange} />
+                </StackRow>
+
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <Box
+                    sx={{
+                      backgroundColor: (theme) => theme.palette.background.paper,
+                      padding: defaultGridActionPadding,
+                      border: 1,
+                      borderColor: (theme) => theme.palette.divider,
+                      borderRadius: 2,
+                      flexGrow: 1,
+                    }}
+                  >
+                    <StackRow sx={{ alignItems: 'center' }}>
+                      <SmallIconTypography label={`${seledctedDesks.length} records selected`} />
+                      <PushToRight />
+                      <Button
+                        size="medium"
+                        variant="contained"
+                        color="secondary"
+                        disabled={seledctedDesks.length === 0}
+                        onClick={handleDeactivateDesksClick}
+                      >
+                        Deactuvate Desk
+                      </Button>
+                      <Button
+                        size="medium"
+                        variant="contained"
+                        color="secondary"
+                        disabled={seledctedDesks.length === 0}
+                        onClick={handleActivateDesksClick}
+                      >
+                        Activate Desk
+                      </Button>
+                      <Button
+                        size="medium"
+                        variant="contained"
+                        color="warning"
+                        startIcon={<DeleteIcon />}
+                        disabled={seledctedDesks.length === 0}
+                        onClick={handleRemoveDesksClick}
+                      >
+                        Remove Desk
+                      </Button>
+                    </StackRow>
+                  </Box>
+                </StackRow>
+
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <PushToRight />
+                  <AddDeskButton
+                    onReloadRequired={onReloadRequired}
+                    organizationId={organizationId}
+                    locationId={locationId}
+                    connectionIds={desksConnectionIds}
+                  />
+                  <BulkAddDeskButton
+                    onReloadRequired={onReloadRequired}
+                    organizationId={organizationId}
+                    locationId={locationId}
+                    connectionIds={desksConnectionIds}
+                  />
+                </StackRow>
+
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <DataGrid
+                    checkboxSelection
+                    rowSelectionModel={seledctedDesks}
+                    onRowSelectionModelChange={handleSelectedDesksChanged}
+                    rows={deskRows}
+                    columns={deskColumns}
+                    hideFooterPagination={deskRows.length <= 10}
+                    initialState={{
+                      pagination: {
+                        rowCount: deskRows.length,
+                        paginationModel: {
+                          pageSize: 10,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[10]}
+                    ignoreDiacritics
+                    disableRowSelectionOnClick
+                    getRowHeight={() => 'auto'}
+                    rowSpacingType="margin"
+                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                    sx={defaultGridStyle}
+                  />
+                </StackRow>
               </StackColumnWithSaveExitCancelAppBar>
             )}
           />
         </Box>
       </Box>
+
+      <MoreActionsMenu
+        anchorEl={deskMoreActionsAnchorEl}
+        open={deskMoreActionsMenuOpen}
+        onMenuItemClick={handleDeskMoreActionsMenuItemClick}
+        options={deskMoreActionsOption}
+      />
     </>
   );
 };

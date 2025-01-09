@@ -15,7 +15,7 @@ namespace Location.Api.Services;
 
 public interface IDeskService
 {
-    Task<Desk> GetAsync(string deskId, CancellationToken cancellationToken);
+    Task<Desk> GetByIdAsync(string id, CancellationToken cancellationToken);
 
     Task<Desk> AddAsync(
         Desk desk,
@@ -56,12 +56,12 @@ public class DeskService(
     IMapper mapper,
     ILocationOutboxPublisher locationOutboxPublisher) : IDeskService
 {
-    public async Task<Desk> GetAsync(string deskId, CancellationToken cancellationToken)
+    public async Task<Desk> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(deskId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var desk = await repositoryFactory.DeskRepository.GetByIdAsync(deskId, cancellationToken);
+        var desk = await repositoryFactory.DeskRepository.GetByIdAsync(id, cancellationToken);
         if (desk is null)
         {
             throw new DeskNotFound();

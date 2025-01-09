@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4b2f0bc7befc7a3a20004dc5b516acad>>
+ * @generated SignedSource<<076eef357054e7f39b754d0e1aea5c17>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type OrganizationTagOrderInput = {
 export type organizationZonesTab_rootQuery$variables = {
   organizationId: string;
   zoneNameSearchText?: string | null | undefined;
-  zoneSortingValues: ReadonlyArray<OrganizationTagOrderInput>;
+  zoneSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
 };
 export type organizationZonesTab_rootQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationZonesTab_query" | "organizationZonesTab_zones_query">;
@@ -278,16 +278,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d5ec6d23a829c9a0a8ba3deab4e5042c",
+    "cacheID": "05d1c68c6335fd689782f4c96220953f",
     "id": null,
     "metadata": {},
     "name": "organizationZonesTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationZonesTab_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [OrganizationTagOrderInput!]!\n) {\n  ...organizationZonesTab_query\n  ...organizationZonesTab_zones_query\n}\n\nfragment organizationZonesTab_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...zoneCard_Query\n}\n\nfragment organizationZonesTab_zones_query on Query {\n  zones(first: 50, where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment zoneCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment zoneCard_Query on Query {\n  me {\n    id\n    preferredZones {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n"
+    "text": "query organizationZonesTab_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...organizationZonesTab_query\n  ...organizationZonesTab_zones_query\n}\n\nfragment organizationZonesTab_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...zoneCard_Query\n}\n\nfragment organizationZonesTab_zones_query on Query {\n  zones(first: 50, where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment zoneCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment zoneCard_Query on Query {\n  me {\n    id\n    preferredZones {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fde2f3929668c247c7b1f074c0d2232c";
+(node as any).hash = "ea3bee83a5b086e617821b7d83507b8a";
 
 export default node;

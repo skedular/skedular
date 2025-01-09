@@ -22,7 +22,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query oldTeams_rootQuery($teamsSortingValues: [TeamOrderInput!]!, $teamNameSearchText: String) {
+  query oldTeams_rootQuery($teamsSortingValues: [TeamOrderInput!], $teamNameSearchText: String) {
     ...oldTeams_query
   }
 `;

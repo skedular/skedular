@@ -286,7 +286,7 @@ public class LocationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await deskService.GetAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await deskService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<Desk> AddDesk(AddDeskInput request, ServerCallContext context)

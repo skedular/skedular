@@ -32,7 +32,7 @@ const RootQuery = graphql`
   query organizationDeskTypesTab_rootQuery(
     $organizationId: String!
     $deskTypeNameSearchText: String
-    $deskTypeSortingValues: [OrganizationTagOrderInput!]!
+    $deskTypeSortingValues: [OrganizationTagOrderInput!]
   ) {
     ...organizationDeskTypesTab_query
     ...organizationDeskTypesTab_deskTypes_query

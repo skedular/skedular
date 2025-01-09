@@ -178,49 +178,47 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, canc
   };
 
   return (
-    <>
-      <Box sx={{ display: 'flex' }}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Form
-            onSubmit={handleLocationCreateClick}
-            initialValues={{
-              name: '',
-              about: null,
-              organizationId,
-              physicalAddress: null,
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location">
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <SectionIconTypography label="Location Setup" />
-                  <BodyIconTypography label="Edit your location name and details" />
-                  <Divider />
-                </StackColumn>
+    <Box sx={{ display: 'flex' }}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Form
+          onSubmit={handleLocationCreateClick}
+          initialValues={{
+            name: '',
+            about: null,
+            organizationId,
+            physicalAddress: null,
+          }}
+          validate={validate}
+          render={({ handleSubmit }) => (
+            <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location">
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <SectionIconTypography label="Location Setup" />
+                <BodyIconTypography label="Edit your location name and details" />
+                <Divider />
+              </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredFields.name} />
-                  </FormFieldLabel>
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <FormFieldLabel label="Name">
+                  <TextField name="name" required={requiredFields.name} />
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="About">
-                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
-                  </FormFieldLabel>
+                <FormFieldLabel label="About">
+                  <TextField name="about" required={requiredFields.about} multiline rows={3} />
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Timezone">
-                    <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-                  </FormFieldLabel>
+                <FormFieldLabel label="Timezone">
+                  <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Physical Address">
-                    <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
-                  </FormFieldLabel>
-                </StackColumn>
-              </StackColumnWithSaveExitCancelAppBar>
-            )}
-          />
-        </Box>
+                <FormFieldLabel label="Physical Address">
+                  <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
+                </FormFieldLabel>
+              </StackColumn>
+            </StackColumnWithSaveExitCancelAppBar>
+          )}
+        />
       </Box>
-    </>
+    </Box>
   );
 };
 

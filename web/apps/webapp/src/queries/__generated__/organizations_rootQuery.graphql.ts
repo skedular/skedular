@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6a13bc777cdf3ef0a150a5eb4d998e93>>
+ * @generated SignedSource<<53d8acc25bf7bc98aa2242342b883e88>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type OrganizationOrderInput = {
 };
 export type organizations_rootQuery$variables = {
   organizationNameSearchText?: string | null | undefined;
-  organizationsSortingValues: ReadonlyArray<OrganizationOrderInput>;
+  organizationsSortingValues?: ReadonlyArray<OrganizationOrderInput> | null | undefined;
 };
 export type organizations_rootQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizations_query">;
@@ -210,16 +210,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "20d3d9974f41b983afb7b4cac7828ca9",
+    "cacheID": "9360d7809da173c81ff877a29f7e6fb0",
     "id": null,
     "metadata": {},
     "name": "organizations_rootQuery",
     "operationKind": "query",
-    "text": "query organizations_rootQuery(\n  $organizationsSortingValues: [OrganizationOrderInput!]!\n  $organizationNameSearchText: String\n) {\n  ...organizations_query\n}\n\nfragment organizations_query on Query {\n  organizations(first: 50, where: {nameContains: $organizationNameSearchText}, orderBy: $organizationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizations_rootQuery(\n  $organizationsSortingValues: [OrganizationOrderInput!]\n  $organizationNameSearchText: String\n) {\n  ...organizations_query\n}\n\nfragment organizations_query on Query {\n  organizations(first: 50, where: {nameContains: $organizationNameSearchText}, orderBy: $organizationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "87fd5091a77d8132cbe892831dacd09d";
+(node as any).hash = "9dfb92c0265b3368bc78f81563ac7d48";
 
 export default node;

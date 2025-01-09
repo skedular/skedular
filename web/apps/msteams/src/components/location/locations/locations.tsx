@@ -25,9 +25,9 @@ type Props = {
 const RootQuery = graphql`
   query locations_rootQuery(
     $organizationId: String!
-    $locationsSortingValues: [LocationOrderInput!]!
-    $zonesSortingValues: [OrganizationTagOrderInput!]!
-    $deskTypesSortingValues: [OrganizationTagOrderInput!]!
+    $locationsSortingValues: [LocationOrderInput!]
+    $zonesSortingValues: [OrganizationTagOrderInput!]
+    $deskTypesSortingValues: [OrganizationTagOrderInput!]
     $todayDate: DateTime!
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $zoneIds: [String!]

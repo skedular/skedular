@@ -52,7 +52,7 @@ import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import DeskTypeSelector from '../deskTypeSelector/desk-type-selector';
-import { getModernOrganizationLocationsBaseLink } from '../organization-link';
+import { getModernOrganizationLocationDeskBaseLink, getModernOrganizationLocationsBaseLink } from '../organization-link';
 import ZoneSelector from '../zoneSelector/zone-selector';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationLocationLeftSideNavigationMenuContent from './organization-location-left-side-navigation-menu-content';
@@ -85,7 +85,7 @@ type ZoneDetails = {
 type DeskRowType = {
   id: string;
   name: string;
-  deskTypes: ZoneDetails[];
+  deskTypes: DeskTypeDetails[];
   zones: ZoneDetails[];
   status: boolean;
 };
@@ -382,6 +382,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
 
     switch (id) {
       case MoreActionsMenuOptionType.EditDesk:
+        if (deskDetails) {
+          router.push(getModernOrganizationLocationDeskBaseLink(organizationId, locationId, deskDetails.id));
+          return;
+        }
+
         break;
 
       case MoreActionsMenuOptionType.DeactivateDesk:

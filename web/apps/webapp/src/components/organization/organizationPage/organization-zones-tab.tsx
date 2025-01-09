@@ -29,7 +29,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query organizationZonesTab_rootQuery($organizationId: String!, $zoneNameSearchText: String, $zoneSortingValues: [OrganizationTagOrderInput!]!) {
+  query organizationZonesTab_rootQuery($organizationId: String!, $zoneNameSearchText: String, $zoneSortingValues: [OrganizationTagOrderInput!]) {
     ...organizationZonesTab_query
     ...organizationZonesTab_zones_query
   }

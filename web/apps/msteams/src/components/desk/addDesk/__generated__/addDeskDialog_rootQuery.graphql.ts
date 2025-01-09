@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d4a84dd9cc3e6488240f91cdb2cef87b>>
+ * @generated SignedSource<<ac3a5cfff140df7a78999f439ebb3031>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,8 +17,8 @@ export type OrganizationTagOrderInput = {
   field: OrganizationTagOrderField;
 };
 export type addDeskDialog_rootQuery$variables = {
-  multipleChoicesDeskTypesSortingValues: ReadonlyArray<OrganizationTagOrderInput>;
-  multipleChoicesZonesSortingValues: ReadonlyArray<OrganizationTagOrderInput>;
+  multipleChoicesDeskTypesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
+  multipleChoicesZonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   organizationId: string;
 };
 export type addDeskDialog_rootQuery$data = {
@@ -185,16 +185,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c246892ef3aebd700bcf92c655c38c0a",
+    "cacheID": "6e0c0aab7cf26418e76e35d7954669f4",
     "id": null,
     "metadata": {},
     "name": "addDeskDialog_rootQuery",
     "operationKind": "query",
-    "text": "query addDeskDialog_rootQuery(\n  $organizationId: String!\n  $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]!\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]!\n) {\n  ...multipleChoicesDeskTypes_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $multipleChoicesDeskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query addDeskDialog_rootQuery(\n  $organizationId: String!\n  $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...multipleChoicesDeskTypes_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $multipleChoicesDeskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d60b03c539910626c43e78c351d406b0";
+(node as any).hash = "a2bb1ca14927bba08190722b70e0a4a8";
 
 export default node;

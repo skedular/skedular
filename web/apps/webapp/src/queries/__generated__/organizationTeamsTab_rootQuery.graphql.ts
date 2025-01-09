@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ade75dc01e71b592725645bf3f9342db>>
+ * @generated SignedSource<<f4672c7c6525503039ff3fb0fd892518>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type TeamOrderInput = {
 };
 export type organizationTeamsTab_rootQuery$variables = {
   organizationId: string;
-  organizationTeamsSortingValues: ReadonlyArray<TeamOrderInput>;
+  organizationTeamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
   teamNameSearchText?: string | null | undefined;
 };
 export type organizationTeamsTab_rootQuery$data = {
@@ -237,16 +237,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fe99995301a5fea3a0e7d4ba76f1a38c",
+    "cacheID": "4c1d1688a7f0878702fb0287209cd194",
     "id": null,
     "metadata": {},
     "name": "organizationTeamsTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationTeamsTab_rootQuery(\n  $organizationId: String!\n  $organizationTeamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String\n) {\n  ...organizationTeamsTab_teams_query\n}\n\nfragment organizationTeamsTab_teams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $organizationTeamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationTeamsTab_rootQuery(\n  $organizationId: String!\n  $organizationTeamsSortingValues: [TeamOrderInput!]\n  $teamNameSearchText: String\n) {\n  ...organizationTeamsTab_teams_query\n}\n\nfragment organizationTeamsTab_teams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $organizationTeamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1dd154ec91d4f435eec36624497c492f";
+(node as any).hash = "9914f1a1048ca78f7eec01901242f3c0";
 
 export default node;

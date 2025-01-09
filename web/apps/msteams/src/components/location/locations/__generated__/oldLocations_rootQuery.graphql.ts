@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e493d22925e431b0df3f7c4d53be6780>>
+ * @generated SignedSource<<82b9aa05145d7f8372877a074e8b7944>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type LocationOrderInput = {
 };
 export type oldLocations_rootQuery$variables = {
   locationNameSearchText?: string | null | undefined;
-  locationsSortingValues: ReadonlyArray<LocationOrderInput>;
+  locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
   organizationId: string;
 };
 export type oldLocations_rootQuery$data = {
@@ -243,16 +243,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8bf9d5c2a2140bd2180a4343e2b49569",
+    "cacheID": "000212463a93743133fe9a43d18465d6",
     "id": null,
     "metadata": {},
     "name": "oldLocations_rootQuery",
     "operationKind": "query",
-    "text": "query oldLocations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]!\n  $locationNameSearchText: String\n) {\n  ...oldLocations_query\n}\n\nfragment oldLocations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query oldLocations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]\n  $locationNameSearchText: String\n) {\n  ...oldLocations_query\n}\n\nfragment oldLocations_query on Query {\n  locations(first: 50, where: {organizationId: $organizationId, nameContains: $locationNameSearchText}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8fd3cf50a267015e214da13db906d515";
+(node as any).hash = "eab60041ce4dda7c5f6a0123e47c0e86";
 
 export default node;

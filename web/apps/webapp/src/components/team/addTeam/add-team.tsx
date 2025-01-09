@@ -211,82 +211,80 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   }
 
   return (
-    <>
-      <Box sx={{ display: 'flex' }}>
-        <Box sx={{ flexGrow: 1 }}>
-          <Form
-            onSubmit={handleTeamCreateClick}
-            initialValues={{
-              name: '',
-              about: null,
-              organizationMemberIds: [],
-              primaryLocationId: null,
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Team">
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <SectionIconTypography label="Team Setup" />
-                  <BodyIconTypography label="Edit your team name and details" />
-                  <Divider />
-                </StackColumn>
+    <Box sx={{ display: 'flex' }}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Form
+          onSubmit={handleTeamCreateClick}
+          initialValues={{
+            name: '',
+            about: null,
+            organizationMemberIds: [],
+            primaryLocationId: null,
+          }}
+          validate={validate}
+          render={({ handleSubmit }) => (
+            <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Team">
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <SectionIconTypography label="Team Setup" />
+                <BodyIconTypography label="Edit your team name and details" />
+                <Divider />
+              </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredFields.name} />
-                  </FormFieldLabel>
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <FormFieldLabel label="Name">
+                  <TextField name="name" required={requiredFields.name} />
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="About">
-                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
-                  </FormFieldLabel>
+                <FormFieldLabel label="About">
+                  <TextField name="about" required={requiredFields.about} multiline rows={3} />
+                </FormFieldLabel>
 
-                  <FormFieldLabel label="Timezone">
-                    <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-                  </FormFieldLabel>
-                </StackColumn>
+                <FormFieldLabel label="Timezone">
+                  <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
+                </FormFieldLabel>
+              </StackColumn>
 
-                {organizationId && (
-                  <>
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <SectionIconTypography label="Location Settings" />
-                      <BodyIconTypography label="Assign team to locations" />
-                      <Divider />
-                    </StackColumn>
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Primary Location">
-                        <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
-                      </FormFieldLabel>
-                    </StackColumn>
-                  </>
-                )}
+              {organizationId && (
+                <>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <SectionIconTypography label="Location Settings" />
+                    <BodyIconTypography label="Assign team to locations" />
+                    <Divider />
+                  </StackColumn>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Primary Location">
+                      <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
+                    </FormFieldLabel>
+                  </StackColumn>
+                </>
+              )}
 
-                {organizationId && (
-                  <>
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <SectionIconTypography label="Team Members" />
-                      <BodyIconTypography label="Manage your team members" />
-                      <Divider />
-                    </StackColumn>
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Organization Members">
-                        <OrganizationMemberSelector
-                          rootDataRelay={rootData}
-                          organizationId={organizationId}
-                          name="organizationMemberIds"
-                          required={requiredFields.organizationMemberIds}
-                          multiple={true}
-                          useMemberId={true}
-                        />
-                      </FormFieldLabel>
-                    </StackColumn>
-                  </>
-                )}
-              </StackColumnWithSaveExitCancelAppBar>
-            )}
-          />
-        </Box>
+              {organizationId && (
+                <>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <SectionIconTypography label="Team Members" />
+                    <BodyIconTypography label="Manage your team members" />
+                    <Divider />
+                  </StackColumn>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Organization Members">
+                      <OrganizationMemberSelector
+                        rootDataRelay={rootData}
+                        organizationId={organizationId}
+                        name="organizationMemberIds"
+                        required={requiredFields.organizationMemberIds}
+                        multiple={true}
+                        useMemberId={true}
+                      />
+                    </FormFieldLabel>
+                  </StackColumn>
+                </>
+              )}
+            </StackColumnWithSaveExitCancelAppBar>
+          )}
+        />
       </Box>
-    </>
+    </Box>
   );
 };
 

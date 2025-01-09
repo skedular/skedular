@@ -225,4 +225,14 @@ public class Query(IMapper mapper)
             await locationAnalyticsService.GetAnalyticsAsync(locationId, from, until, cancellationToken);
         return mapper.MapTo(locationDesksOccupancyPercentages, locationDailyBookingsTotals);
     }
+
+    [UseResolverScope]
+    public async Task<DeskDetails?> LocationDeskAsync(
+        string id,
+        [Service] IDeskService deskService,
+        CancellationToken cancellationToken)
+    {
+        var desk = await deskService.GetByIdAsync(id, cancellationToken);
+        return mapper.MapTo(desk);
+    }
 }

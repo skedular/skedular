@@ -23,8 +23,8 @@ const RootQuery = graphql`
     $organizationId: String!
     $locationId: String!
     $deskNameSearchText: String
-    $zonesSortingValues: [OrganizationTagOrderInput!]!
-    $deskTypesSortingValues: [OrganizationTagOrderInput!]!
+    $zonesSortingValues: [OrganizationTagOrderInput!]
+    $deskTypesSortingValues: [OrganizationTagOrderInput!]
     $deskZoneIds: [String!]
     $deskDeskTypeIds: [String!]
   ) {

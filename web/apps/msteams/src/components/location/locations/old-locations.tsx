@@ -28,7 +28,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query oldLocations_rootQuery($organizationId: String!, $locationsSortingValues: [LocationOrderInput!]!, $locationNameSearchText: String) {
+  query oldLocations_rootQuery($organizationId: String!, $locationsSortingValues: [LocationOrderInput!], $locationNameSearchText: String) {
     ...oldLocations_query
   }
 `;

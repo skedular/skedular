@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a783b0bcaeddeb23063e75192a6f7aa4>>
+ * @generated SignedSource<<3593449058de8f4e9d18838d75b9177f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type TeamOrderInput = {
 export type oldTeams_rootQuery$variables = {
   organizationId: string;
   teamNameSearchText?: string | null | undefined;
-  teamsSortingValues: ReadonlyArray<TeamOrderInput>;
+  teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
 export type oldTeams_rootQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"oldTeams_query">;
@@ -243,16 +243,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c6d41365cdaae0593da8584025d6d517",
+    "cacheID": "1f8995b2558ab3d25e738d0652b67a92",
     "id": null,
     "metadata": {},
     "name": "oldTeams_rootQuery",
     "operationKind": "query",
-    "text": "query oldTeams_rootQuery(\n  $organizationId: String!\n  $teamsSortingValues: [TeamOrderInput!]!\n  $teamNameSearchText: String\n) {\n  ...oldTeams_query\n}\n\nfragment oldTeams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query oldTeams_rootQuery(\n  $organizationId: String!\n  $teamsSortingValues: [TeamOrderInput!]\n  $teamNameSearchText: String\n) {\n  ...oldTeams_query\n}\n\nfragment oldTeams_query on Query {\n  teams(first: 50, where: {organizationId: $organizationId, nameContains: $teamNameSearchText}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8fab1b70de5ffd88179991a84fb61958";
+(node as any).hash = "03dbf5d1175319f4086ade41141a9bc4";
 
 export default node;

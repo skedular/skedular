@@ -41,9 +41,9 @@ const RootQuery = graphql`
     $fromToGetBookings: DateTime
     $toToGetBookings: DateTime
     $deskNameSearchText: String
-    $deskSortingValues: [DeskOrderInput!]!
-    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]!
-    $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]!
+    $deskSortingValues: [DeskOrderInput!]
+    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
     ...locationDesksTab_query
     ...locationDesksTab_locationDesks_query

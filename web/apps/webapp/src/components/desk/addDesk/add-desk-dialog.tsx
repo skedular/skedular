@@ -46,8 +46,8 @@ type Props = {
 const RootQuery = graphql`
   query addDeskDialog_rootQuery(
     $organizationId: String!
-    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]!
-    $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]!
+    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
     ...multipleChoicesDeskTypes_query
     ...multipleChoicesZones_query

@@ -29,7 +29,7 @@ type Props = {
 const RootQuery = graphql`
   query organizationLocationsTab_rootQuery(
     $organizationId: String!
-    $organizationLocationsSortingValues: [LocationOrderInput!]!
+    $organizationLocationsSortingValues: [LocationOrderInput!]
     $locationNameSearchText: String
   ) {
     ...organizationLocationsTab_query
