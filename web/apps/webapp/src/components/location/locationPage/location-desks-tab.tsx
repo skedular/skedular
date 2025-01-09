@@ -1,4 +1,6 @@
-import { AddDeskButton, BulkAddDeskButton, DeskCard } from '@/components/desk';
+import { DeskCard } from '@/components/desk';
+import { AddDeskButton } from '@/components/desk/addDesk';
+import { BulkAddDeskButton } from '@/components/desk/bulkAddDesk';
 import type { locationDesksTab_allBookings_query$key } from '@/queries/__generated__/locationDesksTab_allBookings_query.graphql';
 import type { locationDesksTab_allBookings_refetchableFragment } from '@/queries/__generated__/locationDesksTab_allBookings_refetchableFragment.graphql';
 import type { locationDesksTab_locationDesks_query$key } from '@/queries/__generated__/locationDesksTab_locationDesks_query.graphql';

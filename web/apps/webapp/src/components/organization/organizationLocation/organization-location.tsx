@@ -1,4 +1,5 @@
-import { AddDeskButton, BulkAddDeskButton } from '@/components/desk';
+import { AddDeskButton } from '@/components/desk/addDesk';
+import { BulkAddDeskButton } from '@/components/desk/bulkAddDesk';
 import type { organizationLocation_activateDesksMutation } from '@/queries/__generated__/organizationLocation_activateDesksMutation.graphql';
 import type { organizationLocation_deactivateDesksMutation } from '@/queries/__generated__/organizationLocation_deactivateDesksMutation.graphql';
 import type { organizationLocation_deleteDesksMutation } from '@/queries/__generated__/organizationLocation_deleteDesksMutation.graphql';
