@@ -6,6 +6,7 @@ import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import {
   BodyIconTypography,
+  FormFieldLabel,
   PushToRight,
   SectionIconTypography,
   SmallIconTypography,
@@ -33,20 +34,25 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { getOrganizationBaseLink, OrganizationMultipleChoicesIndustries } from 'components/organization';
 import { AddOrganizationDeskTypeButton } from 'components/organization/addOrganizationDeskType';
 import { AddOrganizationZoneButton } from 'components/organization/addOrganizationZone';
 import { EditOrganizationZoneDialog } from 'components/organization/editOrganizationZone/';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { Form } from 'react-final-form';
 import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { array, object, string } from 'yup';
 import EditOrganizationDeskTypeDialog from '../editOrganizationDeskType/edit-organization-desk-type-dialog';
 import type { organizationAdmin_deleteDeskTypesMutation } from './__generated__/organizationAdmin_deleteDeskTypesMutation.graphql';
 import type { organizationAdmin_deleteZonesMutation } from './__generated__/organizationAdmin_deleteZonesMutation.graphql';
 import type { organizationAdmin_deskTypes_query$key } from './__generated__/organizationAdmin_deskTypes_query.graphql';
 import type { organizationAdmin_deskTypes_refetchableFragment } from './__generated__/organizationAdmin_deskTypes_refetchableFragment.graphql';
 import type { organizationAdmin_query$key } from './__generated__/organizationAdmin_query.graphql';
+import type { organizationAdmin_updateOrganizationMutation } from './__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_zones_query$key } from './__generated__/organizationAdmin_zones_query.graphql';
 import type { organizationAdmin_zones_refetchableFragment } from './__generated__/organizationAdmin_zones_refetchableFragment.graphql';
 import { expandedDrawerWidthPx } from './commons';
@@ -59,6 +65,20 @@ type Props = {
   onReloadRequired: () => void;
   organizationId: string;
 };
+
+type OrganizationDetails = {
+  name: string;
+  about: string | null;
+  website: string | null;
+  industrySubCategoryIds: string[];
+};
+
+const organizationSchema = object({
+  name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
+  about: string().nullable(),
+  website: string().nullable(),
+  industrySubCategoryIds: array().nullable(),
+});
 
 type ZoneRowType = {
   id: string;
@@ -79,8 +99,22 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
         organization(id: $organizationId) {
           id
           name
+          logoUrl
           about
+          website
+          canModify
+          industrySubCategories {
+            id
+            name
+          }
         }
+        organizationIndustryMainCategoriesReferences {
+          subCategories {
+            id
+            name
+          }
+        }
+        ...organizationMultipleChoicesIndustries_query
       }
     `,
     rootDataRelay,
@@ -137,6 +171,23 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
     rootDataDeskTypesRelay,
   );
 
+  const [commitUpdateOrganization] = useMutation<organizationAdmin_updateOrganizationMutation>(graphql`
+    mutation organizationAdmin_updateOrganizationMutation($input: UpdateOrganizationInput!) @raw_response_type {
+      updateOrganization(input: $input) {
+        organization {
+          id
+          name
+          about
+          website
+          industrySubCategories {
+            id
+            name
+          }
+        }
+      }
+    }
+  `);
+
   const [commitDeleteZones] = useMutation<organizationAdmin_deleteZonesMutation>(graphql`
     mutation organizationAdmin_deleteZonesMutation($connectionIds: [ID!]!, $input: DeleteZonesInput!) {
       deleteZones(input: $input) {
@@ -160,9 +211,12 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const validate = makeValidate(organizationSchema);
+  const requiredFields = makeRequired(organizationSchema);
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
   const [deskTypeNameSearchText, setDeskTypeNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>([]);
@@ -256,6 +310,68 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
     },
     [refetchDeskTypes],
   );
+
+  const handleDetailUpdateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
+    if (!rootData.organization) {
+      return;
+    }
+
+    const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
+    const toastId = themedToast(
+      <NotificationContent content={`Updating organization '${rootData.organization.name}'...`} />,
+      infoNotificationOptions,
+    );
+
+    commitUpdateOrganization({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: rootData.organization.id,
+          name,
+          about,
+          website,
+          industrySubCategoryIds: selectedIndustrySubCategoryIds,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${rootData.organization?.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${name} details updated.`} />,
+        });
+
+        navigate(getOrganizationBaseLink(organizationId));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update organization '${rootData.organization?.name}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateOrganization: {
+          organization: {
+            id: rootData.organization.id,
+            name,
+            about,
+            website,
+            industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
+              .flatMap((mainCategory) => mainCategory.subCategories)
+              .filter(({ id }) => selectedIndustrySubCategoryIds.find((selectedIndustrySubCategoryId) => selectedIndustrySubCategoryId === id))
+              .map(({ id, name }) => ({ id, name })),
+          },
+        },
+      },
+    });
+  };
 
   const handleZonesSearchTextChange = (str: string) => {
     setZoneNameSearchText(str);
@@ -470,6 +586,14 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
     setIsEditDeskTypeDialogOpen(false);
   };
 
+  const handleCancelClick = () => {
+    navigate(getOrganizationBaseLink(organizationId));
+  };
+
+  if (!rootData.organization) {
+    return <></>;
+  }
+
   const zoneRows: ZoneRowType[] = zones.map((zone) => ({
     id: zone.id,
     name: zone.name,
@@ -554,178 +678,214 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
     },
   ];
 
+  const organization = rootData.organization;
+
   return (
     <>
       <Box sx={{ display: 'flex' }}>
         <OrganizationAdminLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-          <StackColumnWithSaveExitCancelAppBar label="Edit Organization Information" hideCancel hideSaveAndExit>
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['setup'] = divElement;
-              }}
-            >
-              <SectionIconTypography label="Organization Setup" />
-              <BodyIconTypography label="Edit your organization details" />
-              <Divider />
-            </StackColumn>
+          <Form
+            onSubmit={handleDetailUpdateClick}
+            initialValues={{
+              name: organization.name,
+              about: organization.about,
+              website: organization.website,
+              industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
+            }}
+            validate={validate}
+            render={({ handleSubmit }) => (
+              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Edit Organization Information">
+                <StackColumn
+                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                  ref={(divElement) => {
+                    sectionRefs.current['setup'] = divElement;
+                  }}
+                >
+                  <SectionIconTypography label="Organization Setup" />
+                  <BodyIconTypography label="Edit your organization details" />
+                  <Divider />
+                </StackColumn>
 
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['zones-setup'] = divElement;
-              }}
-            >
-              <SectionIconTypography label="Zones Setup" />
-              <BodyIconTypography label="Edit your organization zones details" />
-              <Divider />
-            </StackColumn>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredFields.name} />
+                  </FormFieldLabel>
 
-            <StackRow sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search size="small" placeholder="Search for zones" defaultValue={zoneNameSearchText} onChange={handleZonesSearchTextChange} />
-            </StackRow>
+                  <FormFieldLabel label="About">
+                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
+                  </FormFieldLabel>
 
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <Box
-                sx={{
-                  backgroundColor: (theme) => theme.palette.background.paper,
-                  padding: defaultGridActionPadding,
-                  border: 1,
-                  borderColor: (theme) => theme.palette.divider,
-                  borderRadius: 2,
-                  flexGrow: 1,
-                }}
-              >
-                <StackRow sx={{ alignItems: 'center' }}>
-                  <SmallIconTypography label={`${seledctedZones.length} records selected`} />
+                  <FormFieldLabel label="Industry">
+                    <TextField name="website" required={requiredFields.about} helperText="https://" />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Industry">
+                    <OrganizationMultipleChoicesIndustries
+                      rootDataRelay={rootData}
+                      name="industrySubCategoryIds"
+                      required={requiredFields.industrySubCategoryIds}
+                    />
+                  </FormFieldLabel>
+                </StackColumn>
+
+                <StackColumn
+                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                  ref={(divElement) => {
+                    sectionRefs.current['zones-setup'] = divElement;
+                  }}
+                >
+                  <SectionIconTypography label="Zones Setup" />
+                  <BodyIconTypography label="Edit your organization zones details" />
+                  <Divider />
+                </StackColumn>
+
+                <StackRow sx={{ padding: defaultPadding }}>
                   <PushToRight />
-                  <Button
-                    size="medium"
-                    variant="contained"
-                    color="warning"
-                    startIcon={<DeleteIcon />}
-                    disabled={seledctedZones.length === 0}
-                    onClick={handleRemoveZonesClick}
-                  >
-                    Remove Zone
-                  </Button>
+                  <Search size="small" placeholder="Search for zones" defaultValue={zoneNameSearchText} onChange={handleZonesSearchTextChange} />
                 </StackRow>
-              </Box>
-            </StackRow>
 
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <PushToRight />
-              <AddOrganizationZoneButton organizationId={organizationId} connectionIds={zonesConnectionIds} />
-            </StackRow>
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <Box
+                    sx={{
+                      backgroundColor: (theme) => theme.palette.background.paper,
+                      padding: defaultGridActionPadding,
+                      border: 1,
+                      borderColor: (theme) => theme.palette.divider,
+                      borderRadius: 2,
+                      flexGrow: 1,
+                    }}
+                  >
+                    <StackRow sx={{ alignItems: 'center' }}>
+                      <SmallIconTypography label={`${seledctedZones.length} records selected`} />
+                      <PushToRight />
+                      <Button
+                        size="medium"
+                        variant="contained"
+                        color="warning"
+                        startIcon={<DeleteIcon />}
+                        disabled={seledctedZones.length === 0}
+                        onClick={handleRemoveZonesClick}
+                      >
+                        Remove Zone
+                      </Button>
+                    </StackRow>
+                  </Box>
+                </StackRow>
 
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedZones}
-                onRowSelectionModelChange={handleSelectedZonesChanged}
-                rows={zoneRows}
-                columns={zoneColumns}
-                hideFooterPagination={zoneRows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: zoneRows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-              />
-            </StackRow>
-
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['desk-types-setup'] = divElement;
-              }}
-            >
-              <SectionIconTypography label="Desk Types Setup" />
-              <BodyIconTypography label="Edit your organization desk types details" />
-              <Divider />
-            </StackColumn>
-
-            <StackRow sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search
-                size="small"
-                placeholder="Search for desk types"
-                defaultValue={deskTypeNameSearchText}
-                onChange={handleDeskTypesSearchTextChange}
-              />
-            </StackRow>
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <Box
-                sx={{
-                  backgroundColor: (theme) => theme.palette.background.paper,
-                  padding: defaultGridActionPadding,
-                  border: 1,
-                  borderColor: (theme) => theme.palette.divider,
-                  borderRadius: 2,
-                  flexGrow: 1,
-                }}
-              >
-                <StackRow sx={{ alignItems: 'center' }}>
-                  <SmallIconTypography label={`${seledctedDeskTypes.length} records selected`} />
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                   <PushToRight />
-                  <Button
-                    size="medium"
-                    variant="contained"
-                    color="warning"
-                    startIcon={<DeleteIcon />}
-                    disabled={seledctedDeskTypes.length === 0}
-                    onClick={handleRemoveDeskTypesClick}
-                  >
-                    Remove Desk Type
-                  </Button>
+                  <AddOrganizationZoneButton organizationId={organizationId} connectionIds={zonesConnectionIds} />
                 </StackRow>
-              </Box>
-            </StackRow>
 
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <PushToRight />
-              <AddOrganizationDeskTypeButton organizationId={organizationId} connectionIds={deskTypesConnectionIds} />
-            </StackRow>
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <DataGrid
+                    checkboxSelection
+                    rowSelectionModel={seledctedZones}
+                    onRowSelectionModelChange={handleSelectedZonesChanged}
+                    rows={zoneRows}
+                    columns={zoneColumns}
+                    hideFooterPagination={zoneRows.length <= 10}
+                    initialState={{
+                      pagination: {
+                        rowCount: zoneRows.length,
+                        paginationModel: {
+                          pageSize: 10,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[10]}
+                    ignoreDiacritics
+                    disableRowSelectionOnClick
+                    getRowHeight={() => 'auto'}
+                    rowSpacingType="margin"
+                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                    sx={defaultGridStyle}
+                  />
+                </StackRow>
 
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedDeskTypes}
-                onRowSelectionModelChange={handleSelectedDeskTypesChanged}
-                rows={deskTypeRows}
-                columns={deskTypeColumns}
-                hideFooterPagination={deskTypeRows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: deskTypeRows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-              />
-            </StackRow>
-          </StackColumnWithSaveExitCancelAppBar>
+                <StackColumn
+                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                  ref={(divElement) => {
+                    sectionRefs.current['desk-types-setup'] = divElement;
+                  }}
+                >
+                  <SectionIconTypography label="Desk Types Setup" />
+                  <BodyIconTypography label="Edit your organization desk types details" />
+                  <Divider />
+                </StackColumn>
+
+                <StackRow sx={{ padding: defaultPadding }}>
+                  <PushToRight />
+                  <Search
+                    size="small"
+                    placeholder="Search for desk types"
+                    defaultValue={deskTypeNameSearchText}
+                    onChange={handleDeskTypesSearchTextChange}
+                  />
+                </StackRow>
+
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <Box
+                    sx={{
+                      backgroundColor: (theme) => theme.palette.background.paper,
+                      padding: defaultGridActionPadding,
+                      border: 1,
+                      borderColor: (theme) => theme.palette.divider,
+                      borderRadius: 2,
+                      flexGrow: 1,
+                    }}
+                  >
+                    <StackRow sx={{ alignItems: 'center' }}>
+                      <SmallIconTypography label={`${seledctedDeskTypes.length} records selected`} />
+                      <PushToRight />
+                      <Button
+                        size="medium"
+                        variant="contained"
+                        color="warning"
+                        startIcon={<DeleteIcon />}
+                        disabled={seledctedDeskTypes.length === 0}
+                        onClick={handleRemoveDeskTypesClick}
+                      >
+                        Remove Desk Type
+                      </Button>
+                    </StackRow>
+                  </Box>
+                </StackRow>
+
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <PushToRight />
+                  <AddOrganizationDeskTypeButton organizationId={organizationId} connectionIds={deskTypesConnectionIds} />
+                </StackRow>
+
+                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                  <DataGrid
+                    checkboxSelection
+                    rowSelectionModel={seledctedDeskTypes}
+                    onRowSelectionModelChange={handleSelectedDeskTypesChanged}
+                    rows={deskTypeRows}
+                    columns={deskTypeColumns}
+                    hideFooterPagination={deskTypeRows.length <= 10}
+                    initialState={{
+                      pagination: {
+                        rowCount: deskTypeRows.length,
+                        paginationModel: {
+                          pageSize: 10,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[10]}
+                    ignoreDiacritics
+                    disableRowSelectionOnClick
+                    getRowHeight={() => 'auto'}
+                    rowSpacingType="margin"
+                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                    sx={defaultGridStyle}
+                  />
+                </StackRow>
+              </StackColumnWithSaveExitCancelAppBar>
+            )}
+          />
         </Box>
       </Box>
 

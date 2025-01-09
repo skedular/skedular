@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2d65a1690960ce08f116f6a19762e3c>>
+ * @generated SignedSource<<af399e7bb7da1260f3f1d8db9c0a4482>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,12 +63,16 @@ v5 = {
   "name": "id",
   "storageKey": null
 },
-v6 = {
+v6 = [
+  (v5/*: any*/),
+  (v4/*: any*/)
+],
+v7 = {
   "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
 },
-v7 = [
+v8 = [
   {
     "fields": [
       {
@@ -76,13 +80,13 @@ v7 = [
         "name": "nameContains",
         "variableName": "zoneNameSearchText"
       },
-      (v6/*: any*/)
+      (v7/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v8 = [
+v9 = [
   {
     "alias": null,
     "args": null,
@@ -173,7 +177,7 @@ v8 = [
     ]
   }
 ],
-v9 = [
+v10 = [
   {
     "kind": "Literal",
     "name": "orderBy",
@@ -191,7 +195,7 @@ v9 = [
         "name": "nameContains",
         "variableName": "deskTypeNameSearchText"
       },
-      (v6/*: any*/)
+      (v7/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
@@ -263,7 +267,38 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
+            "name": "logoUrl",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
             "name": "about",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "website",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canModify",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationIndustrySubCategoryReferenceDetails",
+            "kind": "LinkedField",
+            "name": "industrySubCategories",
+            "plural": true,
+            "selections": (v6/*: any*/),
             "storageKey": null
           }
         ],
@@ -271,17 +306,40 @@ return {
       },
       {
         "alias": null,
-        "args": (v7/*: any*/),
-        "concreteType": "OrganizationTagConnection",
+        "args": null,
+        "concreteType": "OrganizationIndustryMainCategoryReferenceDetails",
         "kind": "LinkedField",
-        "name": "zones",
-        "plural": false,
-        "selections": (v8/*: any*/),
+        "name": "organizationIndustryMainCategoriesReferences",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationIndustrySubCategoryReferenceDetails",
+            "kind": "LinkedField",
+            "name": "subCategories",
+            "plural": true,
+            "selections": (v6/*: any*/),
+            "storageKey": null
+          },
+          (v5/*: any*/),
+          (v4/*: any*/)
+        ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v7/*: any*/),
+        "args": (v8/*: any*/),
+        "concreteType": "OrganizationTagConnection",
+        "kind": "LinkedField",
+        "name": "zones",
+        "plural": false,
+        "selections": (v9/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v8/*: any*/),
         "filters": [
           "where"
         ],
@@ -292,17 +350,17 @@ return {
       },
       {
         "alias": null,
-        "args": (v9/*: any*/),
+        "args": (v10/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "deskTypes",
         "plural": false,
-        "selections": (v8/*: any*/),
+        "selections": (v9/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v9/*: any*/),
+        "args": (v10/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -315,12 +373,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "43f21b7e3113acbcd2af18125647953f",
+    "cacheID": "2e4f184b5e8b36a870ab11e914fe5024",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $deskTypeNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_deskTypes_query\n}\n\nfragment organizationAdmin_deskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    about\n  }\n}\n\nfragment organizationAdmin_zones_query on Query {\n  zones(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $deskTypeNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_deskTypes_query\n}\n\nfragment organizationAdmin_deskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationAdmin_zones_query on Query {\n  zones(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
