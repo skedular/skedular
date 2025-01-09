@@ -1,7 +1,7 @@
 {
   "display_information": {
-    "name": "UnityHub Development",
-    "description": "UnityHub shows you and your team who will be in and what’s happening in the office",
+    "name": "Skedular Azizi",
+    "description": "Skedular shows you and your team who will be in and what’s happening in the office",
     "background_color": "#323336"
   },
   "features": {
@@ -11,7 +11,7 @@
       "messages_tab_read_only_enabled": false
     },
     "bot_user": {
-      "display_name": "UnityHub Development",
+      "display_name": "Skedular Azizi",
       "always_online": false
     }
   },

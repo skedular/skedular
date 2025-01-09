@@ -1,6 +1,6 @@
 {
   "display_information": {
-    "name": "UnityHub Yihuan",
+    "name": "Skedular Yihuan",
     "description": "UnityHub shows you and your team who will be in and what’s happening in the office",
     "background_color": "#323336"
   },
@@ -11,7 +11,7 @@
       "messages_tab_read_only_enabled": false
     },
     "bot_user": {
-      "display_name": "UnityHub Yihuan",
+      "display_name": "Skedular Yihuan",
       "always_online": false
     }
   },

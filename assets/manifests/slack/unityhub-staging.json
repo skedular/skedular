@@ -1,7 +1,7 @@
 {
   "display_information": {
-    "name": "UnityHub Staging",
-    "description": "UnityHub shows you and your team who will be in and what’s happening in the office",
+    "name": "Skedular Staging",
+    "description": "Skedular shows you and your team who will be in and what’s happening in the office",
     "background_color": "#323336"
   },
   "features": {
@@ -11,12 +11,14 @@
       "messages_tab_read_only_enabled": false
     },
     "bot_user": {
-      "display_name": "UnityHub Staging",
+      "display_name": "Skedular Staging",
       "always_online": false
     }
   },
   "oauth_config": {
-    "redirect_urls": ["https://slackapistaging.unityhub.io/slack/api/v1/callback"],
+    "redirect_urls": [
+      "https://slackapistaging.skedular.app/slack/api/v1/callback"
+    ],
     "scopes": {
       "user": ["users.profile:write", "users.profile:read"],
       "bot": [
@@ -34,13 +36,13 @@
   },
   "settings": {
     "event_subscriptions": {
-      "request_url": "https://slackapistaging.unityhub.io/slack/api/v1/event",
+      "request_url": "https://slackapistaging.skedular.app/slack/api/v1/event",
       "bot_events": ["app_home_opened", "app_mention"]
     },
     "interactivity": {
       "is_enabled": true,
-      "request_url": "https://slackapistaging.unityhub.io/slack/api/v1/action",
-      "message_menu_options_url": "https://slackapistaging.unityhub.io/slack/api/v1/options"
+      "request_url": "https://slackapistaging.skedular.app/slack/api/v1/action",
+      "message_menu_options_url": "https://slackapistaging.uskedular.app/slack/api/v1/options"
     },
     "org_deploy_enabled": false,
     "socket_mode_enabled": false,
