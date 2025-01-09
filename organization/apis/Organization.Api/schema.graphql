@@ -239,6 +239,8 @@ type Query {
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   deskTypes(after: String first: Int before: String last: Int where: DeskTypeOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
   zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+  zone(id: String!): OrganizationTagDetails @cost(weight: "10")
+  deskType(id: String!): OrganizationTagDetails @cost(weight: "10")
 }
 
 type RejectInvitationToJoinOrganizationPayload {

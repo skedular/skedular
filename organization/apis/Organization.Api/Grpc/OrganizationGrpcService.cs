@@ -212,7 +212,7 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseDeskType(await tagService.GetAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponseDeskType(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<DeskType> AddDeskType(AddDeskTypeInput request, ServerCallContext context)
@@ -291,7 +291,7 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseZone(await tagService.GetAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponseZone(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<Zone> AddZone(AddZoneInput request, ServerCallContext context)

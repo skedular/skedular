@@ -107,15 +107,15 @@ public interface IMapper
     Tag MapTo(UpdateDeskTypeInput src);
     Tag MapTo(GraphQL.AddZoneInput src);
     Tag MapTo(GraphQL.UpdateZoneInput src);
-    OrganizationTagDetails MapTo(Tag src);
+    OrganizationTagDetails? MapTo(Tag? src);
     OrganizationTagEdge MapTo(Edge<Tag> src);
 
-    DeskType MapToGrpcResponseDeskType(Tag src);
+    DeskType MapToGrpcResponseDeskType(Tag? src);
     DeskTypeEdge MapToGrpcResponseDeskType(Edge<Tag> src);
     Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddDeskTypeInput src);
     Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateDeskTypeInput src);
 
-    Zone MapToGrpcResponseZone(Tag src);
+    Zone MapToGrpcResponseZone(Tag? src);
     ZoneEdge MapToGrpcResponseZone(Edge<Tag> src);
     Tag MapTo(AddZoneInput src);
     Tag MapTo(UpdateZoneInput src);
@@ -570,24 +570,31 @@ public class Mapper : IMapper
     public Tag MapTo(GraphQL.UpdateZoneInput src) =>
         new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = OrganizationTagType.Zone };
 
-    public OrganizationTagDetails MapTo(Tag src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Description = src.Description,
-            TagType = src.Type switch
+    public OrganizationTagDetails? MapTo(Tag? src) =>
+        src is null
+            ? null
+            : new OrganizationTagDetails
             {
-                OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
-                OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
-                _ => throw new ArgumentOutOfRangeException()
-            }
-        };
+                Id = src.Id,
+                Name = src.Name,
+                Description = src.Description,
+                TagType = src.Type switch
+                {
+                    OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+                    OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+            };
 
-    public OrganizationTagEdge MapTo(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+    public OrganizationTagEdge MapTo(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
 
-    public DeskType MapToGrpcResponseDeskType(Tag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
+    public DeskType MapToGrpcResponseDeskType(Tag? src) =>
+        src is null
+            ? new DeskType()
+            : new DeskType
+            {
+                Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString()
+            };
 
     public DeskTypeEdge MapToGrpcResponseDeskType(Edge<Tag> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponseDeskType(src.Node) };
@@ -611,8 +618,10 @@ public class Mapper : IMapper
             Type = OrganizationTagType.DeskType
         };
 
-    public Zone MapToGrpcResponseZone(Tag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
+    public Zone MapToGrpcResponseZone(Tag? src) =>
+        src is null
+            ? new Zone()
+            : new Zone { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
 
     public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponseZone(src.Node) };

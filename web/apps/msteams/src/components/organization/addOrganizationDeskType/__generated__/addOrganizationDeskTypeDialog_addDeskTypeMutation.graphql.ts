@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2095c7fde63a3d6639269d4c91330b9d>>
+ * @generated SignedSource<<01d12dd937e6b50a6cfccc62e05b8b23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type addOrganizationDeskTypeDialog_addDeskTypeMutation$variables = {
 export type addOrganizationDeskTypeDialog_addDeskTypeMutation$data = {
   readonly addDeskType: {
     readonly organizationTag: {
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
@@ -31,6 +32,7 @@ export type addOrganizationDeskTypeDialog_addDeskTypeMutation$data = {
 export type addOrganizationDeskTypeDialog_addDeskTypeMutation$rawResponse = {
   readonly addDeskType: {
     readonly organizationTag: {
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
@@ -82,6 +84,13 @@ v2 = {
       "args": null,
       "kind": "ScalarField",
       "name": "name",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "description",
       "storageKey": null
     }
   ],
@@ -152,16 +161,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "52743fa1433e9ef9587995803428b2bc",
+    "cacheID": "6265d224f47c8a6ace4c00e21f64510a",
     "id": null,
     "metadata": {},
     "name": "addOrganizationDeskTypeDialog_addDeskTypeMutation",
     "operationKind": "mutation",
-    "text": "mutation addOrganizationDeskTypeDialog_addDeskTypeMutation(\n  $input: AddDeskTypeInput!\n) {\n  addDeskType(input: $input) {\n    organizationTag {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation addOrganizationDeskTypeDialog_addDeskTypeMutation(\n  $input: AddDeskTypeInput!\n) {\n  addDeskType(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ffa0a80d7bbf7c864ad9f0817da9f2d9";
+(node as any).hash = "0980e519061f8ec9c98a6b7c36794cb0";
 
 export default node;

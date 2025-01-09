@@ -37,10 +37,12 @@ type Props = {
 
 type DeskTypeDetails = {
   name: string;
+  description: string;
 };
 
 const deskTypeSchema = object({
   name: string().required('Desk type name is required'),
+  description: string().nullable(),
 });
 
 const AddOrganizationDeskTypeDialog = ({ organizationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
@@ -50,6 +52,7 @@ const AddOrganizationDeskTypeDialog = ({ organizationId, connectionIds, isDialog
         organizationTag @appendNode(connections: $connectionIds, edgeTypeName: "OrganizationTagDetails") {
           id
           name
+          description
         }
       }
     }
@@ -60,7 +63,7 @@ const AddOrganizationDeskTypeDialog = ({ organizationId, connectionIds, isDialog
   const validate = makeValidate(deskTypeSchema);
   const requiredFields = makeRequired(deskTypeSchema);
 
-  const handleAddClick = ({ name }: DeskTypeDetails) => {
+  const handleAddClick = ({ name, description }: DeskTypeDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding desk type '${name}'...`} />, infoNotificationOptions);
 
@@ -72,6 +75,7 @@ const AddOrganizationDeskTypeDialog = ({ organizationId, connectionIds, isDialog
           id,
           organizationId,
           name,
+          description,
         },
       },
       onCompleted: (_, errors) => {
@@ -102,6 +106,7 @@ const AddOrganizationDeskTypeDialog = ({ organizationId, connectionIds, isDialog
           organizationTag: {
             id,
             name,
+            description,
           },
         },
       },
@@ -124,6 +129,10 @@ const AddOrganizationDeskTypeDialog = ({ organizationId, connectionIds, isDialog
 
                 <FormFieldLabel label="Name" useWiderSpace>
                   <TextField name="name" required={requiredFields.name} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Description" useWiderSpace>
+                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />

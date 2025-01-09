@@ -15,7 +15,7 @@ namespace Organization.Api.Services;
 
 public interface ITagService
 {
-    Task<Tag> GetAsync(string tagId, CancellationToken cancellationToken);
+    Task<Tag?> GetByIdAsync(string tagId, CancellationToken cancellationToken);
 
     Task<Tag> AddAsync(
         Tag tag,
@@ -43,7 +43,7 @@ public class TagService(
     IMapper mapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher) : ITagService
 {
-    public async Task<Tag> GetAsync(string tagId, CancellationToken cancellationToken)
+    public async Task<Tag?> GetByIdAsync(string tagId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 

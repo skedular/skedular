@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2f9a973d9524371ddc6ba4a9b88aa99>>
+ * @generated SignedSource<<3ceabbdf5c923cd2d69892d9cfe34edd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,26 +9,37 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type UpdateZoneInput = {
+export type UpdateDeskTypeInput = {
   clientMutationId?: string | null | undefined;
   description?: string | null | undefined;
   id: string;
   name: string;
 };
-export type organizationManageAssets_updateZoneMutation$variables = {
-  input: UpdateZoneInput;
+export type editOrganizationDeskTypeDialog_updateDeskTypeMutation$variables = {
+  input: UpdateDeskTypeInput;
 };
-export type organizationManageAssets_updateZoneMutation$data = {
-  readonly updateZone: {
+export type editOrganizationDeskTypeDialog_updateDeskTypeMutation$data = {
+  readonly updateDeskType: {
     readonly organizationTag: {
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
   } | null | undefined;
 };
-export type organizationManageAssets_updateZoneMutation = {
-  response: organizationManageAssets_updateZoneMutation$data;
-  variables: organizationManageAssets_updateZoneMutation$variables;
+export type editOrganizationDeskTypeDialog_updateDeskTypeMutation$rawResponse = {
+  readonly updateDeskType: {
+    readonly organizationTag: {
+      readonly description: string | null | undefined;
+      readonly id: string;
+      readonly name: string;
+    };
+  } | null | undefined;
+};
+export type editOrganizationDeskTypeDialog_updateDeskTypeMutation = {
+  rawResponse: editOrganizationDeskTypeDialog_updateDeskTypeMutation$rawResponse;
+  response: editOrganizationDeskTypeDialog_updateDeskTypeMutation$data;
+  variables: editOrganizationDeskTypeDialog_updateDeskTypeMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -51,7 +62,7 @@ v1 = [
     ],
     "concreteType": "OrganizationTagPayload",
     "kind": "LinkedField",
-    "name": "updateZone",
+    "name": "updateDeskType",
     "plural": false,
     "selections": [
       {
@@ -75,6 +86,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "name",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "description",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -88,7 +106,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationManageAssets_updateZoneMutation",
+    "name": "editOrganizationDeskTypeDialog_updateDeskTypeMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -97,20 +115,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationManageAssets_updateZoneMutation",
+    "name": "editOrganizationDeskTypeDialog_updateDeskTypeMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "04cb6a99655cf05b602b02346ff7fafb",
+    "cacheID": "9a2ee35657a6848fa48e2554dd70adca",
     "id": null,
     "metadata": {},
-    "name": "organizationManageAssets_updateZoneMutation",
+    "name": "editOrganizationDeskTypeDialog_updateDeskTypeMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationManageAssets_updateZoneMutation(\n  $input: UpdateZoneInput!\n) {\n  updateZone(input: $input) {\n    organizationTag {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation editOrganizationDeskTypeDialog_updateDeskTypeMutation(\n  $input: UpdateDeskTypeInput!\n) {\n  updateDeskType(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9c6c09efcc0a1e767cc13758f9e19895";
+(node as any).hash = "5412f64488bf4781832197039f0f561d";
 
 export default node;

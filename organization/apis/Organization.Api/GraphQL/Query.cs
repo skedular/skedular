@@ -254,6 +254,26 @@ public class Query(IMapper mapper)
             tagService,
             cancellationToken);
 
+    [UseResolverScope]
+    public async Task<OrganizationTagDetails?> ZoneAsync(
+        string id,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken)
+    {
+        var tag = await tagService.GetByIdAsync(id, cancellationToken);
+        return mapper.MapTo(tag);
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationTagDetails?> DeskTypeAsync(
+        string id,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken)
+    {
+        var tag = await tagService.GetByIdAsync(id, cancellationToken);
+        return mapper.MapTo(tag);
+    }
+
     private async Task<OrganizationTagConnection?> OrganizationTagsAsync(
         string? after,
         int? first,

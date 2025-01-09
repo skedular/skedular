@@ -742,6 +742,7 @@ type Query {
   bookingVersion: Version!
   customersByDefaultLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByDefaultLocationWhereInput!): CustomerConnection @cost(weight: "10")
   customerVersion: Version!
+  deskType(id: String!): OrganizationTagDetails @cost(weight: "10")
   deskTypes(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: DeskTypeOrganizationTagWhereInput!): OrganizationTagConnection @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
   location(id: String!): LocationDetails @cost(weight: "10")
@@ -785,6 +786,7 @@ type Query {
   teamMembers(after: String before: String first: Int last: Int orderBy: [TeamMemberOrderInput!] where: TeamMemberWhereInput!): TeamMemberConnection @cost(weight: "10")
   teams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: TeamWhereInput!): TeamConnection @cost(weight: "10")
   teamVersion: Version!
+  zone(id: String!): OrganizationTagDetails @cost(weight: "10")
   zones(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ZoneOrganizationTagWhereInput!): OrganizationTagConnection @cost(weight: "10")
 }
 

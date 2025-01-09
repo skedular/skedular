@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a338d80be831cb308d9de1e463c9fbd4>>
+ * @generated SignedSource<<2c5ffb22804976e66408b060a66a2ee1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type addOrganizationZoneDialog_addZoneMutation$variables = {
 export type addOrganizationZoneDialog_addZoneMutation$data = {
   readonly addZone: {
     readonly organizationTag: {
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
@@ -31,6 +32,7 @@ export type addOrganizationZoneDialog_addZoneMutation$data = {
 export type addOrganizationZoneDialog_addZoneMutation$rawResponse = {
   readonly addZone: {
     readonly organizationTag: {
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
@@ -82,6 +84,13 @@ v2 = {
       "args": null,
       "kind": "ScalarField",
       "name": "name",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "description",
       "storageKey": null
     }
   ],
@@ -152,16 +161,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f7a7d0c52089fd861ba64e030b6d7341",
+    "cacheID": "c906c6a7bae0e6dc251e392721cfd9e4",
     "id": null,
     "metadata": {},
     "name": "addOrganizationZoneDialog_addZoneMutation",
     "operationKind": "mutation",
-    "text": "mutation addOrganizationZoneDialog_addZoneMutation(\n  $input: AddZoneInput!\n) {\n  addZone(input: $input) {\n    organizationTag {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation addOrganizationZoneDialog_addZoneMutation(\n  $input: AddZoneInput!\n) {\n  addZone(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "48e8db843594ee51c09eede88891ed1a";
+(node as any).hash = "9868fd4615f492b53c4a73648703b1f9";
 
 export default node;

@@ -36,10 +36,12 @@ type Props = {
 
 type ZoneDetails = {
   name: string;
+  description: string;
 };
 
 const zoneSchema = object({
   name: string().required('Zone name is required'),
+  description: string().nullable(),
 });
 
 const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
@@ -49,6 +51,7 @@ const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen
         organizationTag @appendNode(connections: $connectionIds, edgeTypeName: "OrganizationTagDetails") {
           id
           name
+          description
         }
       }
     }
@@ -59,7 +62,7 @@ const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen
   const validate = makeValidate(zoneSchema);
   const requiredFields = makeRequired(zoneSchema);
 
-  const handleAddClick = ({ name }: ZoneDetails) => {
+  const handleAddClick = ({ name, description }: ZoneDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding zone '${name}'...`} />, infoNotificationOptions);
 
@@ -71,6 +74,7 @@ const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen
           id,
           organizationId,
           name,
+          description,
         },
       },
       onCompleted: (_, errors) => {
@@ -101,6 +105,7 @@ const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen
           organizationTag: {
             id,
             name,
+            description,
           },
         },
       },
@@ -123,6 +128,10 @@ const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen
 
                 <FormFieldLabel label="Name" useWiderSpace>
                   <TextField name="name" required={requiredFields.name} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Description" useWiderSpace>
+                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
