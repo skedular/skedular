@@ -34,19 +34,7 @@ module "common" {
   environment = var.environment
 }
 
-module "simple_email_service_1" {
-  source = "../../modules/aws_simple_email_service"
-  providers = {
-    aws        = aws
-    cloudflare = cloudflare
-  }
-
-  tags              = local.tags
-  domain            = module.common.simple_email_service_domain_1
-  cloudflare_domain = module.common.cloudflare_public_website_domain_name_1
-}
-
-module "simple_email_service_2" {
+module "simple_email_service" {
   source = "../../modules/aws_simple_email_service"
   providers = {
     aws        = aws
@@ -55,7 +43,7 @@ module "simple_email_service_2" {
 
   tags              = local.tags
   domain            = module.common.simple_email_service_domain_2
-  cloudflare_domain = module.common.cloudflare_public_website_domain_name_2
+  cloudflare_domain = module.common.cloudflare_webapp_domain_name_2
 }
 
 module "cognito_user_pool" {
@@ -67,19 +55,19 @@ module "cognito_user_pool" {
   tags                                       = local.tags
   name                                       = module.common.cognito_user_pool_name
   domain                                     = module.common.cognito_user_pool_domain
-  simple_email_service_arn                   = module.simple_email_service_1.arn
-  from_email_address                         = module.common.from_email_address_1
-  reply_to_email_address                     = module.common.reply_to_email_address_1
-  gcp_unityhub_web_credentials_client_id     = var.gcp_unityhub_web_credentials_client_id
-  gcp_unityhub_web_credentials_client_secret = var.gcp_unityhub_web_credentials_client_secret
+  simple_email_service_arn                   = module.simple_email_service.arn
+  from_email_address                         = module.common.from_email_address_2
+  reply_to_email_address                     = module.common.reply_to_email_address_2
+  gcp_skedular_web_credentials_client_id     = var.gcp_skedular_web_credentials_client_id
+  gcp_skedular_web_credentials_client_secret = var.gcp_skedular_web_credentials_client_secret
   google_provider_name                       = module.common.aws_cognito_identity_provider_google_provider_name
 }
 
 resource "stripe_product" "pay_as_you_go_v1" {
   name        = "Premium"
   unit_label  = "Active User"
-  description = "UnityHub Pay-as-you-go"
-  url         = "https://unityhub.io/pricing"
+  description = "Skedular Pay-as-you-go"
+  url         = "https://${module.common.cloudflare_public_website_domain_name_2}/pricing"
   metadata = {
     offering_code = "PAY_AS_YOU_GO_V1"
   }

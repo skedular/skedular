@@ -68,9 +68,9 @@ jobs:
         env:
           TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
           TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
-          TF_VAR_gcp_unityhub_web_credentials_client_id: ${{ secrets.STAGING_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_ID }}
+          TF_VAR_gcp_skedular_web_credentials_client_id: ${{ secrets.STAGING_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_ID }}
           TF_VAR_slack_client_secret: ${{ secrets.STAGING_SLACK_CLIENT_SECRET }}
-          TF_VAR_gcp_unityhub_web_credentials_client_secret: ${{ secrets.STAGING_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_SECRET }}
+          TF_VAR_gcp_skedular_web_credentials_client_secret: ${{ secrets.STAGING_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_SECRET }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           workingDirectory: ./web/event-catalog/infrastructure/workspaces/staging
@@ -88,9 +88,9 @@ jobs:
         env:
           TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
           TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
-          TF_VAR_gcp_unityhub_web_credentials_client_id: ${{ secrets.PRODUCTION_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_ID }}
+          TF_VAR_gcp_skedular_web_credentials_client_id: ${{ secrets.PRODUCTION_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_ID }}
           TF_VAR_slack_client_secret: ${{ secrets.PRODUCTION_SLACK_CLIENT_SECRET }}
-          TF_VAR_gcp_unityhub_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_SECRET }}
+          TF_VAR_gcp_skedular_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_SECRET }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           workingDirectory: ./web/event-catalog/infrastructure/workspaces/production
@@ -124,9 +124,9 @@ jobs:
         env:
           TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
           TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
-          TF_VAR_gcp_unityhub_web_credentials_client_id: ${{ secrets.STAGING_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_ID }}
+          TF_VAR_gcp_skedular_web_credentials_client_id: ${{ secrets.STAGING_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_ID }}
           TF_VAR_slack_client_secret: ${{ secrets.STAGING_SLACK_CLIENT_SECRET }}
-          TF_VAR_gcp_unityhub_web_credentials_client_secret: ${{ secrets.STAGING_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_SECRET }}
+          TF_VAR_gcp_skedular_web_credentials_client_secret: ${{ secrets.STAGING_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_SECRET }}
         with:
           workingDirectory: ./web/event-catalog/infrastructure/workspaces/staging
 
@@ -157,8 +157,8 @@ jobs:
         env:
           TF_VAR_cloudflare_api_key: ${{ secrets.CLOUDFLARE_API_KEY }}
           TF_VAR_vercel_api_token: ${{ secrets.VERCEL_API_TOKEN }}
-          TF_VAR_gcp_unityhub_web_credentials_client_id: ${{ secrets.PRODUCTION_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_ID }}
+          TF_VAR_gcp_skedular_web_credentials_client_id: ${{ secrets.PRODUCTION_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_ID }}
           TF_VAR_slack_client_secret: ${{ secrets.PRODUCTION_SLACK_CLIENT_SECRET }}
-          TF_VAR_gcp_unityhub_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_SECRET }}
+          TF_VAR_gcp_skedular_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_UNITYHUB_WEB_CREDENTIALS_CLIENT_SECRET }}
         with:
           workingDirectory: ./web/event-catalog/infrastructure/workspaces/production

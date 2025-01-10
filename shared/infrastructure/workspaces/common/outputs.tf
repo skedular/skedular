@@ -6,7 +6,6 @@ locals {
   public_website_domain_1      = local.is_production ? local.public_website_domain_root_1 : "${var.environment}.${local.public_website_domain_root_1}"
   webapp_domain_1              = local.is_production ? "app.${local.webapp_domain_root_1}" : "app.${var.environment}.${local.webapp_domain_root_1}"
   api_domain_1                 = local.is_production ? "api.${local.webapp_domain_root_1}" : "api${var.environment}.${local.webapp_domain_root_1}"
-  slack_api_domain_1           = local.is_production ? "slackapi.${local.webapp_domain_root_1}" : "slackapi${var.environment}.${local.webapp_domain_root_1}"
   msteams_webapp_domain_1      = local.is_production ? "msteams.${local.webapp_domain_root_1}" : "msteams.${var.environment}.${local.webapp_domain_root_1}"
   eventcatalog_webapp_domain_1 = local.is_production ? "eventcatalog.${local.webapp_domain_root_1}" : "eventcatalog.${var.environment}.${local.webapp_domain_root_1}"
 
@@ -15,7 +14,6 @@ locals {
   public_website_domain_2      = local.is_production ? local.public_website_domain_root_2 : "${var.environment}.${local.public_website_domain_root_2}"
   webapp_domain_2              = local.is_production ? "${local.webapp_domain_root_2}" : "${var.environment}.${local.webapp_domain_root_2}"
   api_domain_2                 = local.is_production ? "api.${local.webapp_domain_root_2}" : "api${var.environment}.${local.webapp_domain_root_2}"
-  slack_api_domain_2           = local.is_production ? "slackapi.${local.webapp_domain_root_2}" : "slackapi${var.environment}.${local.webapp_domain_root_2}"
   msteams_webapp_domain_2      = local.is_production ? "msteams.${local.webapp_domain_root_2}" : "msteams.${var.environment}.${local.webapp_domain_root_2}"
   eventcatalog_webapp_domain_2 = local.is_production ? "eventcatalog.${local.webapp_domain_root_2}" : "eventcatalog.${var.environment}.${local.webapp_domain_root_2}"
 }
@@ -60,14 +58,6 @@ output "simple_email_service_domain_1" {
   value = local.public_website_domain_1
 }
 
-output "from_email_address_1" {
-  value = "no-reply@${local.public_website_domain_1}"
-}
-
-output "reply_to_email_address_1" {
-  value = "no-reply@${local.public_website_domain_1}"
-}
-
 output "api_domain_name_1" {
   value = local.api_domain_1
 }
@@ -85,15 +75,15 @@ output "eventcatalog_webapp_domain_name_1" {
 }
 
 output "simple_email_service_domain_2" {
-  value = local.public_website_domain_2
+  value = local.webapp_domain_2
 }
 
 output "from_email_address_2" {
-  value = "no-reply@${local.public_website_domain_2}"
+  value = "no-reply@${local.webapp_domain_2}"
 }
 
 output "reply_to_email_address_2" {
-  value = "no-reply@${local.public_website_domain_2}"
+  value = "no-reply@${local.webapp_domain_2}"
 }
 
 output "api_domain_name_2" {

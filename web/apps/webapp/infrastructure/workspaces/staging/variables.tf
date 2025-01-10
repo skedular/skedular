@@ -14,14 +14,14 @@ variable "vercel_api_token" {
   default = ""
 }
 
-variable "gcp_unityhub_web_credentials_client_id" {
+variable "gcp_skedular_web_credentials_client_id" {
   type        = string
-  description = "GCP UnityHub web credentials client Id"
+  description = "GCP Skedular web credentials client Id"
   default     = ""
 }
 
-variable "gcp_unityhub_web_credentials_client_secret" {
+variable "gcp_skedular_web_credentials_client_secret" {
   type        = string
-  description = "GCP UnityHub web credentials client Secret"
+  description = "GCP Skedular web credentials client Secret"
   default     = ""
 }

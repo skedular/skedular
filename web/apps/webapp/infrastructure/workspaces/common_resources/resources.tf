@@ -141,12 +141,12 @@ resource "vercel_project" "default" {
     },
     {
       key    = "GOOGLE_CLIENT_ID"
-      value  = var.gcp_unityhub_web_credentials_client_id
+      value  = var.gcp_skedular_web_credentials_client_id
       target = ["development", "preview", "production"]
     },
     {
       key    = "GOOGLE_CLIENT_SECRET"
-      value  = var.gcp_unityhub_web_credentials_client_secret
+      value  = var.gcp_skedular_web_credentials_client_secret
       target = ["development", "preview", "production"]
     },
     {

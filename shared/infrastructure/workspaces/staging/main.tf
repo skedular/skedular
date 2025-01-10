@@ -14,7 +14,7 @@ module "common_resources" {
   }
 
   environment                                = local.environment
-  gcp_unityhub_web_credentials_client_id     = var.gcp_unityhub_web_credentials_client_id
-  gcp_unityhub_web_credentials_client_secret = var.gcp_unityhub_web_credentials_client_secret
+  gcp_skedular_web_credentials_client_id     = var.gcp_skedular_web_credentials_client_id
+  gcp_skedular_web_credentials_client_secret = var.gcp_skedular_web_credentials_client_secret
   log_retention                              = local.log_retention
 }
