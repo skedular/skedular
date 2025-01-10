@@ -53,7 +53,7 @@ output "cognito_user_pool_name" {
 }
 
 output "cognito_user_pool_domain" {
-  value = local.is_production ? "unityhub" : "${var.environment}unityhub"
+  value = local.is_production ? "skedular" : "${var.environment}skedular"
 }
 
 output "simple_email_service_domain_1" {
