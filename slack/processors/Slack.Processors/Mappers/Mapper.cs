@@ -84,6 +84,7 @@ public interface IMapper
     Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId);
     Booking MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking src);
     Shared.Models.Workspace MapTo(Workspace src);
+    Workspace MergeToEntity(SlackNet.Team src, Workspace dest);
 }
 
 public class Mapper : IMapper
@@ -405,6 +406,10 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
             Name = src.Name,
+            Domain = src.Domain,
+            EmailDomain = src.EmailDomain,
+            EnterpriseId = src.EnterpriseId,
+            EnterpriseName = src.EnterpriseName,
             BotUserId = src.BotUserId,
             BotUserScope = src.BotUserScope,
             BotUserAccessToken = src.BotUserAccessToken,
@@ -413,6 +418,8 @@ public class Mapper : IMapper
             AuthedUserScope = src.AuthedUserScope,
             AuthedUserAccessToken = src.AuthedUserAccessToken,
             AuthedRefreshToken = src.AuthedRefreshToken,
+            LastRefreshedAt = src.LastRefreshedAt,
+            ChannelsLastRefreshedAt = src.ChannelsLastRefreshedAt,
             MembersLastRefreshedAt = src.MembersLastRefreshedAt,
             Organization = MapTo(src.Organization)
         };
@@ -420,6 +427,16 @@ public class Mapper : IMapper
         workspace.WorkspaceMembers = MapTo(src.WorkspaceMembers, workspace).ToList();
 
         return workspace;
+    }
+
+    public Workspace MergeToEntity(SlackNet.Team src, Workspace dest)
+    {
+        dest.Name = src.Name;
+        dest.Domain = src.Domain;
+        dest.EmailDomain = src.EmailDomain;
+        dest.EnterpriseId = src.EnterpriseId;
+        dest.EnterpriseName = src.EnterpriseName;
+        return dest;
     }
 
     public Customer? MapTo(Shared.Database.Entities.Customer? src)

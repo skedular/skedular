@@ -19,11 +19,8 @@ public class LocationDailyUpdateJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
-                var repositoryFactory =
-                    scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var slackInternalPublisher =
-                    scope.ServiceProvider.GetRequiredService<ISlackInternalPublisher>();
-
+                var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
+                var slackInternalPublisher = scope.ServiceProvider.GetRequiredService<ISlackInternalPublisher>();
                 var now = timeProvider.GetUtcNow();
                 var locations = await repositoryFactory.LocationRepository.Query(
                     new Specification<Location>

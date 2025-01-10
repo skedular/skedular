@@ -18,11 +18,9 @@ public class RefreshAzureTenantMembersJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
-                var repositoryFactory =
-                    scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
+                var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
                 var msTeamsInternalPublisher =
                     scope.ServiceProvider.GetRequiredService<IOrganizationInternalPublisher>();
-
                 var now = timeProvider.GetUtcNow();
                 var tenantIds = await repositoryFactory.AzureTenantRepository.Query(
                     new Specification<AzureTenant>

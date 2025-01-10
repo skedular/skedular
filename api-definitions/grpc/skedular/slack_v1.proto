@@ -21,27 +21,35 @@ message Version {
 message Admin_AddWorkspaceInput {
     string id = 1;
     string name = 2;
-    string botUserId = 3;
-    string botUserScope = 4;
-    string botUserAccessToken = 5;
-    string botRefreshToken = 6;
-    string authedUserId = 7;
-    string authedUserScope = 8;
-    string authedUserAccessToken = 9;
-    string authedRefreshToken = 10;
-    string organizationId = 11;
+    string domain = 3;
+    string emailDomain = 4;
+    string enterpriseId = 5;
+    string enterpriseName = 6;
+    string botUserId = 7;
+    string botUserScope = 8;
+    string botUserAccessToken = 9;
+    string botRefreshToken = 10;
+    string authedUserId = 11;
+    string authedUserScope = 12;
+    string authedUserAccessToken = 13;
+    string authedRefreshToken = 14;
+    string organizationId = 15;
 }
 
 message Workspace {
     string id = 1;
     string name = 2;
-    string botUserId = 3;
-    string botUserScope = 4;
-    string botUserAccessToken = 5;
-    string botRefreshToken = 6;
-    string authedUserId = 7;
-    string authedUserScope = 8;
-    string authedUserAccessToken = 9;
-    string authedRefreshToken = 10;
-    string organizationId = 11;
+    string domain = 3;
+    string emailDomain = 4;
+    string enterpriseId = 5;
+    string enterpriseName = 6;
+    string botUserId = 7;
+    string botUserScope = 8;
+    string botUserAccessToken = 9;
+    string botRefreshToken = 10;
+    string authedUserId = 11;
+    string authedUserScope = 12;
+    string authedUserAccessToken = 13;
+    string authedRefreshToken = 14;
+    string organizationId = 15;
 }

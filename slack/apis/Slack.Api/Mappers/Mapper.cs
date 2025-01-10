@@ -481,6 +481,10 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
             Name = src.Name,
+            Domain = src.Domain,
+            EmailDomain = src.EmailDomain,
+            EnterpriseId = src.EnterpriseId,
+            EnterpriseName = src.EnterpriseName,
             BotUserId = src.BotUserId,
             BotUserScope = src.BotUserScope,
             BotUserAccessToken = src.BotUserAccessToken,
@@ -489,7 +493,9 @@ public class Mapper : IMapper
             AuthedUserScope = src.AuthedUserScope,
             AuthedUserAccessToken = src.AuthedUserAccessToken,
             AuthedRefreshToken = src.AuthedRefreshToken,
+            LastRefreshedAt = src.LastRefreshedAt,
             MembersLastRefreshedAt = src.MembersLastRefreshedAt,
+            ChannelsLastRefreshedAt = src.ChannelsLastRefreshedAt,
             Organization = MapTo(src.Organization)
         };
 
@@ -583,6 +589,10 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
+            Domain = src.Domain.ToSafeString(),
+            EmailDomain = src.EmailDomain.ToSafeString(),
+            EnterpriseId = src.EnterpriseId.ToSafeString(),
+            EnterpriseName = src.EnterpriseName.ToSafeString(),
             BotUserId = src.BotUserId.ToSafeString(),
             BotUserScope = src.BotUserScope.ToSafeString(),
             BotUserAccessToken = src.BotUserAccessToken.ToSafeString(),
@@ -599,6 +609,10 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
+            Domain = src.Domain.ToSafeString(),
+            EmailDomain = src.EmailDomain.ToSafeString(),
+            EnterpriseId = src.EnterpriseId.ToSafeString(),
+            EnterpriseName = src.EnterpriseName.ToSafeString(),
             BotUserId = src.BotUserId.ToSafeString(),
             BotUserScope = src.BotUserScope.ToSafeString(),
             BotUserAccessToken = src.BotUserAccessToken.ToSafeString(),
@@ -619,6 +633,10 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
+        dest.Domain = src.Domain.ToSafeString();
+        dest.EmailDomain = src.EmailDomain.ToSafeString();
+        dest.EnterpriseId = src.EnterpriseId.ToSafeString();
+        dest.EnterpriseName = src.EnterpriseName.ToSafeString();
         dest.BotUserId = src.BotUserId;
         dest.BotUserScope = src.BotUserScope;
         dest.BotUserAccessToken = src.BotUserAccessToken;

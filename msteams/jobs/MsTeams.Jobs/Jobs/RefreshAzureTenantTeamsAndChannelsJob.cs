@@ -18,11 +18,8 @@ public class RefreshAzureTenantTeamsAndChannelsJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
-                var repositoryFactory =
-                    scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var msTeamsInternalPublisher =
-                    scope.ServiceProvider.GetRequiredService<IMsTeamsInternalPublisher>();
-
+                var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
+                var msTeamsInternalPublisher = scope.ServiceProvider.GetRequiredService<IMsTeamsInternalPublisher>();
                 var now = timeProvider.GetUtcNow();
                 var azureTenantIds = await repositoryFactory.AzureTenantRepository.Query(
                         new Specification<AzureTenant>

@@ -32,14 +32,15 @@ namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value {
             "CQoHcGF5bG9hZCKjAQoITWV0YWRhdGESCgoCaWQYASABKAkSFAoMZG9tYWlu",
             "U291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIhCgR0eXBlGAQgASgO",
             "MhMuc2xhY2tpbnRlcm5hbC5UeXBlEigKBHRpbWUYBSABKAsyGi5nb29nbGUu",
-            "cHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0aW9uSWQYBiABKAkq8QEK",
-            "BFR5cGUSGwoXUmVmcmVzaFdvcmtzcGFjZU1lbWJlcnMQABIcChhSZWZyZXNo",
-            "V29ya3NwYWNlQ2hhbm5lbHMQARIrCidTZW5kV29ya3NwYWNlTG9jYXRpb25E",
-            "YWlseVVwZGF0ZU1lc3NhZ2UQAhImCiJVcGRhdGVXb3Jrc3BhY2VNZW1iZXJQ",
-            "cm9maWxlU3RhdHVzEAMSMAosRGVhY3RpdmF0ZU9yZ2FuaXphdGlvbk1lbWJl",
-            "cnNOb3RGb3VuZE9uU2xhY2sQBBInCiNTZW5kV29ya3NwYWNlVGVhbURhaWx5",
-            "VXBkYXRlTWVzc2FnZRAFQjyqAjlBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRz",
-            "LlNrZWR1bGFyLlNsYWNrSW50ZXJuYWwuVjEuVmFsdWViBnByb3RvMw=="));
+            "cHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0aW9uSWQYBiABKAkqhwIK",
+            "BFR5cGUSFAoQUmVmcmVzaFdvcmtzcGFjZRAAEhsKF1JlZnJlc2hXb3Jrc3Bh",
+            "Y2VNZW1iZXJzEAESHAoYUmVmcmVzaFdvcmtzcGFjZUNoYW5uZWxzEAISKwon",
+            "U2VuZFdvcmtzcGFjZUxvY2F0aW9uRGFpbHlVcGRhdGVNZXNzYWdlEAMSJgoi",
+            "VXBkYXRlV29ya3NwYWNlTWVtYmVyUHJvZmlsZVN0YXR1cxAEEjAKLERlYWN0",
+            "aXZhdGVPcmdhbml6YXRpb25NZW1iZXJzTm90Rm91bmRPblNsYWNrEAUSJwoj",
+            "U2VuZFdvcmtzcGFjZVRlYW1EYWlseVVwZGF0ZU1lc3NhZ2UQBkI8qgI5QXBp",
+            "LlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5TbGFja0ludGVybmFs",
+            "LlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -52,12 +53,13 @@ namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value {
   }
   #region Enums
   public enum Type {
-    [pbr::OriginalName("RefreshWorkspaceMembers")] RefreshWorkspaceMembers = 0,
-    [pbr::OriginalName("RefreshWorkspaceChannels")] RefreshWorkspaceChannels = 1,
-    [pbr::OriginalName("SendWorkspaceLocationDailyUpdateMessage")] SendWorkspaceLocationDailyUpdateMessage = 2,
-    [pbr::OriginalName("UpdateWorkspaceMemberProfileStatus")] UpdateWorkspaceMemberProfileStatus = 3,
-    [pbr::OriginalName("DeactivateOrganizationMembersNotFoundOnSlack")] DeactivateOrganizationMembersNotFoundOnSlack = 4,
-    [pbr::OriginalName("SendWorkspaceTeamDailyUpdateMessage")] SendWorkspaceTeamDailyUpdateMessage = 5,
+    [pbr::OriginalName("RefreshWorkspace")] RefreshWorkspace = 0,
+    [pbr::OriginalName("RefreshWorkspaceMembers")] RefreshWorkspaceMembers = 1,
+    [pbr::OriginalName("RefreshWorkspaceChannels")] RefreshWorkspaceChannels = 2,
+    [pbr::OriginalName("SendWorkspaceLocationDailyUpdateMessage")] SendWorkspaceLocationDailyUpdateMessage = 3,
+    [pbr::OriginalName("UpdateWorkspaceMemberProfileStatus")] UpdateWorkspaceMemberProfileStatus = 4,
+    [pbr::OriginalName("DeactivateOrganizationMembersNotFoundOnSlack")] DeactivateOrganizationMembersNotFoundOnSlack = 5,
+    [pbr::OriginalName("SendWorkspaceTeamDailyUpdateMessage")] SendWorkspaceTeamDailyUpdateMessage = 6,
   }
 
   #endregion
@@ -601,7 +603,7 @@ namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value {
 
     /// <summary>Field number for the "type" field.</summary>
     public const int TypeFieldNumber = 4;
-    private global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type type_ = global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspaceMembers;
+    private global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type type_ = global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspace;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type Type {
@@ -666,7 +668,7 @@ namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (DomainSource.Length != 0) hash ^= DomainSource.GetHashCode();
       if (AppSource.Length != 0) hash ^= AppSource.GetHashCode();
-      if (Type != global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspaceMembers) hash ^= Type.GetHashCode();
+      if (Type != global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspace) hash ^= Type.GetHashCode();
       if (time_ != null) hash ^= Time.GetHashCode();
       if (CorrelationId.Length != 0) hash ^= CorrelationId.GetHashCode();
       if (_unknownFields != null) {
@@ -699,7 +701,7 @@ namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspaceMembers) {
+      if (Type != global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspace) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Type);
       }
@@ -733,7 +735,7 @@ namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspaceMembers) {
+      if (Type != global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspace) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Type);
       }
@@ -764,7 +766,7 @@ namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value {
       if (AppSource.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AppSource);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspaceMembers) {
+      if (Type != global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspace) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
       if (time_ != null) {
@@ -794,7 +796,7 @@ namespace Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value {
       if (other.AppSource.Length != 0) {
         AppSource = other.AppSource;
       }
-      if (other.Type != global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspaceMembers) {
+      if (other.Type != global::Api.Shared.Clients.Events.Skedular.SlackInternal.V1.Value.Type.RefreshWorkspace) {
         Type = other.Type;
       }
       if (other.time_ != null) {

@@ -6,10 +6,10 @@ using Slack.Shared.Repositories;
 
 namespace Slack.Jobs.Jobs;
 
-public class RefreshWorkspaceMembersJob(
+public class RefreshWorkspaceJob(
     IServiceProvider serviceProvider,
     TimeProvider timeProvider,
-    ILogger<RefreshWorkspaceMembersJob> logger) : BackgroundService
+    ILogger<RefreshWorkspaceJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -25,14 +25,14 @@ public class RefreshWorkspaceMembersJob(
                         new Specification<Workspace>
                         {
                             Criteria = query =>
-                                !query.MembersLastRefreshedAt.HasValue ||
-                                (now - query.MembersLastRefreshedAt.Value).TotalHours >= 24
+                                !query.LastRefreshedAt.HasValue ||
+                                (now - query.LastRefreshedAt.Value).TotalHours >= 24
                         })
                     .Select(item => item.Id)
                     .ToListAsync(cancellationToken);
                 if (workspaceIds.Count != 0)
                 {
-                    await slackInternalPublisher.PublishRefreshWorkspaceMembersAsync(workspaceIds, cancellationToken);
+                    await slackInternalPublisher.PublishRefreshWorkspaceAsync(workspaceIds, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromHours(1), cancellationToken);
@@ -43,7 +43,7 @@ public class RefreshWorkspaceMembersJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshWorkspaceMembersJob));
+                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshWorkspaceJob));
             }
         } while (true);
     }

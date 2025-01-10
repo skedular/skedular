@@ -14,6 +14,7 @@ public static class Extensions
         services
             .AddHostedService<LocationDailyUpdateJob>()
             .AddHostedService<RefreshWorkspaceChannelsJob>()
+            .AddHostedService<RefreshWorkspaceJob>()
             .AddHostedService<RefreshWorkspaceMembersJob>()
             .AddHostedService<TeamDailyUpdateJob>()
             .AddHostedService<UpdateWorkspaceMemberProfileStatusJob>();

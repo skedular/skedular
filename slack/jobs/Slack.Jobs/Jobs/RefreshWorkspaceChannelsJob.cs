@@ -18,11 +18,8 @@ public class RefreshWorkspaceChannelsJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
-                var repositoryFactory =
-                    scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var slackInternalPublisher =
-                    scope.ServiceProvider.GetRequiredService<ISlackInternalPublisher>();
-
+                var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
+                var slackInternalPublisher = scope.ServiceProvider.GetRequiredService<ISlackInternalPublisher>();
                 var now = timeProvider.GetUtcNow();
                 var workspaceIds = await repositoryFactory.WorkspaceRepository.Query(
                         new Specification<Workspace>

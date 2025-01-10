@@ -17,11 +17,9 @@ public class OrganizationOfferingRenewalJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
-                var repositoryFactory =
-                    scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
+                var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
                 var organizationInternalPublisher =
                     scope.ServiceProvider.GetRequiredService<IOrganizationInternalPublisher>();
-
                 var now = timeProvider.GetUtcNow();
                 var organizationIds = await repositoryFactory.OrganizationRepository.Query(
                     new Specification<Shared.Database.Entities.Organization>

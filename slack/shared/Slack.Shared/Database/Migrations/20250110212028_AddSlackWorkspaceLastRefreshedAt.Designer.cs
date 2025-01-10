@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Slack.Shared.Database;
@@ -12,9 +13,11 @@ using Slack.Shared.Database;
 namespace Slack.Shared.Database.Migrations
 {
     [DbContext(typeof(SlackDbContext))]
-    partial class SlackDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250110212028_AddSlackWorkspaceLastRefreshedAt")]
+    partial class AddSlackWorkspaceLastRefreshedAt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -394,22 +397,6 @@ namespace Slack.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Domain")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("EmailDomain")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("EnterpriseId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("EnterpriseName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
 
                     b.Property<DateTimeOffset?>("LastRefreshedAt")
                         .HasColumnType("timestamp with time zone");

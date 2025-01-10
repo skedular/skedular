@@ -50,6 +50,10 @@ public class WorkspaceService(
                 await repositoryFactory.WorkspaceRepository.GetByIdAsync(response.Team.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(workspace);
             workspace = repositoryFactory.WorkspaceRepository.Update(mapper.MergeTo(response, workspace, organization));
+            await slackInternalOutboxPublisher.PublishRefreshWorkspaceAsync(
+                [workspace.Id],
+                repositoryFactory.WorkspaceRepository.UnitOfWork,
+                cancellationToken);
             await slackInternalOutboxPublisher.PublishRefreshWorkspaceMembersAsync(
                 [workspace.Id],
                 repositoryFactory.WorkspaceRepository.UnitOfWork,

@@ -9,6 +9,10 @@ namespace Slack.Shared.Publishers;
 
 public interface ISlackInternalPublisher
 {
+    Task PublishRefreshWorkspaceAsync(
+        IEnumerable<string> workspaceIds,
+        CancellationToken cancellationToken);
+
     Task PublishRefreshWorkspaceMembersAsync(
         IEnumerable<string> workspaceIds,
         CancellationToken cancellationToken);
@@ -36,6 +40,25 @@ public class SlackInternalPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : ISlackInternalPublisher
 {
+    public async Task PublishRefreshWorkspaceAsync(
+        IEnumerable<string> workspaceIds,
+        CancellationToken cancellationToken) =>
+        await Task.WhenAll(workspaceIds.Select(async workspaceId =>
+        {
+            var key = new Key { WorkspaceId = workspaceId };
+            var @event = new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    Type.RefreshWorkspace,
+                    context.GetCorrelationId()),
+                WorkspaceId = workspaceId
+            };
+
+            await publisher.PublishAsync(key, @event, cancellationToken);
+        }));
+
     public async Task PublishRefreshWorkspaceMembersAsync(
         IEnumerable<string> workspaceIds,
         CancellationToken cancellationToken) =>

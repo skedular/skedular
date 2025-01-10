@@ -20,11 +20,8 @@ public class UpdateWorkspaceMemberProfileStatusJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
-                var repositoryFactory =
-                    scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var slackInternalPublisher =
-                    scope.ServiceProvider.GetRequiredService<ISlackInternalPublisher>();
-
+                var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
+                var slackInternalPublisher = scope.ServiceProvider.GetRequiredService<ISlackInternalPublisher>();
                 var now = timeProvider.GetUtcNow();
                 var workspaceMembers = await repositoryFactory.WorkspaceMemberRepository.Query(
                         new Specification<WorkspaceMember>

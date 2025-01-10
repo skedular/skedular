@@ -10,6 +10,11 @@ namespace Slack.Shared.Publishers;
 
 public interface ISlackInternalOutboxPublisher
 {
+    Task PublishRefreshWorkspaceAsync(
+        IEnumerable<string> workspaceIds,
+        IUnitOfWork unitOfWork,
+        CancellationToken cancellationToken);
+
     Task PublishRefreshWorkspaceMembersAsync(
         IEnumerable<string> workspaceIds,
         IUnitOfWork unitOfWork,
@@ -60,6 +65,26 @@ public class SlackInternalOutboxPublisher(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
                     Type.RefreshWorkspaceChannels,
+                    context.GetCorrelationId()),
+                WorkspaceId = workspaceId
+            };
+
+            await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
+        }));
+
+    public async Task PublishRefreshWorkspaceAsync(
+        IEnumerable<string> workspaceIds,
+        IUnitOfWork unitOfWork,
+        CancellationToken cancellationToken) =>
+        await Task.WhenAll(workspaceIds.Select(async workspaceId =>
+        {
+            var key = new Key { WorkspaceId = workspaceId };
+            var @event = new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    Type.RefreshWorkspace,
                     context.GetCorrelationId()),
                 WorkspaceId = workspaceId
             };

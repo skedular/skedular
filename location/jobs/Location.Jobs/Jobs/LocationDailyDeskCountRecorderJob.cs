@@ -18,11 +18,8 @@ public class LocationDailyDeskCountRecorderJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
-                var repositoryFactory =
-                    scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var locationInternalPublisher =
-                    scope.ServiceProvider.GetRequiredService<ILocationInternalPublisher>();
-
+                var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
+                var locationInternalPublisher = scope.ServiceProvider.GetRequiredService<ILocationInternalPublisher>();
                 var yesterday = timeProvider.GetUtcNow().EndOfYesterday();
                 var locationIds = await repositoryFactory.LocationRepository.Query(
                     new Specification<Shared.Database.Entities.Location>
