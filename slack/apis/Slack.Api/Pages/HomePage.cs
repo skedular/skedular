@@ -733,9 +733,7 @@ public class HomePage(
             Last = -1,
             Where = new BookingWhereInput
             {
-                FromGTE = from.ToTimestamp(),
-                FromLTE = until.ToTimestamp(),
-                IncludeMineOnly = true
+                FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = true
             }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);

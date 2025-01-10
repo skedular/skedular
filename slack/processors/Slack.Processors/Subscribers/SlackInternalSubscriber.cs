@@ -110,13 +110,13 @@ public class SlackInternalSubscriber(
             return;
         }
 
-        var team = await existingWorkspace.GetApiClient().Team.Info(cancellationToken: cancellationToken);
+        var team = await existingWorkspace.GetApiClient().Team.Info(cancellationToken);
 
         existingWorkspace = mapper.MergeToEntity(team, existingWorkspace);
         existingWorkspace.LastRefreshedAt = timeProvider.GetUtcNow();
 
         await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-   }
+    }
 
     private async Task HandleRefreshWorkspaceMembersEventAsync(string workspaceId, CancellationToken cancellationToken)
     {

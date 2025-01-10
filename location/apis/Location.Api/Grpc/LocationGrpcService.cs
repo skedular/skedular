@@ -246,7 +246,7 @@ public class LocationGrpcService(
                 request.Last.FromNullInt()),
             new DeskSearchCriteria(
                 request.Where.LocationId,
-                request.Where.NameContains, 
+                request.Where.NameContains,
                 request.Where.ZoneIds,
                 request.Where.DeskTypeIds),
             request.OrderBy.Select(item =>
