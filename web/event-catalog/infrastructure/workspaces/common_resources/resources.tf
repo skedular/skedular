@@ -31,7 +31,7 @@ resource "vercel_project" "default" {
 resource "vercel_project_domain" "default" {
   project_id = vercel_project.default.id
   team_id    = local.team_id
-  domain     = module.shared_common.eventcatalog_webapp_domain_name_2
+  domain     = module.shared_common.eventcatalog_webapp_domain_name
 }
 
 data "vercel_project_directory" "default" {
@@ -47,12 +47,12 @@ resource "vercel_deployment" "default" {
 }
 
 data "cloudflare_zone" "default" {
-  name = module.shared_common.cloudflare_webapp_domain_name_2
+  name = module.shared_common.cloudflare_webapp_domain_name
 }
 
 resource "cloudflare_record" "default" {
   zone_id = data.cloudflare_zone.default.id
-  name    = module.shared_common.eventcatalog_webapp_domain_name_2
+  name    = module.shared_common.eventcatalog_webapp_domain_name
   content = "cname.vercel-dns.com."
   type    = "CNAME"
   proxied = false

@@ -1,37 +1,21 @@
 locals {
   is_production = var.environment == "production"
 
-  public_website_domain_root_1 = "unityhub.io"
-  webapp_domain_root_1         = "unityhub.io"
-  public_website_domain_1      = local.is_production ? local.public_website_domain_root_1 : "${var.environment}.${local.public_website_domain_root_1}"
-  webapp_domain_1              = local.is_production ? "app.${local.webapp_domain_root_1}" : "app.${var.environment}.${local.webapp_domain_root_1}"
-  api_domain_1                 = local.is_production ? "api.${local.webapp_domain_root_1}" : "api${var.environment}.${local.webapp_domain_root_1}"
-  msteams_webapp_domain_1      = local.is_production ? "msteams.${local.webapp_domain_root_1}" : "msteams.${var.environment}.${local.webapp_domain_root_1}"
-  eventcatalog_webapp_domain_1 = local.is_production ? "eventcatalog.${local.webapp_domain_root_1}" : "eventcatalog.${var.environment}.${local.webapp_domain_root_1}"
-
-  public_website_domain_root_2 = "getskedular.com"
-  webapp_domain_root_2         = "skedular.app"
-  public_website_domain_2      = local.is_production ? local.public_website_domain_root_2 : "${var.environment}.${local.public_website_domain_root_2}"
-  webapp_domain_2              = local.is_production ? "${local.webapp_domain_root_2}" : "${var.environment}.${local.webapp_domain_root_2}"
-  api_domain_2                 = local.is_production ? "api.${local.webapp_domain_root_2}" : "api${var.environment}.${local.webapp_domain_root_2}"
-  msteams_webapp_domain_2      = local.is_production ? "msteams.${local.webapp_domain_root_2}" : "msteams.${var.environment}.${local.webapp_domain_root_2}"
-  eventcatalog_webapp_domain_2 = local.is_production ? "eventcatalog.${local.webapp_domain_root_2}" : "eventcatalog.${var.environment}.${local.webapp_domain_root_2}"
+  public_website_domain_root = "getskedular.com"
+  webapp_domain_root         = "skedular.app"
+  public_website_domain      = local.is_production ? local.public_website_domain_root : "${var.environment}.${local.public_website_domain_root}"
+  webapp_domain              = local.is_production ? "${local.webapp_domain_root}" : "${var.environment}.${local.webapp_domain_root}"
+  api_domain                 = local.is_production ? "api.${local.webapp_domain_root}" : "api${var.environment}.${local.webapp_domain_root}"
+  msteams_webapp_domain      = local.is_production ? "msteams.${local.webapp_domain_root}" : "msteams.${var.environment}.${local.webapp_domain_root}"
+  eventcatalog_webapp_domain = local.is_production ? "eventcatalog.${local.webapp_domain_root}" : "eventcatalog.${var.environment}.${local.webapp_domain_root}"
 }
 
-output "cloudflare_public_website_domain_name_1" {
-  value = local.public_website_domain_root_1
+output "cloudflare_public_website_domain_name" {
+  value = local.public_website_domain_root
 }
 
-output "cloudflare_webapp_domain_name_1" {
-  value = local.webapp_domain_root_1
-}
-
-output "cloudflare_public_website_domain_name_2" {
-  value = local.public_website_domain_root_2
-}
-
-output "cloudflare_webapp_domain_name_2" {
-  value = local.webapp_domain_root_2
+output "cloudflare_webapp_domain_name" {
+  value = local.webapp_domain_root
 }
 
 output "aws_region" {
@@ -54,52 +38,32 @@ output "cognito_user_pool_domain" {
   value = local.is_production ? "skedular" : "${var.environment}skedular"
 }
 
-output "simple_email_service_domain_1" {
-  value = local.public_website_domain_1
+output "simple_email_service_domain" {
+  value = local.webapp_domain
 }
 
-output "api_domain_name_1" {
-  value = local.api_domain_1
+output "from_email_address" {
+  value = "no-reply@${local.webapp_domain}"
 }
 
-output "webapp_domain_name_1" {
-  value = local.webapp_domain_1
+output "reply_to_email_address" {
+  value = "no-reply@${local.webapp_domain}"
 }
 
-output "msteams_webapp_domain_name_1" {
-  value = local.msteams_webapp_domain_1
+output "api_domain_name" {
+  value = local.api_domain
 }
 
-output "eventcatalog_webapp_domain_name_1" {
-  value = local.eventcatalog_webapp_domain_1
+output "webapp_domain_name" {
+  value = local.webapp_domain
 }
 
-output "simple_email_service_domain_2" {
-  value = local.webapp_domain_2
+output "msteams_webapp_domain_name" {
+  value = local.msteams_webapp_domain
 }
 
-output "from_email_address_2" {
-  value = "no-reply@${local.webapp_domain_2}"
-}
-
-output "reply_to_email_address_2" {
-  value = "no-reply@${local.webapp_domain_2}"
-}
-
-output "api_domain_name_2" {
-  value = local.api_domain_2
-}
-
-output "webapp_domain_name_2" {
-  value = local.webapp_domain_2
-}
-
-output "msteams_webapp_domain_name_2" {
-  value = local.msteams_webapp_domain_2
-}
-
-output "eventcatalog_webapp_domain_name_2" {
-  value = local.eventcatalog_webapp_domain_2
+output "eventcatalog_webapp_domain_name" {
+  value = local.eventcatalog_webapp_domain
 }
 
 output "gcp_project_id" {

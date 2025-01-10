@@ -92,7 +92,7 @@ resource "azuread_application_redirect_uris" "azure_application_web_redirect_uri
   type           = "Web"
 
   redirect_uris = [
-    "https://${module.shared_common.webapp_domain_name_1}/api/auth/callback/azure-ad"
+    "https://${module.shared_common.webapp_domain_name}/api/auth/callback/azure-ad"
   ]
 }
 
@@ -101,14 +101,14 @@ resource "azuread_application_redirect_uris" "azure_application_spa_redirect_uri
   type           = "SPA"
 
   redirect_uris = [
-    "https://${module.shared_common.msteams_webapp_domain_name_1}/auth-end.html?clientId=${azuread_application.azure_application.client_id}",
-    "https://${module.shared_common.api_domain_name_1}/organization/api/v1/onboard-azure-tenant"
+    "https://${module.shared_common.msteams_webapp_domain_name}/auth-end.html?clientId=${azuread_application.azure_application.client_id}",
+    "https://${module.shared_common.api_domain_name}/organization/api/v1/onboard-azure-tenant"
   ]
 }
 
 resource "azuread_application_identifier_uri" "azure_application_identifier_uris" {
   application_id = azuread_application.azure_application.id
-  identifier_uri = "api://${module.shared_common.msteams_webapp_domain_name_1}/${azuread_application.azure_application.client_id}"
+  identifier_uri = "api://${module.shared_common.msteams_webapp_domain_name}/${azuread_application.azure_application.client_id}"
 }
 
 resource "random_uuid" "access_as_user_id" {}

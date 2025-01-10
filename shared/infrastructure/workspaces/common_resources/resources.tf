@@ -42,8 +42,8 @@ module "simple_email_service" {
   }
 
   tags              = local.tags
-  domain            = module.common.simple_email_service_domain_2
-  cloudflare_domain = module.common.cloudflare_webapp_domain_name_2
+  domain            = module.common.simple_email_service_domain
+  cloudflare_domain = module.common.cloudflare_webapp_domain_name
 }
 
 module "cognito_user_pool" {
@@ -56,8 +56,8 @@ module "cognito_user_pool" {
   name                                       = module.common.cognito_user_pool_name
   domain                                     = module.common.cognito_user_pool_domain
   simple_email_service_arn                   = module.simple_email_service.arn
-  from_email_address                         = module.common.from_email_address_2
-  reply_to_email_address                     = module.common.reply_to_email_address_2
+  from_email_address                         = module.common.from_email_address
+  reply_to_email_address                     = module.common.reply_to_email_address
   gcp_skedular_web_credentials_client_id     = var.gcp_skedular_web_credentials_client_id
   gcp_skedular_web_credentials_client_secret = var.gcp_skedular_web_credentials_client_secret
   google_provider_name                       = module.common.aws_cognito_identity_provider_google_provider_name
@@ -67,7 +67,7 @@ resource "stripe_product" "pay_as_you_go_v1" {
   name        = "Premium"
   unit_label  = "Active User"
   description = "Skedular Pay-as-you-go"
-  url         = "https://${module.common.cloudflare_public_website_domain_name_2}/pricing"
+  url         = "https://${module.common.cloudflare_public_website_domain_name}/pricing"
   metadata = {
     offering_code = "PAY_AS_YOU_GO_V1"
   }
@@ -96,13 +96,13 @@ resource "aws_ssm_parameter" "stripe_pay_as_you_go_v1_product_unit_amount" {
   tags  = local.tags
 }
 
-data "cloudflare_zone" "public_website_1" {
-  name = module.common.cloudflare_public_website_domain_name_1
+data "cloudflare_zone" "public_website" {
+  name = module.common.cloudflare_public_website_domain_name
 }
 
-resource "cloudflare_record" "cloudflare_dns_record_production_1" {
+resource "cloudflare_record" "cloudflare_dns_record_production" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website_1.id
+  zone_id = data.cloudflare_zone.public_website.id
   name    = "@"
   content = "31.220.100.177"
   type    = "A"
@@ -110,9 +110,9 @@ resource "cloudflare_record" "cloudflare_dns_record_production_1" {
   ttl     = 600
 }
 
-resource "cloudflare_record" "cloudflare_dns_record_production_1_staging" {
+resource "cloudflare_record" "cloudflare_dns_record_production_staging" {
   count   = local.is_staging ? 1 : 0
-  zone_id = data.cloudflare_zone.public_website_1.id
+  zone_id = data.cloudflare_zone.public_website.id
   name    = "staging"
   content = "31.220.100.177"
   type    = "A"
@@ -120,13 +120,13 @@ resource "cloudflare_record" "cloudflare_dns_record_production_1_staging" {
   ttl     = 600
 }
 
-data "cloudflare_zone" "webapp_1" {
-  name = module.common.cloudflare_webapp_domain_name_1
+data "cloudflare_zone" "webapp" {
+  name = module.common.cloudflare_webapp_domain_name
 }
 
-resource "cloudflare_record" "cloudflare_dns_records_staging_1" {
+resource "cloudflare_record" "cloudflare_dns_records_staging" {
   count   = local.is_staging ? length(local.dns_records_staging) : 0
-  zone_id = data.cloudflare_zone.webapp_1.id
+  zone_id = data.cloudflare_zone.webapp.id
   name    = element(local.dns_records_staging, count.index)
   content = "31.220.100.177"
   type    = "A"
@@ -134,57 +134,9 @@ resource "cloudflare_record" "cloudflare_dns_records_staging_1" {
   ttl     = 600
 }
 
-resource "cloudflare_record" "cloudflare_dns_records_production_1" {
+resource "cloudflare_record" "cloudflare_dns_records_production" {
   count   = local.is_staging ? 0 : length(local.dns_records_production)
-  zone_id = data.cloudflare_zone.webapp_1.id
-  name    = element(local.dns_records_production, count.index)
-  content = "31.220.100.177"
-  type    = "A"
-  proxied = false
-  ttl     = 600
-}
-
-data "cloudflare_zone" "public_website_2" {
-  name = module.common.cloudflare_public_website_domain_name_2
-}
-
-resource "cloudflare_record" "cloudflare_dns_record_production_2" {
-  count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website_2.id
-  name    = "@"
-  content = "31.220.100.177"
-  type    = "A"
-  proxied = false
-  ttl     = 600
-}
-
-resource "cloudflare_record" "cloudflare_dns_record_production_2_staging" {
-  count   = local.is_staging ? 1 : 0
-  zone_id = data.cloudflare_zone.public_website_2.id
-  name    = "staging"
-  content = "31.220.100.177"
-  type    = "A"
-  proxied = false
-  ttl     = 600
-}
-
-data "cloudflare_zone" "webapp_2" {
-  name = module.common.cloudflare_webapp_domain_name_2
-}
-
-resource "cloudflare_record" "cloudflare_dns_records_staging_2" {
-  count   = local.is_staging ? length(local.dns_records_staging) : 0
-  zone_id = data.cloudflare_zone.webapp_2.id
-  name    = element(local.dns_records_staging, count.index)
-  content = "31.220.100.177"
-  type    = "A"
-  proxied = false
-  ttl     = 600
-}
-
-resource "cloudflare_record" "cloudflare_dns_records_production_2" {
-  count   = local.is_staging ? 0 : length(local.dns_records_production)
-  zone_id = data.cloudflare_zone.webapp_2.id
+  zone_id = data.cloudflare_zone.webapp.id
   name    = element(local.dns_records_production, count.index)
   content = "31.220.100.177"
   type    = "A"
