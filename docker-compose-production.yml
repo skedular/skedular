@@ -1,10 +1,10 @@
 networks:
-  unityhubio_network:
+  skedular_network:
 
 volumes:
   unityhubio_postgres_data:
-  unityhubio_redis_data:
-  unityhubio_kafka1_data:
+  skedular_redis_data:
+  skedular_kafka1_data:
 
 services:
   dozzle:
@@ -14,7 +14,7 @@ services:
     ports:
       - 5001:8080
     networks:
-      - unityhubio_network
+      - skedular_network
 
   postgres:
     image: postgres:16-alpine
@@ -23,30 +23,30 @@ services:
     volumes:
       - unityhubio_postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: ${UNITYHUBIO_POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      POSTGRES_USER: ${SKEDULAR_POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${SKEDULAR_POSTGRES_PASSWORD}
     ports:
       - "13450:5432"
     networks:
-      - unityhubio_network
+      - skedular_network
 
   redis:
     image: redis:latest
     restart: unless-stopped
     volumes:
-      - unityhubio_redis_data:/data
+      - skedular_redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 5s
       retries: 100
     networks:
-      - unityhubio_network
+      - skedular_network
 
   kafka1:
     image: confluentinc/cp-kafka:latest
     volumes:
-      - unityhubio_kafka1_data:/var/lib/kafka/data
+      - skedular_kafka1_data:/var/lib/kafka/data
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
@@ -69,7 +69,7 @@ services:
       # See https://docs.confluent.io/kafka/operations-tools/kafka-tools.html#kafka-storage-sh
       CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
     networks:
-      - unityhubio_network
+      - skedular_network
 
   kowl:
     image: docker.redpanda.com/redpandadata/console:latest
@@ -81,22 +81,22 @@ services:
     ports:
       - 8888:8080
     networks:
-      - unityhubio_network
+      - skedular_network
 
   staging-infra-provision:
     image: ghcr.io/unityhubio/allinfra:latest
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
-      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
-      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
+      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
+      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Application__Environment: staging
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
     networks:
-      - unityhubio_network
+      - skedular_network
 
   staging-apis-01:
     image: ghcr.io/unityhubio/allapis:latest
@@ -129,9 +129,9 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
-      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
-      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
-      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
+      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
+      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
@@ -144,25 +144,25 @@ services:
       Subgraphs__Payment__Url: http://localhost:10100/payment/api/v1/graphql
       Subgraphs__Slack__Url: http://localhost:10700/slack/api/v1/graphql
       Subgraphs__Team__Url: http://localhost:10500/team/api/v1/graphql
-      Billing__ApiKey: ${STAGING_UNITYHUBIO_BILLING_APIKEY}
-      Booking__ApiKey: ${STAGING_UNITYHUBIO_BOOKING_APIKEY}
-      Customer__ApiKey: ${STAGING_UNITYHUBIO_CUSTOMER_APIKEY}
-      Location__ApiKey: ${STAGING_UNITYHUBIO_LOCATION_APIKEY}
-      Notification__ApiKey: ${STAGING_UNITYHUBIO_NOTIFICATION_APIKEY}
-      Organization__ApiKey: ${STAGING_UNITYHUBIO_ORGANIZATION_APIKEY}
-      Payment__ApiKey: ${STAGING_UNITYHUBIO_PAYMENT_APIKEY}
-      Slack__ApiKey: ${STAGING_UNITYHUBIO_SLACK_APIKEY}
-      Team__ApiKey: ${STAGING_UNITYHUBIO_TEAM_APIKEY}
-      Stripe__PublishableKey: ${STAGING_UNITYHUBIO_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${STAGING_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Billing__ApiKey: ${STAGING_SKEDULAR_BILLING_APIKEY}
+      Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
+      Customer__ApiKey: ${STAGING_SKEDULAR_CUSTOMER_APIKEY}
+      Location__ApiKey: ${STAGING_SKEDULAR_LOCATION_APIKEY}
+      Notification__ApiKey: ${STAGING_SKEDULAR_NOTIFICATION_APIKEY}
+      Organization__ApiKey: ${STAGING_SKEDULAR_ORGANIZATION_APIKEY}
+      Payment__ApiKey: ${STAGING_SKEDULAR_PAYMENT_APIKEY}
+      Slack__ApiKey: ${STAGING_SKEDULAR_SLACK_APIKEY}
+      Team__ApiKey: ${STAGING_SKEDULAR_TEAM_APIKEY}
+      Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
-      Slack__ClientSecret: ${STAGING_UNITYHUBIO_SLACK_CLIENT_SECRET}
-      Slack__SigningSecret: ${STAGING_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${STAGING_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapistaging.skedular.app/slack/api/v1/callback
       Slack__SuccessInstallUrl: https://staging.getskedular.com/slack-success-install
-      AzureEntra__ClientId: ${STAGING_UNITYHUBIO_AZURE_ENTRA_CLIENT_ID}
-      AzureEntra__ClientSecret: ${STAGING_UNITYHUBIO_AZURE_ENTRA_CLIENT_SECRET}
+      AzureEntra__ClientId: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
+      AzureEntra__ClientSecret: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinOrganizationNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
@@ -185,7 +185,7 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      - unityhubio_network
+      - skedular_network
 
   staging-processors-01:
     image: ghcr.io/unityhubio/allprocessors:latest
@@ -208,40 +208,40 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
-      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
-      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
-      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
+      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
+      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
-      Billing__ApiKey: ${STAGING_UNITYHUBIO_BILLING_APIKEY}
+      Billing__ApiKey: ${STAGING_SKEDULAR_BILLING_APIKEY}
       Billing__GrpcUrl: http://staging-apis-01:10802
-      Booking__ApiKey: ${STAGING_UNITYHUBIO_BOOKING_APIKEY}
+      Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://staging-apis-01:10302
-      Customer__ApiKey: ${STAGING_UNITYHUBIO_CUSTOMER_APIKEY}
+      Customer__ApiKey: ${STAGING_SKEDULAR_CUSTOMER_APIKEY}
       Customer__GrpcUrl: http://staging-apis-01:10002
-      Location__ApiKey: ${STAGING_UNITYHUBIO_LOCATION_APIKEY}
+      Location__ApiKey: ${STAGING_SKEDULAR_LOCATION_APIKEY}
       Location__GrpcUrl: http://staging-apis-01:10602
-      Notification__ApiKey: ${STAGING_UNITYHUBIO_NOTIFICATION_APIKEY}
+      Notification__ApiKey: ${STAGING_SKEDULAR_NOTIFICATION_APIKEY}
       Notification__GrpcUrl: http://staging-apis-01:10402
-      Organization__ApiKey: ${STAGING_UNITYHUBIO_ORGANIZATION_APIKEY}
+      Organization__ApiKey: ${STAGING_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://staging-apis-01:10202
-      Payment__ApiKey: ${STAGING_UNITYHUBIO_PAYMENT_APIKEY}
+      Payment__ApiKey: ${STAGING_SKEDULAR_PAYMENT_APIKEY}
       Payment__GrpcUrl: http://staging-apis-01:10102
-      Slack__ApiKey: ${STAGING_UNITYHUBIO_SLACK_APIKEY}
+      Slack__ApiKey: ${STAGING_SKEDULAR_SLACK_APIKEY}
       Slack__GrpcUrl: http://staging-apis-01:10702
-      Team__ApiKey: ${STAGING_UNITYHUBIO_TEAM_APIKEY}
+      Team__ApiKey: ${STAGING_SKEDULAR_TEAM_APIKEY}
       Team__GrpcUrl: http://staging-apis-01:10502
-      Stripe__PublishableKey: ${STAGING_UNITYHUBIO_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${STAGING_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
-      Slack__ClientSecret: ${STAGING_UNITYHUBIO_SLACK_CLIENT_SECRET}
-      Slack__SigningSecret: ${STAGING_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${STAGING_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapistaging.skedular.app/slack/api/v1/callback
       Slack__SuccessInstallUrl: https://staging.getskedular.com/slack-success-install
-      AzureEntra__ClientId: ${STAGING_UNITYHUBIO_AZURE_ENTRA_CLIENT_ID}
-      AzureEntra__ClientSecret: ${STAGING_UNITYHUBIO_AZURE_ENTRA_CLIENT_SECRET}
+      AzureEntra__ClientId: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
+      AzureEntra__ClientSecret: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
@@ -267,7 +267,7 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      - unityhubio_network
+      - skedular_network
 
   staging-jobs-01:
     image: ghcr.io/unityhubio/alljobs:latest
@@ -290,40 +290,40 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
-      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
-      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
-      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
+      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
+      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
-      Billing__ApiKey: ${STAGING_UNITYHUBIO_BILLING_APIKEY}
+      Billing__ApiKey: ${STAGING_SKEDULAR_BILLING_APIKEY}
       Billing__GrpcUrl: http://staging-apis-01:10802
-      Booking__ApiKey: ${STAGING_UNITYHUBIO_BOOKING_APIKEY}
+      Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://staging-apis-01:10302
-      Customer__ApiKey: ${STAGING_UNITYHUBIO_CUSTOMER_APIKEY}
+      Customer__ApiKey: ${STAGING_SKEDULAR_CUSTOMER_APIKEY}
       Customer__GrpcUrl: http://staging-apis-01:10002
-      Location__ApiKey: ${STAGING_UNITYHUBIO_LOCATION_APIKEY}
+      Location__ApiKey: ${STAGING_SKEDULAR_LOCATION_APIKEY}
       Location__GrpcUrl: http://staging-apis-01:10602
-      Notification__ApiKey: ${STAGING_UNITYHUBIO_NOTIFICATION_APIKEY}
+      Notification__ApiKey: ${STAGING_SKEDULAR_NOTIFICATION_APIKEY}
       Notification__GrpcUrl: http://staging-apis-01:10402
-      Organization__ApiKey: ${STAGING_UNITYHUBIO_ORGANIZATION_APIKEY}
+      Organization__ApiKey: ${STAGING_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://staging-apis-01:10202
-      Payment__ApiKey: ${STAGING_UNITYHUBIO_PAYMENT_APIKEY}
+      Payment__ApiKey: ${STAGING_SKEDULAR_PAYMENT_APIKEY}
       Payment__GrpcUrl: http://staging-apis-01:10102
-      Slack__ApiKey: ${STAGING_UNITYHUBIO_SLACK_APIKEY}
+      Slack__ApiKey: ${STAGING_SKEDULAR_SLACK_APIKEY}
       Slack__GrpcUrl: http://staging-apis-01:10702
-      Team__ApiKey: ${STAGING_UNITYHUBIO_TEAM_APIKEY}
+      Team__ApiKey: ${STAGING_SKEDULAR_TEAM_APIKEY}
       Team__GrpcUrl: http://staging-apis-01:10502
-      Stripe__PublishableKey: ${STAGING_UNITYHUBIO_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${STAGING_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
-      Slack__ClientSecret: ${STAGING_UNITYHUBIO_SLACK_CLIENT_SECRET}
-      Slack__SigningSecret: ${STAGING_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${STAGING_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapistaging.skedular.app/slack/api/v1/callback
       Slack__SuccessInstallUrl: https://staging.getskedular.com/slack-success-install
-      AzureEntra__ClientId: ${STAGING_UNITYHUBIO_AZURE_ENTRA_CLIENT_ID}
-      AzureEntra__ClientSecret: ${STAGING_UNITYHUBIO_AZURE_ENTRA_CLIENT_SECRET}
+      AzureEntra__ClientId: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
+      AzureEntra__ClientSecret: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
@@ -349,22 +349,22 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      - unityhubio_network
+      - skedular_network
 
   prod-infra-provision:
     image: ghcr.io/unityhubio/allinfra:latest
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
-      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
-      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
+      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
+      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Application__Environment: prod
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
     networks:
-      - unityhubio_network
+      - skedular_network
 
   prod-apis-01:
     image: ghcr.io/unityhubio/allapis:latest
@@ -399,9 +399,9 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
-      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
-      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
-      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
+      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
+      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
@@ -414,25 +414,25 @@ services:
       Subgraphs__Payment__Url: http://localhost:10100/payment/api/v1/graphql
       Subgraphs__Slack__Url: http://localhost:10700/slack/api/v1/graphql
       Subgraphs__Team__Url: http://localhost:10500/team/api/v1/graphql
-      Billing__ApiKey: ${PRODUCTION_UNITYHUBIO_BILLING_APIKEY}
-      Booking__ApiKey: ${PRODUCTION_UNITYHUBIO_BOOKING_APIKEY}
-      Customer__ApiKey: ${PRODUCTION_UNITYHUBIO_CUSTOMER_APIKEY}
-      Location__ApiKey: ${PRODUCTION_UNITYHUBIO_LOCATION_APIKEY}
-      Notification__ApiKey: ${PRODUCTION_UNITYHUBIO_NOTIFICATION_APIKEY}
-      Organization__ApiKey: ${PRODUCTION_UNITYHUBIO_ORGANIZATION_APIKEY}
-      Payment__ApiKey: ${PRODUCTION_UNITYHUBIO_PAYMENT_APIKEY}
-      Slack__ApiKey: ${PRODUCTION_UNITYHUBIO_SLACK_APIKEY}
-      Team__ApiKey: ${PRODUCTION_UNITYHUBIO_TEAM_APIKEY}
-      Stripe__PublishableKey: ${PRODUCTION_UNITYHUBIO_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${PRODUCTION_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
+      Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
+      Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
+      Location__ApiKey: ${PRODUCTION_SKEDULAR_LOCATION_APIKEY}
+      Notification__ApiKey: ${PRODUCTION_SKEDULAR_NOTIFICATION_APIKEY}
+      Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
+      Payment__ApiKey: ${PRODUCTION_SKEDULAR_PAYMENT_APIKEY}
+      Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
+      Team__ApiKey: ${PRODUCTION_SKEDULAR_TEAM_APIKEY}
+      Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
-      Slack__ClientSecret: ${PRODUCTION_UNITYHUBIO_SLACK_CLIENT_SECRET}
-      Slack__SigningSecret: ${PRODUCTION_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${PRODUCTION_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapi.skedular.app/slack/api/v1/callback
       Slack__SuccessInstallUrl: https://getskedular.com/slack-success-install
-      AzureEntra__ClientId: ${PRODUCTION_UNITYHUBIO_AZURE_ENTRA_CLIENT_ID}
-      AzureEntra__ClientSecret: ${PRODUCTION_UNITYHUBIO_AZURE_ENTRA_CLIENT_SECRET}
+      AzureEntra__ClientId: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
+      AzureEntra__ClientSecret: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__NewCustomerJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinOrganizationNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
@@ -455,7 +455,7 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      - unityhubio_network
+      - skedular_network
 
   prod-processors-01:
     image: ghcr.io/unityhubio/allprocessors:latest
@@ -478,40 +478,40 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
-      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
-      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
-      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
+      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
+      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
-      Billing__ApiKey: ${PRODUCTION_UNITYHUBIO_BILLING_APIKEY}
+      Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
       Billing__GrpcUrl: http://prod-apis-01:10802
-      Booking__ApiKey: ${PRODUCTION_UNITYHUBIO_BOOKING_APIKEY}
+      Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://prod-apis-01:10302
-      Customer__ApiKey: ${PRODUCTION_UNITYHUBIO_CUSTOMER_APIKEY}
+      Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
       Customer__GrpcUrl: http://prod-apis-01:10002
-      Location__ApiKey: ${PRODUCTION_UNITYHUBIO_LOCATION_APIKEY}
+      Location__ApiKey: ${PRODUCTION_SKEDULAR_LOCATION_APIKEY}
       Location__GrpcUrl: http://prod-apis-01:10602
-      Notification__ApiKey: ${PRODUCTION_UNITYHUBIO_NOTIFICATION_APIKEY}
+      Notification__ApiKey: ${PRODUCTION_SKEDULAR_NOTIFICATION_APIKEY}
       Notification__GrpcUrl: http://prod-apis-01:10402
-      Organization__ApiKey: ${PRODUCTION_UNITYHUBIO_ORGANIZATION_APIKEY}
+      Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://prod-apis-01:10202
-      Payment__ApiKey: ${PRODUCTION_UNITYHUBIO_PAYMENT_APIKEY}
+      Payment__ApiKey: ${PRODUCTION_SKEDULAR_PAYMENT_APIKEY}
       Payment__GrpcUrl: http://prod-apis-01:10102
-      Slack__ApiKey: ${PRODUCTION_UNITYHUBIO_SLACK_APIKEY}
+      Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
       Slack__GrpcUrl: http://prod-apis-01:10702
-      Team__ApiKey: ${PRODUCTION_UNITYHUBIO_TEAM_APIKEY}
+      Team__ApiKey: ${PRODUCTION_SKEDULAR_TEAM_APIKEY}
       Team__GrpcUrl: http://prod-apis-01:10502
-      Stripe__PublishableKey: ${PRODUCTION_UNITYHUBIO_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${PRODUCTION_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
-      Slack__ClientSecret: ${PRODUCTION_UNITYHUBIO_SLACK_CLIENT_SECRET}
-      Slack__SigningSecret: ${PRODUCTION_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${PRODUCTION_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapi.skedular.app/slack/api/v1/callback
       Slack__SuccessInstallUrl: https://getskedular.com/slack-success-install
-      AzureEntra__ClientId: ${PRODUCTION_UNITYHUBIO_AZURE_ENTRA_CLIENT_ID}
-      AzureEntra__ClientSecret: ${PRODUCTION_UNITYHUBIO_AZURE_ENTRA_CLIENT_SECRET}
+      AzureEntra__ClientId: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
+      AzureEntra__ClientSecret: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
@@ -537,7 +537,7 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      - unityhubio_network
+      - skedular_network
 
   prod-jobs-01:
     image: ghcr.io/unityhubio/alljobs:latest
@@ -560,40 +560,40 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
-      Postgres__Server: ${UNITYHUBIO_POSTGRES_SERVER}
-      Postgres__Username: ${UNITYHUBIO_POSTGRES_USERNAME}
-      Postgres__Password: ${UNITYHUBIO_POSTGRES_PASSWORD}
+      Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
+      Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
+      Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
       Kafka__BootstrapServers: "kafka1:29092"
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
-      Billing__ApiKey: ${PRODUCTION_UNITYHUBIO_BILLING_APIKEY}
+      Billing__ApiKey: ${PRODUCTION_SKEDULAR_BILLING_APIKEY}
       Billing__GrpcUrl: http://prod-apis-01:10802
-      Booking__ApiKey: ${PRODUCTION_UNITYHUBIO_BOOKING_APIKEY}
+      Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
       Booking__GrpcUrl: http://prod-apis-01:10302
-      Customer__ApiKey: ${PRODUCTION_UNITYHUBIO_CUSTOMER_APIKEY}
+      Customer__ApiKey: ${PRODUCTION_SKEDULAR_CUSTOMER_APIKEY}
       Customer__GrpcUrl: http://prod-apis-01:10002
-      Location__ApiKey: ${PRODUCTION_UNITYHUBIO_LOCATION_APIKEY}
+      Location__ApiKey: ${PRODUCTION_SKEDULAR_LOCATION_APIKEY}
       Location__GrpcUrl: http://prod-apis-01:10602
-      Notification__ApiKey: ${PRODUCTION_UNITYHUBIO_NOTIFICATION_APIKEY}
+      Notification__ApiKey: ${PRODUCTION_SKEDULAR_NOTIFICATION_APIKEY}
       Notification__GrpcUrl: http://prod-apis-01:10402
-      Organization__ApiKey: ${PRODUCTION_UNITYHUBIO_ORGANIZATION_APIKEY}
+      Organization__ApiKey: ${PRODUCTION_SKEDULAR_ORGANIZATION_APIKEY}
       Organization__GrpcUrl: http://prod-apis-01:10202
-      Payment__ApiKey: ${PRODUCTION_UNITYHUBIO_PAYMENT_APIKEY}
+      Payment__ApiKey: ${PRODUCTION_SKEDULAR_PAYMENT_APIKEY}
       Payment__GrpcUrl: http://prod-apis-01:10102
-      Slack__ApiKey: ${PRODUCTION_UNITYHUBIO_SLACK_APIKEY}
+      Slack__ApiKey: ${PRODUCTION_SKEDULAR_SLACK_APIKEY}
       Slack__GrpcUrl: http://prod-apis-01:10702
-      Team__ApiKey: ${PRODUCTION_UNITYHUBIO_TEAM_APIKEY}
+      Team__ApiKey: ${PRODUCTION_SKEDULAR_TEAM_APIKEY}
       Team__GrpcUrl: http://prod-apis-01:10502
-      Stripe__PublishableKey: ${PRODUCTION_UNITYHUBIO_STRIPE_PUBLISH_KEY}
-      Stripe__SecretKey: ${PRODUCTION_UNITYHUBIO_STRIPE_SECRET_KEY}
+      Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
+      Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
-      Slack__ClientSecret: ${PRODUCTION_UNITYHUBIO_SLACK_CLIENT_SECRET}
-      Slack__SigningSecret: ${PRODUCTION_UNITYHUBIO_SLACK_SIGNING_SECRET}
+      Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
+      Slack__SigningSecret: ${PRODUCTION_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapi.skedular.app/slack/api/v1/callback
       Slack__SuccessInstallUrl: https://getskedular.com/slack-success-install
-      AzureEntra__ClientId: ${PRODUCTION_UNITYHUBIO_AZURE_ENTRA_CLIENT_ID}
-      AzureEntra__ClientSecret: ${PRODUCTION_UNITYHUBIO_AZURE_ENTRA_CLIENT_SECRET}
+      AzureEntra__ClientId: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
+      AzureEntra__ClientSecret: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       AWS_REGION: us-east-1
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
@@ -619,4 +619,4 @@ services:
       timeout: 5s
       retries: 100
     networks:
-      - unityhubio_network
+      - skedular_network
