@@ -8,14 +8,14 @@ variable "stripe_api_key" {
   default = ""
 }
 
-variable "gcp_skedular_web_credentials_client_id" {
+variable "gcp_web_credentials_client_id" {
   type        = string
-  description = "GCP Skedular web credentials client Id"
+  description = "GCP web credentials client Id"
   default     = ""
 }
 
-variable "gcp_skedular_web_credentials_client_secret" {
+variable "gcp_web_credentials_client_secret" {
   type        = string
-  description = "GCP Skedular web credentials client Secret"
+  description = "GCP web credentials client Secret"
   default     = ""
 }

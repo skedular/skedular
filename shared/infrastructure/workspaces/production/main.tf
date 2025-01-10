@@ -13,8 +13,8 @@ module "common_resources" {
     stripe     = stripe
   }
 
-  environment                                = local.environment
-  gcp_skedular_web_credentials_client_id     = var.gcp_skedular_web_credentials_client_id
-  gcp_skedular_web_credentials_client_secret = var.gcp_skedular_web_credentials_client_secret
-  log_retention                              = local.log_retention
+  environment                       = local.environment
+  gcp_web_credentials_client_id     = var.gcp_web_credentials_client_id
+  gcp_web_credentials_client_secret = var.gcp_web_credentials_client_secret
+  log_retention                     = local.log_retention
 }

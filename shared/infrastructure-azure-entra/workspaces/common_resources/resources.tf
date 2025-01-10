@@ -29,12 +29,12 @@ resource "azuread_application" "azure_application" {
   display_name          = var.environment == "production" ? "UnityHub" : "UnityHub-${var.environment}"
   description           = var.environment == "production" ? "UnityHub" : "UnityHub-${var.environment}"
   sign_in_audience      = "AzureADMultipleOrgs"
-  privacy_statement_url = "https://unityhub.io/privacy-policy"
-  terms_of_service_url  = "https://unityhub.io/terms-of-service"
+  privacy_statement_url = "https://getskedular.com/privacy-policy"
+  terms_of_service_url  = "https://getskedular.com/terms-of-service"
   logo_image            = filebase64("../../../../assets/logos/logo.png")
 
   web {
-    homepage_url = "https://unityhub.io"
+    homepage_url = "https://getskedular.com"
   }
 
   api {

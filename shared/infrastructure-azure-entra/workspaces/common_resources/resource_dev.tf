@@ -8,12 +8,12 @@ resource "azuread_application" "azure_application_dev" {
   display_name          = local.azure_app_display_name_dev
   description           = local.azure_app_description_dev
   sign_in_audience      = "AzureADMultipleOrgs"
-  privacy_statement_url = "https://unityhub.io/privacy-policy"
-  terms_of_service_url  = "https://unityhub.io/terms-of-service"
+  privacy_statement_url = "https://getskedular.com/privacy-policy"
+  terms_of_service_url  = "https://getskedular.com/terms-of-service"
   logo_image            = filebase64("../../../../assets/logos/logo.png")
 
   web {
-    homepage_url = "https://unityhub.io"
+    homepage_url = "https://getskedular.com"
   }
 
   api {

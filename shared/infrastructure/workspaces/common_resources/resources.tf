@@ -52,15 +52,15 @@ module "cognito_user_pool" {
     aws = aws
   }
 
-  tags                                       = local.tags
-  name                                       = module.common.cognito_user_pool_name
-  domain                                     = module.common.cognito_user_pool_domain
-  simple_email_service_arn                   = module.simple_email_service.arn
-  from_email_address                         = module.common.from_email_address
-  reply_to_email_address                     = module.common.reply_to_email_address
-  gcp_skedular_web_credentials_client_id     = var.gcp_skedular_web_credentials_client_id
-  gcp_skedular_web_credentials_client_secret = var.gcp_skedular_web_credentials_client_secret
-  google_provider_name                       = module.common.aws_cognito_identity_provider_google_provider_name
+  tags                              = local.tags
+  name                              = module.common.cognito_user_pool_name
+  domain                            = module.common.cognito_user_pool_domain
+  simple_email_service_arn          = module.simple_email_service.arn
+  from_email_address                = module.common.from_email_address
+  reply_to_email_address            = module.common.reply_to_email_address
+  gcp_web_credentials_client_id     = var.gcp_web_credentials_client_id
+  gcp_web_credentials_client_secret = var.gcp_web_credentials_client_secret
+  google_provider_name              = module.common.aws_cognito_identity_provider_google_provider_name
 }
 
 resource "stripe_product" "pay_as_you_go_v1" {
