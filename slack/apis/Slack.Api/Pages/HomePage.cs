@@ -733,7 +733,9 @@ public class HomePage(
             Last = -1,
             Where = new BookingWhereInput
             {
-                FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = true
+                FromGTE = from.ToTimestamp(),
+                FromLTE = until.ToTimestamp(),
+                IncludeMineOnly = true
             }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
@@ -749,7 +751,7 @@ public class HomePage(
 
     private static ICollection<Block> GetTitle() =>
     [
-        new SectionBlock { Text = "*Welcome to UnityHub*".ToMarkdown() }
+        new SectionBlock { Text = "*Welcome to Skedular*".ToMarkdown() }
     ];
 
     private ICollection<Block> GetToolbar(PageContext pageContext)

@@ -34,8 +34,8 @@ const OrganizationTermsOfUse = ({ rootDataRelay, name, required }: Props) => {
           value: true,
         }}
       />
-      <Link component={NextLink} href="https://unityhub.io/terms-of-service" target="_blank" rel="noopener noreferrer">
-        UnityHub Terms of Use.
+      <Link component={NextLink} href="https://getskedular.com/terms-of-service" target="_blank" rel="noopener noreferrer">
+        Skedular Terms of Use.
       </Link>
     </>
   );

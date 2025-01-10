@@ -1,6 +1,6 @@
 {
-  "name": "unityhub-web",
-  "description": "UnityHub Web",
+  "name": "skedular-web",
+  "description": "Skedular Web",
   "private": true,
   "engines": {
     "node": "^20"

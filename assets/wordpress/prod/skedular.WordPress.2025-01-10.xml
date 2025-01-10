@@ -16,7 +16,7 @@
 <!-- 7. WordPress will then import each of the posts, pages, comments, categories, etc. -->
 <!--    contained in this file into your site. -->
 
-	<!-- generator="WordPress/6.7.1" created="2025-01-10 02:54" -->
+	<!-- generator="WordPress/6.7.1" created="2025-01-10 10:50" -->
 <rss version="2.0"
 	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -27,13 +27,13 @@
 
 <channel>
 	<title>Skedular</title>
-	<link>https://unityhub.io</link>
+	<link>https://getskedular.com</link>
 	<description></description>
-	<pubDate>Fri, 10 Jan 2025 02:54:17 +0000</pubDate>
+	<pubDate>Fri, 10 Jan 2025 10:50:24 +0000</pubDate>
 	<language>en-US</language>
 	<wp:wxr_version>1.2</wp:wxr_version>
-	<wp:base_site_url>https://unityhub.io</wp:base_site_url>
-	<wp:base_blog_url>https://unityhub.io</wp:base_blog_url>
+	<wp:base_site_url>https://getskedular.com</wp:base_site_url>
+	<wp:base_blog_url>https://getskedular.com</wp:base_blog_url>
 
 		<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[morteza]]></wp:author_login><wp:author_email><![CDATA[morteza.alizadeh@gmail.com]]></wp:author_email><wp:author_display_name><![CDATA[morteza]]></wp:author_display_name><wp:author_first_name><![CDATA[]]></wp:author_first_name><wp:author_last_name><![CDATA[]]></wp:author_last_name></wp:author>
 
@@ -95,16 +95,16 @@
 	<generator>https://wordpress.org/?v=6.7.1</generator>
 
 <image>
-	<url>https://unityhub.io/wp-content/uploads/2025/01/skedular-icon-primary-150x150.png</url>
+	<url>https://getskedular.com/wp-content/uploads/2025/01/skedular-icon-primary-150x150.png</url>
 	<title>Skedular</title>
-	<link>https://unityhub.io</link>
+	<link>https://getskedular.com</link>
 	<width>32</width>
 	<height>32</height>
 </image> 
 
 		<item>
 		<title><![CDATA[web]]></title>
-		<link>https://unityhub.io/web/</link>
+		<link>https://getskedular.com/web/</link>
 		<pubDate>Wed, 03 Jul 2024 08:06:57 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://public.unityhub.io/wp-content/uploads/2024/07/web.png</guid>
@@ -125,7 +125,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2024/07/web.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2024/07/web.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/web.png]]></wp:meta_value>
@@ -137,7 +137,7 @@
 							</item>
 					<item>
 		<title><![CDATA[slack-mobile]]></title>
-		<link>https://unityhub.io/slack-mobile/</link>
+		<link>https://getskedular.com/slack-mobile/</link>
 		<pubDate>Wed, 03 Jul 2024 08:06:58 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://public.unityhub.io/wp-content/uploads/2024/07/slack-mobile.jpg</guid>
@@ -158,7 +158,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2024/07/slack-mobile.jpg]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2024/07/slack-mobile.jpg]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/slack-mobile.jpg]]></wp:meta_value>
@@ -170,7 +170,7 @@
 							</item>
 					<item>
 		<title><![CDATA[slack-desktop]]></title>
-		<link>https://unityhub.io/slack-desktop/</link>
+		<link>https://getskedular.com/slack-desktop/</link>
 		<pubDate>Wed, 03 Jul 2024 08:07:00 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://public.unityhub.io/wp-content/uploads/2024/07/slack-desktop.png</guid>
@@ -191,7 +191,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2024/07/slack-desktop.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2024/07/slack-desktop.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/slack-desktop.png]]></wp:meta_value>
@@ -203,7 +203,7 @@
 							</item>
 					<item>
 		<title><![CDATA[web]]></title>
-		<link>https://unityhub.io/web-2/</link>
+		<link>https://getskedular.com/web-2/</link>
 		<pubDate>Wed, 03 Jul 2024 08:06:51 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/wp-content/uploads/2024/07/web-1.png</guid>
@@ -224,7 +224,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2024/07/web-1.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2024/07/web-1.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/web-1.png]]></wp:meta_value>
@@ -236,7 +236,7 @@
 							</item>
 					<item>
 		<title><![CDATA[slack-mobile]]></title>
-		<link>https://unityhub.io/slack-mobile-2/</link>
+		<link>https://getskedular.com/slack-mobile-2/</link>
 		<pubDate>Wed, 03 Jul 2024 08:06:52 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/wp-content/uploads/2024/07/slack-mobile-1.jpg</guid>
@@ -257,7 +257,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2024/07/slack-mobile-1.jpg]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2024/07/slack-mobile-1.jpg]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/slack-mobile-1.jpg]]></wp:meta_value>
@@ -269,7 +269,7 @@
 							</item>
 					<item>
 		<title><![CDATA[LogoWithText]]></title>
-		<link>https://unityhub.io/logowithtext/</link>
+		<link>https://getskedular.com/logowithtext/</link>
 		<pubDate>Wed, 03 Jul 2024 08:12:15 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://public.unityhub.io/wp-content/uploads/2024/07/LogoWithText.png</guid>
@@ -290,7 +290,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2024/07/LogoWithText.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2024/07/LogoWithText.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/LogoWithText.png]]></wp:meta_value>
@@ -302,7 +302,7 @@
 							</item>
 					<item>
 		<title><![CDATA[cropped-logo.png]]></title>
-		<link>https://unityhub.io/?attachment_id=149</link>
+		<link>https://getskedular.com/?attachment_id=149</link>
 		<pubDate>Wed, 03 Jul 2024 09:43:07 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/wp-content/uploads/2024/07/cropped-logo.png</guid>
@@ -323,7 +323,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2024/07/cropped-logo.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2024/07/cropped-logo.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/cropped-logo.png]]></wp:meta_value>
@@ -339,7 +339,7 @@
 							</item>
 					<item>
 		<title><![CDATA[slack-desktop]]></title>
-		<link>https://unityhub.io/slack-desktop-2/</link>
+		<link>https://getskedular.com/slack-desktop-2/</link>
 		<pubDate>Wed, 03 Jul 2024 08:06:54 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/wp-content/uploads/2024/07/slack-desktop-1.png</guid>
@@ -360,7 +360,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2024/07/slack-desktop-1.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2024/07/slack-desktop-1.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/slack-desktop-1.png]]></wp:meta_value>
@@ -372,7 +372,7 @@
 							</item>
 					<item>
 		<title><![CDATA[LogoWithText]]></title>
-		<link>https://unityhub.io/logowithtext-2/</link>
+		<link>https://getskedular.com/logowithtext-2/</link>
 		<pubDate>Wed, 03 Jul 2024 08:12:19 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/wp-content/uploads/2024/07/LogoWithText-1.png</guid>
@@ -393,7 +393,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2024/07/LogoWithText-1.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2024/07/LogoWithText-1.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/LogoWithText-1.png]]></wp:meta_value>
@@ -405,7 +405,7 @@
 							</item>
 					<item>
 		<title><![CDATA[logo]]></title>
-		<link>https://unityhub.io/logo-2/</link>
+		<link>https://getskedular.com/logo-2/</link>
 		<pubDate>Wed, 03 Jul 2024 09:42:05 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/wp-content/uploads/2024/07/cropped-logo-1.png</guid>
@@ -426,7 +426,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2024/07/cropped-logo-1.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2024/07/cropped-logo-1.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/cropped-logo-1.png]]></wp:meta_value>
@@ -458,7 +458,7 @@
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://unityhub.io/199/</link>
+		<link>https://getskedular.com/199/</link>
 		<pubDate>Mon, 08 Jul 2024 02:34:27 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/</guid>
@@ -519,7 +519,7 @@
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://unityhub.io/200/</link>
+		<link>https://getskedular.com/200/</link>
 		<pubDate>Mon, 08 Jul 2024 02:34:27 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/</guid>
@@ -584,7 +584,7 @@
 							</item>
 					<item>
 		<title><![CDATA[Sign In]]></title>
-		<link>https://unityhub.io/sign-in/</link>
+		<link>https://getskedular.com/sign-in/</link>
 		<pubDate>Mon, 08 Jul 2024 02:34:27 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/sign-in/</guid>
@@ -649,7 +649,7 @@
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://unityhub.io/203/</link>
+		<link>https://getskedular.com/203/</link>
 		<pubDate>Mon, 08 Jul 2024 02:34:27 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/</guid>
@@ -710,7 +710,7 @@
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://unityhub.io/204/</link>
+		<link>https://getskedular.com/204/</link>
 		<pubDate>Mon, 08 Jul 2024 02:34:27 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/</guid>
@@ -771,7 +771,7 @@
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://unityhub.io/205/</link>
+		<link>https://getskedular.com/205/</link>
 		<pubDate>Mon, 08 Jul 2024 02:34:27 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/</guid>
@@ -832,7 +832,7 @@
 							</item>
 					<item>
 		<title><![CDATA[Terms & Conditions]]></title>
-		<link>https://unityhub.io/terms-conditions/</link>
+		<link>https://getskedular.com/terms-conditions/</link>
 		<pubDate>Mon, 08 Jul 2024 02:34:27 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/terms-conditions/</guid>
@@ -893,7 +893,7 @@
 							</item>
 					<item>
 		<title><![CDATA[skedular-logo-primary]]></title>
-		<link>https://unityhub.io/skedular-logo-primary/</link>
+		<link>https://getskedular.com/skedular-logo-primary/</link>
 		<pubDate>Thu, 09 Jan 2025 23:54:40 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/wp-content/uploads/2025/01/skedular-logo-primary.png</guid>
@@ -914,7 +914,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2025/01/skedular-logo-primary.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2025/01/skedular-logo-primary.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2025/01/skedular-logo-primary.png]]></wp:meta_value>
@@ -926,7 +926,7 @@
 							</item>
 					<item>
 		<title><![CDATA[skedular-icon-primary]]></title>
-		<link>https://unityhub.io/skedular-icon-primary/</link>
+		<link>https://getskedular.com/skedular-icon-primary/</link>
 		<pubDate>Thu, 09 Jan 2025 23:54:41 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/wp-content/uploads/2025/01/skedular-icon-primary.png</guid>
@@ -947,7 +947,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2025/01/skedular-icon-primary.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2025/01/skedular-icon-primary.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2025/01/skedular-icon-primary.png]]></wp:meta_value>
@@ -959,7 +959,7 @@
 							</item>
 					<item>
 		<title><![CDATA[cropped-skedular-logo-primary.png]]></title>
-		<link>https://unityhub.io/skedular-logo-primary/cropped-skedular-logo-primary-png/</link>
+		<link>https://getskedular.com/skedular-logo-primary/cropped-skedular-logo-primary-png/</link>
 		<pubDate>Thu, 09 Jan 2025 23:55:18 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/wp-content/uploads/2025/01/cropped-skedular-logo-primary.png</guid>
@@ -980,7 +980,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://unityhub.io/wp-content/uploads/2025/01/cropped-skedular-logo-primary.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://getskedular.com/wp-content/uploads/2025/01/cropped-skedular-logo-primary.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2025/01/cropped-skedular-logo-primary.png]]></wp:meta_value>
@@ -996,7 +996,7 @@
 							</item>
 					<item>
 		<title><![CDATA[Hello world!]]></title>
-		<link>https://unityhub.io/hello-world/</link>
+		<link>https://getskedular.com/hello-world/</link>
 		<pubDate>Wed, 03 Jul 2024 08:00:50 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://public.unityhub.io/?p=1</guid>
@@ -1023,7 +1023,11 @@
 						<wp:postmeta>
 		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
 		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
-";s:2:"js";s:0:"";s:18:"current_block_list";a:8:{i:0;s:14:"core/paragraph";i:1;s:11:"core/search";i:2;s:10:"core/group";i:3;s:12:"core/heading";i:4;s:17:"core/latest-posts";i:5;s:20:"core/latest-comments";i:6;s:13:"core/archives";i:7;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736466922";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+";s:2:"js";s:0:"";s:18:"current_block_list";a:8:{i:0;s:14:"core/paragraph";i:1;s:11:"core/search";i:2;s:10:"core/group";i:3;s:12:"core/heading";i:4;s:17:"core/latest-posts";i:5;s:20:"core/latest-comments";i:6;s:13:"core/archives";i:7;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736477553";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
+		<wp:meta_value><![CDATA[uag-css-1.css]]></wp:meta_value>
 		</wp:postmeta>
 							<wp:comment>
 			<wp:comment_id>1</wp:comment_id>
@@ -1044,7 +1048,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 					</item>
 					<item>
 		<title><![CDATA[Privacy Policy]]></title>
-		<link>https://unityhub.io/privacy-policy/</link>
+		<link>https://getskedular.com/privacy-policy/</link>
 		<pubDate>Mon, 01 Jul 2024 09:48:05 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?page_id=3</guid>
@@ -1420,7 +1424,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 							<wp:postmeta>
 		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
 		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
-";s:2:"js";s:0:"";s:18:"current_block_list";a:10:{i:0;s:12:"core/heading";i:1;s:14:"core/paragraph";i:2;s:9:"core/list";i:3;s:14:"core/list-item";i:4;s:11:"core/search";i:5;s:10:"core/group";i:6;s:17:"core/latest-posts";i:7;s:20:"core/latest-comments";i:8;s:13:"core/archives";i:9;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736476199";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+";s:2:"js";s:0:"";s:18:"current_block_list";a:10:{i:0;s:12:"core/heading";i:1;s:14:"core/paragraph";i:2;s:9:"core/list";i:3;s:14:"core/list-item";i:4;s:11:"core/search";i:5;s:10:"core/group";i:6;s:17:"core/latest-posts";i:7;s:20:"core/latest-comments";i:8;s:13:"core/archives";i:9;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736502956";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
 		</wp:postmeta>
 							<wp:postmeta>
 		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
@@ -1429,7 +1433,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 							</item>
 					<item>
 		<title><![CDATA[Navigation]]></title>
-		<link>https://unityhub.io/navigation/</link>
+		<link>https://getskedular.com/navigation/</link>
 		<pubDate>Wed, 03 Jul 2024 08:00:51 +0000</pubDate>
 		<dc:creator><![CDATA[]]></dc:creator>
 		<guid isPermaLink="false">https://public.unityhub.io/2024/07/03/navigation/</guid>
@@ -1453,7 +1457,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 														</item>
 					<item>
 		<title><![CDATA[Home]]></title>
-		<link>https://unityhub.io/</link>
+		<link>https://getskedular.com/</link>
 		<pubDate>Mon, 01 Jul 2024 10:02:38 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?page_id=7</guid>
@@ -1477,7 +1481,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"className":"is-style-fill"} -->
-<div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button" href="https://app.unityhub.io">Try for free</a></div>
+<div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button" href="https://skedular.app">Try for free</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div><figure class="wp-block-media-text__media"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/hero-img.svg" alt="" class="wp-image-118 size-full"/></figure></div>
@@ -1638,8 +1642,8 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 		<wp:post_id>7</wp:post_id>
 		<wp:post_date><![CDATA[2024-07-01 10:02:38]]></wp:post_date>
 		<wp:post_date_gmt><![CDATA[2024-07-01 10:02:38]]></wp:post_date_gmt>
-		<wp:post_modified><![CDATA[2025-01-10 14:52:33]]></wp:post_modified>
-		<wp:post_modified_gmt><![CDATA[2025-01-10 02:52:33]]></wp:post_modified_gmt>
+		<wp:post_modified><![CDATA[2025-01-10 21:46:50]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2025-01-10 09:46:50]]></wp:post_modified_gmt>
 		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
 		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
 		<wp:post_name><![CDATA[home]]></wp:post_name>
@@ -1772,7 +1776,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 							<wp:postmeta>
 		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
 		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
-";s:2:"js";s:0:"";s:18:"current_block_list";a:16:{i:0;s:10:"core/cover";i:1;s:10:"core/group";i:2;s:15:"core/media-text";i:3;s:12:"core/heading";i:5;s:9:"core/html";i:6;s:12:"core/buttons";i:7;s:11:"core/button";i:9;s:12:"core/columns";i:10;s:11:"core/column";i:11;s:10:"core/image";i:12;s:14:"core/paragraph";i:13;s:11:"core/search";i:14;s:17:"core/latest-posts";i:15;s:20:"core/latest-comments";i:16;s:13:"core/archives";i:17;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:0:"";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+";s:2:"js";s:0:"";s:18:"current_block_list";a:16:{i:0;s:10:"core/cover";i:1;s:10:"core/group";i:2;s:15:"core/media-text";i:3;s:12:"core/heading";i:5;s:9:"core/html";i:6;s:12:"core/buttons";i:7;s:11:"core/button";i:9;s:12:"core/columns";i:10;s:11:"core/column";i:11;s:10:"core/image";i:12;s:14:"core/paragraph";i:13;s:11:"core/search";i:14;s:17:"core/latest-posts";i:15;s:20:"core/latest-comments";i:16;s:13:"core/archives";i:17;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736506062";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
 		</wp:postmeta>
 							<wp:postmeta>
 		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
@@ -1781,7 +1785,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 							</item>
 					<item>
 		<title><![CDATA[Custom Styles]]></title>
-		<link>https://unityhub.io/wp-global-styles-astra/</link>
+		<link>https://getskedular.com/wp-global-styles-astra/</link>
 		<pubDate>Mon, 01 Jul 2024 22:59:38 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/wp-global-styles-astra/</guid>
@@ -1806,7 +1810,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 						</item>
 					<item>
 		<title><![CDATA[Terms of Service]]></title>
-		<link>https://unityhub.io/terms-of-service/</link>
+		<link>https://getskedular.com/terms-of-service/</link>
 		<pubDate>Mon, 01 Jul 2024 23:21:57 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?page_id=36</guid>
@@ -2353,10 +2357,19 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 		<wp:post_type><![CDATA[page]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-														</item>
+														<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
+";s:2:"js";s:0:"";s:18:"current_block_list";a:10:{i:0;s:12:"core/heading";i:1;s:14:"core/paragraph";i:2;s:9:"core/list";i:3;s:14:"core/list-item";i:4;s:11:"core/search";i:5;s:10:"core/group";i:6;s:17:"core/latest-posts";i:7;s:20:"core/latest-comments";i:8;s:13:"core/archives";i:9;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736502925";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
+		<wp:meta_value><![CDATA[uag-css-36.css]]></wp:meta_value>
+		</wp:postmeta>
+							</item>
 					<item>
 		<title><![CDATA[Pricing]]></title>
-		<link>https://unityhub.io/pricing/</link>
+		<link>https://getskedular.com/pricing/</link>
 		<pubDate>Tue, 02 Jul 2024 00:30:25 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?page_id=49</guid>
@@ -2393,7 +2406,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 							</item>
 					<item>
 		<title><![CDATA[Navigation]]></title>
-		<link>https://unityhub.io/navigation-2/</link>
+		<link>https://getskedular.com/navigation-2/</link>
 		<pubDate>Mon, 01 Jul 2024 09:48:06 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/01/navigation/</guid>
@@ -2417,7 +2430,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 														</item>
 					<item>
 		<title><![CDATA[Custom Styles]]></title>
-		<link>https://unityhub.io/wp-global-styles-twentytwentyfour/</link>
+		<link>https://getskedular.com/wp-global-styles-twentytwentyfour/</link>
 		<pubDate>Tue, 02 Jul 2024 03:55:26 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/wp-global-styles-twentytwentyfour/</guid>
@@ -2442,7 +2455,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 						</item>
 					<item>
 		<title><![CDATA[Hello world!]]></title>
-		<link>https://unityhub.io/hello-world-2/</link>
+		<link>https://getskedular.com/hello-world-2/</link>
 		<pubDate>Wed, 03 Jul 2024 08:00:49 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?p=1</guid>
@@ -2468,12 +2481,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 										<category domain="category" nicename="uncategorized"><![CDATA[Uncategorized]]></category>
 						<wp:postmeta>
 		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
-		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
-";s:2:"js";s:0:"";s:18:"current_block_list";a:8:{i:0;s:14:"core/paragraph";i:1;s:11:"core/search";i:2;s:10:"core/group";i:3;s:12:"core/heading";i:4;s:17:"core/latest-posts";i:5;s:20:"core/latest-comments";i:6;s:13:"core/archives";i:7;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736466922";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
-		<wp:meta_value><![CDATA[uag-css-152.css]]></wp:meta_value>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:0:"";s:2:"js";s:0:"";s:18:"current_block_list";a:8:{i:0;s:14:"core/paragraph";i:1;s:11:"core/search";i:2;s:10:"core/group";i:3;s:12:"core/heading";i:4;s:17:"core/latest-posts";i:5;s:20:"core/latest-comments";i:6;s:13:"core/archives";i:7;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736477553";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
 		</wp:postmeta>
 							<wp:comment>
 			<wp:comment_id>3</wp:comment_id>
@@ -2494,7 +2502,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/" rel="nofollow ugc
 					</item>
 					<item>
 		<title><![CDATA[Navigation]]></title>
-		<link>https://unityhub.io/navigation-3/</link>
+		<link>https://getskedular.com/navigation-3/</link>
 		<pubDate>Wed, 03 Jul 2024 08:00:50 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/03/navigation/</guid>
@@ -2518,7 +2526,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/" rel="nofollow ugc
 														</item>
 					<item>
 		<title><![CDATA[Sign Up]]></title>
-		<link>https://unityhub.io/sign-up/</link>
+		<link>https://getskedular.com/sign-up/</link>
 		<pubDate>Mon, 08 Jul 2024 02:34:27 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/sign-up/</guid>
@@ -2583,7 +2591,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/" rel="nofollow ugc
 							</item>
 					<item>
 		<title><![CDATA[Slack Sucess Install]]></title>
-		<link>https://unityhub.io/slack-success-install/</link>
+		<link>https://getskedular.com/slack-success-install/</link>
 		<pubDate>Wed, 03 Jul 2024 09:16:01 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/?page_id=148</guid>
@@ -2622,7 +2630,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/" rel="nofollow ugc
 							</item>
 					<item>
 		<title><![CDATA[About us]]></title>
-		<link>https://unityhub.io/about-us/</link>
+		<link>https://getskedular.com/about-us/</link>
 		<pubDate>Thu, 15 Aug 2024 05:35:53 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/?page_id=213</guid>
@@ -2683,7 +2691,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/" rel="nofollow ugc
 .uagb-ifb-content>svg *{-webkit-transition:all 0.2s;-o-transition:all 0.2s;transition:all 0.2s}.uagb-ifb-content>svg,.uagb-ifb-content{display:inline-block}.uagb-ifb-content>svg{vertical-align:middle;width:inherit;height:inherit;font-style:initial}.uagb-ifb-content .uagb-ifb-icon-wrap svg{box-sizing:content-box;width:inherit;height:inherit}.uagb-ifb-button-wrapper:empty{display:none}div.uagb-ifb-button-wrapper a.uagb-infobox-cta-link,div.uagb-ifb-cta a.uagb-infobox-cta-link,.entry .entry-content a.uagb-infobox-cta-link,a.uagb-infobox-link-wrap,.entry .entry-content a.uagb-infobox-link-wrap{text-decoration:none;align-items:center}.uagb-infobox-icon-left-title.uagb-infobox-image-valign-middle .uagb-ifb-title-wrap,.uagb-infobox-icon-right-title.uagb-infobox-image-valign-middle .uagb-ifb-title-wrap,.uagb-infobox-image-valign-middle .uagb-ifb-icon-wrap,.uagb-infobox-image-valign-middle .uagb-ifb-image-content,.uagb-infobox-icon-left.uagb-infobox-image-valign-middle .uagb-ifb-content,.uagb-infobox-icon-right.uagb-infobox-image-valign-middle .uagb-ifb-content{-ms-flex-item-align:center;-webkit-align-self:center;align-self:center}.uagb-infobox-icon-left-title.uagb-infobox-image-valign-top .uagb-ifb-title-wrap,.uagb-infobox-icon-right-title.uagb-infobox-image-valign-top .uagb-ifb-title-wrap,.uagb-infobox-image-valign-top .uagb-ifb-icon-wrap,.uagb-infobox-image-valign-top .uagb-ifb-image-content,.uagb-infobox-icon-left.uagb-infobox-image-valign-top .uagb-ifb-content,.uagb-infobox-icon-right.uagb-infobox-image-valign-top .uagb-ifb-content{-webkit-align-self:self-start;align-self:self-start}.uagb-infobox-left{justify-content:flex-start;text-align:left;-webkit-box-pack:start;-ms-flex-pack:start;-webkit-justify-content:flex-start;-moz-box-pack:start}.uagb-infobox-center{justify-content:center;text-align:center;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;-moz-box-pack:center}.uagb-infobox-right{justify-content:flex-end;text-align:right;-webkit-box-pack:end;-ms-flex-pack:end;-webkit-justify-content:flex-end;-moz-box-pack:end}.uagb-infobox-icon-above-title.uagb-infobox__content-wrap,.uagb-infobox-icon-below-title.uagb-infobox__content-wrap{display:block;width:100%}.uagb-infobox-icon-left-title .uagb-ifb-content>svg,.uagb-infobox-icon-left .uagb-ifb-content>svg{margin-right:10px}.uagb-infobox-icon-right-title .uagb-ifb-content>svg,.uagb-infobox-icon-right .uagb-ifb-content>svg{margin-left:10px}.uagb-infobox-icon-left.uagb-infobox__content-wrap,.uagb-infobox-icon-right.uagb-infobox__content-wrap,.uagb-infobox-icon-left-title .uagb-ifb-left-title-image,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image{display:-webkit-box;display:-ms-flexbox;display:-webkit-flex;display:-moz-box;display:flex;-js-display:flex}.uagb-infobox-icon-left-title .uagb-ifb-left-title-image .uagb-ifb-image-content,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image .uagb-ifb-image-content,.uagb-infobox-icon-left .uagb-ifb-image-content,.uagb-infobox-icon-right .uagb-ifb-image-content{flex-shrink:0;line-height:0}.uagb-infobox-icon-left-title .uagb-ifb-left-title-image .uagb-ifb-title-wrap,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image .uagb-ifb-title-wrap,.uagb-infobox-icon-left .uagb-ifb-content,.uagb-infobox-icon-right .uagb-ifb-content{flex-grow:1}.uagb-infobox-icon-right.uagb-infobox__content-wrap,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image{-webkit-box-pack:end;-ms-flex-pack:end;-webkit-justify-content:flex-end;-moz-box-pack:end;justify-content:flex-end}.uagb-ifb-content img{position:relative;display:inline-block;line-height:0;width:auto;height:auto !important;max-width:100%;border-radius:inherit;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;-webkit-border-radius:inherit}.uagb-infobox-module-link{position:absolute;top:0;right:0;bottom:0;left:0;z-index:4;width:100%;height:100%}.uagb-edit-mode .uagb-infobox-module-link{z-index:2}.uagb-infobox-link-icon-after{margin-right:0;margin-left:5px}.uagb-infobox-link-icon-before{margin-right:5px;margin-left:0}.uagb-infobox-link-icon{-webkit-transition:all 200ms linear;transition:all 200ms linear}.uagb-infobox__content-wrap{box-sizing:border-box;position:relative;width:100%;word-break:break-word;z-index:1}.uagb-ifb-separator{display:inline-block;margin:0;border-top-color:#333;border-top-style:solid;border-top-width:2px;line-height:0}.uagb-ifb-button-wrapper{line-height:1}.uagb-ifb-button-wrapper.uagb-ifb-button-type-text .uagb-infobox-cta-link.wp-block-button__link{background-color:unset;border:none}.uagb-ifb-button-wrapper.uagb-ifb-button-type-text .uagb-infobox-cta-link.wp-block-button__link:hover{background-color:unset;border-color:unset}.uagb-ifb-button-wrapper .uagb-infobox-cta-link{cursor:pointer}.uagb-ifb-button-wrapper .wp-block-button__link svg,.uagb-ifb-button-wrapper .ast-outline-button svg{fill:currentColor}.uagb-infobox__content-wrap a{-webkit-box-shadow:none;box-shadow:none;text-decoration:none}.uagb-ifb-title-wrap{width:100%}.uagb-ifb-title{margin-block-start:0}.uagb-ifb-title-wrap .uagb-ifb-title-prefix{display:block;padding:0;margin:0}.uagb-infobox__content-wrap.uagb-infobox__content-wrap{position:relative}.uagb-ifb-content{width:100%}.uagb-infobox__content-wrap.uagb-infobox,.uagb-ifb-content,.uagb-ifb-title-wrap,.uagb-ifb-title-prefix *,svg.dashicon.dashicons-upload{z-index:1}a.uagb-infobox-link-wrap{color:inherit}.uagb-ifb-content p:empty{display:none}.uagb-infobox__content-wrap .uagb-ifb-content img{display:inline-block;max-width:100%}.uagb-infobox__content-wrap .uagb-ifb-content svg{display:inline-block}.uagb-infobox__content-wrap .uagb-ifb-icon-wrap,.uagb-infobox-icon-left .uagb-ifb-image-content,.uagb-infobox-icon-right .uagb-ifb-image-content{box-sizing:content-box}.uagb-infobox-cta-link>svg{vertical-align:middle;width:15px;height:15px;font-size:15px}.uagb-infobox-cta-link{display:inline-flex}.block-editor-page #wpwrap .uagb-infobox-cta-link svg,.uagb-infobox-cta-link svg{font-style:normal}.uagb-infobox-icon-left-title .uagb-ifb-icon-wrap,.uagb-infobox-icon-left .uagb-ifb-icon-wrap{margin-right:10px;line-height:0}.uagb-infobox-icon-right-title .uagb-ifb-icon-wrap,.uagb-infobox-icon-right .uagb-ifb-icon-wrap{margin-left:10px;line-height:0}html[dir="rtl"] .uagb-infobox-icon-left-title .uagb-ifb-icon-wrap,html[dir="rtl"] .uagb-infobox-icon-left .uagb-ifb-icon-wrap{margin-left:10px;line-height:0}html[dir="rtl"] .uagb-infobox-icon-right-title .uagb-ifb-icon-wrap,html[dir="rtl"] .uagb-infobox-icon-right .uagb-ifb-icon-wrap{margin-right:10px;line-height:0}html[dir="rtl"] .uagb-infobox-left{justify-content:flex-end;text-align:right;-webkit-box-pack:end;-ms-flex-pack:end;-webkit-justify-content:flex-end;-moz-box-pack:end}html[dir="rtl"] .uagb-infobox-right{justify-content:flex-start;text-align:left;-webkit-box-pack:start;-ms-flex-pack:start;-webkit-justify-content:flex-start;-moz-box-pack:start}.uagb-infobox-icon-left .uagb-ifb-left-right-wrap,.uagb-infobox-icon-right .uagb-ifb-left-right-wrap,.uagb-infobox-icon-left-title .uagb-ifb-left-title-image,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image{display:-webkit-box;display:-ms-flexbox;display:flex}.uagb-infobox-icon-right .uagb-ifb-left-right-wrap,.uagb-infobox-icon-right-title .uagb-ifb-right-title-image{-webkit-box-pack:end;-ms-flex-pack:end;-webkit-justify-content:flex-end;-moz-box-pack:end;justify-content:flex-end}a.uagb-infbox__link-to-all{position:absolute;top:0;left:0;z-index:3;width:100%;height:100%;box-shadow:none;text-decoration:none;-webkit-box-shadow:none}@media only screen and (max-width: 976px){.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-image-content{padding:0;margin-bottom:20px}.uagb-infobox-stacked-tablet.uagb-reverse-order-tablet.uagb-infobox__content-wrap{display:-webkit-inline-box;display:-ms-inline-flexbox;display:-webkit-inline-flex;display:-moz-inline-box;display:inline-flex;flex-direction:column-reverse;-js-display:inline-flex;-webkit-box-orient:vertical;-webkit-box-direction:reverse;-ms-flex-direction:column-reverse;-webkit-flex-direction:column-reverse;-moz-box-orient:vertical;-moz-box-direction:reverse}.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-content,.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-icon-wrap,.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-image-content{display:block;width:100%;text-align:center}.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-icon-wrap,.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap .uagb-ifb-image-content{margin-right:0;margin-left:0}.uagb-infobox-stacked-tablet.uagb-infobox__content-wrap{display:inline-block}.uagb-infobox-icon-left-title.uagb-infobox-stacked-tablet .uagb-ifb-image-content,.uagb-infobox-icon-left-title.uagb-infobox-stacked-tablet .uagb-ifb-icon-wrap,.uagb-infobox-icon-left.uagb-infobox-stacked-tablet .uagb-ifb-image-content,.uagb-infobox-icon-left.uagb-infobox-stacked-tablet .uagb-ifb-icon-wrap{margin-right:0}.uagb-infobox-icon-right-title.uagb-infobox-stacked-tablet .uagb-ifb-image-content,.uagb-infobox-icon-right-title.uagb-infobox-stacked-tablet .uagb-ifb-icon-wrap,.uagb-infobox-icon-right.uagb-infobox-stacked-tablet .uagb-ifb-image-content,.uagb-infobox-icon-right.uagb-infobox-stacked-tablet .uagb-ifb-icon-wrap{margin-left:0}.uagb-infobox-icon-left-title .uagb-ifb-separator{margin:10px 0}}@media screen and (max-width: 767px){.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap{display:inline-block}.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap .uagb-ifb-image-content,.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap .uagb-ifb-icon-wrap{padding:0;margin-bottom:20px;margin-right:0;margin-left:0}.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap.uagb-reverse-order-mobile{display:-webkit-inline-box;display:-ms-inline-flexbox;display:-webkit-inline-flex;display:-moz-inline-box;display:inline-flex;flex-direction:column-reverse;-js-display:inline-flex;-webkit-box-orient:vertical;-webkit-box-direction:reverse;-ms-flex-direction:column-reverse;-webkit-flex-direction:column-reverse;-moz-box-orient:vertical;-moz-box-direction:reverse}.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap .uagb-ifb-image-content,.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap .uagb-ifb-icon-wrap,.uagb-infobox-stacked-mobile.uagb-infobox__content-wrap .uagb-ifb-content{display:block;width:100%;text-align:center}.uagb-infobox-icon-left-title.uagb-infobox-stacked-mobile .uagb-ifb-image-content,.uagb-infobox-icon-left-title.uagb-infobox-stacked-mobile .uagb-ifb-icon-wrap,.uagb-infobox-icon-left.uagb-infobox-stacked-mobile .uagb-ifb-image-content,.uagb-infobox-icon-left.uagb-infobox-stacked-mobile .uagb-ifb-icon-wrap{margin-right:0}.uagb-infobox-icon-right-title.uagb-infobox-stacked-mobile .uagb-ifb-image-content,.uagb-infobox-icon-right-title.uagb-infobox-stacked-mobile .uagb-ifb-icon-wrap,.uagb-infobox-icon-right.uagb-infobox-stacked-mobile .uagb-ifb-image-content,.uagb-infobox-icon-right.uagb-infobox-stacked-mobile .uagb-ifb-icon-wrap{margin-left:0}.uagb-infobox-icon-left-title .uagb-ifb-separator{margin:10px 0}}.uagb-ifb-icon svg{width:inherit;height:inherit;vertical-align:middle}.uagb-ifb-button-icon{height:15px;width:15px;font-size:15px;vertical-align:middle}.uagb-ifb-button-icon svg{height:inherit;width:inherit;display:inline-block}.uagb-ifb-button-icon.uagb-ifb-align-icon-after{float:right}.uagb-ifb-cta-button{display:inline-block}.uagb-disable-link{pointer-events:none}@media only screen and (min-width: 977px){.uagb-infobox-margin-wrapper{display:flex}}.uagb-ifb-content .uagb-ifb-desc p:last-child{margin-bottom:0}
 .wp-block-uagb-advanced-heading h1,.wp-block-uagb-advanced-heading h2,.wp-block-uagb-advanced-heading h3,.wp-block-uagb-advanced-heading h4,.wp-block-uagb-advanced-heading h5,.wp-block-uagb-advanced-heading h6,.wp-block-uagb-advanced-heading p,.wp-block-uagb-advanced-heading div{word-break:break-word}.wp-block-uagb-advanced-heading .uagb-heading-text{margin:0}.wp-block-uagb-advanced-heading .uagb-desc-text{margin:0}.wp-block-uagb-advanced-heading .uagb-separator{font-size:0;border-top-style:solid;display:inline-block;margin:0 0 10px 0}.wp-block-uagb-advanced-heading .uagb-highlight{color:#f78a0c;border:0;transition:all 0.3s ease}.uag-highlight-toolbar{border-left:0;border-top:0;border-bottom:0;border-radius:0;border-right-color:#1e1e1e}.uag-highlight-toolbar .components-button{border-radius:0;outline:none}.uag-highlight-toolbar .components-button.is-primary{color:#fff}
 .wp-block-uagb-container.uagb-block-ahe984ga .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-ahe984ga .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-ahe984ga .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-ahe984ga .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-ahe984ga .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-ahe984ga{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-ahe984ga > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: flex-start;justify-content: center;flex-wrap: nowrap;row-gap: 48px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-ahe984ga{box-shadow: 0px 0px   #00000070 ;padding-top: 112px;padding-bottom: 112px;padding-left: 40px;padding-right: 40px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;background-color: var(--ast-global-color-5);;row-gap: 48px;column-gap: 0px;}.uagb-block-lpgtjmms .uagb-ifb-icon{width: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-ifb-icon > span{font-size: 30px;width: 30px;line-height: 30px;color: #333;}.uagb-block-lpgtjmms .uagb-ifb-icon svg{fill: #333;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-icon-wrap svg{width: 30px;height: 30px;line-height: 30px;font-size: 30px;color: #333;fill: #333;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-icon-wrap svg{line-height: 30px;font-size: 30px;color: #333;fill: #333;}.uagb-block-lpgtjmms .uagb-iconbox-icon-wrap{margin: auto;display: inline-flex;align-items: center;justify-content: center;box-sizing: content-box;width: 30px;height: 30px;line-height: 30px;padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-icon-wrap > svg{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content .uagb-ifb-icon-wrap > svg{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-left-title-image svg{width: 30px;line-height: 30px;font-size: 30px;color: #333;fill: #333;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-right-title-image svg{width: 30px;line-height: 30px;font-size: 30px;color: #333;fill: #333;}.uagb-block-lpgtjmms .uagb-infobox__content-wrap .uagb-ifb-imgicon-wrap{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;}.uagb-block-lpgtjmms .uagb-infobox .uagb-ifb-image-content img{border-radius: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap img{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;border-radius: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content .uagb-ifb-right-title-image > img{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;border-radius: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content .uagb-ifb-left-title-image > img{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;border-radius: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content > img{padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;border-radius: 0px;}.uagb-block-lpgtjmms .uagb-ifb-title-wrap .uagb-ifb-title-prefix{color: var(--ast-global-color-2);margin-bottom: 24px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-title{color: var(--ast-global-color-2);margin-bottom: 20px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-desc{color: var(--ast-global-color-3);margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms .uagb-ifb-separator{width: 30%;border-top-width: 2px;border-top-color: #333;border-top-style: solid;margin-bottom: 0px;}.uagb-block-lpgtjmms .uagb-infobox__content-wrap .uagb-ifb-separator{width: 30%;border-top-width: 2px;border-top-color: #333;border-top-style: solid;}.uagb-block-lpgtjmms .uagb-ifb-align-icon-after{margin-left: 5px;}.uagb-block-lpgtjmms .uagb-ifb-align-icon-before{margin-right: 5px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content svg{box-sizing: content-box;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content img{box-sizing: content-box;}.uagb-block-lpgtjmms .uagb-infobox__content-wrap{text-align: left;}.uagb-block-lpgtjmms.uagb-infobox-icon-above-title{text-align: left;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap:not(.wp-block-uagb-info-box--has-margin){padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap.wp-block-uagb-info-box--has-margin .uagb-infobox-margin-wrapper{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-infobox-cta-link > svg {margin-left: 5px;}.uagb-block-lpgtjmms .uagb-ifb-title-prefix{text-transform: uppercase;font-weight: 500;font-size: 16px;line-height: 1em;letter-spacing: 2px;}[dir=rtl] .uagb-block-lpgtjmms.uagb-infobox__content-wrap{text-align: right;}[dir=rtl] .uagb-block-lpgtjmms.uagb-infobox-icon-above-title{text-align: right;}[dir=rtl] .uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-infobox-cta-link > svg{margin-right: 5px;margin-left: 0px;}.wp-block-uagb-container.uagb-block-udpwecyw .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-udpwecyw .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-udpwecyw .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-udpwecyw .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-udpwecyw .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-udpwecyw{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-udpwecyw > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: center;justify-content: center;flex-wrap: nowrap;row-gap: 24px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-udpwecyw{box-shadow: 0px 0px   #00000070 ;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;flex-direction: column;align-items: center;justify-content: center;flex-wrap: nowrap;row-gap: 24px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-mlgj0zyf .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-mlgj0zyf .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-mlgj0zyf .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-mlgj0zyf .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-mlgj0zyf .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-mlgj0zyf{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-mlgj0zyf > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: row;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 72px;}.wp-block-uagb-container.uagb-block-mlgj0zyf{box-shadow: 0px 0px   #00000070 ;padding-top: 44px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);flex-direction: row;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 72px;}.wp-block-uagb-container.uagb-block-450zcguv .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-450zcguv .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-450zcguv .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-450zcguv .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-450zcguv .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-450zcguv{max-width: 30%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-450zcguv > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 32px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-450zcguv{box-shadow: 0px 0px   #00000070 ;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 32px;column-gap: 0px;}.wp-block-uagb-advanced-heading.uagb-block-u0nsiwig.wp-block-uagb-advanced-heading .uagb-desc-text{margin-bottom: 15px;}.wp-block-uagb-advanced-heading.uagb-block-u0nsiwig.wp-block-uagb-advanced-heading .uagb-highlight{font-style: normal;font-weight: Default;background: #007cba;color: #fff;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-u0nsiwig.wp-block-uagb-advanced-heading .uagb-highlight::-moz-selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-u0nsiwig.wp-block-uagb-advanced-heading .uagb-highlight::selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-container.uagb-block-cichkv7q .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-cichkv7q .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-cichkv7q .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-cichkv7q .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-cichkv7q .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-cichkv7q{max-width: 70%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-cichkv7q > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-cichkv7q{box-shadow: 0px 0px   #00000070 ;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-advanced-heading.uagb-block-xeehftru.wp-block-uagb-advanced-heading .uagb-desc-text{margin-bottom: 15px;}.wp-block-uagb-advanced-heading.uagb-block-xeehftru.wp-block-uagb-advanced-heading .uagb-highlight{font-style: normal;font-weight: Default;background: #007cba;color: #fff;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-xeehftru.wp-block-uagb-advanced-heading .uagb-highlight::-moz-selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-xeehftru.wp-block-uagb-advanced-heading .uagb-highlight::selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-container.uagb-block-oulspur6 .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-oulspur6 .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-oulspur6 .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-oulspur6 .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-oulspur6 .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-oulspur6{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-oulspur6 > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: row;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 72px;}.wp-block-uagb-container.uagb-block-oulspur6{box-shadow: 0px 0px   #00000070 ;padding-top: 44px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);flex-direction: row;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 72px;}.wp-block-uagb-container.uagb-block-lqjivqsy .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-lqjivqsy .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-lqjivqsy .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-lqjivqsy .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-lqjivqsy .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-lqjivqsy{max-width: 30%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-lqjivqsy > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 32px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-lqjivqsy{box-shadow: 0px 0px   #00000070 ;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 32px;column-gap: 0px;}.wp-block-uagb-advanced-heading.uagb-block-ndrokvsq.wp-block-uagb-advanced-heading .uagb-desc-text{margin-bottom: 15px;}.wp-block-uagb-advanced-heading.uagb-block-ndrokvsq.wp-block-uagb-advanced-heading .uagb-highlight{font-style: normal;font-weight: Default;background: #007cba;color: #fff;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-ndrokvsq.wp-block-uagb-advanced-heading .uagb-highlight::-moz-selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-ndrokvsq.wp-block-uagb-advanced-heading .uagb-highlight::selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-container.uagb-block-hwp2xxml .uagb-container__shape-top svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-hwp2xxml .uagb-container__shape.uagb-container__shape-top .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-hwp2xxml .uagb-container__shape-bottom svg{width: calc( 100% + 1.3px );}.wp-block-uagb-container.uagb-block-hwp2xxml .uagb-container__shape.uagb-container__shape-bottom .uagb-container__shape-fill{fill: rgba(51,51,51,1);}.wp-block-uagb-container.uagb-block-hwp2xxml .uagb-container__video-wrap video{opacity: 1;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-hwp2xxml{max-width: 70%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-hwp2xxml > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1200px);max-width: var(--inner-content-custom-width);width: 100%;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-hwp2xxml{box-shadow: 0px 0px   #00000070 ;padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;overflow: visible;order: initial;border-color: inherit;flex-direction: column;align-items: flex-start;justify-content: flex-start;flex-wrap: nowrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-advanced-heading.uagb-block-gf3ygopx.wp-block-uagb-advanced-heading .uagb-desc-text{margin-bottom: 15px;}.wp-block-uagb-advanced-heading.uagb-block-gf3ygopx.wp-block-uagb-advanced-heading .uagb-highlight{font-style: normal;font-weight: Default;background: #007cba;color: #fff;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-gf3ygopx.wp-block-uagb-advanced-heading .uagb-highlight::-moz-selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}.wp-block-uagb-advanced-heading.uagb-block-gf3ygopx.wp-block-uagb-advanced-heading .uagb-highlight::selection{color: #fff;background: #007cba;-webkit-text-fill-color: #fff;}@media only screen and (max-width: 976px) {.wp-block-uagb-container.uagb-is-root-container .uagb-block-ahe984ga{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-ahe984ga > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 50px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-ahe984ga{padding-top: 80px;padding-bottom: 80px;padding-left: 32px;padding-right: 32px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;background-color: var(--ast-global-color-5);;row-gap: 50px;column-gap: 0px;}.uagb-block-lpgtjmms .uagb-ifb-title-wrap .uagb-ifb-title-prefix{margin-bottom: 12px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-title{margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-desc{margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-icon-wrap > svg{width: 30px;height: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content .uagb-ifb-icon-wrap > svg{line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content img{box-sizing: content-box;}.uagb-block-lpgtjmms .uagb-ifb-icon{width: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-ifb-icon > span{font-size: 30px;width: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-iconbox-icon-wrap{width: 30px;height: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-left-title-image > svg{width: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-right-title-image > svg{width: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap:not(.wp-block-uagb-info-box--has-margin){padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap.wp-block-uagb-info-box--has-margin .uagb-infobox-margin-wrapper{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-infobox-cta-link > svg {margin-left: 5px;}.uagb-block-lpgtjmms .uagb-ifb-title-prefix{font-size: 16px;line-height: 1em;letter-spacing: 2px;}[dir=rtl] .uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-infobox-cta-link > svg{margin-right: 5px;margin-left: 0px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-udpwecyw{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-udpwecyw > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 24px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-udpwecyw{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;row-gap: 24px;column-gap: 0px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-mlgj0zyf{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-mlgj0zyf > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;align-items: stretch;row-gap: 0px;column-gap: 40px;}.wp-block-uagb-container.uagb-block-mlgj0zyf{padding-top: 24px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);align-items: stretch;row-gap: 0px;column-gap: 40px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-450zcguv{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-450zcguv > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-450zcguv{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-cichkv7q{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-cichkv7q > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-cichkv7q{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-oulspur6{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-oulspur6 > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;align-items: stretch;row-gap: 0px;column-gap: 40px;}.wp-block-uagb-container.uagb-block-oulspur6{padding-top: 24px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);align-items: stretch;row-gap: 0px;column-gap: 40px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-lqjivqsy{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-lqjivqsy > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-lqjivqsy{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-hwp2xxml{width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-hwp2xxml > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 1024px);max-width: var(--inner-content-custom-width);width: 100%;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-hwp2xxml{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;order: initial;row-gap: 0px;column-gap: 0px;}}@media only screen and (max-width: 767px) {.wp-block-uagb-container.uagb-is-root-container .uagb-block-ahe984ga{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-ahe984ga > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 40px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-ahe984ga{padding-top: 64px;padding-bottom: 64px;padding-left: 24px;padding-right: 24px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 40px;column-gap: 0px;order: initial;background-color: var(--ast-global-color-5);;}.uagb-block-lpgtjmms .uagb-ifb-title-wrap .uagb-ifb-title-prefix{margin-bottom: 12px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-title{margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.wp-block-uagb-info-box .uagb-ifb-desc{margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-icon-wrap > svg{width: 30px;height: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content .uagb-ifb-icon-wrap > svg{line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-left-title-image > svg{width: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms .uagb-ifb-content .uagb-ifb-right-title-image > svg{width: 30px;line-height: 30px;font-size: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-ifb-content img{box-sizing: content-box;}.uagb-block-lpgtjmms .uagb-ifb-icon{width: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-ifb-icon > span{font-size: 30px;width: 30px;line-height: 30px;}.uagb-block-lpgtjmms .uagb-iconbox-icon-wrap{width: 30px;height: 30px;line-height: 30px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap:not(.wp-block-uagb-info-box--has-margin){padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap.wp-block-uagb-info-box--has-margin .uagb-infobox-margin-wrapper{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}.uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-infobox-cta-link > svg {margin-left: 5px;}.uagb-block-lpgtjmms .uagb-ifb-title-prefix{font-size: 15px;line-height: 1em;letter-spacing: 2px;}[dir=rtl] .uagb-block-lpgtjmms.uagb-infobox__content-wrap .uagb-infobox-cta-link > svg{margin-right: 5px;margin-left: 0px;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-udpwecyw{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-udpwecyw > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 24px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-udpwecyw{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 24px;column-gap: 0px;order: initial;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-mlgj0zyf{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-mlgj0zyf > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;align-items: stretch;flex-wrap: wrap;row-gap: 16px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-mlgj0zyf{padding-top: 24px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 16px;column-gap: 0px;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);align-items: stretch;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-450zcguv{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-450zcguv > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-450zcguv{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 0px;column-gap: 0px;order: initial;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-cichkv7q{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-cichkv7q > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-cichkv7q{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 0px;column-gap: 0px;order: initial;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-oulspur6{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-oulspur6 > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;align-items: stretch;flex-wrap: wrap;row-gap: 16px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-oulspur6{padding-top: 24px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 16px;column-gap: 0px;order: initial;border-top-width: 1px;border-left-width: 0px;border-right-width: 0px;border-bottom-width: 0px;border-style: solid;border-color: var(--ast-global-color-6);align-items: stretch;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-lqjivqsy{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-lqjivqsy > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-lqjivqsy{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 0px;column-gap: 0px;order: initial;flex-wrap: wrap;}.wp-block-uagb-container.uagb-is-root-container .uagb-block-hwp2xxml{max-width: 100%;width: 100%;}.wp-block-uagb-container.uagb-is-root-container.alignfull.uagb-block-hwp2xxml > .uagb-container-inner-blocks-wrap{--inner-content-custom-width: min( 100%, 767px);max-width: var(--inner-content-custom-width);width: 100%;flex-wrap: wrap;row-gap: 0px;column-gap: 0px;}.wp-block-uagb-container.uagb-block-hwp2xxml{padding-top: 0px;padding-bottom: 0px;padding-left: 0px;padding-right: 0px;margin-top: 0px !important;margin-bottom: 0px !important;margin-left: 0px;margin-right: 0px;row-gap: 0px;column-gap: 0px;order: initial;flex-wrap: wrap;}}.uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
-";s:2:"js";s:0:"";s:18:"current_block_list";a:10:{i:0;s:14:"uagb/container";i:1;s:13:"uagb/info-box";i:5;s:21:"uagb/advanced-heading";i:6;s:11:"core/search";i:7;s:10:"core/group";i:8;s:12:"core/heading";i:9;s:17:"core/latest-posts";i:10;s:20:"core/latest-comments";i:11;s:13:"core/archives";i:12;s:15:"core/categories";}s:8:"uag_flag";b:1;s:11:"uag_version";s:10:"1735205167";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+";s:2:"js";s:0:"";s:18:"current_block_list";a:10:{i:0;s:14:"uagb/container";i:1;s:13:"uagb/info-box";i:5;s:21:"uagb/advanced-heading";i:6;s:11:"core/search";i:7;s:10:"core/group";i:8;s:12:"core/heading";i:9;s:17:"core/latest-posts";i:10;s:20:"core/latest-comments";i:11;s:13:"core/archives";i:12;s:15:"core/categories";}s:8:"uag_flag";b:1;s:11:"uag_version";s:10:"1736477553";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
 		</wp:postmeta>
 							<wp:postmeta>
 		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
@@ -2692,7 +2700,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/" rel="nofollow ugc
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://unityhub.io/218/</link>
+		<link>https://getskedular.com/218/</link>
 		<pubDate>Thu, 15 Aug 2024 05:38:15 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://unityhub.io/218/</guid>

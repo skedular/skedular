@@ -1,8 +1,8 @@
 Authentication:
-https://app.staging.unityhub.io/api/auth/callback/azure-ad
-https://msteams.staging.unityhub.io/auth-end.html?clientId=c27788ea-97c3-4658-afd5-0be50fa1019c
-https://apistaging.unityhub.io/organization/api/v1/onboard-azure-tenant
+https://app.staging.skedular.app/api/auth/callback/azure-ad
+https://msteams.staging.skedular.app/auth-end.html?clientId=c27788ea-97c3-4658-afd5-0be50fa1019c
+https://apistaging.skedular.app/organization/api/v1/onboard-azure-tenant
 
 Expose an API:
-api://msteams.staging.unityhub.io/e2f3d447-0197-4a61-be7a-546c4b02b4d3
-api://msteams.staging.unityhub.io/e2f3d447-0197-4a61-be7a-546c4b02b4d3/access_as_user
+api://msteams.staging.skedular.app/e2f3d447-0197-4a61-be7a-546c4b02b4d3
+api://msteams.staging.skedular.app/e2f3d447-0197-4a61-be7a-546c4b02b4d3/access_as_user

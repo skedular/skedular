@@ -8,30 +8,6 @@
 # this machine's public IP, then replace ":80" below with your
 # domain name.
 
-staging.unityhub.io {
-	reverse_proxy localhost:8080
-}
-
-unityhub.io {
-	reverse_proxy localhost:8081
-}
-
-apistaging.unityhub.io {
-	reverse_proxy localhost:49000
-}
-
-slackapistaging.unityhub.io {
-	reverse_proxy localhost:40700
-}
-
-api.unityhub.io {
-	reverse_proxy localhost:9000
-}
-
-slackapi.unityhub.io {
-	reverse_proxy localhost:10700
-}
-
 aapp.skedular.app {
 	reverse_proxy localhost:7000
 }

@@ -1,7 +1,7 @@
 {
   "name": "publicwebsite",
   "version": "0.1.0",
-  "description": "UnityHub Public Website",
+  "description": "Skedular Public Website",
   "private": true,
   "scripts": {
     "dev": "cross-env PORT=15001 next dev --turbopack",

@@ -12,7 +12,7 @@ const Home = () => {
   return (
     <StackRow>
       <SlackButton />
-      <Link component={NextLink} href="https://app.unityhub.io">
+      <Link component={NextLink} href="https://skedular.app">
         <Button variant="contained" sx={{ marginLeft: 2, borderRadius: '50px' }} size="large" startIcon={<TryIcon />}>
           Try for free
         </Button>

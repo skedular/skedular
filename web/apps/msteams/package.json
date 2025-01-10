@@ -1,7 +1,7 @@
 {
   "name": "msteams",
   "version": "0.1.0",
-  "description": "UnityHub MsTeams Web App",
+  "description": "Skedular MsTeams Web App",
   "private": true,
   "scripts": {
     "dev": "cross-env HTTPS=true PORT=15002 react-scripts start",

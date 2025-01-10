@@ -1,190 +1,174 @@
 {
-	"id": "e7530332-b4fa-45a4-bac0-336baffe050f",
-	"deletedDateTime": null,
-	"appId": "40aa5b3e-327c-4af6-8c00-ea380b1cae0a",
-	"applicationTemplateId": null,
-	"disabledByMicrosoftStatus": null,
-	"createdDateTime": "2024-11-10T00:53:30Z",
-	"displayName": "UnityHub-staging",
-	"description": "UnityHub-staging",
-	"groupMembershipClaims": null,
-	"identifierUris": [
-		"api://msteams.staging.unityhub.io/40aa5b3e-327c-4af6-8c00-ea380b1cae0a"
-	],
-	"isDeviceOnlyAuthSupported": false,
-	"isFallbackPublicClient": false,
-	"nativeAuthenticationApisEnabled": null,
-	"notes": null,
-	"publisherDomain": "unityhub.io",
-	"serviceManagementReference": null,
-	"signInAudience": "AzureADMultipleOrgs",
-	"tags": [
-		"WindowsAzureActiveDirectoryGalleryApplicationNonPrimaryV1",
-		"WindowsAzureActiveDirectoryIntegratedApp"
-	],
-	"tokenEncryptionKeyId": null,
-	"samlMetadataUrl": null,
-	"defaultRedirectUri": null,
-	"certification": null,
-	"servicePrincipalLockConfiguration": null,
-	"requestSignatureVerification": null,
-	"addIns": [],
-	"api": {
-		"acceptMappedClaims": true,
-		"knownClientApplications": [],
-		"requestedAccessTokenVersion": 2,
-		"oauth2PermissionScopes": [
-			{
-				"adminConsentDescription": "Allows UnityHub application to call the app's web APIs as the current user.",
-				"adminConsentDisplayName": "UnityHub application can access app's web APIs",
-				"id": "9b34edf6-bd94-247b-5b94-cceb26308ff9",
-				"isEnabled": true,
-				"type": "User",
-				"userConsentDescription": "Enable UnityHub application to call this app's web APIs with the same rights that you have",
-				"userConsentDisplayName": "UnityHub application can access app's web APIs and make requests on your behalf",
-				"value": "access_as_user"
-			}
-		],
-		"preAuthorizedApplications": [
-			{
-				"appId": "00000002-0000-0ff1-ce00-000000000000",
-				"delegatedPermissionIds": [
-					"9b34edf6-bd94-247b-5b94-cceb26308ff9"
-				]
-			},
-			{
-				"appId": "4345a7b9-9a63-4910-a426-35363201d503",
-				"delegatedPermissionIds": [
-					"9b34edf6-bd94-247b-5b94-cceb26308ff9"
-				]
-			},
-			{
-				"appId": "0ec893e0-5785-4de6-99da-4ed124e5296c",
-				"delegatedPermissionIds": [
-					"9b34edf6-bd94-247b-5b94-cceb26308ff9"
-				]
-			},
-			{
-				"appId": "4765445b-32c6-49b0-83e6-1d93765276ca",
-				"delegatedPermissionIds": [
-					"9b34edf6-bd94-247b-5b94-cceb26308ff9"
-				]
-			},
-			{
-				"appId": "1fec8e78-bce4-4aaf-ab1b-5451cc387264",
-				"delegatedPermissionIds": [
-					"9b34edf6-bd94-247b-5b94-cceb26308ff9"
-				]
-			},
-			{
-				"appId": "5e3ce6c0-2b1f-4285-8d4b-75ee78787346",
-				"delegatedPermissionIds": [
-					"9b34edf6-bd94-247b-5b94-cceb26308ff9"
-				]
-			},
-			{
-				"appId": "d3590ed6-52b3-4102-aeff-aad2292ab01c",
-				"delegatedPermissionIds": [
-					"9b34edf6-bd94-247b-5b94-cceb26308ff9"
-				]
-			},
-			{
-				"appId": "bc59ab01-8403-45c6-8796-ac3ef710b3e3",
-				"delegatedPermissionIds": [
-					"9b34edf6-bd94-247b-5b94-cceb26308ff9"
-				]
-			}
-		]
-	},
-	"appRoles": [],
-	"info": {
-		"logoUrl": "https://aadcdn.msftauthimages.net/81d6b03a-8ncj1ystsjcdo1mklxtnxouafrz7hbhjr-v2dhm8ll4/appbranding/zsmsuovcgwmlt9eb5cl7lqobizkfnhjk2awpmx0t3au/1033/bannerlogo?ts=638667968131486091",
-		"marketingUrl": null,
-		"privacyStatementUrl": "https://unityhub.io/privacy-policy",
-		"supportUrl": null,
-		"termsOfServiceUrl": "https://unityhub.io/terms-of-service"
-	},
-	"keyCredentials": [],
-	"optionalClaims": {
-		"accessToken": [],
-		"idToken": [],
-		"saml2Token": []
-	},
-	"parentalControlSettings": {
-		"countriesBlockedForMinors": [],
-		"legalAgeGroupRule": "Allow"
-	},
-	"passwordCredentials": [
-		{
-			"customKeyIdentifier": null,
-			"displayName": null,
-			"endDateTime": "2026-11-10T00:53:34.9331858Z",
-			"hint": "siJ",
-			"keyId": "6cdb07e3-251d-43ea-b766-a01451f20516",
-			"secretText": null,
-			"startDateTime": "2024-11-10T00:53:34.9331858Z"
-		}
-	],
-	"publicClient": {
-		"redirectUris": []
-	},
-	"requiredResourceAccess": [
-		{
-			"resourceAppId": "00000003-0000-0000-c000-000000000000",
-			"resourceAccess": [
-				{
-					"id": "97235f07-e226-4f63-ace3-39588e11d3a1",
-					"type": "Role"
-				},
-				{
-					"id": "e24d31aa-e1ab-4c80-85fe-23018690335d",
-					"type": "Role"
-				},
-				{
-					"id": "243cded2-bd16-4fd6-a953-ff8177894c3d",
-					"type": "Role"
-				},
-				{
-					"id": "62a82d76-70ea-41e2-9197-370581804d09",
-					"type": "Role"
-				},
-				{
-					"id": "2280dda6-0bfd-44ee-a2f4-cb867cfc4c1e",
-					"type": "Role"
-				},
-				{
-					"id": "dfb0dd15-61de-45b2-be36-d6a69fba3c79",
-					"type": "Role"
-				}
-			]
-		}
-	],
-	"verifiedPublisher": {
-		"displayName": null,
-		"verifiedPublisherId": null,
-		"addedDateTime": null
-	},
-	"web": {
-		"homePageUrl": "https://unityhub.io",
-		"logoutUrl": null,
-		"redirectUris": [
-			"https://app.staging.unityhub.io/api/auth/callback/azure-ad"
-		],
-		"implicitGrantSettings": {
-			"enableAccessTokenIssuance": false,
-			"enableIdTokenIssuance": false
-		},
-		"redirectUriSettings": [
-			{
-				"uri": "https://app.staging.unityhub.io/api/auth/callback/azure-ad",
-				"index": null
-			}
-		]
-	},
-	"spa": {
-		"redirectUris": [
-			"https://msteams.staging.unityhub.io/auth-end.html?clientId=40aa5b3e-327c-4af6-8c00-ea380b1cae0a",
-			"https://apistaging.unityhub.io/organization/api/v1/onboard-azure-tenant"
-		]
-	}
+  "id": "e7530332-b4fa-45a4-bac0-336baffe050f",
+  "deletedDateTime": null,
+  "appId": "40aa5b3e-327c-4af6-8c00-ea380b1cae0a",
+  "applicationTemplateId": null,
+  "disabledByMicrosoftStatus": null,
+  "createdDateTime": "2024-11-10T00:53:30Z",
+  "displayName": "Skedular-staging",
+  "description": "Skedular-staging",
+  "groupMembershipClaims": null,
+  "identifierUris": [
+    "api://msteams.staging.skedular.app/40aa5b3e-327c-4af6-8c00-ea380b1cae0a"
+  ],
+  "isDeviceOnlyAuthSupported": false,
+  "isFallbackPublicClient": false,
+  "nativeAuthenticationApisEnabled": null,
+  "notes": null,
+  "publisherDomain": "getskedular.com",
+  "serviceManagementReference": null,
+  "signInAudience": "AzureADMultipleOrgs",
+  "tags": [
+    "WindowsAzureActiveDirectoryGalleryApplicationNonPrimaryV1",
+    "WindowsAzureActiveDirectoryIntegratedApp"
+  ],
+  "tokenEncryptionKeyId": null,
+  "samlMetadataUrl": null,
+  "defaultRedirectUri": null,
+  "certification": null,
+  "servicePrincipalLockConfiguration": null,
+  "requestSignatureVerification": null,
+  "addIns": [],
+  "api": {
+    "acceptMappedClaims": true,
+    "knownClientApplications": [],
+    "requestedAccessTokenVersion": 2,
+    "oauth2PermissionScopes": [
+      {
+        "adminConsentDescription": "Allows Skedular application to call the app's web APIs as the current user.",
+        "adminConsentDisplayName": "Skedular application can access app's web APIs",
+        "id": "9b34edf6-bd94-247b-5b94-cceb26308ff9",
+        "isEnabled": true,
+        "type": "User",
+        "userConsentDescription": "Enable Skedular application to call this app's web APIs with the same rights that you have",
+        "userConsentDisplayName": "Skedular application can access app's web APIs and make requests on your behalf",
+        "value": "access_as_user"
+      }
+    ],
+    "preAuthorizedApplications": [
+      {
+        "appId": "00000002-0000-0ff1-ce00-000000000000",
+        "delegatedPermissionIds": ["9b34edf6-bd94-247b-5b94-cceb26308ff9"]
+      },
+      {
+        "appId": "4345a7b9-9a63-4910-a426-35363201d503",
+        "delegatedPermissionIds": ["9b34edf6-bd94-247b-5b94-cceb26308ff9"]
+      },
+      {
+        "appId": "0ec893e0-5785-4de6-99da-4ed124e5296c",
+        "delegatedPermissionIds": ["9b34edf6-bd94-247b-5b94-cceb26308ff9"]
+      },
+      {
+        "appId": "4765445b-32c6-49b0-83e6-1d93765276ca",
+        "delegatedPermissionIds": ["9b34edf6-bd94-247b-5b94-cceb26308ff9"]
+      },
+      {
+        "appId": "1fec8e78-bce4-4aaf-ab1b-5451cc387264",
+        "delegatedPermissionIds": ["9b34edf6-bd94-247b-5b94-cceb26308ff9"]
+      },
+      {
+        "appId": "5e3ce6c0-2b1f-4285-8d4b-75ee78787346",
+        "delegatedPermissionIds": ["9b34edf6-bd94-247b-5b94-cceb26308ff9"]
+      },
+      {
+        "appId": "d3590ed6-52b3-4102-aeff-aad2292ab01c",
+        "delegatedPermissionIds": ["9b34edf6-bd94-247b-5b94-cceb26308ff9"]
+      },
+      {
+        "appId": "bc59ab01-8403-45c6-8796-ac3ef710b3e3",
+        "delegatedPermissionIds": ["9b34edf6-bd94-247b-5b94-cceb26308ff9"]
+      }
+    ]
+  },
+  "appRoles": [],
+  "info": {
+    "logoUrl": "https://aadcdn.msftauthimages.net/81d6b03a-8ncj1ystsjcdo1mklxtnxouafrz7hbhjr-v2dhm8ll4/appbranding/zsmsuovcgwmlt9eb5cl7lqobizkfnhjk2awpmx0t3au/1033/bannerlogo?ts=638667968131486091",
+    "marketingUrl": null,
+    "privacyStatementUrl": "https://getskedular.com/privacy-policy",
+    "supportUrl": null,
+    "termsOfServiceUrl": "https://getskedular.com/terms-of-service"
+  },
+  "keyCredentials": [],
+  "optionalClaims": {
+    "accessToken": [],
+    "idToken": [],
+    "saml2Token": []
+  },
+  "parentalControlSettings": {
+    "countriesBlockedForMinors": [],
+    "legalAgeGroupRule": "Allow"
+  },
+  "passwordCredentials": [
+    {
+      "customKeyIdentifier": null,
+      "displayName": null,
+      "endDateTime": "2026-11-10T00:53:34.9331858Z",
+      "hint": "siJ",
+      "keyId": "6cdb07e3-251d-43ea-b766-a01451f20516",
+      "secretText": null,
+      "startDateTime": "2024-11-10T00:53:34.9331858Z"
+    }
+  ],
+  "publicClient": {
+    "redirectUris": []
+  },
+  "requiredResourceAccess": [
+    {
+      "resourceAppId": "00000003-0000-0000-c000-000000000000",
+      "resourceAccess": [
+        {
+          "id": "97235f07-e226-4f63-ace3-39588e11d3a1",
+          "type": "Role"
+        },
+        {
+          "id": "e24d31aa-e1ab-4c80-85fe-23018690335d",
+          "type": "Role"
+        },
+        {
+          "id": "243cded2-bd16-4fd6-a953-ff8177894c3d",
+          "type": "Role"
+        },
+        {
+          "id": "62a82d76-70ea-41e2-9197-370581804d09",
+          "type": "Role"
+        },
+        {
+          "id": "2280dda6-0bfd-44ee-a2f4-cb867cfc4c1e",
+          "type": "Role"
+        },
+        {
+          "id": "dfb0dd15-61de-45b2-be36-d6a69fba3c79",
+          "type": "Role"
+        }
+      ]
+    }
+  ],
+  "verifiedPublisher": {
+    "displayName": null,
+    "verifiedPublisherId": null,
+    "addedDateTime": null
+  },
+  "web": {
+    "homePageUrl": "https://getskedular.com",
+    "logoutUrl": null,
+    "redirectUris": [
+      "https://app.staging.skedular.app/api/auth/callback/azure-ad"
+    ],
+    "implicitGrantSettings": {
+      "enableAccessTokenIssuance": false,
+      "enableIdTokenIssuance": false
+    },
+    "redirectUriSettings": [
+      {
+        "uri": "https://app.staging.skedular.app/api/auth/callback/azure-ad",
+        "index": null
+      }
+    ]
+  },
+  "spa": {
+    "redirectUris": [
+      "https://msteams.staging.skedular.app/auth-end.html?clientId=40aa5b3e-327c-4af6-8c00-ea380b1cae0a",
+      "https://apistaging.skedular.app/organization/api/v1/onboard-azure-tenant"
+    ]
+  }
 }

@@ -1,7 +1,7 @@
 {
   "name": "webapp",
   "version": "0.1.0",
-  "description": "UnityHub Web App",
+  "description": "Skedular Web App",
   "private": true,
   "scripts": {
     "dev": "cross-env PORT=15000 next dev --turbopack",

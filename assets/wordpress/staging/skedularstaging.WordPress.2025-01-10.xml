@@ -16,7 +16,7 @@
 <!-- 7. WordPress will then import each of the posts, pages, comments, categories, etc. -->
 <!--    contained in this file into your site. -->
 
-	<!-- generator="WordPress/6.7.1" created="2025-01-10 02:54" -->
+	<!-- generator="WordPress/6.7.1" created="2025-01-10 10:51" -->
 <rss version="2.0"
 	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"
@@ -27,13 +27,13 @@
 
 <channel>
 	<title>Skedular Staging</title>
-	<link>https://staging.unityhub.io</link>
+	<link>https://staging.getskedular.com</link>
 	<description></description>
-	<pubDate>Fri, 10 Jan 2025 02:54:50 +0000</pubDate>
+	<pubDate>Fri, 10 Jan 2025 10:51:17 +0000</pubDate>
 	<language>en-US</language>
 	<wp:wxr_version>1.2</wp:wxr_version>
-	<wp:base_site_url>https://staging.unityhub.io</wp:base_site_url>
-	<wp:base_blog_url>https://staging.unityhub.io</wp:base_blog_url>
+	<wp:base_site_url>https://staging.getskedular.com</wp:base_site_url>
+	<wp:base_blog_url>https://staging.getskedular.com</wp:base_blog_url>
 
 		<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[morteza]]></wp:author_login><wp:author_email><![CDATA[morteza.alizadeh@gmail.com]]></wp:author_email><wp:author_display_name><![CDATA[morteza]]></wp:author_display_name><wp:author_first_name><![CDATA[]]></wp:author_first_name><wp:author_last_name><![CDATA[]]></wp:author_last_name></wp:author>
 
@@ -95,16 +95,16 @@
 	<generator>https://wordpress.org/?v=6.7.1</generator>
 
 <image>
-	<url>https://staging.unityhub.io/wp-content/uploads/2025/01/skedular-icon-primary-1-150x150.png</url>
+	<url>https://staging.getskedular.com/wp-content/uploads/2025/01/skedular-icon-primary-1-150x150.png</url>
 	<title>Skedular Staging</title>
-	<link>https://staging.unityhub.io</link>
+	<link>https://staging.getskedular.com</link>
 	<width>32</width>
 	<height>32</height>
 </image> 
 
 		<item>
 		<title><![CDATA[web]]></title>
-		<link>https://staging.unityhub.io/web/</link>
+		<link>https://staging.getskedular.com/web/</link>
 		<pubDate>Wed, 03 Jul 2024 08:06:51 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/wp-content/uploads/2024/07/web.png</guid>
@@ -125,7 +125,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2024/07/web.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2024/07/web.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/web.png]]></wp:meta_value>
@@ -146,7 +146,7 @@
 							</item>
 					<item>
 		<title><![CDATA[slack-mobile]]></title>
-		<link>https://staging.unityhub.io/slack-mobile/</link>
+		<link>https://staging.getskedular.com/slack-mobile/</link>
 		<pubDate>Wed, 03 Jul 2024 08:06:52 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/wp-content/uploads/2024/07/slack-mobile.jpg</guid>
@@ -167,7 +167,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2024/07/slack-mobile.jpg]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2024/07/slack-mobile.jpg]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/slack-mobile.jpg]]></wp:meta_value>
@@ -179,7 +179,7 @@
 							</item>
 					<item>
 		<title><![CDATA[slack-desktop]]></title>
-		<link>https://staging.unityhub.io/slack-desktop/</link>
+		<link>https://staging.getskedular.com/slack-desktop/</link>
 		<pubDate>Wed, 03 Jul 2024 08:06:54 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/wp-content/uploads/2024/07/slack-desktop.png</guid>
@@ -200,7 +200,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2024/07/slack-desktop.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2024/07/slack-desktop.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/slack-desktop.png]]></wp:meta_value>
@@ -212,7 +212,7 @@
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://staging.unityhub.io/117/</link>
+		<link>https://staging.getskedular.com/117/</link>
 		<pubDate>Wed, 03 Jul 2024 08:07:28 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/03/</guid>
@@ -273,7 +273,7 @@
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://staging.unityhub.io/118/</link>
+		<link>https://staging.getskedular.com/118/</link>
 		<pubDate>Wed, 03 Jul 2024 08:07:28 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/03/</guid>
@@ -338,7 +338,7 @@
 							</item>
 					<item>
 		<title><![CDATA[Sign In]]></title>
-		<link>https://staging.unityhub.io/sign-in/</link>
+		<link>https://staging.getskedular.com/sign-in/</link>
 		<pubDate>Wed, 03 Jul 2024 08:07:28 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/03/sign-in/</guid>
@@ -403,7 +403,7 @@
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://staging.unityhub.io/121/</link>
+		<link>https://staging.getskedular.com/121/</link>
 		<pubDate>Wed, 03 Jul 2024 08:07:28 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/03/</guid>
@@ -464,7 +464,7 @@
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://staging.unityhub.io/122/</link>
+		<link>https://staging.getskedular.com/122/</link>
 		<pubDate>Wed, 03 Jul 2024 08:07:28 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/03/</guid>
@@ -525,7 +525,7 @@
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://staging.unityhub.io/123/</link>
+		<link>https://staging.getskedular.com/123/</link>
 		<pubDate>Wed, 03 Jul 2024 08:07:28 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/03/</guid>
@@ -586,7 +586,7 @@
 							</item>
 					<item>
 		<title><![CDATA[Terms & Conditions]]></title>
-		<link>https://staging.unityhub.io/terms-conditions/</link>
+		<link>https://staging.getskedular.com/terms-conditions/</link>
 		<pubDate>Wed, 03 Jul 2024 08:07:28 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/03/terms-conditions/</guid>
@@ -647,7 +647,7 @@
 							</item>
 					<item>
 		<title><![CDATA[LogoWithText]]></title>
-		<link>https://staging.unityhub.io/logowithtext/</link>
+		<link>https://staging.getskedular.com/logowithtext/</link>
 		<pubDate>Wed, 03 Jul 2024 08:12:19 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/wp-content/uploads/2024/07/LogoWithText.png</guid>
@@ -668,7 +668,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2024/07/LogoWithText.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2024/07/LogoWithText.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/LogoWithText.png]]></wp:meta_value>
@@ -680,7 +680,7 @@
 							</item>
 					<item>
 		<title><![CDATA[logo]]></title>
-		<link>https://staging.unityhub.io/?attachment_id=158</link>
+		<link>https://staging.getskedular.com/?attachment_id=158</link>
 		<pubDate>Wed, 03 Jul 2024 09:42:05 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/wp-content/uploads/2024/07/cropped-logo-1.png</guid>
@@ -701,7 +701,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2024/07/cropped-logo-1.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2024/07/cropped-logo-1.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/07/cropped-logo-1.png]]></wp:meta_value>
@@ -721,7 +721,7 @@
 							</item>
 					<item>
 		<title><![CDATA[team-skip-01.jpg]]></title>
-		<link>https://staging.unityhub.io/team-skip-01-jpg/</link>
+		<link>https://staging.getskedular.com/team-skip-01-jpg/</link>
 		<pubDate>Thu, 15 Aug 2024 05:24:59 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/wp-content/uploads/2024/08/team-skip-01.jpg</guid>
@@ -742,7 +742,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2024/08/team-skip-01.jpg]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2024/08/team-skip-01.jpg]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/08/team-skip-01.jpg]]></wp:meta_value>
@@ -758,7 +758,7 @@
 							</item>
 					<item>
 		<title><![CDATA[team-skip-24.jpg]]></title>
-		<link>https://staging.unityhub.io/team-skip-24-jpg/</link>
+		<link>https://staging.getskedular.com/team-skip-24-jpg/</link>
 		<pubDate>Thu, 15 Aug 2024 05:24:59 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/wp-content/uploads/2024/08/team-skip-24.jpg</guid>
@@ -779,7 +779,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2024/08/team-skip-24.jpg]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2024/08/team-skip-24.jpg]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/08/team-skip-24.jpg]]></wp:meta_value>
@@ -795,7 +795,7 @@
 							</item>
 					<item>
 		<title><![CDATA[team-skip-03.jpg]]></title>
-		<link>https://staging.unityhub.io/team-skip-03-jpg/</link>
+		<link>https://staging.getskedular.com/team-skip-03-jpg/</link>
 		<pubDate>Thu, 15 Aug 2024 05:25:00 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/wp-content/uploads/2024/08/team-skip-03.jpg</guid>
@@ -816,7 +816,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2024/08/team-skip-03.jpg]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2024/08/team-skip-03.jpg]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2024/08/team-skip-03.jpg]]></wp:meta_value>
@@ -832,7 +832,7 @@
 							</item>
 					<item>
 		<title><![CDATA[UnityHub]]></title>
-		<link>https://staging.unityhub.io/unityhub/</link>
+		<link>https://staging.getskedular.com/unityhub/</link>
 		<pubDate>Thu, 09 Jan 2025 23:49:41 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/wp-content/uploads/2025/01/UnityHub.png</guid>
@@ -853,7 +853,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2025/01/UnityHub.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2025/01/UnityHub.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2025/01/UnityHub.png]]></wp:meta_value>
@@ -865,7 +865,7 @@
 							</item>
 					<item>
 		<title><![CDATA[skedular-icon-primary]]></title>
-		<link>https://staging.unityhub.io/skedular-icon-primary/</link>
+		<link>https://staging.getskedular.com/skedular-icon-primary/</link>
 		<pubDate>Thu, 09 Jan 2025 23:49:59 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/wp-content/uploads/2025/01/skedular-icon-primary.png</guid>
@@ -886,7 +886,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2025/01/skedular-icon-primary.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2025/01/skedular-icon-primary.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2025/01/skedular-icon-primary.png]]></wp:meta_value>
@@ -898,7 +898,7 @@
 							</item>
 					<item>
 		<title><![CDATA[skedular-icon-primary]]></title>
-		<link>https://staging.unityhub.io/skedular-icon-primary-2/</link>
+		<link>https://staging.getskedular.com/skedular-icon-primary-2/</link>
 		<pubDate>Thu, 09 Jan 2025 23:50:21 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/wp-content/uploads/2025/01/skedular-icon-primary-1.png</guid>
@@ -919,7 +919,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2025/01/skedular-icon-primary-1.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2025/01/skedular-icon-primary-1.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2025/01/skedular-icon-primary-1.png]]></wp:meta_value>
@@ -931,7 +931,7 @@
 							</item>
 					<item>
 		<title><![CDATA[skedular-logo-primary]]></title>
-		<link>https://staging.unityhub.io/skedular-logo-primary/</link>
+		<link>https://staging.getskedular.com/skedular-logo-primary/</link>
 		<pubDate>Thu, 09 Jan 2025 23:52:29 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/wp-content/uploads/2025/01/skedular-logo-primary.png</guid>
@@ -952,7 +952,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2025/01/skedular-logo-primary.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2025/01/skedular-logo-primary.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2025/01/skedular-logo-primary.png]]></wp:meta_value>
@@ -964,7 +964,7 @@
 							</item>
 					<item>
 		<title><![CDATA[cropped-skedular-logo-primary.png]]></title>
-		<link>https://staging.unityhub.io/skedular-logo-primary/cropped-skedular-logo-primary-png/</link>
+		<link>https://staging.getskedular.com/skedular-logo-primary/cropped-skedular-logo-primary-png/</link>
 		<pubDate>Thu, 09 Jan 2025 23:53:17 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/wp-content/uploads/2025/01/cropped-skedular-logo-primary.png</guid>
@@ -985,7 +985,7 @@
 		<wp:post_type><![CDATA[attachment]]></wp:post_type>
 		<wp:post_password><![CDATA[]]></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-						<wp:attachment_url><![CDATA[https://staging.unityhub.io/wp-content/uploads/2025/01/cropped-skedular-logo-primary.png]]></wp:attachment_url>
+						<wp:attachment_url><![CDATA[https://staging.getskedular.com/wp-content/uploads/2025/01/cropped-skedular-logo-primary.png]]></wp:attachment_url>
 											<wp:postmeta>
 		<wp:meta_key><![CDATA[_wp_attached_file]]></wp:meta_key>
 		<wp:meta_value><![CDATA[2025/01/cropped-skedular-logo-primary.png]]></wp:meta_value>
@@ -1001,7 +1001,7 @@
 							</item>
 					<item>
 		<title><![CDATA[Hello world!]]></title>
-		<link>https://staging.unityhub.io/hello-world/</link>
+		<link>https://staging.getskedular.com/hello-world/</link>
 		<pubDate>Wed, 03 Jul 2024 08:00:49 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?p=1</guid>
@@ -1028,7 +1028,7 @@
 						<wp:postmeta>
 		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
 		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
-";s:2:"js";s:0:"";s:18:"current_block_list";a:8:{i:0;s:14:"core/paragraph";i:1;s:11:"core/search";i:2;s:10:"core/group";i:3;s:12:"core/heading";i:4;s:17:"core/latest-posts";i:5;s:20:"core/latest-comments";i:6;s:13:"core/archives";i:7;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736466801";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+";s:2:"js";s:0:"";s:18:"current_block_list";a:8:{i:0;s:14:"core/paragraph";i:1;s:11:"core/search";i:2;s:10:"core/group";i:3;s:12:"core/heading";i:4;s:17:"core/latest-posts";i:5;s:20:"core/latest-comments";i:6;s:13:"core/archives";i:7;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736476225";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
 		</wp:postmeta>
 							<wp:comment>
 			<wp:comment_id>1</wp:comment_id>
@@ -1049,7 +1049,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 					</item>
 					<item>
 		<title><![CDATA[Privacy Policy]]></title>
-		<link>https://staging.unityhub.io/privacy-policy/</link>
+		<link>https://staging.getskedular.com/privacy-policy/</link>
 		<pubDate>Mon, 01 Jul 2024 09:48:05 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?page_id=3</guid>
@@ -1422,10 +1422,19 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 		<wp:meta_key><![CDATA[_wp_suggested_privacy_policy_content]]></wp:meta_key>
 		<wp:meta_value><![CDATA[a:3:{s:11:"plugin_name";s:7:"Akismet";s:11:"policy_text";s:400:"We collect information about visitors who comment on Sites that use our Akismet Anti-spam service. The information we collect depends on how the User sets up Akismet for the Site, but typically includes the commenter's IP address, user agent, referrer, and Site URL (along with other information directly provided by the commenter such as their name, username, email address, and the comment itself).";s:5:"added";i:1719900508;}]]></wp:meta_value>
 		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
+		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
+";s:2:"js";s:0:"";s:18:"current_block_list";a:10:{i:0;s:12:"core/heading";i:1;s:14:"core/paragraph";i:2;s:9:"core/list";i:3;s:14:"core/list-item";i:4;s:11:"core/search";i:5;s:10:"core/group";i:6;s:17:"core/latest-posts";i:7;s:20:"core/latest-comments";i:8;s:13:"core/archives";i:9;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736503195";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
+		</wp:postmeta>
+							<wp:postmeta>
+		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
+		<wp:meta_value><![CDATA[uag-css-3.css]]></wp:meta_value>
+		</wp:postmeta>
 							</item>
 					<item>
 		<title><![CDATA[Navigation]]></title>
-		<link>https://staging.unityhub.io/navigation/</link>
+		<link>https://staging.getskedular.com/navigation/</link>
 		<pubDate>Wed, 03 Jul 2024 08:00:50 +0000</pubDate>
 		<dc:creator><![CDATA[]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/03/navigation/</guid>
@@ -1449,7 +1458,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 														</item>
 					<item>
 		<title><![CDATA[Custom Styles]]></title>
-		<link>https://staging.unityhub.io/wp-global-styles-astra/</link>
+		<link>https://staging.getskedular.com/wp-global-styles-astra/</link>
 		<pubDate>Mon, 01 Jul 2024 22:59:38 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/wp-global-styles-astra/</guid>
@@ -1474,7 +1483,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 						</item>
 					<item>
 		<title><![CDATA[Home]]></title>
-		<link>https://staging.unityhub.io/</link>
+		<link>https://staging.getskedular.com/</link>
 		<pubDate>Mon, 01 Jul 2024 10:02:38 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?page_id=7</guid>
@@ -1498,7 +1507,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"className":"is-style-fill"} -->
-<div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button" href="https://app.unityhub.io">Try for free</a></div>
+<div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button" href="https://staging.skedular.app">Try for free</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div><figure class="wp-block-media-text__media"><img src="https://stagingpublic.unityhub.io/wp-content/themes/astra/inc/assets/images/starter-content/hero-img.svg" alt="" class="wp-image-118 size-full"/></figure></div>
@@ -1659,8 +1668,8 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 		<wp:post_id>34</wp:post_id>
 		<wp:post_date><![CDATA[2024-07-01 10:02:38]]></wp:post_date>
 		<wp:post_date_gmt><![CDATA[2024-07-01 10:02:38]]></wp:post_date_gmt>
-		<wp:post_modified><![CDATA[2025-01-10 14:28:33]]></wp:post_modified>
-		<wp:post_modified_gmt><![CDATA[2025-01-10 02:28:33]]></wp:post_modified_gmt>
+		<wp:post_modified><![CDATA[2025-01-10 21:47:43]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2025-01-10 09:47:43]]></wp:post_modified_gmt>
 		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
 		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
 		<wp:post_name><![CDATA[home]]></wp:post_name>
@@ -1693,16 +1702,12 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 							<wp:postmeta>
 		<wp:meta_key><![CDATA[_uag_page_assets]]></wp:meta_key>
 		<wp:meta_value><![CDATA[a:9:{s:3:"css";s:263:".uag-blocks-common-selector{z-index:var(--z-index-desktop) !important}@media (max-width: 976px){.uag-blocks-common-selector{z-index:var(--z-index-tablet) !important}}@media (max-width: 767px){.uag-blocks-common-selector{z-index:var(--z-index-mobile) !important}}
-";s:2:"js";s:0:"";s:18:"current_block_list";a:16:{i:0;s:10:"core/cover";i:1;s:10:"core/group";i:2;s:15:"core/media-text";i:3;s:12:"core/heading";i:5;s:9:"core/html";i:6;s:12:"core/buttons";i:7;s:11:"core/button";i:9;s:12:"core/columns";i:10;s:11:"core/column";i:11;s:10:"core/image";i:12;s:14:"core/paragraph";i:13;s:11:"core/search";i:14;s:17:"core/latest-posts";i:15;s:20:"core/latest-comments";i:16;s:13:"core/archives";i:17;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736476225";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
-		<wp:meta_key><![CDATA[_uag_css_file_name]]></wp:meta_key>
-		<wp:meta_value><![CDATA[uag-css-34.css]]></wp:meta_value>
+";s:2:"js";s:0:"";s:18:"current_block_list";a:16:{i:0;s:10:"core/cover";i:1;s:10:"core/group";i:2;s:15:"core/media-text";i:3;s:12:"core/heading";i:5;s:9:"core/html";i:6;s:12:"core/buttons";i:7;s:11:"core/button";i:9;s:12:"core/columns";i:10;s:11:"core/column";i:11;s:10:"core/image";i:12;s:14:"core/paragraph";i:13;s:11:"core/search";i:14;s:17:"core/latest-posts";i:15;s:20:"core/latest-comments";i:16;s:13:"core/archives";i:17;s:15:"core/categories";}s:8:"uag_flag";b:0;s:11:"uag_version";s:10:"1736503196";s:6:"gfonts";a:0:{}s:10:"gfonts_url";s:0:"";s:12:"gfonts_files";a:0:{}s:14:"uag_faq_layout";b:0;}]]></wp:meta_value>
 		</wp:postmeta>
 							</item>
 					<item>
 		<title><![CDATA[Terms of Service]]></title>
-		<link>https://staging.unityhub.io/terms-of-service/</link>
+		<link>https://staging.getskedular.com/terms-of-service/</link>
 		<pubDate>Mon, 01 Jul 2024 23:21:57 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?page_id=36</guid>
@@ -2252,7 +2257,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 														</item>
 					<item>
 		<title><![CDATA[Pricing]]></title>
-		<link>https://staging.unityhub.io/pricing/</link>
+		<link>https://staging.getskedular.com/pricing/</link>
 		<pubDate>Tue, 02 Jul 2024 00:30:25 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/?page_id=49</guid>
@@ -2293,7 +2298,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 							</item>
 					<item>
 		<title><![CDATA[Sign Up]]></title>
-		<link>https://staging.unityhub.io/sign-up/</link>
+		<link>https://staging.getskedular.com/sign-up/</link>
 		<pubDate>Wed, 03 Jul 2024 08:07:28 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/03/sign-up/</guid>
@@ -2358,7 +2363,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 							</item>
 					<item>
 		<title><![CDATA[Navigation]]></title>
-		<link>https://staging.unityhub.io/navigation-2/</link>
+		<link>https://staging.getskedular.com/navigation-2/</link>
 		<pubDate>Mon, 01 Jul 2024 09:48:06 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/2024/07/01/navigation/</guid>
@@ -2382,7 +2387,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 														</item>
 					<item>
 		<title><![CDATA[Custom Styles]]></title>
-		<link>https://staging.unityhub.io/wp-global-styles-twentytwentyfour/</link>
+		<link>https://staging.getskedular.com/wp-global-styles-twentytwentyfour/</link>
 		<pubDate>Tue, 02 Jul 2024 03:55:26 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://stagingpublic.unityhub.io/wp-global-styles-twentytwentyfour/</guid>
@@ -2407,7 +2412,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 						</item>
 					<item>
 		<title><![CDATA[Slack Sucess Install]]></title>
-		<link>https://staging.unityhub.io/slack-success-install/</link>
+		<link>https://staging.getskedular.com/slack-success-install/</link>
 		<pubDate>Wed, 03 Jul 2024 09:16:01 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/?page_id=148</guid>
@@ -2446,7 +2451,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 							</item>
 					<item>
 		<title><![CDATA[About us]]></title>
-		<link>https://staging.unityhub.io/about-us/</link>
+		<link>https://staging.getskedular.com/about-us/</link>
 		<pubDate>Thu, 15 Aug 2024 05:17:15 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/?page_id=171</guid>
@@ -2528,7 +2533,7 @@ Commenter avatars come from <a href="https://en.gravatar.com/">Gravatar</a>.]]><
 							</item>
 					<item>
 		<title><![CDATA[]]></title>
-		<link>https://staging.unityhub.io/180/</link>
+		<link>https://staging.getskedular.com/180/</link>
 		<pubDate>Thu, 15 Aug 2024 05:32:10 +0000</pubDate>
 		<dc:creator><![CDATA[morteza]]></dc:creator>
 		<guid isPermaLink="false">https://staging.unityhub.io/180/</guid>

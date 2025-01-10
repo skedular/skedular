@@ -1,8 +1,8 @@
-import unityhub from "@repo/eslint-config/react-internal.mjs";
+import skedular from "@repo/eslint-config/react-internal.mjs";
 
 export default [
   {
     ignores: ["src/clients/openapi/skedular/"],
   },
-  ...unityhub,
+  ...skedular,
 ];

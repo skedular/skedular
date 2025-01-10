@@ -5,22 +5,22 @@
   "id": "9e668292-6724-11ef-921c-5f8c407faabc",
   "packageName": "com.microsoft.teams.extension",
   "developer": {
-    "name": "UnityHub Ltd",
-    "websiteUrl": "https://msteams.staging.unityhub.io",
-    "privacyUrl": "https://unityhub.io/privacy-policy",
-    "termsOfUseUrl": "https://unityhub.io/terms-of-service"
+    "name": "skedular Ltd",
+    "websiteUrl": "https://msteams.staging.skedular.app",
+    "privacyUrl": "https://getskedular.com/privacy-policy",
+    "termsOfUseUrl": "https://getskedular.com/terms-of-service"
   },
   "icons": {
     "color": "logo.png",
     "outline": "logo.png"
   },
   "name": {
-    "short": "UnityHub-staging",
-    "full": "UnityHub-staging"
+    "short": "Skedular-staging",
+    "full": "Skedular-staging"
   },
   "description": {
-    "short": "UnityHub-staging",
-    "full": "UnityHub-staging"
+    "short": "Skedular-staging",
+    "full": "Skedular-staging"
   },
   "accentColor": "#FFFFFF",
   "bots": [],
@@ -28,16 +28,16 @@
   "staticTabs": [
     {
       "entityId": "index",
-      "name": "UnityHub Home",
-      "contentUrl": "https://msteams.staging.unityhub.io",
-      "websiteUrl": "https://msteams.staging.unityhub.io",
+      "name": "Skedular Home",
+      "contentUrl": "https://msteams.staging.skedular.app",
+      "websiteUrl": "https://msteams.staging.skedular.app",
       "scopes": ["personal", "team", "groupChat"]
     }
   ],
   "permissions": ["identity", "messageTeamMembers"],
-  "validDomains": ["msteams.staging.unityhub.io"],
+  "validDomains": ["msteams.staging.skedular.app"],
   "webApplicationInfo": {
     "id": "e2f3d447-0197-4a61-be7a-546c4b02b4d3",
-    "resource": "api://msteams.staging.unityhub.io/e2f3d447-0197-4a61-be7a-546c4b02b4d3"
+    "resource": "api://msteams.staging.skedular.app/e2f3d447-0197-4a61-be7a-546c4b02b4d3"
   }
 }

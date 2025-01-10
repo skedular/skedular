@@ -14,5 +14,5 @@
 - Create OAuth client ID credential for each one of them
 
 gcloud auth application-default login
-gcloud config set project unityhub-staging
-gcloud config set project unityhub-production
+gcloud config set project skedular-staging
+gcloud config set project skedular-production

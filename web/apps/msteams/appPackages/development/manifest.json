@@ -5,22 +5,22 @@
   "id": "2d02f9d4-7ad1-48d7-9a65-368287dcda70",
   "packageName": "com.microsoft.teams.extension",
   "developer": {
-    "name": "UnityHub Ltd",
+    "name": "Skedular Ltd",
     "websiteUrl": "https://localhost:15002",
-    "privacyUrl": "https://unityhub.io/privacy-policy",
-    "termsOfUseUrl": "https://unityhub.io/terms-of-service"
+    "privacyUrl": "https://getskedular.com/privacy-policy",
+    "termsOfUseUrl": "https://getskedular.com/terms-of-service"
   },
   "icons": {
     "color": "logo.png",
     "outline": "logo.png"
   },
   "name": {
-    "short": "UnityHub-development",
-    "full": "UnityHub-development"
+    "short": "Skedular-development",
+    "full": "Skedular-development"
   },
   "description": {
-    "short": "UnityHub-development",
-    "full": "UnityHub-development"
+    "short": "Skedular-development",
+    "full": "Skedular-development"
   },
   "accentColor": "#FFFFFF",
   "bots": [],
@@ -28,7 +28,7 @@
   "staticTabs": [
     {
       "entityId": "index",
-      "name": "UnityHub Home",
+      "name": "Skedular Home",
       "contentUrl": "https://localhost:15002",
       "websiteUrl": "https://localhost:15002",
       "scopes": ["personal", "team", "groupChat"]
