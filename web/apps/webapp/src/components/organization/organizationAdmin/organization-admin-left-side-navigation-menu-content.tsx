@@ -99,7 +99,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
       </ListItem>
 
       <ListItem disablePadding>
-        <Link href={ssoLink}>
+        <Link component={NextLink} href={ssoLink}>
           <ListItemButton selected={fullPath === ssoLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === ssoLink) }}>
             {collapsed && (
               <BodyIconTypography
