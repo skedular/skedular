@@ -1,4 +1,5 @@
 import {
+  getModernOrganizationAdminBillingAndPaymentBaseLink,
   getModernOrganizationAdminDeskTypesBaseLink,
   getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationAdminSSOBaseLink,
@@ -9,7 +10,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
-import { DeskTypeIcon, SSOIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { BillingAndPaymentIcon, DeskTypeIcon, EditIcon, SSOIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
 import NextLink from 'next/link';
@@ -58,8 +59,8 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-
   const setupLink = getModernOrganizationAdminSetupBaseLink(organizationId);
+  const billingAndPaymentLink = getModernOrganizationAdminBillingAndPaymentBaseLink(organizationId);
   const ssoLink = getModernOrganizationAdminSSOBaseLink(organizationId);
   const zonesLink = getModernOrganizationAdminZonesBaseLink(organizationId);
   const deskTypesLink = getModernOrganizationAdminDeskTypesBaseLink(organizationId);
@@ -81,16 +82,41 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
           <ListItemButton selected={fullPath === setupLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === setupLink) }}>
             {collapsed && (
               <BodyIconTypography
-                startElement={!hideIcons && <ZoneIcon color="inherit" />}
+                startElement={!hideIcons && <EditIcon color="inherit" />}
                 invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
               />
             )}
             {!collapsed && (
               <BodyIconTypography
                 label="Organization Setup"
-                startElement={!hideIcons && <ZoneIcon color="inherit" />}
+                startElement={!hideIcons && <EditIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={billingAndPaymentLink}>
+          <ListItemButton
+            selected={fullPath === billingAndPaymentLink}
+            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === billingAndPaymentLink) }}
+          >
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
+                invertDefaultColor={fullPath === billingAndPaymentLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Billing & Payment"
+                startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === billingAndPaymentLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c145357311a12dd084fcf23c992a4095>>
+ * @generated SignedSource<<4b65a3b66409f5b19646c3d31ee4c35f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,7 +28,14 @@ var v0 = [
     "kind": "LocalArgument",
     "name": "organizationId"
   }
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -65,13 +72,7 @@ return {
         "name": "organization",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -96,13 +97,7 @@ return {
         "name": "organizationBillingInfo",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "organizationId",
-            "storageKey": null
-          },
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -165,16 +160,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a3a013fd3bf26a9f3b571a51602ee1db",
+    "cacheID": "13efe2657a84312d9b79b0e49a675c22",
     "id": null,
     "metadata": {},
     "name": "organizationBillingInfo_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationBillingInfo_refetchableFragment(\n  $organizationId: String!\n) {\n  ...organizationBillingInfo_query\n}\n\nfragment organizationBillingInfo_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n  }\n  organizationBillingInfo(organizationId: $organizationId) {\n    organizationId\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n}\n"
+    "text": "query organizationBillingInfo_refetchableFragment(\n  $organizationId: String!\n) {\n  ...organizationBillingInfo_query\n}\n\nfragment organizationBillingInfo_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n  }\n  organizationBillingInfo(organizationId: $organizationId) {\n    id\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "21bcc26f06ca53378b25c31153f3c099";
+(node as any).hash = "1719aa4b5bf95c806b403bc8576a102a";
 
 export default node;

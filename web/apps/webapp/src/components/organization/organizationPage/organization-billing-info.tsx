@@ -65,7 +65,7 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
           name
         }
         organizationBillingInfo(organizationId: $organizationId) {
-          organizationId
+          id
           email
           addressLine1
           addressLine2
@@ -84,7 +84,7 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
     mutation organizationBillingInfo_setOrganizationBillingInfoMutation($input: SetOrganizationBillingInfoInput!) @raw_response_type {
       setOrganizationBillingInfo(input: $input) {
         organizationBillingInfo {
-          organizationId
+          id
           email
           addressLine1
           addressLine2
@@ -116,8 +116,15 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
       return;
     }
 
+    if (!rootData.organizationBillingInfo) {
+      return;
+    }
+
+    const organization = rootData.organization;
+    const organizationBillingInfo = rootData.organizationBillingInfo;
+
     const toastId = themedToast(
-      <NotificationContent content={`Updating organization '${rootData.organization.name} billing contact info'...`} />,
+      <NotificationContent content={`Updating organization '${organization.name} billing contact info'...`} />,
       infoNotificationOptions,
     );
 
@@ -125,7 +132,7 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
       variables: {
         input: {
           clientMutationId: nanoid(),
-          organizationId: rootData.organization.id,
+          organizationId: organization.id,
           email,
           addressLine1,
           addressLine2,
@@ -142,7 +149,7 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
             ...errorNotificationOptions,
             render: (
               <NotificationContent
-                content={`Failed to update organization '${rootData.organization?.name}' billing contact info. Error: ${joinErrors(errors)}.`}
+                content={`Failed to update organization '${organization?.name}' billing contact info. Error: ${joinErrors(errors)}.`}
               />
             ),
           });
@@ -152,28 +159,23 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${rootData.organization?.name} billing contact info updated.`} />,
+          render: <NotificationContent content={`Organization ${organization?.name} billing contact info updated.`} />,
         });
 
         setEditing(false);
-        startTransition(() => {
-          refetch({ organizationId: rootData.organization?.id }, { fetchPolicy: 'store-and-network' });
-        });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
           render: (
-            <NotificationContent
-              content={`Failed to update organization '${rootData.organization?.name}' billing contact info. Error: ${error.message}.`}
-            />
+            <NotificationContent content={`Failed to update organization '${organization?.name}' billing contact info. Error: ${error.message}.`} />
           ),
         });
       },
       optimisticResponse: {
         setOrganizationBillingInfo: {
           organizationBillingInfo: {
-            organizationId: rootData.organization.id,
+            id: organizationBillingInfo.id,
             email,
             addressLine1,
             addressLine2,

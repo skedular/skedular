@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<46654b3ef2ca4248ea01005ec1eecc8e>>
+ * @generated SignedSource<<63506d29a631176191b770309dd00be5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,7 +32,7 @@ export type organizationBillingInfo_setOrganizationBillingInfoMutation$data = {
       readonly city: string | null | undefined;
       readonly country: string | null | undefined;
       readonly email: string | null | undefined;
-      readonly organizationId: string;
+      readonly id: string;
       readonly province: string | null | undefined;
       readonly suburb: string | null | undefined;
       readonly zipcode: string | null | undefined;
@@ -47,7 +47,7 @@ export type organizationBillingInfo_setOrganizationBillingInfoMutation$rawRespon
       readonly city: string | null | undefined;
       readonly country: string | null | undefined;
       readonly email: string | null | undefined;
-      readonly organizationId: string;
+      readonly id: string;
       readonly province: string | null | undefined;
       readonly suburb: string | null | undefined;
       readonly zipcode: string | null | undefined;
@@ -95,7 +95,7 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "organizationId",
+            "name": "id",
             "storageKey": null
           },
           {
@@ -179,16 +179,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "0f48f3d790fe9d206f632e89a153bbb9",
+    "cacheID": "2a530ee35c7c687557c2019241f306e3",
     "id": null,
     "metadata": {},
     "name": "organizationBillingInfo_setOrganizationBillingInfoMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationBillingInfo_setOrganizationBillingInfoMutation(\n  $input: SetOrganizationBillingInfoInput!\n) {\n  setOrganizationBillingInfo(input: $input) {\n    organizationBillingInfo {\n      organizationId\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
+    "text": "mutation organizationBillingInfo_setOrganizationBillingInfoMutation(\n  $input: SetOrganizationBillingInfoInput!\n) {\n  setOrganizationBillingInfo(input: $input) {\n    organizationBillingInfo {\n      id\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a8dae293cf846deaef2add4117c30f94";
+(node as any).hash = "82126a0d1de5a81c9caf1ff09585c62b";
 
 export default node;

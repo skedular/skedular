@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d3df6bc2d955cd3bcee5a13a6c6a5a04>>
+ * @generated SignedSource<<a73cd4684e5945f429adf73dcbaf69a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,17 @@ export type organizationAdmin_query$data = {
     readonly logoUrl: string | null | undefined;
     readonly name: string;
     readonly website: string | null | undefined;
+  } | null | undefined;
+  readonly organizationBillingInfo: {
+    readonly addressLine1: string | null | undefined;
+    readonly addressLine2: string | null | undefined;
+    readonly city: string | null | undefined;
+    readonly country: string | null | undefined;
+    readonly email: string | null | undefined;
+    readonly id: string;
+    readonly province: string | null | undefined;
+    readonly suburb: string | null | undefined;
+    readonly zipcode: string | null | undefined;
   } | null | undefined;
   readonly organizationIndustryMainCategoriesReferences: ReadonlyArray<{
     readonly subCategories: ReadonlyArray<{
@@ -146,6 +157,80 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "organizationId",
+          "variableName": "organizationId"
+        }
+      ],
+      "concreteType": "OrganizationBillingInfo",
+      "kind": "LinkedField",
+      "name": "organizationBillingInfo",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "email",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "addressLine1",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "addressLine2",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "suburb",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "city",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "province",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "zipcode",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "country",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "organizationMultipleChoicesIndustries_query"
@@ -156,6 +241,6 @@ return {
 };
 })();
 
-(node as any).hash = "a16edf7c8a8bd474f8c9138ce797e31a";
+(node as any).hash = "ab0d3c1cf9acaf09ccb5d28c0a1f117c";
 
 export default node;

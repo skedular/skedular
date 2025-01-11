@@ -1,17 +1,17 @@
 ﻿schema {
-    query: Query
+  query: Query
 }
 
 type Query {
-    slackVersion: Version!
-    slackCustomerRecordSynced: Boolean! @cost(weight: "10")
+  slackVersion: Version!
+  slackCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type Version {
-    major: Int!
-    minor: Int!
-    build: Int!
-    revision: Int!
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

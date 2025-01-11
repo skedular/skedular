@@ -7,6 +7,7 @@ import type { organizationAdmin_deleteZonesMutation } from '@/queries/__generate
 import type { organizationAdmin_deskTypes_query$key } from '@/queries/__generated__/organizationAdmin_deskTypes_query.graphql';
 import type { organizationAdmin_deskTypes_refetchableFragment } from '@/queries/__generated__/organizationAdmin_deskTypes_refetchableFragment.graphql';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
+import type { organizationAdmin_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationAdmin_setOrganizationBillingInfoMutation.graphql';
 import type { organizationAdmin_updateOrganizationMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_zones_query$key } from '@/queries/__generated__/organizationAdmin_zones_query.graphql';
 import type { organizationAdmin_zones_refetchableFragment } from '@/queries/__generated__/organizationAdmin_zones_refetchableFragment.graphql';
@@ -27,6 +28,7 @@ import {
   StackRow,
 } from '@repo/shared/components/commons';
 import { DeskType } from '@repo/shared/components/deskType';
+import { SingleChoiceCountry } from '@repo/shared/components/forms';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -70,6 +72,14 @@ type OrganizationDetails = {
   about: string | null;
   website: string | null;
   industrySubCategoryIds: string[];
+  billingEmail: string;
+  billingAddressLine1: string | null;
+  billingAddressLine2: string | null;
+  billingSuburb: string | null;
+  billingCity: string | null;
+  billingProvince: string | null;
+  billingZipcode: string | null;
+  billingCountry: string | null;
 };
 
 const organizationSchema = object({
@@ -77,6 +87,14 @@ const organizationSchema = object({
   about: string().nullable(),
   website: string().nullable(),
   industrySubCategoryIds: array().nullable(),
+  billingEmail: string().email(({ value }) => `${value} is not a valid email`),
+  billingAddressLine1: string().nullable(),
+  billingAddressLine2: string().nullable(),
+  billingSuburb: string().nullable(),
+  billingCity: string().nullable(),
+  billingProvince: string().nullable(),
+  billingZipcode: string().nullable(),
+  billingCountry: string().nullable(),
 });
 
 type ZoneRowType = {
@@ -112,6 +130,17 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
             id
             name
           }
+        }
+        organizationBillingInfo(organizationId: $organizationId) {
+          id
+          email
+          addressLine1
+          addressLine2
+          suburb
+          city
+          province
+          zipcode
+          country
         }
         ...organizationMultipleChoicesIndustries_query
       }
@@ -202,6 +231,24 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
       deleteDeskTypes(input: $input) {
         organizationTags {
           id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitSetOrganizationBillingInfo] = useMutation<organizationAdmin_setOrganizationBillingInfoMutation>(graphql`
+    mutation organizationAdmin_setOrganizationBillingInfoMutation($input: SetOrganizationBillingInfoInput!) @raw_response_type {
+      setOrganizationBillingInfo(input: $input) {
+        organizationBillingInfo {
+          id
+          email
+          addressLine1
+          addressLine2
+          suburb
+          city
+          province
+          zipcode
+          country
         }
       }
     }
@@ -310,22 +357,39 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
     [refetchDeskTypes],
   );
 
-  const handleDetailUpdateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
+  const handleDetailUpdateClick = ({
+    name,
+    about,
+    website,
+    industrySubCategoryIds,
+    billingEmail,
+    billingAddressLine1,
+    billingAddressLine2,
+    billingSuburb,
+    billingCity,
+    billingProvince,
+    billingZipcode,
+    billingCountry,
+  }: OrganizationDetails) => {
     if (!rootData.organization) {
       return;
     }
 
+    if (!rootData.organizationBillingInfo) {
+      return;
+    }
+
+    const organization = rootData.organization;
+    const organizationBillingInfo = rootData.organizationBillingInfo;
+
     const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
-    const toastId = themedToast(
-      <NotificationContent content={`Updating organization '${rootData.organization.name}'...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}'...`} />, infoNotificationOptions);
 
     commitUpdateOrganization({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id: rootData.organization.id,
+          id: organization.id,
           name,
           about,
           website,
@@ -336,29 +400,77 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${rootData.organization?.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
         }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${name} details updated.`} />,
-        });
+        commitSetOrganizationBillingInfo({
+          variables: {
+            input: {
+              clientMutationId: nanoid(),
+              organizationId: organization.id,
+              email: billingEmail,
+              addressLine1: billingAddressLine1,
+              addressLine2: billingAddressLine2,
+              suburb: billingSuburb,
+              city: billingCity,
+              province: billingProvince,
+              zipcode: billingZipcode,
+              country: billingCountry,
+            },
+          },
+          onCompleted: (_, errors) => {
+            if (errors && errors.length > 0) {
+              toast.update(toastId, {
+                ...errorNotificationOptions,
+                render: <NotificationContent content={`Failed to update organization '${organization?.name}'. Error: ${joinErrors(errors)}.`} />,
+              });
 
-        router.push(getOrganizationBaseLink(organizationId));
+              return;
+            }
+
+            toast.update(toastId, {
+              ...successNotificationOptions,
+              render: <NotificationContent content={`Organization ${name} details updated.`} />,
+            });
+
+            router.push(getOrganizationBaseLink(organizationId));
+          },
+          onError: (error) => {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to update organization '${organization?.name}'. Error: ${error.message}.`} />,
+            });
+          },
+          optimisticResponse: {
+            setOrganizationBillingInfo: {
+              organizationBillingInfo: {
+                id: organizationBillingInfo.id,
+                email: billingEmail,
+                addressLine1: billingAddressLine1,
+                addressLine2: billingAddressLine2,
+                suburb: billingSuburb,
+                city: billingCity,
+                province: billingProvince,
+                zipcode: billingZipcode,
+                country: billingCountry,
+              },
+            },
+          },
+        });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization '${rootData.organization?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update organization '${organization?.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
         updateOrganization: {
           organization: {
-            id: rootData.organization.id,
+            id: organization.id,
             name,
             about,
             website,
@@ -593,6 +705,10 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
     return <></>;
   }
 
+  if (!rootData.organizationBillingInfo) {
+    return <></>;
+  }
+
   const zoneRows: ZoneRowType[] = zones.map((zone) => ({
     id: zone.id,
     name: zone.name,
@@ -678,6 +794,15 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
   ];
 
   const organization = rootData.organization;
+  const organizationBillingInfo = rootData.organizationBillingInfo;
+  const billingEmail = organizationBillingInfo.email ? organizationBillingInfo.email : '';
+  const billingAddressLine1 = organizationBillingInfo.addressLine1 ? organizationBillingInfo.addressLine1 : '';
+  const billingAddressLine2 = organizationBillingInfo.addressLine2 ? organizationBillingInfo.addressLine2 : '';
+  const billingSuburb = organizationBillingInfo.suburb ? organizationBillingInfo.suburb : '';
+  const billingCity = organizationBillingInfo.city ? organizationBillingInfo.city : '';
+  const billingProvince = organizationBillingInfo.province ? organizationBillingInfo.province : '';
+  const billingZipcode = organizationBillingInfo.zipcode ? organizationBillingInfo.zipcode : '';
+  const billingCountry = organizationBillingInfo.country ? organizationBillingInfo.country : '';
 
   return (
     <>
@@ -691,6 +816,14 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
               about: organization.about,
               website: organization.website,
               industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
+              billingEmail,
+              billingAddressLine1,
+              billingAddressLine2,
+              billingSuburb,
+              billingCity,
+              billingProvince,
+              billingZipcode,
+              billingCountry,
             }}
             validate={validate}
             render={({ handleSubmit }) => (
@@ -725,6 +858,51 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
                       name="industrySubCategoryIds"
                       required={requiredFields.industrySubCategoryIds}
                     />
+                  </FormFieldLabel>
+                </StackColumn>
+
+                <StackColumn
+                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                  ref={(divElement) => {
+                    sectionRefs.current['billing-payment-setup'] = divElement;
+                  }}
+                >
+                  <SectionIconTypography label="Billing & Payment Setup" />
+                  <BodyIconTypography label="Edit your organization billing and payment details" />
+                  <Divider />
+                </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Email">
+                    <TextField name="billingEmail" required={requiredFields.billingEmail} helperText="Email to send invoice to" />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Address line 1">
+                    <TextField name="billingAddressLine1" required={requiredFields.billingAddressLine1} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Address line 2">
+                    <TextField name="billingAddressLine2" required={requiredFields.billingAddressLine2} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Suburb">
+                    <TextField name="billingSuburb" required={requiredFields.billingSuburb} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="City">
+                    <TextField name="billingCity" required={requiredFields.billingCity} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Province">
+                    <TextField name="billingProvince" required={requiredFields.billingProvince} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Zipcode">
+                    <TextField name="billingZipcode" required={requiredFields.billingZipcode} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Country">
+                    <SingleChoiceCountry name="billingCountry" required={requiredFields.billingCountry} />
                   </FormFieldLabel>
                 </StackColumn>
 

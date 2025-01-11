@@ -18,7 +18,7 @@ public class Mapper : IMapper
     public OrganizationBillingInfo MapTo(Organization src) =>
         new()
         {
-            OrganizationId = src.Id,
+            Id = $"organization-billing-{src.Id}",
             Email = src.BillingContactEmail,
             AddressLine1 = src.BillingContactAddressLine1,
             AddressLine2 = src.BillingContactAddressLine2,

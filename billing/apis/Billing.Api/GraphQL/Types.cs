@@ -1,3 +1,4 @@
+using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
@@ -7,9 +8,8 @@ using HotChocolate.Types.Relay;
 namespace Billing.Api.GraphQL;
 
 [GraphQLName("OrganizationBillingInfo")]
-public class OrganizationBillingInfo
+public class OrganizationBillingInfo : Node
 {
-    [GraphQLName("organizationId")] [ID] public required string OrganizationId { get; set; }
     [GraphQLName("email")] public string? Email { get; set; }
     [GraphQLName("addressLine1")] public string? AddressLine1 { get; set; }
     [GraphQLName("addressLine2")] public string? AddressLine2 { get; set; }
@@ -18,6 +18,7 @@ public class OrganizationBillingInfo
     [GraphQLName("province")] public string? Province { get; set; }
     [GraphQLName("zipcode")] public string? Zipcode { get; set; }
     [GraphQLName("country")] public string? Country { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("OrganizationBillingInfoPayload")]

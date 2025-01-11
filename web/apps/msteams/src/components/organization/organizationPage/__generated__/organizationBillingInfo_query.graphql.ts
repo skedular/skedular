@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b069830cb69046d45e6e84f24da25b56>>
+ * @generated SignedSource<<bf0db7d59c16842488a7e2f9be337ed5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type organizationBillingInfo_query$data = {
     readonly city: string | null | undefined;
     readonly country: string | null | undefined;
     readonly email: string | null | undefined;
-    readonly organizationId: string;
+    readonly id: string;
     readonly province: string | null | undefined;
     readonly suburb: string | null | undefined;
     readonly zipcode: string | null | undefined;
@@ -33,7 +33,15 @@ export type organizationBillingInfo_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationBillingInfo_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -64,13 +72,7 @@ const node: ReaderFragment = {
       "name": "organization",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -95,13 +97,7 @@ const node: ReaderFragment = {
       "name": "organizationBillingInfo",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "organizationId",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -165,7 +161,8 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "21bcc26f06ca53378b25c31153f3c099";
+(node as any).hash = "1719aa4b5bf95c806b403bc8576a102a";
 
 export default node;

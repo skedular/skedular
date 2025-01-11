@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<63506d29a631176191b770309dd00be5>>
+ * @generated SignedSource<<967df9ce29e61417cc6703fe8f475e81>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,10 +21,10 @@ export type SetOrganizationBillingInfoInput = {
   suburb?: string | null | undefined;
   zipcode?: string | null | undefined;
 };
-export type organizationBillingInfo_setOrganizationBillingInfoMutation$variables = {
+export type organizationAdmin_setOrganizationBillingInfoMutation$variables = {
   input: SetOrganizationBillingInfoInput;
 };
-export type organizationBillingInfo_setOrganizationBillingInfoMutation$data = {
+export type organizationAdmin_setOrganizationBillingInfoMutation$data = {
   readonly setOrganizationBillingInfo: {
     readonly organizationBillingInfo: {
       readonly addressLine1: string | null | undefined;
@@ -39,7 +39,7 @@ export type organizationBillingInfo_setOrganizationBillingInfoMutation$data = {
     };
   } | null | undefined;
 };
-export type organizationBillingInfo_setOrganizationBillingInfoMutation$rawResponse = {
+export type organizationAdmin_setOrganizationBillingInfoMutation$rawResponse = {
   readonly setOrganizationBillingInfo: {
     readonly organizationBillingInfo: {
       readonly addressLine1: string | null | undefined;
@@ -54,10 +54,10 @@ export type organizationBillingInfo_setOrganizationBillingInfoMutation$rawRespon
     };
   } | null | undefined;
 };
-export type organizationBillingInfo_setOrganizationBillingInfoMutation = {
-  rawResponse: organizationBillingInfo_setOrganizationBillingInfoMutation$rawResponse;
-  response: organizationBillingInfo_setOrganizationBillingInfoMutation$data;
-  variables: organizationBillingInfo_setOrganizationBillingInfoMutation$variables;
+export type organizationAdmin_setOrganizationBillingInfoMutation = {
+  rawResponse: organizationAdmin_setOrganizationBillingInfoMutation$rawResponse;
+  response: organizationAdmin_setOrganizationBillingInfoMutation$data;
+  variables: organizationAdmin_setOrganizationBillingInfoMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -166,7 +166,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationBillingInfo_setOrganizationBillingInfoMutation",
+    "name": "organizationAdmin_setOrganizationBillingInfoMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -175,20 +175,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationBillingInfo_setOrganizationBillingInfoMutation",
+    "name": "organizationAdmin_setOrganizationBillingInfoMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "2a530ee35c7c687557c2019241f306e3",
+    "cacheID": "4cc4577fd8a2d7cb351aebfc8bdf5c20",
     "id": null,
     "metadata": {},
-    "name": "organizationBillingInfo_setOrganizationBillingInfoMutation",
+    "name": "organizationAdmin_setOrganizationBillingInfoMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationBillingInfo_setOrganizationBillingInfoMutation(\n  $input: SetOrganizationBillingInfoInput!\n) {\n  setOrganizationBillingInfo(input: $input) {\n    organizationBillingInfo {\n      id\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_setOrganizationBillingInfoMutation(\n  $input: SetOrganizationBillingInfoInput!\n) {\n  setOrganizationBillingInfo(input: $input) {\n    organizationBillingInfo {\n      id\n      email\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "82126a0d1de5a81c9caf1ff09585c62b";
+(node as any).hash = "2c427d41bfc4810e0533735875d8c2a1";
 
 export default node;
