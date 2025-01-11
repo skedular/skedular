@@ -201,7 +201,7 @@ const MyLocationCard = ({
 
   return (
     <>
-      <Card sx={{ width: 600 }}>
+      <Card sx={{ width: { xs: '100%', sm: 600 } }}>
         <CardHeader
           title={
             <StackRow>

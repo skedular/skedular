@@ -191,7 +191,7 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
 
   return (
     <>
-      <Card sx={{ width: 315 }}>
+      <Card sx={{ width: { xs: '100%', sm: 315 } }}>
         <CardHeader
           title={
             <LeadIconTypography

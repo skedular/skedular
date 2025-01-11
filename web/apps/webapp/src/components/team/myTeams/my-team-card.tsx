@@ -177,7 +177,7 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
 
   return (
     <>
-      <Card sx={{ width: 600 }}>
+      <Card sx={{ width: { xs: '100%', sm: 400 } }}>
         <CardHeader
           title={
             <Link component={NextLink} href={editLink}>

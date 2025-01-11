@@ -9,14 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import {
-  DefaultDialogTitle,
-  LeadIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-  TwoButtonsDialogActions,
-} from '@repo/shared/components/commons';
+import { DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { EllipseMenuIcon, TeamIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -177,7 +170,7 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
 
   return (
     <>
-      <Card sx={{ width: 600 }}>
+      <Card sx={{ width: { xs: '100%', sm: 400 } }}>
         <CardHeader
           title={
             <Link href={editLink}>
@@ -197,16 +190,14 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
           }
         />
         <CardContent>
-          <StackColumn sx={{ paddingTop: 1, paddingBottom: 1 }}>
+          <StackRow>
             <SmallIconTypography label="Members of this team" />
-            <StackRow>
-              <AvatarGroup max={5}>
-                {teammates.map((item) => (
-                  <CustomerAvatar key={item.uniqueId} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
-                ))}
-              </AvatarGroup>
-            </StackRow>
-          </StackColumn>
+            <AvatarGroup max={5}>
+              {teammates.map((item) => (
+                <CustomerAvatar key={item.uniqueId} name={item} photo={{ url: item.photoUrl }} size="medium" showFullName />
+              ))}
+            </AvatarGroup>
+          </StackRow>
         </CardContent>
       </Card>
 
