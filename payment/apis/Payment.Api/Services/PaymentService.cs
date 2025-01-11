@@ -96,13 +96,14 @@ public class PaymentService(
         var redirectUrl = Url.Combine(
             applicationConfiguration.WebAppBaseDomain,
             "organizations",
-            organizationStripePaymentMethod.Organization.Id);
+            organizationStripePaymentMethod.Organization.Id,
+            "admin");
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(
             repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork,
             cancellationToken);
 
-        redirectUrl = redirectUrl.SetQueryParam("tab", "billing");
+        redirectUrl = redirectUrl.SetQueryParam("section", "billing-payment-setup");
 
         if (redirectStatus != "succeeded")
         {

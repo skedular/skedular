@@ -8,11 +8,11 @@ import {
   FormFieldLabel,
   FormStackColumn,
   LeadIconTypography,
+  SectionIconTypography,
   StackRow,
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
 import { SingleChoiceCountry } from '@repo/shared/components/forms';
-import { EditIcon } from '@repo/shared/components/icons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -23,7 +23,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useContext, useState, useTransition } from 'react';
+import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -57,7 +57,7 @@ const organizationBillingInfoSchema = object({
 });
 
 const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment<organizationBillingInfo_refetchableFragment, organizationBillingInfo_query$key>(
+  const [rootData] = useRefetchableFragment<organizationBillingInfo_refetchableFragment, organizationBillingInfo_query$key>(
     graphql`
       fragment organizationBillingInfo_query on Query @refetchable(queryName: "organizationBillingInfo_refetchableFragment") {
         organization(id: $organizationId) {
@@ -100,7 +100,6 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const [, startTransition] = useTransition();
   const [editing, setEditing] = useState(false);
   const validate = makeValidate(organizationBillingInfoSchema);
   const requiredFields = makeRequired(organizationBillingInfoSchema);
@@ -207,6 +206,8 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
     <>
       {!editing && (
         <>
+          <SectionIconTypography label="Billing Info" />
+
           <StackRow>
             <LeadIconTypography label="Email" />
             <BodyIconTypography label={email} />
@@ -248,8 +249,8 @@ const OrganizationBillingInfo = ({ rootDataRelay, onReloadRequired }: Props) => 
           </StackRow>
 
           <StackRow>
-            <Button variant="contained" size="small" color="primary" startIcon={<EditIcon />} onClick={handleEditClick}>
-              Edit
+            <Button variant="contained" onClick={handleEditClick}>
+              <BodyIconTypography label="Edit" invertDefaultColor={paletteMode === 'dark'} />
             </Button>
           </StackRow>
         </>

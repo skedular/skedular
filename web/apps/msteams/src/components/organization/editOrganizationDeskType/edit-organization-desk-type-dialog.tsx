@@ -139,7 +139,7 @@ const EditOrganizationDeskTypeDialog = ({ queryReference, deskTypeId, isDialogOp
 
   return (
     <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
-      <DefaultDialogTitle title="Edit DeskType" />
+      <DefaultDialogTitle title="Edit Desk Type" />
       <DialogContent>
         <Form
           onSubmit={handleAddClick}

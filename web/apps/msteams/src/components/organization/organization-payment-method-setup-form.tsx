@@ -7,10 +7,10 @@ import { Form } from 'react-final-form';
 import { toast } from 'react-toastify';
 
 type Props = {
-  onCancelClick: () => void;
+  onCancel: () => void;
 };
 
-const OrganizationPaymentMethodSetupForm = ({ onCancelClick }: Props) => {
+const OrganizationPaymentMethodSetupForm = ({ onCancel }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const stripe = useStripe();
@@ -36,18 +36,15 @@ const OrganizationPaymentMethodSetupForm = ({ onCancelClick }: Props) => {
     setIsAdding(false);
   };
 
-  const handleCancelClick = () => {
-    onCancelClick();
-  };
-
   return (
     <Form
       onSubmit={handleAddClick}
       render={({ handleSubmit }) => (
         <FormStackColumn onSubmit={handleSubmit}>
           <PaymentElement id="payment-element" />
+
           <TwoButtonsDialogActions
-            onSecondaryClicked={handleCancelClick}
+            onSecondaryClicked={onCancel}
             primaryLabel="Add"
             secondaryLabel="Cancel"
             disabled={isAdding || !stripe || !elements}

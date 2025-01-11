@@ -3,7 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import { OrganizationAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
-import { NotificationContent, errorNotificationOptions } from '@repo/shared/components/notification';
+import { NotificationContent, errorNotificationOptions, successNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
@@ -57,6 +57,7 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
     if (addPaymentMethodStatus === 'failed') {
       themedToast(<NotificationContent content={`Failed to add payment method`} />, errorNotificationOptions);
     } else if (addPaymentMethodStatus === 'added') {
+      themedToast(<NotificationContent content={`Payment method added.`} />, successNotificationOptions);
     }
   }, [addPaymentMethodStatus, themedToast]);
 

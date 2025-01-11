@@ -6,7 +6,9 @@ import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import {
   BodyIconTypography,
+  CreditCard,
   FormFieldLabel,
+  LeadIconTypography,
   PushToRight,
   SectionIconTypography,
   SmallIconTypography,
@@ -16,7 +18,7 @@ import {
 } from '@repo/shared/components/commons';
 import { DeskType } from '@repo/shared/components/deskType';
 import { SingleChoiceCountry } from '@repo/shared/components/forms';
-import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
+import { DeleteIcon, EllipseMenuIcon, NewIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -37,6 +39,7 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getOrganizationBaseLink, OrganizationMultipleChoicesIndustries } from 'components/organization';
 import { AddOrganizationDeskTypeButton } from 'components/organization/addOrganizationDeskType';
+import { AddOrganizationPaymentMethodDialog } from 'components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from 'components/organization/addOrganizationZone';
 import { EditOrganizationZoneDialog } from 'components/organization/editOrganizationZone/';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -52,7 +55,10 @@ import type { organizationAdmin_deleteDeskTypesMutation } from './__generated__/
 import type { organizationAdmin_deleteZonesMutation } from './__generated__/organizationAdmin_deleteZonesMutation.graphql';
 import type { organizationAdmin_deskTypes_query$key } from './__generated__/organizationAdmin_deskTypes_query.graphql';
 import type { organizationAdmin_deskTypes_refetchableFragment } from './__generated__/organizationAdmin_deskTypes_refetchableFragment.graphql';
+import type { organizationAdmin_organizationPaymentMethodsDetails_query$key } from './__generated__/organizationAdmin_organizationPaymentMethodsDetails_query.graphql';
+import type { organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment } from './__generated__/organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment.graphql';
 import type { organizationAdmin_query$key } from './__generated__/organizationAdmin_query.graphql';
+import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from './__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdmin_setOrganizationBillingInfoMutation } from './__generated__/organizationAdmin_setOrganizationBillingInfoMutation.graphql';
 import type { organizationAdmin_updateOrganizationMutation } from './__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_zones_query$key } from './__generated__/organizationAdmin_zones_query.graphql';
@@ -62,6 +68,7 @@ import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin
 
 type Props = {
   rootDataRelay: organizationAdmin_query$key;
+  rootDataOrganizationPaymentMethodsDetailsRelay: organizationAdmin_organizationPaymentMethodsDetails_query$key;
   rootDataZonesRelay: organizationAdmin_zones_query$key;
   rootDataDeskTypesRelay: organizationAdmin_deskTypes_query$key;
   onReloadRequired: () => void;
@@ -110,7 +117,14 @@ type DeskTypeRowType = {
   description: string | null | undefined;
 };
 
-const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskTypesRelay, onReloadRequired, organizationId }: Props) => {
+const OrganizationAdmin = ({
+  rootDataRelay,
+  rootDataOrganizationPaymentMethodsDetailsRelay,
+  rootDataZonesRelay,
+  rootDataDeskTypesRelay,
+  onReloadRequired,
+  organizationId,
+}: Props) => {
   const rootData = useFragment<organizationAdmin_query$key>(
     graphql`
       fragment organizationAdmin_query on Query {
@@ -147,6 +161,25 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
       }
     `,
     rootDataRelay,
+  );
+
+  const [rootDataOrganizationPaymentMethodsDetails, refetchOrganizationPaymentMethodsDetails] = useRefetchableFragment<
+    organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment,
+    organizationAdmin_organizationPaymentMethodsDetails_query$key
+  >(
+    graphql`
+      fragment organizationAdmin_organizationPaymentMethodsDetails_query on Query
+      @refetchable(queryName: "organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment") {
+        organizationPaymentMethodsDetails(organizationId: $organizationId) {
+          id
+          cardBrand
+          cardExpiryMonth
+          cardExpiryYear
+          cardLastFourDigit
+        }
+      }
+    `,
+    rootDataOrganizationPaymentMethodsDetailsRelay,
   );
 
   const [rootDataZones, refetchZones] = useRefetchableFragment<organizationAdmin_zones_refetchableFragment, organizationAdmin_zones_query$key>(
@@ -255,6 +288,14 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
     }
   `);
 
+  const [commitRemoveOrganizationPaymentMethod] = useMutation<organizationAdmin_removeOrganizationPaymentMethodMutation>(graphql`
+    mutation organizationAdmin_removeOrganizationPaymentMethodMutation($input: RemoveOrganizationPaymentMethodInput!) {
+      removeOrganizationPaymentMethod(input: $input) {
+        clientMutationId
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -276,6 +317,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
   const deskTypeMoreActionsMenuOpen = Boolean(deskTypeMoreActionsAnchorEl);
   const [isEditZoneDialogOpen, setIsEditZoneDialogOpen] = useState(false);
   const [isEditDeskTypeDialogOpen, setIsEditDeskTypeDialogOpen] = useState(false);
+  const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
 
   const zoneMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditZone],
@@ -357,6 +399,17 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
     },
     [refetchDeskTypes],
   );
+
+  const handleRefetchOrganizationPaymentMethodsDetails = useCallback(() => {
+    startTransition(() => {
+      refetchOrganizationPaymentMethodsDetails(
+        {},
+        {
+          fetchPolicy: 'store-and-network',
+        },
+      );
+    });
+  }, [refetchOrganizationPaymentMethodsDetails]);
 
   const handleDetailUpdateClick = ({
     name,
@@ -698,8 +751,56 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
     setIsEditDeskTypeDialogOpen(false);
   };
 
+  const onAddPaymentMethodClicked = () => {
+    setIsAddPaymentMethodDialogOpen(true);
+  };
+
+  const onAddPaymentMethodCancel = () => {
+    setIsAddPaymentMethodDialogOpen(false);
+  };
+
   const handleCancelClick = () => {
     navigate(getOrganizationBaseLink(organizationId));
+  };
+
+  const handleRemovePaymentMethodClick = (id: string) => {
+    if (!rootData.organization) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Removing payment method...`} />, infoNotificationOptions);
+
+    commitRemoveOrganizationPaymentMethod({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove payment method. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Payment method removed.`} />,
+        });
+
+        handleRefetchOrganizationPaymentMethodsDetails();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove payment method. Error: ${error.message}.`} />,
+        });
+      },
+    });
   };
 
   if (!rootData.organization) {
@@ -804,6 +905,9 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
   const billingProvince = organizationBillingInfo.province ? organizationBillingInfo.province : '';
   const billingZipcode = organizationBillingInfo.zipcode ? organizationBillingInfo.zipcode : '';
   const billingCountry = organizationBillingInfo.country ? organizationBillingInfo.country : '';
+  const paymentMethodExist =
+    rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails &&
+    rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
 
   return (
     <>
@@ -906,6 +1010,46 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
                     <SingleChoiceCountry name="billingCountry" required={requiredFields.billingCountry} />
                   </FormFieldLabel>
                 </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <BodyIconTypography label="Edit your payment method" />
+                  <Divider />
+                </StackColumn>
+
+                {paymentMethodExist && (
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      {rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.map((item) => (
+                        <StackColumn key={item.id}>
+                          <CreditCard
+                            lastFourDigits={item.cardLastFourDigit}
+                            expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`}
+                            cardBrand={item.cardBrand}
+                          />
+                          <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>
+                            <BodyIconTypography
+                              label="Remove Payment Method"
+                              invertDefaultColor={paletteMode === 'dark'}
+                              startElement={<DeleteIcon />}
+                            />
+                          </Button>
+                        </StackColumn>
+                      ))}
+                    </StackRow>
+                  </StackColumn>
+                )}
+
+                {!paymentMethodExist && (
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      <SmallIconTypography label="No payment method setup yet" />
+                      <PushToRight />
+                      <Button variant="text" onClick={onAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
+                        <LeadIconTypography label={'Add Payment Method'} endElement={<NewIcon fontSize="large" />} />
+                      </Button>
+                    </StackRow>
+                  </StackColumn>
+                )}
 
                 <StackColumn
                   sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
@@ -1109,6 +1253,14 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataZonesRelay, rootDataDeskType
           isDialogOpen={isEditDeskTypeDialogOpen}
           onAddClicked={handleEditDeskTypeClick}
           onCancel={onEditDeskTypeCancel}
+        />
+      )}
+
+      {!paymentMethodExist && isAddPaymentMethodDialogOpen && (
+        <AddOrganizationPaymentMethodDialog
+          organizationId={organizationId}
+          isDialogOpen={isAddPaymentMethodDialogOpen}
+          onCancel={onAddPaymentMethodCancel}
         />
       )}
     </>

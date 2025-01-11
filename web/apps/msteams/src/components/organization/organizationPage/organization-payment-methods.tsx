@@ -1,10 +1,6 @@
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
-import { BodyIconTypography, LeadIconTypography, StackRow } from '@repo/shared/components/commons';
-import { AddIcon, RemoveIcon } from '@repo/shared/components/icons';
+import { BodyIconTypography, CreditCard, SectionIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -17,6 +13,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import type { Stripe } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import graphql from 'babel-plugin-relay/macro';
+import { OrganizationPaymentMethodSetupForm } from 'components/organization';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
@@ -24,7 +21,6 @@ import { toast } from 'react-toastify';
 import type { organizationPaymentMethods_addOrganizationPaymentMethodIntentMutation } from './__generated__/organizationPaymentMethods_addOrganizationPaymentMethodIntentMutation.graphql';
 import type { organizationPaymentMethods_query$key } from './__generated__/organizationPaymentMethods_query.graphql';
 import type { organizationPaymentMethods_removeOrganizationPaymentMethodMutation } from './__generated__/organizationPaymentMethods_removeOrganizationPaymentMethodMutation.graphql';
-import OrganizationPaymentMethodSetupForm from './organization-payment-method-setup-form';
 
 type Props = {
   rootDataRelay: organizationPaymentMethods_query$key;
@@ -32,11 +28,9 @@ type Props = {
 };
 
 enum AddOrganizationPaymentMethodState {
-  NOT_STARTED = 1,
+  NOT_STARTED,
   WAITING_FOR_CLIENT_SECRET,
   WAITING_FOR_PAYMENT_METHOD_DETAILS,
-  WAITING_FOR_PAYMENT_METHOD_CONFIRMATION,
-  PAYMENT_METHOD_SUBMITTED,
 }
 
 const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) => {
@@ -177,32 +171,29 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
 
   return (
     <>
-      <LeadIconTypography label="Payment methods" />
+      <SectionIconTypography label="Payment method" />
       {paymentMethodExist && (
         <>
           {rootData.organizationPaymentMethodsDetails.map(({ id, cardBrand, cardExpiryMonth, cardExpiryYear, cardLastFourDigit }) => {
             return (
-              <Card key={id}>
-                <CardContent>
-                  <BodyIconTypography label={`${cardBrand} •••• ${cardLastFourDigit}`} />
-                  <BodyIconTypography label={`Expires ${cardExpiryMonth}/${cardExpiryYear?.toString().slice(-2)}`} />
-                  <CardActions sx={{ justifyContent: 'flex-end' }}>
-                    <Button startIcon={<RemoveIcon />} onClick={() => handleRemovePaymentMethodClick(id)}>
-                      Remove
-                    </Button>
-                  </CardActions>
-                </CardContent>
-              </Card>
+              <StackColumn key={id} sx={{ alignItems: 'flex-start' }}>
+                <CreditCard lastFourDigits={cardLastFourDigit} expiryDate={`${cardExpiryMonth}/${cardExpiryYear}`} cardBrand={cardBrand} />
+
+                <Button variant="contained" onClick={() => handleRemovePaymentMethodClick(id)}>
+                  <BodyIconTypography label="Remove" invertDefaultColor={paletteMode === 'dark'} />
+                </Button>
+              </StackColumn>
             );
           })}
         </>
       )}
+
       {!paymentMethodExist && addNewPaymentMethodState === AddOrganizationPaymentMethodState.NOT_STARTED && (
         <>
           <BodyIconTypography label="No payment method setup yet" />
           <StackRow>
-            <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={handleAddNewPaymentMethodClick}>
-              Add payment method
+            <Button variant="contained" onClick={handleAddNewPaymentMethodClick}>
+              <BodyIconTypography label="Add payment method" invertDefaultColor={paletteMode === 'dark'} />
             </Button>
           </StackRow>
         </>
@@ -210,11 +201,8 @@ const OrganizationPaymentMethods = ({ rootDataRelay, onReloadRequired }: Props) 
       {!paymentMethodExist && addNewPaymentMethodState === AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET && <CircularProgress />}
       {!paymentMethodExist && addNewPaymentMethodState === AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_DETAILS && stripePromise && (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <OrganizationPaymentMethodSetupForm onCancelClick={handleCancelAddPaymentMethodClick} />
+          <OrganizationPaymentMethodSetupForm onCancel={handleCancelAddPaymentMethodClick} />
         </Elements>
-      )}
-      {!paymentMethodExist && addNewPaymentMethodState === AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_CONFIRMATION && (
-        <CircularProgress />
       )}
     </>
   );

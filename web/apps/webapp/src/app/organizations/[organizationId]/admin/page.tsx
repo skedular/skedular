@@ -28,6 +28,7 @@ const RootQuery = graphql`
       name
     }
     ...organizationAdmin_query
+    ...organizationAdmin_organizationPaymentMethodsDetails_query
     ...organizationAdmin_zones_query
     ...organizationAdmin_deskTypes_query
   }
@@ -59,6 +60,7 @@ const AdminPage = ({ queryReference, onReloadRequired, organizationId }: Props) 
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <OrganizationAdmin
         rootDataRelay={rootData}
+        rootDataOrganizationPaymentMethodsDetailsRelay={rootData}
         rootDataZonesRelay={rootData}
         rootDataDeskTypesRelay={rootData}
         onReloadRequired={onReloadRequired}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0ec8be46383f21c8c082eae36aca710b>>
+ * @generated SignedSource<<6fe0519934153670d0edd45deeb36ab6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type pageOrganizationAdmin_rootQuery$data = {
   readonly organization: {
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_deskTypes_query" | "organizationAdmin_query" | "organizationAdmin_zones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_deskTypes_query" | "organizationAdmin_organizationPaymentMethodsDetails_query" | "organizationAdmin_query" | "organizationAdmin_zones_query">;
 };
 export type pageOrganizationAdmin_rootQuery = {
   response: pageOrganizationAdmin_rootQuery$data;
@@ -73,6 +73,9 @@ v7 = {
   "variableName": "organizationId"
 },
 v8 = [
+  (v7/*: any*/)
+],
+v9 = [
   {
     "fields": [
       {
@@ -86,7 +89,7 @@ v8 = [
     "name": "where"
   }
 ],
-v9 = [
+v10 = [
   {
     "alias": null,
     "args": null,
@@ -177,7 +180,7 @@ v9 = [
     ]
   }
 ],
-v10 = [
+v11 = [
   {
     "kind": "Literal",
     "name": "orderBy",
@@ -228,6 +231,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "organizationAdmin_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "organizationAdmin_organizationPaymentMethodsDetails_query"
       },
       {
         "args": null,
@@ -329,9 +337,7 @@ return {
       },
       {
         "alias": null,
-        "args": [
-          (v7/*: any*/)
-        ],
+        "args": (v8/*: any*/),
         "concreteType": "OrganizationBillingInfo",
         "kind": "LinkedField",
         "name": "organizationBillingInfo",
@@ -400,16 +406,56 @@ return {
       {
         "alias": null,
         "args": (v8/*: any*/),
-        "concreteType": "OrganizationTagConnection",
+        "concreteType": "OrganizationPaymentMethod",
         "kind": "LinkedField",
-        "name": "zones",
-        "plural": false,
-        "selections": (v9/*: any*/),
+        "name": "organizationPaymentMethodsDetails",
+        "plural": true,
+        "selections": [
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "cardBrand",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "cardExpiryMonth",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "cardExpiryYear",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "cardLastFourDigit",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v8/*: any*/),
+        "args": (v9/*: any*/),
+        "concreteType": "OrganizationTagConnection",
+        "kind": "LinkedField",
+        "name": "zones",
+        "plural": false,
+        "selections": (v10/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v9/*: any*/),
         "filters": [
           "where"
         ],
@@ -420,17 +466,17 @@ return {
       },
       {
         "alias": null,
-        "args": (v10/*: any*/),
+        "args": (v11/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "deskTypes",
         "plural": false,
-        "selections": (v9/*: any*/),
+        "selections": (v10/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v10/*: any*/),
+        "args": (v11/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -443,16 +489,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "667b0c6b307f4f00d5987c8b8c989792",
+    "cacheID": "e77a6f37b92e2cc6977341a03bee2acd",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $deskTypeNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_deskTypes_query\n}\n\nfragment organizationAdmin_deskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  organizationBillingInfo(organizationId: $organizationId) {\n    id\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationAdmin_zones_query on Query {\n  zones(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $deskTypeNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_organizationPaymentMethodsDetails_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_deskTypes_query\n}\n\nfragment organizationAdmin_deskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId, nameContains: $deskTypeNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationAdmin_organizationPaymentMethodsDetails_query on Query {\n  organizationPaymentMethodsDetails(organizationId: $organizationId) {\n    id\n    cardBrand\n    cardExpiryMonth\n    cardExpiryYear\n    cardLastFourDigit\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  organizationBillingInfo(organizationId: $organizationId) {\n    id\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationAdmin_zones_query on Query {\n  zones(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f572cb0b3289c7c0556f56184729b31a";
+(node as any).hash = "88c412bcdce55a489c0be2adab4edf41";
 
 export default node;
