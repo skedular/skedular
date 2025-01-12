@@ -110,6 +110,16 @@ resource "cloudflare_record" "cloudflare_dns_record_production" {
   ttl     = 600
 }
 
+resource "cloudflare_record" "cloudflare_dns_record_production_www_public_website" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.public_website.id
+  name    = "www"
+  content = "31.220.100.177"
+  type    = "A"
+  proxied = true
+  ttl     = 1
+}
+
 resource "cloudflare_record" "cloudflare_dns_record_production_staging" {
   count   = local.is_staging ? 1 : 0
   zone_id = data.cloudflare_zone.public_website.id
@@ -122,6 +132,16 @@ resource "cloudflare_record" "cloudflare_dns_record_production_staging" {
 
 data "cloudflare_zone" "webapp" {
   name = module.common.cloudflare_webapp_domain_name
+}
+
+resource "cloudflare_record" "cloudflare_dns_record_production_www_webapp" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.webapp.id
+  name    = "www"
+  content = "31.220.100.177"
+  type    = "A"
+  proxied = true
+  ttl     = 1
 }
 
 resource "cloudflare_record" "cloudflare_dns_records_staging" {
