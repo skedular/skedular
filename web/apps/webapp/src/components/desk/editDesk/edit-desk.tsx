@@ -178,7 +178,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location">
+            <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Edit Desk Information">
               <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                 <SectionIconTypography label="Desk Setup" />
                 <BodyIconTypography label="Edit your desk name and details" />
