@@ -8,6 +8,14 @@
 # this machine's public IP, then replace ":80" below with your
 # domain name.
 
+kowl.skedular.app {
+	reverse_proxy localhost:8888
+}
+
+dozzle.skedular.app {
+	reverse_proxy localhost:5001
+}
+
 aapp.skedular.app {
 	reverse_proxy localhost:7000
 }
