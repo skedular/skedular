@@ -13,19 +13,19 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/billing_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/booking_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/customer_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/location_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/notification_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/organization_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/payment_v1.proto" GrpcServices="Client"/>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/team_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/billing_v1.proto" GrpcServices="Client" />
+        <Protobuf Include="../../../api-definitions/grpc/skedular/booking_v1.proto" GrpcServices="Client" />
+        <Protobuf Include="../../../api-definitions/grpc/skedular/customer_v1.proto" GrpcServices="Client" />
+        <Protobuf Include="../../../api-definitions/grpc/skedular/location_v1.proto" GrpcServices="Client" />
+        <Protobuf Include="../../../api-definitions/grpc/skedular/notification_v1.proto" GrpcServices="Client" />
+        <Protobuf Include="../../../api-definitions/grpc/skedular/organization_v1.proto" GrpcServices="Client" />
+        <Protobuf Include="../../../api-definitions/grpc/skedular/payment_v1.proto" GrpcServices="Client" />
+        <Protobuf Include="../../../api-definitions/grpc/skedular/team_v1.proto" GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SlackNet" Version="0.15.3"/>
-        <PackageReference Include="SlackNet.AspNetCore" Version="0.15.3"/>
+        <PackageReference Include="SlackNet" Version="0.15.4" />
+        <PackageReference Include="SlackNet.AspNetCore" Version="0.15.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -37,13 +37,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
-        <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj"/>
+        <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj" />
+        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj" />
+        <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="appsettings.json"/>
+        <EmbeddedResource Include="appsettings.json" />
     </ItemGroup>
 
 </Project>
