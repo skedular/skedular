@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d735ff377bced95786227ce05062ec03>>
+ * @generated SignedSource<<3a49d91b1900709f0f362829ca1aba27>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -81,6 +81,11 @@ return {
           "kind": "Variable",
           "name": "orderBy",
           "variableName": "myNotificationsSortingValues"
+        },
+        {
+          "kind": "Literal",
+          "name": "where",
+          "value": {}
         }
       ],
       "concreteType": "NotificationConnection",
@@ -189,6 +194,6 @@ return {
 };
 })();
 
-(node as any).hash = "322d2a8c908aaf4eb679453045a9f261";
+(node as any).hash = "f6cbad2a36c5373ef18eb38c3f5a6a51";
 
 export default node;

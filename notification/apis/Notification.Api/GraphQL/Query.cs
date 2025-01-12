@@ -39,6 +39,7 @@ public class Query(IMapper mapper)
         int? first,
         string? before,
         int? last,
+        MyNotificationWhereInput where,
         NotificationOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] INotificationService notificationService,
@@ -52,7 +53,7 @@ public class Query(IMapper mapper)
         var (paginatedInfo, edges, totalCount) =
             await notificationService.GetMyPaginatedNotificationsAsync(
                 new PaginationInputParam(after, first, before, last),
-                new NotificationSearchCriteria(),
+                new NotificationSearchCriteria(where.OrganizationId),
                 orderBy is null
                     ? []
                     : orderBy.Select(item =>

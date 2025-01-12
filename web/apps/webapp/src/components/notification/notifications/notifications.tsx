@@ -41,7 +41,8 @@ const Notifications = ({ queryReference }: Props) => {
       fragment notifications_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
       @refetchable(queryName: "notifications_refetchableFragment") {
-        myNotifications(first: $count, after: $cursor, orderBy: $myNotificationsSortingValues) @connection(key: "notifications_myNotifications") {
+        myNotifications(first: $count, after: $cursor, where: {}, orderBy: $myNotificationsSortingValues)
+          @connection(key: "notifications_myNotifications") {
           __id
           totalCount
           edges {

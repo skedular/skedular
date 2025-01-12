@@ -51,6 +51,12 @@ internal static class NotificationExtensions
                 item.Invitee != null && item.Invitee.Id == searchCriteria.InviteeId);
         }
 
+        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+        {
+            query = query.Where(item =>
+                item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId);
+        }
+
         return query;
     }
 

@@ -75,3 +75,9 @@ public class NotificationTeamDetails
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
+
+[GraphQLName("MyNotificationWhereInput")]
+public class MyNotificationWhereInput
+{
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+}

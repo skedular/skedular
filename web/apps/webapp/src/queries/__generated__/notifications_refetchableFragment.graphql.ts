@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7540e583c2e6be755a6042fd26d70e00>>
+ * @generated SignedSource<<18de984e68f5040126d6b8229a085835>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -62,6 +62,11 @@ v1 = [
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "myNotificationsSortingValues"
+  },
+  {
+    "kind": "Literal",
+    "name": "where",
+    "value": {}
   }
 ],
 v2 = {
@@ -304,6 +309,7 @@ return {
         "alias": null,
         "args": (v1/*: any*/),
         "filters": [
+          "where",
           "orderBy"
         ],
         "handle": "connection",
@@ -314,16 +320,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7aa8fc247c54884be9180f2b720a495b",
+    "cacheID": "d7d63c4181044d7f1de799a2361683dd",
     "id": null,
     "metadata": {},
     "name": "notifications_refetchableFragment",
     "operationKind": "query",
-    "text": "query notifications_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $myNotificationsSortingValues: [NotificationOrderInput!]\n) {\n  ...notifications_query_1G22uz\n}\n\nfragment invitationToJoinLocationNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  location {\n    name\n  }\n}\n\nfragment invitationToJoinOrganizationNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    name\n  }\n}\n\nfragment invitationToJoinTeamNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  team {\n    name\n  }\n}\n\nfragment notificationCard_NotificationDetails on Notification {\n  id\n  notificationType\n  ...invitationToJoinOrganizationNotificationCard_NotificationDetails\n  ...invitationToJoinLocationNotificationCard_NotificationDetails\n  ...invitationToJoinTeamNotificationCard_NotificationDetails\n}\n\nfragment notifications_query_1G22uz on Query {\n  myNotifications(first: $count, after: $cursor, orderBy: $myNotificationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...notificationCard_NotificationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query notifications_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $myNotificationsSortingValues: [NotificationOrderInput!]\n) {\n  ...notifications_query_1G22uz\n}\n\nfragment invitationToJoinLocationNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  location {\n    name\n  }\n}\n\nfragment invitationToJoinOrganizationNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    name\n  }\n}\n\nfragment invitationToJoinTeamNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  team {\n    name\n  }\n}\n\nfragment notificationCard_NotificationDetails on Notification {\n  id\n  notificationType\n  ...invitationToJoinOrganizationNotificationCard_NotificationDetails\n  ...invitationToJoinLocationNotificationCard_NotificationDetails\n  ...invitationToJoinTeamNotificationCard_NotificationDetails\n}\n\nfragment notifications_query_1G22uz on Query {\n  myNotifications(first: $count, after: $cursor, where: {}, orderBy: $myNotificationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...notificationCard_NotificationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "322d2a8c908aaf4eb679453045a9f261";
+(node as any).hash = "f6cbad2a36c5373ef18eb38c3f5a6a51";
 
 export default node;
