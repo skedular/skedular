@@ -38,6 +38,7 @@ type Props = {
   showCancel: boolean;
   onAdded: (id: string) => void;
   onCancel?: () => void;
+  saveAndExitLabel?: string;
 };
 
 const RootQuery = graphql`
@@ -66,7 +67,7 @@ const organizationSchema = object({
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
-const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded, onCancel }: Props) => {
+const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded, onCancel, saveAndExitLabel }: Props) => {
   const rootData = usePreloadedQuery<addOrganization_rootQuery>(RootQuery, queryReference);
   const [commitAddOrganization] = useMutation<addOrganization_addOrganizationMutation>(graphql`
     mutation addOrganization_addOrganizationMutation($input: AddOrganizationInput!) @raw_response_type {
@@ -182,7 +183,13 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={onCancel} label="Add Organization" hideCancel={!showCancel}>
+            <StackColumnWithSaveExitCancelAppBar
+              onSubmit={handleSubmit}
+              onCancel={onCancel}
+              label="Add Organization"
+              hideCancel={!showCancel}
+              saveAndExitLabel={saveAndExitLabel}
+            >
               <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                 <SectionIconTypography label="Organization Setup" />
                 <BodyIconTypography label="Edit your organization name and details" />
@@ -226,9 +233,10 @@ type RelayProps = {
   showCancel: boolean;
   onAdded: (id: string) => void;
   onCancel?: () => void;
+  saveAndExitLabel?: string;
 };
 
-const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCancel }: RelayProps) => {
+const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCancel, saveAndExitLabel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addOrganization_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -262,6 +270,7 @@ const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCan
         showCancel={showCancel}
         onAdded={onAdded}
         onCancel={onCancel}
+        saveAndExitLabel={saveAndExitLabel}
       />
     </ErrorBoundary>
   );

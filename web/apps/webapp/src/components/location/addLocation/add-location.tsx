@@ -32,7 +32,7 @@ type Props = {
   organizationId?: string;
   onAdded: (id: string) => void;
   onCancel: () => void;
-  cancelButtonText?: string;
+  saveAndExitLabel?: string;
 };
 
 type LocationDetails = {
@@ -49,7 +49,7 @@ const locationSchema = object({
   physicalAddress: string().nullable(),
 });
 
-const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, cancelButtonText }: Props) => {
+const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, saveAndExitLabel }: Props) => {
   const [commitAddLocation] = useMutation<addLocation_addLocationMutation>(graphql`
     mutation addLocation_addLocationMutation($input: AddLocationInput!) @raw_response_type {
       addLocation(input: $input) {
@@ -190,7 +190,12 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, canc
           }}
           validate={validate}
           render={({ handleSubmit }) => (
-            <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Add Location">
+            <StackColumnWithSaveExitCancelAppBar
+              onSubmit={handleSubmit}
+              onCancel={handleCancelClick}
+              label="Add Location"
+              saveAndExitLabel={saveAndExitLabel}
+            >
               <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                 <SectionIconTypography label="Location Setup" />
                 <BodyIconTypography label="Edit your location name and details" />

@@ -28,6 +28,7 @@ type Props = {
   hideCancel?: boolean;
   hideSaveAndExit?: boolean;
   useChildrenPadding?: boolean;
+  saveAndExitLabel?: string;
 };
 
 const StackColumnWithSaveExitCancelAppBar = ({
@@ -40,6 +41,7 @@ const StackColumnWithSaveExitCancelAppBar = ({
   hideCancel,
   hideSaveAndExit,
   useChildrenPadding,
+  saveAndExitLabel,
 }: PropsWithChildren<Props>) => {
   const paletteMode = useContext(PaletteModeContext);
   const childrenSx = useChildrenPadding ? { maxWidth: maxScreenWidth, padding: defaultPadding } : { maxWidth: maxScreenWidth };
@@ -64,8 +66,8 @@ const StackColumnWithSaveExitCancelAppBar = ({
           <SmallHeadingIconTypography label={label} invertDefaultColor />
 
           <PushToRight />
-          {!hideCancel && (
-            <StackRow>
+          <StackRow>
+            {!hideCancel && (
               <Button
                 sx={{
                   border: 1,
@@ -81,14 +83,14 @@ const StackColumnWithSaveExitCancelAppBar = ({
               >
                 <SmallIconTypography label="Cancel" invertDefaultColor />
               </Button>
+            )}
 
-              {!hideSaveAndExit && (
-                <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                  <SmallIconTypography label="Save & Exit" />
-                </Button>
-              )}
-            </StackRow>
-          )}
+            {!hideSaveAndExit && (
+              <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                <SmallIconTypography label={saveAndExitLabel ?? 'Save & Exit'} />
+              </Button>
+            )}
+          </StackRow>
         </Toolbar>
       </AppBar>
 

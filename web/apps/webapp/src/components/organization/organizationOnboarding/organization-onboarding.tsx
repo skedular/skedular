@@ -66,14 +66,16 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
           <StepLabel>Create Team</StepLabel>
         </Step>
       </Stepper>
-      {activeStep === 0 && <AddOrganization onReloadRequired={() => {}} showCancel={false} onAdded={handleOrganizationAdded} />}
+      {activeStep === 0 && (
+        <AddOrganization onReloadRequired={() => {}} showCancel={false} onAdded={handleOrganizationAdded} saveAndExitLabel="Create Organization" />
+      )}
       {activeStep === 1 && organizationId && (
         <AddLocation
           organizationId={organizationId}
           onReloadRequired={() => {}}
           onAdded={handleLocationAdded}
           onCancel={handleLocationDismissed}
-          cancelButtonText="Dismiss"
+          saveAndExitLabel="Create Location"
         />
       )}
       {activeStep === 2 && organizationId && (
@@ -82,7 +84,7 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
           onReloadRequired={() => {}}
           onAdded={handleTeamAdded}
           onCancel={handleTeamDismissed}
-          cancelButtonText="Dismiss"
+          saveAndExitLabel="Create Team"
         />
       )}
     </StackColumn>
