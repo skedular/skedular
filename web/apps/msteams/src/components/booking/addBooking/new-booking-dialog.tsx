@@ -314,7 +314,7 @@ const NewBookingDialog = ({
 
                 <BookingDetailsSelector
                   rootDataRelay={rootData}
-                  rootDataPaginatedOrganizationMembersRelay={rootData}
+                  rootDataOrganizationMembersRelay={rootData}
                   rootDataAvailableLocationDesksRelay={rootData}
                   defaultOrganizationId={organizationId}
                   organizationName="organization"

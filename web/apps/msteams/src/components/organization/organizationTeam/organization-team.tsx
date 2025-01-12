@@ -37,6 +37,7 @@ import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, fl
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { SingleChoiceLocation } from 'components/location/locationSelector';
+import { getModernOrganizationTeamsBaseLink } from 'components/organization';
 import { AddOrganizationTeamMemberButton } from 'components/organization/addOrganizationTeamMember';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -46,7 +47,6 @@ import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
-import { getModernOrganizationTeamsBaseLink } from '../organization-link';
 import type { organizationTeam_changeTeamMemberRoleMutation } from './__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
 import type { organizationTeam_changeTeamMembersStatusMutation } from './__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
 import type { organizationTeam_query$key } from './__generated__/organizationTeam_query.graphql';

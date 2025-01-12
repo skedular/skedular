@@ -1,5 +1,6 @@
 import { AddDeskButton } from '@/components/desk/addDesk';
 import { BulkAddDeskButton } from '@/components/desk/bulkAddDesk';
+import { getModernOrganizationLocationDeskBaseLink, getModernOrganizationLocationsBaseLink } from '@/components/organization';
 import type { organizationLocation_activateDesksMutation } from '@/queries/__generated__/organizationLocation_activateDesksMutation.graphql';
 import type { organizationLocation_deactivateDesksMutation } from '@/queries/__generated__/organizationLocation_deactivateDesksMutation.graphql';
 import type { organizationLocation_deleteDesksMutation } from '@/queries/__generated__/organizationLocation_deleteDesksMutation.graphql';
@@ -52,7 +53,6 @@ import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import DeskTypeSelector from '../deskTypeSelector/desk-type-selector';
-import { getModernOrganizationLocationDeskBaseLink, getModernOrganizationLocationsBaseLink } from '../organization-link';
 import ZoneSelector from '../zoneSelector/zone-selector';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationLocationLeftSideNavigationMenuContent from './organization-location-left-side-navigation-menu-content';

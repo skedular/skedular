@@ -36,6 +36,8 @@ export const getModernOrganizationTeamMembersBaseLink = (id: string, teamId: str
 export const getModernOrganizationTeamLocationBaseLink = (id: string, teamId: string) =>
   `${getOrganizationBaseLink(id)}/teams/${teamId}?section=location`;
 
+export const getModernOrganizationBookingBaseLink = (id: string, bookingId: string) => `${getOrganizationBaseLink(id)}/bookings/${bookingId}`;
+
 export const getModernOrganizationLocationsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/locations`;
 export const getModernOrganizationLocationSetupBaseLink = (id: string, locationId: string) =>
   `${getOrganizationBaseLink(id)}/locations/${locationId}?section=setup`;

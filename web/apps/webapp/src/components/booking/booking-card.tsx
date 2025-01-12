@@ -758,7 +758,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
 
                   <BookingDetailsSelector
                     rootDataRelay={rootData}
-                    rootDataPaginatedOrganizationMembersRelay={rootData}
+                    rootDataOrganizationMembersRelay={rootData}
                     rootDataAvailableLocationDesksRelay={rootData}
                     defaultOrganizationId={bookingDetails.organization?.uniqueId}
                     organizationName="organization"

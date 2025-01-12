@@ -116,6 +116,7 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
         rootDataRelay={rootData}
         rootDataBookingRelay={rootData}
         onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
         from={startWeek}
         to={endWeek}
         locationIds={locationIds}

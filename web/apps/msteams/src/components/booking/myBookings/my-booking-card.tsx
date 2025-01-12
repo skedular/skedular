@@ -4,6 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
@@ -25,16 +26,19 @@ import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/li
 import { coal, sandstone } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { getModernOrganizationBookingBaseLink } from 'components/organization';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import type { myBookingCard_BookingDetails$key } from './__generated__/myBookingCard_BookingDetails.graphql';
 import type { myBookingCard_deleteBookingMutation } from './__generated__/myBookingCard_deleteBookingMutation.graphql';
 
 type Props = {
   bookingDetailsRelay: myBookingCard_BookingDetails$key;
+  organizationId: string;
   connectionIds: string[];
   otherTeammates: CustomerDetails[];
 };
@@ -54,7 +58,7 @@ type CustomerDetails = {
   photoUrl?: string | null | undefined;
 };
 
-const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: Props) => {
+const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, connectionIds }: Props) => {
   const bookingDetails = useFragment(
     graphql`
       fragment myBookingCard_BookingDetails on BookingDetails {
@@ -105,6 +109,7 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
     }
   `);
 
+  const navigate = useNavigate();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
@@ -126,6 +131,9 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
+        if (bookingDetails) {
+          navigate(getModernOrganizationBookingBaseLink(organizationId, bookingDetails.id));
+        }
         break;
 
       case MoreActionsMenuOptionType.DeleteBooking:
@@ -194,12 +202,14 @@ const MyBookingCard = ({ bookingDetailsRelay, otherTeammates, connectionIds }: P
       <Card sx={{ width: { xs: '100%', sm: 315 } }}>
         <CardHeader
           title={
-            <LeadIconTypography
-              startElement={<LocationIcon />}
-              label={bookingDetails.location?.name}
-              sx={{ flexWrap: undefined }}
-              invertDefaultColor
-            />
+            <Link href={getModernOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
+              <LeadIconTypography
+                startElement={<LocationIcon />}
+                label={bookingDetails.location?.name}
+                sx={{ flexWrap: undefined }}
+                invertDefaultColor
+              />
+            </Link>
           }
           action={
             <>

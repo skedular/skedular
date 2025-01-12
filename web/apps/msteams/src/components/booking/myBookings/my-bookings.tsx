@@ -25,10 +25,12 @@ import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/li
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { getModernOrganizationBookingBaseLink } from 'components/organization';
 import dayjs, { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import type { myBookings_bookings_query$key } from './__generated__/myBookings_bookings_query.graphql';
 import type { myBookings_bookings_refetchableFragment } from './__generated__/myBookings_bookings_refetchableFragment.graphql';
@@ -40,6 +42,7 @@ type Props = {
   rootDataRelay: myBookings_query$key;
   rootDataBookingRelay: myBookings_bookings_query$key;
   onReloadRequired: () => void;
+  organizationId: string;
   from: Dayjs;
   to: Dayjs;
   locationIds: string[];
@@ -84,7 +87,7 @@ type RowType = {
   teammates: ReadonlyArray<CustomerDetails>;
 };
 
-const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, from, to, locationIds, teamIds, viewMode }: Props) => {
+const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, to, locationIds, teamIds, viewMode }: Props) => {
   const rootData = useFragment<myBookings_query$key>(
     graphql`
       fragment myBookings_query on Query {
@@ -169,6 +172,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
     }
   `);
 
+  const navigate = useNavigate();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
@@ -243,6 +247,8 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
+        navigate(getModernOrganizationBookingBaseLink(organizationId, bookingId));
+
         break;
 
       case MoreActionsMenuOptionType.DeleteBooking:
@@ -433,6 +439,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, fro
                 <Grid key={myBooking.id}>
                   <MyBookingCard
                     bookingDetailsRelay={myBooking}
+                    organizationId={organizationId}
                     connectionIds={connectionIds}
                     otherTeammates={otherTeammates!.map(({ customer }) => customer)}
                   />

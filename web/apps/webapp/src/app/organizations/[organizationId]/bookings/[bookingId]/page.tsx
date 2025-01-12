@@ -1,8 +1,8 @@
 'use client';
 
-import { EditDesk } from '@/components/desk/editDesk';
+import { EditBooking } from '@/components/booking/editBooking';
 import { RootShell } from '@/components/rootShell';
-import type { pageOrganizationLocationDesk_rootQuery } from '@/queries/__generated__/pageOrganizationLocationDesk_rootQuery.graphql';
+import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
@@ -10,6 +10,8 @@ import { BodyIconTypography, StackColumn } from '@repo/shared/components/commons
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { startOfDay, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
+import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -17,37 +19,45 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 const RootQuery = graphql`
-  query pageOrganizationLocationDesk_rootQuery(
+  query pageOrganizationBooking_rootQuery(
     $organizationId: String!
-    $deskId: String!
-    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
-    $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
+    $bookingId: String!
+    $peopleNameSearchText: String
+    $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $locationId: String!
+    $locationExists: Boolean!
+    $dateToGetAvailableDesks: DateTime!
+    $deskIdsToIncludeToGetAvailableDesks: [String!]!
   ) {
-    desk(id: $deskId) {
-      name
+    booking(id: $bookingId) {
+      from
     }
-    ...editDesk_query
+    ...editBooking_query
+    ...editBooking_organizationMembers_query
+    ...editBooking_availableLocationDesks_query
   }
 `;
 
 type Props = {
-  queryReference: PreloadedQuery<pageOrganizationLocationDesk_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<pageOrganizationBooking_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
-  deskId: string;
+  bookingId: string;
 };
 
-const LocationPage = ({ queryReference, onReloadRequired, organizationId, deskId }: Props) => {
-  const rootData = usePreloadedQuery<pageOrganizationLocationDesk_rootQuery>(RootQuery, queryReference);
+const LocationPage = ({ queryReference, onReloadRequired, organizationId, bookingId }: Props) => {
+  const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
   const handleBackClick = () => {
     router.back();
   };
 
-  if (!rootData.desk) {
+  if (!rootData.booking) {
     return <></>;
   }
+
+  const date = dayjs(rootData.booking.from);
 
   const breadcrumbs = (
     <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
@@ -56,8 +66,8 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, deskId
       </Button>
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Breadcrumbs>
-          <BodyIconTypography label="Desk Settings" />
-          <BodyIconTypography label={rootData.desk.name} />
+          <BodyIconTypography label="Booking" />
+          <BodyIconTypography label={toShortDateWithAdditionalDayInfo(date)} />
         </Breadcrumbs>
       </Box>
     </StackColumn>
@@ -65,7 +75,13 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, deskId
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <EditDesk rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
+      <EditBooking
+        rootDataRelay={rootData}
+        rootDataOrganizationMembersRelay={rootData}
+        rootDataAvailableLocationDesksRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
+      />
     </RootShell>
   );
 };
@@ -73,10 +89,10 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, deskId
 const MemoLocationPage = memo(LocationPage);
 
 const LocationPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageOrganizationLocationDesk_rootQuery>(RootQuery);
+  const [queryReference, loadQuery] = useQueryLoader<pageOrganizationBooking_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
-  const { organizationId, deskId } = useParams();
+  const { organizationId, bookingId } = useParams();
   let finalOrganizationId = '';
 
   if (typeof organizationId === 'string') {
@@ -91,43 +107,43 @@ const LocationPageWithRelay = () => {
     throw new Error('organizationId is required');
   }
 
-  let finalDeskId = '';
+  let finalBookingId = '';
 
-  if (typeof deskId === 'string') {
-    finalDeskId = deskId;
-  } else if (Array.isArray(deskId)) {
-    if (typeof deskId[0] === 'undefined') {
-      throw new Error('deskId is required');
+  if (typeof bookingId === 'string') {
+    finalBookingId = bookingId;
+  } else if (Array.isArray(bookingId)) {
+    if (typeof bookingId[0] === 'undefined') {
+      throw new Error('bookingId is required');
     }
 
-    finalDeskId = deskId[0];
+    finalBookingId = bookingId[0];
   } else {
-    throw new Error('deskId is required');
+    throw new Error('bookingId is required');
   }
 
   useEffect(() => {
+    const date = startOfDay().toISOString();
+
     loadQuery(
       {
         organizationId: finalOrganizationId,
-        deskId: finalDeskId,
-        multipleChoicesDeskTypesSortingValues: [
+        bookingId: finalBookingId,
+        organizationMembersSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',
           },
         ],
-        multipleChoicesZonesSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'Name',
-          },
-        ],
+        locationId: '',
+        locationExists: false,
+        dateToGetAvailableDesks: date,
+        deskIdsToIncludeToGetAvailableDesks: [],
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId, finalDeskId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationId, finalBookingId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -145,7 +161,7 @@ const LocationPageWithRelay = () => {
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
         organizationId={finalOrganizationId}
-        deskId={finalDeskId}
+        bookingId={finalBookingId}
       />
     </ErrorBoundary>
   );

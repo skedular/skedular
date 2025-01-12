@@ -16,7 +16,7 @@ import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   rootDataRelay: bookingDetailsSelector_query$key;
-  rootDataPaginatedOrganizationMembersRelay: bookingDetailsSelector_organizationMembers_query$key;
+  rootDataOrganizationMembersRelay: bookingDetailsSelector_organizationMembers_query$key;
   rootDataAvailableLocationDesksRelay: bookingDetailsSelector_availableLocationDesks_query$key;
 
   defaultOrganizationId?: string;
@@ -79,7 +79,7 @@ type DeskDetails = {
 
 const BookingDetailsSelector = ({
   rootDataRelay,
-  rootDataPaginatedOrganizationMembersRelay,
+  rootDataOrganizationMembersRelay,
   rootDataAvailableLocationDesksRelay,
 
   defaultOrganizationId,
@@ -129,7 +129,7 @@ const BookingDetailsSelector = ({
     `,
     rootDataRelay,
   );
-  const { data: rootDataPaginatedOrganizationMembers, refetch: refetchPaginatedOrganizationMembers } = usePaginationFragment<
+  const { data: rootDataOrganizationMembers, refetch: refetchOrganizationMembers } = usePaginationFragment<
     bookingDetailsSelector_organizationMembers_refetchableFragment,
     bookingDetailsSelector_organizationMembers_query$key
   >(
@@ -161,7 +161,7 @@ const BookingDetailsSelector = ({
         }
       }
     `,
-    rootDataPaginatedOrganizationMembersRelay,
+    rootDataOrganizationMembersRelay,
   );
 
   const [rootDataAvailableLocationDesks, refetchAvailableLocationDesks] = useRefetchableFragment<
@@ -201,12 +201,12 @@ const BookingDetailsSelector = ({
   );
 
   const customers = useMemo<OrganizationMemberDetails[]>(() => {
-    if (!rootDataPaginatedOrganizationMembers.organizationMembers) {
+    if (!rootDataOrganizationMembers.organizationMembers) {
       return [];
     }
 
-    return rootDataPaginatedOrganizationMembers.organizationMembers.edges.map(({ node }) => node);
-  }, [rootDataPaginatedOrganizationMembers.organizationMembers]);
+    return rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node);
+  }, [rootDataOrganizationMembers.organizationMembers]);
 
   const locations = useMemo<LocationDetails[]>(() => {
     const myLocations = rootData.myLocations ? rootData.myLocations.map((location) => location) : [];
@@ -226,10 +226,10 @@ const BookingDetailsSelector = ({
     }));
   }, [rootDataAvailableLocationDesks.availableDesks]);
 
-  const handleRefetchPaginatedOrganizationMembers = useCallback(
+  const handleRefetchOrganizationMembers = useCallback(
     (bookingPeopleNameSearchText: string, organizationId?: string) => {
       startTransition(() => {
-        refetchPaginatedOrganizationMembers(
+        refetchOrganizationMembers(
           {
             count: pageSize,
             bookingPeopleNameSearchText,
@@ -245,7 +245,7 @@ const BookingDetailsSelector = ({
         );
       });
     },
-    [refetchPaginatedOrganizationMembers, pageSize],
+    [refetchOrganizationMembers, pageSize],
   );
 
   const handleRefetchAvailableLocationDesks = useCallback(
@@ -272,10 +272,10 @@ const BookingDetailsSelector = ({
 
   // Workaround to ensure we have the entire form refreshed once any dependent values change
   useEffect(() => {
-    handleRefetchPaginatedOrganizationMembers(bookingPeopleNameSearchText, organizationId);
+    handleRefetchOrganizationMembers(bookingPeopleNameSearchText, organizationId);
     handleRefetchAvailableLocationDesks(defaultDeskIds, locationId);
   }, [
-    handleRefetchPaginatedOrganizationMembers,
+    handleRefetchOrganizationMembers,
     handleRefetchAvailableLocationDesks,
     bookingPeopleNameSearchText,
     organizationId,
@@ -292,7 +292,7 @@ const BookingDetailsSelector = ({
   const handleOrganizationChange = (option: OrganizationDetails | null) => {
     const id = option?.id;
     setOrganizationId(id);
-    handleRefetchPaginatedOrganizationMembers(bookingPeopleNameSearchText, id);
+    handleRefetchOrganizationMembers(bookingPeopleNameSearchText, id);
   };
 
   const handleLocationChange = (option: LocationDetails | null) => {
@@ -301,13 +301,13 @@ const BookingDetailsSelector = ({
     handleRefetchAvailableLocationDesks(defaultDeskIds, id);
   };
 
-  const handleSearchTextChange = (str: string) => {
+  const handlePeopleNameSearchTextChange = (str: string) => {
     setBookingPeopleNameSearchText(str);
 
-    handleRefetchPaginatedOrganizationMembers(str, organizationId);
+    handleRefetchOrganizationMembers(str, organizationId);
   };
 
-  const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
+  const debouncePeopleNameSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardDebounceTimeout);
 
   return (
     <>
@@ -365,7 +365,7 @@ const BookingDetailsSelector = ({
             freeSolo={true}
             filterOptions={(options, params) => {
               if (params.inputValue !== bookingPeopleNameSearchText) {
-                debounceSearchTextChange(params.inputValue);
+                debouncePeopleNameSearchTextChange(params.inputValue);
               }
 
               return options;
