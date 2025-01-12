@@ -175,7 +175,7 @@ const OrganizationAboutTab = ({ queryReference }: Props) => {
             <TextField name="about" required={requiredFields.about} multiline rows={3} />
           </FormFieldLabel>
 
-          <FormFieldLabel label="Industry">
+          <FormFieldLabel label="Website">
             <TextField name="website" required={requiredFields.about} helperText="https://" />
           </FormFieldLabel>
 
