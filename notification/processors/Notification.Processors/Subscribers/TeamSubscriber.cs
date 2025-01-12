@@ -2,7 +2,6 @@
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Enterprise.Shared.Kafka.Consume;
 using Notification.Processors.Mappers;
-using Notification.Shared.Database.Entities;
 using Notification.Shared.Repositories;
 using Team = Notification.Shared.Database.Entities.Team;
 using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type;
@@ -43,7 +42,7 @@ public class TeamSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleTeamUpsertedEventAsync(team, existingTeam, organization, cancellationToken);
+                    await HandleTeamUpsertedEventAsync(team, existingTeam, cancellationToken);
                 }
                 break;
 
@@ -120,13 +119,11 @@ public class TeamSubscriber(
     private async Task HandleTeamUpsertedEventAsync(
         Shared.Models.Team team,
         Team? existingTeam,
-        Organization? organization,
         CancellationToken cancellationToken)
     {
         _ = existingTeam is null
-            ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team, organization))
-            : repositoryFactory.TeamRepository.Update(
-                mapper.MergeToEntity(team, existingTeam, organization));
+            ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team))
+            : repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam));
 
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

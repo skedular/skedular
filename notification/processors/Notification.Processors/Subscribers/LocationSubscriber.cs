@@ -1,6 +1,5 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
-using Notification.Shared.Database.Entities;
 using Notification.Shared.Repositories;
 using Event = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event;
 using IMapper = Notification.Processors.Mappers.IMapper;
@@ -43,7 +42,7 @@ public class LocationSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleLocationUpsertedEventAsync(location, existingLocation, organization, cancellationToken);
+                    await HandleLocationUpsertedEventAsync(location, existingLocation, cancellationToken);
                 }
                 break;
 
@@ -121,13 +120,11 @@ public class LocationSubscriber(
     private async Task HandleLocationUpsertedEventAsync(
         Shared.Models.Location location,
         Location? existingLocation,
-        Organization? organization,
         CancellationToken cancellationToken)
     {
         _ = existingLocation is null
-            ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, organization))
-            : repositoryFactory.LocationRepository.Update(
-                mapper.MergeToEntity(location, existingLocation, organization));
+            ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location))
+            : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation));
 
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
