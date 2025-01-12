@@ -11,6 +11,7 @@ public class Team : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
 
+    public virtual Organization? Organization { get; set; }
     public virtual ICollection<Notification> Notifications { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -22,5 +23,9 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxTeamNameLength);
+        
+        builder
+            .HasOne(item => item.Organization)
+            .WithMany(item => item.Teams);
     }
 }

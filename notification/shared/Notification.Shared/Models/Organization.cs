@@ -7,5 +7,7 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public string? Name { get; set; }
     public string? LogoUrl { get; set; }
 
-    public virtual ICollection<Notification> Notifications { get; set; } = [];
+    public ICollection<Location> Locations { get; set; } = [];
+    public ICollection<Team> Teams { get; set; } = [];
+    public ICollection<Notification> Notifications { get; set; } = [];
 }

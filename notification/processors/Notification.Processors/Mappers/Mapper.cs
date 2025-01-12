@@ -18,10 +18,16 @@ public interface IMapper
     Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
-    Shared.Database.Entities.Location MapToEntity(Location src);
-    Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest);
-    Shared.Database.Entities.Team MapToEntity(Team src);
-    Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest);
+    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization? organization);
+
+    Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest,
+        Shared.Database.Entities.Organization? organization);
+
+    Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization? organization);
+    Shared.Database.Entities.Team MergeToEntity(
+        Team src,
+        Shared.Database.Entities.Team dest,
+        Shared.Database.Entities.Organization? organization);
     IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Customer? customer);
     Customer MapToEntity(Shared.Models.Customer src, ICollection<Identity> identities);
     Customer MergeToEntity(Shared.Models.Customer src, Customer dest, ICollection<Identity> identities);
@@ -117,7 +123,11 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             Id = locationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Name = locationAfterState.Name
+            Name = locationAfterState.Name,
+            Organization =
+                string.IsNullOrWhiteSpace(locationAfterState.OrganizationId)
+                    ? null
+                    : new Organization { Id = locationAfterState.OrganizationId }
         };
 
         return location;
@@ -131,7 +141,14 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
 
         var team = new Team
         {
-            Id = teamAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt, Name = teamAfterState.Name
+            Id = teamAfterState.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = teamAfterState.Name,
+            Organization =
+                string.IsNullOrWhiteSpace(teamAfterState.OrganizationId)
+                    ? null
+                    : new Organization { Id = teamAfterState.OrganizationId }
         };
 
         return team;
@@ -297,25 +314,35 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Location MapToEntity(Location src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Location());
+    public Shared.Database.Entities.Location MapToEntity(
+        Location src,
+        Shared.Database.Entities.Organization? organization) =>
+        MergeToEntity(src, new Shared.Database.Entities.Location(), organization);
 
-    public Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest)
+    public Shared.Database.Entities.Location MergeToEntity(
+        Location src,
+        Shared.Database.Entities.Location dest,
+        Shared.Database.Entities.Organization? organization)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
+        dest.Organization = organization;
         return dest;
     }
 
-    public Shared.Database.Entities.Team MapToEntity(Team src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Team());
+    public Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization? organization) =>
+        MergeToEntity(src, new Shared.Database.Entities.Team(), organization);
 
-    public Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest)
+    public Shared.Database.Entities.Team MergeToEntity(
+        Team src,
+        Shared.Database.Entities.Team dest,
+        Shared.Database.Entities.Organization? organization)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
+        dest.Organization = organization;
         return dest;
     }
 }

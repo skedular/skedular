@@ -2,6 +2,7 @@
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Enterprise.Shared.Kafka.Consume;
 using Notification.Processors.Mappers;
+using Notification.Shared.Database.Entities;
 using Notification.Shared.Repositories;
 using Team = Notification.Shared.Database.Entities.Team;
 using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type;
@@ -24,8 +25,16 @@ public class TeamSubscriber(
             case Type.TeamUpserted:
                 {
                     var team = mapper.MapTo(@event);
+                    var organization = team.Organization is null
+                        ? null
+                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                            team.Organization.Id,
+                            cancellationToken);
                     var existingTeam =
-                        await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, cancellationToken);
+                        await repositoryFactory.TeamRepository.UpsertNakedAsync(
+                            team.Id,
+                            organization,
+                            cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
                         logger.LogInformation(
@@ -34,7 +43,7 @@ public class TeamSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleTeamUpsertedEventAsync(team, existingTeam, cancellationToken);
+                    await HandleTeamUpsertedEventAsync(team, existingTeam, organization, cancellationToken);
                 }
                 break;
 
@@ -111,12 +120,13 @@ public class TeamSubscriber(
     private async Task HandleTeamUpsertedEventAsync(
         Shared.Models.Team team,
         Team? existingTeam,
+        Organization? organization,
         CancellationToken cancellationToken)
     {
         _ = existingTeam is null
-            ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team))
+            ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team, organization))
             : repositoryFactory.TeamRepository.Update(
-                mapper.MergeToEntity(team, existingTeam));
+                mapper.MergeToEntity(team, existingTeam, organization));
 
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -145,7 +155,10 @@ public class TeamSubscriber(
 
         var team = string.IsNullOrWhiteSpace(notification.Team?.Id)
             ? null
-            : await repositoryFactory.TeamRepository.UpsertNakedAsync(notification.Team.Id, cancellationToken);
+            : await repositoryFactory.TeamRepository.UpsertNakedAsync(
+                notification.Team.Id,
+                null,
+                cancellationToken);
 
         _ = existingNotification is null
             ? repositoryFactory.NotificationRepository.Add(

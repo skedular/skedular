@@ -16,7 +16,7 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public string? PhotoUrl192 { get; set; }
     public string? PhotoUrl512 { get; set; }
 
-    public virtual ICollection<Identity> Identities { get; set; } = [];
-    public virtual ICollection<Notification> InvitedByNotifications { get; set; } = [];
-    public virtual ICollection<Notification> InviteeNotifications { get; set; } = [];
+    public ICollection<Identity> Identities { get; set; } = [];
+    public ICollection<Notification> InvitedByNotifications { get; set; } = [];
+    public ICollection<Notification> InviteeNotifications { get; set; } = [];
 }

@@ -7,7 +7,7 @@ namespace Notification.Shared.Repositories;
 
 public interface ITeamRepository : IRepository<Team>
 {
-    Task<Team> UpsertNakedAsync(string id, CancellationToken cancellationToken);
+    Task<Team> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
     Task<Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Team Add(Team team);
     Team Update(Team team);
@@ -17,9 +17,12 @@ public interface ITeamRepository : IRepository<Team>
 public class TeamRepository(NotificationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<NotificationDbContext, Team>(dbContext, timeProvider), ITeamRepository
 {
-    public override async Task<Team> UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public async Task<Team> UpsertNakedAsync(
+        string id,
+        Organization? organization, 
+        CancellationToken cancellationToken)
     {
-        await base.UpsertNakedAsync(id, cancellationToken);
+        await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 
         return (await GetByIdAsync(id, cancellationToken))!;
     }

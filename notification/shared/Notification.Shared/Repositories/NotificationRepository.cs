@@ -54,7 +54,11 @@ internal static class NotificationExtensions
         if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
         {
             query = query.Where(item =>
-                item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId);
+                (item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId) ||
+                (item.Location != null && item.Location.Organization != null &&
+                 item.Location.Organization.Id == searchCriteria.OrganizationId) ||
+                (item.Team != null && item.Team.Organization != null &&
+                 item.Team.Organization.Id == searchCriteria.OrganizationId));
         }
 
         return query;

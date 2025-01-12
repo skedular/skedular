@@ -8,9 +8,9 @@ public class Notification : ModelBaseWithDeleted
     public string SourceId { get; set; }
     public string Type { get; set; }
 
-    public virtual Customer? InvitedBy { get; set; }
-    public virtual Customer? Invitee { get; set; }
-    public virtual Organization? Organization { get; set; }
-    public virtual Location? Location { get; set; }
-    public virtual Team? Team { get; set; }
+    public Customer? InvitedBy { get; set; }
+    public Customer? Invitee { get; set; }
+    public Organization? Organization { get; set; }
+    public Location? Location { get; set; }
+    public Team? Team { get; set; }
 }
