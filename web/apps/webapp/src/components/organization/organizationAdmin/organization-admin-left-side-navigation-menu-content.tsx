@@ -3,6 +3,7 @@ import {
   getModernOrganizationAdminDeskTypesBaseLink,
   getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationAdminSSOBaseLink,
+  getModernOrganizationAdminSubscriptionsBaseLink,
   getModernOrganizationAdminZonesBaseLink,
 } from '@/components/organization';
 import Link from '@mui/material/Link';
@@ -10,7 +11,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
-import { BillingAndPaymentIcon, DeskTypeIcon, EditIcon, SSOIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { BillingAndPaymentIcon, DeskTypeIcon, EditIcon, SSOIcon, SubscriptionsIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
 import NextLink from 'next/link';
@@ -64,6 +65,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   const ssoLink = getModernOrganizationAdminSSOBaseLink(organizationId);
   const zonesLink = getModernOrganizationAdminZonesBaseLink(organizationId);
   const deskTypesLink = getModernOrganizationAdminDeskTypesBaseLink(organizationId);
+  const subscriptionsLink = getModernOrganizationAdminSubscriptionsBaseLink(organizationId);
 
   return (
     <List
@@ -158,7 +160,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
             {!collapsed && (
               <BodyIconTypography
                 label="Zone Setup"
-                startElement={!hideIcons && <ZoneIcon color="inherit" />}
+                startElement={!hideIcons && <ZoneIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === zonesLink && paletteMode === 'dark'}
                 noWrap
@@ -183,9 +185,34 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
             {!collapsed && (
               <BodyIconTypography
                 label="Desk Type Setup"
-                startElement={!hideIcons && <DeskTypeIcon color="inherit" />}
+                startElement={!hideIcons && <DeskTypeIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === deskTypesLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={subscriptionsLink}>
+          <ListItemButton
+            selected={fullPath === subscriptionsLink}
+            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === subscriptionsLink) }}
+          >
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}
+                invertDefaultColor={fullPath === subscriptionsLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Subscriptions"
+                startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === subscriptionsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

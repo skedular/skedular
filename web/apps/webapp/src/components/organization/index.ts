@@ -6,6 +6,7 @@ export {
   getModernOrganizationAdminDeskTypesBaseLink,
   getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationAdminSSOBaseLink,
+  getModernOrganizationAdminSubscriptionsBaseLink,
   getModernOrganizationAdminZonesBaseLink,
   getModernOrganizationBookingBaseLink,
   getModernOrganizationLocationDeskBaseLink,

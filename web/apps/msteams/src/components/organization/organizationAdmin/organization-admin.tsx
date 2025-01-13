@@ -1216,6 +1216,17 @@ const OrganizationAdmin = ({
                     sx={defaultGridStyle}
                   />
                 </StackRow>
+
+                <StackColumn
+                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                  ref={(divElement) => {
+                    sectionRefs.current['subscriptions'] = divElement;
+                  }}
+                >
+                  <SectionIconTypography label="Subscriptions" />
+                  <BodyIconTypography label="Edit your organization subscriptions" />
+                  <Divider />
+                </StackColumn>
               </StackColumnWithSaveExitCancelAppBar>
             )}
           />

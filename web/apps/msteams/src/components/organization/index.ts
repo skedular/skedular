@@ -1,22 +1,24 @@
 export { default as MultipleChoicesDeskTypes } from './multiple-choices-desk-types';
 export { default as MultipleChoicesZones } from './multiple-choices-zones';
 export {
+  default as OrganizationLink,
   getModernOrganizationAdminBillingAndPaymentBaseLink,
   getModernOrganizationAdminDeskTypesBaseLink,
-  getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationAdminSSOBaseLink,
+  getModernOrganizationAdminSetupBaseLink,
+  getModernOrganizationAdminSubscriptionsBaseLink,
   getModernOrganizationAdminZonesBaseLink,
   getModernOrganizationBookingBaseLink,
   getModernOrganizationLocationDeskBaseLink,
   getModernOrganizationLocationManageDesksBaseLink,
-  getModernOrganizationLocationsBaseLink,
   getModernOrganizationLocationSetupBaseLink,
+  getModernOrganizationLocationsBaseLink,
   getModernOrganizationMembersBaseLink,
   getModernOrganizationNotificationsBaseLink,
   getModernOrganizationTeamLocationBaseLink,
   getModernOrganizationTeamMembersBaseLink,
-  getModernOrganizationTeamsBaseLink,
   getModernOrganizationTeamSetupBaseLink,
+  getModernOrganizationTeamsBaseLink,
   getOrganizationAddLink,
   getOrganizationAnalyticsBaseLink,
   getOrganizationBaseLink,
@@ -27,7 +29,6 @@ export {
   getOrganizationOfferingBaseLink,
   getOrganizationSettingsBaseLink,
   getOrganizationTeamsBaseLink,
-  default as OrganizationLink,
 } from './organization-link';
 export { default as OrganizationMemberCard } from './organization-member-card';
 export { default as OrganizationMemberSelector } from './organization-member-selector';
