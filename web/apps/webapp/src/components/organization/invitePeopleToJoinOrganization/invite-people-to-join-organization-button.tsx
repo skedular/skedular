@@ -1,10 +1,14 @@
 import Button from '@mui/material/Button';
+import type { CSSProperties } from '@mui/material/styles/createTypography';
+import type { SxProps, Theme } from '@mui/system';
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
-import { NewIcon } from '@repo/shared/components/icons';
+import { InvitePeopleIcon } from '@repo/shared/components/icons';
 import { memo, useState } from 'react';
 import InvitePeopleToJoinOrganizationDialog from './invite-people-to-join-organization-dialog';
 
 type Props = {
+  sx?: SxProps<Theme>;
+  color?: CSSProperties['color'];
   organizationId: string;
   fullWidth?: boolean;
   label?: string;
@@ -13,7 +17,7 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const InvitePeopleToJoinOrganizationButton = ({ organizationId, fullWidth, label, hideIcon, variant, size }: Props) => {
+const InvitePeopleToJoinOrganizationButton = ({ sx, color, organizationId, fullWidth, label, hideIcon, variant, size }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleButtonClicked = () => {
@@ -30,15 +34,27 @@ const InvitePeopleToJoinOrganizationButton = ({ organizationId, fullWidth, label
 
   return (
     <>
-      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ textTransform: 'none' }}>
+      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ textTransform: 'none', ...sx }}>
         {size === 'small' && (
-          <SmallIconTypography label={label ?? 'Invite Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
+          <SmallIconTypography
+            label={label ?? 'Invite Members'}
+            endElement={hideIcon ? null : <InvitePeopleIcon fontSize={size ?? 'small'} />}
+            color={color}
+          />
         )}
         {size === 'medium' && (
-          <BodyIconTypography label={label ?? 'Invite Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
+          <BodyIconTypography
+            label={label ?? 'Invite Members'}
+            endElement={hideIcon ? null : <InvitePeopleIcon fontSize={size ?? 'medium'} />}
+            color={color}
+          />
         )}
         {(size === 'large' || !size) && (
-          <LeadIconTypography label={label ?? 'Invite Members'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
+          <LeadIconTypography
+            label={label ?? 'Invite Members'}
+            endElement={hideIcon ? null : <InvitePeopleIcon fontSize={size ?? 'large'} />}
+            color={color}
+          />
         )}
       </Button>
       <InvitePeopleToJoinOrganizationDialog

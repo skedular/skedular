@@ -53,6 +53,7 @@ export { default as ExpandIcon } from '@mui/icons-material/OpenInFull';
 export { default as BillingAndPaymentIcon } from '@mui/icons-material/Payment';
 export { default as CustomerIcon } from '@mui/icons-material/Person';
 export { default as InviteMemberIcon } from '@mui/icons-material/PersonAdd';
+export { default as InvitePeopleIcon } from '@mui/icons-material/PersonAddAlt1';
 export { default as RemoveIcon } from '@mui/icons-material/Remove';
 export { default as SearchRoundedIcon } from '@mui/icons-material/SearchRounded';
 export { default as PreferredIcon } from '@mui/icons-material/Star';
@@ -61,6 +62,7 @@ export { default as SSOIcon } from '@mui/icons-material/SyncLock';
 export { default as TodayIcon } from '@mui/icons-material/Today';
 export { default as ToggleOffIcon } from '@mui/icons-material/ToggleOff';
 export { default as ToggleOnIcon } from '@mui/icons-material/ToggleOn';
+export { default as UpgradeIcon } from '@mui/icons-material/Upgrade';
 export { default as ViewIcon } from '@mui/icons-material/Visibility';
 
 type Props = {
