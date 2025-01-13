@@ -499,6 +499,11 @@ type OrganizationAnalytics {
   memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
 }
 
+type OrganizationAvailableDesks {
+  availableDesksCount: Int!
+  desksCount: Int!
+}
+
 type OrganizationAvailableOfferingDetails {
   code: String!
   featureSet: [OrganizationFeatureSetDetails!]!
@@ -770,6 +775,7 @@ type Query {
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions @cost(weight: "10")
   organizationCurrentOfferingCharges(organizationId: String!): [OrganizationCurrentOfferingChargesDetails!] @cost(weight: "10")
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
+  organizationDesksAvailability(where: OrganizationAvailableDesksWhereInput!): OrganizationAvailableDesks @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): OrganizationMemberConnection @cost(weight: "10")
@@ -1328,6 +1334,11 @@ input MyNotificationWhereInput {
 input NotificationOrderInput {
   direction: OrderDirection!
   field: NotificationOrderField!
+}
+
+input OrganizationAvailableDesksWhereInput {
+  date: DateTime!
+  organizationId: String!
 }
 
 input OrganizationMemberOrderInput {

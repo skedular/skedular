@@ -270,4 +270,24 @@ public class Query(IMapper mapper)
             CanDeleteBookingOnBehalf = permissions.CanDeleteBookingOnBehalf
         };
     }
+
+    [UseResolverScope]
+    public async Task<OrganizationAvailableDesks?> OrganizationDesksAvailabilityAsync(
+        OrganizationAvailableDesksWhereInput where,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IDeskService deskService,
+        CancellationToken cancellationToken)
+    {
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        var (desksCount, availableDesksCount) = await deskService.GetOrganizationDesksAvailabilityAsync(
+            where.OrganizationId,
+            where.Date,
+            cancellationToken);
+
+        return new OrganizationAvailableDesks { DesksCount = desksCount, AvailableDesksCount = availableDesksCount };
+    }
 }

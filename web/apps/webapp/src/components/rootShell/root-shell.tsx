@@ -12,6 +12,7 @@ import { LogoutIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { startOfDay } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import { signOut } from 'next-auth/react';
 import { useParams } from 'next/navigation';
@@ -31,7 +32,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query rootShell_rootQuery($organizationId: String!, $organizationExists: Boolean!) {
+  query rootShell_rootQuery($organizationId: String!, $organizationExists: Boolean!, $todayDate: DateTime!) {
     me {
       id
     }
@@ -186,10 +187,13 @@ const RootShellWithRelay = ({
   }
 
   useEffect(() => {
+    const today = startOfDay();
+
     loadQuery(
       {
         organizationId: finalOrganizationId,
         organizationExists: !!finalOrganizationId,
+        todayDate: today.toISOString(),
       },
       {
         fetchPolicy: 'store-and-network',

@@ -97,6 +97,11 @@ type Mutation {
   deleteBooking(input: DeleteBookingInput!): BookingPayload @cost(weight: "10")
 }
 
+type OrganizationAvailableDesks {
+  desksCount: Int!
+  availableDesksCount: Int!
+}
+
 type OrganizationBookingPermissions {
   canAddBooking: Boolean!
   canUpdateBooking: Boolean!
@@ -123,6 +128,7 @@ type Query {
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions @cost(weight: "10")
   locationBookingPermissions(locationId: String!): LocationBookingPermissions @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions @cost(weight: "10")
+  organizationDesksAvailability(where: OrganizationAvailableDesksWhereInput!): OrganizationAvailableDesks @cost(weight: "10")
 }
 
 type TeamBookingPermissions {
@@ -193,6 +199,11 @@ input BookingWhereInput {
 input DeleteBookingInput {
   clientMutationId: String
   id: String!
+}
+
+input OrganizationAvailableDesksWhereInput {
+  organizationId: String!
+  date: DateTime!
 }
 
 input UpdateBookingInput {

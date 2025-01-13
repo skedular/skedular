@@ -18,6 +18,11 @@ public interface IDeskService
         ICollection<string> zoneIds,
         bool combineDeskTypesZones,
         CancellationToken cancellationToken);
+
+    Task<(int, int)> GetOrganizationDesksAvailabilityAsync(
+        string organizationId,
+        DateTimeOffset date,
+        CancellationToken cancellationToken);
 }
 
 public class DeskService(
@@ -92,5 +97,49 @@ public class DeskService(
 
             return item;
         }).ToList();
+    }
+
+    public async Task<(int, int)> GetOrganizationDesksAvailabilityAsync(
+        string organizationId,
+        DateTimeOffset date,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
+
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var organization =
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        if (organization is null)
+        {
+            throw new OrganizationNotFound();
+        }
+
+        if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
+        {
+            throw new Unauthorized();
+        }
+
+        var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(
+            organizationId,
+            cancellationToken);
+
+        var desksCount = locations.Aggregate(0, (acc, item) => item.Desks.Count + acc);
+        var availableDesksCount = 0;
+
+        foreach (var location in locations)
+        {
+            var availableDesks = await repositoryFactory.DeskRepository.GetAvailableDesksAsync(
+                organizationId,
+                location.Id,
+                date,
+                [],
+                [],
+                [],
+                false,
+                cancellationToken);
+            availableDesksCount += availableDesks.Count;
+        }
+
+        return (desksCount, availableDesksCount);
     }
 }

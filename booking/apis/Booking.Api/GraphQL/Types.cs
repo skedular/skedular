@@ -234,3 +234,17 @@ public class AvailableDesksWhereInput
     [GraphQLName("zoneIds")] public string[]? ZoneIds { get; set; }
     [GraphQLName("combineDeskTypesZones")] public bool? CombineDeskTypesZones { get; set; }
 }
+
+[GraphQLName("OrganizationAvailableDesksWhereInput")]
+public class OrganizationAvailableDesksWhereInput
+{
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("date")] public required DateTimeOffset Date { get; set; }
+}
+
+[GraphQLName("OrganizationAvailableDesks")]
+public class OrganizationAvailableDesks
+{
+    [GraphQLName("desksCount")] public int DesksCount { get; set; }
+    [GraphQLName("availableDesksCount")] public int AvailableDesksCount { get; set; }
+}

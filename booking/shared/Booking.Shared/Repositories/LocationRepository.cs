@@ -15,6 +15,7 @@ public interface ILocationRepository : IRepository<Location>
     Location Update(Location location);
     Location Remove(Location location);
     Task<ICollection<Location>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
+    Task<ICollection<Location>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 internal static class LocationExtensions
@@ -95,5 +96,14 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
                                   organizationMember =>
                                       !organizationMember.DeletedAt.HasValue &&
                                       organizationMember.Customer.Id == customerId))))
+            .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<Location>> GetByOrganizationIdAsync(
+        string organizationId,
+        CancellationToken cancellationToken) =>
+        await DbContext.Location
+            .Where(query => !query.DeletedAt.HasValue &&
+                            query.Organization != null && query.Organization.Id == organizationId)
+            .AddDependentObjects(false)
             .ToListAsync(cancellationToken);
 }

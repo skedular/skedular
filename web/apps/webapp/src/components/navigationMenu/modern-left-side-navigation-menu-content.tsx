@@ -52,6 +52,10 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
           id
           canModify
         }
+        organizationDesksAvailability(where: { organizationId: $organizationId, date: $todayDate }) @include(if: $organizationExists) {
+          desksCount
+          availableDesksCount
+        }
       }
     `,
     rootDataRelay,
@@ -322,7 +326,12 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
                 <BodyIconTypography label="Upgrade Plan" endElement={<UpgradeIcon fontSize="medium" />} color="inherit" />
               </Button>
 
-              <SmallIconTypography label="3/5 seats available" invertDefaultColor />
+              {rootData.organizationDesksAvailability && (
+                <SmallIconTypography
+                  label={`${rootData.organizationDesksAvailability.availableDesksCount}/${rootData.organizationDesksAvailability.desksCount} seats available`}
+                  invertDefaultColor
+                />
+              )}
 
               <InvitePeopleToJoinOrganizationButton
                 variant="contained"
