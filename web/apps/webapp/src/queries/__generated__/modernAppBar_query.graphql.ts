@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f8fc42d5a98bb88350497ccd62e67d6>>
+ * @generated SignedSource<<a703f0bafad3b680364af8faa089dba5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,6 +25,7 @@ export type modernAppBar_query$data = {
     readonly logoUrl: string | null | undefined;
     readonly name: string;
   }> | null | undefined;
+  readonly pendingInvitationsCount: number;
   readonly " $fragmentSpreads": FragmentRefs<"mobileLeftSideNavigationMenu_query" | "newFeedbackDialog_query">;
   readonly " $fragmentType": "modernAppBar_query";
 };
@@ -132,6 +133,13 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "pendingInvitationsCount",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "mobileLeftSideNavigationMenu_query"
@@ -146,6 +154,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b8cdfbfd3ea3ab1c36757c82c3c3c83e";
+(node as any).hash = "f2926c9e98234853e8ac70cf3a202d01";
 
 export default node;

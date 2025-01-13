@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1c5530eb91a6f0e23e677df037d9fc37>>
+ * @generated SignedSource<<102db30279c8f35cde3518d22e794a9a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -326,12 +326,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "13b6b8b1dbb8f4cffe6c5403d72d1599",
+    "cacheID": "9327d7c887becf6785a3f62ad76b4ea5",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  pendingInvitationsCount\n  ...oldAppBar_query\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n}\n\nfragment appBar_query on Query {\n  ...modernAppBar_query\n  ...oldAppBar_query\n}\n\nfragment leftSideNavigationMenuContent_query on Query {\n  ...modernLeftSideNavigationMenuContent_query\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment mobileLeftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment modernAppBar_query on Query {\n  me {\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n\nfragment modernLeftSideNavigationMenuContent_query on Query {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    canModify\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment oldAppBar_query on Query {\n  me {\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n"
+    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  pendingInvitationsCount\n  ...oldAppBar_query\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n}\n\nfragment appBar_query on Query {\n  ...modernAppBar_query\n  ...oldAppBar_query\n}\n\nfragment leftSideNavigationMenuContent_query on Query {\n  ...modernLeftSideNavigationMenuContent_query\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment mobileLeftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment modernAppBar_query on Query {\n  me {\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  pendingInvitationsCount\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n\nfragment modernLeftSideNavigationMenuContent_query on Query {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    canModify\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment oldAppBar_query on Query {\n  me {\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n    id\n  }\n  pendingInvitationsCount\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n"
   }
 };
 })();

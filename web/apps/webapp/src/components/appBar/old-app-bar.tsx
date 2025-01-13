@@ -1,8 +1,10 @@
 import { NewFeedbackDialog } from '@/components/feedback';
+import { getModernNotificationsBaseLink } from '@/components/organization/organization-link';
 import type { oldAppBar_query$key } from '@/queries/__generated__/oldAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AppBar from '@mui/material/AppBar';
+import Badge from '@mui/material/Badge';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
@@ -51,6 +53,7 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
           familyName
           photoUrl
         }
+        pendingInvitationsCount
         ...mobileLeftSideNavigationMenu_query
         ...newFeedbackDialog_query
       }
@@ -140,7 +143,14 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
           <Divider orientation="vertical" flexItem />
 
           <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
-            <NotificationsIcon excludeTooltip />
+            <Link component={NextLink} href={getModernNotificationsBaseLink()}>
+              {rootData.pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
+              {rootData.pendingInvitationsCount > 0 && (
+                <Badge badgeContent={rootData.pendingInvitationsCount} color="primary">
+                  <NotificationsIcon excludeTooltip />
+                </Badge>
+              )}
+            </Link>
           </IconButton>
 
           <IconButton onClick={handleProfileMenuOpenClick}>
@@ -187,7 +197,7 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
             <Divider />
 
             <MenuItem>
-              <Link component={NextLink} href="/settings" color="inherit">
+              <Link component={NextLink} href="/settings">
                 <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
               </Link>
             </MenuItem>

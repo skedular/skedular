@@ -1,11 +1,16 @@
 import { NewFeedbackDialog } from '@/components/feedback';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { getOrganizationAddLink, getOrganizationBaseLink } from '@/components/organization/organization-link';
+import {
+  getModernOrganizationNotificationsBaseLink,
+  getOrganizationAddLink,
+  getOrganizationBaseLink,
+} from '@/components/organization/organization-link';
 import { SelectedOrganizationContext, UpdateSelectedOrganizationContext } from '@/libs/providers';
 import type { modernAppBar_query$key } from '@/queries/__generated__/modernAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AppBar from '@mui/material/AppBar';
+import Badge from '@mui/material/Badge';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
@@ -74,6 +79,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
           canModify
           canViewAnalytics
         }
+        pendingInvitationsCount
         ...mobileLeftSideNavigationMenu_query
         ...newFeedbackDialog_query
       }
@@ -277,7 +283,16 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
           <Divider orientation="vertical" flexItem />
 
           <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
-            <NotificationsIcon excludeTooltip />
+            {finalOrganizationId && (
+              <Link component={NextLink} href={getModernOrganizationNotificationsBaseLink(finalOrganizationId)}>
+                {rootData.pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
+                {rootData.pendingInvitationsCount > 0 && (
+                  <Badge badgeContent={rootData.pendingInvitationsCount} color="primary">
+                    <NotificationsIcon excludeTooltip />
+                  </Badge>
+                )}
+              </Link>
+            )}
           </IconButton>
 
           <IconButton onClick={handleProfileMenuOpenClick}>
@@ -324,7 +339,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
             <Divider />
 
             <MenuItem>
-              <Link component={NextLink} href="/settings" color="inherit">
+              <Link component={NextLink} href="/settings">
                 <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
               </Link>
             </MenuItem>

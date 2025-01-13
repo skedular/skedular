@@ -1,6 +1,7 @@
 export { default as MultipleChoicesDeskTypes } from './multiple-choices-desk-types';
 export { default as MultipleChoicesZones } from './multiple-choices-zones';
 export {
+  getModernNotificationsBaseLink,
   getModernOrganizationAdminBillingAndPaymentBaseLink,
   getModernOrganizationAdminDeskTypesBaseLink,
   getModernOrganizationAdminSetupBaseLink,
@@ -12,6 +13,7 @@ export {
   getModernOrganizationLocationsBaseLink,
   getModernOrganizationLocationSetupBaseLink,
   getModernOrganizationMembersBaseLink,
+  getModernOrganizationNotificationsBaseLink,
   getModernOrganizationTeamLocationBaseLink,
   getModernOrganizationTeamMembersBaseLink,
   getModernOrganizationTeamsBaseLink,

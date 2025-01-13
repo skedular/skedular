@@ -63,6 +63,8 @@ export const getOrganizationOfferingBaseLink = (id: string) => `${getOrganizatio
 export const getOrganizationBillingBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=billing`;
 export const getOrganizationAnalyticsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=analytics`;
 
+export const getModernOrganizationNotificationsBaseLink = (id: string) => `/organizations/${id}/notifications`;
+
 const OrganizationLink = ({
   id,
   name,

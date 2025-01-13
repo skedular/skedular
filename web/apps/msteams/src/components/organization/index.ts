@@ -12,6 +12,7 @@ export {
   getModernOrganizationLocationsBaseLink,
   getModernOrganizationLocationSetupBaseLink,
   getModernOrganizationMembersBaseLink,
+  getModernOrganizationNotificationsBaseLink,
   getModernOrganizationTeamLocationBaseLink,
   getModernOrganizationTeamMembersBaseLink,
   getModernOrganizationTeamsBaseLink,

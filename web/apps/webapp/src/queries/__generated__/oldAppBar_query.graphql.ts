@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25c1a989f3c799e6364054518139567c>>
+ * @generated SignedSource<<342781df495eaffa8abd204b9b4b4370>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type oldAppBar_query$data = {
     readonly middleName: string | null | undefined;
     readonly photoUrl: string | null | undefined;
   } | null | undefined;
+  readonly pendingInvitationsCount: number;
   readonly " $fragmentSpreads": FragmentRefs<"mobileLeftSideNavigationMenu_query" | "newFeedbackDialog_query">;
   readonly " $fragmentType": "oldAppBar_query";
 };
@@ -79,6 +80,13 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "pendingInvitationsCount",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "mobileLeftSideNavigationMenu_query"
@@ -93,6 +101,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "7daed5bb62b64ca24115958948e8f6ec";
+(node as any).hash = "b12eb267ceb1f480c6fcb201bbba0c87";
 
 export default node;
