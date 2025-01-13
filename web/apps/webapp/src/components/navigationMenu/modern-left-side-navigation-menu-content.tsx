@@ -307,7 +307,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
         </List>
       </Box>
 
-      {finalOrganizationId && (
+      {!collapsed && finalOrganizationId && (
         <>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
