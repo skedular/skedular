@@ -778,6 +778,7 @@ type Query {
   organizationVersion: Version!
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
   paymentVersion: Version!
+  pendingInvitationsCount: Int! @cost(weight: "10")
   slackCustomerRecordSynced: Boolean! @cost(weight: "10")
   slackVersion: Version!
   team(id: String!): TeamDetails @cost(weight: "10")

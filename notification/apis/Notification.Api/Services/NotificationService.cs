@@ -8,6 +8,8 @@ namespace Notification.Api.Services;
 
 public interface INotificationService
 {
+    Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken);
+
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Notification>>, int )> GetMyPaginatedNotificationsAsync(
         PaginationInputParam paginationInputParam,
         NotificationSearchCriteria searchCriteria,
@@ -20,6 +22,14 @@ public class NotificationService(
     ICachedCustomerService cachedCustomerService,
     IMapper mapper) : INotificationService
 {
+    public async Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken)
+    {
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        return await repositoryFactory.NotificationRepository.PendingInvitationsCountAsync(
+            customer.Id,
+            cancellationToken);
+    }
+
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Notification>>, int)>
         GetMyPaginatedNotificationsAsync(
             PaginationInputParam paginationInputParam,

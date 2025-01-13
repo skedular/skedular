@@ -13,6 +13,7 @@ namespace Notification.Shared.Repositories;
 
 public interface INotificationRepository : IRepository<Database.Entities.Notification>
 {
+    Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken);
     Task<Database.Entities.Notification?> GetBySourceIdAsync(string sourceId, CancellationToken cancellationToken);
     Database.Entities.Notification Add(Database.Entities.Notification notification);
     Database.Entities.Notification Update(Database.Entities.Notification notification);
@@ -101,6 +102,12 @@ public class NotificationRepository(NotificationDbContext dbContext, TimeProvide
     : RepositoryBase<NotificationDbContext, Database.Entities.Notification>(dbContext, timeProvider),
         INotificationRepository
 {
+    public async Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken) =>
+        await DbContext.Notification
+            .CountAsync(
+                query => query.DeletedAt == null && query.Invitee != null && query.Invitee.Id == inviteeId,
+                cancellationToken);
+
     public async Task<Database.Entities.Notification?> GetBySourceIdAsync(
         string sourceId,
         CancellationToken cancellationToken) =>

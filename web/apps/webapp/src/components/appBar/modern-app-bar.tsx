@@ -264,7 +264,9 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
 
           {!hideWelcomeMessage && (
             <>
-              {!hideOrganizationSelector && <Divider orientation="vertical" flexItem />}
+              {!hideOrganizationSelector && !hideOrganizationSelector && rootData.myOrganizations.length !== 0 && (
+                <Divider orientation="vertical" flexItem />
+              )}
               <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
             </>
           )}

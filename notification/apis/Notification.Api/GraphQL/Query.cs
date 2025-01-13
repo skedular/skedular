@@ -34,6 +34,15 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
+    public async Task<int> PendingInvitationsCountAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] INotificationService notificationService,
+        CancellationToken cancellationToken) =>
+        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
+            ? await notificationService.PendingInvitationsCountAsync(cancellationToken)
+            : 0;
+
+    [UseResolverScope]
     public async Task<NotificationConnection?> MyNotificationsAsync(
         string? after,
         int? first,

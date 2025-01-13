@@ -1,5 +1,6 @@
 import { AppBar } from '@/components/appBar';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
+import { Notifications } from '@/components/notification/notifications';
 import { Observability } from '@/components/observability';
 import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
@@ -46,6 +47,7 @@ const RootQuery = graphql`
     paymentCustomerRecordSynced
     slackCustomerRecordSynced
     teamCustomerRecordSynced
+    pendingInvitationsCount
     ...oldAppBar_query
     ...appBar_query
     ...leftSideNavigationMenu_query
@@ -139,7 +141,11 @@ const RootShell = ({
             showBreadcrumps={showBreadcrumps}
             breadcrumbs={breadcrumbs}
           />
-          {!rootData.myOrganizations || (rootData.myOrganizations.length === 0 && <OrganizationOnboarding onReloadRequired={onReloadRequired} />)}
+          {!rootData.myOrganizations ||
+            (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && (
+              <OrganizationOnboarding onReloadRequired={onReloadRequired} />
+            ))}
+          {!rootData.myOrganizations || (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />)}
           {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <>{children}</>}
         </Box>
       </Box>
