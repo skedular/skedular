@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0fafee995557cd2d2f5b3aacdbee58b3>>
+ * @generated SignedSource<<3b8f550bb72b876bc4040e77812ac00a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,17 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
   readonly organization: {
     readonly about: string | null | undefined;
+    readonly availableOfferings: ReadonlyArray<{
+      readonly code: string;
+      readonly featureSet: ReadonlyArray<{
+        readonly description: string;
+        readonly name: string;
+      }>;
+      readonly name: string;
+      readonly unitPrice: number;
+    }>;
     readonly canModify: boolean;
+    readonly hasAttachedPaymentMethod: boolean;
     readonly id: string;
     readonly industrySubCategories: ReadonlyArray<{
       readonly id: string;
@@ -78,7 +88,33 @@ v1 = {
 v2 = [
   (v0/*: any*/),
   (v1/*: any*/)
-];
+],
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "unitPrice",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "OrganizationFeatureSetDetails",
+  "kind": "LinkedField",
+  "name": "featureSet",
+  "plural": true,
+  "selections": [
+    (v1/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "description",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -147,6 +183,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "hasAttachedPaymentMethod",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "OrganizationOfferingDetails",
           "kind": "LinkedField",
           "name": "offering",
@@ -168,32 +211,8 @@ return {
               "name": "end",
               "storageKey": null
             },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "unitPrice",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "OrganizationFeatureSetDetails",
-              "kind": "LinkedField",
-              "name": "featureSet",
-              "plural": true,
-              "selections": [
-                (v1/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "description",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
+            (v3/*: any*/),
+            (v4/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -201,6 +220,27 @@ return {
               "name": "free",
               "storageKey": null
             }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationAvailableOfferingDetails",
+          "kind": "LinkedField",
+          "name": "availableOfferings",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "code",
+              "storageKey": null
+            },
+            (v1/*: any*/),
+            (v3/*: any*/),
+            (v4/*: any*/)
           ],
           "storageKey": null
         }
@@ -313,6 +353,6 @@ return {
 };
 })();
 
-(node as any).hash = "c872016a55ed6d05f8494fcdfe966b59";
+(node as any).hash = "739131f46df3ccbec6a9949b93722040";
 
 export default node;

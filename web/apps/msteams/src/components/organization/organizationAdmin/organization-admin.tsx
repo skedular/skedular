@@ -68,6 +68,7 @@ import type { organizationAdmin_query$key } from './__generated__/organizationAd
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from './__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdmin_setOrganizationBillingInfoMutation } from './__generated__/organizationAdmin_setOrganizationBillingInfoMutation.graphql';
 import type { organizationAdmin_updateOrganizationMutation } from './__generated__/organizationAdmin_updateOrganizationMutation.graphql';
+import type { organizationAdmin_updateOrganizationOfferingMutation } from './__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_zones_query$key } from './__generated__/organizationAdmin_zones_query.graphql';
 import type { organizationAdmin_zones_refetchableFragment } from './__generated__/organizationAdmin_zones_refetchableFragment.graphql';
 import { expandedDrawerWidthPx } from './commons';
@@ -146,6 +147,7 @@ const OrganizationAdmin = ({
             id
             name
           }
+          hasAttachedPaymentMethod
           offering {
             id
             name
@@ -157,6 +159,15 @@ const OrganizationAdmin = ({
               description
             }
             free
+          }
+          availableOfferings {
+            code
+            name
+            unitPrice
+            featureSet {
+              name
+              description
+            }
           }
         }
         organizationIndustryMainCategoriesReferences {
@@ -318,6 +329,14 @@ const OrganizationAdmin = ({
   const [commitCancelOrganizationOffering] = useMutation<organizationAdmin_cancelOrganizationOfferingMutation>(graphql`
     mutation organizationAdmin_cancelOrganizationOfferingMutation($input: CancelOrganizationOfferingInput!) {
       cancelOrganizationOffering(input: $input) {
+        clientMutationId
+      }
+    }
+  `);
+
+  const [commitUpdateOrganizationOffering] = useMutation<organizationAdmin_updateOrganizationOfferingMutation>(graphql`
+    mutation organizationAdmin_updateOrganizationOfferingMutation($input: UpdateOrganizationOfferingInput!) {
+      updateOrganizationOffering(input: $input) {
         clientMutationId
       }
     }
@@ -883,6 +902,56 @@ const OrganizationAdmin = ({
     });
   };
 
+  const handleUpgradeOfferingClick = (code: string) => {
+    if (!rootData.organization) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Updating organization '${rootData.organization.name} offering'...`} />,
+      infoNotificationOptions,
+    );
+
+    commitUpdateOrganizationOffering({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: rootData.organization.id,
+          offeringCode: code,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to update organization ${rootData.organization?.name} offering. Error: ${joinErrors(errors)}.`} />
+            ),
+          });
+
+          onReloadRequired();
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${rootData.organization?.name} offering updated.`} />,
+        });
+
+        onReloadRequired();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update organization ${rootData.organization?.name} offering. Error: ${error.message}.`} />,
+        });
+
+        onReloadRequired();
+      },
+    });
+  };
+
   if (!rootData.organization) {
     return <></>;
   }
@@ -989,6 +1058,9 @@ const OrganizationAdmin = ({
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails &&
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
   const offering = rootData.organization ? rootData.organization.offering : null;
+  const availableOfferingExist =
+    rootData.organization && rootData.organization.availableOfferings ? rootData.organization.availableOfferings.length > 0 : false;
+  const availableOfferings = rootData.organization && rootData.organization.availableOfferings ? rootData.organization.availableOfferings : [];
 
   return (
     <>
@@ -1341,6 +1413,54 @@ const OrganizationAdmin = ({
                       </CardContent>
                     </Card>
                   </StackColumn>
+                )}
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <BodyIconTypography label="Available Offerings" />
+                  <Divider />
+                </StackColumn>
+
+                {!availableOfferingExist && <LeadIconTypography label="No offering is available" />}
+
+                {availableOfferingExist && (
+                  <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    {availableOfferings.map((availableOffering) => {
+                      return (
+                        <Card key={availableOffering.code} sx={{ width: { xs: '100%', sm: 500 } }}>
+                          <CardHeader
+                            title={
+                              <>
+                                <BodyIconTypography label={availableOffering.name} invertDefaultColor />
+                                <BodyIconTypography label={`Unit price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
+                              </>
+                            }
+                          />
+
+                          <CardContent sx={{ marginLeft: 1 }}>
+                            <List sx={{ listStyleType: 'disc' }}>
+                              Feature set:
+                              {availableOffering.featureSet.map(({ name, description }, index) => (
+                                <ListItem key={index} sx={{ display: 'list-item' }}>
+                                  <SmallIconTypography label={`${name}: ${description}`} />
+                                </ListItem>
+                              ))}
+                            </List>
+                            {!rootData.organization?.hasAttachedPaymentMethod && (
+                              <SmallIconTypography label="You need to have payment method setup in order to upgrade to this offering. Please setup payment method under Billing tab." />
+                            )}
+                          </CardContent>
+
+                          {rootData.organization?.hasAttachedPaymentMethod && (
+                            <CardActions sx={{ justifyContent: 'flex-end' }}>
+                              <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)}>
+                                Upgrade
+                              </Button>
+                            </CardActions>
+                          )}
+                        </Card>
+                      );
+                    })}
+                  </StackRow>
                 )}
               </StackColumnWithSaveExitCancelAppBar>
             )}
