@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a73cd4684e5945f429adf73dcbaf69a8>>
+ * @generated SignedSource<<0fafee995557cd2d2f5b3aacdbee58b3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,6 +21,18 @@ export type organizationAdmin_query$data = {
     }>;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
+    readonly offering: {
+      readonly end: any;
+      readonly featureSet: ReadonlyArray<{
+        readonly description: string;
+        readonly name: string;
+      }>;
+      readonly free: boolean;
+      readonly id: string;
+      readonly name: string;
+      readonly start: any;
+      readonly unitPrice: number;
+    };
     readonly website: string | null | undefined;
   } | null | undefined;
   readonly organizationBillingInfo: {
@@ -130,6 +142,66 @@ return {
           "name": "industrySubCategories",
           "plural": true,
           "selections": (v2/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationOfferingDetails",
+          "kind": "LinkedField",
+          "name": "offering",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/),
+            (v1/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "start",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "end",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "unitPrice",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationFeatureSetDetails",
+              "kind": "LinkedField",
+              "name": "featureSet",
+              "plural": true,
+              "selections": [
+                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "description",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "free",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -241,6 +313,6 @@ return {
 };
 })();
 
-(node as any).hash = "ab0d3c1cf9acaf09ccb5d28c0a1f117c";
+(node as any).hash = "c872016a55ed6d05f8494fcdfe966b59";
 
 export default node;

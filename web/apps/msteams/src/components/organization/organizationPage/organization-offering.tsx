@@ -5,8 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import { BodyIconTypography, LeadIconTypography } from '@repo/shared/components/commons';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
 import {
   NotificationContent,
   errorNotificationOptions,
@@ -141,14 +140,14 @@ const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
             Feature set:
             {offering.featureSet.map(({ name, description }, index) => (
               <ListItem key={index} sx={{ display: 'list-item' }}>
-                <ListItemText>{`${name}: ${description}`}</ListItemText>
+                <SmallIconTypography label={`${name}: ${description}`} />
               </ListItem>
             ))}
           </List>
 
           {!offering.free && (
             <CardActions sx={{ justifyContent: 'flex-end' }}>
-              <Button color="secondary" variant="contained" onClick={() => handleCancelClick()}>
+              <Button color="secondary" variant="contained" onClick={handleCancelClick}>
                 Cancel
               </Button>
             </CardActions>

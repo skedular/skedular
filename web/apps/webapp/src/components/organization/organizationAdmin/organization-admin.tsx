@@ -3,6 +3,7 @@ import { AddOrganizationDeskTypeButton } from '@/components/organization/addOrga
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
 import { EditOrganizationZoneDialog } from '@/components/organization/editOrganizationZone/';
+import type { organizationAdmin_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_cancelOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_deleteDeskTypesMutation } from '@/queries/__generated__/organizationAdmin_deleteDeskTypesMutation.graphql';
 import type { organizationAdmin_deleteZonesMutation } from '@/queries/__generated__/organizationAdmin_deleteZonesMutation.graphql';
 import type { organizationAdmin_deskTypes_query$key } from '@/queries/__generated__/organizationAdmin_deskTypes_query.graphql';
@@ -17,8 +18,14 @@ import type { organizationAdmin_zones_query$key } from '@/queries/__generated__/
 import type { organizationAdmin_zones_refetchableFragment } from '@/queries/__generated__/organizationAdmin_zones_refetchableFragment.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import {
@@ -137,6 +144,18 @@ const OrganizationAdmin = ({
           industrySubCategories {
             id
             name
+          }
+          offering {
+            id
+            name
+            start
+            end
+            unitPrice
+            featureSet {
+              name
+              description
+            }
+            free
           }
         }
         organizationIndustryMainCategoriesReferences {
@@ -290,6 +309,14 @@ const OrganizationAdmin = ({
   const [commitRemoveOrganizationPaymentMethod] = useMutation<organizationAdmin_removeOrganizationPaymentMethodMutation>(graphql`
     mutation organizationAdmin_removeOrganizationPaymentMethodMutation($input: RemoveOrganizationPaymentMethodInput!) {
       removeOrganizationPaymentMethod(input: $input) {
+        clientMutationId
+      }
+    }
+  `);
+
+  const [commitCancelOrganizationOffering] = useMutation<organizationAdmin_cancelOrganizationOfferingMutation>(graphql`
+    mutation organizationAdmin_cancelOrganizationOfferingMutation($input: CancelOrganizationOfferingInput!) {
+      cancelOrganizationOffering(input: $input) {
         clientMutationId
       }
     }
@@ -802,6 +829,59 @@ const OrganizationAdmin = ({
     });
   };
 
+  const handleCancelActiveOfferingClick = () => {
+    if (!rootData.organization) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Cancelling organization '${rootData.organization.name}' offering...`} />,
+      infoNotificationOptions,
+    );
+
+    commitCancelOrganizationOffering({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: rootData.organization.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to cancel organization '${rootData.organization?.name}' offering. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          onReloadRequired();
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization '${rootData.organization?.name}' offering cancelled.`} />,
+        });
+
+        onReloadRequired();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to cancel organization '${rootData.organization?.name}' offering. Error: ${error.message}.`} />
+          ),
+        });
+
+        onReloadRequired();
+      },
+    });
+  };
+
   if (!rootData.organization) {
     return <></>;
   }
@@ -907,6 +987,7 @@ const OrganizationAdmin = ({
   const paymentMethodExist =
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails &&
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
+  const offering = rootData.organization ? rootData.organization.offering : null;
 
   return (
     <>
@@ -1223,9 +1304,43 @@ const OrganizationAdmin = ({
                   }}
                 >
                   <SectionIconTypography label="Subscriptions" />
-                  <BodyIconTypography label="Edit your organization subscriptions" />
+                  <BodyIconTypography label="Active Offering" />
                   <Divider />
                 </StackColumn>
+
+                {offering && (
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <Card sx={{ width: { xs: '100%', sm: 500 } }}>
+                      <CardHeader
+                        title={
+                          <>
+                            <BodyIconTypography label={offering.name} invertDefaultColor />
+                            <BodyIconTypography label={`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
+                          </>
+                        }
+                      />
+
+                      <CardContent sx={{ marginLeft: 1 }}>
+                        <List sx={{ listStyleType: 'disc' }}>
+                          Feature set:
+                          {offering.featureSet.map(({ name, description }, index) => (
+                            <ListItem key={index} sx={{ display: 'list-item' }}>
+                              <SmallIconTypography label={`${name}: ${description}`} />
+                            </ListItem>
+                          ))}
+                        </List>
+
+                        {!offering.free && (
+                          <CardActions sx={{ justifyContent: 'flex-end' }}>
+                            <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick}>
+                              Cancel
+                            </Button>
+                          </CardActions>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </StackColumn>
+                )}
               </StackColumnWithSaveExitCancelAppBar>
             )}
           />
