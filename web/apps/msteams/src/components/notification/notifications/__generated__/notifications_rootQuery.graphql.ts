@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<254fac21c8b55e898405de9f1b92bb81>>
+ * @generated SignedSource<<0a86b0be4c724285d2af5973a13abd99>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,8 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
 export type NotificationOrderField = "Date" | "Type" | "%future added value";
+export type NotificationType = "InvitationToJoinLocation" | "InvitationToJoinOrganization" | "InvitationToJoinTeam" | "%future added value";
 export type OrderDirection = "Ascending" | "Descending" | "%future added value";
 export type NotificationOrderInput = {
   direction: OrderDirection;
@@ -20,7 +20,33 @@ export type notifications_rootQuery$variables = {
   myNotificationsSortingValues?: ReadonlyArray<NotificationOrderInput> | null | undefined;
 };
 export type notifications_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"notifications_query">;
+  readonly myNotifications: {
+    readonly __id: string;
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly invitedBy: {
+          readonly familyName: string | null | undefined;
+          readonly givenName: string | null | undefined;
+          readonly middleName: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly photoUrl: string | null | undefined;
+        } | null | undefined;
+        readonly location: {
+          readonly name: string;
+        } | null | undefined;
+        readonly notificationType: NotificationType;
+        readonly organization: {
+          readonly name: string;
+        } | null | undefined;
+        readonly sourceId: string;
+        readonly team: {
+          readonly name: string;
+        } | null | undefined;
+      };
+    }>;
+    readonly totalCount: number | null | undefined;
+  } | null | undefined;
 };
 export type notifications_rootQuery = {
   response: notifications_rootQuery$data;
@@ -35,193 +61,115 @@ var v0 = [
     "name": "myNotificationsSortingValues"
   }
 ],
-v1 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 50
-  },
-  {
-    "kind": "Variable",
-    "name": "orderBy",
-    "variableName": "myNotificationsSortingValues"
-  },
-  {
-    "kind": "Literal",
-    "name": "where",
-    "value": {}
-  }
-],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
-  (v2/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "givenName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "middleName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "familyName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "photoUrl",
-    "storageKey": null
-  }
+v2 = [
+  (v1/*: any*/)
 ],
-v4 = [
-  (v2/*: any*/)
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "notifications_rootQuery",
-    "selections": [
+v3 = [
+  {
+    "alias": null,
+    "args": [
       {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "notifications_query"
+        "kind": "Variable",
+        "name": "orderBy",
+        "variableName": "myNotificationsSortingValues"
+      },
+      {
+        "kind": "Literal",
+        "name": "where",
+        "value": {}
       }
     ],
-    "type": "Query",
-    "abstractKey": null
-  },
-  "kind": "Request",
-  "operation": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Operation",
-    "name": "notifications_rootQuery",
+    "concreteType": "NotificationConnection",
+    "kind": "LinkedField",
+    "name": "myNotifications",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "NotificationConnection",
+        "args": null,
+        "kind": "ScalarField",
+        "name": "totalCount",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "NotificationEdge",
         "kind": "LinkedField",
-        "name": "myNotifications",
-        "plural": false,
+        "name": "edges",
+        "plural": true,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "totalCount",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "NotificationEdge",
+            "concreteType": "Notification",
             "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
+            "name": "node",
+            "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Notification",
+                "kind": "ScalarField",
+                "name": "id",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "sourceId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "notificationType",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "NotificationCustomerDetails",
                 "kind": "LinkedField",
-                "name": "node",
+                "name": "invitedBy",
                 "plural": false,
                 "selections": [
+                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "id",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "notificationType",
+                    "name": "givenName",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "sourceId",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "NotificationCustomerDetails",
-                    "kind": "LinkedField",
-                    "name": "invitedBy",
-                    "plural": false,
-                    "selections": (v3/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "NotificationCustomerDetails",
-                    "kind": "LinkedField",
-                    "name": "invitee",
-                    "plural": false,
-                    "selections": (v3/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "NotificationOrganizationDetails",
-                    "kind": "LinkedField",
-                    "name": "organization",
-                    "plural": false,
-                    "selections": (v4/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "NotificationLocationDetails",
-                    "kind": "LinkedField",
-                    "name": "location",
-                    "plural": false,
-                    "selections": (v4/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "NotificationTeamDetails",
-                    "kind": "LinkedField",
-                    "name": "team",
-                    "plural": false,
-                    "selections": (v4/*: any*/),
+                    "name": "middleName",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "__typename",
+                    "name": "familyName",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "photoUrl",
                     "storageKey": null
                   }
                 ],
@@ -230,78 +178,83 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
-            "kind": "LinkedField",
-            "name": "pageInfo",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
+                "concreteType": "NotificationOrganizationDetails",
+                "kind": "LinkedField",
+                "name": "organization",
+                "plural": false,
+                "selections": (v2/*: any*/),
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
+                "concreteType": "NotificationLocationDetails",
+                "kind": "LinkedField",
+                "name": "location",
+                "plural": false,
+                "selections": (v2/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "NotificationTeamDetails",
+                "kind": "LinkedField",
+                "name": "team",
+                "plural": false,
+                "selections": (v2/*: any*/),
                 "storageKey": null
               }
             ],
             "storageKey": null
-          },
-          {
-            "kind": "ClientExtension",
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__id",
-                "storageKey": null
-              }
-            ]
           }
         ],
         "storageKey": null
       },
       {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "filters": [
-          "where",
-          "orderBy"
-        ],
-        "handle": "connection",
-        "key": "notifications_myNotifications",
-        "kind": "LinkedHandle",
-        "name": "myNotifications"
+        "kind": "ClientExtension",
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__id",
+            "storageKey": null
+          }
+        ]
       }
-    ]
+    ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "notifications_rootQuery",
+    "selections": (v3/*: any*/),
+    "type": "Query",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Operation",
+    "name": "notifications_rootQuery",
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "f40dfaecc3f01c88cdd31d6106746f72",
+    "cacheID": "c9e2676488e6bbc0928a4d2ab7deb177",
     "id": null,
     "metadata": {},
     "name": "notifications_rootQuery",
     "operationKind": "query",
-    "text": "query notifications_rootQuery(\n  $myNotificationsSortingValues: [NotificationOrderInput!]\n) {\n  ...notifications_query\n}\n\nfragment invitationToJoinLocationNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  location {\n    name\n  }\n}\n\nfragment invitationToJoinOrganizationNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    name\n  }\n}\n\nfragment invitationToJoinTeamNotificationCard_NotificationDetails on Notification {\n  id\n  sourceId\n  invitedBy {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  invitee {\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  team {\n    name\n  }\n}\n\nfragment notificationCard_NotificationDetails on Notification {\n  id\n  notificationType\n  ...invitationToJoinOrganizationNotificationCard_NotificationDetails\n  ...invitationToJoinLocationNotificationCard_NotificationDetails\n  ...invitationToJoinTeamNotificationCard_NotificationDetails\n}\n\nfragment notifications_query on Query {\n  myNotifications(first: 50, where: {}, orderBy: $myNotificationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...notificationCard_NotificationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query notifications_rootQuery(\n  $myNotificationsSortingValues: [NotificationOrderInput!]\n) {\n  myNotifications(where: {}, orderBy: $myNotificationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        sourceId\n        notificationType\n        invitedBy {\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          name\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "15a193cb40a8da6dcc8eb5120645c7a2";
+(node as any).hash = "ada98cd6c9179a5b8cdcca3d8f1da20d";
 
 export default node;

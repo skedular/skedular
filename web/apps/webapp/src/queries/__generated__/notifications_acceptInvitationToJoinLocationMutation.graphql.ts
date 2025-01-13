@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4278d9a85f770ee7f96a130edc52f01f>>
+ * @generated SignedSource<<2f1e2873f6baf34b2dbf7a4a2100592e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,17 +13,17 @@ export type AcceptInvitationToJoinLocationInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation$variables = {
+export type notifications_acceptInvitationToJoinLocationMutation$variables = {
   input: AcceptInvitationToJoinLocationInput;
 };
-export type invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation$data = {
+export type notifications_acceptInvitationToJoinLocationMutation$data = {
   readonly acceptInvitationToJoinLocation: {
     readonly clientMutationId: string | null | undefined;
   } | null | undefined;
 };
-export type invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation = {
-  response: invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation$data;
-  variables: invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation$variables;
+export type notifications_acceptInvitationToJoinLocationMutation = {
+  response: notifications_acceptInvitationToJoinLocationMutation$data;
+  variables: notifications_acceptInvitationToJoinLocationMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -65,7 +65,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation",
+    "name": "notifications_acceptInvitationToJoinLocationMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -74,20 +74,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation",
+    "name": "notifications_acceptInvitationToJoinLocationMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "28c0d5fa14566eeadc2d3a10886338b6",
+    "cacheID": "e4ea7b7093ef421090bf86b540f88fa0",
     "id": null,
     "metadata": {},
-    "name": "invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation",
+    "name": "notifications_acceptInvitationToJoinLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation invitationToJoinLocationNotificationCard_acceptInvitationToJoinLocationMutation(\n  $input: AcceptInvitationToJoinLocationInput!\n) {\n  acceptInvitationToJoinLocation(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation notifications_acceptInvitationToJoinLocationMutation(\n  $input: AcceptInvitationToJoinLocationInput!\n) {\n  acceptInvitationToJoinLocation(input: $input) {\n    clientMutationId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "28bd3b8a604b60b5903f1c4d1a573b5b";
+(node as any).hash = "29fa87cefb5d3b765f6a1e421c3e2a99";
 
 export default node;

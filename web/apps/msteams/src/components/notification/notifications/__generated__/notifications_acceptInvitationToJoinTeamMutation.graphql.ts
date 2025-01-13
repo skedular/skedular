@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<89ff78f6e80b65ac2746ce6520398146>>
+ * @generated SignedSource<<dd6db1d67cc40e231a8d6fb81ad0cad9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,17 +13,17 @@ export type AcceptInvitationToJoinTeamInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation$variables = {
+export type notifications_acceptInvitationToJoinTeamMutation$variables = {
   input: AcceptInvitationToJoinTeamInput;
 };
-export type invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation$data = {
+export type notifications_acceptInvitationToJoinTeamMutation$data = {
   readonly acceptInvitationToJoinTeam: {
     readonly clientMutationId: string | null | undefined;
   } | null | undefined;
 };
-export type invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation = {
-  response: invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation$data;
-  variables: invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation$variables;
+export type notifications_acceptInvitationToJoinTeamMutation = {
+  response: notifications_acceptInvitationToJoinTeamMutation$data;
+  variables: notifications_acceptInvitationToJoinTeamMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -65,7 +65,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation",
+    "name": "notifications_acceptInvitationToJoinTeamMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -74,20 +74,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation",
+    "name": "notifications_acceptInvitationToJoinTeamMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "63bf2ed90006348301938cc75ccf2807",
+    "cacheID": "223c6c960886e655226ad600c4e74d64",
     "id": null,
     "metadata": {},
-    "name": "invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation",
+    "name": "notifications_acceptInvitationToJoinTeamMutation",
     "operationKind": "mutation",
-    "text": "mutation invitationToJoinTeamNotificationCard_acceptInvitationToJoinTeamMutation(\n  $input: AcceptInvitationToJoinTeamInput!\n) {\n  acceptInvitationToJoinTeam(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation notifications_acceptInvitationToJoinTeamMutation(\n  $input: AcceptInvitationToJoinTeamInput!\n) {\n  acceptInvitationToJoinTeam(input: $input) {\n    clientMutationId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5973eda6eb359491fb43c3ea096b281d";
+(node as any).hash = "7ba4849fa96e6a58cf43fbe9d9e6134e";
 
 export default node;

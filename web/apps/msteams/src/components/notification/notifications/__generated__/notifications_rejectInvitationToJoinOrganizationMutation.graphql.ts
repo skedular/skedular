@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6367c563858eeac951fbfb932c18f867>>
+ * @generated SignedSource<<fb9c61c09d7b7f916e8dee0a7874d8d7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,17 +13,17 @@ export type RejectInvitationToJoinOrganizationInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type invitationToJoinOrganizationNotificationCard_rejectInvitationToJoinOrganizationMutation$variables = {
+export type notifications_rejectInvitationToJoinOrganizationMutation$variables = {
   input: RejectInvitationToJoinOrganizationInput;
 };
-export type invitationToJoinOrganizationNotificationCard_rejectInvitationToJoinOrganizationMutation$data = {
+export type notifications_rejectInvitationToJoinOrganizationMutation$data = {
   readonly rejectInvitationToJoinOrganization: {
     readonly clientMutationId: string | null | undefined;
   } | null | undefined;
 };
-export type invitationToJoinOrganizationNotificationCard_rejectInvitationToJoinOrganizationMutation = {
-  response: invitationToJoinOrganizationNotificationCard_rejectInvitationToJoinOrganizationMutation$data;
-  variables: invitationToJoinOrganizationNotificationCard_rejectInvitationToJoinOrganizationMutation$variables;
+export type notifications_rejectInvitationToJoinOrganizationMutation = {
+  response: notifications_rejectInvitationToJoinOrganizationMutation$data;
+  variables: notifications_rejectInvitationToJoinOrganizationMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -65,7 +65,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "invitationToJoinOrganizationNotificationCard_rejectInvitationToJoinOrganizationMutation",
+    "name": "notifications_rejectInvitationToJoinOrganizationMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -74,20 +74,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "invitationToJoinOrganizationNotificationCard_rejectInvitationToJoinOrganizationMutation",
+    "name": "notifications_rejectInvitationToJoinOrganizationMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "632226f0e887d0a1098bf0e1d82f06c5",
+    "cacheID": "32e0d8420ff908baf068c82641be1360",
     "id": null,
     "metadata": {},
-    "name": "invitationToJoinOrganizationNotificationCard_rejectInvitationToJoinOrganizationMutation",
+    "name": "notifications_rejectInvitationToJoinOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation invitationToJoinOrganizationNotificationCard_rejectInvitationToJoinOrganizationMutation(\n  $input: RejectInvitationToJoinOrganizationInput!\n) {\n  rejectInvitationToJoinOrganization(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation notifications_rejectInvitationToJoinOrganizationMutation(\n  $input: RejectInvitationToJoinOrganizationInput!\n) {\n  rejectInvitationToJoinOrganization(input: $input) {\n    clientMutationId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "43fbbfb84d02820a284edfa1a04f600b";
+(node as any).hash = "952f65b17c9e960d688d3290a139ffa5";
 
 export default node;
