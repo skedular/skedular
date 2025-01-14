@@ -42,8 +42,6 @@ const SingleChoinceTimezone = ({ name, required }: Props) => {
           </li>
         );
       }}
-      disableCloseOnSelect={false}
-      freeSolo={true}
       filterOptions={(options, params) => filter(options as TimezoneDetails[], params)}
       selectOnFocus
       clearOnBlur

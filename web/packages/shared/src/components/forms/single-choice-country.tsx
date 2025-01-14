@@ -34,8 +34,6 @@ const SingleChoiceCountry = ({ name, required }: Props) => {
           </li>
         );
       }}
-      disableCloseOnSelect={false}
-      freeSolo={true}
       filterOptions={(options, params) => filter(options as CountryDetails[], params)}
       selectOnFocus
       clearOnBlur

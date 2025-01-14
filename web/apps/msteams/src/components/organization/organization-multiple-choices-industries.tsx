@@ -62,8 +62,7 @@ const OrganizationMultipleChoicesIndustries = ({ rootDataRelay, name, required }
 
         return <li {...props}>{castedOption.name}</li>;
       }}
-      disableCloseOnSelect={true}
-      freeSolo={true}
+      disableCloseOnSelect
       filterOptions={(options, params) => filter(options as SubCategoryDetails[], params)}
       selectOnFocus
       clearOnBlur

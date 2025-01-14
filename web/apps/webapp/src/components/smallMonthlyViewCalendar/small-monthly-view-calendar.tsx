@@ -240,7 +240,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
         <AccordionDetails>
           <Autocomplete
             options={organizations}
-            onChange={(event, option) => {
+            onChange={(_, option) => {
               const castedOption = option as OrganizationDetails;
 
               setSelectedOrganization(castedOption);
@@ -257,8 +257,6 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
               );
             }}
             renderInput={(params) => <TextField {...params} label="Organization" />}
-            disableCloseOnSelect={false}
-            freeSolo={true}
             filterOptions={(options, params) => filter(options as OrganizationDetails[], params)}
             selectOnFocus
             clearOnBlur

@@ -42,8 +42,6 @@ const LocationSingleChoiceMemberRole = ({ rootDataRelay, name, required }: Props
           </li>
         );
       }}
-      disableCloseOnSelect={false}
-      freeSolo={true}
       filterOptions={(options, params) => filter(options as string[], params)}
       selectOnFocus
       clearOnBlur

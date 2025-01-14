@@ -236,8 +236,6 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
                         </li>
                       );
                     }}
-                    disableCloseOnSelect={false}
-                    freeSolo={true}
                     filterOptions={(options, params) => {
                       if (params.inputValue !== peopleNameSearchText) {
                         debounceSearchTextChange(params.inputValue);

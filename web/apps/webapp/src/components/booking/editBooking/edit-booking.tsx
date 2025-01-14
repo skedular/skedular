@@ -574,8 +574,6 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
                           </li>
                         );
                       }}
-                      disableCloseOnSelect={false}
-                      freeSolo={true}
                       filterOptions={(options, params) => {
                         if (params.inputValue !== peopleNameSearchText) {
                           debounceSearchTextChange(params.inputValue);
@@ -606,8 +604,6 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
                           </li>
                         );
                       }}
-                      disableCloseOnSelect={false}
-                      freeSolo={true}
                       filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
                       selectOnFocus
                       clearOnBlur
@@ -633,8 +629,6 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
                           </li>
                         );
                       }}
-                      disableCloseOnSelect={false}
-                      freeSolo={true}
                       filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
                       selectOnFocus
                       clearOnBlur
@@ -665,8 +659,7 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
                               </li>
                             );
                           }}
-                          disableCloseOnSelect={true}
-                          freeSolo={true}
+                          disableCloseOnSelect
                           filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
                           selectOnFocus
                           clearOnBlur

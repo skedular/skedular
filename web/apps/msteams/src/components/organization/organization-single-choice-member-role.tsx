@@ -43,8 +43,6 @@ const OrganizationSingleChoiceMemberRole = ({ rootDataRelay, name, required }: P
           </li>
         );
       }}
-      disableCloseOnSelect={false}
-      freeSolo={true}
       filterOptions={(options, params) => filter(options as string[], params)}
       selectOnFocus
       clearOnBlur

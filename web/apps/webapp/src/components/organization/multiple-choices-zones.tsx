@@ -66,8 +66,7 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
           </li>
         );
       }}
-      disableCloseOnSelect={true}
-      freeSolo={true}
+      disableCloseOnSelect
       filterOptions={(options, params) => filter(options as ZoneDetails[], params)}
       selectOnFocus
       clearOnBlur

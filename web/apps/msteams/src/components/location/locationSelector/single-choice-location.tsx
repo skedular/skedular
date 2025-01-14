@@ -56,8 +56,6 @@ const SingleChoiceLocation = ({ rootDataRelay, id, required }: Props) => {
           </li>
         );
       }}
-      disableCloseOnSelect={false}
-      freeSolo={true}
       filterOptions={(options, params) => filter(options as LocationDetails[], params)}
       selectOnFocus
       clearOnBlur

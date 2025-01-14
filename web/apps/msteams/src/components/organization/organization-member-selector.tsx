@@ -130,8 +130,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
           </li>
         );
       }}
-      disableCloseOnSelect={false}
-      freeSolo={true}
+      disableCloseOnSelect={multiple}
       filterOptions={(options, params) => {
         if (params.inputValue !== bookingPeopleNameSearchText) {
           debounceSearchTextChange(params.inputValue);

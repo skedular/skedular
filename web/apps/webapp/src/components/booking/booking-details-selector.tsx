@@ -329,8 +329,6 @@ const BookingDetailsSelector = ({
                 </li>
               );
             }}
-            disableCloseOnSelect={false}
-            freeSolo={true}
             filterOptions={(options, params) => filterOrganization(options as OrganizationDetails[], params)}
             selectOnFocus
             clearOnBlur
@@ -361,8 +359,6 @@ const BookingDetailsSelector = ({
                 </li>
               );
             }}
-            disableCloseOnSelect={false}
-            freeSolo={true}
             filterOptions={(options, params) => {
               if (params.inputValue !== bookingPeopleNameSearchText) {
                 debouncePeopleNameSearchTextChange(params.inputValue);
@@ -395,8 +391,6 @@ const BookingDetailsSelector = ({
                 </li>
               );
             }}
-            disableCloseOnSelect={false}
-            freeSolo={true}
             filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
             selectOnFocus
             clearOnBlur
@@ -429,8 +423,7 @@ const BookingDetailsSelector = ({
                     </li>
                   );
                 }}
-                disableCloseOnSelect={true}
-                freeSolo={true}
+                disableCloseOnSelect
                 filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
                 selectOnFocus
                 clearOnBlur
