@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a0d5c425018b29368095238e14badc1c>>
+ * @generated SignedSource<<a59b42673c4845528c0a6ede761d79e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,10 +14,6 @@ export type modernLeftSideNavigationMenuContent_query$data = {
   readonly organization?: {
     readonly canModify: boolean;
     readonly id: string;
-  } | null | undefined;
-  readonly organizationDesksAvailability?: {
-    readonly availableDesksCount: number;
-    readonly desksCount: number;
   } | null | undefined;
   readonly " $fragmentType": "modernLeftSideNavigationMenuContent_query";
 };
@@ -35,10 +31,6 @@ const node: ReaderFragment = {
     {
       "kind": "RootArgument",
       "name": "organizationId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "todayDate"
     }
   ],
   "kind": "Fragment",
@@ -80,48 +72,6 @@ const node: ReaderFragment = {
             }
           ],
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": [
-            {
-              "fields": [
-                {
-                  "kind": "Variable",
-                  "name": "date",
-                  "variableName": "todayDate"
-                },
-                {
-                  "kind": "Variable",
-                  "name": "organizationId",
-                  "variableName": "organizationId"
-                }
-              ],
-              "kind": "ObjectValue",
-              "name": "where"
-            }
-          ],
-          "concreteType": "OrganizationAvailableDesks",
-          "kind": "LinkedField",
-          "name": "organizationDesksAvailability",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "desksCount",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "availableDesksCount",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
         }
       ]
     }
@@ -130,6 +80,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "9d39d89f66cf66433a2176f58910478f";
+(node as any).hash = "94e4fbd6d402f75e96ebc0bb145b21bb";
 
 export default node;
