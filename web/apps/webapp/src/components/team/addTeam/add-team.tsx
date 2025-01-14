@@ -272,7 +272,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
                     <Divider />
                   </StackColumn>
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Organization Members">
+                    <FormFieldLabel label="Organization Users">
                       <OrganizationMemberSelector
                         rootDataRelay={rootData}
                         organizationId={organizationId}

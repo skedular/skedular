@@ -3,9 +3,9 @@ import {
   getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationAdminSubscriptionsBaseLink,
   getModernOrganizationLocationsBaseLink,
-  getModernOrganizationMembersBaseLink,
   getModernOrganizationNotificationsBaseLink,
   getModernOrganizationTeamsBaseLink,
+  getModernOrganizationUsersBaseLink,
   getOrganizationBaseLink,
 } from '@/components/organization/organization-link';
 import type { modernLeftSideNavigationMenuContent_query$key } from '@/queries/__generated__/modernLeftSideNavigationMenuContent_query.graphql';
@@ -128,7 +128,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
   const organizationBaseLink = getOrganizationBaseLink(rootData.organization.id);
   const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
   const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
-  const organizationMembersBaseLink = getModernOrganizationMembersBaseLink(rootData.organization.id);
+  const organizationMembersBaseLink = getModernOrganizationUsersBaseLink(rootData.organization.id);
   const notificationsBaseLink = getModernOrganizationNotificationsBaseLink(rootData.organization.id);
   const organizationAdminSetupBaseLink = getModernOrganizationAdminSetupBaseLink(rootData.organization.id);
 
@@ -246,7 +246,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
                 )}
                 {!collapsed && (
                   <BodyIconTypography
-                    label="Members"
+                    label="Users"
                     startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
                     spacing={3}
                     invertDefaultColor={pathName.startsWith(organizationMembersBaseLink) && paletteMode === 'dark'}

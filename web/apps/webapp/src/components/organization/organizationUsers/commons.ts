@@ -1,4 +1,4 @@
-export const expandedDrawerWidth = 110;
+export const expandedDrawerWidth = 190;
 export const collapsedDrawerWidth = 80;
-export const expandedDrawerWidthPx = '130px';
+export const expandedDrawerWidthPx = '210px';
 export const collapsedDrawerWidthPx = '100px';

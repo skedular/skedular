@@ -1,4 +1,3 @@
-import { getModernOrganizationMembersBaseLink } from '@/components/organization';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -6,10 +5,10 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { MembersIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
-import NextLink from 'next/link';
-import { usePathname } from 'next/navigation';
+import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
+import { getModernOrganizationUsersBaseLink } from 'components/organization';
 import { memo, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
 
 type Props = {
@@ -18,40 +17,34 @@ type Props = {
   hideIcons?: boolean;
 };
 
-const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
-  const pathName = usePathname();
+const OrganizationUsersLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+  const location = useLocation();
+  const pathName = location.pathname;
   const paletteMode = useContext(PaletteModeContext);
   const maxWidth = collapsed ? collapsedDrawerWidth : expandedDrawerWidth;
   const styles = {
     width: maxWidth,
-    borderRadius: 4,
-    marginLeft: 1,
-    marginRight: 1,
+    marginLeft: 2,
+    marginRight: 2,
     transition: 'border-radius 0.3s ease, width 0.3s ease',
     '&:hover': {
-      width: maxWidth,
       borderRadius: 4,
-      marginLeft: 1,
-      marginRight: 1,
+      width: maxWidth,
+      marginLeft: 2,
+      marginRight: 2,
       transition: 'none',
     },
     '&.Mui-selected': {
       width: maxWidth,
-      borderRadius: 4,
-      marginLeft: 1,
-      marginRight: 1,
       backgroundColor: sandstone,
       '&:hover': {
-        width: maxWidth,
-        borderRadius: 4,
-        marginLeft: 1,
-        marginRight: 1,
         backgroundColor: sandstone,
       },
     },
+    ...selectedListItemPaddings,
   };
 
-  const memberesLink = getModernOrganizationMembersBaseLink(organizationId);
+  const memberesLink = getModernOrganizationUsersBaseLink(organizationId);
 
   return (
     <List
@@ -66,7 +59,7 @@ const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, coll
       }}
     >
       <ListItem disablePadding>
-        <Link component={NextLink} href={memberesLink}>
+        <Link href={memberesLink}>
           <ListItemButton
             selected={pathName === memberesLink}
             sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === memberesLink) }}
@@ -79,7 +72,7 @@ const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, coll
             )}
             {!collapsed && (
               <BodyIconTypography
-                label="Members"
+                label="Users"
                 startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={pathName === memberesLink && paletteMode === 'dark'}
@@ -92,4 +85,4 @@ const OrganizationMembersLeftSideNavigationMenuContent = ({ organizationId, coll
   );
 };
 
-export default memo(OrganizationMembersLeftSideNavigationMenuContent);
+export default memo(OrganizationUsersLeftSideNavigationMenuContent);

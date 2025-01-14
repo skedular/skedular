@@ -27,7 +27,7 @@ type Props = {
 export const getOrganizationBaseLink = (id: string) => `/organizations/${id}`;
 export const getOrganizationAddLink = () => `/organizations/add`;
 
-export const getModernOrganizationMembersBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/members`;
+export const getModernOrganizationUsersBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/users`;
 
 export const getModernOrganizationTeamsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/teams`;
 export const getModernOrganizationTeamSetupBaseLink = (id: string, teamId: string) => `${getOrganizationBaseLink(id)}/teams/${teamId}?section=setup`;

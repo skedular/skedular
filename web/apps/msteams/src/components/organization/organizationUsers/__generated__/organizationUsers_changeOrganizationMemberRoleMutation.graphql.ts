@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<80b5dc2737c2beb1942ee7a9e7ec40a1>>
+ * @generated SignedSource<<531322fa91ce450c00dece614096fe7a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,10 +16,10 @@ export type ChangeOrganizationMemberRoleInput = {
   id: string;
   role: OrganizationMemberRole;
 };
-export type organizationMembers_changeOrganizationMemberRoleMutation$variables = {
+export type organizationUsers_changeOrganizationMemberRoleMutation$variables = {
   input: ChangeOrganizationMemberRoleInput;
 };
-export type organizationMembers_changeOrganizationMemberRoleMutation$data = {
+export type organizationUsers_changeOrganizationMemberRoleMutation$data = {
   readonly changeOrganizationMemberRole: {
     readonly member: {
       readonly customer: {
@@ -38,7 +38,7 @@ export type organizationMembers_changeOrganizationMemberRoleMutation$data = {
     } | null | undefined;
   } | null | undefined;
 };
-export type organizationMembers_changeOrganizationMemberRoleMutation$rawResponse = {
+export type organizationUsers_changeOrganizationMemberRoleMutation$rawResponse = {
   readonly changeOrganizationMemberRole: {
     readonly member: {
       readonly customer: {
@@ -57,10 +57,10 @@ export type organizationMembers_changeOrganizationMemberRoleMutation$rawResponse
     } | null | undefined;
   } | null | undefined;
 };
-export type organizationMembers_changeOrganizationMemberRoleMutation = {
-  rawResponse: organizationMembers_changeOrganizationMemberRoleMutation$rawResponse;
-  response: organizationMembers_changeOrganizationMemberRoleMutation$data;
-  variables: organizationMembers_changeOrganizationMemberRoleMutation$variables;
+export type organizationUsers_changeOrganizationMemberRoleMutation = {
+  rawResponse: organizationUsers_changeOrganizationMemberRoleMutation$rawResponse;
+  response: organizationUsers_changeOrganizationMemberRoleMutation$data;
+  variables: organizationUsers_changeOrganizationMemberRoleMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -194,7 +194,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMembers_changeOrganizationMemberRoleMutation",
+    "name": "organizationUsers_changeOrganizationMemberRoleMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -203,20 +203,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMembers_changeOrganizationMemberRoleMutation",
+    "name": "organizationUsers_changeOrganizationMemberRoleMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "52a5da123e07e3bfe4fbf58e5c5d508f",
+    "cacheID": "f582001c81a03dd112396d67d8834883",
     "id": null,
     "metadata": {},
-    "name": "organizationMembers_changeOrganizationMemberRoleMutation",
+    "name": "organizationUsers_changeOrganizationMemberRoleMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMembers_changeOrganizationMemberRoleMutation(\n  $input: ChangeOrganizationMemberRoleInput!\n) {\n  changeOrganizationMemberRole(input: $input) {\n    member {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
+    "text": "mutation organizationUsers_changeOrganizationMemberRoleMutation(\n  $input: ChangeOrganizationMemberRoleInput!\n) {\n  changeOrganizationMemberRole(input: $input) {\n    member {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6b73e84102e5eebf990aef9bfd8e87e5";
+(node as any).hash = "1c73c2074692575a5875a8ed6281f884";
 
 export default node;

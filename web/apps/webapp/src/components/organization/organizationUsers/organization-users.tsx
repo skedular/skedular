@@ -1,14 +1,14 @@
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import { TeamSelector } from '@/components/team/teamSelector';
-import type { organizationMembers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationMembers_changeOrganizationMemberRoleMutation.graphql';
-import type { organizationMembers_changeOrganizationMembersStatusMutation } from '@/queries/__generated__/organizationMembers_changeOrganizationMembersStatusMutation.graphql';
+import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
+import type { organizationUsers_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationUsersStatusMutation.graphql';
 import type {
   OrganizationMemberRole,
-  organizationMembers_organizationMembers_query$key,
-} from '@/queries/__generated__/organizationMembers_organizationMembers_query.graphql';
-import type { organizationMembers_organizationMembers_refetchableFragment } from '@/queries/__generated__/organizationMembers_organizationMembers_refetchableFragment.graphql';
-import type { organizationMembers_removeOrganizationMembersMutation } from '@/queries/__generated__/organizationMembers_removeOrganizationMembersMutation.graphql';
-import type { organizationMembers_rootQuery } from '@/queries/__generated__/organizationMembers_rootQuery.graphql';
+  organizationUsers_organizationMembers_query$key,
+} from '@/queries/__generated__/organizationUsers_organizationMembers_query.graphql';
+import type { organizationUsers_organizationUsers_refetchableFragment } from '@/queries/__generated__/organizationUsers_organizationUsers_refetchableFragment.graphql';
+import type { organizationUsers_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUsers_removeOrganizationUsersMutation.graphql';
+import type { organizationUsers_rootQuery } from '@/queries/__generated__/organizationUsers_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -45,16 +45,16 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { expandedDrawerWidthPx } from './commons';
-import OrganizationMembersLeftSideNavigationMenuContent from './organization-members-left-side-navigation-menu-content';
+import OrganizationUsersLeftSideNavigationMenuContent from './organization-users-left-side-navigation-menu-content';
 
 type Props = {
-  queryReference: PreloadedQuery<organizationMembers_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<organizationUsers_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
 };
 
 const RootQuery = graphql`
-  query organizationMembers_rootQuery($organizationId: String!, $peopleNameSearchText: String) {
+  query organizationUsers_rootQuery($organizationId: String!, $peopleNameSearchText: String) {
     organization(id: $organizationId) {
       canInvitePeople
     }
@@ -79,7 +79,7 @@ const RootQuery = graphql`
     }
     organizationMemberRoles
     ...teamSelector_allTeams_query
-    ...organizationMembers_organizationMembers_query
+    ...organizationUsers_organizationMembers_query
   }
 `;
 
@@ -104,16 +104,16 @@ type RowType = {
   status: boolean;
 };
 
-const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
-  const rootData = usePreloadedQuery<organizationMembers_rootQuery>(RootQuery, queryReference);
-  const [rootDataOrganizationMembers, refetchOrganizationMembers] = useRefetchableFragment<
-    organizationMembers_organizationMembers_refetchableFragment,
-    organizationMembers_organizationMembers_query$key
+const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
+  const rootData = usePreloadedQuery<organizationUsers_rootQuery>(RootQuery, queryReference);
+  const [rootDataOrganizationUsers, refetchOrganizationUsers] = useRefetchableFragment<
+    organizationUsers_organizationUsers_refetchableFragment,
+    organizationUsers_organizationMembers_query$key
   >(
     graphql`
-      fragment organizationMembers_organizationMembers_query on Query
+      fragment organizationUsers_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "organizationMembers_organizationMembers_refetchableFragment") {
+      @refetchable(queryName: "organizationUsers_organizationUsers_refetchableFragment") {
         organizationMembers(first: $count, after: $cursor, where: { organizationId: $organizationId, nameContains: $peopleNameSearchText })
           @connection(key: "organizationMembers_organizationMembers") {
           __id
@@ -141,8 +141,8 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
     rootData,
   );
 
-  const [commitChangeOrganizationMembersStatus] = useMutation<organizationMembers_changeOrganizationMembersStatusMutation>(graphql`
-    mutation organizationMembers_changeOrganizationMembersStatusMutation($input: ChangeOrganizationMembersStatusInput!) {
+  const [commitChangeOrganizationUsersStatus] = useMutation<organizationUsers_changeOrganizationUsersStatusMutation>(graphql`
+    mutation organizationUsers_changeOrganizationUsersStatusMutation($input: ChangeOrganizationMembersStatusInput!) {
       changeOrganizationMembersStatus(input: $input) {
         members {
           id
@@ -163,8 +163,8 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
-  const [commitRemoveOrganizationMembers] = useMutation<organizationMembers_removeOrganizationMembersMutation>(graphql`
-    mutation organizationMembers_removeOrganizationMembersMutation($connectionIds: [ID!]!, $input: RemoveOrganizationMembersInput!) {
+  const [commitRemoveOrganizationUsers] = useMutation<organizationUsers_removeOrganizationUsersMutation>(graphql`
+    mutation organizationUsers_removeOrganizationUsersMutation($connectionIds: [ID!]!, $input: RemoveOrganizationMembersInput!) {
       removeOrganizationMembers(input: $input) {
         members {
           id @deleteEdge(connections: $connectionIds)
@@ -173,8 +173,8 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
-  const [commitChangeOrganizationMemberRole] = useMutation<organizationMembers_changeOrganizationMemberRoleMutation>(graphql`
-    mutation organizationMembers_changeOrganizationMemberRoleMutation($input: ChangeOrganizationMemberRoleInput!) @raw_response_type {
+  const [commitChangeOrganizationMemberRole] = useMutation<organizationUsers_changeOrganizationMemberRoleMutation>(graphql`
+    mutation organizationUsers_changeOrganizationMemberRoleMutation($input: ChangeOrganizationMemberRoleInput!) @raw_response_type {
       changeOrganizationMemberRole(input: $input) {
         member {
           id
@@ -212,19 +212,19 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   ];
 
   const memberDetails = useMemo(
-    () => rootDataOrganizationMembers.organizationMembers?.edges.map(({ node }) => node).find((item) => item.id === selectedMemberId),
-    [selectedMemberId, rootDataOrganizationMembers.organizationMembers],
+    () => rootDataOrganizationUsers.organizationMembers?.edges.map(({ node }) => node).find((item) => item.id === selectedMemberId),
+    [selectedMemberId, rootDataOrganizationUsers.organizationMembers],
   );
   const connectionIds = useMemo(
-    () => (rootDataOrganizationMembers.organizationMembers ? [rootDataOrganizationMembers.organizationMembers.__id] : []),
-    [rootDataOrganizationMembers.organizationMembers],
+    () => (rootDataOrganizationUsers.organizationMembers ? [rootDataOrganizationUsers.organizationMembers.__id] : []),
+    [rootDataOrganizationUsers.organizationMembers],
   );
   const members = useMemo(() => {
-    if (!rootDataOrganizationMembers.organizationMembers) {
+    if (!rootDataOrganizationUsers.organizationMembers) {
       return [];
     }
 
-    const members = rootDataOrganizationMembers.organizationMembers.edges
+    const members = rootDataOrganizationUsers.organizationMembers.edges
       .map(({ node }) => node)
       .sort((a, b) => {
         const name1 = getCustomerFullName(a.customer);
@@ -252,12 +252,12 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
 
       return member.teams.some((team) => teamIds.includes(team.id));
     });
-  }, [rootData.teams, rootDataOrganizationMembers.organizationMembers, teamIds]);
+  }, [rootData.teams, rootDataOrganizationUsers.organizationMembers, teamIds]);
 
-  const handleRefetchOrganizationMembers = useCallback(
+  const handleRefetchOrganizationUsers = useCallback(
     (peopleNameSearchText: string) => {
       startTransition(() => {
-        refetchOrganizationMembers(
+        refetchOrganizationUsers(
           {
             peopleNameSearchText,
           },
@@ -267,7 +267,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
         );
       });
     },
-    [refetchOrganizationMembers],
+    [refetchOrganizationUsers],
   );
 
   const handlTeamChanged = (id?: string) => {
@@ -277,7 +277,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   const handleSearchTextChange = (str: string) => {
     setPeopleNameSearchText(str);
 
-    handleRefetchOrganizationMembers(str);
+    handleRefetchOrganizationUsers(str);
   };
 
   const handleSelectedMembersChanged = (newRowSelectionModel: GridRowSelectionModel) => {
@@ -287,7 +287,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   const handleDeactivateMembersClick = () => {
     const toastId = themedToast(<NotificationContent content={'Deactivating members...'} />, infoNotificationOptions);
 
-    commitChangeOrganizationMembersStatus({
+    commitChangeOrganizationUsersStatus({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -323,7 +323,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   const handleActivateMembersClick = () => {
     const toastId = themedToast(<NotificationContent content={'Activating members...'} />, infoNotificationOptions);
 
-    commitChangeOrganizationMembersStatus({
+    commitChangeOrganizationUsersStatus({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -359,7 +359,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   const handleRemoveMembersClick = () => {
     const toastId = themedToast(<NotificationContent content={'Removing members...'} />, infoNotificationOptions);
 
-    commitRemoveOrganizationMembers({
+    commitRemoveOrganizationUsers({
       variables: {
         connectionIds,
         input: {
@@ -417,7 +417,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
 
     const toastId = themedToast(<NotificationContent content={'Deactivating member...'} />, infoNotificationOptions);
 
-    commitChangeOrganizationMembersStatus({
+    commitChangeOrganizationUsersStatus({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -457,7 +457,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
 
     const toastId = themedToast(<NotificationContent content={'Activating member...'} />, infoNotificationOptions);
 
-    commitChangeOrganizationMembersStatus({
+    commitChangeOrganizationUsersStatus({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -497,7 +497,7 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
 
     const toastId = themedToast(<NotificationContent content={'Removing member...'} />, infoNotificationOptions);
 
-    commitRemoveOrganizationMembers({
+    commitRemoveOrganizationUsers({
       variables: {
         connectionIds,
         input: {
@@ -704,12 +704,12 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <OrganizationMembersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
+        <OrganizationUsersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
           <StackColumn sx={{ maxWidth: maxScreenWidth }}>
             <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <SectionIconTypography label="Organization Members" />
-              <BodyIconTypography label="View members in your organization" />
+            <SectionIconTypography label="Organization Users" />
+              <BodyIconTypography label="View users in your organization" />
               <Divider />
             </StackColumn>
 
@@ -792,14 +792,14 @@ const OrganizationMembers = ({ queryReference, organizationId }: Props) => {
   );
 };
 
-const MemoOrganizationMembers = memo(OrganizationMembers);
+const MemoOrganizationUsers = memo(OrganizationUsers);
 
 type RelayProps = {
   organizationId: string;
 };
 
-const OrganizationMembersWithRelay = ({ organizationId }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<organizationMembers_rootQuery>(RootQuery);
+const OrganizationUsersWithRelay = ({ organizationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<organizationUsers_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
@@ -826,9 +826,9 @@ const OrganizationMembersWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationMembers queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoOrganizationUsers queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(OrganizationMembersWithRelay);
+export default memo(OrganizationUsersWithRelay);

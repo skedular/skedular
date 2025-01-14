@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0b496e1144dfebd20cab45f99d015790>>
+ * @generated SignedSource<<9b1c1bfb43d175b2bdb2ecb0e2876385>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 export type OrganizationMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
 export type OrganizationMemberStatus = "Active" | "Inactive" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type organizationMembers_organizationMembers_query$data = {
+export type organizationUsers_organizationMembers_query$data = {
   readonly organizationMembers: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -34,11 +34,11 @@ export type organizationMembers_organizationMembers_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "organizationMembers_organizationMembers_query";
+  readonly " $fragmentType": "organizationUsers_organizationMembers_query";
 };
-export type organizationMembers_organizationMembers_query$key = {
-  readonly " $data"?: organizationMembers_organizationMembers_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMembers_organizationMembers_query">;
+export type organizationUsers_organizationMembers_query$key = {
+  readonly " $data"?: organizationUsers_organizationMembers_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationUsers_organizationMembers_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -86,10 +86,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationMembers_organizationMembers_refetchableFragment.graphql')
+      "operation": require('./organizationUsers_organizationUsers_refetchableFragment.graphql')
     }
   },
-  "name": "organizationMembers_organizationMembers_query",
+  "name": "organizationUsers_organizationMembers_query",
   "selections": [
     {
       "alias": "organizationMembers",
@@ -293,6 +293,6 @@ return {
 };
 })();
 
-(node as any).hash = "f87f33f7d1d4f084a80d74369c644118";
+(node as any).hash = "ce9f66638b1dd58a1f19498adb328774";
 
 export default node;

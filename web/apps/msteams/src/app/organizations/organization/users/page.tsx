@@ -1,16 +1,14 @@
-'use client';
-
-import { OrganizationMembers } from '@/components/organization/organizationMembers';
-import { RootShell } from '@/components/rootShell';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
 import { BodyIconTypography, StackColumn } from '@repo/shared/components/commons';
-import { useParams, useRouter } from 'next/navigation';
+import { OrganizationUsers } from 'components/organization/organizationUsers';
+import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const OrganizationsPage = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -27,7 +25,7 @@ const OrganizationsPage = () => {
   }
 
   const handleBackClick = () => {
-    router.back();
+    navigate(-1);
   };
 
   const breadcrumbs = (
@@ -37,15 +35,15 @@ const OrganizationsPage = () => {
       </Button>
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Breadcrumbs>
-          <BodyIconTypography label="View Members" />
+          <BodyIconTypography label="View Users" />
         </Breadcrumbs>
       </Box>
     </StackColumn>
   );
 
   return (
-    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationMembers organizationId={finalOrganizationId} />
+    <RootShell collapsed hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+      <OrganizationUsers organizationId={finalOrganizationId} />
     </RootShell>
   );
 };

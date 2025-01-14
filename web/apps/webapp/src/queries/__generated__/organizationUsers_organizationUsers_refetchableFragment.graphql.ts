@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f3f6f2a16df103a69440c95528c755b>>
+ * @generated SignedSource<<28df5047727d277dd2691d71c4c6430f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,18 +10,18 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationMembers_organizationMembers_refetchableFragment$variables = {
+export type organizationUsers_organizationUsers_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationId: string;
   peopleNameSearchText?: string | null | undefined;
 };
-export type organizationMembers_organizationMembers_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMembers_organizationMembers_query">;
+export type organizationUsers_organizationUsers_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationUsers_organizationMembers_query">;
 };
-export type organizationMembers_organizationMembers_refetchableFragment = {
-  response: organizationMembers_organizationMembers_refetchableFragment$data;
-  variables: organizationMembers_organizationMembers_refetchableFragment$variables;
+export type organizationUsers_organizationUsers_refetchableFragment = {
+  response: organizationUsers_organizationUsers_refetchableFragment$data;
+  variables: organizationUsers_organizationUsers_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -80,7 +80,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMembers_organizationMembers_refetchableFragment",
+    "name": "organizationUsers_organizationUsers_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -96,7 +96,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "organizationMembers_organizationMembers_query"
+        "name": "organizationUsers_organizationMembers_query"
       }
     ],
     "type": "Query",
@@ -106,7 +106,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMembers_organizationMembers_refetchableFragment",
+    "name": "organizationUsers_organizationUsers_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -301,16 +301,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4d6aed0ad129ffea2d383a86e3d53e55",
+    "cacheID": "d347381195007466776e0fb95459bd79",
     "id": null,
     "metadata": {},
-    "name": "organizationMembers_organizationMembers_refetchableFragment",
+    "name": "organizationUsers_organizationUsers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMembers_organizationMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...organizationMembers_organizationMembers_query_1G22uz\n}\n\nfragment organizationMembers_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationUsers_organizationUsers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...organizationUsers_organizationMembers_query_1G22uz\n}\n\nfragment organizationUsers_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f87f33f7d1d4f084a80d74369c644118";
+(node as any).hash = "ce9f66638b1dd58a1f19498adb328774";
 
 export default node;

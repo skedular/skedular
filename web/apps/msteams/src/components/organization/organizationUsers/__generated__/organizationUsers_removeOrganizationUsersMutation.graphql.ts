@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e1d3c943dba364a319361057e831919e>>
+ * @generated SignedSource<<a73e81b5daa8620f5d674e0a3bb0e081>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,20 +13,20 @@ export type RemoveOrganizationMembersInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationMembers_removeOrganizationMembersMutation$variables = {
+export type organizationUsers_removeOrganizationUsersMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: RemoveOrganizationMembersInput;
 };
-export type organizationMembers_removeOrganizationMembersMutation$data = {
+export type organizationUsers_removeOrganizationUsersMutation$data = {
   readonly removeOrganizationMembers: {
     readonly members: ReadonlyArray<{
       readonly id: string;
     }>;
   } | null | undefined;
 };
-export type organizationMembers_removeOrganizationMembersMutation = {
-  response: organizationMembers_removeOrganizationMembersMutation$data;
-  variables: organizationMembers_removeOrganizationMembersMutation$variables;
+export type organizationUsers_removeOrganizationUsersMutation = {
+  response: organizationUsers_removeOrganizationUsersMutation$data;
+  variables: organizationUsers_removeOrganizationUsersMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMembers_removeOrganizationMembersMutation",
+    "name": "organizationUsers_removeOrganizationUsersMutation",
     "selections": [
       {
         "alias": null,
@@ -94,7 +94,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMembers_removeOrganizationMembersMutation",
+    "name": "organizationUsers_removeOrganizationUsersMutation",
     "selections": [
       {
         "alias": null,
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7eb34bb98be471cef79397d13c287836",
+    "cacheID": "ff00ab17ce446aaac702aca6b2f74479",
     "id": null,
     "metadata": {},
-    "name": "organizationMembers_removeOrganizationMembersMutation",
+    "name": "organizationUsers_removeOrganizationUsersMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMembers_removeOrganizationMembersMutation(\n  $input: RemoveOrganizationMembersInput!\n) {\n  removeOrganizationMembers(input: $input) {\n    members {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationUsers_removeOrganizationUsersMutation(\n  $input: RemoveOrganizationMembersInput!\n) {\n  removeOrganizationMembers(input: $input) {\n    members {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "475d3e6e7f00b616d1e2d91777184491";
+(node as any).hash = "64d83e56810b846f3ab6bc95c78f3173";
 
 export default node;

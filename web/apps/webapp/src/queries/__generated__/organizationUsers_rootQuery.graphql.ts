@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8332fc0191ee358104a5bbba2782a859>>
+ * @generated SignedSource<<82ea4d93943120161610ae184f7d9e3c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,11 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type OrganizationMemberRole = "Administrator" | "Member" | "Owner" | "%future added value";
-export type organizationMembers_rootQuery$variables = {
+export type organizationUsers_rootQuery$variables = {
   organizationId: string;
   peopleNameSearchText?: string | null | undefined;
 };
-export type organizationMembers_rootQuery$data = {
+export type organizationUsers_rootQuery$data = {
   readonly organization: {
     readonly canInvitePeople: boolean;
   } | null | undefined;
@@ -39,11 +39,11 @@ export type organizationMembers_rootQuery$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMembers_organizationMembers_query" | "teamSelector_allTeams_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationUsers_organizationMembers_query" | "teamSelector_allTeams_query">;
 };
-export type organizationMembers_rootQuery = {
-  response: organizationMembers_rootQuery$data;
-  variables: organizationMembers_rootQuery$variables;
+export type organizationUsers_rootQuery = {
+  response: organizationUsers_rootQuery$data;
+  variables: organizationUsers_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -184,7 +184,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMembers_rootQuery",
+    "name": "organizationUsers_rootQuery",
     "selections": [
       {
         "alias": null,
@@ -282,7 +282,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "organizationMembers_organizationMembers_query"
+        "name": "organizationUsers_organizationMembers_query"
       }
     ],
     "type": "Query",
@@ -292,7 +292,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMembers_rootQuery",
+    "name": "organizationUsers_rootQuery",
     "selections": [
       {
         "alias": null,
@@ -551,16 +551,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5fe73c2ac878f0c2016974f07505408d",
+    "cacheID": "16337bb735c2752797dca413455b85a6",
     "id": null,
     "metadata": {},
-    "name": "organizationMembers_rootQuery",
+    "name": "organizationUsers_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMembers_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    canInvitePeople\n    id\n  }\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n      }\n    }\n  }\n  organizationMemberRoles\n  ...teamSelector_allTeams_query\n  ...organizationMembers_organizationMembers_query\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueId\n  }\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment organizationMembers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query organizationUsers_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    canInvitePeople\n    id\n  }\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        members {\n          organizationMember {\n            uniqueId\n            customer {\n              uniqueId\n            }\n          }\n          id\n        }\n        ...myTeamCard_TeamDetails\n      }\n    }\n  }\n  organizationMemberRoles\n  ...teamSelector_allTeams_query\n  ...organizationUsers_organizationMembers_query\n}\n\nfragment myTeamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueId\n  }\n  members {\n    organizationMember {\n      uniqueId\n      customer {\n        uniqueId\n        givenName\n        middleName\n        familyName\n        name\n        photoUrl\n      }\n    }\n    id\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment organizationUsers_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          email\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n          phoneNumber\n        }\n        status\n        role\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationId: $organizationId}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "15c48a43debf12c5cc30683131fff1f4";
+(node as any).hash = "007ca1d0958861b14586c56946d0381d";
 
 export default node;

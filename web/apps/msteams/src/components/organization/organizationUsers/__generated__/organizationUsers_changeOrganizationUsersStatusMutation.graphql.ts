@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b6acb4385c2d26ac324e8eafd79e21b3>>
+ * @generated SignedSource<<c9b966bae6fa0cc0529fe098c0ad3183>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,10 +16,10 @@ export type ChangeOrganizationMembersStatusInput = {
   ids: ReadonlyArray<string>;
   status: OrganizationMemberStatus;
 };
-export type organizationMembers_changeOrganizationMembersStatusMutation$variables = {
+export type organizationUsers_changeOrganizationUsersStatusMutation$variables = {
   input: ChangeOrganizationMembersStatusInput;
 };
-export type organizationMembers_changeOrganizationMembersStatusMutation$data = {
+export type organizationUsers_changeOrganizationUsersStatusMutation$data = {
   readonly changeOrganizationMembersStatus: {
     readonly members: ReadonlyArray<{
       readonly customer: {
@@ -38,9 +38,9 @@ export type organizationMembers_changeOrganizationMembersStatusMutation$data = {
     }>;
   } | null | undefined;
 };
-export type organizationMembers_changeOrganizationMembersStatusMutation = {
-  response: organizationMembers_changeOrganizationMembersStatusMutation$data;
-  variables: organizationMembers_changeOrganizationMembersStatusMutation$variables;
+export type organizationUsers_changeOrganizationUsersStatusMutation = {
+  response: organizationUsers_changeOrganizationUsersStatusMutation$data;
+  variables: organizationUsers_changeOrganizationUsersStatusMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -174,7 +174,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMembers_changeOrganizationMembersStatusMutation",
+    "name": "organizationUsers_changeOrganizationUsersStatusMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -183,20 +183,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMembers_changeOrganizationMembersStatusMutation",
+    "name": "organizationUsers_changeOrganizationUsersStatusMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "de55471ac4b016a74bf9bb3df059923c",
+    "cacheID": "bf8e58a10a6503939cda1c8e0def0b83",
     "id": null,
     "metadata": {},
-    "name": "organizationMembers_changeOrganizationMembersStatusMutation",
+    "name": "organizationUsers_changeOrganizationUsersStatusMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMembers_changeOrganizationMembersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
+    "text": "mutation organizationUsers_changeOrganizationUsersStatusMutation(\n  $input: ChangeOrganizationMembersStatusInput!\n) {\n  changeOrganizationMembersStatus(input: $input) {\n    members {\n      id\n      customer {\n        uniqueId\n        email\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n        phoneNumber\n      }\n      status\n      role\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "da17999fb5f45d772251b326b79fc002";
+(node as any).hash = "d1a26f4ddfff08ee8df31da8f8c9ba6a";
 
 export default node;
