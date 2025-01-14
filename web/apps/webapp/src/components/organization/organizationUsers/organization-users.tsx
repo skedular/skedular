@@ -689,15 +689,18 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       sortable: false,
       display: 'flex',
       renderCell: (params) => (
-        <IconButton
-          onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedMemberId(params.id as string);
-            setMoreActionsAnchorEl(event.currentTarget);
-          }}
-        >
-          <EllipseMenuIcon />
-        </IconButton>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setSelectedMemberId(params.id as string);
+              setMoreActionsAnchorEl(event.currentTarget);
+            }}
+          >
+            <EllipseMenuIcon />
+          </IconButton>
+        </Box>
       ),
+      flex: 1,
     },
   ];
 

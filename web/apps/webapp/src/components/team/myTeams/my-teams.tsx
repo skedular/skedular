@@ -272,15 +272,18 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
       sortable: false,
       display: 'flex',
       renderCell: (params) => (
-        <IconButton
-          onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedTeamId(params.id as string);
-            setMoreActionsAnchorEl(event.currentTarget);
-          }}
-        >
-          <EllipseMenuIcon />
-        </IconButton>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setSelectedTeamId(params.id as string);
+              setMoreActionsAnchorEl(event.currentTarget);
+            }}
+          >
+            <EllipseMenuIcon />
+          </IconButton>
+        </Box>
       ),
+      flex: 1,
     },
   ];
 

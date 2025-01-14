@@ -403,15 +403,18 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       sortable: false,
       display: 'flex',
       renderCell: (params) => (
-        <IconButton
-          onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedBookingId(params.id as string);
-            setMoreActionsAnchorEl(event.currentTarget);
-          }}
-        >
-          <EllipseMenuIcon />
-        </IconButton>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setSelectedBookingId(params.id as string);
+              setMoreActionsAnchorEl(event.currentTarget);
+            }}
+          >
+            <EllipseMenuIcon />
+          </IconButton>
+        </Box>
       ),
+      flex: 1,
     },
   ];
 

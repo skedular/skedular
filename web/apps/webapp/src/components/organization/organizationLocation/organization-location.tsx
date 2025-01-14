@@ -693,15 +693,18 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       sortable: false,
       display: 'flex',
       renderCell: (params) => (
-        <IconButton
-          onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedDeskId(params.id as string);
-            setDeskMoreActionsAnchorEl(event.currentTarget);
-          }}
-        >
-          <EllipseMenuIcon />
-        </IconButton>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setSelectedDeskId(params.id as string);
+              setDeskMoreActionsAnchorEl(event.currentTarget);
+            }}
+          >
+            <EllipseMenuIcon />
+          </IconButton>
+        </Box>
       ),
+      flex: 1,
     },
   ];
 

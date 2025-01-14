@@ -988,15 +988,18 @@ const OrganizationAdmin = ({
       sortable: false,
       display: 'flex',
       renderCell: (params) => (
-        <IconButton
-          onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedZoneId(params.id as string);
-            setZoneMoreActionsAnchorEl(event.currentTarget);
-          }}
-        >
-          <EllipseMenuIcon />
-        </IconButton>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setSelectedZoneId(params.id as string);
+              setZoneMoreActionsAnchorEl(event.currentTarget);
+            }}
+          >
+            <EllipseMenuIcon />
+          </IconButton>
+        </Box>
       ),
+      flex: 1,
     },
   ];
 
@@ -1030,15 +1033,18 @@ const OrganizationAdmin = ({
       sortable: false,
       display: 'flex',
       renderCell: (params) => (
-        <IconButton
-          onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedCustomTagId(params.id as string);
-            setCustomTagMoreActionsAnchorEl(event.currentTarget);
-          }}
-        >
-          <EllipseMenuIcon />
-        </IconButton>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setSelectedCustomTagId(params.id as string);
+              setCustomTagMoreActionsAnchorEl(event.currentTarget);
+            }}
+          >
+            <EllipseMenuIcon />
+          </IconButton>
+        </Box>
       ),
+      flex: 1,
     },
   ];
 
