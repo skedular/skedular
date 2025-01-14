@@ -749,13 +749,13 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       renderCell: (params) => (
         <StackRow>
           {params.value && (
-            <StackRow sx={{ flexWrap: undefined }}>
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
               <SmallIconTypography label="Active" />
               <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
             </StackRow>
           )}
           {!params.value && (
-            <StackRow sx={{ flexWrap: undefined }}>
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
               <SmallIconTypography label="Inactive" />
               <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
             </StackRow>

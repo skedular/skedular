@@ -27,9 +27,9 @@ export enum MoreActionsMenuOptionType {
   SetAsPreferredTeam,
   RemoveAsPreferredTeam,
   RemoveTeam,
-  RemoveOrganizationMember,
-  DeactivateOrganizationMember,
-  ActivateOrganizationMember,
+  RemoveOrganizationUser,
+  DeactivateOrganizationUser,
+  ActivateOrganizationUser,
   RemoveTeamMember,
   DeactivateTeamMember,
   ActivateTeamMember,
@@ -128,31 +128,31 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     label: 'Remove organization',
     icon: <DeleteIcon color="warning" />,
   },
-  [MoreActionsMenuOptionType.RemoveOrganizationMember]: {
-    id: MoreActionsMenuOptionType.RemoveOrganizationMember,
-    label: 'Remove member',
+  [MoreActionsMenuOptionType.RemoveOrganizationUser]: {
+    id: MoreActionsMenuOptionType.RemoveOrganizationUser,
+    label: 'Remove User',
     icon: <DeleteIcon color="warning" />,
   },
-  [MoreActionsMenuOptionType.DeactivateOrganizationMember]: {
-    id: MoreActionsMenuOptionType.DeactivateOrganizationMember,
-    label: 'Deactivate member',
+  [MoreActionsMenuOptionType.DeactivateOrganizationUser]: {
+    id: MoreActionsMenuOptionType.DeactivateOrganizationUser,
+    label: 'Deactivate User',
   },
-  [MoreActionsMenuOptionType.ActivateOrganizationMember]: {
-    id: MoreActionsMenuOptionType.ActivateOrganizationMember,
-    label: 'Activate member',
+  [MoreActionsMenuOptionType.ActivateOrganizationUser]: {
+    id: MoreActionsMenuOptionType.ActivateOrganizationUser,
+    label: 'Activate User',
   },
   [MoreActionsMenuOptionType.RemoveTeamMember]: {
     id: MoreActionsMenuOptionType.RemoveTeamMember,
-    label: 'Remove member',
+    label: 'Remove Member',
     icon: <DeleteIcon color="warning" />,
   },
   [MoreActionsMenuOptionType.DeactivateTeamMember]: {
     id: MoreActionsMenuOptionType.DeactivateTeamMember,
-    label: 'Deactivate member',
+    label: 'Deactivate Member',
   },
   [MoreActionsMenuOptionType.ActivateTeamMember]: {
     id: MoreActionsMenuOptionType.ActivateTeamMember,
-    label: 'Activate member',
+    label: 'Activate Member',
   },
   [MoreActionsMenuOptionType.EditZone]: {
     id: MoreActionsMenuOptionType.EditZone,

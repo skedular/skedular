@@ -141,7 +141,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     rootData,
   );
 
-  const [commitChangeOrganizationUsersStatus] = useMutation<organizationUsers_changeOrganizationUsersStatusMutation>(graphql`
+  const [commitChangeOrganizationMembersStatus] = useMutation<organizationUsers_changeOrganizationUsersStatusMutation>(graphql`
     mutation organizationUsers_changeOrganizationUsersStatusMutation($input: ChangeOrganizationMembersStatusInput!) {
       changeOrganizationMembersStatus(input: $input) {
         members {
@@ -163,7 +163,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
-  const [commitRemoveOrganizationUsers] = useMutation<organizationUsers_removeOrganizationUsersMutation>(graphql`
+  const [commitRemoveOrganizationMembers] = useMutation<organizationUsers_removeOrganizationUsersMutation>(graphql`
     mutation organizationUsers_removeOrganizationUsersMutation($connectionIds: [ID!]!, $input: RemoveOrganizationMembersInput!) {
       removeOrganizationMembers(input: $input) {
         members {
@@ -206,9 +206,9 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateOrganizationMember],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateOrganizationMember],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveOrganizationMember],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateOrganizationUser],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateOrganizationUser],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveOrganizationUser],
   ];
 
   const memberDetails = useMemo(
@@ -280,14 +280,14 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     handleRefetchOrganizationUsers(str);
   };
 
-  const handleSelectedMembersChanged = (newRowSelectionModel: GridRowSelectionModel) => {
+  const handleSelectedUsersChanged = (newRowSelectionModel: GridRowSelectionModel) => {
     setSeledctedMembers(newRowSelectionModel);
   };
 
   const handleDeactivateMembersClick = () => {
-    const toastId = themedToast(<NotificationContent content={'Deactivating members...'} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={'Deactivating users...'} />, infoNotificationOptions);
 
-    commitChangeOrganizationUsersStatus({
+    commitChangeOrganizationMembersStatus({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -299,7 +299,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate members. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate users. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -307,23 +307,23 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'Members deactivated.'} />,
+          render: <NotificationContent content={'Users deactivated.'} />,
         });
         setSeledctedMembers([]);
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to deactivate members. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to deactivate users. Error: ${error.message}.`} />,
         });
       },
     });
   };
 
-  const handleActivateMembersClick = () => {
-    const toastId = themedToast(<NotificationContent content={'Activating members...'} />, infoNotificationOptions);
+  const handleActivateUsersClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Activating users...'} />, infoNotificationOptions);
 
-    commitChangeOrganizationUsersStatus({
+    commitChangeOrganizationMembersStatus({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -335,7 +335,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate members. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate users. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -343,23 +343,23 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'Members activated.'} />,
+          render: <NotificationContent content={'Users activated.'} />,
         });
         setSeledctedMembers([]);
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to activate members. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to activate users. Error: ${error.message}.`} />,
         });
       },
     });
   };
 
-  const handleRemoveMembersClick = () => {
-    const toastId = themedToast(<NotificationContent content={'Removing members...'} />, infoNotificationOptions);
+  const handleRemoveUsersClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Removing users...'} />, infoNotificationOptions);
 
-    commitRemoveOrganizationUsers({
+    commitRemoveOrganizationMembers({
       variables: {
         connectionIds,
         input: {
@@ -371,7 +371,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove members. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to remove users. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -379,14 +379,14 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'Members removed.'} />,
+          render: <NotificationContent content={'Users removed.'} />,
         });
         setSeledctedMembers([]);
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove members. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove users. Error: ${error.message}.`} />,
         });
       },
     });
@@ -396,28 +396,28 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     setMoreActionsAnchorEl(null);
 
     switch (id) {
-      case MoreActionsMenuOptionType.DeactivateOrganizationMember:
-        handleDeactivateMemberClick();
+      case MoreActionsMenuOptionType.DeactivateOrganizationUser:
+        handleDeactivateUserClick();
         break;
 
-      case MoreActionsMenuOptionType.ActivateOrganizationMember:
-        handleActivateMemberClick();
+      case MoreActionsMenuOptionType.ActivateOrganizationUser:
+        handleActivateUserClick();
         break;
 
-      case MoreActionsMenuOptionType.RemoveOrganizationMember:
-        handleRemoveMemberClick();
+      case MoreActionsMenuOptionType.RemoveOrganizationUser:
+        handleRemoveUserClick();
         break;
     }
   };
 
-  const handleDeactivateMemberClick = () => {
+  const handleDeactivateUserClick = () => {
     if (!memberDetails) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={'Deactivating member...'} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={'Deactivating user...'} />, infoNotificationOptions);
 
-    commitChangeOrganizationUsersStatus({
+    commitChangeOrganizationMembersStatus({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -429,7 +429,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate member. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate user. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -437,27 +437,27 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'Member deactivated.'} />,
+          render: <NotificationContent content={'User deactivated.'} />,
         });
         setSeledctedMembers([]);
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to deactivate member. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to deactivate user. Error: ${error.message}.`} />,
         });
       },
     });
   };
 
-  const handleActivateMemberClick = () => {
+  const handleActivateUserClick = () => {
     if (!memberDetails) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={'Activating member...'} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={'Activating user...'} />, infoNotificationOptions);
 
-    commitChangeOrganizationUsersStatus({
+    commitChangeOrganizationMembersStatus({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -469,7 +469,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate member. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate user. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -477,27 +477,27 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'Member activated.'} />,
+          render: <NotificationContent content={'User activated.'} />,
         });
         setSeledctedMembers([]);
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to activate member. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to activate user. Error: ${error.message}.`} />,
         });
       },
     });
   };
 
-  const handleRemoveMemberClick = () => {
+  const handleRemoveUserClick = () => {
     if (!memberDetails) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={'Removing member...'} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={'Removing user...'} />, infoNotificationOptions);
 
-    commitRemoveOrganizationUsers({
+    commitRemoveOrganizationMembers({
       variables: {
         connectionIds,
         input: {
@@ -509,7 +509,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove member. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to remove user. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -517,14 +517,14 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={'Member removed.'} />,
+          render: <NotificationContent content={'User removed.'} />,
         });
         setSeledctedMembers([]);
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove member. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove user. Error: ${error.message}.`} />,
         });
       },
     });
@@ -667,13 +667,13 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       renderCell: (params) => (
         <StackRow>
           {params.value && (
-            <StackRow sx={{ flexWrap: undefined }}>
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
               <SmallIconTypography label="Active" />
               <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
             </StackRow>
           )}
           {!params.value && (
-            <StackRow sx={{ flexWrap: undefined }}>
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
               <SmallIconTypography label="Inactive" />
               <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
             </StackRow>
@@ -708,7 +708,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
           <StackColumn sx={{ maxWidth: maxScreenWidth }}>
             <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-            <SectionIconTypography label="Organization Users" />
+              <SectionIconTypography label="Organization Users" />
               <BodyIconTypography label="View users in your organization" />
               <Divider />
             </StackColumn>
@@ -735,13 +735,13 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
                     <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateMembersClick}>
-                      Deactivate Member
+                      Deactivate User
                     </Button>
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateMembersClick}>
-                      Activate Member
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUsersClick}>
+                      Activate User
                     </Button>
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveMembersClick}>
-                      Remove Member
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUsersClick}>
+                      Remove User
                     </Button>
                   </StackRow>
                 </Box>
@@ -757,7 +757,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
               <DataGrid
                 checkboxSelection
                 rowSelectionModel={seledctedMembers}
-                onRowSelectionModelChange={handleSelectedMembersChanged}
+                onRowSelectionModelChange={handleSelectedUsersChanged}
                 rows={rows}
                 columns={columns}
                 hideFooterPagination={rows.length <= 10}
