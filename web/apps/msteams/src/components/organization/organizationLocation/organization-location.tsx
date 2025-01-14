@@ -679,7 +679,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
           )}
           {!params.value && (
             <StackRow sx={{ flexWrap: undefined }}>
-              <SmallIconTypography label="Deactive" />
+              <SmallIconTypography label="Inactive" />
               <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
             </StackRow>
           )}
@@ -771,51 +771,34 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                   <Search size="small" placeholder="Search for desks" defaultValue={deskNameSearchText} onChange={handleDeskNameSearchTextChange} />
                 </StackRow>
 
-                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                  <Box
-                    sx={{
-                      backgroundColor: (theme) => theme.palette.background.paper,
-                      padding: defaultGridActionPadding,
-                      border: 1,
-                      borderColor: (theme) => theme.palette.divider,
-                      borderRadius: 2,
-                      flexGrow: 1,
-                    }}
-                  >
-                    <StackRow sx={{ alignItems: 'center' }}>
-                      <SmallIconTypography label={`${seledctedDesks.length} records selected`} />
-                      <PushToRight />
-                      <Button
-                        size="medium"
-                        variant="contained"
-                        color="secondary"
-                        disabled={seledctedDesks.length === 0}
-                        onClick={handleDeactivateDesksClick}
-                      >
-                        Deactuvate Desk
-                      </Button>
-                      <Button
-                        size="medium"
-                        variant="contained"
-                        color="secondary"
-                        disabled={seledctedDesks.length === 0}
-                        onClick={handleActivateDesksClick}
-                      >
-                        Activate Desk
-                      </Button>
-                      <Button
-                        size="medium"
-                        variant="contained"
-                        color="warning"
-                        startIcon={<DeleteIcon />}
-                        disabled={seledctedDesks.length === 0}
-                        onClick={handleRemoveDesksClick}
-                      >
-                        Remove Desk
-                      </Button>
-                    </StackRow>
-                  </Box>
-                </StackRow>
+                {seledctedDesks.length > 0 && (
+                  <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                    <Box
+                      sx={{
+                        backgroundColor: (theme) => theme.palette.background.paper,
+                        padding: defaultGridActionPadding,
+                        border: 1,
+                        borderColor: (theme) => theme.palette.divider,
+                        borderRadius: 2,
+                        flexGrow: 1,
+                      }}
+                    >
+                      <StackRow sx={{ alignItems: 'center' }}>
+                        <SmallIconTypography label={`${seledctedDesks.length} records selected`} />
+                        <PushToRight />
+                        <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateDesksClick}>
+                          Deactivate Desk
+                        </Button>
+                        <Button size="medium" variant="contained" color="secondary" onClick={handleActivateDesksClick}>
+                          Activate Desk
+                        </Button>
+                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveDesksClick}>
+                          Remove Desk
+                        </Button>
+                      </StackRow>
+                    </Box>
+                  </StackRow>
+                )}
 
                 <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                   <PushToRight />

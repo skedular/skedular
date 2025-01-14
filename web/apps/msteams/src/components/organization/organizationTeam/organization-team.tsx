@@ -756,7 +756,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           )}
           {!params.value && (
             <StackRow sx={{ flexWrap: undefined }}>
-              <SmallIconTypography label="Deactive" />
+              <SmallIconTypography label="Inactive" />
               <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
             </StackRow>
           )}
@@ -859,51 +859,34 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                   <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
                 </StackRow>
 
-                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                  <Box
-                    sx={{
-                      backgroundColor: (theme) => theme.palette.background.paper,
-                      padding: defaultGridActionPadding,
-                      border: 1,
-                      borderColor: (theme) => theme.palette.divider,
-                      borderRadius: 2,
-                      flexGrow: 1,
-                    }}
-                  >
-                    <StackRow sx={{ alignItems: 'center' }}>
-                      <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
-                      <PushToRight />
-                      <Button
-                        size="medium"
-                        variant="contained"
-                        color="secondary"
-                        disabled={seledctedMembers.length === 0}
-                        onClick={handleDeactivateMembersClick}
-                      >
-                        Deactuvate Member
-                      </Button>
-                      <Button
-                        size="medium"
-                        variant="contained"
-                        color="secondary"
-                        disabled={seledctedMembers.length === 0}
-                        onClick={handleActivateMembersClick}
-                      >
-                        Activate Member
-                      </Button>
-                      <Button
-                        size="medium"
-                        variant="contained"
-                        color="warning"
-                        startIcon={<DeleteIcon />}
-                        disabled={seledctedMembers.length === 0}
-                        onClick={handleRemoveMembersClick}
-                      >
-                        Remove Member
-                      </Button>
-                    </StackRow>
-                  </Box>
-                </StackRow>
+                {seledctedMembers.length > 0 && (
+                  <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                    <Box
+                      sx={{
+                        backgroundColor: (theme) => theme.palette.background.paper,
+                        padding: defaultGridActionPadding,
+                        border: 1,
+                        borderColor: (theme) => theme.palette.divider,
+                        borderRadius: 2,
+                        flexGrow: 1,
+                      }}
+                    >
+                      <StackRow sx={{ alignItems: 'center' }}>
+                        <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
+                        <PushToRight />
+                        <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateMembersClick}>
+                          Deactivate Member
+                        </Button>
+                        <Button size="medium" variant="contained" color="secondary" onClick={handleActivateMembersClick}>
+                          Activate Member
+                        </Button>
+                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveMembersClick}>
+                          Remove Member
+                        </Button>
+                      </StackRow>
+                    </Box>
+                  </StackRow>
+                )}
 
                 <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                   <PushToRight />

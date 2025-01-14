@@ -1231,33 +1231,28 @@ const OrganizationAdmin = ({
                   <Search size="small" placeholder="Search for zones" defaultValue={zoneNameSearchText} onChange={handleZonesSearchTextChange} />
                 </StackRow>
 
-                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                  <Box
-                    sx={{
-                      backgroundColor: (theme) => theme.palette.background.paper,
-                      padding: defaultGridActionPadding,
-                      border: 1,
-                      borderColor: (theme) => theme.palette.divider,
-                      borderRadius: 2,
-                      flexGrow: 1,
-                    }}
-                  >
-                    <StackRow sx={{ alignItems: 'center' }}>
-                      <SmallIconTypography label={`${seledctedZones.length} records selected`} />
-                      <PushToRight />
-                      <Button
-                        size="medium"
-                        variant="contained"
-                        color="warning"
-                        startIcon={<DeleteIcon />}
-                        disabled={seledctedZones.length === 0}
-                        onClick={handleRemoveZonesClick}
-                      >
-                        Remove Zone
-                      </Button>
-                    </StackRow>
-                  </Box>
-                </StackRow>
+                {seledctedZones.length > 0 && (
+                  <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                    <Box
+                      sx={{
+                        backgroundColor: (theme) => theme.palette.background.paper,
+                        padding: defaultGridActionPadding,
+                        border: 1,
+                        borderColor: (theme) => theme.palette.divider,
+                        borderRadius: 2,
+                        flexGrow: 1,
+                      }}
+                    >
+                      <StackRow sx={{ alignItems: 'center' }}>
+                        <SmallIconTypography label={`${seledctedZones.length} records selected`} />
+                        <PushToRight />
+                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveZonesClick}>
+                          Remove Zone
+                        </Button>
+                      </StackRow>
+                    </Box>
+                  </StackRow>
+                )}
 
                 <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                   <PushToRight />
@@ -1311,33 +1306,28 @@ const OrganizationAdmin = ({
                   />
                 </StackRow>
 
-                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                  <Box
-                    sx={{
-                      backgroundColor: (theme) => theme.palette.background.paper,
-                      padding: defaultGridActionPadding,
-                      border: 1,
-                      borderColor: (theme) => theme.palette.divider,
-                      borderRadius: 2,
-                      flexGrow: 1,
-                    }}
-                  >
-                    <StackRow sx={{ alignItems: 'center' }}>
-                      <SmallIconTypography label={`${seledctedDeskTypes.length} records selected`} />
-                      <PushToRight />
-                      <Button
-                        size="medium"
-                        variant="contained"
-                        color="warning"
-                        startIcon={<DeleteIcon />}
-                        disabled={seledctedDeskTypes.length === 0}
-                        onClick={handleRemoveDeskTypesClick}
-                      >
-                        Remove Desk Type
-                      </Button>
-                    </StackRow>
-                  </Box>
-                </StackRow>
+                {seledctedDeskTypes.length > 0 && (
+                  <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                    <Box
+                      sx={{
+                        backgroundColor: (theme) => theme.palette.background.paper,
+                        padding: defaultGridActionPadding,
+                        border: 1,
+                        borderColor: (theme) => theme.palette.divider,
+                        borderRadius: 2,
+                        flexGrow: 1,
+                      }}
+                    >
+                      <StackRow sx={{ alignItems: 'center' }}>
+                        <SmallIconTypography label={`${seledctedDeskTypes.length} records selected`} />
+                        <PushToRight />
+                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveDeskTypesClick}>
+                          Remove Desk Type
+                        </Button>
+                      </StackRow>
+                    </Box>
+                  </StackRow>
+                )}
 
                 <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                   <PushToRight />
@@ -1420,7 +1410,11 @@ const OrganizationAdmin = ({
                   <Divider />
                 </StackColumn>
 
-                {!availableOfferingExist && <LeadIconTypography label="No offering is available" />}
+                {!availableOfferingExist && (
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <BodyIconTypography label="No offering is available" />
+                  </StackColumn>
+                )}
 
                 {availableOfferingExist && (
                   <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
