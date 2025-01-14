@@ -719,7 +719,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
             <StackRow sx={{ padding: defaultPadding }}>
               <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
               <PushToRight />
-              <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+              <Search size="small" placeholder="Search for users" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
             </StackRow>
 
             {seledctedMembers.length > 0 && (
