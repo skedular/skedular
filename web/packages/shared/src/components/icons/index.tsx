@@ -119,11 +119,11 @@ export const ZoneIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
     </TooltipIcon>
   );
 
-export const DeskTypeIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
+export const CustomTagIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
     <LocalOffer fontSize={fontSize} sx={sx} color={color} />
   ) : (
-    <TooltipIcon tip={tip ?? 'Desk Type'}>
+    <TooltipIcon tip={tip ?? 'Tag'}>
       <LocalOffer fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d0524e04aa6841be003aa1cabca84abb>>
+ * @generated SignedSource<<662ad04f3fc329f4c03593e8d496b2e9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,7 +38,7 @@ export type bookingsWeekGrid_addBookingMutation$data = {
         readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
-        readonly deskTypes: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
           readonly name: string;
           readonly uniqueId: string;
         }>;
@@ -78,7 +78,7 @@ export type bookingsWeekGrid_addBookingMutation$rawResponse = {
         readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
-        readonly deskTypes: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
           readonly name: string;
           readonly uniqueId: string;
         }>;
@@ -263,9 +263,9 @@ v5 = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingOrganizationDeskTypeDetails",
+          "concreteType": "BookingOrganizationCustomTagDetails",
           "kind": "LinkedField",
-          "name": "deskTypes",
+          "name": "customTags",
           "plural": true,
           "selections": (v4/*: any*/),
           "storageKey": null
@@ -351,16 +351,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b9bd4998face46517c73f15ff392809d",
+    "cacheID": "1ffe0fe77311b2f5b17edce363b9a4ae",
     "id": null,
     "metadata": {},
     "name": "bookingsWeekGrid_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingsWeekGrid_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingsWeekGrid_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        name\n        customTags {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "167b9fc26963f0d452e75543b370817d";
+(node as any).hash = "ef53a65827aeac6c15ebd1d678f04a73";
 
 export default node;

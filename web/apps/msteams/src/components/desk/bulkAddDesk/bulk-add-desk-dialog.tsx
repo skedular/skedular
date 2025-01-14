@@ -21,7 +21,7 @@ import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { MultipleChoicesDeskTypes, MultipleChoicesZones } from 'components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesZones } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
@@ -47,10 +47,10 @@ type Props = {
 const RootQuery = graphql`
   query bulkAddDeskDialog_rootQuery(
     $organizationId: String!
-    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
-    ...multipleChoicesDeskTypes_query
+    ...multipleChoicesCustomTags_query
     ...multipleChoicesZones_query
   }
 `;
@@ -58,14 +58,14 @@ const RootQuery = graphql`
 type DeskDetails = {
   namePrefix: string;
   count: number;
-  deskTypeIds: string[];
+  customTagIds: string[];
   zoneIds: string[];
 };
 
 const deskSchema = object({
   namePrefix: string(),
   count: number().positive().integer().required('Desk count is required'),
-  deskTypeIds: array().nullable(),
+  customTagIds: array().nullable(),
   zoneIds: array().nullable(),
 });
 
@@ -78,7 +78,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
         desks @appendNode(connections: $connectionIds, edgeTypeName: "DeskDetails") {
           id
           name
-          deskTypes {
+          customTags {
             uniqueId
           }
           zones {
@@ -94,7 +94,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
 
-  const handleAddClick = ({ namePrefix, count, deskTypeIds, zoneIds }: DeskDetails) => {
+  const handleAddClick = ({ namePrefix, count, customTagIds, zoneIds }: DeskDetails) => {
     const ids = Array.from(Array(count).keys()).map((_) => nanoid());
     const toastId = themedToast(<NotificationContent content={`Adding desks...`} />, infoNotificationOptions);
 
@@ -108,7 +108,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
           count: parseInt(count.toString()),
           deactivated: false,
           requireBookingApproval: false,
-          deskTypeIds,
+          customTagIds,
           zoneIds,
         },
       },
@@ -137,7 +137,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
       },
       optimisticResponse: {
         bulkAddDesk: {
-          desks: ids.map((id) => ({ id, name: namePrefix, deskTypes: [], zones: [] })),
+          desks: ids.map((id) => ({ id, name: namePrefix, customTags: [], zones: [] })),
         },
       },
     });
@@ -152,7 +152,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
           initialValues={{
             namePrefix: '',
             count: 0,
-            deskTypeIds: [],
+            customTagIds: [],
             zoneIds: [],
           }}
           validate={validate}
@@ -169,8 +169,8 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
                 <TextField name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
               </FormFieldLabel>
 
-              <FormFieldLabel label="Desk Types" useWiderSpace>
-                <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+              <FormFieldLabel label="Tags" useWiderSpace>
+                <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} />
               </FormFieldLabel>
 
               <FormFieldLabel label="Zones" useWiderSpace>
@@ -215,7 +215,7 @@ const BulkAddDeskDialogWithRelay = ({
     loadQuery(
       {
         organizationId: organizationId ?? '',
-        multipleChoicesDeskTypesSortingValues: [
+        multipleChoicesCustomTagsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

@@ -174,7 +174,7 @@ message Team {
     string name = 2;
 }
 
-message OrganizationDeskType {
+message OrganizationCustomTag {
     string id = 1;
     string name = 2;
 }
@@ -188,7 +188,7 @@ message Desk {
     string id = 1;
     string name = 2;
     Location location = 3;
-    repeated OrganizationDeskType organizationDeskTypes = 4;
+    repeated OrganizationCustomTag organizationCustomTags = 4;
     repeated OrganizationZone organizationZones = 5;
 }
 
@@ -287,9 +287,9 @@ message GetAvailableDesksInput {
     string locationId = 2;
     google.protobuf.Timestamp date = 3;
     repeated string deskIdsToInclude = 4;
-    repeated string DeskTypeIds = 5;
+    repeated string CustomTagIds = 5;
     repeated string ZoneIds = 6;
-    bool combineDeskTypesZones = 7;
+    bool combineCustomTagsZones = 7;
 }
 
 message AvailableDesks {

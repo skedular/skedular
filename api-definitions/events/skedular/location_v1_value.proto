@@ -61,7 +61,7 @@ message Desk {
   string name = 2;
   bool deactivated = 3;
   bool requireBookingApproval = 4;
-  repeated string deskTypeIds = 5;
+  repeated string customTagIds = 5;
   repeated string zoneIds = 6;
 }
 

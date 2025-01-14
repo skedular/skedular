@@ -17,8 +17,8 @@
     "./components/commons": {
       "default": "./dist/components/commons/index.js"
     },
-    "./components/deskType": {
-      "default": "./dist/components/deskType/index.js"
+    "./components/customTag": {
+      "default": "./dist/components/customTag/index.js"
     },
     "./components/datePickers": {
       "default": "./dist/components/datePickers/index.js"

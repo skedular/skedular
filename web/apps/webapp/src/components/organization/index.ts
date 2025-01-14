@@ -1,9 +1,9 @@
-export { default as MultipleChoicesDeskTypes } from './multiple-choices-desk-types';
+export { default as MultipleChoicesCustomTags } from './multiple-choices-custom-tags';
 export { default as MultipleChoicesZones } from './multiple-choices-zones';
 export {
   getModernNotificationsBaseLink,
   getModernOrganizationAdminBillingAndPaymentBaseLink,
-  getModernOrganizationAdminDeskTypesBaseLink,
+  getModernOrganizationAdminCustomTagsBaseLink,
   getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationAdminSSOBaseLink,
   getModernOrganizationAdminSubscriptionsBaseLink,

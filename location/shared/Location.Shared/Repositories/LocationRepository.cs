@@ -92,9 +92,9 @@ internal static class LocationExtensions
                         !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
         }
 
-        if (searchCriteria.DeskTypeIds.Length != 0)
+        if (searchCriteria.CustomTagIds.Length != 0)
         {
-            searchCriteria.DeskTypeIds.ForEach(id =>
+            searchCriteria.CustomTagIds.ForEach(id =>
                 query = query.Where(item =>
                     item.Desks.Any(desk =>
                         !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));

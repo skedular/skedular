@@ -142,7 +142,7 @@ public class CustomerDetails : Node
     [GraphQLName("defaultTeams")] public CustomerTeamDetails[] DefaultTeams { get; set; } = [];
     [GraphQLName("defaultOrganization")] public CustomerOrganizationDetails? DefaultOrganization { get; set; }
     [GraphQLName("preferredZones")] public CustomerOrganizationTagDetails[] PreferredZones { get; set; } = [];
-    [GraphQLName("preferredDeskTypes")] public CustomerOrganizationTagDetails[] PreferredDeskTypes { get; set; } = [];
+    [GraphQLName("preferredCustomTags")] public CustomerOrganizationTagDetails[] PreferredCustomTags { get; set; } = [];
     [GraphQLName("preferredDesks")] public CustomerDeskDetails[] PreferredDesks { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }

@@ -495,16 +495,16 @@ public class Mapper : IMapper
                 }
         };
 
-        desk.OrganizationDeskTypes.AddRange(MapToGrpcResponseDeskTypes(src.OrganizationTags));
+        desk.OrganizationCustomTags.AddRange(MapToGrpcResponseCustomTags(src.OrganizationTags));
         desk.OrganizationZones.AddRange(MapToGrpcResponseZones(src.OrganizationTags));
 
         return desk;
     }
 
-    private static IEnumerable<OrganizationDeskType> MapToGrpcResponseDeskTypes(IEnumerable<OrganizationTag> src) =>
-        src.Where(item => item.Type == OrganizationTagType.DeskType).Select(MapToGrpcResponseDeskType);
+    private static IEnumerable<OrganizationCustomTag> MapToGrpcResponseCustomTags(IEnumerable<OrganizationTag> src) =>
+        src.Where(item => item.Type == OrganizationTagType.Custom).Select(MapToGrpcResponseCustomTag);
 
-    private static OrganizationDeskType MapToGrpcResponseDeskType(OrganizationTag src) =>
+    private static OrganizationCustomTag MapToGrpcResponseCustomTag(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<OrganizationZone> MapToGrpcResponseZones(IEnumerable<OrganizationTag> src) =>
@@ -559,18 +559,18 @@ public class Mapper : IMapper
         {
             UniqueId = src.Id,
             Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
-            DeskTypes = MapToDeskTypes(src.OrganizationTags).ToArray(),
+            CustomTags = MapToCustomTags(src.OrganizationTags).ToArray(),
             Zones = MapToZones(src.OrganizationTags).ToArray(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Location = MapTo(src.Location)
         };
 
-    private static IEnumerable<BookingOrganizationDeskTypeDetails>
-        MapToDeskTypes(IEnumerable<OrganizationTag> src) =>
-        src.Where(item => item.Type == OrganizationTagType.DeskType).Select(MapToDeskType);
+    private static IEnumerable<BookingOrganizationCustomTagDetails>
+        MapToCustomTags(IEnumerable<OrganizationTag> src) =>
+        src.Where(item => item.Type == OrganizationTagType.Custom).Select(MapToCustomTag);
 
-    private static BookingOrganizationDeskTypeDetails MapToDeskType(OrganizationTag src) =>
+    private static BookingOrganizationCustomTagDetails MapToCustomTag(OrganizationTag src) =>
         new() { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
 
     private static IEnumerable<BookingOrganizationZoneDetails>
@@ -632,7 +632,7 @@ public class Mapper : IMapper
             Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
             Type = src.Type switch
             {
-                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             }

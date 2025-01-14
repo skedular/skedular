@@ -159,8 +159,8 @@ public class OrganizationGrpcService(
         };
     }
 
-    public override async Task<DeskTypeConnection> GetPaginatedDeskTypes(
-        GetPaginatedDeskTypesInput request,
+    public override async Task<CustomTagConnection> GetPaginatedCustomTags(
+        GetPaginatedCustomTagsInput request,
         ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
@@ -173,7 +173,7 @@ public class OrganizationGrpcService(
                 request.Last.FromNullInt()),
             new TagSearchCriteria(
                 request.Where.OrganizationId,
-                OrganizationTagTypeConstants.DeskType,
+                OrganizationTagTypeConstants.Custom,
                 request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
@@ -183,8 +183,8 @@ public class OrganizationGrpcService(
                     : OrderDirection.Descending;
                 var field = item.Field switch
                 {
-                    DeskTypeOrderField.DeskTypeName => OrganizationTagOrderField.Name,
-                    DeskTypeOrderField.DeskTypeDescription => OrganizationTagOrderField.Description,
+                    CustomTagOrderField.CustomTagName => OrganizationTagOrderField.Name,
+                    CustomTagOrderField.CustomTagDescription => OrganizationTagOrderField.Description,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -192,7 +192,7 @@ public class OrganizationGrpcService(
             }).ToList(),
             context.CancellationToken);
 
-        var connection = new DeskTypeConnection
+        var connection = new CustomTagConnection
         {
             PageInfo = new PageInfo
             {
@@ -204,38 +204,38 @@ public class OrganizationGrpcService(
             TotalCount = totalCount
         };
 
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseDeskType));
+        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseCustomTag));
         return connection;
     }
 
-    public override async Task<DeskType> GetDeskType(GetDeskTypeInput request, ServerCallContext context)
+    public override async Task<CustomTag> GetCustomTag(GetCustomTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseDeskType(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponseCustomTag(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<DeskType> AddDeskType(AddDeskTypeInput request, ServerCallContext context)
+    public override async Task<CustomTag> AddCustomTag(AddCustomTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseDeskType(
+        return mapper.MapToGrpcResponseCustomTag(
             await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
-    public override async Task<DeskType> UpdateDeskType(UpdateDeskTypeInput request, ServerCallContext context)
+    public override async Task<CustomTag> UpdateCustomTag(UpdateCustomTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseDeskType(await tagService.UpdateAsync(mapper.MapTo(request),
+        return mapper.MapToGrpcResponseCustomTag(await tagService.UpdateAsync(mapper.MapTo(request),
             context.CancellationToken));
     }
 
-    public override async Task<DeskType> RemoveDeskType(RemoveDeskTypeInput request, ServerCallContext context)
+    public override async Task<CustomTag> RemoveCustomTag(RemoveCustomTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseDeskType(await tagService.DeleteAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponseCustomTag(await tagService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<ZoneConnection> GetPaginatedZones(

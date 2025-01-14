@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<109b9f2f563745f5886d76f20a4fdbba>>
+ * @generated SignedSource<<c9c010a1d7e4daefd5f44d27a5553f68>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -127,9 +127,9 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "BookingOrganizationDeskTypeDetails",
+                "concreteType": "BookingOrganizationCustomTagDetails",
                 "kind": "LinkedField",
-                "name": "deskTypes",
+                "name": "customTags",
                 "plural": true,
                 "selections": (v3/*: any*/),
                 "storageKey": null
@@ -152,16 +152,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7fa869ee345fc26f3b06f1c0687bf49c",
+    "cacheID": "526b85ccd5b9ea7ac3adc241c85f322a",
     "id": null,
     "metadata": {},
     "name": "bookingDetailsSelector_availableLocationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookingDetailsSelector_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]\n  $locationExists: Boolean!\n  $locationId: String\n) {\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableDesks(where: {locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n"
+    "text": "query bookingDetailsSelector_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]\n  $locationExists: Boolean!\n  $locationId: String\n) {\n  ...bookingDetailsSelector_availableLocationDesks_query\n}\n\nfragment bookingDetailsSelector_availableLocationDesks_query on Query {\n  availableDesks(where: {locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "34eab7b420217dc18af7331afb203430";
+(node as any).hash = "d627d43bfb0b2888f959fb13cd80b242";
 
 export default node;

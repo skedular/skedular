@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ddd269c34a5e2e38bfb1557f010d24f>>
+ * @generated SignedSource<<1db012d761584e8135862552aea07107>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -283,9 +283,9 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingOrganizationDeskTypeDetails",
+                        "concreteType": "BookingOrganizationCustomTagDetails",
                         "kind": "LinkedField",
-                        "name": "deskTypes",
+                        "name": "customTags",
                         "plural": true,
                         "selections": (v4/*: any*/),
                         "storageKey": null
@@ -327,16 +327,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c8b0ffaa98727ac980dcd98c4e93977e",
+    "cacheID": "6526fd9e5b9de1a21815b3830dd911bf",
     "id": null,
     "metadata": {},
     "name": "bookingsWeekGrid_allBookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookingsWeekGrid_allBookings_refetchableFragment(\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $teamId: String!\n  $to: DateTime\n) {\n  ...bookingsWeekGrid_allBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        type\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query bookingsWeekGrid_allBookings_refetchableFragment(\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $teamId: String!\n  $to: DateTime\n) {\n  ...bookingsWeekGrid_allBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        type\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          customTags {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9cee852f0c1c6bfcbc00eacf7ab3fc7f";
+(node as any).hash = "b97bae8065f6aee799a28a49c17d7248";
 
 export default node;

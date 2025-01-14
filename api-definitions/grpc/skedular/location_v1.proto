@@ -109,7 +109,7 @@ message Location {
     bool hasFutureBooking = 7;
     Permissions permissions = 8;
     repeated LocationMember members = 9;
-    repeated OrganizationDeskType deskTypes = 10;
+    repeated OrganizationCustomTag customTags = 10;
     repeated OrganizationZone zones = 11;
 }
 
@@ -143,7 +143,7 @@ message LocationWhereInput {
     string organizationId = 1;
     string nameContains = 2;
     repeated string zoneIds = 3;
-    repeated string deskTypeIds = 4;
+    repeated string customTagIds = 4;
 }
 
 message LocationOrderInput {
@@ -157,7 +157,7 @@ enum LocationOrderField {
     Timezone = 2;
 }
 
-message OrganizationDeskType {
+message OrganizationCustomTag {
     string id = 1;
     string name = 2;
 }
@@ -172,7 +172,7 @@ message Desk {
     string name = 2;
     bool deactivated = 3;
     bool requireBookingApproval = 4;
-    repeated OrganizationDeskType organizationDeskTypes = 5;
+    repeated OrganizationCustomTag organizationCustomTags = 5;
     repeated OrganizationZone organizationZones = 6;
 }
 
@@ -233,7 +233,7 @@ message DeskWhereInput {
     string locationId = 1;
     string nameContains = 2;
     repeated string zoneIds = 3;
-    repeated string deskTypeIds = 4;
+    repeated string customTagIds = 4;
 }
 
 message DeskOrderInput {
@@ -256,7 +256,7 @@ message BulkAddDesksInput {
     int32 count = 4;
     bool deactivated = 5;
     bool requireBookingApproval = 6;
-    repeated string deskTypeIds = 7;
+    repeated string customTagIds = 7;
     repeated string zoneIds = 8;
 }
 
@@ -270,7 +270,7 @@ message AddDeskInput {
     string name = 3;
     bool deactivated = 4;
     bool requireBookingApproval = 5;
-    repeated string deskTypeIds = 6;
+    repeated string customTagIds = 6;
     repeated string zoneIds = 7;
 }
 
@@ -279,7 +279,7 @@ message UpdateDeskInput {
     string name = 2;
     bool deactivated = 3;
     bool requireBookingApproval = 4;
-    repeated string deskTypeIds = 5;
+    repeated string customTagIds = 5;
     repeated string zoneIds = 6;
 }
 

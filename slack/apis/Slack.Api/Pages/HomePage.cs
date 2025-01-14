@@ -48,7 +48,7 @@ public class HomePage(
     IBookingsPage bookingsPage,
     ILocationsPage locationsPage,
     ITeamsPage teamsPage,
-    IDeskTypesPage deskTypesPage,
+    ICustomTagsPage customTagsPage,
     IZonesPage zonesPage,
     ISettingsPage settingsPage,
     IMapper mapper,
@@ -307,13 +307,13 @@ public class HomePage(
 
                 break;
 
-            case DeskTypeActionTypes.DeskTypes:
+            case CustomTagActionTypes.CustomTags:
                 {
                     var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
-                    context.PageContext.DeskTypesPage = new Shared.Context.DeskTypesPage(new PaginationContext());
+                    context.PageContext.CustomTagsPage = new Shared.Context.CustomTagsPage(new PaginationContext());
                     context.PageContext.PushCurrentPageToVisitedPages();
 
-                    await deskTypesPage.RenderWithContextAsync(
+                    await customTagsPage.RenderWithContextAsync(
                         workspace,
                         workspaceMember,
                         new CommonPageContext(context.PageContext),
@@ -774,7 +774,7 @@ public class HomePage(
                 new Option { Value = TeamActionTypes.Teams, Text = "Teams".ToPlainTextWithIcon(Icons.Teams) },
                 new Option
                 {
-                    Value = DeskTypeActionTypes.DeskTypes, Text = "Desk Types".ToPlainTextWithIcon(Icons.DeskTypes)
+                    Value = CustomTagActionTypes.CustomTags, Text = "Tags".ToPlainTextWithIcon(Icons.CustomTags)
                 },
                 new Option { Value = ZoneActionTypes.Zones, Text = "Zones".ToPlainTextWithIcon(Icons.Zones) },
                 new Option

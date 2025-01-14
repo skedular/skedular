@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2f261c8d4cec90319525761e3ef0439>>
+ * @generated SignedSource<<d76df738ad912c14743169a632db3653>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -284,9 +284,9 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingOrganizationDeskTypeDetails",
+                        "concreteType": "BookingOrganizationCustomTagDetails",
                         "kind": "LinkedField",
-                        "name": "deskTypes",
+                        "name": "customTags",
                         "plural": true,
                         "selections": (v4/*: any*/),
                         "storageKey": null
@@ -386,16 +386,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "97e54f2247323721fa482aba2f4e0a05",
+    "cacheID": "2e0cf0299e5ebd42b95bb8635c0c3c31",
     "id": null,
     "metadata": {},
     "name": "smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment(\n  $count: Int = 1000\n  $cursor: String\n  $monthlyCalendarDateFrom: DateTime\n  $monthlyCalendarDateTo: DateTime\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  ...smallMonthlyViewCalendar_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  type\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          uniqueId\n          name\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          deskTypes {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment(\n  $count: Int = 1000\n  $cursor: String\n  $monthlyCalendarDateFrom: DateTime\n  $monthlyCalendarDateTo: DateTime\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  ...smallMonthlyViewCalendar_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  type\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          uniqueId\n          name\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          customTags {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f169a5e55e8145fb63ab330268257a28";
+(node as any).hash = "50f8820e965d3a0101808d378acaabd8";
 
 export default node;

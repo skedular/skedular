@@ -1,388 +1,388 @@
 ﻿schema {
-  query: Query
-  mutation: Mutation
+    query: Query
+    mutation: Mutation
 }
 
 type AcceptInvitationToJoinLocationPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type BulkDeskPayload {
-  clientMutationId: String
-  desks: [DeskDetails!]!
+    clientMutationId: String
+    desks: [DeskDetails!]!
 }
 
 type CancelInvitationToJoinLocationPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type DeskConnection {
-  pageInfo: PageInfo!
-  edges: [DeskEdge!]!
-  totalCount: Int
+    pageInfo: PageInfo!
+    edges: [DeskEdge!]!
+    totalCount: Int
 }
 
 type DeskDetails {
-  name: String!
-  deactivated: Boolean!
-  requireBookingApproval: Boolean!
-  deskTypes: [Organization_OrganizationTagDetails!]!
-  zones: [Organization_OrganizationTagDetails!]!
-  id: ID!
+    name: String!
+    deactivated: Boolean!
+    requireBookingApproval: Boolean!
+    customTags: [Organization_OrganizationTagDetails!]!
+    zones: [Organization_OrganizationTagDetails!]!
+    id: ID!
 }
 
 type DeskEdge {
-  node: DeskDetails!
-  cursor: String!
+    node: DeskDetails!
+    cursor: String!
 }
 
 type DeskPayload {
-  clientMutationId: String
-  desk: DeskDetails!
+    clientMutationId: String
+    desk: DeskDetails!
 }
 
 type DesksOccupancyPercentage {
-  date: DateTime!
-  percentage: Float!
+    date: DateTime!
+    percentage: Float!
 }
 
 type DesksPayload {
-  clientMutationId: String
-  desks: [DeskDetails!]!
+    clientMutationId: String
+    desks: [DeskDetails!]!
 }
 
 type InviteCustomersToJoinLocationPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type LocationAddressDetails {
-  formattedAddress: String
-  addressLine1: String
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String
-  country: String
+    formattedAddress: String
+    addressLine1: String
+    addressLine2: String
+    suburb: String
+    city: String
+    province: String
+    zipcode: String
+    country: String
 }
 
 type LocationAnalytics {
-  desksOccupancyPercentage: [DesksOccupancyPercentage!]!
-  dailyBookingsTotals: [LocationDailyBookingsTotal!]!
+    desksOccupancyPercentage: [DesksOccupancyPercentage!]!
+    dailyBookingsTotals: [LocationDailyBookingsTotal!]!
 }
 
 type LocationConnection {
-  pageInfo: PageInfo!
-  edges: [LocationEdge!]!
-  totalCount: Int
+    pageInfo: PageInfo!
+    edges: [LocationEdge!]!
+    totalCount: Int
 }
 
 type LocationCustomerDetails {
-  uniqueId: ID!
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
+    uniqueId: ID!
+    name: String
+    givenName: String
+    middleName: String
+    familyName: String
+    photoUrl: String
+    photoUrl24: String
+    photoUrl32: String
+    photoUrl48: String
+    photoUrl72: String
+    photoUrl192: String
+    photoUrl512: String
 }
 
 type LocationDailyBookingsTotal {
-  date: DateTime!
-  total: Int!
+    date: DateTime!
+    total: Int!
 }
 
 type LocationDetails {
-  name: String!
-  about: String
-  organization: LocationOrganizationDetails
-  timezone: String
-  deskCapacity: Int!
-  hasFutureBooking: Boolean!
-  canModify: Boolean!
-  canDelete: Boolean!
-  canInvitePeople: Boolean!
-  canViewAnalytics: Boolean!
-  desks: [DeskDetails!]!
-  physicalAddress: LocationAddressDetails
-  deskTypes: [Organization_OrganizationTagDetails!]!
-  zones: [Organization_OrganizationTagDetails!]!
-  id: ID!
+    name: String!
+    about: String
+    organization: LocationOrganizationDetails
+    timezone: String
+    deskCapacity: Int!
+    hasFutureBooking: Boolean!
+    canModify: Boolean!
+    canDelete: Boolean!
+    canInvitePeople: Boolean!
+    canViewAnalytics: Boolean!
+    desks: [DeskDetails!]!
+    physicalAddress: LocationAddressDetails
+    customTags: [Organization_OrganizationTagDetails!]!
+    zones: [Organization_OrganizationTagDetails!]!
+    id: ID!
 }
 
 type LocationEdge {
-  node: LocationDetails!
-  cursor: String!
+    node: LocationDetails!
+    cursor: String!
 }
 
 type LocationMemberConnection {
-  pageInfo: PageInfo!
-  edges: [LocationMemberEdge!]!
-  totalCount: Int
+    pageInfo: PageInfo!
+    edges: [LocationMemberEdge!]!
+    totalCount: Int
 }
 
 type LocationMemberDetails {
-  role: LocationMemberRole
-  customer: LocationCustomerDetails!
-  id: ID!
+    role: LocationMemberRole
+    customer: LocationCustomerDetails!
+    id: ID!
 }
 
 type LocationMemberDetailsPayload {
-  clientMutationId: String
-  member: LocationMemberDetails
+    clientMutationId: String
+    member: LocationMemberDetails
 }
 
 type LocationMemberEdge {
-  node: LocationMemberDetails!
-  cursor: String!
+    node: LocationMemberDetails!
+    cursor: String!
 }
 
 type LocationOrganizationDetails {
-  uniqueId: ID!
-  name: String!
-  logoUrl: String
+    uniqueId: ID!
+    name: String!
+    logoUrl: String
 }
 
 type LocationPayload {
-  clientMutationId: String
-  location: LocationDetails!
+    clientMutationId: String
+    location: LocationDetails!
 }
 
 type Mutation {
-  addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
-  updateLocation(input: UpdateLocationInput!): LocationPayload @cost(weight: "10")
-  deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
-  addDesk(input: AddDeskInput!): DeskPayload @cost(weight: "10")
-  bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload @cost(weight: "10")
-  updateDesk(input: UpdateDeskInput!): DeskPayload @cost(weight: "10")
-  deleteDesk(input: DeleteDeskInput!): DeskPayload @cost(weight: "10")
-  deleteDesks(input: DeleteDesksInput!): DesksPayload @cost(weight: "10")
-  activateDesks(input: ActivateDesksInput!): DesksPayload @cost(weight: "10")
-  deactivateDesks(input: DeactivateDesksInput!): DesksPayload @cost(weight: "10")
-  changeLocationMemberRole(input: ChangeLocationMemberRoleInput!): LocationMemberDetailsPayload @cost(weight: "10")
-  inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
-  acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
-  rejectInvitationToJoinLocation(input: RejectInvitationToJoinLocationInput!): RejectInvitationToJoinLocationPayload @cost(weight: "10")
-  cancelInvitationToJoinLocation(input: CancelInvitationToJoinLocationInput!): CancelInvitationToJoinLocationPayload @cost(weight: "10")
+    addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
+    updateLocation(input: UpdateLocationInput!): LocationPayload @cost(weight: "10")
+    deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
+    addDesk(input: AddDeskInput!): DeskPayload @cost(weight: "10")
+    bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload @cost(weight: "10")
+    updateDesk(input: UpdateDeskInput!): DeskPayload @cost(weight: "10")
+    deleteDesk(input: DeleteDeskInput!): DeskPayload @cost(weight: "10")
+    deleteDesks(input: DeleteDesksInput!): DesksPayload @cost(weight: "10")
+    activateDesks(input: ActivateDesksInput!): DesksPayload @cost(weight: "10")
+    deactivateDesks(input: DeactivateDesksInput!): DesksPayload @cost(weight: "10")
+    changeLocationMemberRole(input: ChangeLocationMemberRoleInput!): LocationMemberDetailsPayload @cost(weight: "10")
+    inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
+    acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
+    rejectInvitationToJoinLocation(input: RejectInvitationToJoinLocationInput!): RejectInvitationToJoinLocationPayload @cost(weight: "10")
+    cancelInvitationToJoinLocation(input: CancelInvitationToJoinLocationInput!): CancelInvitationToJoinLocationPayload @cost(weight: "10")
 }
 
 type Organization_OrganizationTagDetails {
-  name: String
-  tagType: String
-  uniqueId: ID!
+    name: String
+    tagType: String
+    uniqueId: ID!
 }
 
 type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
 }
 
 type Query {
-  locationVersion: Version!
-  locationCustomerRecordSynced: Boolean! @cost(weight: "10")
-  locationMemberRoles: [LocationMemberRole!]!
-  location(id: String!): LocationDetails @cost(weight: "10")
-  locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): LocationConnection @cost(weight: "10")
-  myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
-  locationMembers(after: String first: Int before: String last: Int where: LocationMemberWhereInput! orderBy: [LocationMemberOrderInput!]): LocationMemberConnection @cost(weight: "10")
-  desks(after: String first: Int before: String last: Int where: DeskWhereInput! orderBy: [DeskOrderInput!]): DeskConnection @cost(weight: "10")
-  locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
-  desk(id: String!): DeskDetails @cost(weight: "10")
+    locationVersion: Version!
+    locationCustomerRecordSynced: Boolean! @cost(weight: "10")
+    locationMemberRoles: [LocationMemberRole!]!
+    location(id: String!): LocationDetails @cost(weight: "10")
+    locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): LocationConnection @cost(weight: "10")
+    myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
+    locationMembers(after: String first: Int before: String last: Int where: LocationMemberWhereInput! orderBy: [LocationMemberOrderInput!]): LocationMemberConnection @cost(weight: "10")
+    desks(after: String first: Int before: String last: Int where: DeskWhereInput! orderBy: [DeskOrderInput!]): DeskConnection @cost(weight: "10")
+    locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
+    desk(id: String!): DeskDetails @cost(weight: "10")
 }
 
 type RejectInvitationToJoinLocationPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type Version {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
 }
 
 input AcceptInvitationToJoinLocationInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input ActivateDesksInput {
-  clientMutationId: String
-  ids: [String!]!
+    clientMutationId: String
+    ids: [String!]!
 }
 
 input AddDeskInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  locationId: String!
-  deskTypeIds: [String!]!
-  zoneIds: [String!]!
+    clientMutationId: String
+    id: String
+    name: String!
+    locationId: String!
+    customTagIds: [String!]!
+    zoneIds: [String!]!
 }
 
 input AddLocationInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  about: String
-  organizationId: String
-  timezone: String
-  physicalAddress: LocationAddressDetailsInput
+    clientMutationId: String
+    id: String
+    name: String!
+    about: String
+    organizationId: String
+    timezone: String
+    physicalAddress: LocationAddressDetailsInput
 }
 
 input BulkAddDeskInput {
-  clientMutationId: String
-  id: String
-  namePrefix: String
-  locationId: String!
-  count: Int!
-  deskTypeIds: [String!]!
-  zoneIds: [String!]!
-  deactivated: Boolean!
-  requireBookingApproval: Boolean!
+    clientMutationId: String
+    id: String
+    namePrefix: String
+    locationId: String!
+    count: Int!
+    customTagIds: [String!]!
+    zoneIds: [String!]!
+    deactivated: Boolean!
+    requireBookingApproval: Boolean!
 }
 
 input CancelInvitationToJoinLocationInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input ChangeLocationMemberRoleInput {
-  clientMutationId: String
-  id: String!
-  role: LocationMemberRole!
+    clientMutationId: String
+    id: String!
+    role: LocationMemberRole!
 }
 
 input DeactivateDesksInput {
-  clientMutationId: String
-  ids: [String!]!
+    clientMutationId: String
+    ids: [String!]!
 }
 
 input DeleteDeskInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input DeleteDesksInput {
-  clientMutationId: String
-  ids: [String!]!
+    clientMutationId: String
+    ids: [String!]!
 }
 
 input DeleteLocationInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input DeskOrderInput {
-  direction: OrderDirection!
-  field: DeskOrderField!
+    direction: OrderDirection!
+    field: DeskOrderField!
 }
 
 input DeskWhereInput {
-  locationId: String!
-  nameContains: String
-  zoneIds: [String!]
-  deskTypeIds: [String!]
+    locationId: String!
+    nameContains: String
+    zoneIds: [String!]
+    customTagIds: [String!]
 }
 
 input InviteCustomersToJoinLocationInput {
-  clientMutationId: String
-  locationId: String!
-  emails: [String!]!
+    clientMutationId: String
+    locationId: String!
+    emails: [String!]!
 }
 
 input LocationAddressDetailsInput {
-  formattedAddress: String
-  addressLine1: String
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String
-  country: String
+    formattedAddress: String
+    addressLine1: String
+    addressLine2: String
+    suburb: String
+    city: String
+    province: String
+    zipcode: String
+    country: String
 }
 
 input LocationMemberOrderInput {
-  direction: OrderDirection!
-  field: LocationMemberOrderField!
+    direction: OrderDirection!
+    field: LocationMemberOrderField!
 }
 
 input LocationMemberWhereInput {
-  locationId: String!
-  nameContains: String
+    locationId: String!
+    nameContains: String
 }
 
 input LocationOrderInput {
-  direction: OrderDirection!
-  field: LocationOrderField!
+    direction: OrderDirection!
+    field: LocationOrderField!
 }
 
 input LocationWhereInput {
-  organizationId: String
-  nameContains: String
-  zoneIds: [String!]
-  deskTypeIds: [String!]
+    organizationId: String
+    nameContains: String
+    zoneIds: [String!]
+    customTagIds: [String!]
 }
 
 input RejectInvitationToJoinLocationInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input UpdateDeskInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  deactivated: Boolean!
-  requireBookingApproval: Boolean!
-  deskTypeIds: [String!]!
-  zoneIds: [String!]!
+    clientMutationId: String
+    id: String!
+    name: String!
+    deactivated: Boolean!
+    requireBookingApproval: Boolean!
+    customTagIds: [String!]!
+    zoneIds: [String!]!
 }
 
 input UpdateLocationInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  about: String
-  organizationId: String
-  timezone: String
-  physicalAddress: LocationAddressDetailsInput
+    clientMutationId: String
+    id: String!
+    name: String!
+    about: String
+    organizationId: String
+    timezone: String
+    physicalAddress: LocationAddressDetailsInput
 }
 
 enum DeskOrderField {
-  Name
+    Name
 }
 
 enum LocationMemberOrderField {
-  Role
-  Name
-  GivenName
-  MiddleName
-  FamilyName
+    Role
+    Name
+    GivenName
+    MiddleName
+    FamilyName
 }
 
 enum LocationMemberRole {
-  Owner
-  Administrator
-  Member
+    Owner
+    Administrator
+    Member
 }
 
 enum LocationOrderField {
-  Name
-  About
-  Timezone
+    Name
+    About
+    Timezone
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+    Ascending
+    Descending
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

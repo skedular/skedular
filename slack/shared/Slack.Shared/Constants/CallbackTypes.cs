@@ -46,9 +46,9 @@ public class DeskCallbackTypes
     public const string RemoveDesk = "RemoveDesk";
 }
 
-public class DeskTypeCallbackTypes
+public class CustomTagCallbackTypes
 {
-    public const string AddDeskType = "AddDeskType";
-    public const string EditDeskType = "EditDeskType";
-    public const string RemoveDeskType = "RemoveDeskType";
+    public const string AddCustomTag = "AddCustomTag";
+    public const string EditCustomTag = "EditCustomTag";
+    public const string RemoveCustomTag = "RemoveCustomTag";
 }

@@ -12,7 +12,7 @@ using Team = Slack.Shared.Models.Team;
 using Organization = Slack.Shared.Models.Organization;
 using Customer = Slack.Shared.Models.Customer;
 using Desk = Slack.Shared.Models.Desk;
-using OrganizationDeskType = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationDeskType;
+using OrganizationCustomTag = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Slack.Shared.Models.Identity;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
@@ -550,17 +550,17 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
-            OrganizationDeskTypes = MapTo(src.OrganizationDeskTypes).ToList(),
+            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList(),
             Location = string.IsNullOrWhiteSpace(src.Location?.Id)
                 ? null
                 : new Location { Id = src.Id, Name = src.Name }
         };
 
-    private static IEnumerable<Shared.Models.OrganizationDeskType> MapTo(IEnumerable<OrganizationDeskType> src) =>
+    private static IEnumerable<Shared.Models.OrganizationCustomTag> MapTo(IEnumerable<OrganizationCustomTag> src) =>
         src.Select(MapTo);
 
-    private static Shared.Models.OrganizationDeskType MapTo(OrganizationDeskType src) =>
+    private static Shared.Models.OrganizationCustomTag MapTo(OrganizationCustomTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<OrganizationZone> MapTo(

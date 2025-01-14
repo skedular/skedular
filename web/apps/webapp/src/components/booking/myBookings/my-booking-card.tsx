@@ -85,7 +85,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
         desks {
           uniqueId
           name
-          deskTypes {
+          customTags {
             uniqueId
             name
           }

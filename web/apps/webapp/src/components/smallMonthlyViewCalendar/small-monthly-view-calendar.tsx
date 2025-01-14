@@ -127,7 +127,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
               desks {
                 uniqueId
                 name
-                deskTypes {
+                customTags {
                   uniqueId
                   name
                 }

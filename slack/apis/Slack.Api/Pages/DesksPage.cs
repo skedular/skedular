@@ -715,25 +715,25 @@ public class DesksPage(
 
         var blocks = new List<Block> { name, deactivated, requireBookingApproval };
 
-        var deskTypeConnection = await GetDeskTypesAsync(workspace, workspaceMember, cancellationToken);
-        if (deskTypeConnection.Edges.Count != 0)
+        var customTagConnection = await GetCustomTagsAsync(workspace, workspaceMember, cancellationToken);
+        if (customTagConnection.Edges.Count != 0)
         {
             blocks.Add(new InputBlock
             {
-                BlockId = DeskTypeActionTypes.DeskTypes,
-                Label = "Desk Types".ToPlainText(),
+                BlockId = CustomTagActionTypes.CustomTags,
+                Label = "Tags".ToPlainText(),
                 Element = new StaticMultiSelectMenu
                 {
-                    ActionId = DeskTypeActionTypes.DeskTypes,
-                    Options = deskTypeConnection.Edges.Select(item => item.Node).Select(item => new Option
+                    ActionId = CustomTagActionTypes.CustomTags,
+                    Options = customTagConnection.Edges.Select(item => item.Node).Select(item => new Option
                     {
                         Text = item.Name.ToOptionText(),
                         Value = item.Id,
                         Description =
                             string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList(),
-                    InitialOptions = deskTypeConnection.Edges.Select(item => item.Node)
-                        .Where(item => desk.OrganizationDeskTypes.Select(tag => tag.Id).Contains(item.Id)).Select(
+                    InitialOptions = customTagConnection.Edges.Select(item => item.Node)
+                        .Where(item => desk.OrganizationCustomTags.Select(tag => tag.Id).Contains(item.Id)).Select(
                             item =>
                                 new Option
                                 {
@@ -868,30 +868,30 @@ public class DesksPage(
             cancellationToken);
     }
 
-    private async Task<DeskTypeConnection> GetDeskTypesAsync(
+    private async Task<CustomTagConnection> GetCustomTagsAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         CancellationToken cancellationToken)
     {
-        var getPaginatedDeskTypesInput = new GetPaginatedDeskTypesInput
+        var getPaginatedCustomTagsInput = new GetPaginatedCustomTagsInput
         {
             After = string.Empty,
             First = -1,
             Before = string.Empty,
             Last = -1,
-            Where = new DeskTypeWhereInput { OrganizationId = workspace.Organization.Id }
+            Where = new CustomTagWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
-        getPaginatedDeskTypesInput.OrderBy.AddRange([
-            new DeskTypeOrderInput
+        getPaginatedCustomTagsInput.OrderBy.AddRange([
+            new CustomTagOrderInput
             {
                 Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending,
-                Field = DeskTypeOrderField.DeskTypeName
+                Field = CustomTagOrderField.CustomTagName
             }
         ]);
 
-        return await organizationServiceClient.GetPaginatedDeskTypesAsync(
-            getPaginatedDeskTypesInput,
+        return await organizationServiceClient.GetPaginatedCustomTagsAsync(
+            getPaginatedCustomTagsInput,
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
     }

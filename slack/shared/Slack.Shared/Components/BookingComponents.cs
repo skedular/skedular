@@ -30,10 +30,10 @@ public class BookingComponents : IBookingComponents
                 deskLabel += $" {Icons.Zones} {string.Join(",", item.OrganizationZones.Select(tag => tag.Name))}";
             }
 
-            if (item.OrganizationDeskTypes.Count != 0)
+            if (item.OrganizationCustomTags.Count != 0)
             {
                 deskLabel +=
-                    $" {Icons.DeskTypes} {string.Join(",", item.OrganizationDeskTypes.Select(tag => tag.Name))}";
+                    $" {Icons.CustomTags} {string.Join(",", item.OrganizationCustomTags.Select(tag => tag.Name))}";
             }
 
             return (Block)new SectionBlock { Text = deskLabel.ToMarkdown() };

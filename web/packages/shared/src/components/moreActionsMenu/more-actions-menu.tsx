@@ -35,8 +35,8 @@ export enum MoreActionsMenuOptionType {
   ActivateTeamMember,
   EditZone,
   DeleteZone,
-  EditDeskType,
-  DeleteDeskType,
+  EditCustomTag,
+  DeleteCustomTag,
   EditDesk,
   DeleteDesk,
   ActivateDesk,
@@ -164,14 +164,14 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     label: 'Remove Zone',
     icon: <DeleteIcon color="warning" />,
   },
-  [MoreActionsMenuOptionType.EditDeskType]: {
-    id: MoreActionsMenuOptionType.EditDeskType,
-    label: 'Edit Desk Type',
+  [MoreActionsMenuOptionType.EditCustomTag]: {
+    id: MoreActionsMenuOptionType.EditCustomTag,
+    label: 'Edit Tag',
     icon: <EditIcon color="primary" />,
   },
-  [MoreActionsMenuOptionType.DeleteDeskType]: {
-    id: MoreActionsMenuOptionType.DeleteDeskType,
-    label: 'Remove Desk Type',
+  [MoreActionsMenuOptionType.DeleteCustomTag]: {
+    id: MoreActionsMenuOptionType.DeleteCustomTag,
+    label: 'Remove Tag',
     icon: <DeleteIcon color="warning" />,
   },
   [MoreActionsMenuOptionType.EditDesk]: {

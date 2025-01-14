@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5b526eeaf3130fb1565212186f26c15a>>
+ * @generated SignedSource<<20dce704332ae716838d5dbb77c1cfee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,7 @@ export type locationDesksTab_rootQuery$variables = {
   deskSortingValues?: ReadonlyArray<DeskOrderInput> | null | undefined;
   fromToGetBookings?: any | null | undefined;
   locationId: string;
-  multipleChoicesDeskTypesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
+  multipleChoicesCustomTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   multipleChoicesZonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   organizationId: string;
   toToGetBookings?: any | null | undefined;
@@ -63,7 +63,7 @@ v3 = {
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "multipleChoicesDeskTypesSortingValues"
+  "name": "multipleChoicesCustomTagsSortingValues"
 },
 v5 = {
   "defaultValue": null,
@@ -297,13 +297,13 @@ return {
           {
             "kind": "Variable",
             "name": "orderBy",
-            "variableName": "multipleChoicesDeskTypesSortingValues"
+            "variableName": "multipleChoicesCustomTagsSortingValues"
           },
           (v11/*: any*/)
         ],
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
-        "name": "deskTypes",
+        "name": "customTags",
         "plural": false,
         "selections": (v15/*: any*/),
         "storageKey": null
@@ -371,7 +371,7 @@ return {
                     "args": null,
                     "concreteType": "Organization_OrganizationTagDetails",
                     "kind": "LinkedField",
-                    "name": "deskTypes",
+                    "name": "customTags",
                     "plural": true,
                     "selections": (v17/*: any*/),
                     "storageKey": null
@@ -541,16 +541,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2951fe87a0d78474a1a4acaf3d46abdb",
+    "cacheID": "bf6187f6a13fd0df1953dca408b2475b",
     "id": null,
     "metadata": {},
     "name": "locationDesksTab_rootQuery",
     "operationKind": "query",
-    "text": "query locationDesksTab_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $fromToGetBookings: DateTime\n  $toToGetBookings: DateTime\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]\n  $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...locationDesksTab_query\n  ...locationDesksTab_desks_query\n  ...locationDesksTab_allBookings_query\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  deskTypes {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n}\n\nfragment deskCard_query on Query {\n  me {\n    id\n    preferredDesks {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    canModify\n    id\n  }\n}\n\nfragment locationDesksTab_allBookings_query on Query {\n  allBookings(where: {locationIds: [$locationId], fromGTE: $fromToGetBookings, toLTE: $toToGetBookings}) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    desks {\n      uniqueId\n    }\n  }\n}\n\nfragment locationDesksTab_desks_query on Query {\n  desks(first: 50, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationDesksTab_query on Query {\n  location(id: $locationId) {\n    canModify\n    id\n  }\n  ...deskCard_query\n  ...multipleChoicesDeskTypes_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $multipleChoicesDeskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query locationDesksTab_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $fromToGetBookings: DateTime\n  $toToGetBookings: DateTime\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...locationDesksTab_query\n  ...locationDesksTab_desks_query\n  ...locationDesksTab_allBookings_query\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  customTags {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n}\n\nfragment deskCard_query on Query {\n  me {\n    id\n    preferredDesks {\n      uniqueId\n    }\n  }\n  location(id: $locationId) {\n    canModify\n    id\n  }\n}\n\nfragment locationDesksTab_allBookings_query on Query {\n  allBookings(where: {locationIds: [$locationId], fromGTE: $fromToGetBookings, toLTE: $toToGetBookings}) {\n    id\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    desks {\n      uniqueId\n    }\n  }\n}\n\nfragment locationDesksTab_desks_query on Query {\n  desks(first: 50, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment locationDesksTab_query on Query {\n  location(id: $locationId) {\n    canModify\n    id\n  }\n  ...deskCard_query\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "886a17f003a4df1ce778186bac564054";
+(node as any).hash = "76f8d22a0a52a4e385e98bcedab62960";
 
 export default node;

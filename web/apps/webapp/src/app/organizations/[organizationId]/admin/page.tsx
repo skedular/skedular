@@ -23,14 +23,14 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageOrganizationAdmin_rootQuery($organizationId: String!, $zoneNameSearchText: String, $deskTypeNameSearchText: String) {
+  query pageOrganizationAdmin_rootQuery($organizationId: String!, $zoneNameSearchText: String, $customTagNameSearchText: String) {
     organization(id: $organizationId) {
       name
     }
     ...organizationAdmin_query
     ...organizationAdmin_organizationPaymentMethodsDetails_query
     ...organizationAdmin_zones_query
-    ...organizationAdmin_deskTypes_query
+    ...organizationAdmin_customTags_query
   }
 `;
 
@@ -62,7 +62,7 @@ const AdminPage = ({ queryReference, onReloadRequired, organizationId }: Props) 
         rootDataRelay={rootData}
         rootDataOrganizationPaymentMethodsDetailsRelay={rootData}
         rootDataZonesRelay={rootData}
-        rootDataDeskTypesRelay={rootData}
+        rootDataCustomTagsRelay={rootData}
         onReloadRequired={onReloadRequired}
         organizationId={organizationId}
       />

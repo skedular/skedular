@@ -55,7 +55,7 @@ type Props = {
   rootDataRefetchableRelay: myLocations_locations_availableOrganizationDesks_query$key;
   onReloadRequired: () => void;
   organizationId: string;
-  deskTypeIds: string[];
+  customTagIds: string[];
   zoneIds: string[];
   viewMode: 'list' | 'grid';
 };
@@ -92,7 +92,7 @@ type RowType = {
   teammates: ReadonlyArray<CustomerDetails>;
 };
 
-const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, organizationId, deskTypeIds, zoneIds, viewMode }: Props) => {
+const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, organizationId, customTagIds, zoneIds, viewMode }: Props) => {
   const rootData = useFragment<myLocations_query$key>(
     graphql`
       fragment myLocations_query on Query {
@@ -129,7 +129,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
         locations(
           first: $count
           after: $cursor
-          where: { organizationId: $organizationId, zoneIds: $zoneIds, deskTypeIds: $deskTypeIds }
+          where: { organizationId: $organizationId, zoneIds: $zoneIds, customTagIds: $customTagIds }
           orderBy: $locationsSortingValues
         ) @connection(key: "myLocations_locations") {
           __id
@@ -138,7 +138,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
             node {
               id
               name
-              deskTypes {
+              customTags {
                 uniqueId
                 name
               }
@@ -168,8 +168,8 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
             date: $todayDate
             deskIdsToInclude: []
             zoneIds: $zoneIds
-            deskTypeIds: $deskTypeIds
-            combineDeskTypesZones: true
+            customTagIds: $customTagIds
+            combineCustomTagsZones: true
           }
         ) {
           location {
@@ -225,11 +225,11 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
   }, [rootData.organizationMembers]);
 
   const handleRefetch = useCallback(
-    (deskTypeIds: string[], zoneIds: string[]) => {
+    (customTagIds: string[], zoneIds: string[]) => {
       startTransition(() => {
         refetch(
           {
-            deskTypeIds,
+            customTagIds,
             zoneIds,
           },
           {
@@ -241,7 +241,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     [refetch],
   );
 
-  useEffect(() => handleRefetch(deskTypeIds, zoneIds), [handleRefetch, deskTypeIds, zoneIds]);
+  useEffect(() => handleRefetch(customTagIds, zoneIds), [handleRefetch, customTagIds, zoneIds]);
 
   const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
     setMoreActionsAnchorEl(null);

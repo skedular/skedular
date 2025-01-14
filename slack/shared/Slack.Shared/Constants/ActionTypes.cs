@@ -103,15 +103,15 @@ public static class BillingActionTypes
     public const string Zipcode = "Zipcode";
 }
 
-public static class DeskTypeActionTypes
+public static class CustomTagActionTypes
 {
-    public const string DeskTypes = "DeskTypes";
-    public const string AddDeskType = "AddDeskType";
-    public const string SetPreferredDeskType = "SetPreferredDeskType";
-    public const string RemovePreferredDeskType = "RemovePreferredDeskType";
-    public const string EditDeskType = "EditDeskType";
-    public const string RemoveDeskType = "RemoveDeskType";
-    public const string ActionsMenu = "DeskType_ActionsMenu";
-    public const string Name = "DeskTypeName";
-    public const string Description = "DeskTypeDescription";
+    public const string CustomTags = "CustomTags";
+    public const string AddCustomTag = "AddCustomTag";
+    public const string SetPreferredCustomTag = "SetPreferredCustomTag";
+    public const string RemovePreferredCustomTag = "RemovePreferredCustomTag";
+    public const string EditCustomTag = "EditCustomTag";
+    public const string RemoveCustomTag = "RemoveCustomTag";
+    public const string ActionsMenu = "CustomTag_ActionsMenu";
+    public const string Name = "CustomTagName";
+    public const string Description = "CustomTagDescription";
 }

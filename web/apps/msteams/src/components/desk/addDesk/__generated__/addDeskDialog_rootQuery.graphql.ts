@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ac3a5cfff140df7a78999f439ebb3031>>
+ * @generated SignedSource<<3387c54d72eea15540e6b55d0134b8a9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,12 +17,12 @@ export type OrganizationTagOrderInput = {
   field: OrganizationTagOrderField;
 };
 export type addDeskDialog_rootQuery$variables = {
-  multipleChoicesDeskTypesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
+  multipleChoicesCustomTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   multipleChoicesZonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   organizationId: string;
 };
 export type addDeskDialog_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesDeskTypes_query" | "multipleChoicesZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesZones_query">;
 };
 export type addDeskDialog_rootQuery = {
   response: addDeskDialog_rootQuery$data;
@@ -33,7 +33,7 @@ const node: ConcreteRequest = (function(){
 var v0 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "multipleChoicesDeskTypesSortingValues"
+  "name": "multipleChoicesCustomTagsSortingValues"
 },
 v1 = {
   "defaultValue": null,
@@ -127,7 +127,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "multipleChoicesDeskTypes_query"
+        "name": "multipleChoicesCustomTags_query"
       },
       {
         "args": null,
@@ -154,13 +154,13 @@ return {
           {
             "kind": "Variable",
             "name": "orderBy",
-            "variableName": "multipleChoicesDeskTypesSortingValues"
+            "variableName": "multipleChoicesCustomTagsSortingValues"
           },
           (v3/*: any*/)
         ],
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
-        "name": "deskTypes",
+        "name": "customTags",
         "plural": false,
         "selections": (v4/*: any*/),
         "storageKey": null
@@ -185,16 +185,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6e0c0aab7cf26418e76e35d7954669f4",
+    "cacheID": "2b4c34ce55b5ce471ee4e5cea982b9f4",
     "id": null,
     "metadata": {},
     "name": "addDeskDialog_rootQuery",
     "operationKind": "query",
-    "text": "query addDeskDialog_rootQuery(\n  $organizationId: String!\n  $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...multipleChoicesDeskTypes_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $multipleChoicesDeskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query addDeskDialog_rootQuery(\n  $organizationId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a2bb1ca14927bba08190722b70e0a4a8";
+(node as any).hash = "128e1c2f1cfba81f9e3c2daf646d768f";
 
 export default node;

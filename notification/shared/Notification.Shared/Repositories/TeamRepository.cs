@@ -19,7 +19,7 @@ public class TeamRepository(NotificationDbContext dbContext, TimeProvider timePr
 {
     public async Task<Team> UpsertNakedAsync(
         string id,
-        Organization? organization, 
+        Organization? organization,
         CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);

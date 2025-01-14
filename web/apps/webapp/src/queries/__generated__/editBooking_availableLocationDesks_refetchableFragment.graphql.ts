@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9514fc30bedf25f732bb25da498e33cb>>
+ * @generated SignedSource<<3eac505bbb6008940e48f18630df8405>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -127,9 +127,9 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "BookingOrganizationDeskTypeDetails",
+                "concreteType": "BookingOrganizationCustomTagDetails",
                 "kind": "LinkedField",
-                "name": "deskTypes",
+                "name": "customTags",
                 "plural": true,
                 "selections": (v3/*: any*/),
                 "storageKey": null
@@ -152,16 +152,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "93952708a8a4d858310af16d6c1db797",
+    "cacheID": "a989c66d8d8024dc14d4d18a0e0e26ac",
     "id": null,
     "metadata": {},
     "name": "editBooking_availableLocationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query editBooking_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]\n  $locationExists: Boolean!\n  $locationId: String\n) {\n  ...editBooking_availableLocationDesks_query\n}\n\nfragment editBooking_availableLocationDesks_query on Query {\n  availableDesks(where: {locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n"
+    "text": "query editBooking_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]\n  $locationExists: Boolean!\n  $locationId: String\n) {\n  ...editBooking_availableLocationDesks_query\n}\n\nfragment editBooking_availableLocationDesks_query on Query {\n  availableDesks(where: {locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9ee07674a57d0fed6dbe79b1e44119c9";
+(node as any).hash = "5aed9525f3ecb23eb65167e1a646f7e4";
 
 export default node;

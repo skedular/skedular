@@ -9,7 +9,7 @@ public enum PageType
     Locations = 2,
     Teams = 3,
     Settings = 4,
-    DeskTypes = 6,
+    CustomTags = 6,
     Zones = 7,
     Desks = 8,
     Billing = 9
@@ -34,7 +34,7 @@ public record TeamsPage(PaginationContext Pagination);
 
 public record ZonesPage(PaginationContext Pagination);
 
-public record DeskTypesPage(PaginationContext Pagination);
+public record CustomTagsPage(PaginationContext Pagination);
 
 public class DesksPage(PaginationContext pagination, string locationId, DateTimeOffset selectedDate)
 {
@@ -63,7 +63,7 @@ public class PageContext
     public HomePage? HomePage { get; set; }
     public LocationsPage? LocationsPage { get; set; }
     public TeamsPage? TeamsPage { get; set; }
-    public DeskTypesPage? DeskTypesPage { get; set; }
+    public CustomTagsPage? CustomTagsPage { get; set; }
     public ZonesPage? ZonesPage { get; set; }
     public DesksPage? DesksPage { get; set; }
     public BookingsPage? BookingsPage { get; set; }

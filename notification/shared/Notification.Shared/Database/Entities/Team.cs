@@ -23,7 +23,7 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxTeamNameLength);
-        
+
         builder
             .HasOne(item => item.Organization)
             .WithMany(item => item.Teams);

@@ -26,7 +26,7 @@ public interface IDeskService
         string locationId,
         string? namePrefix,
         int count,
-        ICollection<string> deskTypeIds,
+        ICollection<string> customTagIds,
         ICollection<string> zoneIds,
         bool deactivated,
         bool requireBookingApproval,
@@ -155,7 +155,7 @@ public class DeskService(
                 .Query(new Specification<OrganizationTag>
                 {
                     Criteria = query =>
-                        desk.DeskTypes.Concat(desk.Zones).Select(item => item.Id).Contains(query.Id) &&
+                        desk.CustomTags.Concat(desk.Zones).Select(item => item.Id).Contains(query.Id) &&
                         query.Organization.Id == existingLocation.Organization.Id &&
                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
@@ -180,7 +180,7 @@ public class DeskService(
         string locationId,
         string? namePrefix,
         int count,
-        ICollection<string> deskTypeIds,
+        ICollection<string> customTagIds,
         ICollection<string> zoneIds,
         bool deactivated,
         bool requireBookingApproval,
@@ -218,7 +218,7 @@ public class DeskService(
                 .Query(new Specification<OrganizationTag>
                 {
                     Criteria = query =>
-                        deskTypeIds.Concat(zoneIds).Contains(query.Id) &&
+                        customTagIds.Concat(zoneIds).Contains(query.Id) &&
                         query.Organization.Id == existingLocation.Organization.Id &&
                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
@@ -560,7 +560,7 @@ public class DeskService(
 
         var deskId = desk.Id;
         var deskName = desk.Name;
-        var deskTypes = desk.DeskTypes;
+        var customTags = desk.CustomTags;
         var zones = desk.Zones;
         var locationId = existingDesk.Location.Id;
         var matchingDeskFound = await repositoryFactory.DeskRepository
@@ -583,7 +583,7 @@ public class DeskService(
                 .Query(new Specification<OrganizationTag>
                 {
                     Criteria = query =>
-                        deskTypes.Concat(zones).Select(item => item.Id).Contains(query.Id) &&
+                        customTags.Concat(zones).Select(item => item.Id).Contains(query.Id) &&
                         query.Organization.Id == existingLocation.Organization.Id &&
                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);

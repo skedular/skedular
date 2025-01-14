@@ -194,7 +194,7 @@ const OrganizationZonesTab = ({ queryReference, onReloadRequired, organizationId
       )}
 
       <StackRow>
-        <Search size="small" placeholder="Find a desk type..." defaultValue={zoneNameSearchText} onChange={handleSearchTextChange} />
+        <Search size="small" placeholder="Find a tag..." defaultValue={zoneNameSearchText} onChange={handleSearchTextChange} />
         <PushToRight />
         <TablePagination
           component="div"

@@ -19,7 +19,7 @@ import { toast } from 'react-toastify';
 import OrganizationAboutTab from './organization-about-tab';
 import OrganizationAnalyticsTab from './organization-analytics-tab';
 import OrganizationBillingTab from './organization-billing-tab';
-import OrganizationDeskTypesTab from './organization-desk-types-tab';
+import OrganizationCustomTagsTab from './organization-custom-tags-tab';
 import OrganizationLocationsTab from './organization-locations-tab';
 import OrganizationMembersTab from './organization-members-tab';
 import OrganizationOfferingTab from './organization-offering-tab';
@@ -68,7 +68,7 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
   const membersTabIndex = tabCount++;
   const locationTabIndex = tabCount++;
   const teamTabIndex = tabCount++;
-  const deskTypesTabIndex = tabCount++;
+  const customTagsTabIndex = tabCount++;
   const zonesTabIndex = tabCount++;
   const offeringTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
   const billingTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
@@ -84,8 +84,8 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
     initialTabIndex = locationTabIndex;
   } else if (tab === 'teams') {
     initialTabIndex = teamTabIndex;
-  } else if (tab === 'deskTypes') {
-    initialTabIndex = deskTypesTabIndex;
+  } else if (tab === 'customTags') {
+    initialTabIndex = customTagsTabIndex;
   } else if (tab === 'zones') {
     initialTabIndex = zonesTabIndex;
   } else if (tab === 'offering') {
@@ -113,8 +113,8 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
       tab = 'locations';
     } else if (newValue === teamTabIndex) {
       tab = 'teams';
-    } else if (newValue === deskTypesTabIndex) {
-      tab = 'deskTypes';
+    } else if (newValue === customTagsTabIndex) {
+      tab = 'customTags';
     } else if (newValue === zonesTabIndex) {
       tab = 'zones';
     } else if (newValue === offeringTabIndex) {
@@ -149,7 +149,7 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
         <Tab label="Members" />
         <Tab label="Locations" />
         <Tab label="Teams" />
-        <Tab label="Desk Types" />
+        <Tab label="Tags" />
         <Tab label="Zones" />
         {rootData.organization.canModify && <Tab label="Offering" />}
         {rootData.organization.canModify && <Tab label="Billing" />}
@@ -161,7 +161,7 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
       {tabIndex === membersTabIndex && <OrganizationMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === locationTabIndex && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === teamTabIndex && <OrganizationTeamsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-      {tabIndex === deskTypesTabIndex && <OrganizationDeskTypesTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === customTagsTabIndex && <OrganizationCustomTagsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === zonesTabIndex && <OrganizationZonesTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === offeringTabIndex && rootData.organization.canModify && (
         <OrganizationOfferingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />

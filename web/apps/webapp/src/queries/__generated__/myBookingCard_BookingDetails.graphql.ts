@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ae7da7dc6e7ffe08a28b0e533afe152b>>
+ * @generated SignedSource<<a4e01f724e6cb77d1e4ff865bdce3585>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type myBookingCard_BookingDetails$data = {
     readonly uniqueId: string;
   };
   readonly desks: ReadonlyArray<{
-    readonly deskTypes: ReadonlyArray<{
+    readonly customTags: ReadonlyArray<{
       readonly name: string;
       readonly uniqueId: string;
     }>;
@@ -177,9 +177,9 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingOrganizationDeskTypeDetails",
+          "concreteType": "BookingOrganizationCustomTagDetails",
           "kind": "LinkedField",
-          "name": "deskTypes",
+          "name": "customTags",
           "plural": true,
           "selections": (v2/*: any*/),
           "storageKey": null
@@ -203,6 +203,6 @@ return {
 };
 })();
 
-(node as any).hash = "7722cf3ec435c1a63e6bda3f11fe2d73";
+(node as any).hash = "e1a0d11d4001b1b1034d82028984afae";
 
 export default node;

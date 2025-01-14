@@ -60,7 +60,7 @@ const SmallMonthlyViewCalendarDay = ({ rootData, rootDataBookings, connectionIds
           desks {
             uniqueId
             name
-            deskTypes {
+            customTags {
               uniqueId
               name
             }

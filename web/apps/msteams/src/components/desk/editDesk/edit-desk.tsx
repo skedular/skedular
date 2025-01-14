@@ -17,7 +17,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { MultipleChoicesDeskTypes, MultipleChoicesZones } from 'components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesZones } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext } from 'react';
@@ -37,13 +37,13 @@ type Props = {
 
 type DeskDetails = {
   name: string;
-  deskTypeIds: string[];
+  customTagIds: string[];
   zoneIds: string[];
 };
 
 const deskSchema = object({
   name: string().required('Desk name is required'),
-  deskTypeIds: array().nullable(),
+  customTagIds: array().nullable(),
   zoneIds: array().nullable(),
 });
 
@@ -56,7 +56,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           name
           deactivated
           requireBookingApproval
-          deskTypes {
+          customTags {
             uniqueId
             name
           }
@@ -65,7 +65,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
             name
           }
         }
-        ...multipleChoicesDeskTypes_query
+        ...multipleChoicesCustomTags_query
         ...multipleChoicesZones_query
       }
     `,
@@ -80,7 +80,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           name
           deactivated
           requireBookingApproval
-          deskTypes {
+          customTags {
             uniqueId
             name
           }
@@ -103,7 +103,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
     navigate(-1);
   };
 
-  const handleSaveClick = ({ name, deskTypeIds, zoneIds }: DeskDetails) => {
+  const handleSaveClick = ({ name, customTagIds, zoneIds }: DeskDetails) => {
     if (!rootData.desk) {
       return;
     }
@@ -119,7 +119,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           name,
           deactivated: rootData.desk.deactivated,
           requireBookingApproval: rootData.desk.requireBookingApproval,
-          deskTypeIds,
+          customTagIds,
           zoneIds,
         },
       },
@@ -153,7 +153,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
             name,
             deactivated: rootData.desk.deactivated,
             requireBookingApproval: rootData.desk.requireBookingApproval,
-            deskTypes: [],
+            customTags: [],
             zones: [],
           },
         },
@@ -174,7 +174,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           onSubmit={handleSaveClick}
           initialValues={{
             name: desk.name,
-            deskTypeIds: desk.deskTypes.map(({ uniqueId }) => uniqueId),
+            customTagIds: desk.customTags.map(({ uniqueId }) => uniqueId),
             zoneIds: desk.zones.map(({ uniqueId }) => uniqueId),
           }}
           validate={validate}
@@ -192,8 +192,8 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
                 </FormFieldLabel>
 
                 {organizationId && (
-                  <FormFieldLabel label="Desk Types">
-                    <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+                  <FormFieldLabel label="Tags">
+                    <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} />
                   </FormFieldLabel>
                 )}
 

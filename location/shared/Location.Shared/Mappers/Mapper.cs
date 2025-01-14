@@ -49,7 +49,7 @@ public class Mapper : IMapper
                 RequireBookingApproval = item.RequireBookingApproval
             };
 
-            desk.DeskTypeIds.AddRange(item.DeskTypes.Select(tag => tag.Id));
+            desk.CustomTagIds.AddRange(item.CustomTags.Select(tag => tag.Id));
             desk.ZoneIds.AddRange(item.Zones.Select(tag => tag.Id));
 
             return desk;

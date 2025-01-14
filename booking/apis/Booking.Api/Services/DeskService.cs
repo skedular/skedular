@@ -14,9 +14,9 @@ public interface IDeskService
         string? locationId,
         DateTimeOffset date,
         ICollection<string> deskIdsToInclude,
-        ICollection<string> deskTypeIds,
+        ICollection<string> customTagIds,
         ICollection<string> zoneIds,
-        bool combineDeskTypesZones,
+        bool combineCustomTagsZones,
         CancellationToken cancellationToken);
 
     Task<(int, int)> GetOrganizationDesksAvailabilityAsync(
@@ -37,9 +37,9 @@ public class DeskService(
         string? locationId,
         DateTimeOffset date,
         ICollection<string> deskIdsToInclude,
-        ICollection<string> deskTypeIds,
+        ICollection<string> customTagIds,
         ICollection<string> zoneIds,
-        bool combineDeskTypesZones,
+        bool combineCustomTagsZones,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(organizationId) && string.IsNullOrWhiteSpace(locationId))
@@ -86,9 +86,9 @@ public class DeskService(
             locationId,
             date,
             deskIdsToInclude,
-            deskTypeIds,
+            customTagIds,
             zoneIds,
-            combineDeskTypesZones,
+            combineCustomTagsZones,
             cancellationToken);
 
         return mapper.MapTo(desks).Select(item =>

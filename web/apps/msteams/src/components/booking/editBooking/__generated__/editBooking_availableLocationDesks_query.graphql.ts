@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b74ed5503eec37f771ac8cee8e5f8c67>>
+ * @generated SignedSource<<7513b506703227031c0ed053784704b6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type editBooking_availableLocationDesks_query$data = {
   readonly availableDesks?: ReadonlyArray<{
-    readonly deskTypes: ReadonlyArray<{
+    readonly customTags: ReadonlyArray<{
       readonly name: string;
       readonly uniqueId: string;
     }>;
@@ -118,9 +118,9 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "BookingOrganizationDeskTypeDetails",
+              "concreteType": "BookingOrganizationCustomTagDetails",
               "kind": "LinkedField",
-              "name": "deskTypes",
+              "name": "customTags",
               "plural": true,
               "selections": (v2/*: any*/),
               "storageKey": null
@@ -146,6 +146,6 @@ return {
 };
 })();
 
-(node as any).hash = "9ee07674a57d0fed6dbe79b1e44119c9";
+(node as any).hash = "5aed9525f3ecb23eb65167e1a646f7e4";
 
 export default node;

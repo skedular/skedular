@@ -342,65 +342,65 @@ public record BulkAddDesksContext(PageContext PageContext, string LocationId)
     }
 }
 
-public record AddDeskTypeContext(PageContext PageContext)
+public record AddCustomTagContext(PageContext PageContext)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static AddDeskTypeContext Deserialize(string value)
+    public static AddCustomTagContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<AddDeskTypeContext>(value);
+        var context = JsonSerializer.Deserialize<AddCustomTagContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
 }
 
-public record RemovePreferredDeskTypeContext(PageContext PageContext, string DeskTypeId)
+public record RemovePreferredCustomTagContext(PageContext PageContext, string CustomTagId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemovePreferredDeskTypeContext Deserialize(string value)
+    public static RemovePreferredCustomTagContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<RemovePreferredDeskTypeContext>(value);
+        var context = JsonSerializer.Deserialize<RemovePreferredCustomTagContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
 }
 
-public record SetPreferredDeskTypeContext(PageContext PageContext, string DeskTypeId)
+public record SetPreferredCustomTagContext(PageContext PageContext, string CustomTagId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static SetPreferredDeskTypeContext Deserialize(string value)
+    public static SetPreferredCustomTagContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<SetPreferredDeskTypeContext>(value);
+        var context = JsonSerializer.Deserialize<SetPreferredCustomTagContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
 }
 
-public class EditDeskTypeContext(PageContext pageContext, string deskTypeId)
+public class EditCustomTagContext(PageContext pageContext, string customTagId)
 {
     public PageContext PageContext { get; } = pageContext;
-    public string DeskTypeId { get; set; } = deskTypeId;
+    public string CustomTagId { get; set; } = customTagId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static EditDeskTypeContext Deserialize(string value)
+    public static EditCustomTagContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<EditDeskTypeContext>(value);
+        var context = JsonSerializer.Deserialize<EditCustomTagContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
 }
 
-public class RemoveDeskTypeContext(PageContext pageContext, string deskTypeId)
+public class RemoveCustomTagContext(PageContext pageContext, string customTagId)
 {
     public PageContext PageContext { get; } = pageContext;
-    public string DeskTypeId { get; set; } = deskTypeId;
+    public string CustomTagId { get; set; } = customTagId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemoveDeskTypeContext Deserialize(string value)
+    public static RemoveCustomTagContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<RemoveDeskTypeContext>(value);
+        var context = JsonSerializer.Deserialize<RemoveCustomTagContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }

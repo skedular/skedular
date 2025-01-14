@@ -180,7 +180,7 @@ public class Mapper : IMapper
                 DeskCapacity = src.Desks.Count,
                 Organization = MapTo(src.Organization),
                 Desks = MapTo(src.Desks).ToArray(),
-                DeskTypes = MapTo(src.DeskTypes).ToArray(),
+                CustomTags = MapTo(src.CustomTags).ToArray(),
                 Zones = MapTo(src.Zones).ToArray(),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress)
             };
@@ -195,8 +195,8 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            DeskTypes =
-                MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.DeskType)).ToList(),
+            CustomTags =
+                MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Custom)).ToList(),
             Zones = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Zone)).ToList()
         };
 
@@ -253,7 +253,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            DeskTypes = MapTo(src.DeskTypes).ToArray(),
+            CustomTags = MapTo(src.CustomTags).ToArray(),
             Zones = MapTo(src.Zones).ToArray()
         };
 
@@ -348,7 +348,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = false,
             RequireBookingApproval = false,
-            DeskTypes = src.DeskTypeIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Location = new Shared.Models.Location { Id = src.LocationId }
         };
@@ -360,7 +360,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            DeskTypes = src.DeskTypeIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
@@ -426,7 +426,7 @@ public class Mapper : IMapper
         };
 
         location.Desks.AddRange(MapToGrpcResponse(src.Desks));
-        location.DeskTypes.AddRange(MapToGrpcResponseOrganizationDeskTypes(src.DeskTypes));
+        location.CustomTags.AddRange(MapToGrpcResponseOrganizationCustomTags(src.CustomTags));
         location.Zones.AddRange(MapToGrpcResponseOrganizationZones(src.Zones));
 
         return location;
@@ -467,8 +467,8 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Location = location,
-            DeskTypes = MapTo(
-                    src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.DeskType),
+            CustomTags = MapTo(
+                    src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Custom),
                     location.Organization)
                 .ToList(),
             Zones = MapTo(
@@ -488,7 +488,7 @@ public class Mapper : IMapper
             RequireBookingApproval = src.RequireBookingApproval
         };
 
-        desk.OrganizationDeskTypes.AddRange(MapToGrpcResponseOrganizationDeskTypes(src.DeskTypes));
+        desk.OrganizationCustomTags.AddRange(MapToGrpcResponseOrganizationCustomTags(src.CustomTags));
         desk.OrganizationZones.AddRange(MapToGrpcResponseOrganizationZones(src.Zones));
 
         return desk;
@@ -502,7 +502,7 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Location = new Shared.Models.Location { Id = src.LocationId },
-            DeskTypes = src.DeskTypeIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
@@ -513,7 +513,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            DeskTypes = src.DeskTypeIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
@@ -531,7 +531,7 @@ public class Mapper : IMapper
             Name = src.Name,
             TagType = src.Type switch
             {
-                OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+                OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                 OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             }
@@ -546,7 +546,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Type = src.Type switch
             {
-                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             }
@@ -568,7 +568,7 @@ public class Mapper : IMapper
                 Location = location
             };
 
-    private static OrganizationDeskType MapToGrpcResponseOrganizationDeskType(OrganizationTag src) =>
+    private static OrganizationCustomTag MapToGrpcResponseOrganizationCustomTag(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static OrganizationZone MapToGrpcResponseOrganizationZone(OrganizationTag src) =>
@@ -585,9 +585,9 @@ public class Mapper : IMapper
     private IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) =>
         src.Select(MapTo);
 
-    private static IEnumerable<OrganizationDeskType> MapToGrpcResponseOrganizationDeskTypes(
+    private static IEnumerable<OrganizationCustomTag> MapToGrpcResponseOrganizationCustomTags(
         IEnumerable<OrganizationTag> src) =>
-        src.Select(MapToGrpcResponseOrganizationDeskType);
+        src.Select(MapToGrpcResponseOrganizationCustomTag);
 
     private static IEnumerable<OrganizationZone> MapToGrpcResponseOrganizationZones(IEnumerable<OrganizationTag> src) =>
         src.Select(MapToGrpcResponseOrganizationZone);
@@ -729,7 +729,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Type = src.Type switch
             {
-                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             }

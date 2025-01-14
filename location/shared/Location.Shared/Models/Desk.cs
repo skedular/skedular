@@ -10,6 +10,6 @@ public class Desk : EntityBaseWithDeleted
 
     public Location Location { get; set; }
     public ICollection<Booking> Bookings { get; set; } = [];
-    public ICollection<OrganizationTag> DeskTypes { get; set; } = [];
+    public ICollection<OrganizationTag> CustomTags { get; set; } = [];
     public ICollection<OrganizationTag> Zones { get; set; } = [];
 }

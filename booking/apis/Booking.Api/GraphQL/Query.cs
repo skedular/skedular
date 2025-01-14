@@ -150,9 +150,9 @@ public class Query(IMapper mapper)
             where.LocationId,
             where.Date,
             where.DeskIdsToInclude ?? [],
-            where.DeskTypeIds ?? [],
+            where.CustomTagIds ?? [],
             where.ZoneIds ?? [],
-            where.CombineDeskTypesZones ?? false,
+            where.CombineCustomTagsZones ?? false,
             cancellationToken);
         return mapper.MapTo(desks).ToArray();
     }

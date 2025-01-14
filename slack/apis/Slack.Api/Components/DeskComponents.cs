@@ -135,14 +135,14 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
             });
         }
 
-        if (desk.OrganizationDeskTypes.Count != 0)
+        if (desk.OrganizationCustomTags.Count != 0)
         {
             blocks.Add(new SectionBlock
             {
                 Text = string.Join(
                         ", ",
-                        desk.OrganizationDeskTypes.OrderBy(item => item.Name).Select(item => item.Name))
-                    .ToMarkdownWithIcon(Icons.DeskTypes)
+                        desk.OrganizationCustomTags.OrderBy(item => item.Name).Select(item => item.Name))
+                    .ToMarkdownWithIcon(Icons.CustomTags)
             });
         }
 

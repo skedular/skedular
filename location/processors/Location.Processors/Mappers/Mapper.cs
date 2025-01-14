@@ -138,7 +138,7 @@ public class Mapper : IMapper
             Name = item.Name,
             Type = item.TagType switch
             {
-                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             },
@@ -318,7 +318,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.Type = src.Type switch
         {
-            OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
             _ => throw new ArgumentOutOfRangeException()
         };

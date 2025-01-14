@@ -161,9 +161,9 @@ public class Mapper(IContext context) : IMapper
                     .Where(item => item.Type == OrganizationTagType.Zone)
                     .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name })
                     .ToArray(),
-            PreferredDeskTypes =
+            PreferredCustomTags =
                 src.PreferredOrganizationTags
-                    .Where(item => item.Type == OrganizationTagType.DeskType)
+                    .Where(item => item.Type == OrganizationTagType.Custom)
                     .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name })
                     .ToArray(),
             PreferredDesks =
@@ -416,7 +416,7 @@ public class Mapper(IContext context) : IMapper
                 Name = item.Name.ToSafeString(),
                 Type = item.Type switch
                 {
-                    OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+                    OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                     OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
                     _ => throw new ArgumentOutOfRangeException()
                 },
@@ -574,7 +574,7 @@ public class Mapper(IContext context) : IMapper
                 Name = src.Name,
                 Type = src.Type switch
                 {
-                    OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                    OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                     OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                     _ => throw new ArgumentOutOfRangeException()
                 },

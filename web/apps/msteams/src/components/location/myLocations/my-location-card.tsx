@@ -85,7 +85,7 @@ const MyLocationCard = ({
       fragment myLocationCard_LocationDetails on LocationDetails {
         id
         name
-        deskTypes {
+        customTags {
           uniqueId
           name
         }

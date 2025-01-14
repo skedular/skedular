@@ -331,9 +331,9 @@ public class BookingGrpcService(
             request.LocationId,
             request.Date.ToDateTimeOffset(),
             request.DeskIdsToInclude,
-            request.DeskTypeIds,
+            request.CustomTagIds,
             request.ZoneIds,
-            request.CombineDeskTypesZones,
+            request.CombineCustomTagsZones,
             context.CancellationToken);
 
         var availableDesks = new AvailableDesks();

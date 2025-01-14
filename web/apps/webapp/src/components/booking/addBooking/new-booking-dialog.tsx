@@ -124,7 +124,7 @@ const NewBookingDialog = ({
           desks {
             uniqueId
             name
-            deskTypes {
+            customTags {
               uniqueId
               name
             }

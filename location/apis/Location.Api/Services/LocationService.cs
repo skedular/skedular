@@ -275,9 +275,9 @@ public class LocationService(
         {
             var enrichedLocation = await EnrichLocationAsync(customer, edge.Node, cancellationToken);
 
-            searchCriteria.DeskTypeIds.ForEach(id =>
+            searchCriteria.CustomTagIds.ForEach(id =>
                 enrichedLocation.Desks = enrichedLocation.Desks
-                    .Where(desk => desk.DeskTypes.Select(tag => tag.Id).Contains(id))
+                    .Where(desk => desk.CustomTags.Select(tag => tag.Id).Contains(id))
                     .ToList());
 
             searchCriteria.ZoneIds.ForEach(id =>
@@ -381,10 +381,10 @@ public class LocationService(
 
         var mappedLocation = mapper.MapTo(locationEdge);
 
-        mappedLocation.DeskTypes = mappedLocation.Desks
-            .SelectMany(item => item.DeskTypes.Select(deskType => new OrganizationTag
+        mappedLocation.CustomTags = mappedLocation.Desks
+            .SelectMany(item => item.CustomTags.Select(customTag => new OrganizationTag
             {
-                Id = deskType.Id, Name = deskType.Name, Type = OrganizationTagType.DeskType
+                Id = customTag.Id, Name = customTag.Name, Type = OrganizationTagType.Custom
             }))
             .GroupBy(item => item.Id)
             .Select(group => group.First())

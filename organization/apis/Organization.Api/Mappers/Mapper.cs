@@ -6,7 +6,7 @@ using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
 using Organization.Api.GraphQL;
 using Organization.Shared.Models;
-using AddDeskTypeInput = Organization.Api.GraphQL.AddDeskTypeInput;
+using AddCustomTagInput = Organization.Api.GraphQL.AddCustomTagInput;
 using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
@@ -25,7 +25,7 @@ using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
 using Tag = Organization.Shared.Models.Tag;
 using Team = Organization.Shared.Models.Team;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
-using UpdateDeskTypeInput = Organization.Api.GraphQL.UpdateDeskTypeInput;
+using UpdateCustomTagInput = Organization.Api.GraphQL.UpdateCustomTagInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
 
@@ -103,17 +103,17 @@ public interface IMapper
     IEnumerable<Edge<Tag>> MapTo(IEnumerable<Edge<Shared.Database.Entities.Tag>> src,
         Shared.Models.Organization organization);
 
-    Tag MapTo(AddDeskTypeInput src);
-    Tag MapTo(UpdateDeskTypeInput src);
+    Tag MapTo(AddCustomTagInput src);
+    Tag MapTo(UpdateCustomTagInput src);
     Tag MapTo(GraphQL.AddZoneInput src);
     Tag MapTo(GraphQL.UpdateZoneInput src);
     OrganizationTagDetails? MapTo(Tag? src);
     OrganizationTagEdge MapTo(Edge<Tag> src);
 
-    DeskType MapToGrpcResponseDeskType(Tag? src);
-    DeskTypeEdge MapToGrpcResponseDeskType(Edge<Tag> src);
-    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddDeskTypeInput src);
-    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateDeskTypeInput src);
+    CustomTag MapToGrpcResponseCustomTag(Tag? src);
+    CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src);
+    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddCustomTagInput src);
+    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateCustomTagInput src);
 
     Zone MapToGrpcResponseZone(Tag? src);
     ZoneEdge MapToGrpcResponseZone(Edge<Tag> src);
@@ -512,7 +512,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Type = src.Type switch
             {
-                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             }
@@ -531,7 +531,7 @@ public class Mapper : IMapper
         dest.Description = src.Description;
         dest.Type = src.Type switch
         {
-            OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
             _ => throw new ArgumentOutOfRangeException()
         };
@@ -544,18 +544,18 @@ public class Mapper : IMapper
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    public Tag MapTo(AddDeskTypeInput src) =>
+    public Tag MapTo(AddCustomTagInput src) =>
         new()
         {
             Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
             Name = src.Name,
             Description = src.Description,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Type = OrganizationTagType.DeskType
+            Type = OrganizationTagType.Custom
         };
 
-    public Tag MapTo(UpdateDeskTypeInput src) =>
-        new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = OrganizationTagType.DeskType };
+    public Tag MapTo(UpdateCustomTagInput src) =>
+        new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = OrganizationTagType.Custom };
 
     public Tag MapTo(GraphQL.AddZoneInput src) =>
         new()
@@ -580,7 +580,7 @@ public class Mapper : IMapper
                 Description = src.Description,
                 TagType = src.Type switch
                 {
-                    OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+                    OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                     OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
                     _ => throw new ArgumentOutOfRangeException()
                 }
@@ -588,34 +588,34 @@ public class Mapper : IMapper
 
     public OrganizationTagEdge MapTo(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
 
-    public DeskType MapToGrpcResponseDeskType(Tag? src) =>
+    public CustomTag MapToGrpcResponseCustomTag(Tag? src) =>
         src is null
-            ? new DeskType()
-            : new DeskType
+            ? new CustomTag()
+            : new CustomTag
             {
                 Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString()
             };
 
-    public DeskTypeEdge MapToGrpcResponseDeskType(Edge<Tag> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponseDeskType(src.Node) };
+    public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) =>
+        new() { Cursor = src.Cursor, Node = MapToGrpcResponseCustomTag(src.Node) };
 
-    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddDeskTypeInput src) =>
+    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddCustomTagInput src) =>
         new()
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
-            Type = OrganizationTagType.DeskType,
+            Type = OrganizationTagType.Custom,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateDeskTypeInput src) =>
+    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateCustomTagInput src) =>
         new()
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
-            Type = OrganizationTagType.DeskType
+            Type = OrganizationTagType.Custom
         };
 
     public Zone MapToGrpcResponseZone(Tag? src) =>
@@ -1064,7 +1064,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Type = src.Type switch
             {
-                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             },

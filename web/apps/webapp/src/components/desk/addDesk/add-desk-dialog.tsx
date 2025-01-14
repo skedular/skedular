@@ -1,4 +1,4 @@
-import { MultipleChoicesDeskTypes, MultipleChoicesZones } from '@/components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesZones } from '@/components/organization';
 import type { addDeskDialog_addDeskMutation } from '@/queries/__generated__/addDeskDialog_addDeskMutation.graphql';
 import type { addDeskDialog_rootQuery } from '@/queries/__generated__/addDeskDialog_rootQuery.graphql';
 import Dialog from '@mui/material/Dialog';
@@ -46,23 +46,23 @@ type Props = {
 const RootQuery = graphql`
   query addDeskDialog_rootQuery(
     $organizationId: String!
-    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
-    ...multipleChoicesDeskTypes_query
+    ...multipleChoicesCustomTags_query
     ...multipleChoicesZones_query
   }
 `;
 
 type DeskDetails = {
   name: string;
-  deskTypeIds: string[];
+  customTagIds: string[];
   zoneIds: string[];
 };
 
 const deskSchema = object({
   name: string().required('Desk name is required'),
-  deskTypeIds: array().nullable(),
+  customTagIds: array().nullable(),
   zoneIds: array().nullable(),
 });
 
@@ -75,7 +75,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
         desk @appendNode(connections: $connectionIds, edgeTypeName: "DeskDetails") {
           id
           name
-          deskTypes {
+          customTags {
             uniqueId
           }
           zones {
@@ -91,7 +91,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
 
-  const handleAddClick = ({ name, deskTypeIds, zoneIds }: DeskDetails) => {
+  const handleAddClick = ({ name, customTagIds, zoneIds }: DeskDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding desk '${name}'...`} />, infoNotificationOptions);
 
@@ -103,7 +103,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
           id,
           locationId,
           name,
-          deskTypeIds,
+          customTagIds,
           zoneIds,
         },
       },
@@ -136,7 +136,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
           desk: {
             id,
             name,
-            deskTypes: [],
+            customTags: [],
             zones: [],
           },
         },
@@ -152,7 +152,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
           onSubmit={handleAddClick}
           initialValues={{
             name: '',
-            deskTypeIds: [],
+            customTagIds: [],
             zoneIds: [],
           }}
           validate={validate}
@@ -166,8 +166,8 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
               </FormFieldLabel>
 
               {organizationId && (
-                <FormFieldLabel label="Desk Types" useWiderSpace>
-                  <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+                <FormFieldLabel label="Tags" useWiderSpace>
+                  <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} />
                 </FormFieldLabel>
               )}
 
@@ -215,7 +215,7 @@ const AddDeskDialogWithRelay = ({
     loadQuery(
       {
         organizationId: organizationId ?? '',
-        multipleChoicesDeskTypesSortingValues: [
+        multipleChoicesCustomTagsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

@@ -127,7 +127,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
           desks {
             uniqueId
             name
-            deskTypes {
+            customTags {
               uniqueId
               name
             }

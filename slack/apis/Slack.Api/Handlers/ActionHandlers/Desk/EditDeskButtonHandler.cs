@@ -128,22 +128,22 @@ public class EditDeskButtonHandler(
             throw new InvalidOperationException("requireBookingApproval block is missing");
         }
 
-        if (values.TryGetValue(DeskTypeActionTypes.DeskTypes, out var deskTypesBlock))
+        if (values.TryGetValue(CustomTagActionTypes.CustomTags, out var customTagsBlock))
         {
-            if (deskTypesBlock.TryGetValue(DeskTypeActionTypes.DeskTypes, out var deskTypes))
+            if (customTagsBlock.TryGetValue(CustomTagActionTypes.CustomTags, out var customTags))
             {
-                if (deskTypes is StaticMultiSelectValue value)
+                if (customTags is StaticMultiSelectValue value)
                 {
-                    updateDeskInput.DeskTypeIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    updateDeskInput.CustomTagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {
-                    throw new InvalidOperationException("deskTypes must be StaticMultiSelectValue");
+                    throw new InvalidOperationException("customTags must be StaticMultiSelectValue");
                 }
             }
             else
             {
-                throw new InvalidOperationException("deskTypes block is missing");
+                throw new InvalidOperationException("customTags block is missing");
             }
         }
 

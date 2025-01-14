@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d9d88ddc1dfa03dfd71dcb080f869892>>
+ * @generated SignedSource<<142af2f6f13dc5de5b02da5c0033c70d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -317,9 +317,9 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "BookingOrganizationDeskTypeDetails",
+                "concreteType": "BookingOrganizationCustomTagDetails",
                 "kind": "LinkedField",
-                "name": "deskTypes",
+                "name": "customTags",
                 "plural": true,
                 "selections": (v9/*: any*/),
                 "storageKey": null
@@ -343,12 +343,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8773a9b8150b970d7e5e8c66d1ee3550",
+    "cacheID": "35a4509a855cbf03aff2233bab8a641c",
     "id": null,
     "metadata": {},
     "name": "customerDaySummary_rootQuery",
     "operationKind": "query",
-    "text": "query customerDaySummary_rootQuery(\n  $organizationId: String!\n  $nullableOrganizationId: String\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  myLocations(organizationId: $nullableOrganizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams(organizationId: $nullableOrganizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  ...customerDaySummary_query\n}\n\nfragment customerDaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to, organizationIds: [$organizationId]}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      deskTypes {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query customerDaySummary_rootQuery(\n  $organizationId: String!\n  $nullableOrganizationId: String\n  $from: DateTime!\n  $to: DateTime!\n) {\n  me {\n    id\n  }\n  myLocations(organizationId: $nullableOrganizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  myTeams(organizationId: $nullableOrganizationId) {\n    id\n    name\n    organization {\n      uniqueId\n      name\n    }\n  }\n  ...customerDaySummary_query\n}\n\nfragment customerDaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to, organizationIds: [$organizationId]}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      customTags {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();

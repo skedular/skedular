@@ -1,4 +1,4 @@
-import { MultipleChoicesDeskTypes, MultipleChoicesZones } from '@/components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesZones } from '@/components/organization';
 import type { bulkAddDeskDialog_bulkAddDeskMutation } from '@/queries/__generated__/bulkAddDeskDialog_bulkAddDeskMutation.graphql';
 import type { bulkAddDeskDialog_rootQuery } from '@/queries/__generated__/bulkAddDeskDialog_rootQuery.graphql';
 import Dialog from '@mui/material/Dialog';
@@ -46,10 +46,10 @@ type Props = {
 const RootQuery = graphql`
   query bulkAddDeskDialog_rootQuery(
     $organizationId: String!
-    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
-    ...multipleChoicesDeskTypes_query
+    ...multipleChoicesCustomTags_query
     ...multipleChoicesZones_query
   }
 `;
@@ -57,14 +57,14 @@ const RootQuery = graphql`
 type DeskDetails = {
   namePrefix: string;
   count: number;
-  deskTypeIds: string[];
+  customTagIds: string[];
   zoneIds: string[];
 };
 
 const deskSchema = object({
   namePrefix: string(),
   count: number().positive().integer().required('Desk count is required'),
-  deskTypeIds: array().nullable(),
+  customTagIds: array().nullable(),
   zoneIds: array().nullable(),
 });
 
@@ -77,7 +77,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
         desks @appendNode(connections: $connectionIds, edgeTypeName: "DeskDetails") {
           id
           name
-          deskTypes {
+          customTags {
             uniqueId
           }
           zones {
@@ -93,7 +93,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
 
-  const handleAddClick = ({ namePrefix, count, deskTypeIds, zoneIds }: DeskDetails) => {
+  const handleAddClick = ({ namePrefix, count, customTagIds, zoneIds }: DeskDetails) => {
     const ids = Array.from(Array(count).keys()).map((_) => nanoid());
     const toastId = themedToast(<NotificationContent content={`Adding desks...`} />, infoNotificationOptions);
 
@@ -107,7 +107,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
           count: parseInt(count.toString()),
           deactivated: false,
           requireBookingApproval: false,
-          deskTypeIds,
+          customTagIds,
           zoneIds,
         },
       },
@@ -136,7 +136,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
       },
       optimisticResponse: {
         bulkAddDesk: {
-          desks: ids.map((id) => ({ id, name: namePrefix, deskTypes: [], zones: [] })),
+          desks: ids.map((id) => ({ id, name: namePrefix, customTags: [], zones: [] })),
         },
       },
     });
@@ -151,7 +151,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
           initialValues={{
             namePrefix: '',
             count: 0,
-            deskTypeIds: [],
+            customTagIds: [],
             zoneIds: [],
           }}
           validate={validate}
@@ -169,8 +169,8 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
               </FormFieldLabel>
 
               {organizationId && (
-                <FormFieldLabel label="Desk Types" useWiderSpace>
-                  <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+                <FormFieldLabel label="Tags" useWiderSpace>
+                  <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} />
                 </FormFieldLabel>
               )}
 
@@ -218,7 +218,7 @@ const BulkAddDeskDialogWithRelay = ({
     loadQuery(
       {
         organizationId: organizationId ?? '',
-        multipleChoicesDeskTypesSortingValues: [
+        multipleChoicesCustomTagsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

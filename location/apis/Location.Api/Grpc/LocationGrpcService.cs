@@ -82,7 +82,7 @@ public class LocationGrpcService(
                 request.Where.OrganizationId,
                 request.Where.NameContains,
                 request.Where.ZoneIds.ToArray(),
-                request.Where.DeskTypeIds.ToArray()),
+                request.Where.CustomTagIds.ToArray()),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
@@ -152,7 +152,7 @@ public class LocationGrpcService(
                 request.Where.OrganizationId,
                 request.Where.NameContains,
                 request.Where.ZoneIds.ToArray(),
-                request.Where.DeskTypeIds.ToArray()),
+                request.Where.CustomTagIds.ToArray()),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
@@ -248,7 +248,7 @@ public class LocationGrpcService(
                 request.Where.LocationId,
                 request.Where.NameContains,
                 request.Where.ZoneIds,
-                request.Where.DeskTypeIds),
+                request.Where.CustomTagIds),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
@@ -309,7 +309,7 @@ public class LocationGrpcService(
             request.LocationId,
             request.NamePrefix,
             request.Count,
-            request.DeskTypeIds,
+            request.CustomTagIds,
             request.ZoneIds,
             request.Deactivated,
             request.RequireBookingApproval,

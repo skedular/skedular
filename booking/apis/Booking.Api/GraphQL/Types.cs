@@ -57,7 +57,7 @@ public class BookingDeskDetails
     public bool RequireBookingApproval { get; set; }
 
     [GraphQLName("location")] public BookingLocationDetails? Location { get; set; }
-    [GraphQLName("deskTypes")] public BookingOrganizationDeskTypeDetails[] DeskTypes { get; set; } = [];
+    [GraphQLName("customTags")] public BookingOrganizationCustomTagDetails[] CustomTags { get; set; } = [];
     [GraphQLName("zones")] public BookingOrganizationZoneDetails[] Zones { get; set; } = [];
 }
 
@@ -86,8 +86,8 @@ public class BookingLocationDetails
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 
-[GraphQLName("BookingOrganizationDeskTypeDetails")]
-public class BookingOrganizationDeskTypeDetails
+[GraphQLName("BookingOrganizationCustomTagDetails")]
+public class BookingOrganizationCustomTagDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
@@ -230,9 +230,11 @@ public class AvailableDesksWhereInput
     [GraphQLName("locationId")] public string? LocationId { get; set; }
     [GraphQLName("date")] public required DateTimeOffset Date { get; set; }
     [GraphQLName("deskIdsToInclude")] public required string[]? DeskIdsToInclude { get; set; }
-    [GraphQLName("deskTypeIds")] public string[]? DeskTypeIds { get; set; }
+    [GraphQLName("customTagIds")] public string[]? CustomTagIds { get; set; }
     [GraphQLName("zoneIds")] public string[]? ZoneIds { get; set; }
-    [GraphQLName("combineDeskTypesZones")] public bool? CombineDeskTypesZones { get; set; }
+
+    [GraphQLName("combineCustomTagsZones")]
+    public bool? CombineCustomTagsZones { get; set; }
 }
 
 [GraphQLName("OrganizationAvailableDesksWhereInput")]

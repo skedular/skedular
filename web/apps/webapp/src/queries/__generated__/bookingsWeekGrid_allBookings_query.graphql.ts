@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3faee03ab7f59942a9ed4a1f788df44b>>
+ * @generated SignedSource<<77a71e9d5163ded36e5323114f9442fb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,7 +25,7 @@ export type bookingsWeekGrid_allBookings_query$data = {
           readonly uniqueId: string;
         };
         readonly desks: ReadonlyArray<{
-          readonly deskTypes: ReadonlyArray<{
+          readonly customTags: ReadonlyArray<{
             readonly name: string;
             readonly uniqueId: string;
           }>;
@@ -298,9 +298,9 @@ return {
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "BookingOrganizationDeskTypeDetails",
+                      "concreteType": "BookingOrganizationCustomTagDetails",
                       "kind": "LinkedField",
-                      "name": "deskTypes",
+                      "name": "customTags",
                       "plural": true,
                       "selections": (v3/*: any*/),
                       "storageKey": null
@@ -345,6 +345,6 @@ return {
 };
 })();
 
-(node as any).hash = "9cee852f0c1c6bfcbc00eacf7ab3fc7f";
+(node as any).hash = "b97bae8065f6aee799a28a49c17d7248";
 
 export default node;

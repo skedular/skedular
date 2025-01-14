@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e9b9534bb662202ef30ddc2b9e8fcb6a>>
+ * @generated SignedSource<<8fe2ec7f4dc70935451836be2caed0d4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,7 @@ export type smallMonthlyViewCalendar_bookings_query$data = {
           readonly uniqueId: string;
         };
         readonly desks: ReadonlyArray<{
-          readonly deskTypes: ReadonlyArray<{
+          readonly customTags: ReadonlyArray<{
             readonly name: string;
             readonly uniqueId: string;
           }>;
@@ -297,9 +297,9 @@ return {
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "BookingOrganizationDeskTypeDetails",
+                      "concreteType": "BookingOrganizationCustomTagDetails",
                       "kind": "LinkedField",
-                      "name": "deskTypes",
+                      "name": "customTags",
                       "plural": true,
                       "selections": (v3/*: any*/),
                       "storageKey": null
@@ -388,6 +388,6 @@ return {
 };
 })();
 
-(node as any).hash = "f169a5e55e8145fb63ab330268257a28";
+(node as any).hash = "50f8820e965d3a0101808d378acaabd8";
 
 export default node;

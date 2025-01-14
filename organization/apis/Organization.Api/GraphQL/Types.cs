@@ -367,8 +367,8 @@ public class OrganizationMemberPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("AddDeskTypeInput")]
-public class AddDeskTypeInput
+[GraphQLName("AddCustomTagInput")]
+public class AddCustomTagInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
@@ -377,8 +377,8 @@ public class AddDeskTypeInput
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
 }
 
-[GraphQLName("UpdateDeskTypeInput")]
-public class UpdateDeskTypeInput
+[GraphQLName("UpdateCustomTagInput")]
+public class UpdateCustomTagInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
@@ -386,15 +386,15 @@ public class UpdateDeskTypeInput
     [GraphQLName("description")] public string? Description { get; set; }
 }
 
-[GraphQLName("DeleteDeskTypeInput")]
-public class DeleteDeskTypeInput
+[GraphQLName("DeleteCustomTagInput")]
+public class DeleteCustomTagInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
 }
 
-[GraphQLName("DeleteDeskTypesInput")]
-public class DeleteDeskTypesInput
+[GraphQLName("DeleteCustomTagsInput")]
+public class DeleteCustomTagsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("ids")] public required string[] Ids { get; set; } = [];
@@ -462,8 +462,8 @@ public class OrganizationTagPayload
     [GraphQLName("organizationTag")] public OrganizationTagDetails OrganizationTag { get; set; }
 }
 
-[GraphQLName("DeskTypeOrganizationTagWhereInput")]
-public class DeskTypeOrganizationTagWhereInput
+[GraphQLName("CustomTagOrganizationTagWhereInput")]
+public class CustomTagOrganizationTagWhereInput
 {
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }

@@ -155,7 +155,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
               }
               desks {
                 name
-                deskTypes {
+                customTags {
                   uniqueId
                   name
                 }
@@ -201,7 +201,7 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
           }
           desks {
             name
-            deskTypes {
+            customTags {
               uniqueId
               name
             }

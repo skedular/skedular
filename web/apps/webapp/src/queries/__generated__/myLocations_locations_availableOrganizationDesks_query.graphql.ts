@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9ebdb0eef4bcb8d671980d5edec063bb>>
+ * @generated SignedSource<<8cb24ebffaae0a1ea5950db823325f70>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type myLocations_locations_availableOrganizationDesks_query$data = {
       readonly node: {
         readonly canDelete: boolean;
         readonly canModify: boolean;
-        readonly deskTypes: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
           readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
@@ -60,8 +60,8 @@ var v0 = [
 ],
 v1 = {
   "kind": "Variable",
-  "name": "deskTypeIds",
-  "variableName": "deskTypeIds"
+  "name": "customTagIds",
+  "variableName": "customTagIds"
 },
 v2 = {
   "kind": "Variable",
@@ -115,7 +115,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "deskTypeIds"
+      "name": "customTagIds"
     },
     {
       "kind": "RootArgument",
@@ -212,7 +212,7 @@ return {
                   "args": null,
                   "concreteType": "Organization_OrganizationTagDetails",
                   "kind": "LinkedField",
-                  "name": "deskTypes",
+                  "name": "customTags",
                   "plural": true,
                   "selections": (v7/*: any*/),
                   "storageKey": null
@@ -360,9 +360,10 @@ return {
           "fields": [
             {
               "kind": "Literal",
-              "name": "combineDeskTypesZones",
+              "name": "combineCustomTagsZones",
               "value": true
             },
+            (v1/*: any*/),
             {
               "kind": "Variable",
               "name": "date",
@@ -373,7 +374,6 @@ return {
               "name": "deskIdsToInclude",
               "value": []
             },
-            (v1/*: any*/),
             (v2/*: any*/),
             (v3/*: any*/)
           ],
@@ -405,6 +405,6 @@ return {
 };
 })();
 
-(node as any).hash = "b330461725b896ff86d8b99f899bd7f5";
+(node as any).hash = "de3633ee692c24f507ca5d4d32d8a8bf";
 
 export default node;

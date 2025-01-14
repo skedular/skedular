@@ -1,6 +1,6 @@
 import { NewLocationButton } from '@/components/location/addLocation';
 import { MyLocations } from '@/components/location/myLocations';
-import { DeskTypeSelector } from '@/components/organization/deskTypeSelector';
+import { CustomTagSelector } from '@/components/organization/customTagSelector';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
 import type { locations_rootQuery } from '@/queries/__generated__/locations_rootQuery.graphql';
 import { PushToRight, StackColumn, StackRow } from '@repo/shared/components/commons';
@@ -26,16 +26,16 @@ const RootQuery = graphql`
     $organizationId: String!
     $locationsSortingValues: [LocationOrderInput!]
     $zonesSortingValues: [OrganizationTagOrderInput!]
-    $deskTypesSortingValues: [OrganizationTagOrderInput!]
+    $customTagsSortingValues: [OrganizationTagOrderInput!]
     $todayDate: DateTime!
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $zoneIds: [String!]
-    $deskTypeIds: [String!]
+    $customTagIds: [String!]
   ) {
     organization(id: $organizationId) {
       canModify
     }
-    ...deskTypeSelector_allDeskTypes_query
+    ...customTagSelector_allCustomTags_query
     ...zoneSelector_allZones_query
     ...myLocations_query
     ...myLocations_locations_availableOrganizationDesks_query
@@ -44,12 +44,12 @@ const RootQuery = graphql`
 
 const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<locations_rootQuery>(RootQuery, queryReference);
-  const [deskTypeIds, setDeskTypeIds] = useState<string[]>([]);
+  const [customTagIds, setCustomTagIds] = useState<string[]>([]);
   const [zoneIds, setZoneIds] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
 
-  const handleDeskTypeChanged = (id?: string) => {
-    setDeskTypeIds(id ? [id] : []);
+  const handleCustomTagChanged = (id?: string) => {
+    setCustomTagIds(id ? [id] : []);
   };
 
   const handleZoneTypeChanged = (id?: string) => {
@@ -63,7 +63,7 @@ const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth }}>
       <StackRow sx={{ padding: defaultPadding }}>
-        <DeskTypeSelector rootDataRelay={rootData} onChange={handleDeskTypeChanged} />
+        <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
         <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <PushToRight />
@@ -74,7 +74,7 @@ const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) 
         rootDataRefetchableRelay={rootData}
         onReloadRequired={onReloadRequired}
         organizationId={organizationId}
-        deskTypeIds={deskTypeIds}
+        customTagIds={customTagIds}
         zoneIds={zoneIds}
         viewMode={viewMode}
       />
@@ -111,7 +111,7 @@ const LocationsWithRelay = ({ organizationId }: RelayProps) => {
             field: 'Name',
           },
         ],
-        deskTypesSortingValues: [
+        customTagsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

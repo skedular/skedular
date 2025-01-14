@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7f5ed237aa3cf1964ff22274d506c49d>>
+ * @generated SignedSource<<b7fb7ad61c52d5ae24ff858f1a3cb557>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,11 +19,11 @@ export type organizationLocation_deactivateDesksMutation$variables = {
 export type organizationLocation_deactivateDesksMutation$data = {
   readonly deactivateDesks: {
     readonly desks: ReadonlyArray<{
-      readonly deactivated: boolean;
-      readonly deskTypes: ReadonlyArray<{
+      readonly customTags: ReadonlyArray<{
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
+      readonly deactivated: boolean;
       readonly id: string;
       readonly name: string;
       readonly requireBookingApproval: boolean;
@@ -114,7 +114,7 @@ v3 = [
             "args": null,
             "concreteType": "Organization_OrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "deskTypes",
+            "name": "customTags",
             "plural": true,
             "selections": (v2/*: any*/),
             "storageKey": null
@@ -154,16 +154,16 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "e98229f779bf9ef8aca9060b855d615c",
+    "cacheID": "4a9151495db1cc84379226cff370bc75",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_deactivateDesksMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_deactivateDesksMutation(\n  $input: DeactivateDesksInput!\n) {\n  deactivateDesks(input: $input) {\n    desks {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      deskTypes {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_deactivateDesksMutation(\n  $input: DeactivateDesksInput!\n) {\n  deactivateDesks(input: $input) {\n    desks {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f45c441e2c4c931d2ea44ce90c2485df";
+(node as any).hash = "7fd3945f0b9a927ffa7c25cf8c16a27d";
 
 export default node;

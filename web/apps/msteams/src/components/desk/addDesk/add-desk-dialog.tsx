@@ -21,7 +21,7 @@ import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { MultipleChoicesDeskTypes, MultipleChoicesZones } from 'components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesZones } from 'components/organization';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
@@ -47,23 +47,23 @@ type Props = {
 const RootQuery = graphql`
   query addDeskDialog_rootQuery(
     $organizationId: String!
-    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
-    ...multipleChoicesDeskTypes_query
+    ...multipleChoicesCustomTags_query
     ...multipleChoicesZones_query
   }
 `;
 
 type DeskDetails = {
   name: string;
-  deskTypeIds: string[];
+  customTagIds: string[];
   zoneIds: string[];
 };
 
 const deskSchema = object({
   name: string().required('Desk name is required'),
-  deskTypeIds: array().nullable(),
+  customTagIds: array().nullable(),
   zoneIds: array().nullable(),
 });
 
@@ -76,7 +76,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
         desk @appendNode(connections: $connectionIds, edgeTypeName: "DeskDetails") {
           id
           name
-          deskTypes {
+          customTags {
             uniqueId
           }
           zones {
@@ -92,7 +92,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
 
-  const handleAddClick = ({ name, deskTypeIds, zoneIds }: DeskDetails) => {
+  const handleAddClick = ({ name, customTagIds, zoneIds }: DeskDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding desk '${name}'...`} />, infoNotificationOptions);
 
@@ -104,7 +104,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
           id,
           locationId,
           name,
-          deskTypeIds,
+          customTagIds,
           zoneIds,
         },
       },
@@ -137,7 +137,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
           desk: {
             id,
             name,
-            deskTypes: [],
+            customTags: [],
             zones: [],
           },
         },
@@ -153,7 +153,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
           onSubmit={handleAddClick}
           initialValues={{
             name: '',
-            deskTypeIds: [],
+            customTagIds: [],
             zoneIds: [],
           }}
           validate={validate}
@@ -166,8 +166,8 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
                 <TextField name="name" required={requiredFields.name} helperText="Add your desk name" />
               </FormFieldLabel>
 
-              <FormFieldLabel label="Desk Types" useWiderSpace>
-                <MultipleChoicesDeskTypes rootDataRelay={rootData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+              <FormFieldLabel label="Tags" useWiderSpace>
+                <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} />
               </FormFieldLabel>
 
               <FormFieldLabel label="Zones" useWiderSpace>
@@ -212,7 +212,7 @@ const AddDeskDialogWithRelay = ({
     loadQuery(
       {
         organizationId: organizationId ?? '',
-        multipleChoicesDeskTypesSortingValues: [
+        multipleChoicesCustomTagsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

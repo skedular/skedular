@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ffe2c4de5f827f9f40bccd424f4ea3f6>>
+ * @generated SignedSource<<1f48def0ddf7cc2297176f364a619a98>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationLocation_desks_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  deskDeskTypeIds?: ReadonlyArray<string> | null | undefined;
+  deskCustomTagIds?: ReadonlyArray<string> | null | undefined;
   deskNameSearchText?: string | null | undefined;
   deskZoneIds?: ReadonlyArray<string> | null | undefined;
   locationId: string;
@@ -41,7 +41,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "deskDeskTypeIds"
+    "name": "deskCustomTagIds"
   },
   {
     "defaultValue": null,
@@ -74,8 +74,8 @@ v1 = [
     "fields": [
       {
         "kind": "Variable",
-        "name": "deskTypeIds",
-        "variableName": "deskDeskTypeIds"
+        "name": "customTagIds",
+        "variableName": "deskCustomTagIds"
       },
       {
         "kind": "Variable",
@@ -205,7 +205,7 @@ return {
                     "args": null,
                     "concreteType": "Organization_OrganizationTagDetails",
                     "kind": "LinkedField",
-                    "name": "deskTypes",
+                    "name": "customTags",
                     "plural": true,
                     "selections": (v3/*: any*/),
                     "storageKey": null
@@ -294,16 +294,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "24ca336b547092648aed42a5277a094f",
+    "cacheID": "17ec33f25ecb5a5080547d76bdc27471",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_desks_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationLocation_desks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskDeskTypeIds: [String!]\n  $deskNameSearchText: String\n  $deskZoneIds: [String!]\n  $locationId: String!\n) {\n  ...organizationLocation_desks_query_1G22uz\n}\n\nfragment organizationLocation_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText, deskTypeIds: $deskDeskTypeIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationLocation_desks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskCustomTagIds: [String!]\n  $deskNameSearchText: String\n  $deskZoneIds: [String!]\n  $locationId: String!\n) {\n  ...organizationLocation_desks_query_1G22uz\n}\n\nfragment organizationLocation_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText, customTagIds: $deskCustomTagIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        customTags {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7ed0f3e42f93eeb4de4aeb4bb5b56bbb";
+(node as any).hash = "4312ad51e3704e5de3b4cc30786111bf";
 
 export default node;

@@ -1,13 +1,13 @@
 import { getOrganizationBaseLink, OrganizationMultipleChoicesIndustries } from '@/components/organization';
-import { AddOrganizationDeskTypeButton } from '@/components/organization/addOrganizationDeskType';
+import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
 import { EditOrganizationZoneDialog } from '@/components/organization/editOrganizationZone/';
 import type { organizationAdmin_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_cancelOrganizationOfferingMutation.graphql';
-import type { organizationAdmin_deleteDeskTypesMutation } from '@/queries/__generated__/organizationAdmin_deleteDeskTypesMutation.graphql';
+import type { organizationAdmin_customTags_query$key } from '@/queries/__generated__/organizationAdmin_customTags_query.graphql';
+import type { organizationAdmin_customTags_refetchableFragment } from '@/queries/__generated__/organizationAdmin_customTags_refetchableFragment.graphql';
+import type { organizationAdmin_deleteCustomTagsMutation } from '@/queries/__generated__/organizationAdmin_deleteCustomTagsMutation.graphql';
 import type { organizationAdmin_deleteZonesMutation } from '@/queries/__generated__/organizationAdmin_deleteZonesMutation.graphql';
-import type { organizationAdmin_deskTypes_query$key } from '@/queries/__generated__/organizationAdmin_deskTypes_query.graphql';
-import type { organizationAdmin_deskTypes_refetchableFragment } from '@/queries/__generated__/organizationAdmin_deskTypes_refetchableFragment.graphql';
 import type { organizationAdmin_organizationPaymentMethodsDetails_query$key } from '@/queries/__generated__/organizationAdmin_organizationPaymentMethodsDetails_query.graphql';
 import type { organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment.graphql';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
@@ -41,7 +41,7 @@ import {
   StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
-import { DeskType } from '@repo/shared/components/deskType';
+import { CustomTag } from '@repo/shared/components/customTag';
 import { SingleChoiceCountry } from '@repo/shared/components/forms';
 import { DeleteIcon, EllipseMenuIcon, NewIcon } from '@repo/shared/components/icons';
 import {
@@ -69,7 +69,7 @@ import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
-import EditOrganizationDeskTypeDialog from '../editOrganizationDeskType/edit-organization-desk-type-dialog';
+import EditOrganizationCustomTagDialog from '../editOrganizationCustomTag/edit-organization-custom-tag-dialog';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin-left-side-navigation-menu-content';
 
@@ -77,7 +77,7 @@ type Props = {
   rootDataRelay: organizationAdmin_query$key;
   rootDataOrganizationPaymentMethodsDetailsRelay: organizationAdmin_organizationPaymentMethodsDetails_query$key;
   rootDataZonesRelay: organizationAdmin_zones_query$key;
-  rootDataDeskTypesRelay: organizationAdmin_deskTypes_query$key;
+  rootDataCustomTagsRelay: organizationAdmin_customTags_query$key;
   onReloadRequired: () => void;
   organizationId: string;
 };
@@ -118,7 +118,7 @@ type ZoneRowType = {
   description: string | null | undefined;
 };
 
-type DeskTypeRowType = {
+type CustomTagRowType = {
   id: string;
   name: string;
   description: string | null | undefined;
@@ -128,7 +128,7 @@ const OrganizationAdmin = ({
   rootDataRelay,
   rootDataOrganizationPaymentMethodsDetailsRelay,
   rootDataZonesRelay,
-  rootDataDeskTypesRelay,
+  rootDataCustomTagsRelay,
   onReloadRequired,
   organizationId,
 }: Props) => {
@@ -233,20 +233,20 @@ const OrganizationAdmin = ({
     rootDataZonesRelay,
   );
 
-  const [rootDataDeskTypes, refetchDeskTypes] = useRefetchableFragment<
-    organizationAdmin_deskTypes_refetchableFragment,
-    organizationAdmin_deskTypes_query$key
+  const [rootDataCustomTags, refetchCustomTags] = useRefetchableFragment<
+    organizationAdmin_customTags_refetchableFragment,
+    organizationAdmin_customTags_query$key
   >(
     graphql`
-      fragment organizationAdmin_deskTypes_query on Query
+      fragment organizationAdmin_customTags_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "organizationAdmin_deskTypes_refetchableFragment") {
-        deskTypes(
+      @refetchable(queryName: "organizationAdmin_customTags_refetchableFragment") {
+        customTags(
           first: $count
           after: $cursor
-          where: { organizationId: $organizationId, nameContains: $deskTypeNameSearchText }
+          where: { organizationId: $organizationId, nameContains: $customTagNameSearchText }
           orderBy: [{ direction: Ascending, field: Name }]
-        ) @connection(key: "organizationAdmin_deskTypes") {
+        ) @connection(key: "organizationAdmin_customTags") {
           __id
           totalCount
           edges {
@@ -259,7 +259,7 @@ const OrganizationAdmin = ({
         }
       }
     `,
-    rootDataDeskTypesRelay,
+    rootDataCustomTagsRelay,
   );
 
   const [commitUpdateOrganization] = useMutation<organizationAdmin_updateOrganizationMutation>(graphql`
@@ -289,9 +289,9 @@ const OrganizationAdmin = ({
     }
   `);
 
-  const [commitDeleteDeskTypes] = useMutation<organizationAdmin_deleteDeskTypesMutation>(graphql`
-    mutation organizationAdmin_deleteDeskTypesMutation($connectionIds: [ID!]!, $input: DeleteDeskTypesInput!) {
-      deleteDeskTypes(input: $input) {
+  const [commitDeleteCustomTags] = useMutation<organizationAdmin_deleteCustomTagsMutation>(graphql`
+    mutation organizationAdmin_deleteCustomTagsMutation($connectionIds: [ID!]!, $input: DeleteCustomTagsInput!) {
+      deleteCustomTags(input: $input) {
         organizationTags {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -351,17 +351,17 @@ const OrganizationAdmin = ({
   const validate = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
-  const [deskTypeNameSearchText, setDeskTypeNameSearchText] = useState<string>('');
+  const [customTagNameSearchText, setCustomTagNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>([]);
-  const [seledctedDeskTypes, setSeledctedDeskTypes] = useState<GridRowSelectionModel>([]);
+  const [seledctedCustomTags, setSeledctedCustomTags] = useState<GridRowSelectionModel>([]);
   const [selectedZoneId, setSelectedZoneId] = useState<null | string>(null);
-  const [selectedDeskTypeId, setSelectedDeskTypeId] = useState<null | string>(null);
+  const [selectedCustomTagId, setSelectedCustomTagId] = useState<null | string>(null);
   const [zoneMoreActionsAnchorEl, setZoneMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const zoneMoreActionsMenuOpen = Boolean(zoneMoreActionsAnchorEl);
-  const [deskTypeMoreActionsAnchorEl, setDeskTypeMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
-  const deskTypeMoreActionsMenuOpen = Boolean(deskTypeMoreActionsAnchorEl);
+  const [customTagMoreActionsAnchorEl, setCustomTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const customTagMoreActionsMenuOpen = Boolean(customTagMoreActionsAnchorEl);
   const [isEditZoneDialogOpen, setIsEditZoneDialogOpen] = useState(false);
-  const [isEditDeskTypeDialogOpen, setIsEditDeskTypeDialogOpen] = useState(false);
+  const [isEditCustomTagDialogOpen, setIsEditCustomTagDialogOpen] = useState(false);
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
 
   const zoneMoreActionsOption: MoreActionsMenuItemType[] = [
@@ -369,9 +369,9 @@ const OrganizationAdmin = ({
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteZone],
   ];
 
-  const deskTypeMoreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditDeskType],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteDeskType],
+  const customTagMoreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditCustomTag],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteCustomTag],
   ];
 
   const zonesConnectionIds = useMemo(() => (rootDataZones.zones ? [rootDataZones.zones.__id] : []), [rootDataZones.zones]);
@@ -383,17 +383,17 @@ const OrganizationAdmin = ({
     return rootDataZones.zones.edges.map(({ node }) => node);
   }, [rootDataZones.zones]);
 
-  const deskTypesConnectionIds = useMemo(
-    () => (rootDataDeskTypes.deskTypes ? [rootDataDeskTypes.deskTypes.__id] : []),
-    [rootDataDeskTypes.deskTypes],
+  const customTagsConnectionIds = useMemo(
+    () => (rootDataCustomTags.customTags ? [rootDataCustomTags.customTags.__id] : []),
+    [rootDataCustomTags.customTags],
   );
-  const deskTypes = useMemo(() => {
-    if (!rootDataDeskTypes.deskTypes) {
+  const customTags = useMemo(() => {
+    if (!rootDataCustomTags.customTags) {
       return [];
     }
 
-    return rootDataDeskTypes.deskTypes.edges.map(({ node }) => node);
-  }, [rootDataDeskTypes.deskTypes]);
+    return rootDataCustomTags.customTags.edges.map(({ node }) => node);
+  }, [rootDataCustomTags.customTags]);
 
   useEffect(() => {
     if (!section || section === 'setup') {
@@ -429,12 +429,12 @@ const OrganizationAdmin = ({
     [refetchZones],
   );
 
-  const handleRefetchDeskTypes = useCallback(
-    (deskTypeNameSearchText: string) => {
+  const handleRefetchCustomTags = useCallback(
+    (customTagNameSearchText: string) => {
       startTransition(() => {
-        refetchDeskTypes(
+        refetchCustomTags(
           {
-            deskTypeNameSearchText,
+            customTagNameSearchText,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -442,7 +442,7 @@ const OrganizationAdmin = ({
         );
       });
     },
-    [refetchDeskTypes],
+    [refetchCustomTags],
   );
 
   const handleRefetchOrganizationPaymentMethodsDetails = useCallback(() => {
@@ -589,18 +589,18 @@ const OrganizationAdmin = ({
     handleRefetchZones(str);
   };
 
-  const handleDeskTypesSearchTextChange = (str: string) => {
-    setDeskTypeNameSearchText(str);
+  const handleCustomTagsSearchTextChange = (str: string) => {
+    setCustomTagNameSearchText(str);
 
-    handleRefetchDeskTypes(str);
+    handleRefetchCustomTags(str);
   };
 
   const handleSelectedZonesChanged = (newRowSelectionModel: GridRowSelectionModel) => {
     setSeledctedZones(newRowSelectionModel);
   };
 
-  const handleSelectedDeskTypesChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedDeskTypes(newRowSelectionModel);
+  const handleSelectedCustomTagsChanged = (newRowSelectionModel: GridRowSelectionModel) => {
+    setSeledctedCustomTags(newRowSelectionModel);
   };
 
   const handleZoneMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
@@ -617,16 +617,16 @@ const OrganizationAdmin = ({
     }
   };
 
-  const handleDeskTypeMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
-    setDeskTypeMoreActionsAnchorEl(null);
+  const handleCustomTagMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setCustomTagMoreActionsAnchorEl(null);
 
     switch (id) {
-      case MoreActionsMenuOptionType.EditDeskType:
-        setIsEditDeskTypeDialogOpen(true);
+      case MoreActionsMenuOptionType.EditCustomTag:
+        setIsEditCustomTagDialogOpen(true);
         break;
 
-      case MoreActionsMenuOptionType.DeleteDeskType:
-        handleRemoveDeskTypeClick();
+      case MoreActionsMenuOptionType.DeleteCustomTag:
+        handleRemoveCustomTagClick();
         break;
     }
   };
@@ -704,22 +704,22 @@ const OrganizationAdmin = ({
     });
   };
 
-  const handleRemoveDeskTypesClick = () => {
-    const toastId = themedToast(<NotificationContent content="Removing desk types ..." />, infoNotificationOptions);
+  const handleRemoveCustomTagsClick = () => {
+    const toastId = themedToast(<NotificationContent content="Removing tags ..." />, infoNotificationOptions);
 
-    commitDeleteDeskTypes({
+    commitDeleteCustomTags({
       variables: {
-        connectionIds: deskTypesConnectionIds,
+        connectionIds: customTagsConnectionIds,
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedDeskTypes.map((id) => id as string),
+          ids: seledctedCustomTags.map((id) => id as string),
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove desk types. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove tags. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -727,38 +727,38 @@ const OrganizationAdmin = ({
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Desk types removed.`} />,
+          render: <NotificationContent content={`Tags removed.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove desk types. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove tags. Error: ${error.message}.`} />,
         });
       },
     });
   };
 
-  const handleRemoveDeskTypeClick = () => {
-    if (!selectedDeskTypeId) {
+  const handleRemoveCustomTagClick = () => {
+    if (!selectedCustomTagId) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content="Removing desk type ..." />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content="Removing tag ..." />, infoNotificationOptions);
 
     commitDeleteZones({
       variables: {
-        connectionIds: deskTypesConnectionIds,
+        connectionIds: customTagsConnectionIds,
         input: {
           clientMutationId: nanoid(),
-          ids: [selectedDeskTypeId],
+          ids: [selectedCustomTagId],
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove desk type. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove tag. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -766,15 +766,15 @@ const OrganizationAdmin = ({
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Desk type removed.`} />,
+          render: <NotificationContent content={`Tag removed.`} />,
         });
 
-        setSelectedDeskTypeId(null);
+        setSelectedCustomTagId(null);
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove desk type. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove tag. Error: ${error.message}.`} />,
         });
       },
     });
@@ -788,12 +788,12 @@ const OrganizationAdmin = ({
     setIsEditZoneDialogOpen(false);
   };
 
-  const handleEditDeskTypeClick = () => {
-    setIsEditDeskTypeDialogOpen(false);
+  const handleEditCustomTagClick = () => {
+    setIsEditCustomTagDialogOpen(false);
   };
 
-  const onEditDeskTypeCancel = () => {
-    setIsEditDeskTypeDialogOpen(false);
+  const onEditCustomTagCancel = () => {
+    setIsEditCustomTagDialogOpen(false);
   };
 
   const onAddPaymentMethodClicked = () => {
@@ -1001,18 +1001,18 @@ const OrganizationAdmin = ({
     },
   ];
 
-  const deskTypeRows: DeskTypeRowType[] = deskTypes.map((deskType) => ({
-    id: deskType.id,
-    name: deskType.name,
-    description: deskType.description,
+  const customTagRows: CustomTagRowType[] = customTags.map((customTag) => ({
+    id: customTag.id,
+    name: customTag.name,
+    description: customTag.description,
   }));
 
-  const deskTypeColumns: GridColDef<(typeof deskTypeRows)[number]>[] = [
+  const customTagColumns: GridColDef<(typeof customTagRows)[number]>[] = [
     {
       field: 'name',
       headerName: 'Name',
       editable: false,
-      renderCell: (params) => <DeskType deskType={{ id: params.id as string, name: params.value }} showFullName />,
+      renderCell: (params) => <CustomTag customTag={{ id: params.id as string, name: params.value }} showFullName />,
       display: 'flex',
       minWidth: 200,
     },
@@ -1033,8 +1033,8 @@ const OrganizationAdmin = ({
       renderCell: (params) => (
         <IconButton
           onClick={(event: React.MouseEvent<HTMLElement>) => {
-            setSelectedDeskTypeId(params.id as string);
-            setDeskTypeMoreActionsAnchorEl(event.currentTarget);
+            setSelectedCustomTagId(params.id as string);
+            setCustomTagMoreActionsAnchorEl(event.currentTarget);
           }}
         >
           <EllipseMenuIcon />
@@ -1287,11 +1287,11 @@ const OrganizationAdmin = ({
                 <StackColumn
                   sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
                   ref={(divElement) => {
-                    sectionRefs.current['desk-types-setup'] = divElement;
+                    sectionRefs.current['tags-setup'] = divElement;
                   }}
                 >
-                  <SectionIconTypography label="Desk Types Setup" />
-                  <BodyIconTypography label="Edit your organization desk types details" />
+                  <SectionIconTypography label="Tags Setup" />
+                  <BodyIconTypography label="Edit your organization tags details" />
                   <Divider />
                 </StackColumn>
 
@@ -1299,13 +1299,13 @@ const OrganizationAdmin = ({
                   <PushToRight />
                   <Search
                     size="small"
-                    placeholder="Search for desk types"
-                    defaultValue={deskTypeNameSearchText}
-                    onChange={handleDeskTypesSearchTextChange}
+                    placeholder="Search for tags"
+                    defaultValue={customTagNameSearchText}
+                    onChange={handleCustomTagsSearchTextChange}
                   />
                 </StackRow>
 
-                {seledctedDeskTypes.length > 0 && (
+                {seledctedCustomTags.length > 0 && (
                   <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                     <Box
                       sx={{
@@ -1318,10 +1318,10 @@ const OrganizationAdmin = ({
                       }}
                     >
                       <StackRow sx={{ alignItems: 'center' }}>
-                        <SmallIconTypography label={`${seledctedDeskTypes.length} records selected`} />
+                        <SmallIconTypography label={`${seledctedCustomTags.length} records selected`} />
                         <PushToRight />
-                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveDeskTypesClick}>
-                          Remove Desk Type
+                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveCustomTagsClick}>
+                          Remove Tag
                         </Button>
                       </StackRow>
                     </Box>
@@ -1330,20 +1330,20 @@ const OrganizationAdmin = ({
 
                 <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                   <PushToRight />
-                  <AddOrganizationDeskTypeButton organizationId={organizationId} connectionIds={deskTypesConnectionIds} />
+                  <AddOrganizationCustomTagButton organizationId={organizationId} connectionIds={customTagsConnectionIds} />
                 </StackRow>
 
                 <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                   <DataGrid
                     checkboxSelection
-                    rowSelectionModel={seledctedDeskTypes}
-                    onRowSelectionModelChange={handleSelectedDeskTypesChanged}
-                    rows={deskTypeRows}
-                    columns={deskTypeColumns}
-                    hideFooterPagination={deskTypeRows.length <= 10}
+                    rowSelectionModel={seledctedCustomTags}
+                    onRowSelectionModelChange={handleSelectedCustomTagsChanged}
+                    rows={customTagRows}
+                    columns={customTagColumns}
+                    hideFooterPagination={customTagRows.length <= 10}
                     initialState={{
                       pagination: {
-                        rowCount: deskTypeRows.length,
+                        rowCount: customTagRows.length,
                         paginationModel: {
                           pageSize: 10,
                         },
@@ -1469,10 +1469,10 @@ const OrganizationAdmin = ({
       />
 
       <MoreActionsMenu
-        anchorEl={deskTypeMoreActionsAnchorEl}
-        open={deskTypeMoreActionsMenuOpen}
-        onMenuItemClick={handleDeskTypeMoreActionsMenuItemClick}
-        options={deskTypeMoreActionsOption}
+        anchorEl={customTagMoreActionsAnchorEl}
+        open={customTagMoreActionsMenuOpen}
+        onMenuItemClick={handleCustomTagMoreActionsMenuItemClick}
+        options={customTagMoreActionsOption}
       />
 
       {selectedZoneId && (
@@ -1485,13 +1485,13 @@ const OrganizationAdmin = ({
         />
       )}
 
-      {selectedDeskTypeId && (
-        <EditOrganizationDeskTypeDialog
+      {selectedCustomTagId && (
+        <EditOrganizationCustomTagDialog
           onReloadRequired={onReloadRequired}
-          deskTypeId={selectedDeskTypeId}
-          isDialogOpen={isEditDeskTypeDialogOpen}
-          onAddClicked={handleEditDeskTypeClick}
-          onCancel={onEditDeskTypeCancel}
+          customTagId={selectedCustomTagId}
+          isDialogOpen={isEditCustomTagDialogOpen}
+          onAddClicked={handleEditCustomTagClick}
+          onCancel={onEditCustomTagCancel}
         />
       )}
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<867b60d664021c13db0c995daf8d1dac>>
+ * @generated SignedSource<<2828fb98fcd7bba2bbb3f36e8c1a4bae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,11 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type deskCard_DeskDetails$data = {
-  readonly deactivated: boolean;
-  readonly deskTypes: ReadonlyArray<{
+  readonly customTags: ReadonlyArray<{
     readonly name: string | null | undefined;
     readonly uniqueId: string;
   }>;
+  readonly deactivated: boolean;
   readonly id: string;
   readonly name: string;
   readonly requireBookingApproval: boolean;
@@ -81,7 +81,7 @@ return {
       "args": null,
       "concreteType": "Organization_OrganizationTagDetails",
       "kind": "LinkedField",
-      "name": "deskTypes",
+      "name": "customTags",
       "plural": true,
       "selections": (v1/*: any*/),
       "storageKey": null
@@ -102,6 +102,6 @@ return {
 };
 })();
 
-(node as any).hash = "d55c7670ad137d40b02467ff94e5e998";
+(node as any).hash = "2b3e845b1022fd9068cd0a40f97f53a5";
 
 export default node;

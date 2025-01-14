@@ -117,17 +117,17 @@ public class BulkAddDesksButtonHandler(
 
         var blocks = new List<Block> { prefix, count, deactivated, requireBookingApproval };
 
-        var deskTypeConnection = await GetDeskTypesAsync(workspace, workspaceMember, cancellationToken);
-        if (deskTypeConnection.Edges.Count != 0)
+        var customTagConnection = await GetCustomTagsAsync(workspace, workspaceMember, cancellationToken);
+        if (customTagConnection.Edges.Count != 0)
         {
             blocks.Add(new InputBlock
             {
-                BlockId = DeskTypeActionTypes.DeskTypes,
-                Label = "Desk Types".ToPlainText(),
+                BlockId = CustomTagActionTypes.CustomTags,
+                Label = "Tags".ToPlainText(),
                 Element = new StaticMultiSelectMenu
                 {
-                    ActionId = DeskTypeActionTypes.DeskTypes,
-                    Options = deskTypeConnection.Edges.Select(item => item.Node).Select(item => new Option
+                    ActionId = CustomTagActionTypes.CustomTags,
+                    Options = customTagConnection.Edges.Select(item => item.Node).Select(item => new Option
                     {
                         Text = item.Name.ToOptionText(),
                         Value = item.Id,
@@ -322,22 +322,22 @@ public class BulkAddDesksButtonHandler(
             throw new InvalidOperationException("requireBookingApproval block is missing");
         }
 
-        if (values.TryGetValue(DeskTypeActionTypes.DeskTypes, out var deskTypesBlock))
+        if (values.TryGetValue(CustomTagActionTypes.CustomTags, out var customTagsBlock))
         {
-            if (deskTypesBlock.TryGetValue(DeskTypeActionTypes.DeskTypes, out var deskTypes))
+            if (customTagsBlock.TryGetValue(CustomTagActionTypes.CustomTags, out var customTags))
             {
-                if (deskTypes is StaticMultiSelectValue value)
+                if (customTags is StaticMultiSelectValue value)
                 {
-                    bulkAddDesksInput.DeskTypeIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    bulkAddDesksInput.CustomTagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {
-                    throw new InvalidOperationException("deskTypes must be StaticMultiSelectValue");
+                    throw new InvalidOperationException("customTags must be StaticMultiSelectValue");
                 }
             }
             else
             {
-                throw new InvalidOperationException("deskTypes block is missing");
+                throw new InvalidOperationException("customTags block is missing");
             }
         }
 
@@ -376,26 +376,26 @@ public class BulkAddDesksButtonHandler(
 
     public Task HandleClose(ViewClosed viewClosed) => Task.CompletedTask;
 
-    private async Task<DeskTypeConnection> GetDeskTypesAsync(
+    private async Task<CustomTagConnection> GetCustomTagsAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         CancellationToken cancellationToken)
     {
-        var getPaginatedDeskTypesInput = new GetPaginatedDeskTypesInput
+        var getPaginatedCustomTagsInput = new GetPaginatedCustomTagsInput
         {
             After = string.Empty,
             First = -1,
             Before = string.Empty,
             Last = -1,
-            Where = new DeskTypeWhereInput { OrganizationId = workspace.Organization.Id }
+            Where = new CustomTagWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
-        getPaginatedDeskTypesInput.OrderBy.AddRange([
-            new DeskTypeOrderInput { Direction = OrderDirection.Ascending, Field = DeskTypeOrderField.DeskTypeName }
+        getPaginatedCustomTagsInput.OrderBy.AddRange([
+            new CustomTagOrderInput { Direction = OrderDirection.Ascending, Field = CustomTagOrderField.CustomTagName }
         ]);
 
-        return await organizationServiceClient.GetPaginatedDeskTypesAsync(
-            getPaginatedDeskTypesInput,
+        return await organizationServiceClient.GetPaginatedCustomTagsAsync(
+            getPaginatedCustomTagsInput,
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
     }

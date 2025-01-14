@@ -43,7 +43,7 @@ public class BulkAddDeskInput
     [GraphQLName("namePrefix")] public string? NamePrefix { get; set; }
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("count")] public int Count { get; set; }
-    [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
+    [GraphQLName("customTagIds")] public string[] CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
     [GraphQLName("deactivated")] public bool Deactivated { get; set; }
 
@@ -98,7 +98,7 @@ public class DeskDetails : Node
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
 
-    [GraphQLName("deskTypes")] public OrganizationTagDetails[] DeskTypes { get; set; } = [];
+    [GraphQLName("customTags")] public OrganizationTagDetails[] CustomTags { get; set; } = [];
     [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
@@ -126,7 +126,7 @@ public class DeskWhereInput
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("zoneIds")] public string[]? ZoneIds { get; set; }
-    [GraphQLName("deskTypeIds")] public string[]? DeskTypeIds { get; set; }
+    [GraphQLName("customTagIds")] public string[]? CustomTagIds { get; set; }
 }
 
 [GraphQLName("InviteCustomersToJoinLocationInput")]
@@ -201,7 +201,7 @@ public class LocationDetails : Node
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
     [GraphQLName("desks")] public DeskDetails[] Desks { get; set; } = [];
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
-    [GraphQLName("deskTypes")] public OrganizationTagDetails[] DeskTypes { get; set; } = [];
+    [GraphQLName("customTags")] public OrganizationTagDetails[] CustomTags { get; set; } = [];
     [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
@@ -280,7 +280,7 @@ public class LocationWhereInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("zoneIds")] public string[]? ZoneIds { get; set; }
-    [GraphQLName("deskTypeIds")] public string[]? DeskTypeIds { get; set; }
+    [GraphQLName("customTagIds")] public string[]? CustomTagIds { get; set; }
 }
 
 [GraphQLName("RejectInvitationToJoinLocationInput")]
@@ -315,7 +315,7 @@ public class AddDeskInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("locationId")] public required string LocationId { get; set; }
-    [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
+    [GraphQLName("customTagIds")] public string[] CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
 }
 
@@ -330,7 +330,7 @@ public class UpdateDeskInput
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
 
-    [GraphQLName("deskTypeIds")] public string[] DeskTypeIds { get; set; } = [];
+    [GraphQLName("customTagIds")] public string[] CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
 }
 

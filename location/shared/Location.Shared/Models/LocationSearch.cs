@@ -6,13 +6,13 @@ public class LocationSearchCriteria(
     string? organizationId,
     string? nameContains,
     string[] zoneIds,
-    string[] deskTypeIds)
+    string[] customTagIds)
 {
     public string? CustomerId { get; set; }
     public string? OrganizationId { get; } = organizationId;
     public string? NameContains { get; } = nameContains;
     public string[] ZoneIds { get; set; } = zoneIds;
-    public string[] DeskTypeIds { get; set; } = deskTypeIds;
+    public string[] CustomTagIds { get; set; } = customTagIds;
 }
 
 public record LocationOrder(OrderDirection Direction, LocationOrderField Field);

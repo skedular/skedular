@@ -146,7 +146,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
         desks {
           uniqueId
           name
-          deskTypes {
+          customTags {
             uniqueId
             name
           }
@@ -192,7 +192,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           desks {
             uniqueId
             name
-            deskTypes {
+            customTags {
               uniqueId
               name
             }
@@ -238,7 +238,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           desks {
             uniqueId
             name
-            deskTypes {
+            customTags {
               uniqueId
               name
             }

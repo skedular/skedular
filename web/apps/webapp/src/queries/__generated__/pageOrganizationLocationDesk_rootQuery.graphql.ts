@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f03f202b0dc25efd32e466cdab7601e>>
+ * @generated SignedSource<<2dd59b4f2dfea7d586ebd0483e54c504>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type OrganizationTagOrderInput = {
 };
 export type pageOrganizationLocationDesk_rootQuery$variables = {
   deskId: string;
-  multipleChoicesDeskTypesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
+  multipleChoicesCustomTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   multipleChoicesZonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   organizationId: string;
 };
@@ -42,7 +42,7 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "multipleChoicesDeskTypesSortingValues"
+  "name": "multipleChoicesCustomTagsSortingValues"
 },
 v2 = {
   "defaultValue": null,
@@ -214,7 +214,7 @@ return {
             "args": null,
             "concreteType": "Organization_OrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "deskTypes",
+            "name": "customTags",
             "plural": true,
             "selections": (v7/*: any*/),
             "storageKey": null
@@ -238,13 +238,13 @@ return {
           {
             "kind": "Variable",
             "name": "orderBy",
-            "variableName": "multipleChoicesDeskTypesSortingValues"
+            "variableName": "multipleChoicesCustomTagsSortingValues"
           },
           (v8/*: any*/)
         ],
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
-        "name": "deskTypes",
+        "name": "customTags",
         "plural": false,
         "selections": (v9/*: any*/),
         "storageKey": null
@@ -269,16 +269,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f117e3a18f7a274a8a5366961d7594e3",
+    "cacheID": "7432a57b39eff6e10c7b264744b5bc61",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocationDesk_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocationDesk_rootQuery(\n  $organizationId: String!\n  $deskId: String!\n  $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  desk(id: $deskId) {\n    name\n    id\n  }\n  ...editDesk_query\n}\n\nfragment editDesk_query on Query {\n  desk(id: $deskId) {\n    id\n    name\n    deactivated\n    requireBookingApproval\n    deskTypes {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n  ...multipleChoicesDeskTypes_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $multipleChoicesDeskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationLocationDesk_rootQuery(\n  $organizationId: String!\n  $deskId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  desk(id: $deskId) {\n    name\n    id\n  }\n  ...editDesk_query\n}\n\nfragment editDesk_query on Query {\n  desk(id: $deskId) {\n    id\n    name\n    deactivated\n    requireBookingApproval\n    customTags {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "24592fc4eba215ea51d9631df891e9ce";
+(node as any).hash = "2d6b8ebf30eccbfdda1d26c67b4380e4";
 
 export default node;

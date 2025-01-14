@@ -143,7 +143,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
               desks {
                 uniqueId
                 name
-                deskTypes {
+                customTags {
                   uniqueId
                   name
                 }

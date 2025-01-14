@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a3a4e86156e155687221f7a85e3092f4>>
+ * @generated SignedSource<<2fb57d33fe8f1ffe05e3afee87ac395f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,8 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type UpdateDeskInput = {
   clientMutationId?: string | null | undefined;
+  customTagIds: ReadonlyArray<string>;
   deactivated: boolean;
-  deskTypeIds: ReadonlyArray<string>;
   id: string;
   name: string;
   requireBookingApproval: boolean;
@@ -24,11 +24,11 @@ export type deskCard_updateDeskMutation$variables = {
 export type deskCard_updateDeskMutation$data = {
   readonly updateDesk: {
     readonly desk: {
-      readonly deactivated: boolean;
-      readonly deskTypes: ReadonlyArray<{
+      readonly customTags: ReadonlyArray<{
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
+      readonly deactivated: boolean;
       readonly id: string;
       readonly name: string;
       readonly requireBookingApproval: boolean;
@@ -42,11 +42,11 @@ export type deskCard_updateDeskMutation$data = {
 export type deskCard_updateDeskMutation$rawResponse = {
   readonly updateDesk: {
     readonly desk: {
-      readonly deactivated: boolean;
-      readonly deskTypes: ReadonlyArray<{
+      readonly customTags: ReadonlyArray<{
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
+      readonly deactivated: boolean;
       readonly id: string;
       readonly name: string;
       readonly requireBookingApproval: boolean;
@@ -138,7 +138,7 @@ v3 = [
             "args": null,
             "concreteType": "Organization_OrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "deskTypes",
+            "name": "customTags",
             "plural": true,
             "selections": (v2/*: any*/),
             "storageKey": null
@@ -178,16 +178,16 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "594df5d631e05afc7e1e571944b8e162",
+    "cacheID": "285f3c86ddc93c1e14a049f95338c263",
     "id": null,
     "metadata": {},
     "name": "deskCard_updateDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation deskCard_updateDeskMutation(\n  $input: UpdateDeskInput!\n) {\n  updateDesk(input: $input) {\n    desk {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      deskTypes {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation deskCard_updateDeskMutation(\n  $input: UpdateDeskInput!\n) {\n  updateDesk(input: $input) {\n    desk {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "23b49abe4ef44f82b6b039e01bb04bb6";
+(node as any).hash = "e5863fa4dc407925633e0c9ad41acee2";
 
 export default node;

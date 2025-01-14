@@ -18,7 +18,7 @@ public class Location : ModelBaseWithDeleted
     public ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
     public ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
 
-    public ICollection<OrganizationTag> DeskTypes { get; set; } = [];
+    public ICollection<OrganizationTag> CustomTags { get; set; } = [];
     public ICollection<OrganizationTag> Zones { get; set; } = [];
 
     public bool HasFutureBooking { get; set; }

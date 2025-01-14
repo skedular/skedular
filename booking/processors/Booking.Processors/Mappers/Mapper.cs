@@ -233,7 +233,7 @@ public class Mapper : IMapper
             Name = item.Name,
             Type = item.TagType switch
             {
-                OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             },
@@ -281,7 +281,7 @@ public class Mapper : IMapper
         var organizationTags = location.Organization is null
             ? []
             : locationAfterState.Desks
-                .SelectMany(item => item.DeskTypeIds.Concat(item.ZoneIds))
+                .SelectMany(item => item.CustomTagIds.Concat(item.ZoneIds))
                 .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
 
         location.Desks = locationAfterState.Desks.Select(item => new Shared.Models.Desk
@@ -293,7 +293,7 @@ public class Mapper : IMapper
             Deactivated = item.Deactivated,
             RequireBookingApproval = item.RequireBookingApproval,
             OrganizationTags =
-                organizationTags.Where(tag => item.DeskTypeIds.Concat(item.ZoneIds).Contains(tag.Id)).ToList(),
+                organizationTags.Where(tag => item.CustomTagIds.Concat(item.ZoneIds).Contains(tag.Id)).ToList(),
             Location = location
         }).ToList();
 
@@ -582,7 +582,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.Type = src.Type switch
         {
-            OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
             _ => throw new ArgumentOutOfRangeException()
         };

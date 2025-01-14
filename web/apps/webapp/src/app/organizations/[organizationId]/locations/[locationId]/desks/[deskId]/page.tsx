@@ -20,7 +20,7 @@ const RootQuery = graphql`
   query pageOrganizationLocationDesk_rootQuery(
     $organizationId: String!
     $deskId: String!
-    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
     desk(id: $deskId) {
@@ -110,7 +110,7 @@ const LocationPageWithRelay = () => {
       {
         organizationId: finalOrganizationId,
         deskId: finalDeskId,
-        multipleChoicesDeskTypesSortingValues: [
+        multipleChoicesCustomTagsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

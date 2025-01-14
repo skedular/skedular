@@ -20,9 +20,9 @@ public interface IDeskRepository : IRepository<Desk>
         string? locationId,
         DateTimeOffset date,
         ICollection<string> deskIdsToInclude,
-        ICollection<string> deskTypeIds,
+        ICollection<string> customTagIds,
         ICollection<string> zoneIds,
-        bool combineDeskTypesZones,
+        bool combineCustomTagsZones,
         CancellationToken cancellationToken);
 
     Task<ICollection<Desk>> GetByLocationIdAsync(
@@ -72,9 +72,9 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
         string? locationId,
         DateTimeOffset date,
         ICollection<string> deskIdsToInclude,
-        ICollection<string> deskTypeIds,
+        ICollection<string> customTagIds,
         ICollection<string> zoneIds,
-        bool combineDeskTypesZones,
+        bool combineCustomTagsZones,
         CancellationToken cancellationToken)
     {
         var deskQuery = deskIdsToInclude.Count == 0
@@ -141,18 +141,18 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
                 return true;
             }
 
-            if (deskTypeIds.Count == 0 && zoneIds.Count == 0)
+            if (customTagIds.Count == 0 && zoneIds.Count == 0)
             {
                 return true;
             }
 
             var organizationTagIds = item.OrganizationTags.Select(tag => tag.Id).ToList();
-            var deskTypeMatchResult = deskTypeIds.All(deskTypeId => organizationTagIds.Any(id => id == deskTypeId));
+            var customTagMatchResult = customTagIds.All(customTagId => organizationTagIds.Any(id => id == customTagId));
             var zoneMatchResult = zoneIds.All(zoneId => organizationTagIds.Any(id => id == zoneId));
 
-            return combineDeskTypesZones
-                ? deskTypeMatchResult && zoneMatchResult
-                : deskTypeMatchResult || zoneMatchResult;
+            return combineCustomTagsZones
+                ? customTagMatchResult && zoneMatchResult
+                : customTagMatchResult || zoneMatchResult;
         }).ToList();
     }
 

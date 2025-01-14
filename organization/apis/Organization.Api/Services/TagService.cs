@@ -113,7 +113,7 @@ public class TagService(
 
         var tagType = tag.Type switch
         {
-            OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
             _ => throw new ArgumentOutOfRangeException()
         };
@@ -127,9 +127,9 @@ public class TagService(
             }).AnyAsync(cancellationToken);
         if (matchingTagFound)
         {
-            if (tag.Type == OrganizationTagType.DeskType)
+            if (tag.Type == OrganizationTagType.Custom)
             {
-                throw new DeskTypeWithSameNameExist();
+                throw new CustomTagWithSameNameExist();
             }
 
             if (tag.Type == OrganizationTagType.Zone)
@@ -305,7 +305,7 @@ public class TagService(
         var tagName = tag.Name;
         var tagType = tag.Type switch
         {
-            OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
             _ => throw new ArgumentOutOfRangeException()
         };
@@ -321,9 +321,9 @@ public class TagService(
             }).AnyAsync(cancellationToken);
         if (matchingTagFound)
         {
-            if (tag.Type == OrganizationTagType.DeskType)
+            if (tag.Type == OrganizationTagType.Custom)
             {
-                throw new DeskTypeWithSameNameExist();
+                throw new CustomTagWithSameNameExist();
             }
 
             if (tag.Type == OrganizationTagType.Zone)

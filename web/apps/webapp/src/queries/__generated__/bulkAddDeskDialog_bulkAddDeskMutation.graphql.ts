@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e39bfc3e211fc8d899f46a208fc0f4f3>>
+ * @generated SignedSource<<4cc4b996b88f057dc0a3fca61023e315>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,8 +12,8 @@ import { ConcreteRequest } from 'relay-runtime';
 export type BulkAddDeskInput = {
   clientMutationId?: string | null | undefined;
   count: number;
+  customTagIds: ReadonlyArray<string>;
   deactivated: boolean;
-  deskTypeIds: ReadonlyArray<string>;
   id?: string | null | undefined;
   locationId: string;
   namePrefix?: string | null | undefined;
@@ -27,7 +27,7 @@ export type bulkAddDeskDialog_bulkAddDeskMutation$variables = {
 export type bulkAddDeskDialog_bulkAddDeskMutation$data = {
   readonly bulkAddDesk: {
     readonly desks: ReadonlyArray<{
-      readonly deskTypes: ReadonlyArray<{
+      readonly customTags: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
       readonly id: string;
@@ -41,7 +41,7 @@ export type bulkAddDeskDialog_bulkAddDeskMutation$data = {
 export type bulkAddDeskDialog_bulkAddDeskMutation$rawResponse = {
   readonly bulkAddDesk: {
     readonly desks: ReadonlyArray<{
-      readonly deskTypes: ReadonlyArray<{
+      readonly customTags: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
       readonly id: string;
@@ -114,7 +114,7 @@ v3 = {
       "args": null,
       "concreteType": "Organization_OrganizationTagDetails",
       "kind": "LinkedField",
-      "name": "deskTypes",
+      "name": "customTags",
       "plural": true,
       "selections": (v2/*: any*/),
       "storageKey": null
@@ -197,16 +197,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "29896e954f61b58dac412342daf104db",
+    "cacheID": "47cd8336537f48efd0b2159895769047",
     "id": null,
     "metadata": {},
     "name": "bulkAddDeskDialog_bulkAddDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation bulkAddDeskDialog_bulkAddDeskMutation(\n  $input: BulkAddDeskInput!\n) {\n  bulkAddDesk(input: $input) {\n    desks {\n      id\n      name\n      deskTypes {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation bulkAddDeskDialog_bulkAddDeskMutation(\n  $input: BulkAddDeskInput!\n) {\n  bulkAddDesk(input: $input) {\n    desks {\n      id\n      name\n      customTags {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "21740ea8c13d30d5f6518982f9954a09";
+(node as any).hash = "493552aa7bc2e12c83535459105a3b35";
 
 export default node;

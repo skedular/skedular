@@ -58,7 +58,7 @@ public class Mutation(IMapper mapper)
             input.LocationId,
             input.NamePrefix,
             input.Count,
-            input.DeskTypeIds,
+            input.CustomTagIds,
             input.ZoneIds,
             input.Deactivated,
             input.RequireBookingApproval,

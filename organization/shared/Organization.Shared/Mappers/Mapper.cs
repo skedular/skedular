@@ -50,7 +50,7 @@ public class Mapper : IMapper
             Description = item.Description.ToSafeString(),
             TagType = item.Type switch
             {
-                OrganizationTagType.DeskType => OrganizationTagTypeConstants.DeskType,
+                OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                 OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             }

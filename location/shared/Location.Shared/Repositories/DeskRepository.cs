@@ -52,10 +52,11 @@ internal static class DeskExtensions
                 searchCriteria.ZoneIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
         }
 
-        if (searchCriteria.DeskTypeIds.Count != 0)
+        if (searchCriteria.CustomTagIds.Count != 0)
         {
             query = query.Where(item =>
-                searchCriteria.DeskTypeIds.All(deskTypeId => item.OrganizationTags.Any(tag => tag.Id == deskTypeId)));
+                searchCriteria.CustomTagIds.All(customTagId =>
+                    item.OrganizationTags.Any(tag => tag.Id == customTagId)));
         }
 
         return query;

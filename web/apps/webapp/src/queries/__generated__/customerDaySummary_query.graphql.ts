@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3cdc58d1d4a7bd326278461796865620>>
+ * @generated SignedSource<<a2dfb30b53af7c6de14564fff494caa5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type customerDaySummary_query$data = {
       readonly uniqueId: string;
     };
     readonly desks: ReadonlyArray<{
-      readonly deskTypes: ReadonlyArray<{
+      readonly customTags: ReadonlyArray<{
         readonly name: string;
         readonly uniqueId: string;
       }>;
@@ -226,9 +226,9 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "BookingOrganizationDeskTypeDetails",
+              "concreteType": "BookingOrganizationCustomTagDetails",
               "kind": "LinkedField",
-              "name": "deskTypes",
+              "name": "customTags",
               "plural": true,
               "selections": (v2/*: any*/),
               "storageKey": null
@@ -255,6 +255,6 @@ return {
 };
 })();
 
-(node as any).hash = "40c327e3147c9063f6ed531090d1570c";
+(node as any).hash = "e2674bb23ae8cd3f01ac873321cd60e7";
 
 export default node;

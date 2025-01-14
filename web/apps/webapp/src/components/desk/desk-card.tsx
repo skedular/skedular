@@ -1,11 +1,11 @@
-import { MultipleChoicesDeskTypes, MultipleChoicesZones } from '@/components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesZones } from '@/components/organization';
 import type { deskCard_DeskDetails$key } from '@/queries/__generated__/deskCard_DeskDetails.graphql';
 import type { deskCard_addCustomerDefaultDeskMutation } from '@/queries/__generated__/deskCard_addCustomerDefaultDeskMutation.graphql';
 import type { deskCard_deleteLocationMutation } from '@/queries/__generated__/deskCard_deleteLocationMutation.graphql';
 import type { deskCard_query$key } from '@/queries/__generated__/deskCard_query.graphql';
 import type { deskCard_removeCustomerDefaultDeskMutation } from '@/queries/__generated__/deskCard_removeCustomerDefaultDeskMutation.graphql';
 import type { deskCard_updateDeskMutation } from '@/queries/__generated__/deskCard_updateDeskMutation.graphql';
-import type { multipleChoicesDeskTypes_query$key } from '@/queries/__generated__/multipleChoicesDeskTypes_query.graphql';
+import type { multipleChoicesCustomTags_query$key } from '@/queries/__generated__/multipleChoicesCustomTags_query.graphql';
 import type { multipleChoicesZones_query$key } from '@/queries/__generated__/multipleChoicesZones_query.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -28,7 +28,7 @@ import {
   StackColumn,
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
-import { DeskTypes } from '@repo/shared/components/deskType';
+import { CustomTags } from '@repo/shared/components/customTag';
 import { DeleteIcon, DeskIcon, EditIcon, EllipseMenuIcon, InfoIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -58,7 +58,7 @@ import { array, object, string } from 'yup';
 type Props = {
   rootDataRelay: deskCard_query$key;
   deskDetailsRelay: deskCard_DeskDetails$key;
-  multipleChoicesDeskTypesData: multipleChoicesDeskTypes_query$key;
+  multipleChoicesCustomTagsData: multipleChoicesCustomTags_query$key;
   multipleChoicesZonesData: multipleChoicesZones_query$key;
   connectionIds: string[];
   customerDetails: CustomerDetails | null;
@@ -75,20 +75,20 @@ type CustomerDetails = {
 
 type DeskDetails = {
   name: string;
-  deskTypeIds: string[];
+  customTagIds: string[];
   zoneIds: string[];
 };
 
 const deskSchema = object({
   name: string().required('Desk name is required'),
-  deskTypeIds: array().nullable(),
+  customTagIds: array().nullable(),
   zoneIds: array().nullable(),
 });
 
 const DeskCard = ({
   rootDataRelay,
   deskDetailsRelay,
-  multipleChoicesDeskTypesData,
+  multipleChoicesCustomTagsData,
   multipleChoicesZonesData,
   connectionIds,
   customerDetails,
@@ -117,7 +117,7 @@ const DeskCard = ({
         name
         deactivated
         requireBookingApproval
-        deskTypes {
+        customTags {
           uniqueId
           name
         }
@@ -138,7 +138,7 @@ const DeskCard = ({
           name
           deactivated
           requireBookingApproval
-          deskTypes {
+          customTags {
             uniqueId
             name
           }
@@ -289,7 +289,7 @@ const DeskCard = ({
   const handleConfirmDeactivatingDeskClick = () => {
     setDeskDeactivateConfirmationDialogOpen(false);
 
-    const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
+    const customTagIds = deskDetails.customTags.map(({ uniqueId }) => uniqueId);
     const zoneIds = deskDetails.zones.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(<NotificationContent content={`Deactivating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
@@ -301,7 +301,7 @@ const DeskCard = ({
           name: deskDetails.name,
           deactivated: true,
           requireBookingApproval: deskDetails.requireBookingApproval,
-          deskTypeIds,
+          customTagIds,
           zoneIds,
         },
       },
@@ -333,7 +333,7 @@ const DeskCard = ({
             name: deskDetails.name,
             deactivated: true,
             requireBookingApproval: deskDetails.requireBookingApproval,
-            deskTypes: deskDetails.deskTypes,
+            customTags: deskDetails.customTags,
             zones: deskDetails.zones,
           },
         },
@@ -352,7 +352,7 @@ const DeskCard = ({
   const handleConfirmActivatingDeskClick = () => {
     setDeskActivateConfirmationDialogOpen(false);
 
-    const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
+    const customTagIds = deskDetails.customTags.map(({ uniqueId }) => uniqueId);
     const zoneIds = deskDetails.zones.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(<NotificationContent content={`Activating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
@@ -364,7 +364,7 @@ const DeskCard = ({
           name: deskDetails.name,
           deactivated: false,
           requireBookingApproval: deskDetails.requireBookingApproval,
-          deskTypeIds,
+          customTagIds,
           zoneIds,
         },
       },
@@ -396,7 +396,7 @@ const DeskCard = ({
             name: deskDetails.name,
             deactivated: false,
             requireBookingApproval: deskDetails.requireBookingApproval,
-            deskTypes: deskDetails.deskTypes,
+            customTags: deskDetails.customTags,
             zones: deskDetails.zones,
           },
         },
@@ -412,7 +412,7 @@ const DeskCard = ({
     setEditing(false);
   };
 
-  const handleSaveClick = ({ name, deskTypeIds, zoneIds }: DeskDetails) => {
+  const handleSaveClick = ({ name, customTagIds, zoneIds }: DeskDetails) => {
     const toastId = themedToast(<NotificationContent content={`Updating desk '${deskDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateDesk({
@@ -423,7 +423,7 @@ const DeskCard = ({
           name,
           deactivated: deskDetails.deactivated,
           requireBookingApproval: deskDetails.requireBookingApproval,
-          deskTypeIds,
+          customTagIds,
           zoneIds,
         },
       },
@@ -457,7 +457,7 @@ const DeskCard = ({
             name,
             deactivated: deskDetails.deactivated,
             requireBookingApproval: deskDetails.requireBookingApproval,
-            deskTypes: [],
+            customTags: [],
             zones: [],
           },
         },
@@ -586,7 +586,7 @@ const DeskCard = ({
   const handleSetDeskApprovalRequirementClick = () => {
     setSetDeskApprovalRequirementConfirmationDialogOpen(false);
 
-    const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
+    const customTagIds = deskDetails.customTags.map(({ uniqueId }) => uniqueId);
     const zoneIds = deskDetails.zones.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(
       <NotificationContent content={`Setting '${deskDetails.name}' require approval property...`} />,
@@ -601,7 +601,7 @@ const DeskCard = ({
           name: deskDetails.name,
           deactivated: deskDetails.deactivated,
           requireBookingApproval: true,
-          deskTypeIds,
+          customTagIds,
           zoneIds,
         },
       },
@@ -635,7 +635,7 @@ const DeskCard = ({
             name: deskDetails.name,
             deactivated: deskDetails.deactivated,
             requireBookingApproval: true,
-            deskTypes: deskDetails.deskTypes,
+            customTags: deskDetails.customTags,
             zones: deskDetails.zones,
           },
         },
@@ -654,7 +654,7 @@ const DeskCard = ({
   const handleConfirmRemoveDeskApprovalRequirementDeskClick = () => {
     setRemoveDeskApprovalRequirementConfirmationDialogOpen(false);
 
-    const deskTypeIds = deskDetails.deskTypes.map(({ uniqueId }) => uniqueId);
+    const customTagIds = deskDetails.customTags.map(({ uniqueId }) => uniqueId);
     const zoneIds = deskDetails.zones.map(({ uniqueId }) => uniqueId);
     const toastId = themedToast(
       <NotificationContent content={`Unsetting '${deskDetails.name}' require approval property...`} />,
@@ -669,7 +669,7 @@ const DeskCard = ({
           name: deskDetails.name,
           deactivated: deskDetails.deactivated,
           requireBookingApproval: false,
-          deskTypeIds,
+          customTagIds,
           zoneIds,
         },
       },
@@ -703,7 +703,7 @@ const DeskCard = ({
             name: deskDetails.name,
             deactivated: deskDetails.deactivated,
             requireBookingApproval: false,
-            deskTypes: deskDetails.deskTypes,
+            customTags: deskDetails.customTags,
             zones: deskDetails.zones,
           },
         },
@@ -762,8 +762,8 @@ const DeskCard = ({
 
           <CardContent>
             <StackColumn>
-              <DeskTypes
-                deskTypes={deskDetails.deskTypes.map(({ uniqueId, name }) => ({ id: uniqueId, name }))}
+              <CustomTags
+                customTags={deskDetails.customTags.map(({ uniqueId, name }) => ({ id: uniqueId, name }))}
                 sx={{ paddingTop: 1, paddingBottom: 1 }}
               />
               <Zones zones={deskDetails.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
@@ -817,7 +817,7 @@ const DeskCard = ({
             onSubmit={handleSaveClick}
             initialValues={{
               name: deskDetails.name,
-              deskTypeIds: deskDetails.deskTypes.map(({ uniqueId }) => uniqueId),
+              customTagIds: deskDetails.customTags.map(({ uniqueId }) => uniqueId),
               zoneIds: deskDetails.zones.map(({ uniqueId }) => uniqueId),
             }}
             validate={validate}
@@ -827,8 +827,12 @@ const DeskCard = ({
                   <TextField name="name" required={requiredFields.name} helperText="Add your desk name" />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Desk Types">
-                  <MultipleChoicesDeskTypes rootDataRelay={multipleChoicesDeskTypesData} name="deskTypeIds" required={requiredFields.deskTypeIds} />
+                <FormFieldLabel label="Tags">
+                  <MultipleChoicesCustomTags
+                    rootDataRelay={multipleChoicesCustomTagsData}
+                    name="customTagIds"
+                    required={requiredFields.customTagIds}
+                  />
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Zones">

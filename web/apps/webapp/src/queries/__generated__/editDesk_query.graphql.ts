@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<49ce8995b25e12627e36ac4008125c92>>
+ * @generated SignedSource<<7030ae394b2ec9ee1a8f4f2e1b0f19ac>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,11 +12,11 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type editDesk_query$data = {
   readonly desk: {
-    readonly deactivated: boolean;
-    readonly deskTypes: ReadonlyArray<{
+    readonly customTags: ReadonlyArray<{
       readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
+    readonly deactivated: boolean;
     readonly id: string;
     readonly name: string;
     readonly requireBookingApproval: boolean;
@@ -25,7 +25,7 @@ export type editDesk_query$data = {
       readonly uniqueId: string;
     }>;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesDeskTypes_query" | "multipleChoicesZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesZones_query">;
   readonly " $fragmentType": "editDesk_query";
 };
 export type editDesk_query$key = {
@@ -103,7 +103,7 @@ return {
           "args": null,
           "concreteType": "Organization_OrganizationTagDetails",
           "kind": "LinkedField",
-          "name": "deskTypes",
+          "name": "customTags",
           "plural": true,
           "selections": (v1/*: any*/),
           "storageKey": null
@@ -124,7 +124,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "multipleChoicesDeskTypes_query"
+      "name": "multipleChoicesCustomTags_query"
     },
     {
       "args": null,
@@ -137,6 +137,6 @@ return {
 };
 })();
 
-(node as any).hash = "ecb0bce9cf6343b06259d566aeaed83f";
+(node as any).hash = "a19625a2a610854631d8ea994957a45d";
 
 export default node;

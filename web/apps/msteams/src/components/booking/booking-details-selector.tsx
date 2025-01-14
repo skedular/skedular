@@ -176,7 +176,7 @@ const BookingDetailsSelector = ({
           @include(if: $locationExists) {
           uniqueId
           name
-          deskTypes {
+          customTags {
             uniqueId
             name
           }

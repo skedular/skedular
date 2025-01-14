@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<77eceff8821f21b093acc827f1d52d9c>>
+ * @generated SignedSource<<c155c88e465128cf3c3b284d365b93aa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,7 +39,7 @@ export type bookingCard_addBookingMutation$data = {
         readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
-        readonly deskTypes: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
           readonly name: string;
           readonly uniqueId: string;
         }>;
@@ -82,7 +82,7 @@ export type bookingCard_addBookingMutation$rawResponse = {
         readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
-        readonly deskTypes: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
           readonly name: string;
           readonly uniqueId: string;
         }>;
@@ -284,9 +284,9 @@ v5 = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingOrganizationDeskTypeDetails",
+          "concreteType": "BookingOrganizationCustomTagDetails",
           "kind": "LinkedField",
-          "name": "deskTypes",
+          "name": "customTags",
           "plural": true,
           "selections": (v4/*: any*/),
           "storageKey": null
@@ -372,16 +372,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1d46eae54f4d9a9a10e27ad0c81d187d",
+    "cacheID": "6219ce11a750515bd702cffcf20d85d9",
     "id": null,
     "metadata": {},
     "name": "bookingCard_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingCard_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "79f9610da821e8a9077e7cdeba2e7f15";
+(node as any).hash = "b17f5a7d47a7b579c57519a03a4cae34";
 
 export default node;

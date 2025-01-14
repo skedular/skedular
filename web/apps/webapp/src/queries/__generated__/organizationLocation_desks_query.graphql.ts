@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<848fc5d950e5ef7dacdd827968a69cac>>
+ * @generated SignedSource<<ee12cc77b9002b6c6d582b38489d613f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,11 +15,11 @@ export type organizationLocation_desks_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly deactivated: boolean;
-        readonly deskTypes: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
           readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
+        readonly deactivated: boolean;
         readonly id: string;
         readonly name: string;
         readonly requireBookingApproval: boolean;
@@ -73,7 +73,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "deskDeskTypeIds"
+      "name": "deskCustomTagIds"
     },
     {
       "kind": "RootArgument",
@@ -120,8 +120,8 @@ return {
           "fields": [
             {
               "kind": "Variable",
-              "name": "deskTypeIds",
-              "variableName": "deskDeskTypeIds"
+              "name": "customTagIds",
+              "variableName": "deskCustomTagIds"
             },
             {
               "kind": "Variable",
@@ -198,7 +198,7 @@ return {
                   "args": null,
                   "concreteType": "Organization_OrganizationTagDetails",
                   "kind": "LinkedField",
-                  "name": "deskTypes",
+                  "name": "customTags",
                   "plural": true,
                   "selections": (v2/*: any*/),
                   "storageKey": null
@@ -279,6 +279,6 @@ return {
 };
 })();
 
-(node as any).hash = "7ed0f3e42f93eeb4de4aeb4bb5b56bbb";
+(node as any).hash = "4312ad51e3704e5de3b4cc30786111bf";
 
 export default node;

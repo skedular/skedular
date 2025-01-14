@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2ad0cec75fba956feb7a0aad3be6f4be>>
+ * @generated SignedSource<<691c58d1c5ebc6645928b07ad096c682>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,7 +39,7 @@ export type smallMonthlyViewCalendarDay_addBookingMutation$data = {
         readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
-        readonly deskTypes: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
           readonly name: string;
           readonly uniqueId: string;
         }>;
@@ -82,7 +82,7 @@ export type smallMonthlyViewCalendarDay_addBookingMutation$rawResponse = {
         readonly uniqueId: string;
       };
       readonly desks: ReadonlyArray<{
-        readonly deskTypes: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
           readonly name: string;
           readonly uniqueId: string;
         }>;
@@ -284,9 +284,9 @@ v5 = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingOrganizationDeskTypeDetails",
+          "concreteType": "BookingOrganizationCustomTagDetails",
           "kind": "LinkedField",
-          "name": "deskTypes",
+          "name": "customTags",
           "plural": true,
           "selections": (v4/*: any*/),
           "storageKey": null
@@ -372,16 +372,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ee28f5a94d630682132d704e7bbb11b2",
+    "cacheID": "8bdaf3d809c8d853616ebb94c091a68e",
     "id": null,
     "metadata": {},
     "name": "smallMonthlyViewCalendarDay_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation smallMonthlyViewCalendarDay_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        deskTypes {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation smallMonthlyViewCalendarDay_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c768fa182e3647f5008e91b4052fb566";
+(node as any).hash = "34da6641ab03bbf9d851c01c3ec49b61";
 
 export default node;

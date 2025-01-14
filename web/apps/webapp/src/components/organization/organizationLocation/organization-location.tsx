@@ -24,7 +24,7 @@ import {
   StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
-import { DeskTypes } from '@repo/shared/components/deskType';
+import { CustomTags } from '@repo/shared/components/customTag';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
 import {
@@ -52,7 +52,7 @@ import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
-import DeskTypeSelector from '../deskTypeSelector/desk-type-selector';
+import CustomTagSelector from '../customTagSelector/custom-tag-selector';
 import ZoneSelector from '../zoneSelector/zone-selector';
 import { expandedDrawerWidthPx } from './commons';
 import OrganizationLocationLeftSideNavigationMenuContent from './organization-location-left-side-navigation-menu-content';
@@ -72,7 +72,7 @@ type LocationDetails = {
   physicalAddress: string;
 };
 
-type DeskTypeDetails = {
+type CustomTagDetails = {
   id: string;
   name: string | null | undefined;
 };
@@ -85,7 +85,7 @@ type ZoneDetails = {
 type DeskRowType = {
   id: string;
   name: string;
-  deskTypes: DeskTypeDetails[];
+  customTags: CustomTagDetails[];
   zones: ZoneDetails[];
   status: boolean;
 };
@@ -110,7 +110,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
             formattedAddress
           }
         }
-        ...deskTypeSelector_allDeskTypes_query
+        ...customTagSelector_allCustomTags_query
         ...zoneSelector_allZones_query
       }
     `,
@@ -125,7 +125,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
         desks(
           first: $count
           after: $cursor
-          where: { locationId: $locationId, nameContains: $deskNameSearchText, deskTypeIds: $deskDeskTypeIds, zoneIds: $deskZoneIds }
+          where: { locationId: $locationId, nameContains: $deskNameSearchText, customTagIds: $deskCustomTagIds, zoneIds: $deskZoneIds }
         ) @connection(key: "organizationLocation_desks") {
           __id
           totalCount
@@ -135,7 +135,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
               name
               deactivated
               requireBookingApproval
-              deskTypes {
+              customTags {
                 uniqueId
                 name
               }
@@ -185,7 +185,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
           name
           deactivated
           requireBookingApproval
-          deskTypes {
+          customTags {
             uniqueId
             name
           }
@@ -206,7 +206,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
           name
           deactivated
           requireBookingApproval
-          deskTypes {
+          customTags {
             uniqueId
             name
           }
@@ -229,7 +229,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   const validate = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
   const [deskNameSearchText, setDeskNameSearchText] = useState<string>('');
-  const [deskDeskTypeIds, setDeskDeskTypeIds] = useState<string[]>([]);
+  const [deskCustomTagIds, setDeskCustomTagIds] = useState<string[]>([]);
   const [deskZoneIds, setDeskZoneIds] = useState<string[]>([]);
   const [selectedDeskId, setSelectedDeskId] = useState<null | string>(null);
   const [seledctedDesks, setSeledctedDesks] = useState<GridRowSelectionModel>([]);
@@ -272,12 +272,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   }, [section]);
 
   const handleRefetchDesks = useCallback(
-    (deskNameSearchText: string, deskDeskTypeIds: string[], deskZoneIds: string[]) => {
+    (deskNameSearchText: string, deskCustomTagIds: string[], deskZoneIds: string[]) => {
       startTransition(() => {
         refetchDesks(
           {
             deskNameSearchText,
-            deskDeskTypeIds,
+            deskCustomTagIds,
             deskZoneIds,
           },
           {
@@ -356,12 +356,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   const handleDeskNameSearchTextChange = (str: string) => {
     setDeskNameSearchText(str);
 
-    handleRefetchDesks(str, deskZoneIds, deskDeskTypeIds);
+    handleRefetchDesks(str, deskZoneIds, deskCustomTagIds);
   };
 
-  const handleDeskTypeChanged = (id?: string) => {
+  const handleCustomTagChanged = (id?: string) => {
     const newIds = id ? [id] : [];
-    setDeskDeskTypeIds(newIds);
+    setDeskCustomTagIds(newIds);
 
     handleRefetchDesks(deskNameSearchText, newIds, deskZoneIds);
   };
@@ -370,7 +370,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     const newIds = id ? [id] : [];
     setDeskZoneIds(newIds);
 
-    handleRefetchDesks(deskNameSearchText, deskDeskTypeIds, newIds);
+    handleRefetchDesks(deskNameSearchText, deskCustomTagIds, newIds);
   };
 
   const handleSelectedDesksChanged = (newRowSelectionModel: GridRowSelectionModel) => {
@@ -634,7 +634,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   const deskRows: DeskRowType[] = desks.map((desk) => ({
     id: desk.id,
     name: desk.name,
-    deskTypes: desk.deskTypes.map((item) => ({ id: item.uniqueId, name: item.name })),
+    customTags: desk.customTags.map((item) => ({ id: item.uniqueId, name: item.name })),
     zones: desk.zones.map((item) => ({ id: item.uniqueId, name: item.name })),
     status: !desk.deactivated,
   }));
@@ -649,10 +649,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       minWidth: 200,
     },
     {
-      field: 'deskTypes',
-      headerName: 'Desk Types',
+      field: 'customTags',
+      headerName: 'Tags',
       editable: false,
-      renderCell: (params) => <DeskTypes deskTypes={params.value} hideIcon />,
+      renderCell: (params) => <CustomTags customTags={params.value} hideIcon />,
       display: 'flex',
       minWidth: 250,
     },
@@ -764,7 +764,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                 </StackColumn>
 
                 <StackRow sx={{ padding: defaultPadding }}>
-                  <DeskTypeSelector rootDataRelay={rootData} onChange={handleDeskTypeChanged} />
+                  <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
                   <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
                   <PushToRight />
                   <Search size="small" placeholder="Search for desks" defaultValue={deskNameSearchText} onChange={handleDeskNameSearchTextChange} />

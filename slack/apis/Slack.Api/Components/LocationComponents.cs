@@ -126,8 +126,8 @@ public class LocationComponents(ICustomerService customerService, IOrganizationS
                 },
                 new Option
                 {
-                    Value = $"{DeskTypeActionTypes.DeskTypes}{location.Id}",
-                    Text = "Desk Types".ToOptionPlainTextWithIcon(Icons.DeskTypes)
+                    Value = $"{CustomTagActionTypes.CustomTags}{location.Id}",
+                    Text = "Tags".ToOptionPlainTextWithIcon(Icons.CustomTags)
                 },
                 new Option
                 {

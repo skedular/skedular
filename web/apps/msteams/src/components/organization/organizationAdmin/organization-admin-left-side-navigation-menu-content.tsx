@@ -3,12 +3,12 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
-import { BillingAndPaymentIcon, DeskTypeIcon, EditIcon, SSOIcon, SubscriptionsIcon, ZoneIcon } from '@repo/shared/components/icons';
+import { BillingAndPaymentIcon, CustomTagIcon, EditIcon, SSOIcon, SubscriptionsIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
 import {
   getModernOrganizationAdminBillingAndPaymentBaseLink,
-  getModernOrganizationAdminDeskTypesBaseLink,
+  getModernOrganizationAdminCustomTagsBaseLink,
   getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationAdminSSOBaseLink,
   getModernOrganizationAdminSubscriptionsBaseLink,
@@ -64,7 +64,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   const billingAndPaymentLink = getModernOrganizationAdminBillingAndPaymentBaseLink(organizationId);
   const ssoLink = getModernOrganizationAdminSSOBaseLink(organizationId);
   const zonesLink = getModernOrganizationAdminZonesBaseLink(organizationId);
-  const deskTypesLink = getModernOrganizationAdminDeskTypesBaseLink(organizationId);
+  const customTagsLink = getModernOrganizationAdminCustomTagsBaseLink(organizationId);
   const subscriptionsLink = getModernOrganizationAdminSubscriptionsBaseLink(organizationId);
 
   return (
@@ -171,23 +171,23 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
       </ListItem>
 
       <ListItem disablePadding>
-        <Link href={deskTypesLink}>
+        <Link href={customTagsLink}>
           <ListItemButton
-            selected={fullPath === deskTypesLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === deskTypesLink) }}
+            selected={fullPath === customTagsLink}
+            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === customTagsLink) }}
           >
             {collapsed && (
               <BodyIconTypography
-                startElement={!hideIcons && <DeskTypeIcon color="inherit" />}
-                invertDefaultColor={fullPath === deskTypesLink && paletteMode === 'dark'}
+                startElement={!hideIcons && <CustomTagIcon color="inherit" />}
+                invertDefaultColor={fullPath === customTagsLink && paletteMode === 'dark'}
               />
             )}
             {!collapsed && (
               <BodyIconTypography
-                label="Desk Type Setup"
-                startElement={!hideIcons && <DeskTypeIcon excludeTooltip color="inherit" />}
+                label="Tag Setup"
+                startElement={!hideIcons && <CustomTagIcon excludeTooltip color="inherit" />}
                 spacing={3}
-                invertDefaultColor={fullPath === deskTypesLink && paletteMode === 'dark'}
+                invertDefaultColor={fullPath === customTagsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

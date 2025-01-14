@@ -7,7 +7,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
 import { Bookings } from 'components/booking/bookingsPage';
-import { OrganizationDeskTypes, OrganizationZones } from 'components/organization/organizationPage';
+import { OrganizationCustomTags, OrganizationZones } from 'components/organization/organizationPage';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -52,7 +52,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
   const bookingTabIndex = tabCount++;
   const aboutTabIndex = tabCount++;
   const zonesTabIndex = tabCount++;
-  const deskTypesTabIndex = tabCount++;
+  const customTagsTabIndex = tabCount++;
   const desksTabIndex = tabCount++;
   const analyticsTabIndex = rootData.location?.canViewAnalytics ? tabCount++ : -1;
 
@@ -62,8 +62,8 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
     initialTabIndex = aboutTabIndex;
   } else if (tab === 'zones') {
     initialTabIndex = zonesTabIndex;
-  } else if (tab === 'deskTypes') {
-    initialTabIndex = deskTypesTabIndex;
+  } else if (tab === 'customTags') {
+    initialTabIndex = customTagsTabIndex;
   } else if (tab === 'desks') {
     initialTabIndex = desksTabIndex;
   } else if (tab === 'analytics') {
@@ -83,8 +83,8 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
       tab = 'about';
     } else if (newValue === zonesTabIndex) {
       tab = 'zones';
-    } else if (newValue === deskTypesTabIndex) {
-      tab = 'deskTypes';
+    } else if (newValue === customTagsTabIndex) {
+      tab = 'customTags';
     } else if (newValue === desksTabIndex) {
       tab = 'desks';
     } else if (newValue === analyticsTabIndex) {
@@ -108,7 +108,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
         <Tab label="Bookings" />
         <Tab label="About" />
         <Tab label="Zones" />
-        <Tab label="Desk Types" />
+        <Tab label="Tags" />
         <Tab label="Desks" />
         {rootData.location.canViewAnalytics && <Tab label="Analytics" />}
       </Tabs>
@@ -119,7 +119,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
           <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />
         )}
         {tabIndex === zonesTabIndex && <OrganizationZones onReloadRequired={onReloadRequired} organizationId={organizationId} />}
-        {tabIndex === deskTypesTabIndex && <OrganizationDeskTypes onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+        {tabIndex === customTagsTabIndex && <OrganizationCustomTags onReloadRequired={onReloadRequired} organizationId={organizationId} />}
         {tabIndex === desksTabIndex && (
           <LocationDesksTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />
         )}

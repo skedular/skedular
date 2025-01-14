@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5b7fa199ac0f28c048cbe93915fb8a1f>>
+ * @generated SignedSource<<9e13030258a5274ea37419e74ad59438>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type AddDeskInput = {
   clientMutationId?: string | null | undefined;
-  deskTypeIds: ReadonlyArray<string>;
+  customTagIds: ReadonlyArray<string>;
   id?: string | null | undefined;
   locationId: string;
   name: string;
@@ -24,7 +24,7 @@ export type addDeskDialog_addDeskMutation$variables = {
 export type addDeskDialog_addDeskMutation$data = {
   readonly addDesk: {
     readonly desk: {
-      readonly deskTypes: ReadonlyArray<{
+      readonly customTags: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
       readonly id: string;
@@ -38,7 +38,7 @@ export type addDeskDialog_addDeskMutation$data = {
 export type addDeskDialog_addDeskMutation$rawResponse = {
   readonly addDesk: {
     readonly desk: {
-      readonly deskTypes: ReadonlyArray<{
+      readonly customTags: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
       readonly id: string;
@@ -111,7 +111,7 @@ v3 = {
       "args": null,
       "concreteType": "Organization_OrganizationTagDetails",
       "kind": "LinkedField",
-      "name": "deskTypes",
+      "name": "customTags",
       "plural": true,
       "selections": (v2/*: any*/),
       "storageKey": null
@@ -194,16 +194,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a0c9c245a0cdc2c39aea0e4be34c82db",
+    "cacheID": "a8cc5667eea5e7034334fb78055d0138",
     "id": null,
     "metadata": {},
     "name": "addDeskDialog_addDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation addDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      deskTypes {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation addDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      customTags {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c4a2f56e332f4eb0f240b500f83b8014";
+(node as any).hash = "117309c7c73de6742e8d83a529e5850f";
 
 export default node;

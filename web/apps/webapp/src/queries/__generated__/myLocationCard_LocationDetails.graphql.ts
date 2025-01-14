@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bd2a36fce15c321412c87bbae187376b>>
+ * @generated SignedSource<<4a0180f842420e8fb2060215709f3197>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type myLocationCard_LocationDetails$data = {
   readonly canDelete: boolean;
   readonly canModify: boolean;
-  readonly deskTypes: ReadonlyArray<{
+  readonly customTags: ReadonlyArray<{
     readonly name: string | null | undefined;
     readonly uniqueId: string;
   }>;
@@ -79,7 +79,7 @@ return {
       "args": null,
       "concreteType": "Organization_OrganizationTagDetails",
       "kind": "LinkedField",
-      "name": "deskTypes",
+      "name": "customTags",
       "plural": true,
       "selections": (v3/*: any*/),
       "storageKey": null
@@ -163,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "ad228f9906332d103ddbb01ccb747557";
+(node as any).hash = "aeb1dfefd27712203a47ac00eb209a57";
 
 export default node;

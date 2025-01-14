@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<68c0fb1e0ca692035c9a9761f7d23aa9>>
+ * @generated SignedSource<<d8da56a820559e5b7b6c13241014bb2d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -200,7 +200,7 @@ return {
                     "args": null,
                     "concreteType": "Organization_OrganizationTagDetails",
                     "kind": "LinkedField",
-                    "name": "deskTypes",
+                    "name": "customTags",
                     "plural": true,
                     "selections": (v3/*: any*/),
                     "storageKey": null
@@ -290,12 +290,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "42b6e94a014277d08369c7921758821c",
+    "cacheID": "1b82e4edaf07e1345aa96ea67421bfb3",
     "id": null,
     "metadata": {},
     "name": "locationDesksTab_desks_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationDesksTab_desks_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]\n  $locationId: String!\n) {\n  ...locationDesksTab_desks_query_1G22uz\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  deskTypes {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n}\n\nfragment locationDesksTab_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query locationDesksTab_desks_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]\n  $locationId: String!\n) {\n  ...locationDesksTab_desks_query_1G22uz\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  customTags {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n}\n\nfragment locationDesksTab_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

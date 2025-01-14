@@ -78,7 +78,7 @@ public interface IMapper
     Shared.Models.Workspace MapTo(Admin_AddWorkspaceInput src);
     global::Api.Shared.Services.Grpc.Skedular.Slack.V1.Workspace MapTo(Shared.Models.Workspace src);
 
-    OrganizationDeskType MapTo(DeskType src);
+    OrganizationCustomTag MapTo(CustomTag src);
     OrganizationZone MapTo(Zone src);
 }
 
@@ -258,7 +258,7 @@ public class Mapper : IMapper
                 Name = item.Name.ToSafeString(),
                 Type = item.Type switch
                 {
-                    OrganizationTagTypeConstants.DeskType => OrganizationTagType.DeskType,
+                    OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                     OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                     _ => throw new ArgumentOutOfRangeException()
                 },
@@ -577,7 +577,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationDeskTypes = MapTo(src.OrganizationDeskTypes).ToList(),
+            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList()
         };
 
@@ -623,7 +623,7 @@ public class Mapper : IMapper
             AuthedRefreshToken = src.AuthedRefreshToken.ToSafeString()
         };
 
-    public OrganizationDeskType MapTo(DeskType src) =>
+    public OrganizationCustomTag MapTo(CustomTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
 
     public OrganizationZone MapTo(Zone src) =>
@@ -730,7 +730,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
-            OrganizationDeskTypes = MapTo(src.OrganizationDeskTypes).ToList(),
+            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList(),
             Location = string.IsNullOrWhiteSpace(src.Location?.Id)
                 ? null
@@ -834,12 +834,12 @@ public class Mapper : IMapper
     private static Shared.Models.Identity MapTo(Shared.Database.Entities.Identity src, Customer customer) =>
         new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Customer = customer };
 
-    private static IEnumerable<OrganizationDeskType> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationDeskType> src) =>
+    private static IEnumerable<OrganizationCustomTag> MapTo(
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationCustomTag> src) =>
         src.Select(MapTo);
 
-    private static OrganizationDeskType MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationDeskType src) =>
+    private static OrganizationCustomTag MapTo(
+        global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationCustomTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<OrganizationZone> MapTo(
@@ -850,12 +850,12 @@ public class Mapper : IMapper
         global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static IEnumerable<OrganizationDeskType> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationDeskType> src) =>
+    private static IEnumerable<OrganizationCustomTag> MapTo(
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag> src) =>
         src.Select(MapTo);
 
-    private static OrganizationDeskType MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationDeskType src) =>
+    private static OrganizationCustomTag MapTo(
+        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<OrganizationZone> MapTo(

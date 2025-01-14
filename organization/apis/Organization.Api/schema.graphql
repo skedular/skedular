@@ -1,460 +1,460 @@
 ﻿schema {
-  query: Query
-  mutation: Mutation
+    query: Query
+    mutation: Mutation
 }
 
 type AcceptInvitationToJoinOrganizationPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type CancelInvitationToJoinOrganizationPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type CancelOrganizationOfferingPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type InviteCustomersToJoinOrganizationPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type Mutation {
-  addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
-  updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
-  deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
-  updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
-  cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload @cost(weight: "10")
-  changeOrganizationMemberRole(input: ChangeOrganizationMemberRoleInput!): OrganizationMemberDetailsPayload @cost(weight: "10")
-  changeOrganizationMembersStatus(input: ChangeOrganizationMembersStatusInput!): OrganizationMembersDetailsPayload @cost(weight: "10")
-  removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload @cost(weight: "10")
-  inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InviteCustomersToJoinOrganizationPayload @cost(weight: "10")
-  acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): AcceptInvitationToJoinOrganizationPayload @cost(weight: "10")
-  rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): RejectInvitationToJoinOrganizationPayload @cost(weight: "10")
-  cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): CancelInvitationToJoinOrganizationPayload @cost(weight: "10")
-  completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload @cost(weight: "10")
-  addDeskType(input: AddDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
-  updateDeskType(input: UpdateDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
-  deleteDeskType(input: DeleteDeskTypeInput!): OrganizationTagPayload @cost(weight: "10")
-  deleteDeskTypes(input: DeleteDeskTypesInput!): OrganizationTagsPayload @cost(weight: "10")
-  addZone(input: AddZoneInput!): OrganizationTagPayload @cost(weight: "10")
-  updateZone(input: UpdateZoneInput!): OrganizationTagPayload @cost(weight: "10")
-  deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
-  deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload @cost(weight: "10")
+    addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
+    updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
+    deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
+    updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
+    cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload @cost(weight: "10")
+    changeOrganizationMemberRole(input: ChangeOrganizationMemberRoleInput!): OrganizationMemberDetailsPayload @cost(weight: "10")
+    changeOrganizationMembersStatus(input: ChangeOrganizationMembersStatusInput!): OrganizationMembersDetailsPayload @cost(weight: "10")
+    removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload @cost(weight: "10")
+    inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InviteCustomersToJoinOrganizationPayload @cost(weight: "10")
+    acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): AcceptInvitationToJoinOrganizationPayload @cost(weight: "10")
+    rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): RejectInvitationToJoinOrganizationPayload @cost(weight: "10")
+    cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): CancelInvitationToJoinOrganizationPayload @cost(weight: "10")
+    completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload @cost(weight: "10")
+    addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
+    updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
+    deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
+    deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload @cost(weight: "10")
+    addZone(input: AddZoneInput!): OrganizationTagPayload @cost(weight: "10")
+    updateZone(input: UpdateZoneInput!): OrganizationTagPayload @cost(weight: "10")
+    deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
+    deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload @cost(weight: "10")
 }
 
 type OrganizationAnalytics {
-  memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
-  dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
+    memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
+    dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
 }
 
 type OrganizationAvailableOfferingDetails {
-  code: String!
-  name: String!
-  unitPrice: Int!
-  featureSet: [OrganizationFeatureSetDetails!]!
-  free: Boolean!
+    code: String!
+    name: String!
+    unitPrice: Int!
+    featureSet: [OrganizationFeatureSetDetails!]!
+    free: Boolean!
 }
 
 type OrganizationConnection {
-  pageInfo: PageInfo!
-  edges: [OrganizationEdge!]!
-  totalCount: Int
+    pageInfo: PageInfo!
+    edges: [OrganizationEdge!]!
+    totalCount: Int
 }
 
 type OrganizationCustomerDetails {
-  uniqueId: ID!
-  email: String
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  phoneNumber: String
+    uniqueId: ID!
+    email: String
+    name: String
+    givenName: String
+    middleName: String
+    familyName: String
+    photoUrl: String
+    photoUrl24: String
+    photoUrl32: String
+    photoUrl48: String
+    photoUrl72: String
+    photoUrl192: String
+    photoUrl512: String
+    phoneNumber: String
 }
 
 type OrganizationDailyBookingsTotal {
-  date: DateTime!
-  total: Int!
+    date: DateTime!
+    total: Int!
 }
 
 type OrganizationDetails {
-  name: String!
-  about: String
-  website: String
-  logoUrl: String
-  agreedToTermsOfUse: Boolean!
-  termsOfUse: OrganizationTermsOfUse
-  industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
-  availableOfferings: [OrganizationAvailableOfferingDetails!]!
-  offering: OrganizationOfferingDetails!
-  hasAttachedPaymentMethod: Boolean!
-  hasFutureBooking: Boolean!
-  hasLocation: Boolean!
-  hasTeam: Boolean!
-  canModify: Boolean!
-  canDelete: Boolean!
-  canInvitePeople: Boolean!
-  canViewAnalytics: Boolean!
-  isMyOnboardingDone: Boolean!
-  members: [OrganizationMemberDetails!]!
-  id: ID!
+    name: String!
+    about: String
+    website: String
+    logoUrl: String
+    agreedToTermsOfUse: Boolean!
+    termsOfUse: OrganizationTermsOfUse
+    industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+    availableOfferings: [OrganizationAvailableOfferingDetails!]!
+    offering: OrganizationOfferingDetails!
+    hasAttachedPaymentMethod: Boolean!
+    hasFutureBooking: Boolean!
+    hasLocation: Boolean!
+    hasTeam: Boolean!
+    canModify: Boolean!
+    canDelete: Boolean!
+    canInvitePeople: Boolean!
+    canViewAnalytics: Boolean!
+    isMyOnboardingDone: Boolean!
+    members: [OrganizationMemberDetails!]!
+    id: ID!
 }
 
 type OrganizationEdge {
-  node: OrganizationDetails!
-  cursor: String!
+    node: OrganizationDetails!
+    cursor: String!
 }
 
 type OrganizationFeatureSetDetails {
-  name: String!
-  description: String!
+    name: String!
+    description: String!
 }
 
 type OrganizationIndustryMainCategoryReferenceDetails {
-  name: String!
-  subCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
-  id: ID!
+    name: String!
+    subCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+    id: ID!
 }
 
 type OrganizationIndustrySubCategoryReferenceDetails {
-  name: String!
-  mainCategoryName: String!
-  id: ID!
+    name: String!
+    mainCategoryName: String!
+    id: ID!
 }
 
 type OrganizationMemberAttendancePercentage {
-  date: DateTime!
-  percentage: Float!
+    date: DateTime!
+    percentage: Float!
 }
 
 type OrganizationMemberConnection {
-  pageInfo: PageInfo!
-  edges: [OrganizationMemberEdge!]!
-  totalCount: Int
+    pageInfo: PageInfo!
+    edges: [OrganizationMemberEdge!]!
+    totalCount: Int
 }
 
 type OrganizationMemberDetails {
-  role: OrganizationMemberRole
-  status: OrganizationMemberStatus!
-  isOrganizationOnboardingDone: Boolean!
-  customer: OrganizationCustomerDetails!
-  id: ID!
+    role: OrganizationMemberRole
+    status: OrganizationMemberStatus!
+    isOrganizationOnboardingDone: Boolean!
+    customer: OrganizationCustomerDetails!
+    id: ID!
 }
 
 type OrganizationMemberDetailsPayload {
-  clientMutationId: String
-  member: OrganizationMemberDetails
+    clientMutationId: String
+    member: OrganizationMemberDetails
 }
 
 type OrganizationMemberEdge {
-  node: OrganizationMemberDetails!
-  cursor: String!
+    node: OrganizationMemberDetails!
+    cursor: String!
 }
 
 type OrganizationMemberPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type OrganizationMembersDetailsPayload {
-  clientMutationId: String
-  members: [OrganizationMemberDetails!]!
+    clientMutationId: String
+    members: [OrganizationMemberDetails!]!
 }
 
 type OrganizationOfferingDetails {
-  code: String!
-  name: String!
-  start: DateTime!
-  end: DateTime!
-  unitPrice: Int!
-  featureSet: [OrganizationFeatureSetDetails!]!
-  free: Boolean!
-  id: ID!
+    code: String!
+    name: String!
+    start: DateTime!
+    end: DateTime!
+    unitPrice: Int!
+    featureSet: [OrganizationFeatureSetDetails!]!
+    free: Boolean!
+    id: ID!
 }
 
 type OrganizationPayload {
-  clientMutationId: String
-  organization: OrganizationDetails!
+    clientMutationId: String
+    organization: OrganizationDetails!
 }
 
 type OrganizationTagConnection {
-  pageInfo: PageInfo!
-  edges: [OrganizationTagEdge!]!
-  totalCount: Int
+    pageInfo: PageInfo!
+    edges: [OrganizationTagEdge!]!
+    totalCount: Int
 }
 
 type OrganizationTagDetails {
-  name: String!
-  description: String
-  tagType: String!
-  id: ID!
+    name: String!
+    description: String
+    tagType: String!
+    id: ID!
 }
 
 type OrganizationTagEdge {
-  node: OrganizationTagDetails!
-  cursor: String!
+    node: OrganizationTagDetails!
+    cursor: String!
 }
 
 type OrganizationTagPayload {
-  clientMutationId: String
-  organizationTag: OrganizationTagDetails!
+    clientMutationId: String
+    organizationTag: OrganizationTagDetails!
 }
 
 type OrganizationTagsPayload {
-  clientMutationId: String
-  organizationTags: [OrganizationTagDetails!]!
+    clientMutationId: String
+    organizationTags: [OrganizationTagDetails!]!
 }
 
 type OrganizationTermsOfUse {
-  terms: String!
-  id: ID!
+    terms: String!
+    id: ID!
 }
 
 type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
 }
 
 type Query {
-  organizationVersion: Version!
-  organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
-  activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
-  organizationMemberRoles: [OrganizationMemberRole!]!
-  organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
-  organization(id: String!): OrganizationDetails @cost(weight: "10")
-  organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): OrganizationConnection @cost(weight: "10")
-  myOrganizations: [OrganizationDetails!] @cost(weight: "10")
-  organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection @cost(weight: "10")
-  organizationAnalytics(organizationId: String! from: DateTime! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
-  isAzureTenantInstalled: Boolean! @cost(weight: "10")
-  azureTenantAdminConsentUrl: String! @cost(weight: "10")
-  azureTenantOrganization: OrganizationDetails @cost(weight: "10")
-  deskTypes(after: String first: Int before: String last: Int where: DeskTypeOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
-  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
-  zone(id: String!): OrganizationTagDetails @cost(weight: "10")
-  deskType(id: String!): OrganizationTagDetails @cost(weight: "10")
+    organizationVersion: Version!
+    organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
+    activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
+    organizationMemberRoles: [OrganizationMemberRole!]!
+    organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
+    organization(id: String!): OrganizationDetails @cost(weight: "10")
+    organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): OrganizationConnection @cost(weight: "10")
+    myOrganizations: [OrganizationDetails!] @cost(weight: "10")
+    organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection @cost(weight: "10")
+    organizationAnalytics(organizationId: String! from: DateTime! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
+    isAzureTenantInstalled: Boolean! @cost(weight: "10")
+    azureTenantAdminConsentUrl: String! @cost(weight: "10")
+    azureTenantOrganization: OrganizationDetails @cost(weight: "10")
+    customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+    zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+    zone(id: String!): OrganizationTagDetails @cost(weight: "10")
+    customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
 }
 
 type RejectInvitationToJoinOrganizationPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type UpdateOrganizationOfferingPayload {
-  clientMutationId: String
+    clientMutationId: String
 }
 
 type Version {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
 }
 
 input AcceptInvitationToJoinOrganizationInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
-input AddDeskTypeInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  description: String
-  organizationId: String!
+input AddCustomTagInput {
+    clientMutationId: String
+    id: String
+    name: String!
+    description: String
+    organizationId: String!
 }
 
 input AddOrganizationInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  about: String
-  website: String
-  agreedToTermsOfUse: Boolean!
-  termsOfUseId: String!
-  industrySubCategoryIds: [String!]!
+    clientMutationId: String
+    id: String
+    name: String!
+    about: String
+    website: String
+    agreedToTermsOfUse: Boolean!
+    termsOfUseId: String!
+    industrySubCategoryIds: [String!]!
 }
 
 input AddZoneInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  description: String
-  organizationId: String!
+    clientMutationId: String
+    id: String
+    name: String!
+    description: String
+    organizationId: String!
 }
 
 input CancelInvitationToJoinOrganizationInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input CancelOrganizationOfferingInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input ChangeOrganizationMemberRoleInput {
-  clientMutationId: String
-  id: String!
-  role: OrganizationMemberRole!
+    clientMutationId: String
+    id: String!
+    role: OrganizationMemberRole!
 }
 
 input ChangeOrganizationMembersStatusInput {
-  clientMutationId: String
-  ids: [String!]!
-  status: OrganizationMemberStatus!
+    clientMutationId: String
+    ids: [String!]!
+    status: OrganizationMemberStatus!
 }
 
 input CompleteOrganizationMemberOnboardingInput {
-  clientMutationId: String
-  organizationId: String!
+    clientMutationId: String
+    organizationId: String!
 }
 
-input DeleteDeskTypeInput {
-  clientMutationId: String
-  id: String!
+input CustomTagOrganizationTagWhereInput {
+    organizationId: String!
+    nameContains: String
 }
 
-input DeleteDeskTypesInput {
-  clientMutationId: String
-  ids: [String!]!
+input DeleteCustomTagInput {
+    clientMutationId: String
+    id: String!
+}
+
+input DeleteCustomTagsInput {
+    clientMutationId: String
+    ids: [String!]!
 }
 
 input DeleteOrganizationInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input DeleteZoneInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input DeleteZonesInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
-input DeskTypeOrganizationTagWhereInput {
-  organizationId: String!
-  nameContains: String
+    clientMutationId: String
+    ids: [String!]!
 }
 
 input InviteCustomersToJoinOrganizationInput {
-  clientMutationId: String
-  organizationId: String!
-  emails: [String!]!
+    clientMutationId: String
+    organizationId: String!
+    emails: [String!]!
 }
 
 input OrganizationMemberOrderInput {
-  direction: OrderDirection!
-  field: OrganizationMemberOrderField!
+    direction: OrderDirection!
+    field: OrganizationMemberOrderField!
 }
 
 input OrganizationMemberWhereInput {
-  organizationId: String!
-  nameContains: String
+    organizationId: String!
+    nameContains: String
 }
 
 input OrganizationOrderInput {
-  direction: OrderDirection!
-  field: OrganizationOrderField!
+    direction: OrderDirection!
+    field: OrganizationOrderField!
 }
 
 input OrganizationTagOrderInput {
-  direction: OrderDirection!
-  field: OrganizationTagOrderField!
+    direction: OrderDirection!
+    field: OrganizationTagOrderField!
 }
 
 input OrganizationWhereInput {
-  nameContains: String
+    nameContains: String
 }
 
 input RejectInvitationToJoinOrganizationInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input RemoveOrganizationMembersInput {
-  clientMutationId: String
-  ids: [String!]!
+    clientMutationId: String
+    ids: [String!]!
 }
 
-input UpdateDeskTypeInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  description: String
+input UpdateCustomTagInput {
+    clientMutationId: String
+    id: String!
+    name: String!
+    description: String
 }
 
 input UpdateOrganizationInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  about: String
-  website: String
-  industrySubCategoryIds: [String!]!
+    clientMutationId: String
+    id: String!
+    name: String!
+    about: String
+    website: String
+    industrySubCategoryIds: [String!]!
 }
 
 input UpdateOrganizationOfferingInput {
-  clientMutationId: String
-  id: String!
-  offeringCode: String!
+    clientMutationId: String
+    id: String!
+    offeringCode: String!
 }
 
 input UpdateZoneInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  description: String
+    clientMutationId: String
+    id: String!
+    name: String!
+    description: String
 }
 
 input ZoneOrganizationTagWhereInput {
-  organizationId: String!
-  nameContains: String
+    organizationId: String!
+    nameContains: String
 }
 
 enum OrderDirection {
-  Ascending
-  Descending
+    Ascending
+    Descending
 }
 
 enum OrganizationMemberOrderField {
-  Role
-  Status
-  Name
-  GivenName
-  MiddleName
-  FamilyName
-  PhoneNumber
+    Role
+    Status
+    Name
+    GivenName
+    MiddleName
+    FamilyName
+    PhoneNumber
 }
 
 enum OrganizationMemberRole {
-  Owner
-  Administrator
-  Member
+    Owner
+    Administrator
+    Member
 }
 
 enum OrganizationMemberStatus {
-  Active
-  Inactive
+    Active
+    Inactive
 }
 
 enum OrganizationOrderField {
-  Name
+    Name
 }
 
 enum OrganizationTagOrderField {
-  Name
-  Description
-  TagType
+    Name
+    Description
+    TagType
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

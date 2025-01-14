@@ -23,7 +23,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationNameLength);
-        
+
         builder
             .HasOne(item => item.Organization)
             .WithMany(item => item.Locations);

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<73c62160f5f55be396b7faca2433df06>>
+ * @generated SignedSource<<3ccc0dad0064bde86f6cfee24ef32285>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,12 +17,12 @@ export type OrganizationTagOrderInput = {
   field: OrganizationTagOrderField;
 };
 export type bulkAddDeskDialog_rootQuery$variables = {
-  multipleChoicesDeskTypesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
+  multipleChoicesCustomTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   multipleChoicesZonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   organizationId: string;
 };
 export type bulkAddDeskDialog_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesDeskTypes_query" | "multipleChoicesZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesZones_query">;
 };
 export type bulkAddDeskDialog_rootQuery = {
   response: bulkAddDeskDialog_rootQuery$data;
@@ -33,7 +33,7 @@ const node: ConcreteRequest = (function(){
 var v0 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "multipleChoicesDeskTypesSortingValues"
+  "name": "multipleChoicesCustomTagsSortingValues"
 },
 v1 = {
   "defaultValue": null,
@@ -127,7 +127,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "multipleChoicesDeskTypes_query"
+        "name": "multipleChoicesCustomTags_query"
       },
       {
         "args": null,
@@ -154,13 +154,13 @@ return {
           {
             "kind": "Variable",
             "name": "orderBy",
-            "variableName": "multipleChoicesDeskTypesSortingValues"
+            "variableName": "multipleChoicesCustomTagsSortingValues"
           },
           (v3/*: any*/)
         ],
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
-        "name": "deskTypes",
+        "name": "customTags",
         "plural": false,
         "selections": (v4/*: any*/),
         "storageKey": null
@@ -185,16 +185,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a284b9c6e015f8a60c53ce37ac81573e",
+    "cacheID": "0ee596d332788f8f04367c65c2b69bca",
     "id": null,
     "metadata": {},
     "name": "bulkAddDeskDialog_rootQuery",
     "operationKind": "query",
-    "text": "query bulkAddDeskDialog_rootQuery(\n  $organizationId: String!\n  $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...multipleChoicesDeskTypes_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesDeskTypes_query on Query {\n  deskTypes(where: {organizationId: $organizationId}, orderBy: $multipleChoicesDeskTypesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query bulkAddDeskDialog_rootQuery(\n  $organizationId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1de85caa2d63ee358e34d0da0224f86b";
+(node as any).hash = "da2733b123cd5206b2b95ac9272b8157";
 
 export default node;

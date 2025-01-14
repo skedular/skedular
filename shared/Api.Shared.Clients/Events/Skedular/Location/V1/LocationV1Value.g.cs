@@ -60,7 +60,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "Location", "InvitationToJoinLocation" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Desks" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember.Parser, new[]{ "Id", "Role", "CustomerId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "DeskTypeIds", "ZoneIds" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "CustomTagIds", "ZoneIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null)
           }));
     }
@@ -1778,7 +1778,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       name_ = other.name_;
       deactivated_ = other.deactivated_;
       requireBookingApproval_ = other.requireBookingApproval_;
-      deskTypeIds_ = other.deskTypeIds_.Clone();
+      customTagIds_ = other.customTagIds_.Clone();
       zoneIds_ = other.zoneIds_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1837,15 +1837,15 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "deskTypeIds" field.</summary>
-    public const int DeskTypeIdsFieldNumber = 5;
-    private static readonly pb::FieldCodec<string> _repeated_deskTypeIds_codec
+    /// <summary>Field number for the "customTagIds" field.</summary>
+    public const int CustomTagIdsFieldNumber = 5;
+    private static readonly pb::FieldCodec<string> _repeated_customTagIds_codec
         = pb::FieldCodec.ForString(42);
-    private readonly pbc::RepeatedField<string> deskTypeIds_ = new pbc::RepeatedField<string>();
+    private readonly pbc::RepeatedField<string> customTagIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> DeskTypeIds {
-      get { return deskTypeIds_; }
+    public pbc::RepeatedField<string> CustomTagIds {
+      get { return customTagIds_; }
     }
 
     /// <summary>Field number for the "zoneIds" field.</summary>
@@ -1878,7 +1878,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Name != other.Name) return false;
       if (Deactivated != other.Deactivated) return false;
       if (RequireBookingApproval != other.RequireBookingApproval) return false;
-      if(!deskTypeIds_.Equals(other.deskTypeIds_)) return false;
+      if(!customTagIds_.Equals(other.customTagIds_)) return false;
       if(!zoneIds_.Equals(other.zoneIds_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1891,7 +1891,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Deactivated != false) hash ^= Deactivated.GetHashCode();
       if (RequireBookingApproval != false) hash ^= RequireBookingApproval.GetHashCode();
-      hash ^= deskTypeIds_.GetHashCode();
+      hash ^= customTagIds_.GetHashCode();
       hash ^= zoneIds_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1927,7 +1927,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(32);
         output.WriteBool(RequireBookingApproval);
       }
-      deskTypeIds_.WriteTo(output, _repeated_deskTypeIds_codec);
+      customTagIds_.WriteTo(output, _repeated_customTagIds_codec);
       zoneIds_.WriteTo(output, _repeated_zoneIds_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -1955,7 +1955,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(32);
         output.WriteBool(RequireBookingApproval);
       }
-      deskTypeIds_.WriteTo(ref output, _repeated_deskTypeIds_codec);
+      customTagIds_.WriteTo(ref output, _repeated_customTagIds_codec);
       zoneIds_.WriteTo(ref output, _repeated_zoneIds_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -1979,7 +1979,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (RequireBookingApproval != false) {
         size += 1 + 1;
       }
-      size += deskTypeIds_.CalculateSize(_repeated_deskTypeIds_codec);
+      size += customTagIds_.CalculateSize(_repeated_customTagIds_codec);
       size += zoneIds_.CalculateSize(_repeated_zoneIds_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2005,7 +2005,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (other.RequireBookingApproval != false) {
         RequireBookingApproval = other.RequireBookingApproval;
       }
-      deskTypeIds_.Add(other.deskTypeIds_);
+      customTagIds_.Add(other.customTagIds_);
       zoneIds_.Add(other.zoneIds_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2043,7 +2043,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 42: {
-            deskTypeIds_.AddEntriesFrom(input, _repeated_deskTypeIds_codec);
+            customTagIds_.AddEntriesFrom(input, _repeated_customTagIds_codec);
             break;
           }
           case 50: {
@@ -2086,7 +2086,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 42: {
-            deskTypeIds_.AddEntriesFrom(ref input, _repeated_deskTypeIds_codec);
+            customTagIds_.AddEntriesFrom(ref input, _repeated_customTagIds_codec);
             break;
           }
           case 50: {

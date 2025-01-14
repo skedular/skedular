@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bde1688b8aea7b6522b4f3f97c753e77>>
+ * @generated SignedSource<<d0d24e3bb56bac99b0967c8c4a138042>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -212,9 +212,9 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "BookingOrganizationDeskTypeDetails",
+                "concreteType": "BookingOrganizationCustomTagDetails",
                 "kind": "LinkedField",
-                "name": "deskTypes",
+                "name": "customTags",
                 "plural": true,
                 "selections": (v3/*: any*/),
                 "storageKey": null
@@ -238,16 +238,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7529cecf5452e7a7dd10df42fbb01f10",
+    "cacheID": "e3b1f5110a8fd1ee45ccd3ebc6bb4378",
     "id": null,
     "metadata": {},
     "name": "customerDaySummary_refetchableFragment",
     "operationKind": "query",
-    "text": "query customerDaySummary_refetchableFragment(\n  $from: DateTime\n  $organizationId: String!\n  $to: DateTime\n) {\n  ...customerDaySummary_query\n}\n\nfragment customerDaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to, organizationIds: [$organizationId]}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      deskTypes {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query customerDaySummary_refetchableFragment(\n  $from: DateTime\n  $organizationId: String!\n  $to: DateTime\n) {\n  ...customerDaySummary_query\n}\n\nfragment customerDaySummary_query on Query {\n  allBookings(where: {fromGTE: $from, toLTE: $to, organizationIds: [$organizationId]}) {\n    id\n    from\n    to\n    customer {\n      uniqueId\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    location {\n      uniqueId\n      name\n    }\n    team {\n      uniqueId\n      name\n    }\n    desks {\n      uniqueId\n      name\n      customTags {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "40c327e3147c9063f6ed531090d1570c";
+(node as any).hash = "e2674bb23ae8cd3f01ac873321cd60e7";
 
 export default node;

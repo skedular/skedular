@@ -172,8 +172,8 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> AddDeskTypeAsync(
-        AddDeskTypeInput input,
+    public async Task<OrganizationTagPayload?> AddCustomTagAsync(
+        AddCustomTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
     {
@@ -185,8 +185,8 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> UpdateDeskTypeAsync(
-        UpdateDeskTypeInput input,
+    public async Task<OrganizationTagPayload?> UpdateCustomTagAsync(
+        UpdateCustomTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
     {
@@ -198,8 +198,8 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> DeleteDeskTypeAsync(
-        DeleteDeskTypeInput input,
+    public async Task<OrganizationTagPayload?> DeleteCustomTagAsync(
+        DeleteCustomTagInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
     {
@@ -211,8 +211,8 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagsPayload?> DeleteDeskTypesAsync(
-        DeleteDeskTypesInput input,
+    public async Task<OrganizationTagsPayload?> DeleteCustomTagsAsync(
+        DeleteCustomTagsInput input,
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
     {

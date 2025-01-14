@@ -211,12 +211,12 @@ public class Query(IMapper mapper)
         mapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationTagConnection?> DeskTypesAsync(
+    public async Task<OrganizationTagConnection?> CustomTagsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
-        DeskTypeOrganizationTagWhereInput where,
+        CustomTagOrganizationTagWhereInput where,
         OrganizationTagOrderInput[]? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITagService tagService,
@@ -226,7 +226,7 @@ public class Query(IMapper mapper)
             first,
             before,
             last,
-            new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.DeskType, where.NameContains),
+            new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Custom, where.NameContains),
             orderBy,
             cachedCustomerService,
             tagService,
@@ -265,7 +265,7 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagDetails?> DeskTypeAsync(
+    public async Task<OrganizationTagDetails?> CustomTagAsync(
         string id,
         [Service] ITagService tagService,
         CancellationToken cancellationToken)

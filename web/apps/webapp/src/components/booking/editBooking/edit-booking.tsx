@@ -147,7 +147,7 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
           desks {
             uniqueId
             name
-            deskTypes {
+            customTags {
               uniqueId
               name
             }
@@ -207,7 +207,7 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
           @include(if: $locationExists) {
           uniqueId
           name
-          deskTypes {
+          customTags {
             uniqueId
             name
           }
@@ -253,7 +253,7 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
           desks {
             uniqueId
             name
-            deskTypes {
+            customTags {
               uniqueId
               name
             }

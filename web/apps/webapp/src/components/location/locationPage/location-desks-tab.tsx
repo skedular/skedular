@@ -42,7 +42,7 @@ const RootQuery = graphql`
     $toToGetBookings: DateTime
     $deskNameSearchText: String
     $deskSortingValues: [DeskOrderInput!]
-    $multipleChoicesDeskTypesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
   ) {
     ...locationDesksTab_query
@@ -60,7 +60,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, organizationId, lo
           canModify
         }
         ...deskCard_query
-        ...multipleChoicesDeskTypes_query
+        ...multipleChoicesCustomTags_query
         ...multipleChoicesZones_query
       }
     `,
@@ -283,7 +283,7 @@ const LocationDesksTab = ({ queryReference, onReloadRequired, organizationId, lo
             <Grid key={edge.node.id}>
               <DeskCard
                 rootDataRelay={rootData}
-                multipleChoicesDeskTypesData={rootData}
+                multipleChoicesCustomTagsData={rootData}
                 multipleChoicesZonesData={rootData}
                 deskDetailsRelay={edge.node}
                 connectionIds={connectionIds}
@@ -326,7 +326,7 @@ const LocationDesksTabWithRelay = ({ onReloadRequired, locationId, organizationI
             field: 'Name',
           },
         ],
-        multipleChoicesDeskTypesSortingValues: [
+        multipleChoicesCustomTagsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

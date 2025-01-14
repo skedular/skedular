@@ -52,7 +52,7 @@ export const getModernOrganizationAdminBillingAndPaymentBaseLink = (id: string) 
   `${getOrganizationBaseLink(id)}/admin?section=billing-payment-setup`;
 export const getModernOrganizationAdminSSOBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=sso-setup`;
 export const getModernOrganizationAdminZonesBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=zones-setup`;
-export const getModernOrganizationAdminDeskTypesBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=desk-types-setup`;
+export const getModernOrganizationAdminCustomTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=tags-setup`;
 export const getModernOrganizationAdminSubscriptionsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=subscriptions`;
 
 export const getOrganizationBookingsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}?tab=bookings`;
