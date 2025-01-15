@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7027d4a9ee2b8048f709fbf581becbe9>>
+ * @generated SignedSource<<8b698229a2f2dfdcc3751fb5256b3690>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,13 +22,13 @@ export type bookingCard_BookingDetails$data = {
   };
   readonly desks: ReadonlyArray<{
     readonly customTags: ReadonlyArray<{
-      readonly name: string;
+      readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
     readonly name: string;
     readonly uniqueId: string;
     readonly zones: ReadonlyArray<{
-      readonly name: string;
+      readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
   }>;

@@ -534,7 +534,8 @@ public class Mapper : IMapper
                 OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                 OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            Color = src.Color
         };
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
@@ -549,7 +550,8 @@ public class Mapper : IMapper
                 OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            Color = src.Color
         };
 
     private static Shared.Models.Address? MapTo(LocationAddressDetails? src, Shared.Models.Location location) =>
@@ -569,10 +571,10 @@ public class Mapper : IMapper
             };
 
     private static OrganizationCustomTag MapToGrpcResponseOrganizationCustomTag(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()};
 
     private static OrganizationZone MapToGrpcResponseOrganizationZone(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()};
 
     private IEnumerable<OrganizationTag> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationTag> src,
@@ -732,7 +734,8 @@ public class Mapper : IMapper
                 OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            Color = src.Color
         };
 
         if (organization is not null)

@@ -171,6 +171,7 @@ public class CustomerOrganizationTagDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 }
 
 [GraphQLName("CustomerOrderInput")]

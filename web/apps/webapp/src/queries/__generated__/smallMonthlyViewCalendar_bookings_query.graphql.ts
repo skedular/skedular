@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8fe2ec7f4dc70935451836be2caed0d4>>
+ * @generated SignedSource<<54c5faf34af06f0151e81601fb06537d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,13 +25,13 @@ export type smallMonthlyViewCalendar_bookings_query$data = {
         };
         readonly desks: ReadonlyArray<{
           readonly customTags: ReadonlyArray<{
-            readonly name: string;
+            readonly name: string | null | undefined;
             readonly uniqueId: string;
           }>;
           readonly name: string;
           readonly uniqueId: string;
           readonly zones: ReadonlyArray<{
-            readonly name: string;
+            readonly name: string | null | undefined;
             readonly uniqueId: string;
           }>;
         }>;

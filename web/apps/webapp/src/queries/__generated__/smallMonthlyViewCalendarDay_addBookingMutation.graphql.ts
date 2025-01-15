@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<691c58d1c5ebc6645928b07ad096c682>>
+ * @generated SignedSource<<f81bfe217a38df86e43da5bae16a9cc9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,13 +40,13 @@ export type smallMonthlyViewCalendarDay_addBookingMutation$data = {
       };
       readonly desks: ReadonlyArray<{
         readonly customTags: ReadonlyArray<{
-          readonly name: string;
+          readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
         readonly name: string;
         readonly uniqueId: string;
         readonly zones: ReadonlyArray<{
-          readonly name: string;
+          readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
       }>;
@@ -83,13 +83,13 @@ export type smallMonthlyViewCalendarDay_addBookingMutation$rawResponse = {
       };
       readonly desks: ReadonlyArray<{
         readonly customTags: ReadonlyArray<{
-          readonly name: string;
+          readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
         readonly name: string;
         readonly uniqueId: string;
         readonly zones: ReadonlyArray<{
-          readonly name: string;
+          readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
       }>;

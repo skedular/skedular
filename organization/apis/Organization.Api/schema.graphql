@@ -193,6 +193,7 @@ type OrganizationTagDetails {
     name: String!
     description: String
     tagType: String!
+    color: String
     id: ID!
 }
 
@@ -268,6 +269,7 @@ input AddCustomTagInput {
     id: String
     name: String!
     description: String
+    color: String
     organizationId: String!
 }
 
@@ -288,6 +290,7 @@ input AddZoneInput {
     name: String!
     description: String
     organizationId: String!
+    color: String
 }
 
 input CancelInvitationToJoinOrganizationInput {
@@ -392,6 +395,7 @@ input UpdateCustomTagInput {
     id: String!
     name: String!
     description: String
+    color: String
 }
 
 input UpdateOrganizationInput {
@@ -414,6 +418,7 @@ input UpdateZoneInput {
     id: String!
     name: String!
     description: String
+    color: String
 }
 
 input ZoneOrganizationTagWhereInput {

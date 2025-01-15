@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a2dfb30b53af7c6de14564fff494caa5>>
+ * @generated SignedSource<<e4dfbae5d69a1ff0abb794ba1a782b24>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,13 +22,13 @@ export type customerDaySummary_query$data = {
     };
     readonly desks: ReadonlyArray<{
       readonly customTags: ReadonlyArray<{
-        readonly name: string;
+        readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
       readonly name: string;
       readonly uniqueId: string;
       readonly zones: ReadonlyArray<{
-        readonly name: string;
+        readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
     }>;

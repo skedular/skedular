@@ -32,7 +32,7 @@ public class BookingConnection : Connection<BookingEdge>;
 [GraphQLName("BookingCustomerDetails")]
 public class BookingCustomerDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("givenName")] public string? GivenName { get; set; }
     [GraphQLName("middleName")] public string? MiddleName { get; set; }
@@ -49,7 +49,7 @@ public class BookingCustomerDetails
 [GraphQLName("BookingDeskDetails")]
 public class BookingDeskDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("deactivated")] public bool Deactivated { get; set; }
 
@@ -73,7 +73,7 @@ public class BookingDetails : Node
     [GraphQLName("location")] public BookingLocationDetails? Location { get; set; }
     [GraphQLName("desks")] public BookingDeskDetails[] Desks { get; set; } = [];
     [GraphQLName("team")] public BookingTeamDetails? Team { get; set; }
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
+    [GraphQLName("id")][ID] public required string Id { get; set; }
 }
 
 [GraphQLName("BookingEdge")]
@@ -82,23 +82,24 @@ public class BookingEdge : Edge<BookingDetails>;
 [GraphQLName("BookingLocationDetails")]
 public class BookingLocationDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 
 [GraphQLName("BookingOrganizationCustomTagDetails")]
 public class BookingOrganizationCustomTagDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
+    [GraphQLName("name")] public string? Name { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 }
 
 [GraphQLName("BookingOrganizationZoneDetails")]
 public class BookingOrganizationZoneDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
-
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
+    [GraphQLName("name")] public string? Name { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 }
 
 [GraphQLName("BookingOrderInput")]
@@ -111,7 +112,7 @@ public class BookingOrderInput
 [GraphQLName("BookingOrganizationDetails")]
 public class BookingOrganizationDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 
@@ -125,7 +126,7 @@ public class BookingPayload
 [GraphQLName("BookingTeamDetails")]
 public class BookingTeamDetails
 {
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("uniqueId")][ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 

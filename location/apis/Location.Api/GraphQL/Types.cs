@@ -269,9 +269,10 @@ public class LocationPayload
 [GraphQLName("Organization_OrganizationTagDetails")]
 public class OrganizationTagDetails
 {
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("tagType")] public string? TagType { get; set; }
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 }
 
 [GraphQLName("LocationWhereInput")]

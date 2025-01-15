@@ -1,106 +1,106 @@
 ﻿schema {
-    query: Query
+  query: Query
 }
 
 type Notification {
-    sourceId: ID!
-    eventRaisedAt: DateTime!
-    notificationType: NotificationType!
-    invitedBy: NotificationCustomerDetails
-    invitee: NotificationCustomerDetails
-    organization: NotificationOrganizationDetails
-    location: NotificationLocationDetails
-    team: NotificationTeamDetails
-    id: ID!
+  sourceId: ID!
+  eventRaisedAt: DateTime!
+  notificationType: NotificationType!
+  invitedBy: NotificationCustomerDetails
+  invitee: NotificationCustomerDetails
+  organization: NotificationOrganizationDetails
+  location: NotificationLocationDetails
+  team: NotificationTeamDetails
+  id: ID!
 }
 
 type NotificationConnection {
-    pageInfo: PageInfo!
-    edges: [NotificationEdge!]!
-    totalCount: Int
+  pageInfo: PageInfo!
+  edges: [NotificationEdge!]!
+  totalCount: Int
 }
 
 type NotificationCustomerDetails {
-    uniqueId: ID!
-    name: String
-    givenName: String
-    middleName: String
-    familyName: String
-    photoUrl: String
-    photoUrl24: String
-    photoUrl32: String
-    photoUrl48: String
-    photoUrl72: String
-    photoUrl192: String
-    photoUrl512: String
-    emails: [String!]!
+  uniqueId: ID!
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+  emails: [String!]!
 }
 
 type NotificationEdge {
-    node: Notification!
-    cursor: String!
+  node: Notification!
+  cursor: String!
 }
 
 type NotificationLocationDetails {
-    uniqueId: ID!
-    name: String!
+  uniqueId: ID!
+  name: String!
 }
 
 type NotificationOrganizationDetails {
-    uniqueId: ID!
-    name: String!
-    logoUrl: String
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
 }
 
 type NotificationTeamDetails {
-    uniqueId: ID!
-    name: String!
+  uniqueId: ID!
+  name: String!
 }
 
 type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
 }
 
 type Query {
-    notificationVersion: Version!
-    notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
-    pendingInvitationsCount: Int! @cost(weight: "10")
-    myNotifications(after: String first: Int before: String last: Int where: MyNotificationWhereInput! orderBy: [NotificationOrderInput!]): NotificationConnection @cost(weight: "10")
+  notificationVersion: Version!
+  notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
+  pendingInvitationsCount: Int! @cost(weight: "10")
+  myNotifications(after: String first: Int before: String last: Int where: MyNotificationWhereInput! orderBy: [NotificationOrderInput!]): NotificationConnection @cost(weight: "10")
 }
 
 type Version {
-    major: Int!
-    minor: Int!
-    build: Int!
-    revision: Int!
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
 }
 
 input MyNotificationWhereInput {
-    organizationId: String
+  organizationId: String
 }
 
 input NotificationOrderInput {
-    direction: OrderDirection!
-    field: NotificationOrderField!
+  direction: OrderDirection!
+  field: NotificationOrderField!
 }
 
 enum NotificationOrderField {
-    Date
-    Type
+  Date
+  Type
 }
 
 enum NotificationType {
-    InvitationToJoinOrganization
-    InvitationToJoinLocation
-    InvitationToJoinTeam
+  InvitationToJoinOrganization
+  InvitationToJoinLocation
+  InvitationToJoinTeam
 }
 
 enum OrderDirection {
-    Ascending
-    Descending
+  Ascending
+  Descending
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

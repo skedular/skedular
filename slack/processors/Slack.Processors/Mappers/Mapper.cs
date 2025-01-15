@@ -567,7 +567,7 @@ public class Mapper : IMapper
         IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone> src) => src.Select(MapTo);
 
     private static OrganizationZone MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()};
 
     private static Team? MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? src) =>
         string.IsNullOrWhiteSpace(src?.Id) ? null : new Team { Id = src.Id, Name = src.Name.ToSafeString() };

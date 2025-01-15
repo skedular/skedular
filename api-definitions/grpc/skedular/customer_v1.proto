@@ -251,7 +251,8 @@ message OrganizationTag {
     string id = 1;
     string name = 2;
     string type = 3;
-    Organization organization = 4;
+    string color = 4;
+    Organization organization = 5;
 }
 
 message AddPreferredOrganizationTagInput {

@@ -213,12 +213,14 @@ message Tag {
     string id = 1;
     string name = 2;
     string description = 3;
+    string color = 4;
 }
 
 message CustomTag {
     string id = 1;
     string name = 2;
     string description = 3;
+    string color = 4;
 }
 
 message CustomTagConnection {
@@ -265,12 +267,14 @@ message AddCustomTagInput {
     string organizationId = 2;
     string name = 3;
     string description = 4;
+    string color = 5;
 }
 
 message UpdateCustomTagInput {
     string id = 1;
     string name = 2;
     string description = 3;
+    string color = 4;
 }
 
 message RemoveCustomTagInput {
@@ -281,6 +285,7 @@ message Zone {
     string id = 1;
     string name = 2;
     string description = 3;
+    string color = 4;
 }
 
 message ZoneConnection {
@@ -327,12 +332,14 @@ message AddZoneInput {
     string organizationId = 2;
     string name = 3;
     string description = 4;
+    string color = 5;
 }
 
 message UpdateZoneInput {
     string id = 1;
     string name = 2;
     string description = 3;
+    string color = 4;
 }
 
 message RemoveZoneInput {

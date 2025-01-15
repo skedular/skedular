@@ -515,7 +515,8 @@ public class Mapper : IMapper
                 OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            Color = src.Color
         };
 
     public Shared.Database.Entities.Tag MapTo(Tag src, Shared.Database.Entities.Organization organization) =>
@@ -535,6 +536,7 @@ public class Mapper : IMapper
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
             _ => throw new ArgumentOutOfRangeException()
         };
+        dest.Color = src.Color;
         dest.Organization = organization;
         return dest;
     }
@@ -551,11 +553,19 @@ public class Mapper : IMapper
             Name = src.Name,
             Description = src.Description,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Type = OrganizationTagType.Custom
+            Type = OrganizationTagType.Custom,
+            Color = src.Color
         };
 
     public Tag MapTo(UpdateCustomTagInput src) =>
-        new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = OrganizationTagType.Custom };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            Description = src.Description,
+            Type = OrganizationTagType.Custom,
+            Color = src.Color
+        };
 
     public Tag MapTo(GraphQL.AddZoneInput src) =>
         new()
@@ -564,11 +574,19 @@ public class Mapper : IMapper
             Name = src.Name,
             Description = src.Description,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Type = OrganizationTagType.Zone
+            Type = OrganizationTagType.Zone,
+            Color = src.Color
         };
 
     public Tag MapTo(GraphQL.UpdateZoneInput src) =>
-        new() { Id = src.Id, Name = src.Name, Description = src.Description, Type = OrganizationTagType.Zone };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            Description = src.Description,
+            Type = OrganizationTagType.Zone,
+            Color = src.Color
+        };
 
     public OrganizationTagDetails? MapTo(Tag? src) =>
         src is null
@@ -583,7 +601,8 @@ public class Mapper : IMapper
                     OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                     OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
                     _ => throw new ArgumentOutOfRangeException()
-                }
+                },
+                Color = src.Color
             };
 
     public OrganizationTagEdge MapTo(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
@@ -593,7 +612,10 @@ public class Mapper : IMapper
             ? new CustomTag()
             : new CustomTag
             {
-                Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString()
+                Id = src.Id,
+                Name = src.Name.ToSafeString(),
+                Description = src.Description.ToSafeString(),
+                Color = src.Color
             };
 
     public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) =>
@@ -606,6 +628,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
             Type = OrganizationTagType.Custom,
+            Color = src.Color,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
@@ -615,13 +638,20 @@ public class Mapper : IMapper
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
-            Type = OrganizationTagType.Custom
+            Type = OrganizationTagType.Custom,
+            Color = src.Color
         };
 
     public Zone MapToGrpcResponseZone(Tag? src) =>
         src is null
             ? new Zone()
-            : new Zone { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
+            : new Zone
+            {
+                Id = src.Id,
+                Name = src.Name.ToSafeString(),
+                Description = src.Description.ToSafeString(),
+                Color = src.Color
+            };
 
     public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponseZone(src.Node) };
@@ -633,6 +663,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
             Type = OrganizationTagType.Zone,
+            Color = src.Color,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
@@ -1068,6 +1099,7 @@ public class Mapper : IMapper
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            Color = src.Color,
             Organization = organization
         };
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c155c88e465128cf3c3b284d365b93aa>>
+ * @generated SignedSource<<01de5dcd32a767a76439adf69a072b25>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,13 +40,13 @@ export type bookingCard_addBookingMutation$data = {
       };
       readonly desks: ReadonlyArray<{
         readonly customTags: ReadonlyArray<{
-          readonly name: string;
+          readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
         readonly name: string;
         readonly uniqueId: string;
         readonly zones: ReadonlyArray<{
-          readonly name: string;
+          readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
       }>;
@@ -83,13 +83,13 @@ export type bookingCard_addBookingMutation$rawResponse = {
       };
       readonly desks: ReadonlyArray<{
         readonly customTags: ReadonlyArray<{
-          readonly name: string;
+          readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
         readonly name: string;
         readonly uniqueId: string;
         readonly zones: ReadonlyArray<{
-          readonly name: string;
+          readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
       }>;

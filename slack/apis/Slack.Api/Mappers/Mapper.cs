@@ -262,6 +262,7 @@ public class Mapper : IMapper
                     OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                     _ => throw new ArgumentOutOfRangeException()
                 },
+                Color = item.Color.ToSafeString(),
                 Organization = new Shared.Models.Organization { Id = item.Organization.Id }
             }).ToList();
 
@@ -627,7 +628,13 @@ public class Mapper : IMapper
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
 
     public OrganizationZone MapTo(Zone src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString()
+        };
 
     private static Workspace MergeToEntity(Shared.Models.Workspace src, Workspace dest, Organization organization)
     {
@@ -848,7 +855,7 @@ public class Mapper : IMapper
 
     private static OrganizationZone MapTo(
         global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()};
 
     private static IEnumerable<OrganizationCustomTag> MapTo(
         IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag> src) =>
@@ -862,5 +869,5 @@ public class Mapper : IMapper
         IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone> src) => src.Select(MapTo);
 
     private static OrganizationZone MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()};
 }

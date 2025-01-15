@@ -53,7 +53,8 @@ public class Mapper : IMapper
                 OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                 OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            Color = item.Color.ToSafeString()
         }));
 
         organization.Offering.ActiveCustomerIds.AddRange(

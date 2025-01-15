@@ -160,11 +160,13 @@ enum LocationOrderField {
 message OrganizationCustomTag {
     string id = 1;
     string name = 2;
+    string color = 3;
 }
 
 message OrganizationZone {
     string id = 1;
     string name = 2;
+    string color = 3;
 }
 
 message Desk {

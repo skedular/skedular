@@ -237,6 +237,7 @@ public class Mapper : IMapper
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            Color = item.Color,
             Organization = organization
         }).ToList();
 
@@ -586,6 +587,7 @@ public class Mapper : IMapper
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
             _ => throw new ArgumentOutOfRangeException()
         };
+        dest.Color = src.Color;
         dest.Organization = organization;
         return dest;
     }

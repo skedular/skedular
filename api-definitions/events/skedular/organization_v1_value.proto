@@ -92,4 +92,5 @@ message Tag {
   string name = 2;
   string description = 3;
   string tagType = 4;
+  string color = 5;
 }

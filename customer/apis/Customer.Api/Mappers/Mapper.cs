@@ -159,12 +159,14 @@ public class Mapper(IContext context) : IMapper
             PreferredZones =
                 src.PreferredOrganizationTags
                     .Where(item => item.Type == OrganizationTagType.Zone)
-                    .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name })
+                    .Select(item =>
+                        new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color })
                     .ToArray(),
             PreferredCustomTags =
                 src.PreferredOrganizationTags
                     .Where(item => item.Type == OrganizationTagType.Custom)
-                    .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name })
+                    .Select(item =>
+                        new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color })
                     .ToArray(),
             PreferredDesks =
                 src.PreferredDesks
@@ -420,6 +422,7 @@ public class Mapper(IContext context) : IMapper
                     OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
                     _ => throw new ArgumentOutOfRangeException()
                 },
+                Color = item.Color.ToSafeString(),
                 Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
                 {
                     Id = item.Organization.Id
@@ -578,6 +581,7 @@ public class Mapper(IContext context) : IMapper
                     OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                     _ => throw new ArgumentOutOfRangeException()
                 },
+                Color = src.Color,
                 Organization = new Organization { Id = src.Organization.Id }
             };
 

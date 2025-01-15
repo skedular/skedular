@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2079c541840d82ca5e01611e57e0ceb4>>
+ * @generated SignedSource<<d0cb81ded9a4d66c416600444444abf1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,13 +13,13 @@ import { FragmentRefs } from "relay-runtime";
 export type bookingDetailsSelector_availableLocationDesks_query$data = {
   readonly availableDesks?: ReadonlyArray<{
     readonly customTags: ReadonlyArray<{
-      readonly name: string;
+      readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
     readonly name: string;
     readonly uniqueId: string;
     readonly zones: ReadonlyArray<{
-      readonly name: string;
+      readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
   }> | null | undefined;

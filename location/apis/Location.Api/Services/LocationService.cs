@@ -384,7 +384,7 @@ public class LocationService(
         mappedLocation.CustomTags = mappedLocation.Desks
             .SelectMany(item => item.CustomTags.Select(customTag => new OrganizationTag
             {
-                Id = customTag.Id, Name = customTag.Name, Type = OrganizationTagType.Custom
+                Id = customTag.Id, Name = customTag.Name, Type = OrganizationTagType.Custom, Color = customTag.Color
             }))
             .GroupBy(item => item.Id)
             .Select(group => group.First())
@@ -393,7 +393,7 @@ public class LocationService(
         mappedLocation.Zones = mappedLocation.Desks
             .SelectMany(item => item.Zones.Select(zone => new OrganizationTag
             {
-                Id = zone.Id, Name = zone.Name, Type = OrganizationTagType.Zone
+                Id = zone.Id, Name = zone.Name, Type = OrganizationTagType.Zone, Color = zone.Color
             }))
             .GroupBy(item => item.Id)
             .Select(group => group.First())

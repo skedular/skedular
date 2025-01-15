@@ -12,6 +12,7 @@ public class Tag : EntityBase
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public string Type { get; set; }
+    public string? Color { get; set; }
 
     public virtual Organization Organization { get; set; }
 }
@@ -26,6 +27,7 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxTagNameLength);
         builder.Property(item => item.Description).HasMaxLength(Constants.MaxTagDescriptionLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxTagTypeLength);
+        builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
 
         builder
             .HasOne(item => item.Organization)

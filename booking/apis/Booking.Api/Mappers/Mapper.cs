@@ -505,13 +505,13 @@ public class Mapper : IMapper
         src.Where(item => item.Type == OrganizationTagType.Custom).Select(MapToGrpcResponseCustomTag);
 
     private static OrganizationCustomTag MapToGrpcResponseCustomTag(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static IEnumerable<OrganizationZone> MapToGrpcResponseZones(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.Zone).Select(MapToGrpcResponseZone);
 
     private static OrganizationZone MapToGrpcResponseZone(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString() };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static BookingCustomerDetails MapTo(Customer src) =>
         new()
@@ -571,14 +571,14 @@ public class Mapper : IMapper
         src.Where(item => item.Type == OrganizationTagType.Custom).Select(MapToCustomTag);
 
     private static BookingOrganizationCustomTagDetails MapToCustomTag(OrganizationTag src) =>
-        new() { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
+        new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
 
     private static IEnumerable<BookingOrganizationZoneDetails>
         MapToZones(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.Zone).Select(MapToZone);
 
     private static BookingOrganizationZoneDetails MapToZone(OrganizationTag src) =>
-        new() { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
+        new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
 
     private static Shared.Models.Organization? MapTo(Organization? src) =>
         src is null
@@ -629,12 +629,13 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
+            Name = src.Name,
             Type = src.Type switch
             {
                 OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            Color = src.Color
         };
 }

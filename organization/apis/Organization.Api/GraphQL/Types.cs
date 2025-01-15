@@ -374,6 +374,7 @@ public class AddCustomTagInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
 }
 
@@ -384,6 +385,7 @@ public class UpdateCustomTagInput
     [GraphQLName("id")] public required string Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 }
 
 [GraphQLName("DeleteCustomTagInput")]
@@ -408,6 +410,7 @@ public class AddZoneInput
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 }
 
 [GraphQLName("UpdateZoneInput")]
@@ -417,6 +420,7 @@ public class UpdateZoneInput
     [GraphQLName("id")] public required string Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 }
 
 [GraphQLName("DeleteZoneInput")]
@@ -442,6 +446,7 @@ public class OrganizationTagDetails : Node
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
+    [GraphQLName("color")] public string? Color { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 

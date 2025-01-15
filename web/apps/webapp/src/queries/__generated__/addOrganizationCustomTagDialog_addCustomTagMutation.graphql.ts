@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0c3c1202b775e9557368954cbe7f4c68>>
+ * @generated SignedSource<<7179bb055d0d504dddaa123b98d6f07f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type AddCustomTagInput = {
   clientMutationId?: string | null | undefined;
+  color?: string | null | undefined;
   description?: string | null | undefined;
   id?: string | null | undefined;
   name: string;

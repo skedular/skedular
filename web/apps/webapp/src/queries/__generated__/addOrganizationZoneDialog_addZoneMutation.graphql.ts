@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2c5ffb22804976e66408b060a66a2ee1>>
+ * @generated SignedSource<<fe600a544f788fb4b4567aeb1d268443>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type AddZoneInput = {
   clientMutationId?: string | null | undefined;
+  color?: string | null | undefined;
   description?: string | null | undefined;
   id?: string | null | undefined;
   name: string;
