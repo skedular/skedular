@@ -1530,42 +1530,40 @@ const OrganizationAdmin = ({
                       paddingTop: defaultPadding,
                     }}
                   >
-                    {availableOfferings.map((availableOffering) => {
-                      return (
-                        <Card key={availableOffering.code} sx={{ width: { xs: '100%', sm: 500 } }}>
-                          <CardHeader
-                            title={
-                              <>
-                                <BodyIconTypography label={availableOffering.name} invertDefaultColor />
-                                <BodyIconTypography label={`Unit price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
-                              </>
-                            }
-                          />
+                    {availableOfferings.map((availableOffering) => (
+                      <Card key={availableOffering.code} sx={{ width: { xs: '100%', sm: 500 } }}>
+                        <CardHeader
+                          title={
+                            <>
+                              <BodyIconTypography label={availableOffering.name} invertDefaultColor />
+                              <BodyIconTypography label={`Unit price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
+                            </>
+                          }
+                        />
 
-                          <CardContent sx={{ marginLeft: 1 }}>
-                            <List sx={{ listStyleType: 'disc' }}>
-                              Feature set:
-                              {availableOffering.featureSet.map(({ name, description }, index) => (
-                                <ListItem key={index} sx={{ display: 'list-item' }}>
-                                  <SmallIconTypography label={`${name}: ${description}`} />
-                                </ListItem>
-                              ))}
-                            </List>
-                            {!rootData.organization?.hasAttachedPaymentMethod && (
-                              <SmallIconTypography label="You need to have payment method setup in order to upgrade to this offering. Please setup payment method under Billing tab." />
-                            )}
-                          </CardContent>
-
-                          {rootData.organization?.hasAttachedPaymentMethod && (
-                            <CardActions sx={{ justifyContent: 'flex-end' }}>
-                              <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)}>
-                                Upgrade
-                              </Button>
-                            </CardActions>
+                        <CardContent sx={{ marginLeft: 1 }}>
+                          <List sx={{ listStyleType: 'disc' }}>
+                            Feature set:
+                            {availableOffering.featureSet.map(({ name, description }, index) => (
+                              <ListItem key={index} sx={{ display: 'list-item' }}>
+                                <SmallIconTypography label={`${name}: ${description}`} />
+                              </ListItem>
+                            ))}
+                          </List>
+                          {!rootData.organization?.hasAttachedPaymentMethod && (
+                            <SmallIconTypography label="You need to have payment method setup in order to upgrade to this offering. Please setup payment method under Billing tab." />
                           )}
-                        </Card>
-                      );
-                    })}
+                        </CardContent>
+
+                        {rootData.organization?.hasAttachedPaymentMethod && (
+                          <CardActions sx={{ justifyContent: 'flex-end' }}>
+                            <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)}>
+                              Upgrade
+                            </Button>
+                          </CardActions>
+                        )}
+                      </Card>
+                    ))}
                   </StackRow>
                 )}
               </StackColumnWithSaveExitCancelAppBar>
