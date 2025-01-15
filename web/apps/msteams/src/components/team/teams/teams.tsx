@@ -1,4 +1,4 @@
-import { PushToRight, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { GridContainer, PushToRight, StackColumn } from '@repo/shared/components/commons';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -42,12 +42,12 @@ const Teams = ({ queryReference, onReloadRequired, organizationId }: Props) => {
 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-      <StackRow sx={{ padding: defaultPadding }}>
+      <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
         <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <PushToRight />
         <NewTeamButton organizationId={organizationId} />
-      </StackRow>
+      </GridContainer>
       <MyTeams rootDataRelay={rootData} onReloadRequired={onReloadRequired} primaryLocationIds={locationIds} viewMode={viewMode} />
     </StackColumn>
   );

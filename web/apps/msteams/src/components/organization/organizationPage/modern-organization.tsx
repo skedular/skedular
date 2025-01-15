@@ -1,4 +1,4 @@
-import { PushToRight, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { GridContainer, PushToRight, StackColumn } from '@repo/shared/components/commons';
 import { WeekRangePicker } from '@repo/shared/components/datePickers';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
@@ -98,7 +98,7 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-      <StackRow sx={{ padding: defaultPadding }}>
+      <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
         <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
         <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
         <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
@@ -111,7 +111,7 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
           defaultDate={today}
           organizationId={organizationId}
         />
-      </StackRow>
+      </GridContainer>
       <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
       <MyBookings
         rootDataRelay={rootData}

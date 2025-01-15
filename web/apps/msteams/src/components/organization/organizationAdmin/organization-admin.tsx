@@ -14,6 +14,7 @@ import {
   BodyIconTypography,
   CreditCard,
   FormFieldLabel,
+  GridContainer,
   LeadIconTypography,
   PushToRight,
   SectionIconTypography,
@@ -1292,10 +1293,10 @@ const OrganizationAdmin = ({
                   <Divider />
                 </StackColumn>
 
-                <StackRow sx={{ padding: defaultPadding }}>
+                <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
                   <PushToRight />
                   <Search size="small" placeholder="Search for zones" defaultValue={zoneNameSearchText} onChange={handleZonesSearchTextChange} />
-                </StackRow>
+                </GridContainer>
 
                 {seledctedZones.length > 0 && (
                   <StackRow
@@ -1381,7 +1382,7 @@ const OrganizationAdmin = ({
                   <Divider />
                 </StackColumn>
 
-                <StackRow sx={{ padding: defaultPadding }}>
+                <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
                   <PushToRight />
                   <Search
                     size="small"
@@ -1389,7 +1390,7 @@ const OrganizationAdmin = ({
                     defaultValue={customTagNameSearchText}
                     onChange={handleCustomTagsSearchTextChange}
                   />
-                </StackRow>
+                </GridContainer>
 
                 {seledctedCustomTags.length > 0 && (
                   <StackRow

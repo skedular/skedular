@@ -17,6 +17,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
   BodyIconTypography,
   FormFieldLabel,
+  GridContainer,
   PushToRight,
   SectionIconTypography,
   SmallIconTypography,
@@ -776,12 +777,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                   <Divider />
                 </StackColumn>
 
-                <StackRow sx={{ padding: defaultPadding }}>
-                  <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
+                <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
                   <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
+                  <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
                   <PushToRight />
                   <Search size="small" placeholder="Search for desks" defaultValue={deskNameSearchText} onChange={handleDeskNameSearchTextChange} />
-                </StackRow>
+                </GridContainer>
 
                 {seledctedDesks.length > 0 && (
                   <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>

@@ -18,7 +18,15 @@ import Select from '@mui/material/Select';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
+import {
+  BodyIconTypography,
+  GridContainer,
+  PushToRight,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@repo/shared/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -716,11 +724,11 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
               <Divider />
             </StackColumn>
 
-            <StackRow sx={{ padding: defaultPadding }}>
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
               <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
               <PushToRight />
               <Search size="small" placeholder="Search for users" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-            </StackRow>
+            </GridContainer>
 
             {seledctedMembers.length > 0 && (
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>

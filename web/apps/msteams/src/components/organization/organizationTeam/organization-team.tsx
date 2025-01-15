@@ -10,6 +10,7 @@ import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
   FormFieldLabel,
+  GridContainer,
   PushToRight,
   SectionIconTypography,
   SmallIconTypography,
@@ -857,10 +858,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                   <Divider />
                 </StackColumn>
 
-                <StackRow sx={{ padding: defaultPadding }}>
+                <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
                   <PushToRight />
                   <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
-                </StackRow>
+                </GridContainer>
 
                 {seledctedMembers.length > 0 && (
                   <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>

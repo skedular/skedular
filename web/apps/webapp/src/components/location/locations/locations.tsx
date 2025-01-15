@@ -3,7 +3,7 @@ import { MyLocations } from '@/components/location/myLocations';
 import { CustomTagSelector } from '@/components/organization/customTagSelector';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
 import type { locations_rootQuery } from '@/queries/__generated__/locations_rootQuery.graphql';
-import { PushToRight, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { GridContainer, PushToRight, StackColumn } from '@repo/shared/components/commons';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -62,13 +62,13 @@ const Locations = ({ queryReference, onReloadRequired, organizationId }: Props) 
 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-      <StackRow sx={{ padding: defaultPadding }}>
-        <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
+      <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
         <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
+        <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <PushToRight />
         {rootData.organization?.canModify && <NewLocationButton organizationId={organizationId} />}
-      </StackRow>
+      </GridContainer>
       <MyLocations
         rootDataRelay={rootData}
         rootDataRefetchableRelay={rootData}
