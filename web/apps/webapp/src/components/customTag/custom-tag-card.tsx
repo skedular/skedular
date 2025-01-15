@@ -431,7 +431,7 @@ const CustomTagCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionI
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Color" useWiderSpace>
-                  <ColorPicker onChange={handleColorChange} />
+                  <ColorPicker onChange={handleColorChange} defaultColor={organizationTagDetails.color} />
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />

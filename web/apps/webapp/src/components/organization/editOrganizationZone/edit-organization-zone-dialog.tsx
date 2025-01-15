@@ -172,7 +172,7 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Color" useWiderSpace>
-                  <ColorPicker onChange={handleColorChange} />
+                  <ColorPicker onChange={handleColorChange} defaultColor={rootData.zone?.color} />
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Save" secondaryLabel="Cancel" />

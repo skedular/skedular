@@ -173,7 +173,7 @@ const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialog
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Color" useWiderSpace>
-                  <ColorPicker onChange={handleColorChange} />
+                  <ColorPicker onChange={handleColorChange} defaultColor={rootData.customTag?.color} />
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Save" secondaryLabel="Cancel" />

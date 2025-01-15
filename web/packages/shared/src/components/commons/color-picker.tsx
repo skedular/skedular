@@ -5,7 +5,7 @@ import { SelectedTickIcon } from '../icons';
 import GridContainer from './grid-container';
 
 type Props = {
-  defaultColor?: string;
+  defaultColor?: string | null | undefined;
   onChange?: (color: string) => void;
 };
 
