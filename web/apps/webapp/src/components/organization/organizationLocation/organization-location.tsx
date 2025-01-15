@@ -648,8 +648,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     status: !desk.deactivated,
   }));
 
-  console.log('deskRows', deskRows);
-
   const deskColumns: GridColDef<(typeof deskRows)[number]>[] = [
     {
       field: 'name',
