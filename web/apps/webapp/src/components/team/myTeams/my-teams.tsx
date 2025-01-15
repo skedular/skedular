@@ -294,7 +294,7 @@ const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode
   return (
     <>
       <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-        <SectionIconTypography label="My Teams" />
+        <SectionIconTypography label="Teams" />
         <Divider />
         <Box sx={{ paddingBottom: defaultPadding }} />
 

@@ -441,7 +441,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
   return (
     <>
       <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-        <SectionIconTypography label="My Locations" />
+        <SectionIconTypography label="Locations" />
         <Divider />
         <Box sx={{ paddingBottom: defaultPadding }} />
 
