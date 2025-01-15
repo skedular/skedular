@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f48def0ddf7cc2297176f364a619a98>>
+ * @generated SignedSource<<b45c02d15568469e0d26a09b989307a5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -112,7 +112,14 @@ v3 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v2/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "fragment": {
@@ -294,16 +301,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "17ec33f25ecb5a5080547d76bdc27471",
+    "cacheID": "a6c6e2c1af664b3bf1e2764d0f5a73da",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_desks_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationLocation_desks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskCustomTagIds: [String!]\n  $deskNameSearchText: String\n  $deskZoneIds: [String!]\n  $locationId: String!\n) {\n  ...organizationLocation_desks_query_1G22uz\n}\n\nfragment organizationLocation_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText, customTagIds: $deskCustomTagIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        customTags {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationLocation_desks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskCustomTagIds: [String!]\n  $deskNameSearchText: String\n  $deskZoneIds: [String!]\n  $locationId: String!\n) {\n  ...organizationLocation_desks_query_1G22uz\n}\n\nfragment organizationLocation_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText, customTagIds: $deskCustomTagIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4312ad51e3704e5de3b4cc30786111bf";
+(node as any).hash = "208a761a9d45a590270939a13a87dfcf";
 
 export default node;

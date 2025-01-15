@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9777c1a998cc971f10fd6a63c8c984df>>
+ * @generated SignedSource<<ad1640097369096df11578fba33f5c1a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,8 @@ export type newCustomTagDialog_addCustomTagMutation$variables = {
 export type newCustomTagDialog_addCustomTagMutation$data = {
   readonly addCustomTag: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
@@ -32,6 +34,8 @@ export type newCustomTagDialog_addCustomTagMutation$data = {
 export type newCustomTagDialog_addCustomTagMutation$rawResponse = {
   readonly addCustomTag: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
@@ -83,6 +87,20 @@ v2 = {
       "args": null,
       "kind": "ScalarField",
       "name": "name",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "description",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "color",
       "storageKey": null
     }
   ],
@@ -153,16 +171,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1ec0c5aa5b60169462d90658c8d998f9",
+    "cacheID": "ffe0674c5d373bc0c79ed0ea711fdc6d",
     "id": null,
     "metadata": {},
     "name": "newCustomTagDialog_addCustomTagMutation",
     "operationKind": "mutation",
-    "text": "mutation newCustomTagDialog_addCustomTagMutation(\n  $input: AddCustomTagInput!\n) {\n  addCustomTag(input: $input) {\n    organizationTag {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation newCustomTagDialog_addCustomTagMutation(\n  $input: AddCustomTagInput!\n) {\n  addCustomTag(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2ddc6bdbc6cd2938f1acc42030752b7e";
+(node as any).hash = "62e2d4cf737ec230e940fe510ed1c2fb";
 
 export default node;

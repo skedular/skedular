@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6ac3100e17b783ad3243b04ff3d94d65>>
+ * @generated SignedSource<<d00321f79f8dbe4ff2a0b08dcee66fc1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type editOrganizationZoneDialog_updateZoneMutation$variables = {
 export type editOrganizationZoneDialog_updateZoneMutation$data = {
   readonly updateZone: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
       readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
@@ -31,6 +32,7 @@ export type editOrganizationZoneDialog_updateZoneMutation$data = {
 export type editOrganizationZoneDialog_updateZoneMutation$rawResponse = {
   readonly updateZone: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
       readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
@@ -94,6 +96,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "description",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "color",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -120,16 +129,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "39cde93a6114a50da82aadaa54f89395",
+    "cacheID": "bc340e23c758ec6defe27201d3e646fb",
     "id": null,
     "metadata": {},
     "name": "editOrganizationZoneDialog_updateZoneMutation",
     "operationKind": "mutation",
-    "text": "mutation editOrganizationZoneDialog_updateZoneMutation(\n  $input: UpdateZoneInput!\n) {\n  updateZone(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n    }\n  }\n}\n"
+    "text": "mutation editOrganizationZoneDialog_updateZoneMutation(\n  $input: UpdateZoneInput!\n) {\n  updateZone(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5fe85c5946f967fb83718b5e1e2a81c8";
+(node as any).hash = "c0e5e10234b30f8c1a33ae1ed9b061ae";
 
 export default node;

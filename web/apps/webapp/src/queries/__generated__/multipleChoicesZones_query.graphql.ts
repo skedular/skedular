@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0d4500f9a8e20e7b36add4345bf2b782>>
+ * @generated SignedSource<<108361705158fc5dc5af0fb1b9f0b4a6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type multipleChoicesZones_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly color: string | null | undefined;
         readonly id: string;
         readonly name: string;
       };
@@ -104,6 +105,13 @@ const node: ReaderFragment = {
                   "kind": "ScalarField",
                   "name": "name",
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "color",
+                  "storageKey": null
                 }
               ],
               "storageKey": null
@@ -131,6 +139,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "95dbd84a4dedaa4b540a1b75f8ddda96";
+(node as any).hash = "283f8fc8d375ed3ab516b1aea5c1e919";
 
 export default node;

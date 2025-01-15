@@ -47,6 +47,7 @@ type ZoneDetails = {
   uniqueId: string;
   name: string | null | undefined;
   tagType?: string | null | undefined;
+  color?: string | null | undefined;
 };
 
 type CustomerDetails = {
@@ -88,10 +89,12 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
           customTags {
             uniqueId
             name
+            color
           }
           zones {
             uniqueId
             name
+            color
           }
         }
       }
@@ -238,7 +241,10 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
           <Divider />
           <SmallIconTypography startElement={<DeskIcon />} label={desks.length === 0 ? 'N/A' : desks} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
-          <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <Zones
+            zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))}
+            sx={{ paddingTop: 1, paddingBottom: 1 }}
+          />
           <Divider />
           <SmallIconTypography
             startElement={<NotesIcon />}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b38b7adffb9aad702dcb4f5981cf2979>>
+ * @generated SignedSource<<e8a54b4098007375b2e2d2cc98c156b3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type organizationAdmin_zones_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly color: string | null | undefined;
         readonly description: string | null | undefined;
         readonly id: string;
         readonly name: string;
@@ -152,6 +153,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "color",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
                 }
@@ -214,6 +222,6 @@ return {
 };
 })();
 
-(node as any).hash = "0b2ad0cd7cb8ff72f8195826f02256fa";
+(node as any).hash = "58799a9e483a5e0f87cd78ab657b0267";
 
 export default node;

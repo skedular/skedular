@@ -14,6 +14,7 @@ type Props = {
 type CustomTagDetails = {
   id: string;
   name: string;
+  color: string | null | undefined;
 };
 
 const MultipleChoicesCustomTags = ({ rootDataRelay, name, required }: Props) => {
@@ -27,6 +28,7 @@ const MultipleChoicesCustomTags = ({ rootDataRelay, name, required }: Props) => 
             node {
               id
               name
+              color
             }
           }
         }

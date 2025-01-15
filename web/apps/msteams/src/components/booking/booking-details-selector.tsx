@@ -69,7 +69,8 @@ type LocationDetails = {
 
 type ZoneDetails = {
   id: string;
-  name: string;
+  name: string | null | undefined;
+  color: string | null | undefined;
 };
 
 type DeskDetails = {
@@ -179,10 +180,12 @@ const BookingDetailsSelector = ({
           customTags {
             uniqueId
             name
+            color
           }
           zones {
             uniqueId
             name
+            color
           }
         }
       }
@@ -223,7 +226,7 @@ const BookingDetailsSelector = ({
     return rootDataAvailableLocationDesks.availableDesks.map(({ uniqueId, name, zones }) => ({
       uniqueId,
       name,
-      zones: zones.map(({ uniqueId: id, name }) => ({ id, name })),
+      zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
     }));
   }, [rootDataAvailableLocationDesks.availableDesks]);
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8cb24ebffaae0a1ea5950db823325f70>>
+ * @generated SignedSource<<6a241279a16fcef0c741e52b4425666b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type myLocations_locations_availableOrganizationDesks_query$data = {
         readonly canDelete: boolean;
         readonly canModify: boolean;
         readonly customTags: ReadonlyArray<{
+          readonly color: string | null | undefined;
           readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
@@ -39,6 +40,7 @@ export type myLocations_locations_availableOrganizationDesks_query$data = {
           readonly formattedAddress: string | null | undefined;
         } | null | undefined;
         readonly zones: ReadonlyArray<{
+          readonly color: string | null | undefined;
           readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
@@ -96,7 +98,14 @@ v6 = {
 },
 v7 = [
   (v6/*: any*/),
-  (v5/*: any*/)
+  (v5/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ],
 v8 = [
   (v6/*: any*/)
@@ -405,6 +414,6 @@ return {
 };
 })();
 
-(node as any).hash = "de3633ee692c24f507ca5d4d32d8a8bf";
+(node as any).hash = "6aaee30c93739448fb019374aa2a9d23";
 
 export default node;

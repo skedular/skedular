@@ -1,7 +1,7 @@
 import type { newCustomTagDialog_addCustomTagMutation } from '@/queries/__generated__/newCustomTagDialog_addCustomTagMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -13,7 +13,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useContext } from 'react';
+import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -29,10 +29,12 @@ type Props = {
 
 type CustomTagDetails = {
   name: string;
+  description: string;
 };
 
 const customTagSchema = object({
   name: string().required('Tag name is required'),
+  description: string().nullable(),
 });
 
 const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, organizationId }: Props) => {
@@ -42,6 +44,8 @@ const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCance
         organizationTag @appendNode(connections: $connectionIds, edgeTypeName: "OrganizationTagDetails") {
           id
           name
+          description
+          color
         }
       }
     }
@@ -51,8 +55,13 @@ const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCance
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(customTagSchema);
   const requiredFields = makeRequired(customTagSchema);
+  const [selectedColor, setSelectedColor] = useState('');
 
-  const handleAddClick = ({ name }: CustomTagDetails) => {
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
+
+  const handleAddClick = ({ name, description }: CustomTagDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding tag '${name}'...`} />, infoNotificationOptions);
 
@@ -64,6 +73,8 @@ const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCance
           id,
           organizationId,
           name,
+          description,
+          color: selectedColor,
         },
       },
       onCompleted: (_, errors) => {
@@ -94,6 +105,8 @@ const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCance
           organizationTag: {
             id,
             name,
+            description,
+            color: selectedColor,
           },
         },
       },
@@ -114,6 +127,14 @@ const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCance
             <FormStackColumn onSubmit={handleSubmit}>
               <FormFieldLabel label="Name" useWiderSpace>
                 <TextField name="name" required={requiredFields.name} helperText="Add your tag name" />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Description" useWiderSpace>
+                <TextField name="description" required={requiredFields.description} multiline rows={3} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Color" useWiderSpace>
+                <ColorPicker onChange={handleColorChange} />
               </FormFieldLabel>
 
               <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />

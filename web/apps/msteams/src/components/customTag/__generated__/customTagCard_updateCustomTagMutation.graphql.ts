@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<045f1827ab351b9c8dce54477bc9c540>>
+ * @generated SignedSource<<5341c96b652a2437b43fe06080f1b0ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,8 @@ export type customTagCard_updateCustomTagMutation$variables = {
 export type customTagCard_updateCustomTagMutation$data = {
   readonly updateCustomTag: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
@@ -76,6 +78,20 @@ v1 = [
             "kind": "ScalarField",
             "name": "name",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "description",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "color",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -102,16 +118,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "6ffa1c7a1c6f21749846cf063ce665a2",
+    "cacheID": "1fe7b7a69f64995e8e882ee9c9839208",
     "id": null,
     "metadata": {},
     "name": "customTagCard_updateCustomTagMutation",
     "operationKind": "mutation",
-    "text": "mutation customTagCard_updateCustomTagMutation(\n  $input: UpdateCustomTagInput!\n) {\n  updateCustomTag(input: $input) {\n    organizationTag {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation customTagCard_updateCustomTagMutation(\n  $input: UpdateCustomTagInput!\n) {\n  updateCustomTag(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1e14728cf7ab23f940b9e0a5509c8545";
+(node as any).hash = "b14bc4602316a92e9384de668a65be9c";
 
 export default node;

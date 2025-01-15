@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<470897524adeefdb6dc786cb2b58f3c3>>
+ * @generated SignedSource<<ca9b662867f96bad818237fba198d483>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type editOrganizationCustomTagDialog_updateCustomTagMutation$variables = 
 export type editOrganizationCustomTagDialog_updateCustomTagMutation$data = {
   readonly updateCustomTag: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
       readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
@@ -31,6 +32,7 @@ export type editOrganizationCustomTagDialog_updateCustomTagMutation$data = {
 export type editOrganizationCustomTagDialog_updateCustomTagMutation$rawResponse = {
   readonly updateCustomTag: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
       readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
@@ -94,6 +96,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "description",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "color",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -120,16 +129,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "743d1a238f27c33b96740dc7fcb3385e",
+    "cacheID": "293f0e61e898e1f6950f770e35661c3e",
     "id": null,
     "metadata": {},
     "name": "editOrganizationCustomTagDialog_updateCustomTagMutation",
     "operationKind": "mutation",
-    "text": "mutation editOrganizationCustomTagDialog_updateCustomTagMutation(\n  $input: UpdateCustomTagInput!\n) {\n  updateCustomTag(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n    }\n  }\n}\n"
+    "text": "mutation editOrganizationCustomTagDialog_updateCustomTagMutation(\n  $input: UpdateCustomTagInput!\n) {\n  updateCustomTag(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1c4de7288b2d9d677a0d92bc0d089c9e";
+(node as any).hash = "02436d107bbbc57b385773bb56fde98a";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4d1c19516730a034344d7db5268bf627>>
+ * @generated SignedSource<<1b1f64d0aaaa42dbdb22d729e60f1cbe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,12 +23,14 @@ export type editBooking_query$data = {
     };
     readonly desks: ReadonlyArray<{
       readonly customTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
       readonly name: string;
       readonly uniqueId: string;
       readonly zones: ReadonlyArray<{
+        readonly color: string | null | undefined;
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
@@ -107,6 +109,17 @@ v4 = [
 v5 = [
   (v3/*: any*/),
   (v2/*: any*/)
+],
+v6 = [
+  (v3/*: any*/),
+  (v2/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "argumentDefinitions": [
@@ -300,7 +313,7 @@ return {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v5/*: any*/),
+              "selections": (v6/*: any*/),
               "storageKey": null
             },
             {
@@ -310,7 +323,7 @@ return {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v5/*: any*/),
+              "selections": (v6/*: any*/),
               "storageKey": null
             }
           ],
@@ -325,6 +338,6 @@ return {
 };
 })();
 
-(node as any).hash = "7f850f699a53fd8e2fa9494790fecafe";
+(node as any).hash = "28c0b18984c9b0354caf1c432e1b37fe";
 
 export default node;

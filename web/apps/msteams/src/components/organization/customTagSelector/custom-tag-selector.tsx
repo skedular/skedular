@@ -27,6 +27,7 @@ const CustomTagSelector = ({ rootDataRelay, onChange }: Props) => {
             node {
               id
               name
+              color
             }
           }
         }

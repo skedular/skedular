@@ -67,6 +67,7 @@ type ZoneDetails = {
   uniqueId: string;
   name: string | null | undefined;
   tagType?: string | null | undefined;
+  color?: string | null | undefined;
 };
 
 type DeskDetails = {
@@ -147,10 +148,12 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
                 customTags {
                   uniqueId
                   name
+                  color
                 }
                 zones {
                   uniqueId
                   name
+                  color
                 }
               }
               ...myBookingCard_BookingDetails
@@ -370,7 +373,9 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       field: 'zones',
       headerName: 'Zones',
       editable: false,
-      renderCell: (params) => <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name }))} hideIcon />,
+      renderCell: (params) => (
+        <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />
+      ),
       display: 'flex',
       minWidth: 250,
     },

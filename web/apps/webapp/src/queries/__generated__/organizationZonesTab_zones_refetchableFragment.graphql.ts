@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c9603c8daffc889ec520586cfc6870e8>>
+ * @generated SignedSource<<fb2fa2f48c4c637c9f79eec27ec2be28>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -174,6 +174,20 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "description",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "color",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
                   }
@@ -245,12 +259,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "caccba98e780deb8da06391806e13918",
+    "cacheID": "412b833e28052ce210302e93725a7163",
     "id": null,
     "metadata": {},
     "name": "organizationZonesTab_zones_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationZonesTab_zones_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...organizationZonesTab_zones_query_1G22uz\n}\n\nfragment organizationZonesTab_zones_query_1G22uz on Query {\n  zones(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment zoneCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n"
+    "text": "query organizationZonesTab_zones_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $zoneSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...organizationZonesTab_zones_query_1G22uz\n}\n\nfragment organizationZonesTab_zones_query_1G22uz on Query {\n  zones(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}, orderBy: $zoneSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...zoneCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment zoneCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n  description\n  color\n}\n"
   }
 };
 })();

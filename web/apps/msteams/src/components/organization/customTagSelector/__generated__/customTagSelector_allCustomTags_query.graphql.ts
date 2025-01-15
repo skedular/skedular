@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2831a98af4322c52c11721b8e3cffff>>
+ * @generated SignedSource<<23fda70d07d640d89e56e908f23a1e65>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type customTagSelector_allCustomTags_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly color: string | null | undefined;
         readonly id: string;
         readonly name: string;
       };
@@ -104,6 +105,13 @@ const node: ReaderFragment = {
                   "kind": "ScalarField",
                   "name": "name",
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "color",
+                  "storageKey": null
                 }
               ],
               "storageKey": null
@@ -131,6 +139,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "7f04d8155df9bb5e6d58ef30aa579bfb";
+(node as any).hash = "4d1935a2324cb66dd815ba6e048f30a7";
 
 export default node;

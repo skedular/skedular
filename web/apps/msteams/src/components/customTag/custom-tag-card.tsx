@@ -7,7 +7,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
-import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  BodyIconTypography,
+  ColorPicker,
+  DefaultDialogTitle,
+  FormFieldLabel,
+  FormStackColumn,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import { CustomTagIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -41,10 +48,12 @@ type Props = {
 
 type OrganizationTagDetails = {
   name: string;
+  description: string;
 };
 
 const customTagSchema = object({
   name: string().required('Tag name is required'),
+  description: string().nullable(),
 });
 
 const CustomTagCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }: Props) => {
@@ -70,6 +79,8 @@ const CustomTagCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionI
       fragment customTagCard_OrganizationTagDetails on OrganizationTagDetails {
         id
         name
+        description
+        color
       }
     `,
     organizationTagDetailsRelay,
@@ -81,6 +92,8 @@ const CustomTagCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionI
         organizationTag {
           id
           name
+          description
+          color
         }
       }
     }
@@ -132,6 +145,11 @@ const CustomTagCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionI
     () => !!rootData.me?.preferredCustomTags.find((customTag) => customTag.uniqueId === organizationTagDetails.id),
     [rootData.me?.preferredCustomTags, organizationTagDetails.id],
   );
+  const [selectedColor, setSelectedColor] = useState(organizationTagDetails.color);
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
 
   const handleDeleteClick = () => {
     setCustomTagRemoveConfirmationDialogOpen(true);
@@ -186,7 +204,7 @@ const CustomTagCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionI
     setEditing(false);
   };
 
-  const handleSaveClick = ({ name }: OrganizationTagDetails) => {
+  const handleSaveClick = ({ name, description }: OrganizationTagDetails) => {
     const toastId = themedToast(<NotificationContent content={`Updating tag '${organizationTagDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateCustomTag({
@@ -195,6 +213,8 @@ const CustomTagCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionI
           clientMutationId: nanoid(),
           id: organizationTagDetails.id,
           name,
+          description,
+          color: selectedColor,
         },
       },
       onCompleted: (_, errors) => {
@@ -225,6 +245,8 @@ const CustomTagCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionI
           organizationTag: {
             id: organizationTagDetails.id,
             name,
+            description,
+            color: selectedColor,
           },
         },
       },
@@ -396,12 +418,21 @@ const CustomTagCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionI
             onSubmit={handleSaveClick}
             initialValues={{
               name: organizationTagDetails.name,
+              description: organizationTagDetails.description,
             }}
             validate={validate}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
                 <FormFieldLabel label="Name" useWiderSpace>
                   <TextField name="name" required={requiredFields.name} helperText="Add your tag name" />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Description" useWiderSpace>
+                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Color" useWiderSpace>
+                  <ColorPicker onChange={handleColorChange} />
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />

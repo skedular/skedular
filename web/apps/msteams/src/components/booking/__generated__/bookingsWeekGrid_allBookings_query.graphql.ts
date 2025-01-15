@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4b5e8bc8abea7c677078257d2868bb0b>>
+ * @generated SignedSource<<4b58a0dfaccb43005d4ab2e655f32f8e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,11 +26,13 @@ export type bookingsWeekGrid_allBookings_query$data = {
         };
         readonly desks: ReadonlyArray<{
           readonly customTags: ReadonlyArray<{
+            readonly color: string | null | undefined;
             readonly name: string | null | undefined;
             readonly uniqueId: string;
           }>;
           readonly name: string;
           readonly zones: ReadonlyArray<{
+            readonly color: string | null | undefined;
             readonly name: string | null | undefined;
             readonly uniqueId: string;
           }>;
@@ -76,7 +78,14 @@ v2 = [
 ],
 v3 = [
   (v0/*: any*/),
-  (v1/*: any*/)
+  (v1/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "argumentDefinitions": [
@@ -345,6 +354,6 @@ return {
 };
 })();
 
-(node as any).hash = "b97bae8065f6aee799a28a49c17d7248";
+(node as any).hash = "6a4a92e3f14fb3c7a4398cce8ba060a9";
 
 export default node;

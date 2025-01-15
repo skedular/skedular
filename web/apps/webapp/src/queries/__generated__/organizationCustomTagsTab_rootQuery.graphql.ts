@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2d71568bc01fe6aaa087a5fdc4abaaf9>>
+ * @generated SignedSource<<e05d452981cfcb7232f93e124cdbdde3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -213,6 +213,20 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "description",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "color",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
                   }
@@ -284,12 +298,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c7934c1de2f8a0e3f1c113abc24ab10a",
+    "cacheID": "1f0df8b3f3bbbfbf337cfe2244194ab7",
     "id": null,
     "metadata": {},
     "name": "organizationCustomTagsTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationCustomTagsTab_rootQuery(\n  $organizationId: String!\n  $customTagNameSearchText: String\n  $customTagSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...organizationCustomTagsTab_query\n  ...organizationCustomTagsTab_customTags_query\n}\n\nfragment customTagCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment customTagCard_Query on Query {\n  me {\n    id\n    preferredCustomTags {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n\nfragment organizationCustomTagsTab_customTags_query on Query {\n  customTags(first: 50, where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: $customTagSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...customTagCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationCustomTagsTab_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...customTagCard_Query\n}\n"
+    "text": "query organizationCustomTagsTab_rootQuery(\n  $organizationId: String!\n  $customTagNameSearchText: String\n  $customTagSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...organizationCustomTagsTab_query\n  ...organizationCustomTagsTab_customTags_query\n}\n\nfragment customTagCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n  description\n  color\n}\n\nfragment customTagCard_Query on Query {\n  me {\n    id\n    preferredCustomTags {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n}\n\nfragment organizationCustomTagsTab_customTags_query on Query {\n  customTags(first: 50, where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: $customTagSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...customTagCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationCustomTagsTab_query on Query {\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...customTagCard_Query\n}\n"
   }
 };
 })();

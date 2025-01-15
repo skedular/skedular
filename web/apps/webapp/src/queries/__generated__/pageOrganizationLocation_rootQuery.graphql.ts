@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7fb761b96d19de1b735b137aa41a3cc3>>
+ * @generated SignedSource<<59af4e10a04534352eac6ca6f4cc87dd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -112,6 +112,13 @@ v11 = {
   "storageKey": null
 },
 v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "color",
+  "storageKey": null
+},
+v13 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -123,7 +130,7 @@ v12 = {
     }
   ]
 },
-v13 = [
+v14 = [
   (v11/*: any*/),
   {
     "alias": null,
@@ -142,16 +149,17 @@ v13 = [
         "plural": false,
         "selections": [
           (v9/*: any*/),
-          (v8/*: any*/)
+          (v8/*: any*/),
+          (v12/*: any*/)
         ],
         "storageKey": null
       }
     ],
     "storageKey": null
   },
-  (v12/*: any*/)
+  (v13/*: any*/)
 ],
-v14 = [
+v15 = [
   {
     "fields": [
       {
@@ -179,7 +187,7 @@ v14 = [
     "name": "where"
   }
 ],
-v15 = [
+v16 = [
   {
     "alias": null,
     "args": null,
@@ -187,7 +195,8 @@ v15 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v8/*: any*/)
+  (v8/*: any*/),
+  (v12/*: any*/)
 ];
 return {
   "fragment": {
@@ -303,7 +312,7 @@ return {
         "kind": "LinkedField",
         "name": "customTags",
         "plural": false,
-        "selections": (v13/*: any*/),
+        "selections": (v14/*: any*/),
         "storageKey": null
       },
       {
@@ -320,12 +329,12 @@ return {
         "kind": "LinkedField",
         "name": "zones",
         "plural": false,
-        "selections": (v13/*: any*/),
+        "selections": (v14/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v14/*: any*/),
+        "args": (v15/*: any*/),
         "concreteType": "DeskConnection",
         "kind": "LinkedField",
         "name": "desks",
@@ -371,7 +380,7 @@ return {
                     "kind": "LinkedField",
                     "name": "customTags",
                     "plural": true,
-                    "selections": (v15/*: any*/),
+                    "selections": (v16/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -381,7 +390,7 @@ return {
                     "kind": "LinkedField",
                     "name": "zones",
                     "plural": true,
-                    "selections": (v15/*: any*/),
+                    "selections": (v16/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -429,13 +438,13 @@ return {
             ],
             "storageKey": null
           },
-          (v12/*: any*/)
+          (v13/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v14/*: any*/),
+        "args": (v15/*: any*/),
         "filters": [
           "where"
         ],
@@ -447,12 +456,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d033a98ca8fb76714655b0b1dcd238c6",
+    "cacheID": "ea9b4ff4eff406c159feca98f8e18e5d",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocation_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocation_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $deskNameSearchText: String\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $deskZoneIds: [String!]\n  $deskCustomTagIds: [String!]\n) {\n  location(id: $locationId) {\n    name\n    id\n  }\n  ...organizationLocation_query\n  ...organizationLocation_desks_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $customTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationLocation_desks_query on Query {\n  desks(where: {locationId: $locationId, nameContains: $deskNameSearchText, customTagIds: $deskCustomTagIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        customTags {\n          uniqueId\n          name\n        }\n        zones {\n          uniqueId\n          name\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocation_query on Query {\n  location(id: $locationId) {\n    id\n    name\n    about\n    timezone\n    physicalAddress {\n      formattedAddress\n    }\n  }\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationLocation_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $deskNameSearchText: String\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $deskZoneIds: [String!]\n  $deskCustomTagIds: [String!]\n) {\n  location(id: $locationId) {\n    name\n    id\n  }\n  ...organizationLocation_query\n  ...organizationLocation_desks_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $customTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment organizationLocation_desks_query on Query {\n  desks(where: {locationId: $locationId, nameContains: $deskNameSearchText, customTagIds: $deskCustomTagIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationLocation_query on Query {\n  location(id: $locationId) {\n    id\n    name\n    about\n    timezone\n    physicalAddress {\n      formattedAddress\n    }\n  }\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();

@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SelectedTickIcon } from '../icons';
 import GridContainer from './grid-container';
 
@@ -29,12 +29,19 @@ const colors = [
 ];
 
 const ColorPicker = ({ defaultColor, onChange }: Props) => {
-  const [selectedColor, setSelectedColor] = useState(defaultColor && colors.includes(defaultColor) ? defaultColor : colors[0]);
+  const [selectedColor, setSelectedColor] = useState<string>(defaultColor && colors.includes(defaultColor) ? defaultColor : colors[0]!);
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(selectedColor);
+    }
+  }, []);
 
   const handleChange = (color: string) => {
     if (onChange) {
       onChange(color);
     }
+
     setSelectedColor(color);
   };
 

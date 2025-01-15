@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<39879ff9e518019d67c5257af0ee234b>>
+ * @generated SignedSource<<b9c7c0011afc03387095d16f0c0e886f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -164,6 +164,13 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "color",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
                   }
@@ -234,16 +241,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "26f518cc23a93cb54e018f1f1fcae0fd",
+    "cacheID": "989c5e2d2d5ad644f213df09435de396",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_zones_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationAdmin_zones_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $zoneNameSearchText: String\n) {\n  ...organizationAdmin_zones_query_1G22uz\n}\n\nfragment organizationAdmin_zones_query_1G22uz on Query {\n  zones(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationAdmin_zones_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $zoneNameSearchText: String\n) {\n  ...organizationAdmin_zones_query_1G22uz\n}\n\nfragment organizationAdmin_zones_query_1G22uz on Query {\n  zones(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0b2ad0cd7cb8ff72f8195826f02256fa";
+(node as any).hash = "58799a9e483a5e0f87cd78ab657b0267";
 
 export default node;

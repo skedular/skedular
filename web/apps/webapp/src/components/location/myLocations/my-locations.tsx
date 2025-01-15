@@ -71,6 +71,7 @@ type DesksAvailabilityDetails = {
 type ZoneDetails = {
   id: string;
   name: string | null | undefined;
+  color: string | null | undefined;
 };
 
 type CustomerDetails = {
@@ -140,10 +141,12 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               customTags {
                 uniqueId
                 name
+                color
               }
               zones {
                 uniqueId
                 name
+                color
               }
               desks {
                 id
@@ -311,7 +314,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length
       : 0;
     const availablePercentage = (availableDesksCount / desksCount) * 100;
-    const zones = location.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }));
+    const zones = location.zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }));
 
     return {
       id: location.id,

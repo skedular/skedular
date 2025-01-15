@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7179bb055d0d504dddaa123b98d6f07f>>
+ * @generated SignedSource<<b0781f67d590562421a48bd36067ca27>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,7 @@ export type addOrganizationCustomTagDialog_addCustomTagMutation$variables = {
 export type addOrganizationCustomTagDialog_addCustomTagMutation$data = {
   readonly addCustomTag: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
       readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
@@ -33,6 +34,7 @@ export type addOrganizationCustomTagDialog_addCustomTagMutation$data = {
 export type addOrganizationCustomTagDialog_addCustomTagMutation$rawResponse = {
   readonly addCustomTag: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
       readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
@@ -92,6 +94,13 @@ v2 = {
       "args": null,
       "kind": "ScalarField",
       "name": "description",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "color",
       "storageKey": null
     }
   ],
@@ -162,16 +171,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c3b5dc65f7ceb17287e1b78911eecf36",
+    "cacheID": "348290ce5ec7aa4f063dae26daea7627",
     "id": null,
     "metadata": {},
     "name": "addOrganizationCustomTagDialog_addCustomTagMutation",
     "operationKind": "mutation",
-    "text": "mutation addOrganizationCustomTagDialog_addCustomTagMutation(\n  $input: AddCustomTagInput!\n) {\n  addCustomTag(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n    }\n  }\n}\n"
+    "text": "mutation addOrganizationCustomTagDialog_addCustomTagMutation(\n  $input: AddCustomTagInput!\n) {\n  addCustomTag(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e5cb4cfa480599643119fc3411b1790d";
+(node as any).hash = "dd3403091a6e3755293b836c2f992c93";
 
 export default node;

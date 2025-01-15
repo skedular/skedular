@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2828fb98fcd7bba2bbb3f36e8c1a4bae>>
+ * @generated SignedSource<<5d790446d46262e174a50f76d15235ba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type deskCard_DeskDetails$data = {
   readonly customTags: ReadonlyArray<{
+    readonly color: string | null | undefined;
     readonly name: string | null | undefined;
     readonly uniqueId: string;
   }>;
@@ -20,6 +21,7 @@ export type deskCard_DeskDetails$data = {
   readonly name: string;
   readonly requireBookingApproval: boolean;
   readonly zones: ReadonlyArray<{
+    readonly color: string | null | undefined;
     readonly name: string | null | undefined;
     readonly uniqueId: string;
   }>;
@@ -46,7 +48,14 @@ v1 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v0/*: any*/)
+  (v0/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "argumentDefinitions": [],
@@ -102,6 +111,6 @@ return {
 };
 })();
 
-(node as any).hash = "2b3e845b1022fd9068cd0a40f97f53a5";
+(node as any).hash = "77c076ab90f7a6600cb755a30c0ce366";
 
 export default node;

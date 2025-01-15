@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fe600a544f788fb4b4567aeb1d268443>>
+ * @generated SignedSource<<238e9d2b082744d9ddb7686e09f3a918>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,7 @@ export type addOrganizationZoneDialog_addZoneMutation$variables = {
 export type addOrganizationZoneDialog_addZoneMutation$data = {
   readonly addZone: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
       readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
@@ -33,6 +34,7 @@ export type addOrganizationZoneDialog_addZoneMutation$data = {
 export type addOrganizationZoneDialog_addZoneMutation$rawResponse = {
   readonly addZone: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
       readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
@@ -92,6 +94,13 @@ v2 = {
       "args": null,
       "kind": "ScalarField",
       "name": "description",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "color",
       "storageKey": null
     }
   ],
@@ -162,16 +171,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c906c6a7bae0e6dc251e392721cfd9e4",
+    "cacheID": "3f292625d88e7d2bff8c1f7c78ef717a",
     "id": null,
     "metadata": {},
     "name": "addOrganizationZoneDialog_addZoneMutation",
     "operationKind": "mutation",
-    "text": "mutation addOrganizationZoneDialog_addZoneMutation(\n  $input: AddZoneInput!\n) {\n  addZone(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n    }\n  }\n}\n"
+    "text": "mutation addOrganizationZoneDialog_addZoneMutation(\n  $input: AddZoneInput!\n) {\n  addZone(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9868fd4615f492b53c4a73648703b1f9";
+(node as any).hash = "8c81a322d1ac6639e23c2b5bd26d514b";
 
 export default node;

@@ -75,11 +75,13 @@ type LocationDetails = {
 type CustomTagDetails = {
   id: string;
   name: string | null | undefined;
+  color: string | null | undefined;
 };
 
 type ZoneDetails = {
   id: string;
   name: string | null | undefined;
+  color: string | null | undefined;
 };
 
 type DeskRowType = {
@@ -138,10 +140,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
               customTags {
                 uniqueId
                 name
+                color
               }
               zones {
                 uniqueId
                 name
+                color
               }
             }
           }
@@ -188,10 +192,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
           customTags {
             uniqueId
             name
+            color
           }
           zones {
             uniqueId
             name
+            color
           }
         }
       }
@@ -209,10 +215,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
           customTags {
             uniqueId
             name
+            color
           }
           zones {
             uniqueId
             name
+            color
           }
         }
       }
@@ -634,10 +642,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   const deskRows: DeskRowType[] = desks.map((desk) => ({
     id: desk.id,
     name: desk.name,
-    customTags: desk.customTags.map((item) => ({ id: item.uniqueId, name: item.name })),
-    zones: desk.zones.map((item) => ({ id: item.uniqueId, name: item.name })),
+    customTags: desk.customTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
+    zones: desk.zones.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
     status: !desk.deactivated,
   }));
+
+  console.log('deskRows', deskRows);
 
   const deskColumns: GridColDef<(typeof deskRows)[number]>[] = [
     {

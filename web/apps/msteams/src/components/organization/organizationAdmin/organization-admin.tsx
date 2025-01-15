@@ -226,6 +226,7 @@ const OrganizationAdmin = ({
               id
               name
               description
+              color
             }
           }
         }
@@ -255,6 +256,7 @@ const OrganizationAdmin = ({
               id
               name
               description
+              color
             }
           }
         }
@@ -969,7 +971,14 @@ const OrganizationAdmin = ({
       field: 'name',
       headerName: 'Name',
       editable: false,
-      renderCell: (params) => <Zone zone={{ id: params.id as string, name: params.value }} showFullName />,
+      renderCell: (params) => {
+        const zone = zones.find((zone) => zone.id === (params.id as string));
+        if (!zone) {
+          return <></>;
+        }
+
+        return <Zone zone={zone} showFullName />;
+      },
       display: 'flex',
       minWidth: 200,
     },
@@ -1014,7 +1023,14 @@ const OrganizationAdmin = ({
       field: 'name',
       headerName: 'Name',
       editable: false,
-      renderCell: (params) => <CustomTag customTag={{ id: params.id as string, name: params.value }} showFullName />,
+      renderCell: (params) => {
+        const customTag = customTags.find((customTag) => customTag.id === (params.id as string));
+        if (!customTag) {
+          return <></>;
+        }
+
+        return <CustomTag customTag={customTag} showFullName />;
+      },
       display: 'flex',
       minWidth: 200,
     },

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d8da56a820559e5b7b6c13241014bb2d>>
+ * @generated SignedSource<<8629679646d1630baccc60f878e6e764>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -107,7 +107,14 @@ v3 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v2/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "fragment": {
@@ -290,12 +297,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1b82e4edaf07e1345aa96ea67421bfb3",
+    "cacheID": "39d2dc0f7e2e2bcb456a9b7ed545bc78",
     "id": null,
     "metadata": {},
     "name": "locationDesksTab_desks_refetchableFragment",
     "operationKind": "query",
-    "text": "query locationDesksTab_desks_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]\n  $locationId: String!\n) {\n  ...locationDesksTab_desks_query_1G22uz\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  customTags {\n    uniqueId\n    name\n  }\n  zones {\n    uniqueId\n    name\n  }\n}\n\nfragment locationDesksTab_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query locationDesksTab_desks_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $deskNameSearchText: String\n  $deskSortingValues: [DeskOrderInput!]\n  $locationId: String!\n) {\n  ...locationDesksTab_desks_query_1G22uz\n}\n\nfragment deskCard_DeskDetails on DeskDetails {\n  id\n  name\n  deactivated\n  requireBookingApproval\n  customTags {\n    uniqueId\n    name\n    color\n  }\n  zones {\n    uniqueId\n    name\n    color\n  }\n}\n\nfragment locationDesksTab_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText}, orderBy: $deskSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...deskCard_DeskDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

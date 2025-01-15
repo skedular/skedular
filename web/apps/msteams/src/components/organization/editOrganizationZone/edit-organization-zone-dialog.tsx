@@ -1,6 +1,7 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import {
+  ColorPicker,
   DefaultDialogTitle,
   FormFieldLabel,
   FormStackColumn,
@@ -47,6 +48,7 @@ const RootQuery = graphql`
       id
       name
       description
+      color
     }
   }
 `;
@@ -71,6 +73,7 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
           id
           name
           description
+          color
         }
       }
     }
@@ -80,6 +83,11 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(zoneSchema);
   const requiredFields = makeRequired(zoneSchema);
+  const [selectedColor, setSelectedColor] = useState(rootData.zone?.color);
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
 
   const handleAddClick = ({ name, description }: ZoneDetails) => {
     if (!rootData.zone) {
@@ -96,6 +104,7 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
           id: zoneId,
           name,
           description,
+          color: selectedColor,
         },
       },
       onCompleted: (_, errors) => {
@@ -127,6 +136,7 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
             id: zoneId,
             name,
             description,
+            color: selectedColor,
           },
         },
       },
@@ -160,6 +170,14 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
 
                 <FormFieldLabel label="Description" useWiderSpace>
                   <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Description" useWiderSpace>
+                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Color" useWiderSpace>
+                  <ColorPicker onChange={handleColorChange} />
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Save" secondaryLabel="Cancel" />

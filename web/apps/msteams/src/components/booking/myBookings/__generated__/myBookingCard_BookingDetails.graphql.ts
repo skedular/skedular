@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c91f48cb9bec3f66ebb94a909794da6>>
+ * @generated SignedSource<<e887ad094e7579158aab744f262a3804>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,12 +21,14 @@ export type myBookingCard_BookingDetails$data = {
   };
   readonly desks: ReadonlyArray<{
     readonly customTags: ReadonlyArray<{
+      readonly color: string | null | undefined;
       readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
     readonly name: string;
     readonly uniqueId: string;
     readonly zones: ReadonlyArray<{
+      readonly color: string | null | undefined;
       readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
@@ -68,6 +70,17 @@ v1 = {
 v2 = [
   (v0/*: any*/),
   (v1/*: any*/)
+],
+v3 = [
+  (v0/*: any*/),
+  (v1/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "argumentDefinitions": [],
@@ -181,7 +194,7 @@ return {
           "kind": "LinkedField",
           "name": "customTags",
           "plural": true,
-          "selections": (v2/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -191,7 +204,7 @@ return {
           "kind": "LinkedField",
           "name": "zones",
           "plural": true,
-          "selections": (v2/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         }
       ],
@@ -203,6 +216,6 @@ return {
 };
 })();
 
-(node as any).hash = "e1a0d11d4001b1b1034d82028984afae";
+(node as any).hash = "7566ce6da428fb25c0afa8aee68d1666";
 
 export default node;

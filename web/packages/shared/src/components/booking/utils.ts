@@ -11,8 +11,9 @@ export type TeamDetails = {
 
 export type ZoneDetails = {
   uniqueId: string;
-  name: string;
+  name?: string | undefined | null;
   tagType?: string | undefined | null;
+  color?: string | undefined | null;
 };
 
 export type DeskDetails = {

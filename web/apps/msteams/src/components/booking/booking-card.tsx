@@ -149,10 +149,12 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           customTags {
             uniqueId
             name
+            color
           }
           zones {
             uniqueId
             name
+            color
           }
         }
       }
@@ -195,10 +197,12 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             customTags {
               uniqueId
               name
+              color
             }
             zones {
               uniqueId
               name
+              color
             }
           }
         }
@@ -241,10 +245,12 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
             customTags {
               uniqueId
               name
+              color
             }
             zones {
               uniqueId
               name
+              color
             }
           }
         }
@@ -693,12 +699,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
                     </Tooltip>
                   )}
 
-                  <Zones
-                    zones={zones.map(({ uniqueId, name }) => ({
-                      id: uniqueId,
-                      name,
-                    }))}
-                  />
+                  <Zones zones={zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
                 </StackRow>
               );
             })}

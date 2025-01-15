@@ -14,6 +14,7 @@ type Props = {
 type ZoneDetails = {
   id: string;
   name: string;
+  color: string | null | undefined;
 };
 
 const MultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
@@ -27,6 +28,7 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
             node {
               id
               name
+              color
             }
           }
         }

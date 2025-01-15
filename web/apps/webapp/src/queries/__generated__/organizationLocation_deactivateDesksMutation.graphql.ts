@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b7fb7ad61c52d5ae24ff858f1a3cb557>>
+ * @generated SignedSource<<4fbe2f3edbfbe3f2b2a9f16189f32958>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,7 @@ export type organizationLocation_deactivateDesksMutation$data = {
   readonly deactivateDesks: {
     readonly desks: ReadonlyArray<{
       readonly customTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
@@ -28,6 +29,7 @@ export type organizationLocation_deactivateDesksMutation$data = {
       readonly name: string;
       readonly requireBookingApproval: boolean;
       readonly zones: ReadonlyArray<{
+        readonly color: string | null | undefined;
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
@@ -62,7 +64,14 @@ v2 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v1/*: any*/)
+  (v1/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ],
 v3 = [
   {
@@ -154,16 +163,16 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "4a9151495db1cc84379226cff370bc75",
+    "cacheID": "1f74f37cd3e1abc6c826c4927cac0def",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_deactivateDesksMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_deactivateDesksMutation(\n  $input: DeactivateDesksInput!\n) {\n  deactivateDesks(input: $input) {\n    desks {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n      }\n      zones {\n        uniqueId\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_deactivateDesksMutation(\n  $input: DeactivateDesksInput!\n) {\n  deactivateDesks(input: $input) {\n    desks {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7fd3945f0b9a927ffa7c25cf8c16a27d";
+(node as any).hash = "51983f5f3785087b3df52d48a8fdaae6";
 
 export default node;

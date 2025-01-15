@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1db012d761584e8135862552aea07107>>
+ * @generated SignedSource<<03cb0a6cc7c0ed34712c0bff3ba2c5e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -72,7 +72,14 @@ v3 = [
 ],
 v4 = [
   (v1/*: any*/),
-  (v2/*: any*/)
+  (v2/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "fragment": {
@@ -327,16 +334,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6526fd9e5b9de1a21815b3830dd911bf",
+    "cacheID": "18bf2a9afe1a1f8bb57015b8faec7a1c",
     "id": null,
     "metadata": {},
     "name": "bookingsWeekGrid_allBookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookingsWeekGrid_allBookings_refetchableFragment(\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $teamId: String!\n  $to: DateTime\n) {\n  ...bookingsWeekGrid_allBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        type\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          customTags {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query bookingsWeekGrid_allBookings_refetchableFragment(\n  $from: DateTime\n  $locationId: String!\n  $organizationId: String!\n  $teamId: String!\n  $to: DateTime\n) {\n  ...bookingsWeekGrid_allBookings_query\n}\n\nfragment bookingsWeekGrid_allBookings_query on Query {\n  bookings(where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $from, toLT: $to, combineOrganizationsLocationsTeams: true}) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        type\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        location {\n          name\n        }\n        team {\n          name\n        }\n        desks {\n          name\n          customTags {\n            uniqueId\n            name\n            color\n          }\n          zones {\n            uniqueId\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b97bae8065f6aee799a28a49c17d7248";
+(node as any).hash = "6a4a92e3f14fb3c7a4398cce8ba060a9";
 
 export default node;

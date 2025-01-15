@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<93117dc559860ea0c659035d589d698e>>
+ * @generated SignedSource<<2ad5668dd037b4ed61a70646c9b6baf3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,8 @@ export type zoneCard_updateZoneMutation$variables = {
 export type zoneCard_updateZoneMutation$data = {
   readonly updateZone: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
@@ -76,6 +78,20 @@ v1 = [
             "kind": "ScalarField",
             "name": "name",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "description",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "color",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -102,16 +118,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "4e679a3bed84fbbb20f1be949a25566e",
+    "cacheID": "b5b254ff8417892ccedd279ed65190e5",
     "id": null,
     "metadata": {},
     "name": "zoneCard_updateZoneMutation",
     "operationKind": "mutation",
-    "text": "mutation zoneCard_updateZoneMutation(\n  $input: UpdateZoneInput!\n) {\n  updateZone(input: $input) {\n    organizationTag {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation zoneCard_updateZoneMutation(\n  $input: UpdateZoneInput!\n) {\n  updateZone(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "47efbccca3d4f428d3cd14d5736e95f3";
+(node as any).hash = "d3ed50180d7053949e9d1737f8918404";
 
 export default node;

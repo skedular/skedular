@@ -127,10 +127,12 @@ const NewBookingDialog = ({
             customTags {
               uniqueId
               name
+              color
             }
             zones {
               uniqueId
               name
+              color
             }
           }
         }

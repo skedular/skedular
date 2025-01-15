@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f6c7031bd465bf38c2280933e59277a4>>
+ * @generated SignedSource<<47c5e8ead0cff53806f7ee0e48017f91>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -174,6 +174,13 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "color",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
                   }
@@ -245,16 +252,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4c59d707bcdaa3294bff66056a253c81",
+    "cacheID": "95108f0cd4af33c7943ab237d73b79c5",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_customTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationAdmin_customTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationAdmin_customTags_query_1G22uz\n}\n\nfragment organizationAdmin_customTags_query_1G22uz on Query {\n  customTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationAdmin_customTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagNameSearchText: String\n  $organizationId: String!\n) {\n  ...organizationAdmin_customTags_query_1G22uz\n}\n\nfragment organizationAdmin_customTags_query_1G22uz on Query {\n  customTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "08316cb8826cce5e25d98f21d53561da";
+(node as any).hash = "17c8862bc8d71a448cccd249869f954e";
 
 export default node;

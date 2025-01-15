@@ -87,6 +87,7 @@ type ZoneDetails = {
   readonly uniqueId: string;
   readonly name?: string | null | undefined;
   readonly tagType?: string | null | undefined;
+  readonly color?: string | null | undefined;
 };
 
 type DeskDetails = {
@@ -139,10 +140,12 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth, 
             customTags {
               uniqueId
               name
+              color
             }
             zones {
               uniqueId
               name
+              color
             }
           }
         }
@@ -224,7 +227,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth, 
       {booking.desks?.map(({ uniqueId, name, zones }) => (
         <StackRow key={uniqueId} sx={{ alignItems: 'center' }}>
           <BodyIconTypography label={name} startElement={<DeskIcon />} />
-          <Zones zones={zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <Zones zones={zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
         </StackRow>
       ))}
     </StackColumn>

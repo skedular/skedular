@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d42bc7221fd6d9c2fbaaf2496e5e7c0>>
+ * @generated SignedSource<<ad20b95d3d35629551780d63f0515e73>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,8 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type customTagCard_OrganizationTagDetails$data = {
+  readonly color: string | null | undefined;
+  readonly description: string | null | undefined;
   readonly id: string;
   readonly name: string;
   readonly " $fragmentType": "customTagCard_OrganizationTagDetails";
@@ -39,12 +41,26 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "name",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "description",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "color",
+      "storageKey": null
     }
   ],
   "type": "OrganizationTagDetails",
   "abstractKey": null
 };
 
-(node as any).hash = "0380a850f05888f81994032c906b12d7";
+(node as any).hash = "8edad052a79f7022875cdbf678dba2b2";
 
 export default node;

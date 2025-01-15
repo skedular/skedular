@@ -26,6 +26,7 @@ const ZoneSelector = ({ rootDataRelay, onChange }: Props) => {
             node {
               id
               name
+              color
             }
           }
         }

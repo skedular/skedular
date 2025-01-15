@@ -1,6 +1,7 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import {
+  ColorPicker,
   DefaultDialogTitle,
   FormFieldLabel,
   FormStackColumn,
@@ -20,7 +21,7 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useContext } from 'react';
+import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -53,6 +54,7 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
           id
           name
           description
+          color
         }
       }
     }
@@ -62,6 +64,11 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(customTagSchema);
   const requiredFields = makeRequired(customTagSchema);
+  const [selectedColor, setSelectedColor] = useState('');
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
 
   const handleAddClick = ({ name, description }: CustomTagDetails) => {
     const id = nanoid();
@@ -76,6 +83,7 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
           organizationId,
           name,
           description,
+          color: selectedColor,
         },
       },
       onCompleted: (_, errors) => {
@@ -107,6 +115,7 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
             id,
             name,
             description,
+            color: selectedColor,
           },
         },
       },
@@ -133,6 +142,10 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
 
                 <FormFieldLabel label="Description" useWiderSpace>
                   <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Color" useWiderSpace>
+                  <ColorPicker onChange={handleColorChange} />
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />

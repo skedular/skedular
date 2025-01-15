@@ -78,9 +78,11 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
           name
           customTags {
             uniqueId
+            color
           }
           zones {
             uniqueId
+            color
           }
         }
       }

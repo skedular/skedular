@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9e13030258a5274ea37419e74ad59438>>
+ * @generated SignedSource<<07be3e794cdc486493b649156e6bcdd2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,11 +25,13 @@ export type addDeskDialog_addDeskMutation$data = {
   readonly addDesk: {
     readonly desk: {
       readonly customTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
         readonly uniqueId: string;
       }>;
       readonly id: string;
       readonly name: string;
       readonly zones: ReadonlyArray<{
+        readonly color: string | null | undefined;
         readonly uniqueId: string;
       }>;
     };
@@ -39,11 +41,13 @@ export type addDeskDialog_addDeskMutation$rawResponse = {
   readonly addDesk: {
     readonly desk: {
       readonly customTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
         readonly uniqueId: string;
       }>;
       readonly id: string;
       readonly name: string;
       readonly zones: ReadonlyArray<{
+        readonly color: string | null | undefined;
         readonly uniqueId: string;
       }>;
     };
@@ -81,6 +85,13 @@ v2 = [
     "args": null,
     "kind": "ScalarField",
     "name": "uniqueId",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
     "storageKey": null
   }
 ],
@@ -194,16 +205,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a8cc5667eea5e7034334fb78055d0138",
+    "cacheID": "207ecd05f162e7c790d0b55fc70c88fe",
     "id": null,
     "metadata": {},
     "name": "addDeskDialog_addDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation addDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      customTags {\n        uniqueId\n      }\n      zones {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation addDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      customTags {\n        uniqueId\n        color\n      }\n      zones {\n        uniqueId\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "117309c7c73de6742e8d83a529e5850f";
+(node as any).hash = "f9fec9bdf52131479583947d908194d6";
 
 export default node;

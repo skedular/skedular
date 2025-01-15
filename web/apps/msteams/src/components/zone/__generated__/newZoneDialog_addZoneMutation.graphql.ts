@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3784a02cf9f72079dc82977bf96e25a9>>
+ * @generated SignedSource<<de792990075d6af0b86b21c471b191a7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,8 @@ export type newZoneDialog_addZoneMutation$variables = {
 export type newZoneDialog_addZoneMutation$data = {
   readonly addZone: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
@@ -32,6 +34,8 @@ export type newZoneDialog_addZoneMutation$data = {
 export type newZoneDialog_addZoneMutation$rawResponse = {
   readonly addZone: {
     readonly organizationTag: {
+      readonly color: string | null | undefined;
+      readonly description: string | null | undefined;
       readonly id: string;
       readonly name: string;
     };
@@ -83,6 +87,20 @@ v2 = {
       "args": null,
       "kind": "ScalarField",
       "name": "name",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "description",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "color",
       "storageKey": null
     }
   ],
@@ -153,16 +171,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "dead2e8fc78cd9c4439c6d33d780af7e",
+    "cacheID": "eb04211bcecafb8f8dbdb82b4eec3ef9",
     "id": null,
     "metadata": {},
     "name": "newZoneDialog_addZoneMutation",
     "operationKind": "mutation",
-    "text": "mutation newZoneDialog_addZoneMutation(\n  $input: AddZoneInput!\n) {\n  addZone(input: $input) {\n    organizationTag {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "mutation newZoneDialog_addZoneMutation(\n  $input: AddZoneInput!\n) {\n  addZone(input: $input) {\n    organizationTag {\n      id\n      name\n      description\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9e3c9f48a2b6a13e9a087a72f9d77410";
+(node as any).hash = "c1840817b9beff13c099f61be07678ff";
 
 export default node;

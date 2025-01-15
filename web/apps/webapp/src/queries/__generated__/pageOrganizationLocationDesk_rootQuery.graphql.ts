@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2dd59b4f2dfea7d586ebd0483e54c504>>
+ * @generated SignedSource<<f64863908afe6def0b23b7b069226687>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -75,7 +75,14 @@ v6 = {
   "name": "id",
   "storageKey": null
 },
-v7 = [
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "color",
+  "storageKey": null
+},
+v8 = [
   {
     "alias": null,
     "args": null,
@@ -83,9 +90,10 @@ v7 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v5/*: any*/)
+  (v5/*: any*/),
+  (v7/*: any*/)
 ],
-v8 = {
+v9 = {
   "fields": [
     {
       "kind": "Variable",
@@ -96,7 +104,7 @@ v8 = {
   "kind": "ObjectValue",
   "name": "where"
 },
-v9 = [
+v10 = [
   {
     "alias": null,
     "args": null,
@@ -121,7 +129,8 @@ v9 = [
         "plural": false,
         "selections": [
           (v6/*: any*/),
-          (v5/*: any*/)
+          (v5/*: any*/),
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
@@ -216,7 +225,7 @@ return {
             "kind": "LinkedField",
             "name": "customTags",
             "plural": true,
-            "selections": (v7/*: any*/),
+            "selections": (v8/*: any*/),
             "storageKey": null
           },
           {
@@ -226,7 +235,7 @@ return {
             "kind": "LinkedField",
             "name": "zones",
             "plural": true,
-            "selections": (v7/*: any*/),
+            "selections": (v8/*: any*/),
             "storageKey": null
           }
         ],
@@ -240,13 +249,13 @@ return {
             "name": "orderBy",
             "variableName": "multipleChoicesCustomTagsSortingValues"
           },
-          (v8/*: any*/)
+          (v9/*: any*/)
         ],
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "customTags",
         "plural": false,
-        "selections": (v9/*: any*/),
+        "selections": (v10/*: any*/),
         "storageKey": null
       },
       {
@@ -257,24 +266,24 @@ return {
             "name": "orderBy",
             "variableName": "multipleChoicesZonesSortingValues"
           },
-          (v8/*: any*/)
+          (v9/*: any*/)
         ],
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "zones",
         "plural": false,
-        "selections": (v9/*: any*/),
+        "selections": (v10/*: any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "7432a57b39eff6e10c7b264744b5bc61",
+    "cacheID": "1b1e4627a222b6e1739ac5f963415570",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocationDesk_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocationDesk_rootQuery(\n  $organizationId: String!\n  $deskId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  desk(id: $deskId) {\n    name\n    id\n  }\n  ...editDesk_query\n}\n\nfragment editDesk_query on Query {\n  desk(id: $deskId) {\n    id\n    name\n    deactivated\n    requireBookingApproval\n    customTags {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationLocationDesk_rootQuery(\n  $organizationId: String!\n  $deskId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  desk(id: $deskId) {\n    name\n    id\n  }\n  ...editDesk_query\n}\n\nfragment editDesk_query on Query {\n  desk(id: $deskId) {\n    id\n    name\n    deactivated\n    requireBookingApproval\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();

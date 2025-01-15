@@ -121,10 +121,12 @@ const DeskCard = ({
         customTags {
           uniqueId
           name
+          color
         }
         zones {
           uniqueId
           name
+          color
         }
       }
     `,
@@ -142,10 +144,12 @@ const DeskCard = ({
           customTags {
             uniqueId
             name
+            color
           }
           zones {
             uniqueId
             name
+            color
           }
         }
       }
@@ -764,10 +768,13 @@ const DeskCard = ({
           <CardContent>
             <StackColumn>
               <CustomTags
-                customTags={deskDetails.customTags.map(({ uniqueId, name }) => ({ id: uniqueId, name }))}
+                customTags={deskDetails.customTags.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }))}
                 sx={{ paddingTop: 1, paddingBottom: 1 }}
               />
-              <Zones zones={deskDetails.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+              <Zones
+                zones={deskDetails.zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }))}
+                sx={{ paddingTop: 1, paddingBottom: 1 }}
+              />
             </StackColumn>
 
             {extraInfo.length > 0 && <BodyIconTypography label={extraInfo.join(', ')} startElement={<InfoIcon />} />}

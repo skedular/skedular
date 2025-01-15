@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4a0180f842420e8fb2060215709f3197>>
+ * @generated SignedSource<<a87b6dc2900d25c39a766852dd844ad9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type myLocationCard_LocationDetails$data = {
   readonly canDelete: boolean;
   readonly canModify: boolean;
   readonly customTags: ReadonlyArray<{
+    readonly color: string | null | undefined;
     readonly name: string | null | undefined;
     readonly uniqueId: string;
   }>;
@@ -30,6 +31,7 @@ export type myLocationCard_LocationDetails$data = {
     readonly formattedAddress: string | null | undefined;
   } | null | undefined;
   readonly zones: ReadonlyArray<{
+    readonly color: string | null | undefined;
     readonly name: string | null | undefined;
     readonly uniqueId: string;
   }>;
@@ -64,7 +66,14 @@ v2 = {
 },
 v3 = [
   (v2/*: any*/),
-  (v1/*: any*/)
+  (v1/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "argumentDefinitions": [],
@@ -163,6 +172,6 @@ return {
 };
 })();
 
-(node as any).hash = "aeb1dfefd27712203a47ac00eb209a57";
+(node as any).hash = "f0d9f69b28aed156ef3fd0848c975784";
 
 export default node;

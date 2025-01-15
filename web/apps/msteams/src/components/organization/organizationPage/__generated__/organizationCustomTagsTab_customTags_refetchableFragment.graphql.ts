@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<04a9c0fa8f73e5bbff54d94166dc35f5>>
+ * @generated SignedSource<<003ef5b77711b2c4df799bdc4e99191e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -174,6 +174,20 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "description",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "color",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
                   }
@@ -245,12 +259,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "235e21bee79c567fdf614d0c40d9b990",
+    "cacheID": "9f49b1ba5641f87c114c37e05f6558ed",
     "id": null,
     "metadata": {},
     "name": "organizationCustomTagsTab_customTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationCustomTagsTab_customTags_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $customTagNameSearchText: String\n  $customTagSortingValues: [OrganizationTagOrderInput!]\n  $organizationId: String!\n) {\n  ...organizationCustomTagsTab_customTags_query_1G22uz\n}\n\nfragment customTagCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n}\n\nfragment organizationCustomTagsTab_customTags_query_1G22uz on Query {\n  customTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: $customTagSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...customTagCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationCustomTagsTab_customTags_refetchableFragment(\n  $count: Int = 50\n  $cursor: String\n  $customTagNameSearchText: String\n  $customTagSortingValues: [OrganizationTagOrderInput!]\n  $organizationId: String!\n) {\n  ...organizationCustomTagsTab_customTags_query_1G22uz\n}\n\nfragment customTagCard_OrganizationTagDetails on OrganizationTagDetails {\n  id\n  name\n  description\n  color\n}\n\nfragment organizationCustomTagsTab_customTags_query_1G22uz on Query {\n  customTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: $customTagSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        ...customTagCard_OrganizationTagDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

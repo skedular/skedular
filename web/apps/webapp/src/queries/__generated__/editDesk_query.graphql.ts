@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7030ae394b2ec9ee1a8f4f2e1b0f19ac>>
+ * @generated SignedSource<<6ee1437fa2074e838ae0ed3ce0861b3a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type editDesk_query$data = {
   readonly desk: {
     readonly customTags: ReadonlyArray<{
+      readonly color: string | null | undefined;
       readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
@@ -21,6 +22,7 @@ export type editDesk_query$data = {
     readonly name: string;
     readonly requireBookingApproval: boolean;
     readonly zones: ReadonlyArray<{
+      readonly color: string | null | undefined;
       readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
@@ -49,7 +51,14 @@ v1 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v0/*: any*/)
+  (v0/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "argumentDefinitions": [
@@ -137,6 +146,6 @@ return {
 };
 })();
 
-(node as any).hash = "a19625a2a610854631d8ea994957a45d";
+(node as any).hash = "c5915399a3b376558f9a682fd66bb735";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<80d99e1c7ff117660d002754b11eb9ce>>
+ * @generated SignedSource<<3911ac08a4e8038a55d788df3d6f02b1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type organizationAdmin_customTags_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly color: string | null | undefined;
         readonly description: string | null | undefined;
         readonly id: string;
         readonly name: string;
@@ -162,6 +163,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "color",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
                 }
@@ -224,6 +232,6 @@ return {
 };
 })();
 
-(node as any).hash = "08316cb8826cce5e25d98f21d53561da";
+(node as any).hash = "17c8862bc8d71a448cccd249869f954e";
 
 export default node;

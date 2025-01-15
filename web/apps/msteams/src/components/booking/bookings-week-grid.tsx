@@ -51,6 +51,7 @@ type ZoneDetails = {
   uniqueId: string;
   name?: string | null | undefined;
   tagType?: string | null | undefined;
+  color?: string | null | undefined;
 };
 
 type DeskDetails = {
@@ -158,10 +159,12 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
                 customTags {
                   uniqueId
                   name
+                  color
                 }
                 zones {
                   uniqueId
                   name
+                  color
                 }
               }
             }
@@ -204,10 +207,12 @@ const BookingsWeekGrid = ({ rootDataRelay, rootDataAllBookingsRelay, organizatio
             customTags {
               uniqueId
               name
+              color
             }
             zones {
               uniqueId
               name
+              color
             }
           }
         }

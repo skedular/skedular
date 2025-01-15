@@ -7,7 +7,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
-import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  BodyIconTypography,
+  ColorPicker,
+  DefaultDialogTitle,
+  FormFieldLabel,
+  FormStackColumn,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import { DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon, ZoneIcon } from '@repo/shared/components/icons';
 import {
   errorNotificationOptions,
@@ -41,10 +48,12 @@ type Props = {
 
 type OrganizationTagDetails = {
   name: string;
+  description: string;
 };
 
 const zoneSchema = object({
   name: string().required('Zone name is required'),
+  description: string().nullable(),
 });
 
 const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }: Props) => {
@@ -70,6 +79,8 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
       fragment zoneCard_OrganizationTagDetails on OrganizationTagDetails {
         id
         name
+        description
+        color
       }
     `,
     organizationTagDetailsRelay,
@@ -81,6 +92,8 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
         organizationTag {
           id
           name
+          description
+          color
         }
       }
     }
@@ -132,6 +145,11 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
     () => !!rootData.me?.preferredZones.find((zone) => zone.uniqueId === organizationTagDetails.id),
     [rootData.me?.preferredZones, organizationTagDetails.id],
   );
+  const [selectedColor, setSelectedColor] = useState(organizationTagDetails.color);
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
 
   const handleDeleteClick = () => {
     setZoneRemoveConfirmationDialogOpen(true);
@@ -186,7 +204,7 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
     setEditing(false);
   };
 
-  const handleSaveClick = ({ name }: OrganizationTagDetails) => {
+  const handleSaveClick = ({ name, description }: OrganizationTagDetails) => {
     const toastId = themedToast(<NotificationContent content={`Updating zone '${organizationTagDetails.name}'...`} />, infoNotificationOptions);
 
     commitUpdateZone({
@@ -195,6 +213,8 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
           clientMutationId: nanoid(),
           id: organizationTagDetails.id,
           name,
+          description,
+          color: selectedColor,
         },
       },
       onCompleted: (_, errors) => {
@@ -225,6 +245,8 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
           organizationTag: {
             id: organizationTagDetails.id,
             name,
+            description,
+            color: selectedColor,
           },
         },
       },
@@ -396,12 +418,21 @@ const ZoneCard = ({ rootDataRelay, organizationTagDetailsRelay, connectionIds }:
             onSubmit={handleSaveClick}
             initialValues={{
               name: organizationTagDetails.name,
+              description: organizationTagDetails.description,
             }}
             validate={validate}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
                 <FormFieldLabel label="Name" useWiderSpace>
                   <TextField name="name" required={requiredFields.name} helperText="Add your zone name" />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Description" useWiderSpace>
+                  <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Color" useWiderSpace>
+                  <ColorPicker onChange={handleColorChange} />
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={handleCancelClick} primaryLabel="Update" secondaryLabel="Cancel" />

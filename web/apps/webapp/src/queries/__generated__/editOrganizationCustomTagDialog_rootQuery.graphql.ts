@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2b77a6e4e21fd96c7b7ce6d2ce784c3>>
+ * @generated SignedSource<<10e65a6a7d2db43abf19820497ee37a7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type editOrganizationCustomTagDialog_rootQuery$variables = {
 };
 export type editOrganizationCustomTagDialog_rootQuery$data = {
   readonly customTag: {
+    readonly color: string | null | undefined;
     readonly description: string | null | undefined;
     readonly id: string;
     readonly name: string;
@@ -67,6 +68,13 @@ v1 = [
         "kind": "ScalarField",
         "name": "description",
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "color",
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -90,16 +98,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "f5ef0eed8d9b0564b27e3aa25e147f47",
+    "cacheID": "b21efa5a97eacd95921963bb128f8a38",
     "id": null,
     "metadata": {},
     "name": "editOrganizationCustomTagDialog_rootQuery",
     "operationKind": "query",
-    "text": "query editOrganizationCustomTagDialog_rootQuery(\n  $customTagId: String!\n) {\n  customTag(id: $customTagId) {\n    id\n    name\n    description\n  }\n}\n"
+    "text": "query editOrganizationCustomTagDialog_rootQuery(\n  $customTagId: String!\n) {\n  customTag(id: $customTagId) {\n    id\n    name\n    description\n    color\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "db61c66e9380db688b586a95e14b8159";
+(node as any).hash = "399b511f78d55a42a8f33a48a1891114";
 
 export default node;

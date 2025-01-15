@@ -88,10 +88,12 @@ const MyLocationCard = ({
         customTags {
           uniqueId
           name
+          color
         }
         zones {
           uniqueId
           name
+          color
         }
         desks {
           id
@@ -197,7 +199,7 @@ const MyLocationCard = ({
   };
 
   const desksCount = locationDetails.desks.length;
-  const zones = locationDetails.zones.map(({ uniqueId, name }) => ({ id: uniqueId, name }));
+  const zones = locationDetails.zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }));
 
   return (
     <>

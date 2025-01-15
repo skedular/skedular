@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3eac505bbb6008940e48f18630df8405>>
+ * @generated SignedSource<<075df9303c5a9c198c2552ee29189567>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,7 +63,14 @@ v2 = {
 },
 v3 = [
   (v1/*: any*/),
-  (v2/*: any*/)
+  (v2/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "fragment": {
@@ -152,16 +159,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a989c66d8d8024dc14d4d18a0e0e26ac",
+    "cacheID": "fce04e48598396cfe722ae5c503c5d31",
     "id": null,
     "metadata": {},
     "name": "editBooking_availableLocationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query editBooking_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]\n  $locationExists: Boolean!\n  $locationId: String\n) {\n  ...editBooking_availableLocationDesks_query\n}\n\nfragment editBooking_availableLocationDesks_query on Query {\n  availableDesks(where: {locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n    }\n    zones {\n      uniqueId\n      name\n    }\n  }\n}\n"
+    "text": "query editBooking_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $deskIdsToIncludeToGetAvailableDesks: [String!]\n  $locationExists: Boolean!\n  $locationId: String\n) {\n  ...editBooking_availableLocationDesks_query\n}\n\nfragment editBooking_availableLocationDesks_query on Query {\n  availableDesks(where: {locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5aed9525f3ecb23eb65167e1a646f7e4";
+(node as any).hash = "cbcd073a7b3aa9885a85024785c9293d";
 
 export default node;

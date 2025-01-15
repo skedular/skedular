@@ -1,6 +1,6 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -13,7 +13,7 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useContext } from 'react';
+import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -30,10 +30,12 @@ type Props = {
 
 type ZoneDetails = {
   name: string;
+  description: string;
 };
 
 const zoneSchema = object({
   name: string().required('Zone name is required'),
+  description: string().nullable(),
 });
 
 const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, organizationId }: Props) => {
@@ -43,6 +45,8 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
         organizationTag @appendNode(connections: $connectionIds, edgeTypeName: "OrganizationTagDetails") {
           id
           name
+          description
+          color
         }
       }
     }
@@ -52,8 +56,13 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(zoneSchema);
   const requiredFields = makeRequired(zoneSchema);
+  const [selectedColor, setSelectedColor] = useState('');
 
-  const handleAddClick = ({ name }: ZoneDetails) => {
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
+
+  const handleAddClick = ({ name, description }: ZoneDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding zone '${name}'...`} />, infoNotificationOptions);
 
@@ -65,6 +74,8 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
           id,
           organizationId,
           name,
+          description,
+          color: selectedColor,
         },
       },
       onCompleted: (_, errors) => {
@@ -95,6 +106,8 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
           organizationTag: {
             id,
             name,
+            description,
+            color: selectedColor,
           },
         },
       },
@@ -115,6 +128,14 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
             <FormStackColumn onSubmit={handleSubmit}>
               <FormFieldLabel label="Name" useWiderSpace>
                 <TextField name="name" required={requiredFields.name} helperText="Add your zone name" />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Description" useWiderSpace>
+                <TextField name="description" required={requiredFields.description} multiline rows={3} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Color" useWiderSpace>
+                <ColorPicker onChange={handleColorChange} />
               </FormFieldLabel>
 
               <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />

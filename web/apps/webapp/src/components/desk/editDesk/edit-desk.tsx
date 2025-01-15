@@ -58,10 +58,12 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           customTags {
             uniqueId
             name
+            color
           }
           zones {
             uniqueId
             name
+            color
           }
         }
         ...multipleChoicesCustomTags_query
@@ -82,10 +84,12 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           customTags {
             uniqueId
             name
+            color
           }
           zones {
             uniqueId
             name
+            color
           }
         }
       }
