@@ -1,5 +1,5 @@
 import { NewFeedbackDialog } from '@/components/feedback';
-import { getModernNotificationsBaseLink } from '@/components/organization/organization-link';
+import { getModernNotificationsBaseLink, getNotificationsBaseLink, getOrganizationAddLink } from '@/components/organization/organization-link';
 import type { oldAppBar_query$key } from '@/queries/__generated__/oldAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -33,6 +33,7 @@ import { PaletteModeContext, SwitchToModernUIContext, UpdatePaletteModeContext, 
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
+import { usePathname } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useInterval } from 'usehooks-ts';
@@ -61,6 +62,7 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const pathName = usePathname();
   const [currentTime, setCurrentTime] = useState(localNow());
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
@@ -125,6 +127,10 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
     familyName: rootData.me?.familyName,
   });
 
+  const organizationAddLink = getOrganizationAddLink();
+  const notificationsLink = getNotificationsBaseLink();
+  const showHambugerMenu = pathName !== organizationAddLink && pathName !== notificationsLink;
+
   return (
     <>
       <AppBar position="sticky" className="app-bar">
@@ -167,9 +173,11 @@ const OldAppBar = ({ rootDataRelay }: Props) => {
             />
           </IconButton>
 
-          <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
-            <HamburgerMenuIcon />
-          </IconButton>
+          {showHambugerMenu && (
+            <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
+              <HamburgerMenuIcon />
+            </IconButton>
+          )}
 
           <Menu
             sx={{ marginTop: 4 }}

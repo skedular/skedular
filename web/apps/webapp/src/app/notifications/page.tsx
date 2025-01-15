@@ -5,7 +5,7 @@ import { RootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
 const NotificationsPage = () => (
-  <RootShell>
+  <RootShell hideOrganizationSelector>
     <Notifications />
   </RootShell>
 );

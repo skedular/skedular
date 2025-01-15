@@ -1,5 +1,7 @@
+import { getNotificationsBaseLink, getOrganizationAddLink } from '@/components/organization/organization-link';
 import type { mobileLeftSideNavigationMenu_query$key } from '@/queries/__generated__/mobileLeftSideNavigationMenu_query.graphql';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
+import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { expandedDrawerWidth } from './commons';
@@ -20,6 +22,14 @@ const MobileLeftSideNavigationMenu = ({ rootDataRelay, open, toggleDrawer }: Pro
     `,
     rootDataRelay,
   );
+
+  const pathName = usePathname();
+  const organizationAddLink = getOrganizationAddLink();
+  const notificationsLink = getNotificationsBaseLink();
+
+  if (pathName === organizationAddLink || pathName === notificationsLink) {
+    return <></>;
+  }
 
   return (
     <Drawer

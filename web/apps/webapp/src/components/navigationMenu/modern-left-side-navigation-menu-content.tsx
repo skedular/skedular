@@ -3,7 +3,6 @@ import {
   getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationAdminSubscriptionsBaseLink,
   getModernOrganizationLocationsBaseLink,
-  getModernOrganizationNotificationsBaseLink,
   getModernOrganizationTeamsBaseLink,
   getModernOrganizationUsersBaseLink,
   getOrganizationBaseLink,
@@ -17,16 +16,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
-import {
-  CollpaseDrawerIcon,
-  HomeIcon,
-  LocationIcon,
-  MembersIcon,
-  NotificationsIcon,
-  SettingsIcon,
-  TeamIcon,
-  UpgradeIcon,
-} from '@repo/shared/components/icons';
+import { CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import Image from 'next/image';
@@ -129,7 +119,6 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
   const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
   const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
   const organizationMembersBaseLink = getModernOrganizationUsersBaseLink(rootData.organization.id);
-  const notificationsBaseLink = getModernOrganizationNotificationsBaseLink(rootData.organization.id);
   const organizationAdminSetupBaseLink = getModernOrganizationAdminSetupBaseLink(rootData.organization.id);
 
   return (
@@ -250,30 +239,6 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
                     startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}
                     spacing={3}
                     invertDefaultColor={pathName.startsWith(organizationMembersBaseLink) && paletteMode === 'dark'}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <Link component={NextLink} href={notificationsBaseLink}>
-              <ListItemButton
-                selected={pathName.startsWith(notificationsBaseLink)}
-                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(notificationsBaseLink)) }}
-              >
-                {collapsed && (
-                  <BodyIconTypography
-                    startElement={!hideIcons && <NotificationsIcon color="inherit" />}
-                    invertDefaultColor={pathName.startsWith(notificationsBaseLink) && paletteMode === 'dark'}
-                  />
-                )}
-                {!collapsed && (
-                  <BodyIconTypography
-                    label="Notifications"
-                    startElement={!hideIcons && <NotificationsIcon excludeTooltip color="inherit" />}
-                    spacing={3}
-                    invertDefaultColor={pathName.startsWith(notificationsBaseLink) && paletteMode === 'dark'}
                   />
                 )}
               </ListItemButton>
