@@ -6,6 +6,7 @@ import { stringToColor } from '../../libs/utils';
 export type ZoneDetails = {
   id: string;
   name?: string | null | undefined;
+  color?: string | null | undefined;
 };
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
 
 const Zone = ({ zone, showFullName }: Props) => (
   <Tooltip title={zone.name}>
-    <Chip label={`#${zone.name}`} sx={{ maxWidth: showFullName ? undefined : 100, backgroundColor: stringToColor(zone.id) }} />
+    <Chip label={`#${zone.name}`} sx={{ maxWidth: showFullName ? undefined : 100, backgroundColor: zone.color ?? stringToColor(zone.id) }} />
   </Tooltip>
 );
 

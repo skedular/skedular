@@ -6,6 +6,7 @@ import { stringToColor } from '../../libs/utils';
 export type CustomTagDetails = {
   id: string;
   name?: string | null | undefined;
+  color?: string | null | undefined;
 };
 
 type Props = {
@@ -15,7 +16,10 @@ type Props = {
 
 const CustomTag = ({ customTag, showFullName }: Props) => (
   <Tooltip title={customTag.name}>
-    <Chip label={`#${customTag.name}`} sx={{ maxWidth: showFullName ? undefined : 100, backgroundColor: stringToColor(customTag.id) }} />
+    <Chip
+      label={`#${customTag.name}`}
+      sx={{ maxWidth: showFullName ? undefined : 100, backgroundColor: customTag.color ?? stringToColor(customTag.id) }}
+    />
   </Tooltip>
 );
 

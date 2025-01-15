@@ -26,6 +26,7 @@ export { default as ExpanDrawerIcon } from '@mui/icons-material/ArrowForwardIos'
 export { default as DescDirectionIcon } from '@mui/icons-material/ArrowUpward';
 export { default as CancelIcon } from '@mui/icons-material/Cancel';
 export { default as CheckIcon } from '@mui/icons-material/Check';
+export { default as SelectedTickIcon } from '@mui/icons-material/CheckCircle';
 export { default as CloseIcon } from '@mui/icons-material/Close';
 export { default as CollapseIcon } from '@mui/icons-material/CloseFullscreen';
 export { default as DangerIcon } from '@mui/icons-material/Dangerous';
