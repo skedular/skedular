@@ -1,10 +1,6 @@
 import { NewFeedbackDialog } from '@/components/feedback';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import {
-  getModernOrganizationNotificationsBaseLink,
-  getOrganizationAddLink,
-  getOrganizationBaseLink,
-} from '@/components/organization/organization-link';
+import { getNotificationsBaseLink, getOrganizationAddLink, getOrganizationBaseLink } from '@/components/organization/organization-link';
 import { SelectedOrganizationContext, UpdateSelectedOrganizationContext } from '@/libs/providers';
 import type { modernAppBar_query$key } from '@/queries/__generated__/modernAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -125,7 +121,7 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
   useInterval(() => setCurrentTime(localNow()), 1000);
 
   useEffect(() => {
-    if (pathName === getOrganizationAddLink() || finalOrganizationId || !selectedOrganizationId) {
+    if (pathName === getOrganizationAddLink() || pathName === getNotificationsBaseLink() || finalOrganizationId || !selectedOrganizationId) {
       return;
     }
 
@@ -201,6 +197,10 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
     middleName: rootData.me?.middleName,
     familyName: rootData.me?.familyName,
   });
+
+  const organizationAddLink = getOrganizationAddLink();
+  const notificationsLink = getNotificationsBaseLink();
+  const showHambugerMenu = pathName !== organizationAddLink && pathName !== notificationsLink;
 
   return (
     <>
@@ -283,16 +283,14 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
           <Divider orientation="vertical" flexItem />
 
           <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
-            {finalOrganizationId && (
-              <Link component={NextLink} href={getModernOrganizationNotificationsBaseLink(finalOrganizationId)}>
-                {rootData.pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
-                {rootData.pendingInvitationsCount > 0 && (
-                  <Badge badgeContent={rootData.pendingInvitationsCount} color="primary">
-                    <NotificationsIcon excludeTooltip />
-                  </Badge>
-                )}
-              </Link>
-            )}
+            <Link component={NextLink} href={getNotificationsBaseLink()}>
+              {rootData.pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
+              {rootData.pendingInvitationsCount > 0 && (
+                <Badge badgeContent={rootData.pendingInvitationsCount} color="primary">
+                  <NotificationsIcon excludeTooltip />
+                </Badge>
+              )}
+            </Link>
           </IconButton>
 
           <IconButton onClick={handleProfileMenuOpenClick}>
@@ -309,9 +307,11 @@ const ModernAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMess
             />
           </IconButton>
 
-          <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
-            <HamburgerMenuIcon />
-          </IconButton>
+          {showHambugerMenu && (
+            <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
+              <HamburgerMenuIcon />
+            </IconButton>
+          )}
 
           <Menu
             sx={{ marginTop: 4 }}
