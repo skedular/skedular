@@ -114,7 +114,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
 
           <SectionIconTypography label="Getting started" />
 
-          <GridContainer spacing={{ xs: 1, sm: 1, md: 1, lg: 15 }} sx={{ alignItems: 'center', paddingTop: 2 }}>
+          <GridContainer spacing={1} sx={{ alignItems: 'center', paddingTop: 2, justifyContent: 'space-between' }}>
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Let's start by setting up the organization's first location." />
