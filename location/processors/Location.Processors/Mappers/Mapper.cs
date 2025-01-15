@@ -134,6 +134,7 @@ public class Mapper : IMapper
         organization.Tags = organizationAfterState.Tags.Select(item => new Shared.Models.OrganizationTag
         {
             Id = item.Id,
+            DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
             Type = item.TagType switch

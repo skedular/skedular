@@ -551,6 +551,7 @@ public class Mapper : IMapper
             {
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,

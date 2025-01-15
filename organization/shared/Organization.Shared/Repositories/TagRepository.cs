@@ -1,4 +1,5 @@
-﻿using Enterprise.Shared.Database;
+﻿using Enterprise.Shared;
+using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,7 @@ internal static class TagExtensions
         this IQueryable<Tag> query,
         TagSearchCriteria searchCriteria)
     {
-        query = query.Where(item => item.Organization.Id == searchCriteria.OrganizationId);
+        query = query.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.Type))
         {
@@ -100,9 +101,19 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
         return DbContext.Tag.Add(tag).Entity;
     }
 
-    public void RemoveRange(ICollection<Tag> tags) => DbContext.Tag.RemoveRange(tags);
+    public void RemoveRange(ICollection<Tag> tags)
+    {
+        var now = TimeProvider.GetUtcNow();
+        tags.ForEach(tag => tag.DeletedAt = now);
+        DbContext.Tag.UpdateRange(tags);
+    }
 
-    public Tag Remove(Tag tag) => DbContext.Tag.Remove(tag).Entity;
+    public Tag Remove(Tag tag)
+    {
+        var now = TimeProvider.GetUtcNow();
+        tag.DeletedAt = now;
+        return DbContext.Tag.Update(tag).Entity;
+    }
 
     public Tag Update(Tag tag)
     {

@@ -7,7 +7,7 @@ namespace Organization.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class Tag : EntityBase
+public class Tag : EntityBaseWithDeleted
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
@@ -22,7 +22,7 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
 {
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
-        builder.ConfigureEntityBase();
+        builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxTagNameLength);
         builder.Property(item => item.Description).HasMaxLength(Constants.MaxTagDescriptionLength);

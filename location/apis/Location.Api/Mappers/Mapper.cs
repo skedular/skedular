@@ -543,6 +543,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Type = src.Type switch
@@ -571,10 +572,10 @@ public class Mapper : IMapper
             };
 
     private static OrganizationCustomTag MapToGrpcResponseOrganizationCustomTag(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()};
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static OrganizationZone MapToGrpcResponseOrganizationZone(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()};
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private IEnumerable<OrganizationTag> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationTag> src,
@@ -727,6 +728,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Type = src.Type switch

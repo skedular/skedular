@@ -30,7 +30,7 @@ public class OrganizationRepository(LocationDbContext dbContext, TimeProvider ti
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query => query.Tags)
+            .Include(query => query.Tags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
             .Include(query => query.Locations.Where(location => !location.DeletedAt.HasValue))
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 

@@ -1,3 +1,4 @@
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Location.Shared.Database;
 using Location.Shared.Database.Entities;
@@ -34,8 +35,12 @@ public class OrganizationTagRepository(LocationDbContext dbContext, TimeProvider
         return DbContext.OrganizationTag.Add(organizationTag).Entity;
     }
 
-    public void RemoveRange(ICollection<OrganizationTag> organizationTags) =>
-        DbContext.OrganizationTag.RemoveRange(organizationTags);
+    public void RemoveRange(ICollection<OrganizationTag> organizationTags)
+    {
+        var now = TimeProvider.GetUtcNow();
+        organizationTags.ForEach(organizationTag => organizationTag.DeletedAt = now);
+        DbContext.OrganizationTag.UpdateRange(organizationTags);
+    }
 
     public OrganizationTag Update(OrganizationTag organizationTag)
     {

@@ -3,7 +3,7 @@ using Enterprise.Shared.Models;
 
 namespace Booking.Shared.Models;
 
-public class OrganizationTag : ReplicatedModelBase
+public class OrganizationTag : ReplicatedModelBaseWithDeleted
 {
     public string? Name { get; set; }
     public OrganizationTagType? Type { get; set; }

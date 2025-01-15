@@ -3,7 +3,7 @@ using Enterprise.Shared.Models;
 
 namespace Location.Shared.Models;
 
-public class OrganizationTag : ReplicatedModelBase
+public class OrganizationTag : ReplicatedModelBaseWithDeleted
 {
     public string? Name { get; set; }
     public string? Color { get; set; }

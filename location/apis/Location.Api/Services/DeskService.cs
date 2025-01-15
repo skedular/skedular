@@ -154,10 +154,10 @@ public class DeskService(
             : await repositoryFactory.OrganizationTagRepository
                 .Query(new Specification<OrganizationTag>
                 {
-                    Criteria = query =>
-                        desk.CustomTags.Concat(desk.Zones).Select(item => item.Id).Contains(query.Id) &&
-                        query.Organization.Id == existingLocation.Organization.Id &&
-                        !query.Organization.DeletedAt.HasValue
+                    Criteria = query => !query.DeletedAt.HasValue &&
+                                        desk.CustomTags.Concat(desk.Zones).Select(item => item.Id).Contains(query.Id) &&
+                                        query.Organization.Id == existingLocation.Organization.Id &&
+                                        !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(
@@ -217,10 +217,10 @@ public class DeskService(
             : await repositoryFactory.OrganizationTagRepository
                 .Query(new Specification<OrganizationTag>
                 {
-                    Criteria = query =>
-                        customTagIds.Concat(zoneIds).Contains(query.Id) &&
-                        query.Organization.Id == existingLocation.Organization.Id &&
-                        !query.Organization.DeletedAt.HasValue
+                    Criteria = query =>!query.DeletedAt.HasValue &&
+                                       customTagIds.Concat(zoneIds).Contains(query.Id) &&
+                                       query.Organization.Id == existingLocation.Organization.Id &&
+                                       !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(
@@ -582,10 +582,10 @@ public class DeskService(
             : await repositoryFactory.OrganizationTagRepository
                 .Query(new Specification<OrganizationTag>
                 {
-                    Criteria = query =>
-                        customTags.Concat(zones).Select(item => item.Id).Contains(query.Id) &&
-                        query.Organization.Id == existingLocation.Organization.Id &&
-                        !query.Organization.DeletedAt.HasValue
+                    Criteria = query =>!query.DeletedAt.HasValue &&
+                                       customTags.Concat(zones).Select(item => item.Id).Contains(query.Id) &&
+                                       query.Organization.Id == existingLocation.Organization.Id &&
+                                       !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(

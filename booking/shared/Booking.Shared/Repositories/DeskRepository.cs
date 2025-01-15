@@ -64,7 +64,7 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
     public async Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Desk
             .Include(query => query.Location)
-            .Include(query => query.OrganizationTags)
+            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Desk>> GetAvailableDesksAsync(
