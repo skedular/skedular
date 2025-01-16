@@ -83,6 +83,7 @@ public class TeamGrpcService(
                 request.Last.FromNullInt()),
             new TeamSearchCriteria(
                 request.Where.OrganizationId,
+                request.Where.CustomerId,
                 request.Where.NameContains,
                 request.Where.PrimaryLocationIds),
             request.OrderBy.Select(item =>

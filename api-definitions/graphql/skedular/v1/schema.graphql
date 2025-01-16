@@ -1468,6 +1468,7 @@ input TeamOrderInput {
 }
 
 input TeamWhereInput {
+  customerId: String
   nameContains: String
   organizationId: String
   primaryLocationIds: [String!]
