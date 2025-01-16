@@ -2,6 +2,7 @@ import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/
 import {
   getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationAdminSubscriptionsBaseLink,
+  getModernOrganizationBookingsBaseLink,
   getModernOrganizationLocationsBaseLink,
   getModernOrganizationTeamsBaseLink,
   getModernOrganizationUsersBaseLink,
@@ -16,7 +17,16 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
-import { CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@repo/shared/components/icons';
+import {
+  BookingIcon,
+  CollpaseDrawerIcon,
+  HomeIcon,
+  LocationIcon,
+  MembersIcon,
+  SettingsIcon,
+  TeamIcon,
+  UpgradeIcon,
+} from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import Image from 'next/image';
@@ -116,6 +126,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
   }
 
   const organizationBaseLink = getOrganizationBaseLink(rootData.organization.id);
+  const organizationBookingsBaseLink = getModernOrganizationBookingsBaseLink(rootData.organization.id);
   const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
   const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
   const organizationMembersBaseLink = getModernOrganizationUsersBaseLink(rootData.organization.id);
@@ -167,6 +178,30 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
                     startElement={!hideIcons && <HomeIcon excludeTooltip color="inherit" />}
                     spacing={3}
                     invertDefaultColor={pathName === organizationBaseLink && paletteMode === 'dark'}
+                  />
+                )}
+              </ListItemButton>
+            </Link>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <Link component={NextLink} href={organizationBookingsBaseLink}>
+              <ListItemButton
+                selected={pathName === organizationBookingsBaseLink}
+                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === organizationBookingsBaseLink) }}
+              >
+                {collapsed && (
+                  <BodyIconTypography
+                    startElement={!hideIcons && <BookingIcon color="inherit" />}
+                    invertDefaultColor={pathName === organizationBookingsBaseLink && paletteMode === 'dark'}
+                  />
+                )}
+                {!collapsed && (
+                  <BodyIconTypography
+                    label="Bookings"
+                    startElement={!hideIcons && <BookingIcon excludeTooltip color="inherit" />}
+                    spacing={3}
+                    invertDefaultColor={pathName === organizationBookingsBaseLink && paletteMode === 'dark'}
                   />
                 )}
               </ListItemButton>

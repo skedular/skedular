@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<73cbcc1a54081b8c85dec10355dd4b9e>>
+ * @generated SignedSource<<888b27d4f0439998bb0dcf8ae05b7fd4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,92 +10,39 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type bookings_bookings_query$data = {
+export type oldBookings_bookings_query$data = {
   readonly bookings: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly customer: {
-          readonly familyName: string | null | undefined;
-          readonly givenName: string | null | undefined;
-          readonly middleName: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly photoUrl: string | null | undefined;
           readonly uniqueId: string;
         };
-        readonly desks: ReadonlyArray<{
-          readonly customTags: ReadonlyArray<{
-            readonly color: string | null | undefined;
-            readonly name: string | null | undefined;
-            readonly uniqueId: string;
-          }>;
-          readonly name: string;
-          readonly uniqueId: string;
-          readonly zones: ReadonlyArray<{
-            readonly color: string | null | undefined;
-            readonly name: string | null | undefined;
-            readonly uniqueId: string;
-          }>;
-        }>;
         readonly from: any;
         readonly id: string;
-        readonly location: {
-          readonly name: string;
-          readonly uniqueId: string;
-        } | null | undefined;
-        readonly notes: string | null | undefined;
-        readonly team: {
-          readonly name: string;
-          readonly uniqueId: string;
-        } | null | undefined;
         readonly to: any;
-        readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
+        readonly " $fragmentSpreads": FragmentRefs<"oldBookingCard_BookingDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "bookings_bookings_query";
+  readonly " $fragmentType": "oldBookings_bookings_query";
 };
-export type bookings_bookings_query$key = {
-  readonly " $data"?: bookings_bookings_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"bookings_bookings_query">;
+export type oldBookings_bookings_query$key = {
+  readonly " $data"?: oldBookings_bookings_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"oldBookings_bookings_query">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
   "bookings"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "uniqueId",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v3 = [
-  (v1/*: any*/),
-  (v2/*: any*/)
-],
-v4 = [
-  (v1/*: any*/),
-  (v2/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
 ];
 return {
   "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "bookingSortingValues"
+    },
     {
       "kind": "RootArgument",
       "name": "bookingsSearchCriteriaFrom"
@@ -105,7 +52,7 @@ return {
       "name": "bookingsSearchCriteriaTo"
     },
     {
-      "defaultValue": null,
+      "defaultValue": 50,
       "kind": "LocalArgument",
       "name": "count"
     },
@@ -116,7 +63,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "locationIds"
+      "name": "locationId"
     },
     {
       "kind": "RootArgument",
@@ -124,7 +71,11 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "teamIds"
+      "name": "peopleNameSearchText"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "teamId"
     }
   ],
   "kind": "Fragment",
@@ -147,23 +98,18 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./bookings_bookings_refetchableFragment.graphql')
+      "operation": require('./oldBookings_bookings_refetchableFragment.graphql')
     }
   },
-  "name": "bookings_bookings_query",
+  "name": "oldBookings_bookings_query",
   "selections": [
     {
       "alias": "bookings",
       "args": [
         {
-          "kind": "Literal",
+          "kind": "Variable",
           "name": "orderBy",
-          "value": [
-            {
-              "direction": "Ascending",
-              "field": "From"
-            }
-          ]
+          "variableName": "bookingSortingValues"
         },
         {
           "fields": [
@@ -183,9 +129,25 @@ return {
               "variableName": "bookingsSearchCriteriaTo"
             },
             {
+              "kind": "Literal",
+              "name": "includeMineOnly",
+              "value": false
+            },
+            {
+              "items": [
+                {
+                  "kind": "Variable",
+                  "name": "locationIds.0",
+                  "variableName": "locationId"
+                }
+              ],
+              "kind": "ListValue",
+              "name": "locationIds"
+            },
+            {
               "kind": "Variable",
-              "name": "locationIds",
-              "variableName": "locationIds"
+              "name": "nameContains",
+              "variableName": "peopleNameSearchText"
             },
             {
               "items": [
@@ -199,9 +161,15 @@ return {
               "name": "organizationIds"
             },
             {
-              "kind": "Variable",
-              "name": "teamIds",
-              "variableName": "teamIds"
+              "items": [
+                {
+                  "kind": "Variable",
+                  "name": "teamIds.0",
+                  "variableName": "teamId"
+                }
+              ],
+              "kind": "ListValue",
+              "name": "teamIds"
             }
           ],
           "kind": "ObjectValue",
@@ -260,99 +228,16 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "notes",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
                   "concreteType": "BookingCustomerDetails",
                   "kind": "LinkedField",
                   "name": "customer",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/),
-                    (v2/*: any*/),
                     {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "givenName",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "middleName",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "familyName",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "photoUrl",
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "BookingLocationDetails",
-                  "kind": "LinkedField",
-                  "name": "location",
-                  "plural": false,
-                  "selections": (v3/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "BookingTeamDetails",
-                  "kind": "LinkedField",
-                  "name": "team",
-                  "plural": false,
-                  "selections": (v3/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "BookingDeskDetails",
-                  "kind": "LinkedField",
-                  "name": "desks",
-                  "plural": true,
-                  "selections": [
-                    (v1/*: any*/),
-                    (v2/*: any*/),
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "BookingOrganizationCustomTagDetails",
-                      "kind": "LinkedField",
-                      "name": "customTags",
-                      "plural": true,
-                      "selections": (v4/*: any*/),
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "BookingOrganizationZoneDetails",
-                      "kind": "LinkedField",
-                      "name": "zones",
-                      "plural": true,
-                      "selections": (v4/*: any*/),
+                      "name": "uniqueId",
                       "storageKey": null
                     }
                   ],
@@ -361,7 +246,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "bookingCard_BookingDetails"
+                  "name": "oldBookingCard_BookingDetails"
                 },
                 {
                   "alias": null,
@@ -429,6 +314,6 @@ return {
 };
 })();
 
-(node as any).hash = "7ffdaffadc9ef0047d9e9a9c0c2451ba";
+(node as any).hash = "1d6dae5ae80e0fa19f549e19ef0b6b7a";
 
 export default node;

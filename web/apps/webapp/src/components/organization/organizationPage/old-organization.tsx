@@ -1,4 +1,4 @@
-import { Bookings } from '@/components/booking/bookingsPage';
+import { OldBookings } from '@/components/booking';
 import type { oldOrganization_rootQuery } from '@/queries/__generated__/oldOrganization_rootQuery.graphql';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -156,7 +156,7 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
         {rootData.organization.canViewAnalytics && <Tab label="Analytics" />}
       </Tabs>
 
-      {tabIndex === bookingTabIndex && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} />}
+      {tabIndex === bookingTabIndex && <OldBookings onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === aboutTabIndex && <OrganizationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === membersTabIndex && <OrganizationMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}
       {tabIndex === locationTabIndex && <OrganizationLocationsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />}

@@ -6,7 +6,7 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
-import { Bookings } from 'components/booking/bookingsPage';
+import { OldBookings } from 'components/booking';
 import { OrganizationCustomTags, OrganizationZones } from 'components/organization/organizationPage';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -114,7 +114,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
       </Tabs>
 
       <>
-        {tabIndex === bookingTabIndex && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+        {tabIndex === bookingTabIndex && <OldBookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
         {tabIndex === aboutTabIndex && (
           <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />
         )}

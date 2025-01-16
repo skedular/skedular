@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<70eaae5c01e2a88a8773816f696ed693>>
+ * @generated SignedSource<<dc107ce20bffdfd5e74a81218584fad9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,20 +13,20 @@ export type DeleteBookingInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type bookingCard_deleteBookingMutation$variables = {
+export type bookings_deleteBookingMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: DeleteBookingInput;
 };
-export type bookingCard_deleteBookingMutation$data = {
+export type bookings_deleteBookingMutation$data = {
   readonly deleteBooking: {
     readonly booking: {
       readonly id: string;
     };
   } | null | undefined;
 };
-export type bookingCard_deleteBookingMutation = {
-  response: bookingCard_deleteBookingMutation$data;
-  variables: bookingCard_deleteBookingMutation$variables;
+export type bookings_deleteBookingMutation = {
+  response: bookings_deleteBookingMutation$data;
+  variables: bookings_deleteBookingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "bookingCard_deleteBookingMutation",
+    "name": "bookings_deleteBookingMutation",
     "selections": [
       {
         "alias": null,
@@ -94,7 +94,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "bookingCard_deleteBookingMutation",
+    "name": "bookings_deleteBookingMutation",
     "selections": [
       {
         "alias": null,
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c07310e43d8352d6965ae353e8eaf0e1",
+    "cacheID": "83afc8d7947479f5a21770a6d13d39a7",
     "id": null,
     "metadata": {},
-    "name": "bookingCard_deleteBookingMutation",
+    "name": "bookings_deleteBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_deleteBookingMutation(\n  $input: DeleteBookingInput!\n) {\n  deleteBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
+    "text": "mutation bookings_deleteBookingMutation(\n  $input: DeleteBookingInput!\n) {\n  deleteBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e53c9beb893166ae86b29ab01db7487a";
+(node as any).hash = "39d6a1b10a4d27ba5299fbd79f48773a";
 
 export default node;

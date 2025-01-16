@@ -1,4 +1,4 @@
-import { BookingCard } from '@/components/booking';
+import { OldBookingCard } from '@/components/booking';
 import type { smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment } from '@/queries/__generated__/smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment.graphql';
 import type { smallMonthlyViewCalendar_bookings_query$key } from '@/queries/__generated__/smallMonthlyViewCalendar_bookings_query.graphql';
 import type { smallMonthlyViewCalendar_query$key } from '@/queries/__generated__/smallMonthlyViewCalendar_query.graphql';
@@ -78,7 +78,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
           id
           name
         }
-        ...bookingCard_query
+        ...oldBookingCard_query
       }
     `,
     rootDataRelay,
@@ -136,7 +136,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
                   name
                 }
               }
-              ...bookingCard_BookingDetails
+              ...oldBookingCard_BookingDetails
             }
           }
         }
@@ -268,7 +268,7 @@ const SmallMonthlyViewCalendar = ({ queryReference }: Props) => {
       <GridContainer>
         {nodes.map((node) => (
           <Grid key={node.id}>
-            <BookingCard
+            <OldBookingCard
               rootDataRelay={rootData}
               bookingDetailsRelay={node}
               connectionIds={connectionIds}

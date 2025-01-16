@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a73ef3b3f2df75a2aaaadeb9cc187dad>>
+ * @generated SignedSource<<9ed8265d9542d2412de26752ac07732c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type bookings_query$data = {
+export type oldBookings_query$data = {
   readonly location?: {
     readonly id: string;
     readonly name: string;
@@ -18,7 +18,7 @@ export type bookings_query$data = {
   readonly me: {
     readonly id: string;
   } | null | undefined;
-  readonly organization: {
+  readonly organization?: {
     readonly id: string;
     readonly name: string;
   } | null | undefined;
@@ -26,12 +26,12 @@ export type bookings_query$data = {
     readonly id: string;
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingCard_query" | "newBookingDialog_query">;
-  readonly " $fragmentType": "bookings_query";
+  readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_query" | "oldBookingCard_query">;
+  readonly " $fragmentType": "oldBookings_query";
 };
-export type bookings_query$key = {
-  readonly " $data"?: bookings_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"bookings_query">;
+export type oldBookings_query$key = {
+  readonly " $data"?: oldBookings_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"oldBookings_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -64,6 +64,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "organizationExists"
+    },
+    {
+      "kind": "RootArgument",
       "name": "organizationId"
     },
     {
@@ -77,7 +81,7 @@ return {
   ],
   "kind": "Fragment",
   "metadata": null,
-  "name": "bookings_query",
+  "name": "oldBookings_query",
   "selections": [
     {
       "alias": null,
@@ -92,20 +96,27 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": [
+      "condition": "organizationExists",
+      "kind": "Condition",
+      "passingValue": true,
+      "selections": [
         {
-          "kind": "Variable",
-          "name": "id",
-          "variableName": "organizationId"
+          "alias": null,
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "id",
+              "variableName": "organizationId"
+            }
+          ],
+          "concreteType": "OrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": (v1/*: any*/),
+          "storageKey": null
         }
-      ],
-      "concreteType": "OrganizationDetails",
-      "kind": "LinkedField",
-      "name": "organization",
-      "plural": false,
-      "selections": (v1/*: any*/),
-      "storageKey": null
+      ]
     },
     {
       "condition": "locationExists",
@@ -156,7 +167,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "bookingCard_query"
+      "name": "oldBookingCard_query"
     },
     {
       "args": null,
@@ -169,6 +180,6 @@ return {
 };
 })();
 
-(node as any).hash = "60c8d03d6eecb1a2537bb30f6ce69971";
+(node as any).hash = "7d77d5d7c1787531c86ab478feabec76";
 
 export default node;

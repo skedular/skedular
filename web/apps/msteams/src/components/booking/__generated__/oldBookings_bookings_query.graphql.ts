@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ab5dad2a56ccc5a5ec206265809c945a>>
+ * @generated SignedSource<<69e005224ef2e0d9eba7340277236d63>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type bookings_bookings_query$data = {
+export type oldBookings_bookings_query$data = {
   readonly bookings: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -21,16 +21,16 @@ export type bookings_bookings_query$data = {
         readonly from: any;
         readonly id: string;
         readonly to: any;
-        readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
+        readonly " $fragmentSpreads": FragmentRefs<"oldBookingCard_BookingDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "bookings_bookings_query";
+  readonly " $fragmentType": "oldBookings_bookings_query";
 };
-export type bookings_bookings_query$key = {
-  readonly " $data"?: bookings_bookings_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"bookings_bookings_query">;
+export type oldBookings_bookings_query$key = {
+  readonly " $data"?: oldBookings_bookings_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"oldBookings_bookings_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -98,10 +98,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./bookings_bookings_refetchableFragment.graphql')
+      "operation": require('./oldBookings_bookings_refetchableFragment.graphql')
     }
   },
-  "name": "bookings_bookings_query",
+  "name": "oldBookings_bookings_query",
   "selections": [
     {
       "alias": "bookings",
@@ -241,7 +241,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "bookingCard_BookingDetails"
+                  "name": "oldBookingCard_BookingDetails"
                 },
                 {
                   "alias": null,
@@ -309,6 +309,6 @@ return {
 };
 })();
 
-(node as any).hash = "da644d6b31ad2091b074550182b1fca8";
+(node as any).hash = "b0a6855ebf9e0e252ff533a3941cbde9";
 
 export default node;

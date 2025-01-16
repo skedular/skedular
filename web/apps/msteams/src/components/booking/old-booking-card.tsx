@@ -1,10 +1,3 @@
-import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
-import type { bookingCard_addBookingMutation } from '@/queries/__generated__/bookingCard_addBookingMutation.graphql';
-import type { bookingCard_addCustomerDefaultDeskMutation } from '@/queries/__generated__/bookingCard_addCustomerDefaultDeskMutation.graphql';
-import type { bookingCard_deleteBookingMutation } from '@/queries/__generated__/bookingCard_deleteBookingMutation.graphql';
-import type { bookingCard_query$key } from '@/queries/__generated__/bookingCard_query.graphql';
-import type { bookingCard_removeCustomerDefaultDeskMutation } from '@/queries/__generated__/bookingCard_removeCustomerDefaultDeskMutation.graphql';
-import type { bookingCard_updateBookingMutation } from '@/queries/__generated__/bookingCard_updateBookingMutation.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -30,7 +23,6 @@ import {
   LocationIcon,
   NotesIcon,
   NotPreferredIcon,
-  OrganizationIcon,
   PreferredIcon,
   TeamIcon,
 } from '@repo/shared/components/icons';
@@ -43,19 +35,27 @@ import {
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { endOfDay, getCustomerFullName, joinErrors, toShortDate } from '@repo/shared/libs/utils';
+import graphql from 'babel-plugin-relay/macro';
 import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, useFragment, useMutation } from 'react-relay';
+import { useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { array, date, object, string } from 'yup';
+import type { oldBookingCard_BookingDetails$key } from './__generated__/oldBookingCard_BookingDetails.graphql';
+import type { oldBookingCard_addBookingMutation } from './__generated__/oldBookingCard_addBookingMutation.graphql';
+import type { oldBookingCard_addCustomerDefaultDeskMutation } from './__generated__/oldBookingCard_addCustomerDefaultDeskMutation.graphql';
+import type { oldBookingCard_deleteBookingMutation } from './__generated__/oldBookingCard_deleteBookingMutation.graphql';
+import type { oldBookingCard_query$key } from './__generated__/oldBookingCard_query.graphql';
+import type { oldBookingCard_removeCustomerDefaultDeskMutation } from './__generated__/oldBookingCard_removeCustomerDefaultDeskMutation.graphql';
+import type { oldBookingCard_updateBookingMutation } from './__generated__/oldBookingCard_updateBookingMutation.graphql';
 import BookingDetailsSelector from './booking-details-selector';
 
 type Props = {
-  rootDataRelay: bookingCard_query$key;
-  bookingDetailsRelay: bookingCard_BookingDetails$key;
+  rootDataRelay: oldBookingCard_query$key;
+  bookingDetailsRelay: oldBookingCard_BookingDetails$key;
   connectionIds: string[];
   hideOrganizationControl: boolean;
   hideLocationControl: boolean;
@@ -80,10 +80,17 @@ const bookingSchema = object({
   desk: array().nullable(),
 });
 
-const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrganizationControl, hideLocationControl, canJoinBooking }: Props) => {
+const OldBookingCard = ({
+  rootDataRelay,
+  bookingDetailsRelay,
+  connectionIds,
+  hideOrganizationControl,
+  hideLocationControl,
+  canJoinBooking,
+}: Props) => {
   const rootData = useFragment(
     graphql`
-      fragment bookingCard_query on Query {
+      fragment oldBookingCard_query on Query {
         me {
           id
           name
@@ -117,7 +124,7 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
 
   const bookingDetails = useFragment(
     graphql`
-      fragment bookingCard_BookingDetails on BookingDetails {
+      fragment oldBookingCard_BookingDetails on BookingDetails {
         id
         from
         to
@@ -162,8 +169,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     bookingDetailsRelay,
   );
 
-  const [commitAddBooking] = useMutation<bookingCard_addBookingMutation>(graphql`
-    mutation bookingCard_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
+  const [commitAddBooking] = useMutation<oldBookingCard_addBookingMutation>(graphql`
+    mutation oldBookingCard_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
       addBooking(input: $input) {
         booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
           id
@@ -210,8 +217,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     }
   `);
 
-  const [commitUpdateBooking] = useMutation<bookingCard_updateBookingMutation>(graphql`
-    mutation bookingCard_updateBookingMutation($input: UpdateBookingInput!) @raw_response_type {
+  const [commitUpdateBooking] = useMutation<oldBookingCard_updateBookingMutation>(graphql`
+    mutation oldBookingCard_updateBookingMutation($input: UpdateBookingInput!) @raw_response_type {
       updateBooking(input: $input) {
         booking {
           id
@@ -258,8 +265,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     }
   `);
 
-  const [commitDeleteBooking] = useMutation<bookingCard_deleteBookingMutation>(graphql`
-    mutation bookingCard_deleteBookingMutation($connectionIds: [ID!]!, $input: DeleteBookingInput!) {
+  const [commitDeleteBooking] = useMutation<oldBookingCard_deleteBookingMutation>(graphql`
+    mutation oldBookingCard_deleteBookingMutation($connectionIds: [ID!]!, $input: DeleteBookingInput!) {
       deleteBooking(input: $input) {
         booking {
           id @deleteEdge(connections: $connectionIds)
@@ -268,8 +275,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     }
   `);
 
-  const [commitAddCustomerDefaultDesk] = useMutation<bookingCard_addCustomerDefaultDeskMutation>(graphql`
-    mutation bookingCard_addCustomerDefaultDeskMutation($input: AddCustomerDefaultDeskInput!) {
+  const [commitAddCustomerDefaultDesk] = useMutation<oldBookingCard_addCustomerDefaultDeskMutation>(graphql`
+    mutation oldBookingCard_addCustomerDefaultDeskMutation($input: AddCustomerDefaultDeskInput!) {
       addCustomerDefaultDesk(input: $input) {
         customer {
           id
@@ -281,8 +288,8 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
     }
   `);
 
-  const [commitRemoveCustomerDefaultDesk] = useMutation<bookingCard_removeCustomerDefaultDeskMutation>(graphql`
-    mutation bookingCard_removeCustomerDefaultDeskMutation($input: RemoveCustomerDefaultDeskInput!) {
+  const [commitRemoveCustomerDefaultDesk] = useMutation<oldBookingCard_removeCustomerDefaultDeskMutation>(graphql`
+    mutation oldBookingCard_removeCustomerDefaultDeskMutation($input: RemoveCustomerDefaultDeskInput!) {
       removeCustomerDefaultDesk(input: $input) {
         customer {
           id
@@ -674,7 +681,6 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
           <CardContent>
             <LeadIconTypography label={getCustomerFullName(bookingDetails.customer)} startElement={<CustomerIcon />} />
             {bookingDetails.notes && <BodyIconTypography label={bookingDetails.notes} startElement={<NotesIcon />} />}
-            {bookingDetails.organization && <BodyIconTypography label={bookingDetails.organization.name} startElement={<OrganizationIcon />} />}
             {bookingDetails.location && <BodyIconTypography label={bookingDetails.location.name} startElement={<LocationIcon />} />}
             {bookingDetails.team && <BodyIconTypography label={bookingDetails.team.name} startElement={<TeamIcon />} />}
 
@@ -795,4 +801,4 @@ const Booking = ({ rootDataRelay, bookingDetailsRelay, connectionIds, hideOrgani
   );
 };
 
-export default memo(Booking);
+export default memo(OldBookingCard);

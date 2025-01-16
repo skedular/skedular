@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3cfc7ff344e45b9621551bcd4bc0339e>>
+ * @generated SignedSource<<af12deb31f746f0e3f0962c61871b630>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,22 +11,9 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type bookings_query$data = {
-  readonly location?: {
-    readonly id: string;
-    readonly name: string;
-  } | null | undefined;
   readonly me: {
     readonly id: string;
   } | null | undefined;
-  readonly organization?: {
-    readonly id: string;
-    readonly name: string;
-  } | null | undefined;
-  readonly team?: {
-    readonly id: string;
-    readonly name: string;
-  } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingCard_query" | "newBookingDialog_query">;
   readonly " $fragmentType": "bookings_query";
 };
 export type bookings_query$key = {
@@ -34,51 +21,8 @@ export type bookings_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"bookings_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = [
-  (v0/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "name",
-    "storageKey": null
-  }
-];
-return {
-  "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "locationExists"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "locationId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationExists"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "organizationId"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "teamExists"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "teamId"
-    }
-  ],
+const node: ReaderFragment = {
+  "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "bookings_query",
@@ -91,95 +35,21 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v0/*: any*/)
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        }
       ],
       "storageKey": null
-    },
-    {
-      "condition": "organizationExists",
-      "kind": "Condition",
-      "passingValue": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "id",
-              "variableName": "organizationId"
-            }
-          ],
-          "concreteType": "OrganizationDetails",
-          "kind": "LinkedField",
-          "name": "organization",
-          "plural": false,
-          "selections": (v1/*: any*/),
-          "storageKey": null
-        }
-      ]
-    },
-    {
-      "condition": "locationExists",
-      "kind": "Condition",
-      "passingValue": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "id",
-              "variableName": "locationId"
-            }
-          ],
-          "concreteType": "LocationDetails",
-          "kind": "LinkedField",
-          "name": "location",
-          "plural": false,
-          "selections": (v1/*: any*/),
-          "storageKey": null
-        }
-      ]
-    },
-    {
-      "condition": "teamExists",
-      "kind": "Condition",
-      "passingValue": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": [
-            {
-              "kind": "Variable",
-              "name": "id",
-              "variableName": "teamId"
-            }
-          ],
-          "concreteType": "TeamDetails",
-          "kind": "LinkedField",
-          "name": "team",
-          "plural": false,
-          "selections": (v1/*: any*/),
-          "storageKey": null
-        }
-      ]
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "bookingCard_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "newBookingDialog_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "6fd86c9a5c0e3ad7817d6bbb08325beb";
+(node as any).hash = "d9e8bcf7cda8f3a086b91ac53bef6a39";
 
 export default node;

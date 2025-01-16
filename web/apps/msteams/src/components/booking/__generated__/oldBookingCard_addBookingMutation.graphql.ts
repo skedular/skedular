@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a081210fffd5d1923400069afe56608>>
+ * @generated SignedSource<<b8d756202c863af2ccf7d9941955d19b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,11 +23,11 @@ export type AddBookingInput = {
   to: any;
   type: BookingType;
 };
-export type bookingCard_addBookingMutation$variables = {
+export type oldBookingCard_addBookingMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: AddBookingInput;
 };
-export type bookingCard_addBookingMutation$data = {
+export type oldBookingCard_addBookingMutation$data = {
   readonly addBooking: {
     readonly booking: {
       readonly customer: {
@@ -72,7 +72,7 @@ export type bookingCard_addBookingMutation$data = {
     };
   } | null | undefined;
 };
-export type bookingCard_addBookingMutation$rawResponse = {
+export type oldBookingCard_addBookingMutation$rawResponse = {
   readonly addBooking: {
     readonly booking: {
       readonly customer: {
@@ -117,10 +117,10 @@ export type bookingCard_addBookingMutation$rawResponse = {
     };
   } | null | undefined;
 };
-export type bookingCard_addBookingMutation = {
-  rawResponse: bookingCard_addBookingMutation$rawResponse;
-  response: bookingCard_addBookingMutation$data;
-  variables: bookingCard_addBookingMutation$variables;
+export type oldBookingCard_addBookingMutation = {
+  rawResponse: oldBookingCard_addBookingMutation$rawResponse;
+  response: oldBookingCard_addBookingMutation$data;
+  variables: oldBookingCard_addBookingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -327,7 +327,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "bookingCard_addBookingMutation",
+    "name": "oldBookingCard_addBookingMutation",
     "selections": [
       {
         "alias": null,
@@ -349,7 +349,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "bookingCard_addBookingMutation",
+    "name": "oldBookingCard_addBookingMutation",
     "selections": [
       {
         "alias": null,
@@ -387,16 +387,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8bbfbf282ee512015427789919f20469",
+    "cacheID": "169daa9247248c2ddcf18f707a15fdc7",
     "id": null,
     "metadata": {},
-    "name": "bookingCard_addBookingMutation",
+    "name": "oldBookingCard_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation oldBookingCard_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a8bde1a04d274a947138256d743b3c11";
+(node as any).hash = "6f93e5043c3c1dfe3680d262857da1ea";
 
 export default node;

@@ -1,6 +1,6 @@
 'use client';
 
-import { Bookings } from '@/components/booking/bookingsPage';
+import { OldBookings } from '@/components/booking';
 import { RootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
@@ -9,7 +9,7 @@ const OrganizationsPage = () => {
 
   return (
     <RootShell>
-      <Bookings onReloadRequired={handleReloadRequired} />
+      <OldBookings onReloadRequired={handleReloadRequired} />
     </RootShell>
   );
 };

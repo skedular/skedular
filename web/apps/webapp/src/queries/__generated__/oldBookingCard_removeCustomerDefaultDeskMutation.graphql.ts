@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3fc0fe648efb9cc3d2dc8d351d6c1d2b>>
+ * @generated SignedSource<<ac3f7e0f022a81a9b7883dcce4b872ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,15 +9,15 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type AddCustomerDefaultDeskInput = {
+export type RemoveCustomerDefaultDeskInput = {
   clientMutationId?: string | null | undefined;
   deskId: string;
 };
-export type bookingCard_addCustomerDefaultDeskMutation$variables = {
-  input: AddCustomerDefaultDeskInput;
+export type oldBookingCard_removeCustomerDefaultDeskMutation$variables = {
+  input: RemoveCustomerDefaultDeskInput;
 };
-export type bookingCard_addCustomerDefaultDeskMutation$data = {
-  readonly addCustomerDefaultDesk: {
+export type oldBookingCard_removeCustomerDefaultDeskMutation$data = {
+  readonly removeCustomerDefaultDesk: {
     readonly customer: {
       readonly id: string;
       readonly preferredDesks: ReadonlyArray<{
@@ -26,9 +26,9 @@ export type bookingCard_addCustomerDefaultDeskMutation$data = {
     };
   } | null | undefined;
 };
-export type bookingCard_addCustomerDefaultDeskMutation = {
-  response: bookingCard_addCustomerDefaultDeskMutation$data;
-  variables: bookingCard_addCustomerDefaultDeskMutation$variables;
+export type oldBookingCard_removeCustomerDefaultDeskMutation = {
+  response: oldBookingCard_removeCustomerDefaultDeskMutation$data;
+  variables: oldBookingCard_removeCustomerDefaultDeskMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -51,7 +51,7 @@ v1 = [
     ],
     "concreteType": "CustomerPayload",
     "kind": "LinkedField",
-    "name": "addCustomerDefaultDesk",
+    "name": "removeCustomerDefaultDesk",
     "plural": false,
     "selections": [
       {
@@ -99,7 +99,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "bookingCard_addCustomerDefaultDeskMutation",
+    "name": "oldBookingCard_removeCustomerDefaultDeskMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -108,20 +108,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "bookingCard_addCustomerDefaultDeskMutation",
+    "name": "oldBookingCard_removeCustomerDefaultDeskMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "3f380236244a240fe52b83c7079862ed",
+    "cacheID": "93e6dac140e49f94eb3429b65dc864a1",
     "id": null,
     "metadata": {},
-    "name": "bookingCard_addCustomerDefaultDeskMutation",
+    "name": "oldBookingCard_removeCustomerDefaultDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_addCustomerDefaultDeskMutation(\n  $input: AddCustomerDefaultDeskInput!\n) {\n  addCustomerDefaultDesk(input: $input) {\n    customer {\n      id\n      preferredDesks {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation oldBookingCard_removeCustomerDefaultDeskMutation(\n  $input: RemoveCustomerDefaultDeskInput!\n) {\n  removeCustomerDefaultDesk(input: $input) {\n    customer {\n      id\n      preferredDesks {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a8a9ca9074c61cbd90dd3fed08298e86";
+(node as any).hash = "7c1c4bf6ae6eee766cf32de671f85a56";
 
 export default node;

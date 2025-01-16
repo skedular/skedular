@@ -1,13 +1,13 @@
-import { BookingCard } from '@/components/booking';
+import { OldBookingCard } from '@/components/booking';
 import { NewBookingButton } from '@/components/booking/addBooking';
-import type { bookings_bookings_query$key } from '@/queries/__generated__/bookings_bookings_query.graphql';
+import type { oldBookings_bookings_query$key } from '@/queries/__generated__/oldBookings_bookings_query.graphql';
 import type {
   BookingOrderField,
   BookingOrderInput,
-  bookings_bookings_refetchableFragment,
-} from '@/queries/__generated__/bookings_bookings_refetchableFragment.graphql';
-import type { bookings_query$key } from '@/queries/__generated__/bookings_query.graphql';
-import type { bookings_rootQuery } from '@/queries/__generated__/bookings_rootQuery.graphql';
+  oldBookings_bookings_refetchableFragment,
+} from '@/queries/__generated__/oldBookings_bookings_refetchableFragment.graphql';
+import type { oldBookings_query$key } from '@/queries/__generated__/oldBookings_query.graphql';
+import type { oldBookings_rootQuery } from '@/queries/__generated__/oldBookings_rootQuery.graphql';
 import Grid from '@mui/material/Grid2';
 import TablePagination from '@mui/material/TablePagination';
 import { GridContainer, PushToRight, StackRow } from '@repo/shared/components/commons';
@@ -25,7 +25,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, useFragment, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
-  queryReference: PreloadedQuery<bookings_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<oldBookings_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId?: string;
   locationId?: string;
@@ -33,7 +33,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query bookings_rootQuery(
+  query oldBookings_rootQuery(
     $organizationId: String!
     $nullableOrganizationId: String
     $organizationExists: Boolean!
@@ -50,16 +50,16 @@ const RootQuery = graphql`
     $bookingsSearchCriteriaTo: DateTime!
     $peopleNameSearchText: String
   ) {
-    ...bookings_query
-    ...bookings_bookings_query
+    ...oldBookings_query
+    ...oldBookings_bookings_query
   }
 `;
 
-const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
-  const rootDataRelay = usePreloadedQuery<bookings_rootQuery>(RootQuery, queryReference);
-  const rootData = useFragment<bookings_query$key>(
+const OldBookings = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
+  const rootDataRelay = usePreloadedQuery<oldBookings_rootQuery>(RootQuery, queryReference);
+  const rootData = useFragment<oldBookings_query$key>(
     graphql`
-      fragment bookings_query on Query {
+      fragment oldBookings_query on Query {
         me {
           id
         }
@@ -75,7 +75,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
           id
           name
         }
-        ...bookingCard_query
+        ...oldBookingCard_query
         ...newBookingDialog_query
       }
     `,
@@ -86,11 +86,11 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
     loadNext,
     isLoadingNext,
     refetch,
-  } = usePaginationFragment<bookings_bookings_refetchableFragment, bookings_bookings_query$key>(
+  } = usePaginationFragment<oldBookings_bookings_refetchableFragment, oldBookings_bookings_query$key>(
     graphql`
-      fragment bookings_bookings_query on Query
+      fragment oldBookings_bookings_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 50 })
-      @refetchable(queryName: "bookings_bookings_refetchableFragment") {
+      @refetchable(queryName: "oldBookings_bookings_refetchableFragment") {
         bookings(
           first: $count
           after: $cursor
@@ -116,7 +116,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
               customer {
                 uniqueId
               }
-              ...bookingCard_BookingDetails
+              ...oldBookingCard_BookingDetails
             }
           }
         }
@@ -285,7 +285,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
 
           return (
             <Grid key={booking.id}>
-              <BookingCard
+              <OldBookingCard
                 rootDataRelay={rootData}
                 bookingDetailsRelay={booking}
                 connectionIds={connectionIds}
@@ -301,7 +301,7 @@ const Bookings = ({ queryReference, onReloadRequired, organizationId, locationId
   );
 };
 
-const MemoBookings = memo(Bookings);
+const MemoBookings = memo(OldBookings);
 
 type RelayProps = {
   onReloadRequired: () => void;
@@ -311,7 +311,7 @@ type RelayProps = {
 };
 
 const BookingsWithRelay = ({ onReloadRequired, organizationId, locationId, teamId }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<bookings_rootQuery>(RootQuery);
+  const [queryReference, loadQuery] = useQueryLoader<oldBookings_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
