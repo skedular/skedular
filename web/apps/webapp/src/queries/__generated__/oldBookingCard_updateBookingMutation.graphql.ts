@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<838209c4190e800bc0e85a1ea3ba3e4c>>
+ * @generated SignedSource<<2312a4484ffc953cc2c5ae15d747b182>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,10 +23,10 @@ export type UpdateBookingInput = {
   to: any;
   type: BookingType;
 };
-export type bookingCard_updateBookingMutation$variables = {
+export type oldBookingCard_updateBookingMutation$variables = {
   input: UpdateBookingInput;
 };
-export type bookingCard_updateBookingMutation$data = {
+export type oldBookingCard_updateBookingMutation$data = {
   readonly updateBooking: {
     readonly booking: {
       readonly customer: {
@@ -71,7 +71,7 @@ export type bookingCard_updateBookingMutation$data = {
     };
   } | null | undefined;
 };
-export type bookingCard_updateBookingMutation$rawResponse = {
+export type oldBookingCard_updateBookingMutation$rawResponse = {
   readonly updateBooking: {
     readonly booking: {
       readonly customer: {
@@ -116,10 +116,10 @@ export type bookingCard_updateBookingMutation$rawResponse = {
     };
   } | null | undefined;
 };
-export type bookingCard_updateBookingMutation = {
-  rawResponse: bookingCard_updateBookingMutation$rawResponse;
-  response: bookingCard_updateBookingMutation$data;
-  variables: bookingCard_updateBookingMutation$variables;
+export type oldBookingCard_updateBookingMutation = {
+  rawResponse: oldBookingCard_updateBookingMutation$rawResponse;
+  response: oldBookingCard_updateBookingMutation$data;
+  variables: oldBookingCard_updateBookingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -333,7 +333,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "bookingCard_updateBookingMutation",
+    "name": "oldBookingCard_updateBookingMutation",
     "selections": (v5/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -342,20 +342,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "bookingCard_updateBookingMutation",
+    "name": "oldBookingCard_updateBookingMutation",
     "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "6a07853036e209290432e4d178833f02",
+    "cacheID": "8ea8a75ab74eb432cde41562fff2c917",
     "id": null,
     "metadata": {},
-    "name": "bookingCard_updateBookingMutation",
+    "name": "oldBookingCard_updateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation oldBookingCard_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "876494161c89ca72b68996b3a19857fb";
+(node as any).hash = "4899ec3211f18be3f52adc783c1c3e53";
 
 export default node;

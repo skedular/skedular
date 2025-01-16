@@ -1,4 +1,4 @@
-import { Bookings } from '@/components/booking/bookingsPage';
+import { OldBookings } from '@/components/booking';
 import { OrganizationCustomTags, OrganizationZones } from '@/components/organization/organizationPage';
 import type { location_rootQuery } from '@/queries/__generated__/location_rootQuery.graphql';
 import Tab from '@mui/material/Tab';
@@ -121,7 +121,7 @@ const Location = ({ queryReference, onReloadRequired, organizationId, locationId
         {rootData.location.canViewAnalytics && <Tab label="Analytics" />}
       </Tabs>
 
-      {tabIndex === bookingTabIndex && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
+      {tabIndex === bookingTabIndex && <OldBookings onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
       {tabIndex === aboutTabIndex && <LocationAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />}
       {tabIndex === membersTabIndex && !organizationId && <LocationMembersTab onReloadRequired={onReloadRequired} locationId={locationId} />}
       {tabIndex === zonesTabIndex && organizationId && <OrganizationZones onReloadRequired={onReloadRequired} organizationId={organizationId} />}

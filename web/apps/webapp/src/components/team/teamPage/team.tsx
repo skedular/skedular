@@ -1,4 +1,4 @@
-import { Bookings } from '@/components/booking/bookingsPage';
+import { OldBookings } from '@/components/booking';
 import type { team_rootQuery } from '@/queries/__generated__/team_rootQuery.graphql';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -92,7 +92,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
         <Tab label="Members" />
       </Tabs>
 
-      {tabIndex === bookingTabIndex && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+      {tabIndex === bookingTabIndex && <OldBookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
       {tabIndex === aboutTabIndex && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
       {tabIndex === membersTabIndex && <TeamMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
     </>

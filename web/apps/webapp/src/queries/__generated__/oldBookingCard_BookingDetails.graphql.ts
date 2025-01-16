@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bd36c0662f2e033e9e96f402c3611c94>>
+ * @generated SignedSource<<64182c5a2524b21260be33a3d425b217>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellBeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type bookingCard_BookingDetails$data = {
+export type oldBookingCard_BookingDetails$data = {
   readonly customer: {
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
@@ -51,11 +51,11 @@ export type bookingCard_BookingDetails$data = {
   } | null | undefined;
   readonly to: any;
   readonly type: BookingType;
-  readonly " $fragmentType": "bookingCard_BookingDetails";
+  readonly " $fragmentType": "oldBookingCard_BookingDetails";
 };
-export type bookingCard_BookingDetails$key = {
-  readonly " $data"?: bookingCard_BookingDetails$data;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
+export type oldBookingCard_BookingDetails$key = {
+  readonly " $data"?: oldBookingCard_BookingDetails$data;
+  readonly " $fragmentSpreads": FragmentRefs<"oldBookingCard_BookingDetails">;
 };
 
 const node: ReaderFragment = (function(){
@@ -92,7 +92,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "bookingCard_BookingDetails",
+  "name": "oldBookingCard_BookingDetails",
   "selections": [
     {
       "alias": null,
@@ -239,6 +239,6 @@ return {
 };
 })();
 
-(node as any).hash = "23d296a650ccd13c6c28b0693717317a";
+(node as any).hash = "a9b2b27ef677cd3e2362342d6c234de0";
 
 export default node;

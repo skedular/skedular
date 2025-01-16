@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a2c7ced046a8bf2226ea64d4aa00f1d9>>
+ * @generated SignedSource<<53409a01a5adff7aae4d374546310c53>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,25 +16,44 @@ export type BookingOrderInput = {
   direction: OrderDirection;
   field: BookingOrderField;
 };
-export type smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment$variables = {
+export type oldBookings_bookings_refetchableFragment$variables = {
+  bookingSortingValues?: ReadonlyArray<BookingOrderInput> | null | undefined;
+  bookingsSearchCriteriaFrom?: any | null | undefined;
+  bookingsSearchCriteriaTo?: any | null | undefined;
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  monthlyCalendarDateFrom?: any | null | undefined;
-  monthlyCalendarDateTo?: any | null | undefined;
-  smallMonthlyViewCalendarBookingsSortingValues?: ReadonlyArray<BookingOrderInput> | null | undefined;
+  locationId: string;
+  organizationId: string;
+  peopleNameSearchText?: string | null | undefined;
+  teamId: string;
 };
-export type smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"smallMonthlyViewCalendar_bookings_query">;
+export type oldBookings_bookings_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"oldBookings_bookings_query">;
 };
-export type smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment = {
-  response: smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment$data;
-  variables: smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment$variables;
+export type oldBookings_bookings_refetchableFragment = {
+  response: oldBookings_bookings_refetchableFragment$data;
+  variables: oldBookings_bookings_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": 1000,
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "bookingSortingValues"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "bookingsSearchCriteriaFrom"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "bookingsSearchCriteriaTo"
+  },
+  {
+    "defaultValue": 50,
     "kind": "LocalArgument",
     "name": "count"
   },
@@ -46,17 +65,22 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "monthlyCalendarDateFrom"
+    "name": "locationId"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "monthlyCalendarDateTo"
+    "name": "organizationId"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "smallMonthlyViewCalendarBookingsSortingValues"
+    "name": "peopleNameSearchText"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "teamId"
   }
 ],
 v1 = [
@@ -73,24 +97,67 @@ v1 = [
   {
     "kind": "Variable",
     "name": "orderBy",
-    "variableName": "smallMonthlyViewCalendarBookingsSortingValues"
+    "variableName": "bookingSortingValues"
   },
   {
     "fields": [
       {
-        "kind": "Variable",
-        "name": "fromGTE",
-        "variableName": "monthlyCalendarDateFrom"
-      },
-      {
         "kind": "Literal",
-        "name": "includeMineOnly",
+        "name": "combineOrganizationsLocationsTeams",
         "value": true
       },
       {
         "kind": "Variable",
-        "name": "toLT",
-        "variableName": "monthlyCalendarDateTo"
+        "name": "fromGTE",
+        "variableName": "bookingsSearchCriteriaFrom"
+      },
+      {
+        "kind": "Variable",
+        "name": "fromLTE",
+        "variableName": "bookingsSearchCriteriaTo"
+      },
+      {
+        "kind": "Literal",
+        "name": "includeMineOnly",
+        "value": false
+      },
+      {
+        "items": [
+          {
+            "kind": "Variable",
+            "name": "locationIds.0",
+            "variableName": "locationId"
+          }
+        ],
+        "kind": "ListValue",
+        "name": "locationIds"
+      },
+      {
+        "kind": "Variable",
+        "name": "nameContains",
+        "variableName": "peopleNameSearchText"
+      },
+      {
+        "items": [
+          {
+            "kind": "Variable",
+            "name": "organizationIds.0",
+            "variableName": "organizationId"
+          }
+        ],
+        "kind": "ListValue",
+        "name": "organizationIds"
+      },
+      {
+        "items": [
+          {
+            "kind": "Variable",
+            "name": "teamIds.0",
+            "variableName": "teamId"
+          }
+        ],
+        "kind": "ListValue",
+        "name": "teamIds"
       }
     ],
     "kind": "ObjectValue",
@@ -131,7 +198,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment",
+    "name": "oldBookings_bookings_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -147,7 +214,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "smallMonthlyViewCalendar_bookings_query"
+        "name": "oldBookings_bookings_query"
       }
     ],
     "type": "Query",
@@ -157,7 +224,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment",
+    "name": "oldBookings_bookings_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -167,6 +234,13 @@ return {
         "name": "bookings",
         "plural": false,
         "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "totalCount",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -202,13 +276,6 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "to",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "notes",
                     "storageKey": null
                   },
                   {
@@ -250,6 +317,20 @@ return {
                         "storageKey": null
                       }
                     ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "notes",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
                     "storageKey": null
                   },
                   {
@@ -313,13 +394,6 @@ return {
                         "storageKey": null
                       }
                     ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "type",
                     "storageKey": null
                   },
                   {
@@ -390,23 +464,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "SmallMonthlyViewCalendar_bookings",
+        "key": "bookings_bookings",
         "kind": "LinkedHandle",
         "name": "bookings"
       }
     ]
   },
   "params": {
-    "cacheID": "3c2f8313aba5ccb033bffe80c95c3381",
+    "cacheID": "5251afd3571b146d6d2bbc042749bfa5",
     "id": null,
     "metadata": {},
-    "name": "smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment",
+    "name": "oldBookings_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query smallMonthlyViewCalendarPaginationQuery_bookings_refetchableFragment(\n  $count: Int = 1000\n  $cursor: String\n  $monthlyCalendarDateFrom: DateTime\n  $monthlyCalendarDateTo: DateTime\n  $smallMonthlyViewCalendarBookingsSortingValues: [BookingOrderInput!]\n) {\n  ...smallMonthlyViewCalendar_bookings_query_1G22uz\n}\n\nfragment oldBookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  type\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment smallMonthlyViewCalendar_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {fromGTE: $monthlyCalendarDateFrom, toLT: $monthlyCalendarDateTo, includeMineOnly: true}, orderBy: $smallMonthlyViewCalendarBookingsSortingValues) {\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          uniqueId\n          name\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          customTags {\n            uniqueId\n            name\n          }\n          zones {\n            uniqueId\n            name\n          }\n        }\n        ...oldBookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query oldBookings_bookings_refetchableFragment(\n  $bookingSortingValues: [BookingOrderInput!]\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = 50\n  $cursor: String\n  $locationId: String!\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $teamId: String!\n) {\n  ...oldBookings_bookings_query_1G22uz\n}\n\nfragment oldBookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  type\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n    name\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment oldBookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$organizationId], locationIds: [$locationId], teamIds: [$teamId], fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, nameContains: $peopleNameSearchText, includeMineOnly: false, combineOrganizationsLocationsTeams: true}, orderBy: $bookingSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        customer {\n          uniqueId\n        }\n        ...oldBookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "682561fed2df6a486b1d26a57e426a42";
+(node as any).hash = "1d6dae5ae80e0fa19f549e19ef0b6b7a";
 
 export default node;

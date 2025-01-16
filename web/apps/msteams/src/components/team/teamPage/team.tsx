@@ -6,7 +6,7 @@ import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
-import { Bookings } from 'components/booking/bookingsPage';
+import { OldBookings } from 'components/booking';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -91,7 +91,7 @@ const Team = ({ queryReference, onReloadRequired, organizationId, teamId }: Prop
         <Tab label="Members" />
       </Tabs>
 
-      {tabIndex === bookingTabIndex && <Bookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
+      {tabIndex === bookingTabIndex && <OldBookings onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
       {tabIndex === aboutTabIndex && <TeamAboutTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
       {tabIndex === membersTabIndex && <TeamMembersTab onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />}
     </>

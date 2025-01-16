@@ -2,6 +2,7 @@ export { default as Organization } from './organization';
 export { default as OrganizationAbout } from './organization-about-tab';
 export { default as OrganizationAnalytics } from './organization-analytics-tab';
 export { default as OrganizationBilling } from './organization-billing-tab';
+export { default as OrganizationBookings } from './organization-bookings';
 export { default as OrganizationCustomTags } from './organization-custom-tags-tab';
 export { default as OrganizationLocations } from './organization-locations-tab';
 export { default as OrganizationMembers } from './organization-members-tab';

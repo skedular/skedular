@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<877e6047626f09a1dd94c8767ad2a981>>
+ * @generated SignedSource<<506149b4d5228ec54c113a8b2db336c6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,7 @@ export type smallMonthlyViewCalendar_query$data = {
     readonly id: string;
     readonly name: string;
   }> | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingCard_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"oldBookingCard_query">;
   readonly " $fragmentType": "smallMonthlyViewCalendar_query";
 };
 export type smallMonthlyViewCalendar_query$key = {
@@ -130,7 +130,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "bookingCard_query"
+      "name": "oldBookingCard_query"
     }
   ],
   "type": "Query",
@@ -138,6 +138,6 @@ return {
 };
 })();
 
-(node as any).hash = "0591e045ece20c6760b1e96b5d4d3761";
+(node as any).hash = "c29beb4fee1f9092dfd4ab72be00df45";
 
 export default node;

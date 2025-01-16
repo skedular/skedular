@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ae628d663551ca5ab4851d305df2fc12>>
+ * @generated SignedSource<<8a7b7107e3ab4eb174a14a027c78f53f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type bookingCard_query$data = {
+export type oldBookingCard_query$data = {
   readonly me: {
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
@@ -35,11 +35,11 @@ export type bookingCard_query$data = {
     readonly canUpdateBookingOnBehalf: boolean;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_availableLocationDesks_query" | "bookingDetailsSelector_organizationMembers_query" | "bookingDetailsSelector_query">;
-  readonly " $fragmentType": "bookingCard_query";
+  readonly " $fragmentType": "oldBookingCard_query";
 };
-export type bookingCard_query$key = {
-  readonly " $data"?: bookingCard_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingCard_query">;
+export type oldBookingCard_query$key = {
+  readonly " $data"?: oldBookingCard_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"oldBookingCard_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -74,7 +74,7 @@ return {
   ],
   "kind": "Fragment",
   "metadata": null,
-  "name": "bookingCard_query",
+  "name": "oldBookingCard_query",
   "selections": [
     {
       "alias": null,
@@ -213,6 +213,6 @@ return {
 };
 })();
 
-(node as any).hash = "735abbcb9f229236e7d010f43a5e00d4";
+(node as any).hash = "c595c5e1c7dda69e388c94efae5f550f";
 
 export default node;

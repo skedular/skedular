@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2bbdf16da8fc57523919bca0d3b0025>>
+ * @generated SignedSource<<64182c5a2524b21260be33a3d425b217>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,9 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "SickLeave" | "TravelingForWork" | "Vacation" | "WellBeingLeave" | "WorkingFromHome" | "WorkingFromOffice" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type bookingCard_BookingDetails$data = {
+export type oldBookingCard_BookingDetails$data = {
   readonly customer: {
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
@@ -40,16 +41,21 @@ export type bookingCard_BookingDetails$data = {
     readonly uniqueId: string;
   } | null | undefined;
   readonly notes: string | null | undefined;
+  readonly organization: {
+    readonly name: string;
+    readonly uniqueId: string;
+  } | null | undefined;
   readonly team: {
     readonly name: string;
     readonly uniqueId: string;
   } | null | undefined;
   readonly to: any;
-  readonly " $fragmentType": "bookingCard_BookingDetails";
+  readonly type: BookingType;
+  readonly " $fragmentType": "oldBookingCard_BookingDetails";
 };
-export type bookingCard_BookingDetails$key = {
-  readonly " $data"?: bookingCard_BookingDetails$data;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
+export type oldBookingCard_BookingDetails$key = {
+  readonly " $data"?: oldBookingCard_BookingDetails$data;
+  readonly " $fragmentSpreads": FragmentRefs<"oldBookingCard_BookingDetails">;
 };
 
 const node: ReaderFragment = (function(){
@@ -86,7 +92,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "bookingCard_BookingDetails",
+  "name": "oldBookingCard_BookingDetails",
   "selections": [
     {
       "alias": null,
@@ -114,6 +120,13 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "notes",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "type",
       "storageKey": null
     },
     {
@@ -155,6 +168,16 @@ return {
           "storageKey": null
         }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingOrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": (v2/*: any*/),
       "storageKey": null
     },
     {
@@ -216,6 +239,6 @@ return {
 };
 })();
 
-(node as any).hash = "28750841868fede138e32d6c17dcc256";
+(node as any).hash = "a9b2b27ef677cd3e2362342d6c234de0";
 
 export default node;

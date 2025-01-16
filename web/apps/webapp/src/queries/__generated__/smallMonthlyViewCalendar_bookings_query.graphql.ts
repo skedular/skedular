@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<54c5faf34af06f0151e81601fb06537d>>
+ * @generated SignedSource<<238cc2ac575bc3187f0ce2c620c49135>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -51,7 +51,7 @@ export type smallMonthlyViewCalendar_bookings_query$data = {
           readonly uniqueId: string;
         } | null | undefined;
         readonly to: any;
-        readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
+        readonly " $fragmentSpreads": FragmentRefs<"oldBookingCard_BookingDetails">;
       };
     }>;
   } | null | undefined;
@@ -320,7 +320,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "bookingCard_BookingDetails"
+                  "name": "oldBookingCard_BookingDetails"
                 },
                 {
                   "alias": null,
@@ -388,6 +388,6 @@ return {
 };
 })();
 
-(node as any).hash = "50f8820e965d3a0101808d378acaabd8";
+(node as any).hash = "682561fed2df6a486b1d26a57e426a42";
 
 export default node;
