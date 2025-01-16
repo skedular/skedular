@@ -28,12 +28,16 @@ const RootQuery = graphql`
     $locationExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
+    $customerId: String!
+    $customerExists: Boolean!
+    $teamsSortingValues: [TeamOrderInput!]
   ) {
     booking(id: $bookingId) {
       from
     }
     ...editBooking_query
     ...editBooking_organizationMembers_query
+    ...editBooking_customerTeams_query
     ...editBooking_availableLocationDesks_query
   }
 `;
@@ -77,6 +81,7 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, bookin
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <EditBooking
         rootDataRelay={rootData}
+        rootDataTeamsRelay={rootData}
         rootDataOrganizationMembersRelay={rootData}
         rootDataAvailableLocationDesksRelay={rootData}
         onReloadRequired={onReloadRequired}
@@ -138,6 +143,14 @@ const LocationPageWithRelay = () => {
         locationExists: false,
         dateToGetAvailableDesks: date,
         deskIdsToIncludeToGetAvailableDesks: [],
+        customerId: '',
+        customerExists: false,
+        teamsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
       },
       {
         fetchPolicy: 'store-and-network',

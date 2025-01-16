@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b1f64d0aaaa42dbdb22d729e60f1cbe>>
+ * @generated SignedSource<<3167c1546c6f0bf8f8224ea2157df0cd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -60,13 +60,6 @@ export type editBooking_query$data = {
       readonly uniqueId: string;
     } | null | undefined;
   }> | null | undefined;
-  readonly myTeams: ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-    readonly organization: {
-      readonly uniqueId: string;
-    } | null | undefined;
-  }> | null | undefined;
   readonly " $fragmentType": "editBooking_query";
 };
 export type editBooking_query$key = {
@@ -75,44 +68,34 @@ export type editBooking_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "kind": "Variable",
-    "name": "organizationId",
-    "variableName": "organizationId"
-  }
-],
-v1 = {
+var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v4 = [
-  (v3/*: any*/)
-],
-v5 = [
-  (v3/*: any*/),
-  (v2/*: any*/)
-],
-v6 = [
-  (v3/*: any*/),
+v3 = [
   (v2/*: any*/),
+  (v1/*: any*/)
+],
+v4 = [
+  (v2/*: any*/),
+  (v1/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -138,14 +121,20 @@ return {
   "selections": [
     {
       "alias": null,
-      "args": (v0/*: any*/),
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "organizationId",
+          "variableName": "organizationId"
+        }
+      ],
       "concreteType": "LocationDetails",
       "kind": "LinkedField",
       "name": "myLocations",
       "plural": true,
       "selections": [
+        (v0/*: any*/),
         (v1/*: any*/),
-        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -153,30 +142,9 @@ return {
           "kind": "LinkedField",
           "name": "organization",
           "plural": false,
-          "selections": (v4/*: any*/),
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": (v0/*: any*/),
-      "concreteType": "TeamDetails",
-      "kind": "LinkedField",
-      "name": "myTeams",
-      "plural": true,
-      "selections": [
-        (v1/*: any*/),
-        (v2/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "TeamOrganizationDetails",
-          "kind": "LinkedField",
-          "name": "organization",
-          "plural": false,
-          "selections": (v4/*: any*/),
+          "selections": [
+            (v2/*: any*/)
+          ],
           "storageKey": null
         }
       ],
@@ -196,7 +164,7 @@ return {
       "name": "booking",
       "plural": false,
       "selections": [
-        (v1/*: any*/),
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -233,8 +201,8 @@ return {
           "name": "customer",
           "plural": false,
           "selections": [
-            (v3/*: any*/),
             (v2/*: any*/),
+            (v1/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -273,7 +241,7 @@ return {
           "kind": "LinkedField",
           "name": "organization",
           "plural": false,
-          "selections": (v5/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -283,7 +251,7 @@ return {
           "kind": "LinkedField",
           "name": "location",
           "plural": false,
-          "selections": (v5/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -293,7 +261,7 @@ return {
           "kind": "LinkedField",
           "name": "team",
           "plural": false,
-          "selections": (v5/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -304,8 +272,8 @@ return {
           "name": "desks",
           "plural": true,
           "selections": [
-            (v3/*: any*/),
             (v2/*: any*/),
+            (v1/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -313,7 +281,7 @@ return {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v6/*: any*/),
+              "selections": (v4/*: any*/),
               "storageKey": null
             },
             {
@@ -323,7 +291,7 @@ return {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v6/*: any*/),
+              "selections": (v4/*: any*/),
               "storageKey": null
             }
           ],
@@ -338,6 +306,6 @@ return {
 };
 })();
 
-(node as any).hash = "28c0b18984c9b0354caf1c432e1b37fe";
+(node as any).hash = "4309714512532633b2f1769bed94988d";
 
 export default node;

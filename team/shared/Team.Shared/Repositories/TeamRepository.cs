@@ -61,29 +61,17 @@ internal static class TeamExtensions
     {
         query = query.Where(item => !item.DeletedAt.HasValue);
 
-        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
         {
-            if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
-            {
-                query = query.Where(item =>
-                    item.TeamMembers.Any(teamMember =>
-                        !teamMember.DeletedAt.HasValue && teamMember.Customer.Id == searchCriteria.CustomerId));
-            }
+            query = query.Where(item =>
+                item.Organization != null && item.Organization.Id == searchCriteria.OrganizationId);
         }
-        else
+
+        if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
         {
-            query = string.IsNullOrWhiteSpace(searchCriteria.CustomerId)
-                ? query.Where(item =>
-                    item.Organization != null && !item.Organization.DeletedAt.HasValue &&
-                    item.Organization.Id == searchCriteria.OrganizationId &&
-                    item.Organization.OrganizationMembers.Any(organizationMember =>
-                        !organizationMember.DeletedAt.HasValue))
-                : query.Where(item =>
-                    item.Organization != null && !item.Organization.DeletedAt.HasValue &&
-                    item.Organization.Id == searchCriteria.OrganizationId &&
-                    item.Organization.OrganizationMembers.Any(organizationMember =>
-                        !organizationMember.DeletedAt.HasValue &&
-                        organizationMember.Customer.Id == searchCriteria.CustomerId));
+            query = query.Where(item =>
+                item.TeamMembers.Any(teamMember =>
+                    !teamMember.DeletedAt.HasValue && teamMember.Customer.Id == searchCriteria.CustomerId));
         }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))

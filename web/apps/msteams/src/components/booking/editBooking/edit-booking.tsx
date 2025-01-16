@@ -33,6 +33,8 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { array, date, object, string } from 'yup';
 import type { editBooking_availableLocationDesks_query$key } from './__generated__/editBooking_availableLocationDesks_query.graphql';
 import type { editBooking_availableLocationDesks_refetchableFragment } from './__generated__/editBooking_availableLocationDesks_refetchableFragment.graphql';
+import type { editBooking_customerTeams_query$key } from './__generated__/editBooking_customerTeams_query.graphql';
+import type { editBooking_customerTeams_refetchableFragment } from './__generated__/editBooking_customerTeams_refetchableFragment.graphql';
 import type { editBooking_organizationMembers_query$key } from './__generated__/editBooking_organizationMembers_query.graphql';
 import type { editBooking_organizationMembers_refetchableFragment } from './__generated__/editBooking_organizationMembers_refetchableFragment.graphql';
 import type { editBooking_query$key } from './__generated__/editBooking_query.graphql';
@@ -41,6 +43,7 @@ import type { editBooking_updateBookingMutation } from './__generated__/editBook
 type Props = {
   rootDataRelay: editBooking_query$key;
   rootDataOrganizationMembersRelay: editBooking_organizationMembers_query$key;
+  rootDataTeamsRelay: editBooking_customerTeams_query$key;
   rootDataAvailableLocationDesksRelay: editBooking_availableLocationDesks_query$key;
   onReloadRequired?: () => void;
   organizationId?: string;
@@ -102,18 +105,17 @@ const bookingSchema = object({
   desk: array().nullable(),
 });
 
-const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootDataAvailableLocationDesksRelay, organizationId }: Props) => {
+const EditBooking = ({
+  rootDataRelay,
+  rootDataTeamsRelay,
+  rootDataOrganizationMembersRelay,
+  rootDataAvailableLocationDesksRelay,
+  organizationId,
+}: Props) => {
   const rootData = useFragment<editBooking_query$key>(
     graphql`
       fragment editBooking_query on Query {
         myLocations(organizationId: $organizationId) {
-          id
-          name
-          organization {
-            uniqueId
-          }
-        }
-        myTeams(organizationId: $organizationId) {
           id
           name
           organization {
@@ -201,6 +203,25 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
     rootDataOrganizationMembersRelay,
   );
 
+  const [rootDataTeams, refetchTeams] = useRefetchableFragment<editBooking_customerTeams_refetchableFragment, editBooking_customerTeams_query$key>(
+    graphql`
+      fragment editBooking_customerTeams_query on Query @refetchable(queryName: "editBooking_customerTeams_refetchableFragment") {
+        customerTeams(where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues)
+          @include(if: $customerExists) {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
+      }
+    `,
+    rootDataTeamsRelay,
+  );
+
   const [rootDataAvailableLocationDesks, refetchAvailableLocationDesks] = useRefetchableFragment<
     editBooking_availableLocationDesks_refetchableFragment,
     editBooking_availableLocationDesks_query$key
@@ -286,9 +307,9 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
   const validate = makeValidate(bookingSchema);
   const requiredFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(dayjs(rootData.booking?.from));
-  const to = useMemo(() => (from instanceof Date ? endOfDay(dayjs(from)) : endOfDay(from)), [from]);
-  const [locationId, setLocationId] = useState<string | undefined>(rootData.booking?.location?.uniqueId);
+  const [customerId, setCustomerId] = useState<string | undefined>(rootData.booking?.customer?.uniqueId);
   const [teamId, setTeamId] = useState<string | undefined>(rootData.booking?.team?.uniqueId);
+  const [locationId, setLocationId] = useState<string | undefined>(rootData.booking?.location?.uniqueId);
   const defaultDeskIds = useMemo<string[]>(
     () =>
       rootData.booking?.desks && from.toISOString() === rootData.booking.from && rootData.booking.location?.uniqueId === locationId
@@ -308,12 +329,10 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
     return rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node);
   }, [rootDataOrganizationMembers.organizationMembers]);
 
-  const teams = useMemo<TeamDetails[]>(() => {
-    const myTeams = rootData.myTeams ? rootData.myTeams.map((team) => team) : [];
-
-    return organizationId ? myTeams.filter((team) => team.organization?.uniqueId === organizationId) : myTeams;
-  }, [rootData.myTeams, organizationId]);
-
+  const teams = useMemo<TeamDetails[]>(
+    () => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []),
+    [rootDataTeams.customerTeams],
+  );
   const locations = useMemo<LocationDetails[]>(() => {
     const myLocations = rootData.myLocations ? rootData.myLocations.map((location) => location) : [];
 
@@ -352,6 +371,23 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
     [refetchOrganizationMembers, pageSize],
   );
 
+  const handleRefetchTeams = useCallback(
+    (customerId: string | undefined) => {
+      startTransition(() => {
+        refetchTeams(
+          {
+            customerId: customerId ?? '',
+            customerExists: !!customerId,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchTeams],
+  );
+
   const handleRefetchAvailableLocationDesks = useCallback(
     (deskIds: string[], from: Dayjs | Date, locationId?: string) => {
       startTransition(() => {
@@ -374,9 +410,11 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
     [refetchAvailableLocationDesks],
   );
 
-  useEffect(() => {
-    handleRefetchAvailableLocationDesks(defaultDeskIds, from, locationId);
-  }, [defaultDeskIds, handleRefetchAvailableLocationDesks, from, locationId]);
+  useEffect(() => handleRefetchTeams(rootData.booking?.customer?.uniqueId), [handleRefetchTeams, rootData.booking?.customer?.uniqueId]);
+  useEffect(
+    () => handleRefetchAvailableLocationDesks(defaultDeskIds, from, locationId),
+    [defaultDeskIds, handleRefetchAvailableLocationDesks, from, locationId],
+  );
 
   const handleCancelClick = () => {
     navigate(-1);
@@ -481,6 +519,16 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
     });
   };
 
+  const handleMemberChange = (option: OrganizationMemberDetails | null) => {
+    if (!rootData.booking) {
+      return;
+    }
+
+    const customerId = option?.customer.uniqueId;
+    setCustomerId(customerId);
+    handleRefetchTeams(customerId);
+  };
+
   const handleTeamChange = (option: LocationDetails | null) => {
     if (!rootData.booking) {
       return;
@@ -528,7 +576,7 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
           initialValues={{
             date: from,
             notes: booking.notes,
-            member: booking.customer.uniqueId,
+            member: customerId,
             team: teamId,
             location: locationId,
             desks: booking.desks ? booking.desks.map(({ uniqueId }) => uniqueId) : [],
@@ -560,7 +608,7 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
                     />
                   </FormFieldLabel>
 
-                  <FormFieldLabel label="Member">
+                  <FormFieldLabel label="User">
                     <Autocomplete
                       name="member"
                       multiple={false}
@@ -592,6 +640,7 @@ const EditBooking = ({ rootDataRelay, rootDataOrganizationMembersRelay, rootData
                       selectOnFocus
                       clearOnBlur
                       handleHomeEndKeys
+                      onChange={(_, option) => handleMemberChange(option as OrganizationMemberDetails)}
                     />
                   </FormFieldLabel>
 

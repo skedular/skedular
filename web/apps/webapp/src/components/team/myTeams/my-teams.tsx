@@ -71,7 +71,7 @@ type RowType = {
   teammates: ReadonlyArray<CustomerDetails>;
 };
 
-const MyTeams = ({ rootDataRelay, onReloadRequired, primaryLocationIds, viewMode }: Props) => {
+const MyTeams = ({ rootDataRelay, primaryLocationIds, viewMode }: Props) => {
   const [rootDataRefetchable, refetch] = useRefetchableFragment<myTeams_teams_refetchableFragment, myTeams_teams_query$key>(
     graphql`
       fragment myTeams_teams_query on Query

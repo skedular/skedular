@@ -751,6 +751,7 @@ type Query {
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): BookingConnection @cost(weight: "10")
   bookingVersion: Version!
   customersByDefaultLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByDefaultLocationWhereInput!): CustomerConnection @cost(weight: "10")
+  customerTeams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: CustomerTeamWhereInput!): TeamConnection @cost(weight: "10")
   customerVersion: Version!
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput!): OrganizationTagConnection @cost(weight: "10")
@@ -1211,6 +1212,13 @@ input CustomerOrderInput {
   field: CustomerOrderField!
 }
 
+input CustomerTeamWhereInput {
+  customerId: String!
+  nameContains: String
+  organizationId: String
+  primaryLocationIds: [String!]
+}
+
 input CustomersByDefaultLocationWhereInput {
   locationId: String!
   nameContains: String
@@ -1468,7 +1476,6 @@ input TeamOrderInput {
 }
 
 input TeamWhereInput {
-  customerId: String
   nameContains: String
   organizationId: String
   primaryLocationIds: [String!]

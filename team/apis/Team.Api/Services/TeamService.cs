@@ -313,6 +313,12 @@ public class TeamService(
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
 
+        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) &&
+            string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
+        {
+            throw new InvalidOperationException();
+        }
+
         if (string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
         {
             // Ensure we do not return other customer team by forcing CustomerId as search criteria

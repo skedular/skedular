@@ -217,7 +217,6 @@ public class TeamMemberPayload
 public class TeamWhereInput
 {
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
-    [GraphQLName("customerId")] public string? CustomerId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("primaryLocationIds")] public string[]? PrimaryLocationIds { get; set; }
 }
@@ -293,4 +292,13 @@ public class AddTeamMemberInput
     [GraphQLName("id")] public required string Id { get; set; }
     [GraphQLName("customerId")] public string? CustomerId { get; set; }
     [GraphQLName("organizationMemberId")] public string? OrganizationMemberId { get; set; }
+}
+
+[GraphQLName("CustomerTeamWhereInput")]
+public class CustomerTeamWhereInput
+{
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("customerId")] public string CustomerId { get; set; }= string.Empty;
+    [GraphQLName("nameContains")] public string? NameContains { get; set; }
+    [GraphQLName("primaryLocationIds")] public string[]? PrimaryLocationIds { get; set; }
 }

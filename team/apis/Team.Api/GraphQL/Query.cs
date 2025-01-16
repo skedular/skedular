@@ -74,6 +74,56 @@ public class Query(IMapper mapper)
                 new PaginationInputParam(after, first, before, last),
                 new TeamSearchCriteria(
                     where.OrganizationId, 
+                    null,
+                    where.NameContains,
+                    where.PrimaryLocationIds),
+                orderBy is null
+                    ? []
+                    : orderBy.Select(item =>
+                    {
+                        var direction = item.Direction == OrderDirection.Ascending
+                            ? OrderDirection.Ascending
+                            : OrderDirection.Descending;
+                        return new TeamOrder(direction, item.Field);
+                    }).ToList(),
+                cancellationToken);
+
+        return new TeamConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor,
+                EndCursor = paginatedInfo.EndCursor
+            },
+            Edges = edges.Select(mapper.MapTo).ToArray(),
+            TotalCount = totalCount
+        };
+    }
+    
+    [UseResolverScope]
+    public async Task<TeamConnection?> CustomerTeamsAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        CustomerTeamWhereInput where,
+        TeamOrderInput[]? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] ITeamService teamService,
+        CancellationToken cancellationToken)
+    {
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        var (paginatedInfo, edges, totalCount) =
+            await teamService.GetPaginatedTeamsAsync(
+                new PaginationInputParam(after, first, before, last),
+                new TeamSearchCriteria(
+                    where.OrganizationId, 
                     where.CustomerId,
                     where.NameContains,
                     where.PrimaryLocationIds),
