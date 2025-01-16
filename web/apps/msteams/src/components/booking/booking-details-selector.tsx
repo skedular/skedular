@@ -29,6 +29,10 @@ type Props = {
   organizationMemberRequired?: boolean;
   hideOrganizationMemberControl?: boolean;
 
+  defaultTeamId?: string;
+  teamName: string;
+  teamRequired?: boolean;
+
   defaultLocationId?: string;
   locationName: string;
   locationRequired?: boolean;
@@ -62,6 +66,11 @@ type OrganizationMemberDetails = {
   customer: CustomerDetails;
 };
 
+type TeamDetails = {
+  id: string;
+  name: string;
+};
+
 type LocationDetails = {
   id: string;
   name: string;
@@ -92,6 +101,10 @@ const BookingDetailsSelector = ({
   organizationMemberName,
   organizationMemberRequired,
   hideOrganizationMemberControl,
+
+  defaultTeamId,
+  teamName,
+  teamRequired,
 
   defaultLocationId,
   locationName,
@@ -212,6 +225,12 @@ const BookingDetailsSelector = ({
     return rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node);
   }, [rootDataOrganizationMembers.organizationMembers]);
 
+  const teams = useMemo<TeamDetails[]>(() => {
+    const myTeams = rootData.myTeams ? rootData.myTeams.map((team) => team) : [];
+
+    return organizationId ? myTeams.filter((team) => team.organization?.uniqueId === organizationId) : myTeams;
+  }, [rootData.myTeams, organizationId]);
+
   const locations = useMemo<LocationDetails[]>(() => {
     const myLocations = rootData.myLocations ? rootData.myLocations.map((location) => location) : [];
 
@@ -289,6 +308,7 @@ const BookingDetailsSelector = ({
   ]);
 
   const filterOrganization = createFilterOptions<OrganizationDetails>();
+  const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterDesk = createFilterOptions<DeskDetails>();
 
@@ -375,6 +395,30 @@ const BookingDetailsSelector = ({
           />
         </FormFieldLabel>
       )}
+
+      <FormFieldLabel label="Team" useWiderSpace>
+        <Autocomplete
+          name={teamName}
+          multiple={false}
+          required={teamRequired}
+          options={teams}
+          getOptionValue={(option) => (option as TeamDetails).id}
+          getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
+          renderOption={(props, option) => {
+            const castedOption = option as TeamDetails;
+
+            return (
+              <li {...props}>
+                <BodyIconTypography label={castedOption.name} />
+              </li>
+            );
+          }}
+          filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
+          selectOnFocus
+          clearOnBlur
+          handleHomeEndKeys
+        />
+      </FormFieldLabel>
 
       {!hideLocationControl && (
         <FormFieldLabel label="Location" useWiderSpace>

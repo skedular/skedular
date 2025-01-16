@@ -67,6 +67,7 @@ type BookingDetails = {
   member: string;
   notes: string;
   organization: string | undefined;
+  team: string | undefined;
   location: string | undefined;
   desks: string[];
 };
@@ -76,6 +77,7 @@ const bookingSchema = object({
   member: string().required(),
   notes: string().notRequired(),
   organization: string().notRequired(),
+  team: string().notRequired(),
   location: string().notRequired(),
   desk: array().nullable(),
 });
@@ -471,7 +473,15 @@ const OldBookingCard = ({
     setEditing(false);
   };
 
-  const handleSaveClick = ({ date, member: memberId, notes, organization: organizationId, location: locationId, desks: deskIds }: BookingDetails) => {
+  const handleSaveClick = ({
+    date,
+    member: memberId,
+    notes,
+    organization: organizationId,
+    team: teamId,
+    location: locationId,
+    desks: deskIds,
+  }: BookingDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -502,7 +512,7 @@ const OldBookingCard = ({
           notes,
           organizationId,
           locationId,
-          teamId: bookingDetails.team?.uniqueId,
+          teamId,
           deskIds: locationId ? deskIds : [],
           type,
         },
@@ -745,6 +755,7 @@ const OldBookingCard = ({
               notes: bookingDetails.notes,
               organization: bookingDetails.organization ? bookingDetails.organization.uniqueId : undefined,
               member: bookingDetails.customer.uniqueId,
+              team: bookingDetails.team ? bookingDetails.team.uniqueId : undefined,
               location: bookingDetails.location ? bookingDetails.location.uniqueId : undefined,
               desks: bookingDetails.desks ? bookingDetails.desks.map(({ uniqueId }) => uniqueId) : [],
             }}
@@ -779,6 +790,9 @@ const OldBookingCard = ({
                     organizationMemberName="member"
                     organizationMemberRequired={requiredFields.member}
                     hideOrganizationMemberControl={true}
+                    defaultTeamId={bookingDetails.team?.uniqueId}
+                    teamName="team"
+                    teamRequired={requiredFields.team}
                     defaultLocationId={bookingDetails.location?.uniqueId}
                     locationName="location"
                     locationRequired={requiredFields.location}
