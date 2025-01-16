@@ -41,6 +41,7 @@ type BookingDetails = {
   member: string | undefined;
   notes: string;
   organization: string | undefined;
+  team: string | undefined;
   location: string | undefined;
   desks: string[];
 };
@@ -50,6 +51,7 @@ const bookingSchema = object({
   member: string().required(),
   notes: string().notRequired(),
   organization: string().notRequired(),
+  team: string().notRequired(),
   location: string().notRequired(),
   desk: array().nullable(),
 });
@@ -159,7 +161,15 @@ const NewBookingDialog = ({
     setFrom(defaultDate ?? startOfDay());
   }, [defaultDate]);
 
-  const handleAddClick = ({ date, member, notes, organization: organizationId, location: locationId, desks: deskIds }: BookingDetails) => {
+  const handleAddClick = ({
+    date,
+    member,
+    notes,
+    organization: organizationId,
+    team: teamId,
+    location: locationId,
+    desks: deskIds,
+  }: BookingDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -184,9 +194,9 @@ const NewBookingDialog = ({
           to,
           notes,
           organizationId,
+          teamId,
           locationId,
           deskIds,
-          teamId: defaultTeamId,
           type,
         },
       },
@@ -262,9 +272,9 @@ const NewBookingDialog = ({
                   name: '',
                 }
               : null,
-            team: defaultTeamId
+            team: teamId
               ? {
-                  uniqueId: defaultTeamId,
+                  uniqueId: teamId,
                   name: '',
                 }
               : null,
@@ -324,6 +334,9 @@ const NewBookingDialog = ({
                   organizationMemberName="member"
                   organizationMemberRequired={requiredFields.member}
                   hideOrganizationMemberControl={!!!rootData.organizationBookingPermissions?.canAddBookingOnBehalf}
+                  defaultTeamId={defaultTeamId}
+                  teamName="team"
+                  teamRequired={requiredFields.team}
                   defaultLocationId={locationId}
                   locationName="location"
                   locationRequired={requiredFields.location}
