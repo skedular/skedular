@@ -282,9 +282,6 @@ const BookingDetailsSelector = ({
           },
           {
             fetchPolicy: 'store-and-network',
-            onComplete: () => {
-              setPage(0);
-            },
           },
         );
       });

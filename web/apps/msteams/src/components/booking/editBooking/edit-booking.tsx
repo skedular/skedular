@@ -10,6 +10,7 @@ import {
   StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
+import { CustomTags } from '@repo/shared/components/customTag';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -73,6 +74,12 @@ type LocationDetails = {
   name: string;
 };
 
+type CustomTagDetails = {
+  id: string;
+  name: string | null | undefined;
+  color: string | null | undefined;
+};
+
 type ZoneDetails = {
   id: string;
   name: string | null | undefined;
@@ -82,6 +89,7 @@ type ZoneDetails = {
 type DeskDetails = {
   uniqueId: string;
   name: string;
+  customTags: CustomTagDetails[];
   zones: ZoneDetails[];
 };
 
@@ -335,17 +343,18 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     [rootData.locations],
   );
 
-  const desks = useMemo<DeskDetails[]>(() => {
-    if (!rootDataAvailableLocationDesks.availableDesks) {
-      return [];
-    }
-
-    return rootDataAvailableLocationDesks.availableDesks.map(({ uniqueId, name, zones }) => ({
-      uniqueId,
-      name,
-      zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-    }));
-  }, [rootDataAvailableLocationDesks.availableDesks]);
+  const desks = useMemo<DeskDetails[]>(
+    () =>
+      rootDataAvailableLocationDesks.availableDesks
+        ? rootDataAvailableLocationDesks.availableDesks.map(({ uniqueId, name, customTags, zones }) => ({
+            uniqueId,
+            name,
+            customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
+            zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
+          }))
+        : [],
+    [rootDataAvailableLocationDesks.availableDesks],
+  );
 
   const handleRefetchOrganizationMembers = useCallback(
     (peopleNameSearchText: string) => {
@@ -396,9 +405,6 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
           },
           {
             fetchPolicy: 'store-and-network',
-            onComplete: () => {
-              setPage(0);
-            },
           },
         );
       });
@@ -706,6 +712,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
                               <li {...props}>
                                 <StackRow sx={{ alignItems: 'center' }}>
                                   <BodyIconTypography label={castedOption.name} />
+                                  <CustomTags customTags={castedOption.customTags} />
                                   <Zones zones={castedOption.zones} />
                                 </StackRow>
                               </li>
