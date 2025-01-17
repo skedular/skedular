@@ -22,15 +22,15 @@ internal static class LocationExtensions
 {
     internal static IIncludableQueryable<Location, ICollection<Customer>> AddDependentObjects(
         this IQueryable<Location> originalQuery,
-        bool includeDeactivated) =>
+        bool includeDeactivatedDesk) =>
         originalQuery
             .Include(query => query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query =>
-                query.Desks.Where(desk => !desk.DeletedAt.HasValue && (includeDeactivated || !desk.Deactivated)))
+                query.Desks.Where(desk => !desk.DeletedAt.HasValue && (includeDeactivatedDesk || !desk.Deactivated)))
             .Include(query =>
-                query.Desks.Where(desk => !desk.DeletedAt.HasValue && (includeDeactivated || !desk.Deactivated)))
+                query.Desks.Where(desk => !desk.DeletedAt.HasValue && (includeDeactivatedDesk || !desk.Deactivated)))
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Organization)
             .ThenInclude(query =>

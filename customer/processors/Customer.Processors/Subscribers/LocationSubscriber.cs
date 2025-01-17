@@ -89,6 +89,7 @@ public class LocationSubscriber(
             ? null
             : await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 location.Organization.Id,
+                true,
                 cancellationToken);
 
         existingLocation = existingLocation is null

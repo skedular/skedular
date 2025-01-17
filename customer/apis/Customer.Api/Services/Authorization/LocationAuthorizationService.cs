@@ -36,7 +36,10 @@ public class LocationAuthorizationService(
         }
 
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                location.Organization.Id,
+                false,
+                cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -56,7 +59,10 @@ public class LocationAuthorizationService(
         }
 
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                location.Organization.Id,
+                false,
+                cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();

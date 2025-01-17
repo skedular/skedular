@@ -300,7 +300,7 @@ public class LocationService(
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             var organization =
-                await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+                await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
             if (organization is null)
             {
                 throw new OrganizationNotFound();
