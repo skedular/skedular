@@ -54,8 +54,6 @@ internal static class LocationExtensions
             .Include(query =>
                 query.Desks.Where(desk =>
                     includeDeletedDesks || (!desk.DeletedAt.HasValue && (includeDeactivatedDesk || !desk.Deactivated))))
-            .Include(query =>
-                query.Desks.Where(desk => !desk.DeletedAt.HasValue && (includeDeactivatedDesk || !desk.Deactivated)))
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Organization)
             .ThenInclude(query =>

@@ -667,7 +667,7 @@ const NewBookingDialog = ({
                               <StackRow sx={{ alignItems: 'center' }}>
                                 <BodyIconTypography label={castedOption.name} />
                                 <CustomTags customTags={castedOption.customTags} />
-                                <Zones zones={castedOption.zones} />
+                                <Zones zones={castedOption.zones} hideIcon />
                               </StackRow>
                             </li>
                           );
