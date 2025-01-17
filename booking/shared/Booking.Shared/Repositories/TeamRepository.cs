@@ -8,7 +8,10 @@ namespace Booking.Shared.Repositories;
 public interface ITeamRepository : IRepository<Team>
 {
     Task<Team> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
-    Task<Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Team?> GetByIdAsync(
+        string id,
+        bool includeDeletedTeamMembers,
+        CancellationToken cancellationToken);
     Team Add(Team team);
     Team Update(Team team);
     Team Remove(Team team);
@@ -25,13 +28,16 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdAsync(id, true, cancellationToken))!;
     }
 
-    public async Task<Team?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+    public async Task<Team?> GetByIdAsync(
+        string id,
+        bool includeDeletedTeamMembers,
+        CancellationToken cancellationToken) =>
         await DbContext.Team
-            .Include(query =>
-                query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
+            .Include(query => query.TeamMembers.Where(
+                teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Organization)

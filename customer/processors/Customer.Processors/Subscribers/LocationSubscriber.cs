@@ -54,7 +54,7 @@ public class LocationSubscriber(
                 {
                     var location = mapper.MapTo(@event);
                     var existingLocation =
-                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
+                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, true, cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation(

@@ -8,7 +8,12 @@ namespace Customer.Shared.Repositories;
 public interface ILocationRepository : IRepository<Location>
 {
     Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
-    Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    Task<Location?> GetByIdAsync(
+        string id,
+        bool includeDeletedLocationMembers,
+        CancellationToken cancellationToken);
+
     Location Add(Location location);
     Location Update(Location location);
     Location Remove(Location location);
@@ -24,13 +29,16 @@ public class LocationRepository(CustomerDbContext dbContext, TimeProvider timePr
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdAsync(id, true, cancellationToken))!;
     }
 
-    public async Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+    public async Task<Location?> GetByIdAsync(
+        string id,
+        bool includeDeletedLocationMembers,
+        CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Include(query =>
-                query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
+            .Include(query => query.LocationMembers.Where(
+                locationMember => includeDeletedLocationMembers || !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Desks)

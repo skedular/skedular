@@ -40,7 +40,7 @@ public class CustomerDeskSettingsService(
         }
 
         var location =
-            await repositoryFactory.LocationRepository.GetByIdAsync(desk.Location.Id, cancellationToken);
+            await repositoryFactory.LocationRepository.GetByIdAsync(desk.Location.Id, false, cancellationToken);
         if (location is null)
         {
             throw new LocationNotFound();

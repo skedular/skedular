@@ -74,6 +74,7 @@ public class DeskService(
                 await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAsync(
                     locationId,
                     false,
+                    false,
                     cancellationToken);
             if (location is null)
             {
@@ -130,6 +131,7 @@ public class DeskService(
 
         var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(
             organizationId,
+            false,
             false,
             cancellationToken);
 

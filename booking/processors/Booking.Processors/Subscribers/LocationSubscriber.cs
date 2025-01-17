@@ -54,6 +54,7 @@ public class LocationSubscriber(
                         await repositoryFactory.LocationRepository.GetByIdAsync(
                             location.Id,
                             true,
+                            true,
                             cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {

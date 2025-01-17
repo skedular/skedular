@@ -21,7 +21,7 @@ public class CachedTeamService(IRepositoryFactory repositoryFactory, IMemoryCach
             async cacheEntry =>
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(1);
-                var team = await repositoryFactory.TeamRepository.GetByIdAsync(id, cancellationToken);
+                var team = await repositoryFactory.TeamRepository.GetByIdAsync(id, false, cancellationToken);
                 if (team is null)
                 {
                     throw new TeamNotFound();

@@ -22,7 +22,11 @@ public class CachedLocationService(IRepositoryFactory repositoryFactory, IMemory
             async cacheEntry =>
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(1);
-                var location = await repositoryFactory.LocationRepository.GetByIdAsync(id, false, cancellationToken);
+                var location = await repositoryFactory.LocationRepository.GetByIdAsync(
+                    id,
+                    false,
+                    false,
+                    cancellationToken);
                 if (location is null)
                 {
                     throw new LocationNotFound();

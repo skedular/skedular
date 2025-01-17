@@ -49,7 +49,10 @@ public class TeamSubscriber(
             case Type.TeamDeleted:
                 {
                     var team = mapper.MapTo(@event);
-                    var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
+                    var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(
+                        team.Id,
+                        true,
+                        cancellationToken);
                     if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
                         logger.LogInformation(
