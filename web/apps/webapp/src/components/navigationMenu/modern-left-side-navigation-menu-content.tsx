@@ -51,6 +51,9 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
         organization(id: $organizationId) @include(if: $organizationExists) {
           id
           canModify
+          availableOfferings {
+            code
+          }
         }
       }
     `,
@@ -313,14 +316,16 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
-              <Button
-                href={getModernOrganizationAdminSubscriptionsBaseLink(finalOrganizationId)}
-                variant="contained"
-                color="secondary"
-                sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}
-              >
-                <BodyIconTypography label="Upgrade Plan" endElement={<UpgradeIcon fontSize="medium" />} color="inherit" />
-              </Button>
+              {rootData.organization.availableOfferings.length > 0 && (
+                <Button
+                  href={getModernOrganizationAdminSubscriptionsBaseLink(finalOrganizationId)}
+                  variant="contained"
+                  color="secondary"
+                  sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}
+                >
+                  <BodyIconTypography label="Upgrade Plan" endElement={<UpgradeIcon fontSize="medium" />} color="inherit" />
+                </Button>
+              )}
 
               <InvitePeopleToJoinOrganizationButton
                 variant="contained"

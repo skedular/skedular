@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a59b42673c4845528c0a6ede761d79e1>>
+ * @generated SignedSource<<c16ccd375bd27f7baee54e623da30dc3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,9 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type modernLeftSideNavigationMenuContent_query$data = {
   readonly organization?: {
+    readonly availableOfferings: ReadonlyArray<{
+      readonly code: string;
+    }>;
     readonly canModify: boolean;
     readonly id: string;
   } | null | undefined;
@@ -69,6 +72,24 @@ const node: ReaderFragment = {
               "kind": "ScalarField",
               "name": "canModify",
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationAvailableOfferingDetails",
+              "kind": "LinkedField",
+              "name": "availableOfferings",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "code",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -80,6 +101,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "94e4fbd6d402f75e96ebc0bb145b21bb";
+(node as any).hash = "b156e3e23c209c10b6e4f3018e1e6df7";
 
 export default node;
