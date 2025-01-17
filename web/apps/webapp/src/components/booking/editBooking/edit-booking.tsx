@@ -114,11 +114,14 @@ const EditBooking = ({
   const rootData = useFragment<editBooking_query$key>(
     graphql`
       fragment editBooking_query on Query {
-        myLocations(organizationId: $organizationId) {
-          id
-          name
-          organization {
-            uniqueId
+        locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              name
+            }
           }
         }
         booking(id: $bookingId) {
@@ -332,11 +335,10 @@ const EditBooking = ({
     () => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []),
     [rootDataTeams.customerTeams],
   );
-  const locations = useMemo<LocationDetails[]>(() => {
-    const myLocations = rootData.myLocations ? rootData.myLocations.map((location) => location) : [];
-
-    return organizationId ? myLocations.filter((location) => location.organization?.uniqueId === organizationId) : myLocations;
-  }, [rootData.myLocations, organizationId]);
+  const locations = useMemo<LocationDetails[]>(
+    () => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []),
+    [rootData.locations],
+  );
 
   const desks = useMemo<DeskDetails[]>(() => {
     if (!rootDataAvailableLocationDesks.availableDesks) {

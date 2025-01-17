@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3167c1546c6f0bf8f8224ea2157df0cd>>
+ * @generated SignedSource<<86f86bb0d3ff3c7b0f262c4ce2b6419d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -53,13 +53,16 @@ export type editBooking_query$data = {
     readonly to: any;
     readonly type: BookingType;
   } | null | undefined;
-  readonly myLocations: ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-    readonly organization: {
-      readonly uniqueId: string;
-    } | null | undefined;
-  }> | null | undefined;
+  readonly locations: {
+    readonly __id: string;
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+      };
+    }>;
+    readonly totalCount: number | null | undefined;
+  } | null | undefined;
   readonly " $fragmentType": "editBooking_query";
 };
 export type editBooking_query$key = {
@@ -112,6 +115,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "locationsSortingValues"
+    },
+    {
+      "kind": "RootArgument",
       "name": "organizationId"
     }
   ],
@@ -124,28 +131,68 @@ return {
       "args": [
         {
           "kind": "Variable",
-          "name": "organizationId",
-          "variableName": "organizationId"
+          "name": "orderBy",
+          "variableName": "locationsSortingValues"
+        },
+        {
+          "fields": [
+            {
+              "kind": "Variable",
+              "name": "organizationId",
+              "variableName": "organizationId"
+            }
+          ],
+          "kind": "ObjectValue",
+          "name": "where"
         }
       ],
-      "concreteType": "LocationDetails",
+      "concreteType": "LocationConnection",
       "kind": "LinkedField",
-      "name": "myLocations",
-      "plural": true,
+      "name": "locations",
+      "plural": false,
       "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationOrganizationDetails",
+          "kind": "ScalarField",
+          "name": "totalCount",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LocationEdge",
           "kind": "LinkedField",
-          "name": "organization",
-          "plural": false,
+          "name": "edges",
+          "plural": true,
           "selections": [
-            (v2/*: any*/)
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "LocationDetails",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                (v1/*: any*/)
+              ],
+              "storageKey": null
+            }
           ],
           "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
@@ -306,6 +353,6 @@ return {
 };
 })();
 
-(node as any).hash = "4309714512532633b2f1769bed94988d";
+(node as any).hash = "6666d1894acb5b586cf05e3faeeacfc5";
 
 export default node;

@@ -31,6 +31,7 @@ const RootQuery = graphql`
     $customerId: String!
     $customerExists: Boolean!
     $teamsSortingValues: [TeamOrderInput!]
+    $locationsSortingValues: [LocationOrderInput!]
   ) {
     booking(id: $bookingId) {
       from
@@ -146,6 +147,12 @@ const LocationPageWithRelay = () => {
         customerId: '',
         customerExists: false,
         teamsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        locationsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',
