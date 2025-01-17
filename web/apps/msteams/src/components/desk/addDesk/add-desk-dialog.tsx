@@ -1,6 +1,8 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
+import { createFilterOptions } from '@mui/material/useAutocomplete';
 import {
+  BodyIconTypography,
   DefaultDialogTitle,
   FormFieldLabel,
   FormStackColumn,
@@ -22,9 +24,9 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { MultipleChoicesCustomTags, MultipleChoicesZones } from 'components/organization';
-import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -37,10 +39,10 @@ type Props = {
   queryReference: PreloadedQuery<addDeskDialog_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
   organizationId: string;
-  locationId: string;
+  locationId?: string;
   connectionIds: string[];
   isDialogOpen: boolean;
-  onAddClicked: () => void;
+  onAddClicked: (locationId: string) => void;
   onCancel: () => void;
 };
 
@@ -49,19 +51,37 @@ const RootQuery = graphql`
     $organizationId: String!
     $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
+    $locationsSortingValues: [LocationOrderInput!]
   ) {
+    locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
+      __id
+      totalCount
+      edges {
+        node {
+          id
+          name
+        }
+      }
+    }
     ...multipleChoicesCustomTags_query
     ...multipleChoicesZones_query
   }
 `;
 
+type LocationDetails = {
+  id: string;
+  name: string;
+};
+
 type DeskDetails = {
+  location: string;
   name: string;
   customTagIds: string[];
   zoneIds: string[];
 };
 
 const deskSchema = object({
+  location: string().required(),
   name: string().required('Desk name is required'),
   customTagIds: array().nullable(),
   zoneIds: array().nullable(),
@@ -93,8 +113,13 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
+  const filterLocation = createFilterOptions<LocationDetails>();
+  const locations = useMemo<LocationDetails[]>(
+    () => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []),
+    [rootData.locations],
+  );
 
-  const handleAddClick = ({ name, customTagIds, zoneIds }: DeskDetails) => {
+  const handleAddClick = ({ location: locationId, name, customTagIds, zoneIds }: DeskDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding desk '${name}'...`} />, infoNotificationOptions);
 
@@ -125,7 +150,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
           render: <NotificationContent content={`Desk ${name} added.`} />,
         });
 
-        onAddClicked();
+        onAddClicked(locationId);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -154,6 +179,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
         <Form
           onSubmit={handleAddClick}
           initialValues={{
+            location: locationId,
             name: '',
             customTagIds: [],
             zoneIds: [],
@@ -163,6 +189,32 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
             <FormStackColumn onSubmit={handleSubmit}>
               <LeadIconTypography label="Add desk to this location" />
               <SmallIconTypography label="Enter the name of the desk to add to this location." />
+
+              {!locationId && (
+                <FormFieldLabel label="Location" useWiderSpace>
+                  <Autocomplete
+                    name="location"
+                    multiple={false}
+                    required={requiredFields.location}
+                    options={locations}
+                    getOptionValue={(option) => (option as LocationDetails).id}
+                    getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
+                    renderOption={(props, option) => {
+                      const castedOption = option as LocationDetails;
+
+                      return (
+                        <li {...props}>
+                          <BodyIconTypography label={castedOption.name} />
+                        </li>
+                      );
+                    }}
+                    filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
+                    selectOnFocus
+                    clearOnBlur
+                    handleHomeEndKeys
+                  />
+                </FormFieldLabel>
+              )}
 
               <FormFieldLabel label="Name" useWiderSpace>
                 <TextField name="name" required={requiredFields.name} helperText="Add your desk name" />
@@ -190,10 +242,10 @@ const MemoAddDeskDialog = memo(AddDeskDialog);
 type RelayProps = {
   onReloadRequired?: () => void;
   organizationId: string;
-  locationId: string;
+  locationId?: string;
   connectionIds: string[];
   isDialogOpen: boolean;
-  onAddClicked: () => void;
+  onAddClicked: (locationId: string) => void;
   onCancel: () => void;
 };
 
@@ -221,6 +273,12 @@ const AddDeskDialogWithRelay = ({
           },
         ],
         multipleChoicesZonesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        locationsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

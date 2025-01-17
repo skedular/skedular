@@ -10,12 +10,15 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultPadding, emerald } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { AddDeskDialog } from 'components/desk/addDesk';
 import { getLocationAddLink } from 'components/location';
+import { getModernOrganizationLocationManageDesksBaseLink } from 'components/organization';
 import { InvitePeopleToJoinOrganizationDialog } from 'components/organization/invitePeopleToJoinOrganization';
 import { getTeamAddLink } from 'components/team';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import type { gettingStarted_completeOrganizationMemberOnboardingMutation } from './__generated__/gettingStarted_completeOrganizationMemberOnboardingMutation.graphql';
 import type { gettingStarted_query$key } from './__generated__/gettingStarted_query.graphql';
@@ -46,9 +49,25 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
     }
   `);
 
+  const navigate = useNavigate();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [isInvitePeopleToJoinOrganizationDialogOpen, setIsInvitePeopleToJoinOrganizationDialogOpen] = useState(false);
+  const [isAddDeskDialogOpen, setIsAddDeskDialogOpen] = useState(false);
+
+  const handleAddDesksClicked = () => {
+    setIsAddDeskDialogOpen(true);
+  };
+
+  const handleAddDeskClicked = (locationId: string) => {
+    setIsAddDeskDialogOpen(false);
+
+    navigate(getModernOrganizationLocationManageDesksBaseLink(organizationId, locationId));
+  };
+
+  const handleCancelAddDeskClicked = () => {
+    setIsAddDeskDialogOpen(false);
+  };
 
   const handleInviteTeammatesClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(true);
@@ -150,7 +169,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Add desks and zones for your locations and teams." />
-                <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
+                <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleAddDesksClicked}>
                   <LeadIconTypography
                     label="Add Desks"
                     stackMode="column"
@@ -177,6 +196,15 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
           </GridContainer>
         </Box>
       </Box>
+
+      <AddDeskDialog
+        onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
+        connectionIds={[]}
+        isDialogOpen={isAddDeskDialogOpen}
+        onAddClicked={handleAddDeskClicked}
+        onCancel={handleCancelAddDeskClicked}
+      />
 
       <InvitePeopleToJoinOrganizationDialog
         isDialogOpen={isInvitePeopleToJoinOrganizationDialogOpen}
