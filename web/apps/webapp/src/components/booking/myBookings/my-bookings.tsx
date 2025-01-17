@@ -12,6 +12,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
+import { CustomTags } from '@repo/shared/components/customTag';
 import { EllipseMenuIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -62,16 +63,20 @@ type LocationDetails = {
   name: string;
 };
 
+type CustomTagDetails = {
+  uniqueId: string;
+  name: string | null | undefined;
+  color?: string | null | undefined;
+};
+
 type ZoneDetails = {
   uniqueId: string;
   name: string | null | undefined;
-  tagType?: string | null | undefined;
   color?: string | null | undefined;
 };
 
 type DeskDetails = {
   name: string;
-  zones: ReadonlyArray<ZoneDetails>;
 };
 
 type TeamDetails = {
@@ -83,6 +88,7 @@ type RowType = {
   location?: LocationDetails | null | undefined;
   team?: TeamDetails | null | undefined;
   desks: ReadonlyArray<DeskDetails>;
+  customTags: ReadonlyArray<CustomTagDetails>;
   zones: ReadonlyArray<ZoneDetails>;
   teammates: ReadonlyArray<CustomerDetails>;
 };
@@ -309,6 +315,15 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
   };
 
   const rows: RowType[] = myBookings.map((myBooking) => {
+    const customTags = myBooking.desks
+      .flatMap(({ customTags }) => customTags)
+      .reduce((acc: CustomTagDetails[], customTag) => {
+        if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
+          acc.push(customTag);
+        }
+
+        return acc;
+      }, []);
     const zones = myBooking.desks
       .flatMap(({ zones }) => zones)
       .reduce((acc: ZoneDetails[], zone) => {
@@ -330,6 +345,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       location: myBooking.location,
       team: myBooking.team,
       desks: myBooking.desks,
+      customTags,
       zones,
       teammates,
       date: toShortDateWithAdditionalDayInfo(dayjs(myBooking.from)),
@@ -366,6 +382,16 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
         return <SmallIconTypography label={desks.length === 0 ? 'N/A' : desks} />;
       },
       display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'customTags',
+      headerName: 'Tags',
+      editable: false,
+      renderCell: (params) => (
+        <CustomTags customTags={params.value.map((zone: CustomTagDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />
+      ),
+      display: 'flex',
       minWidth: 200,
     },
     {
@@ -376,7 +402,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
         <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />
       ),
       display: 'flex',
-      minWidth: 250,
+      minWidth: 200,
     },
     {
       field: 'teammates',

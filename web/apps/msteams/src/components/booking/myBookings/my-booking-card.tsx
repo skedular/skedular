@@ -8,6 +8,7 @@ import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
+import { CustomTags } from '@repo/shared/components/customTag';
 import { CalendarIcon, DeskIcon, EllipseMenuIcon, LocationIcon, NotesIcon, TeamIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
@@ -43,10 +44,15 @@ type Props = {
   otherTeammates: CustomerDetails[];
 };
 
+type CustomTagDetails = {
+  uniqueId: string;
+  name: string | null | undefined;
+  color?: string | null | undefined;
+};
+
 type ZoneDetails = {
   uniqueId: string;
   name: string | null | undefined;
-  tagType?: string | null | undefined;
   color?: string | null | undefined;
 };
 
@@ -190,6 +196,15 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
 
   const date = dayjs(bookingDetails.from);
   const desks = bookingDetails.desks.map((desk) => desk.name).join(', ');
+  const customTags = bookingDetails.desks
+    .flatMap(({ customTags }) => customTags)
+    .reduce((acc: CustomTagDetails[], customTag) => {
+      if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
+        acc.push(customTag);
+      }
+
+      return acc;
+    }, []);
   const zones = bookingDetails.desks
     .flatMap(({ zones }) => zones)
     .reduce((acc: ZoneDetails[], zone) => {
@@ -240,6 +255,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
           />
           <Divider />
           <SmallIconTypography startElement={<DeskIcon />} label={desks.length === 0 ? 'N/A' : desks} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <Divider />
+          <CustomTags
+            customTags={customTags.map((customTag: CustomTagDetails) => ({ id: customTag.uniqueId, name: customTag.name, color: customTag.color }))}
+            sx={{ paddingTop: 1, paddingBottom: 1 }}
+          />
           <Divider />
           <Zones
             zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))}
