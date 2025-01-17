@@ -168,6 +168,7 @@ public class BookingService(
         {
             var location = await repositoryFactory.LocationRepository.GetByIdAsync(
                 existingBooking.Location.Id,
+                false,
                 cancellationToken);
             if (location is null)
             {
@@ -548,6 +549,7 @@ public class BookingService(
 
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(
             booking.Location.Id,
+            false,
             cancellationToken);
         if (location is null)
         {
@@ -677,6 +679,7 @@ public class BookingService(
         var locations =
             await repositoryFactory.LocationRepository.GetByCustomerIdAsync(
                 customer.Id,
+                false,
                 cancellationToken);
         return locations.Select(item => item.Id).ToList();
     }
@@ -719,6 +722,7 @@ public class BookingService(
         {
             var location = await repositoryFactory.LocationRepository.GetByIdAsync(
                 booking.Location.Id,
+                false,
                 cancellationToken);
             if (location is null)
             {
@@ -823,7 +827,10 @@ public class BookingService(
                     item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
             if (location is not null)
             {
-                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
+                location = await repositoryFactory.LocationRepository.GetByIdAsync(
+                    location.Id,
+                    false,
+                    cancellationToken);
             }
 
             team = customer.DefaultTeams
@@ -855,7 +862,10 @@ public class BookingService(
                     item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
             if (location is not null)
             {
-                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
+                location = await repositoryFactory.LocationRepository.GetByIdAsync(
+                    location.Id,
+                    false,
+                    cancellationToken);
             }
         }
         else if (booking.Organization is null && (booking.Location is not null || booking.Team is not null))
@@ -877,7 +887,9 @@ public class BookingService(
                                customer.DefaultLocations.FirstOrDefault();
                     if (location is not null)
                     {
-                        location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id,
+                        location = await repositoryFactory.LocationRepository.GetByIdAsync(
+                            location.Id,
+                            false,
                             cancellationToken);
                     }
                 }
@@ -900,7 +912,10 @@ public class BookingService(
                                 item.Organization.Id == customer.DefaultOrganization.Id);
                 if (location is not null)
                 {
-                    location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
+                    location = await repositoryFactory.LocationRepository.GetByIdAsync(
+                        location.Id,
+                        false,
+                        cancellationToken);
                 }
 
                 team = customer.DefaultTeams

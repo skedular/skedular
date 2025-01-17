@@ -17,6 +17,6 @@ public class AddSqlHealthCheckShould
 
         dbSetupContext.AddDatabaseHealthCheck();
 
-        serviceCollection.Count.Should().BeGreaterOrEqualTo(8); // adds about 8+ things
+        serviceCollection.Count.Should().BeGreaterThanOrEqualTo(8); // adds about 8+ things
     }
 }

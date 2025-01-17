@@ -69,6 +69,7 @@ public class DeskService(
             var location =
                 await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAsync(
                     locationId,
+                    false,
                     cancellationToken);
             if (location is null)
             {
@@ -121,6 +122,7 @@ public class DeskService(
 
         var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(
             organizationId,
+            false,
             cancellationToken);
 
         var desksCount = locations.Aggregate(0, (acc, item) => item.Desks.Count + acc);

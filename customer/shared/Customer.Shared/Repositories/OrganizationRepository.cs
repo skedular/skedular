@@ -10,7 +10,7 @@ public interface IOrganizationRepository : IRepository<Organization>
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Organization?> GetByIdAsync(
         string id,
-        bool includeDeletedOrganizationTag,
+        bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
     Organization Add(Organization organization);
     Organization Update(Organization organization);
@@ -29,7 +29,7 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
 
     public async Task<Organization?> GetByIdAsync(
         string id,
-        bool includeDeletedOrganizationTag,
+        bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Include(query =>
@@ -37,7 +37,7 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Tags.Where(
-                organizationTag => includeDeletedOrganizationTag || !organizationTag.DeletedAt.HasValue))
+                organizationTag => includeDeletedOrganizationTags || !organizationTag.DeletedAt.HasValue))
             .Include(query => query.Locations)
             .Include(query => query.Teams)
             .Include(query => query.DefaultedByCustomers)

@@ -11,7 +11,7 @@ public interface IOrganizationRepository : IRepository<Organization>
 
     Task<Organization?> GetByIdAsync(
         string id,
-        bool includeDeletedOrganizationTag,
+        bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
     Organization Add(Organization organization);
@@ -35,7 +35,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
 
     public async Task<Organization?> GetByIdAsync(
         string id,
-        bool includeDeletedOrganizationTag,
+        bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Include(query =>
@@ -43,7 +43,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Tags.Where(
-                organizationTag => includeDeletedOrganizationTag || !organizationTag.DeletedAt.HasValue))
+                organizationTag => includeDeletedOrganizationTags || !organizationTag.DeletedAt.HasValue))
             .Include(query => query.Locations)
             .Include(query => query.Teams)
             .Include(query => query.DefaultedByCustomers)

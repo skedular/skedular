@@ -9,26 +9,45 @@ namespace Booking.Shared.Repositories;
 public interface ILocationRepository : IRepository<Location>
 {
     Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
-    Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<Location?> GetByIdAndExcludeDeactivatedDesksAsync(string id, CancellationToken cancellationToken);
+
+    Task<Location?> GetByIdAsync(
+        string id,
+        bool includeDeletedDesks,
+        CancellationToken cancellationToken);
+
+    Task<Location?> GetByIdAndExcludeDeactivatedDesksAsync(
+        string id,
+        bool includeDeletedDesks,
+        CancellationToken cancellationToken);
+
     Location Add(Location location);
     Location Update(Location location);
     Location Remove(Location location);
-    Task<ICollection<Location>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
-    Task<ICollection<Location>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+
+    Task<ICollection<Location>> GetByCustomerIdAsync(
+        string customerId,
+        bool includeDeletedDesks,
+        CancellationToken cancellationToken);
+
+    Task<ICollection<Location>> GetByOrganizationIdAsync(
+        string organizationId,
+        bool includeDeletedDesks,
+        CancellationToken cancellationToken);
 }
 
 internal static class LocationExtensions
 {
     internal static IIncludableQueryable<Location, ICollection<Customer>> AddDependentObjects(
         this IQueryable<Location> originalQuery,
+        bool includeDeletedDesks,
         bool includeDeactivatedDesk) =>
         originalQuery
             .Include(query => query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query =>
-                query.Desks.Where(desk => !desk.DeletedAt.HasValue && (includeDeactivatedDesk || !desk.Deactivated)))
+                query.Desks.Where(desk =>
+                    includeDeletedDesks || (!desk.DeletedAt.HasValue && (includeDeactivatedDesk || !desk.Deactivated))))
             .Include(query =>
                 query.Desks.Where(desk => !desk.DeletedAt.HasValue && (includeDeactivatedDesk || !desk.Deactivated)))
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
@@ -49,18 +68,24 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdAsync(id, true, cancellationToken))!;
     }
 
-    public async Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+    public async Task<Location?> GetByIdAsync(
+        string id,
+        bool includeDeletedDesks,
+        CancellationToken cancellationToken) =>
         await DbContext.Location
-            .AddDependentObjects(true)
+            .AddDependentObjects(includeDeletedDesks, true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<Location?>
-        GetByIdAndExcludeDeactivatedDesksAsync(string id, CancellationToken cancellationToken) =>
+        GetByIdAndExcludeDeactivatedDesksAsync(
+            string id,
+            bool includeDeletedDesks,
+            CancellationToken cancellationToken) =>
         await DbContext.Location
-            .AddDependentObjects(false)
+            .AddDependentObjects(includeDeletedDesks, false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Location Add(Location location)
@@ -86,6 +111,7 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
 
     public async Task<ICollection<Location>> GetByCustomerIdAsync(
         string customerId,
+        bool includeDeletedDesks,
         CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => !query.DeletedAt.HasValue &&
@@ -96,14 +122,16 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
                                   organizationMember =>
                                       !organizationMember.DeletedAt.HasValue &&
                                       organizationMember.Customer.Id == customerId))))
+            .AddDependentObjects(includeDeletedDesks, false)
             .ToListAsync(cancellationToken);
 
     public async Task<ICollection<Location>> GetByOrganizationIdAsync(
         string organizationId,
+        bool includeDeletedDesks,
         CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => !query.DeletedAt.HasValue &&
                             query.Organization != null && query.Organization.Id == organizationId)
-            .AddDependentObjects(false)
+            .AddDependentObjects(includeDeletedDesks, false)
             .ToListAsync(cancellationToken);
 }
