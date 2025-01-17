@@ -12,7 +12,7 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { AddDeskDialog } from 'components/desk/addDesk';
 import { getLocationAddLink } from 'components/location';
-import { getModernOrganizationLocationManageDesksBaseLink } from 'components/organization';
+import { getModernOrganizationLocationManageDesksBaseLink, getModernOrganizationUsersBaseLink } from 'components/organization';
 import { InvitePeopleToJoinOrganizationDialog } from 'components/organization/invitePeopleToJoinOrganization';
 import { getTeamAddLink } from 'components/team';
 import { nanoid } from 'nanoid';
@@ -75,6 +75,8 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
 
   const handleInvitePeopleToJoinOrganizationClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(false);
+
+    navigate(getModernOrganizationUsersBaseLink(organizationId));
   };
 
   const handleInvitePeopleToJoinOrganizationCancelClicked = () => {

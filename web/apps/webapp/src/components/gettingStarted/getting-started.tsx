@@ -1,6 +1,6 @@
 import { AddDeskDialog } from '@/components/desk/addDesk';
 import { getLocationAddLink } from '@/components/location';
-import { getModernOrganizationLocationManageDesksBaseLink } from '@/components/organization';
+import { getModernOrganizationLocationManageDesksBaseLink, getModernOrganizationUsersBaseLink } from '@/components/organization';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
 import { getTeamAddLink } from '@/components/team';
 import type { gettingStarted_completeOrganizationMemberOnboardingMutation } from '@/queries/__generated__/gettingStarted_completeOrganizationMemberOnboardingMutation.graphql';
@@ -75,6 +75,8 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
 
   const handleInvitePeopleToJoinOrganizationClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(false);
+
+    router.push(getModernOrganizationUsersBaseLink(organizationId));
   };
 
   const handleInvitePeopleToJoinOrganizationCancelClicked = () => {

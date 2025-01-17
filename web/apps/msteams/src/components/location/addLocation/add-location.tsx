@@ -31,7 +31,7 @@ import type { addLocation_completeLocationOnboardingMutation } from './__generat
 type Props = {
   onReloadRequired: () => void;
   organizationId: string;
-  onAdded: (id: string) => void;
+  onAdded: (locationId: string) => void;
   onCancel: () => void;
   saveAndExitLabel?: string;
 };

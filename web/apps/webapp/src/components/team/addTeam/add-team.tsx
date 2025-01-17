@@ -38,7 +38,7 @@ type Props = {
   queryReference: PreloadedQuery<addTeam_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId?: string;
-  onAdded: (id: string) => void;
+  onAdded: (teamId: string) => void;
   onCancel: () => void;
   saveAndExitLabel?: string;
 };
@@ -298,7 +298,7 @@ const MemoAddTeam = memo(AddTeam);
 type RelayProps = {
   organizationId?: string;
   onReloadRequired: () => void;
-  onAdded: (id: string) => void;
+  onAdded: (teamId: string) => void;
   onCancel: () => void;
   saveAndExitLabel?: string;
 };
