@@ -396,12 +396,10 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       editable: false,
       renderCell: (params) => (
         <NewBookingButton
-          hideLocationControl={false}
-          hideOrganizationControl={true}
           onReloadRequired={onReloadRequired}
           defaultDate={defaultDate}
           organizationId={organizationId}
-          locationId={params.id as string}
+          defaultLocationId={params.id as string}
           label="Book Now"
           hideIcon
           variant="contained"

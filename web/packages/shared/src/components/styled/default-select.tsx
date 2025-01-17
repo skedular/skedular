@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 const DefaultSelect = styled(Select)(({ theme }) => ({
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    width: 'min(100%, 320px)',
+    width: 'min(100%, 300px)',
   },
   '& .MuiOutlinedInput-root': {
     borderRadius: 30,

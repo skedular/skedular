@@ -28,7 +28,6 @@ type Props = {
   queryReference: PreloadedQuery<oldBookings_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId?: string;
-  locationId?: string;
   teamId?: string;
 };
 
@@ -49,13 +48,14 @@ const RootQuery = graphql`
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaTo: DateTime!
     $peopleNameSearchText: String
+    $locationsSortingValues: [LocationOrderInput!]
   ) {
     ...oldBookings_query
     ...oldBookings_bookings_query
   }
 `;
 
-const OldBookings = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
+const OldBookings = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootDataRelay = usePreloadedQuery<oldBookings_rootQuery>(RootQuery, queryReference);
   const rootData = useFragment<oldBookings_query$key>(
     graphql`
@@ -233,15 +233,7 @@ const OldBookings = ({ queryReference, onReloadRequired, organizationId, locatio
   return (
     <>
       <StackRow>
-        <NewBookingButton
-          onReloadRequired={onReloadRequired}
-          organizationId={organizationId}
-          locationId={locationId}
-          connectionIds={connectionIds}
-          hideLocationControl={true}
-          hideOrganizationControl={true}
-          defaultDate={startWeek}
-        />
+        <NewBookingButton onReloadRequired={onReloadRequired} organizationId={organizationId} connectionIds={connectionIds} defaultDate={startWeek} />
         <WeekPicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChange} />
         <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
         <PushToRight />
@@ -344,6 +336,12 @@ const BookingsWithRelay = ({ onReloadRequired, organizationId, locationId, teamI
         bookingsSearchCriteriaFrom: from.toISOString(),
         bookingsSearchCriteriaTo: to.toISOString(),
         dateToGetAvailableDesks: startOfDay().toISOString(),
+        locationsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
       },
       {
         fetchPolicy: 'store-and-network',
@@ -365,7 +363,7 @@ const BookingsWithRelay = ({ onReloadRequired, organizationId, locationId, teamI
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoBookings queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} locationId={locationId} />
+      <MemoBookings queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
     </ErrorBoundary>
   );
 };

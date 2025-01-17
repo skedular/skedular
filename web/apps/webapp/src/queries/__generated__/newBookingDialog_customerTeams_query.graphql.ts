@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<58d64606a5b4e283e824a71bf75a8050>>
+ * @generated SignedSource<<ab551d2db2bd20a2df2680ed679e3e25>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,8 +10,8 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type newBookingDialog_query$data = {
-  readonly locations?: {
+export type newBookingDialog_customerTeams_query$data = {
+  readonly customerTeams?: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -21,57 +21,44 @@ export type newBookingDialog_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly me: {
-    readonly id: string;
-  } | null | undefined;
-  readonly " $fragmentType": "newBookingDialog_query";
+  readonly " $fragmentType": "newBookingDialog_customerTeams_query";
 };
-export type newBookingDialog_query$key = {
-  readonly " $data"?: newBookingDialog_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_query">;
+export type newBookingDialog_customerTeams_query$key = {
+  readonly " $data"?: newBookingDialog_customerTeams_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_customerTeams_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "locationsSortingValues"
+      "name": "customerExists"
     },
     {
       "kind": "RootArgument",
-      "name": "organizationExists"
+      "name": "customerId"
     },
     {
       "kind": "RootArgument",
       "name": "organizationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "teamsSortingValues"
     }
   ],
   "kind": "Fragment",
-  "metadata": null,
-  "name": "newBookingDialog_query",
+  "metadata": {
+    "refetch": {
+      "connection": null,
+      "fragmentPathInResult": [],
+      "operation": require('./newBookingDialog_customerTeams_refetchableFragment.graphql')
+    }
+  },
+  "name": "newBookingDialog_customerTeams_query",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "CustomerDetails",
-      "kind": "LinkedField",
-      "name": "me",
-      "plural": false,
-      "selections": [
-        (v0/*: any*/)
-      ],
-      "storageKey": null
-    },
-    {
-      "condition": "organizationExists",
+      "condition": "customerExists",
       "kind": "Condition",
       "passingValue": true,
       "selections": [
@@ -81,10 +68,15 @@ return {
             {
               "kind": "Variable",
               "name": "orderBy",
-              "variableName": "locationsSortingValues"
+              "variableName": "teamsSortingValues"
             },
             {
               "fields": [
+                {
+                  "kind": "Variable",
+                  "name": "customerId",
+                  "variableName": "customerId"
+                },
                 {
                   "kind": "Variable",
                   "name": "organizationId",
@@ -95,9 +87,9 @@ return {
               "name": "where"
             }
           ],
-          "concreteType": "LocationConnection",
+          "concreteType": "TeamConnection",
           "kind": "LinkedField",
-          "name": "locations",
+          "name": "customerTeams",
           "plural": false,
           "selections": [
             {
@@ -110,7 +102,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "LocationEdge",
+              "concreteType": "TeamEdge",
               "kind": "LinkedField",
               "name": "edges",
               "plural": true,
@@ -118,12 +110,18 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "LocationDetails",
+                  "concreteType": "TeamDetails",
                   "kind": "LinkedField",
                   "name": "node",
                   "plural": false,
                   "selections": [
-                    (v0/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "id",
+                      "storageKey": null
+                    },
                     {
                       "alias": null,
                       "args": null,
@@ -158,8 +156,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "30bbb76aeb46d3d62a9275906c3bbfb8";
+(node as any).hash = "b821e9ee7ead2340740b7ef27f119130";
 
 export default node;

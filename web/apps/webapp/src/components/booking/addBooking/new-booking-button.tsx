@@ -17,10 +17,7 @@ type Props = {
   onReloadRequired?: () => void;
   connectionIds?: string[];
   organizationId?: string;
-  locationId?: string;
-  defaultTeamId?: string;
-  hideOrganizationControl?: boolean;
-  hideLocationControl?: boolean;
+  defaultLocationId?: string;
   defaultDate?: Dayjs;
   fullWidth?: boolean;
   label?: string;
@@ -32,16 +29,21 @@ type Props = {
 const RootQuery = graphql`
   query newBookingButton_rootQuery(
     $organizationId: String!
-    $nullableOrganizationId: String
+    $peopleNameSearchText: String
     $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
-    $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $bookingDetailsSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
-    $bookingPeopleNameSearchText: String
+    $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
+    $customerId: String!
+    $customerExists: Boolean!
+    $teamsSortingValues: [TeamOrderInput!]
+    $locationsSortingValues: [LocationOrderInput!]
   ) {
     ...newBookingDialog_query
+    ...newBookingDialog_organizationMembers_query
+    ...newBookingDialog_customerTeams_query
+    ...newBookingDialog_availableLocationDesks_query
   }
 `;
 
@@ -50,10 +52,7 @@ const NewBookingButton = ({
   onReloadRequired,
   connectionIds,
   organizationId,
-  locationId,
-  defaultTeamId,
-  hideOrganizationControl,
-  hideLocationControl,
+  defaultLocationId,
   defaultDate,
   fullWidth,
   label,
@@ -95,15 +94,15 @@ const NewBookingButton = ({
       </Button>
       <NewBookingDialog
         rootDataRelay={rootData}
+        rootDataTeamsRelay={rootData}
+        rootDataOrganizationMembersRelay={rootData}
+        rootDataAvailableLocationDesksRelay={rootData}
         connectionIds={connectionIds ?? []}
         isDialogOpen={isDialogOpen}
         onAddClicked={handleAddClicked}
         onCancel={handleCancelClicked}
         organizationId={organizationId}
-        locationId={locationId}
-        defaultTeamId={defaultTeamId}
-        hideOrganizationControl={hideOrganizationControl}
-        hideLocationControl={hideLocationControl}
+        defaultLocationId={defaultLocationId}
         defaultDate={defaultDate}
       />
     </>
@@ -116,10 +115,7 @@ type RelayProps = {
   onReloadRequired?: () => void;
   connectionIds?: string[];
   organizationId?: string;
-  locationId?: string;
-  defaultTeamId?: string;
-  hideOrganizationControl?: boolean;
-  hideLocationControl?: boolean;
+  defaultLocationId?: string;
   defaultDate?: Dayjs;
   fullWidth?: boolean;
   label?: string;
@@ -132,10 +128,7 @@ const NewBookingButtonWithRelay = ({
   onReloadRequired,
   connectionIds,
   organizationId,
-  locationId,
-  defaultTeamId,
-  hideOrganizationControl,
-  hideLocationControl,
+  defaultLocationId,
   defaultDate,
   fullWidth,
   label,
@@ -151,24 +144,30 @@ const NewBookingButtonWithRelay = ({
     loadQuery(
       {
         organizationId: organizationId ?? '',
-        nullableOrganizationId: organizationId,
         organizationExists: !!organizationId,
-        locationId: locationId ?? '',
-        locationExists: !!locationId,
-        deskIdsToIncludeToGetAvailableDesks: [],
-        bookingDetailsSelectorOrganizationMembersSortingValues: [
+        locationId: defaultLocationId ?? '',
+        locationExists: false,
+        dateToGetAvailableDesks: date,
+        customerId: '',
+        customerExists: false,
+        teamsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',
           },
         ],
-        dateToGetAvailableDesks: date,
+        locationsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, organizationId, locationId]);
+  }, [loadQuery, organizationId, defaultLocationId]);
 
   if (!queryReference) {
     return <Loading />;
@@ -180,10 +179,7 @@ const NewBookingButtonWithRelay = ({
         queryReference={queryReference}
         connectionIds={connectionIds}
         organizationId={organizationId}
-        locationId={locationId}
-        defaultTeamId={defaultTeamId}
-        hideOrganizationControl={hideOrganizationControl}
-        hideLocationControl={hideLocationControl}
+        defaultLocationId={defaultLocationId}
         onReloadRequired={onReloadRequired}
         defaultDate={defaultDate}
         fullWidth={fullWidth}

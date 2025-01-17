@@ -229,9 +229,7 @@ const CustomerDaySummary = ({ queryReference, onReloadRequired, date, minWidth }
       {bookings.length === 0 && <LeadIconTypography label="You have no booking" />}
       {bookings.length !== 0 && <LeadIconTypography label="You" />}
       <StackColumn>
-        {bookings.length === 0 && (
-          <NewBookingButton hideLocationControl={false} hideOrganizationControl={false} onReloadRequired={onReloadRequired} defaultDate={date} />
-        )}
+        {bookings.length === 0 && <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={date} />}
         {bookings.length !== 0 && (
           <>
             {bookings.slice(0, bookings.length - 1).map((booking, index) => (

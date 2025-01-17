@@ -1,6 +1,15 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
+import {
+  BodyIconTypography,
+  DefaultDialogTitle,
+  FormFieldLabel,
+  FormStackColumn,
+  StackRow,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
   infoNotificationOptions,
@@ -8,40 +17,82 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
+import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
-import { endOfDay, getCustomerFullName, joinErrors, startOfDay, toShortDate } from '@repo/shared/libs/utils';
+import { endOfDay, getCustomerFullName, joinErrors, keyboardDebounceTimeout, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { BookingDetailsSelector } from 'components/booking';
-import dayjs, { Dayjs } from 'dayjs';
-import { DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
+import { Dayjs } from 'dayjs';
+import { Autocomplete, DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
-import { useFragment, useMutation } from 'react-relay';
+import { useFragment, useMutation, usePaginationFragment, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { array, date, object, string } from 'yup';
 import type { newBookingDialog_addBookingMutation } from './__generated__/newBookingDialog_addBookingMutation.graphql';
+import type { newBookingDialog_availableLocationDesks_query$key } from './__generated__/newBookingDialog_availableLocationDesks_query.graphql';
+import type { newBookingDialog_availableLocationDesks_refetchableFragment } from './__generated__/newBookingDialog_availableLocationDesks_refetchableFragment.graphql';
+import type { newBookingDialog_customerTeams_query$key } from './__generated__/newBookingDialog_customerTeams_query.graphql';
+import type { newBookingDialog_customerTeams_refetchableFragment } from './__generated__/newBookingDialog_customerTeams_refetchableFragment.graphql';
+import type { newBookingDialog_organizationMembers_query$key } from './__generated__/newBookingDialog_organizationMembers_query.graphql';
+import type { newBookingDialog_organizationMembers_refetchableFragment } from './__generated__/newBookingDialog_organizationMembers_refetchableFragment.graphql';
 import type { newBookingDialog_query$key } from './__generated__/newBookingDialog_query.graphql';
 
 type Props = {
   rootDataRelay: newBookingDialog_query$key;
+  rootDataOrganizationMembersRelay: newBookingDialog_organizationMembers_query$key;
+  rootDataTeamsRelay: newBookingDialog_customerTeams_query$key;
+  rootDataAvailableLocationDesksRelay: newBookingDialog_availableLocationDesks_query$key;
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
   onCancel: () => void;
   organizationId: string;
-  locationId?: string;
-  defaultTeamId?: string;
-  hideOrganizationControl?: boolean;
-  hideLocationControl?: boolean;
+  defaultLocationId?: string;
   defaultDate?: Dayjs;
+};
+
+type CustomerDetails = {
+  uniqueId: string;
+  name: string | null | undefined;
+  givenName: string | null | undefined;
+  middleName: string | null | undefined;
+  familyName: string | null | undefined;
+  photoUrl: string | null | undefined;
+};
+
+type OrganizationMemberDetails = {
+  id: string;
+  customer: CustomerDetails;
+};
+
+type TeamDetails = {
+  id: string;
+  name: string;
+};
+
+type LocationDetails = {
+  id: string;
+  name: string;
+};
+
+type ZoneDetails = {
+  id: string;
+  name: string | null | undefined;
+  color: string | null | undefined;
+};
+
+type DeskDetails = {
+  uniqueId: string;
+  name: string;
+  zones: ZoneDetails[];
 };
 
 type BookingDetails = {
   date: Date;
-  member: string | undefined;
+  member: string;
   notes: string;
-  organization: string | undefined;
   team: string | undefined;
   location: string | undefined;
   desks: string[];
@@ -51,31 +102,22 @@ const bookingSchema = object({
   date: date().required(),
   member: string().required(),
   notes: string().notRequired(),
-  organization: string().notRequired(),
   team: string().notRequired(),
-  location: string().notRequired(),
-  desk: array().nullable(),
-});
-
-const bookingWithoutMemberSchema = object({
-  date: date().required(),
-  notes: string().notRequired(),
-  organization: string().notRequired(),
   location: string().notRequired(),
   desk: array().nullable(),
 });
 
 const NewBookingDialog = ({
   rootDataRelay,
+  rootDataTeamsRelay,
+  rootDataOrganizationMembersRelay,
+  rootDataAvailableLocationDesksRelay,
   connectionIds,
   isDialogOpen,
   onAddClicked,
   onCancel,
   organizationId,
-  locationId,
-  defaultTeamId,
-  hideOrganizationControl,
-  hideLocationControl,
+  defaultLocationId,
   defaultDate,
 }: Props) => {
   const rootData = useFragment(
@@ -84,15 +126,103 @@ const NewBookingDialog = ({
         me {
           id
         }
-        organizationBookingPermissions(organizationId: $organizationId) {
-          canAddBookingOnBehalf
+        locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              name
+            }
+          }
         }
-        ...bookingDetailsSelector_query
-        ...bookingDetailsSelector_organizationMembers_query
-        ...bookingDetailsSelector_availableLocationDesks_query
       }
     `,
     rootDataRelay,
+  );
+
+  const { data: rootDataOrganizationMembers, refetch: refetchOrganizationMembers } = usePaginationFragment<
+    newBookingDialog_organizationMembers_refetchableFragment,
+    newBookingDialog_organizationMembers_query$key
+  >(
+    graphql`
+      fragment newBookingDialog_organizationMembers_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
+      @refetchable(queryName: "newBookingDialog_organizationMembers_refetchableFragment") {
+        organizationMembers(
+          first: $count
+          after: $cursor
+          where: { organizationId: $organizationId, nameContains: $peopleNameSearchText }
+          orderBy: $organizationMembersSortingValues
+        ) @connection(key: "bookingDetailsSelectorQuery_organizationMembers") {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              customer {
+                uniqueId
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+              }
+            }
+          }
+        }
+      }
+    `,
+    rootDataOrganizationMembersRelay,
+  );
+
+  const [rootDataTeams, refetchTeams] = useRefetchableFragment<
+    newBookingDialog_customerTeams_refetchableFragment,
+    newBookingDialog_customerTeams_query$key
+  >(
+    graphql`
+      fragment newBookingDialog_customerTeams_query on Query @refetchable(queryName: "newBookingDialog_customerTeams_refetchableFragment") {
+        customerTeams(where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues)
+          @include(if: $customerExists) {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
+      }
+    `,
+    rootDataTeamsRelay,
+  );
+
+  const [rootDataAvailableLocationDesks, refetchAvailableLocationDesks] = useRefetchableFragment<
+    newBookingDialog_availableLocationDesks_refetchableFragment,
+    newBookingDialog_availableLocationDesks_query$key
+  >(
+    graphql`
+      fragment newBookingDialog_availableLocationDesks_query on Query
+      @refetchable(queryName: "newBookingDialog_availableLocationDesks_refetchableFragment") {
+        availableDesks(where: { locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks })
+          @include(if: $locationExists) {
+          uniqueId
+          name
+          customTags {
+            uniqueId
+            name
+            color
+          }
+          zones {
+            uniqueId
+            name
+            color
+          }
+        }
+      }
+    `,
+    rootDataAvailableLocationDesksRelay,
   );
 
   const [commitAddBooking] = useMutation<newBookingDialog_addBookingMutation>(graphql`
@@ -146,31 +276,110 @@ const NewBookingDialog = ({
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
-  const schema = !!rootData.organizationBookingPermissions?.canAddBookingOnBehalf ? bookingSchema : bookingWithoutMemberSchema;
-  const validate = makeValidate(schema);
-  const requiredFields = makeRequired(schema);
+  const [, startTransition] = useTransition();
+  const [, setPage] = useState(0);
+  const [pageSize] = useState(20);
+  const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
+  const validate = makeValidate(bookingSchema);
+  const requiredFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(defaultDate ?? startOfDay());
-  const to = useMemo(() => {
-    if (from instanceof Date) {
-      return endOfDay(dayjs(from));
+  const [customerId, setCustomerId] = useState<string | undefined>();
+  const [teamId, setTeamId] = useState<string | undefined>();
+  const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
+  const filterTeam = createFilterOptions<TeamDetails>();
+  const filterLocation = createFilterOptions<LocationDetails>();
+  const filterDesk = createFilterOptions<DeskDetails>();
+
+  const customers = useMemo<OrganizationMemberDetails[]>(() => {
+    if (!rootDataOrganizationMembers.organizationMembers) {
+      return [];
     }
 
-    return endOfDay(from);
-  }, [from]);
+    return rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node);
+  }, [rootDataOrganizationMembers.organizationMembers]);
 
-  useEffect(() => {
-    setFrom(defaultDate ?? startOfDay());
-  }, [defaultDate]);
+  const teams = useMemo<TeamDetails[]>(
+    () => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []),
+    [rootDataTeams.customerTeams],
+  );
+  const locations = useMemo<LocationDetails[]>(
+    () => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []),
+    [rootData.locations],
+  );
 
-  const handleAddClick = ({
-    date,
-    member,
-    notes,
-    organization: organizationId,
-    team: teamId,
-    location: locationId,
-    desks: deskIds,
-  }: BookingDetails) => {
+  const desks = useMemo<DeskDetails[]>(() => {
+    if (!rootDataAvailableLocationDesks.availableDesks) {
+      return [];
+    }
+
+    return rootDataAvailableLocationDesks.availableDesks.map(({ uniqueId, name, zones }) => ({
+      uniqueId,
+      name,
+      zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
+    }));
+  }, [rootDataAvailableLocationDesks.availableDesks]);
+
+  const handleRefetchOrganizationMembers = useCallback(
+    (peopleNameSearchText: string) => {
+      startTransition(() => {
+        refetchOrganizationMembers(
+          {
+            count: pageSize,
+            peopleNameSearchText,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
+    },
+    [refetchOrganizationMembers, pageSize],
+  );
+
+  const handleRefetchTeams = useCallback(
+    (customerId: string | undefined) => {
+      startTransition(() => {
+        refetchTeams(
+          {
+            customerId: customerId ?? '',
+            customerExists: !!customerId,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchTeams],
+  );
+
+  const handleRefetchAvailableLocationDesks = useCallback(
+    (from: Dayjs | Date, locationId?: string) => {
+      startTransition(() => {
+        refetchAvailableLocationDesks(
+          {
+            locationId: locationId ?? '',
+            locationExists: !!locationId,
+            dateToGetAvailableDesks: from,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+            onComplete: () => {
+              setPage(0);
+            },
+          },
+        );
+      });
+    },
+    [refetchAvailableLocationDesks],
+  );
+
+  useEffect(() => handleRefetchAvailableLocationDesks(from, locationId), [handleRefetchAvailableLocationDesks, from, locationId]);
+
+  const handleAddClick = ({ date, member, notes, team: teamId, location: locationId, desks: deskIds }: BookingDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -286,6 +495,30 @@ const NewBookingDialog = ({
     });
   };
 
+  const handleMemberChange = (option: OrganizationMemberDetails | null) => {
+    const customerId = option?.customer.uniqueId;
+    setCustomerId(customerId);
+    handleRefetchTeams(customerId);
+  };
+
+  const handleTeamChange = (option: LocationDetails | null) => {
+    setTeamId(option?.id);
+  };
+
+  const handleLocationChange = (option: LocationDetails | null) => {
+    const locationId = option?.id;
+    setLocationId(locationId);
+    handleRefetchAvailableLocationDesks(from, locationId);
+  };
+
+  const handlePeopleNameSearchTextChange = (str: string) => {
+    setPeopleNameSearchText(str);
+
+    handleRefetchOrganizationMembers(str);
+  };
+
+  const debounceSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardDebounceTimeout);
+
   if (!rootData.me) {
     return <></>;
   }
@@ -297,10 +530,10 @@ const NewBookingDialog = ({
         <Form
           onSubmit={handleAddClick}
           initialValues={{
+            member: customerId,
             date: from,
             notes: '',
-            organization: organizationId,
-            member: null,
+            team: teamId,
             location: locationId,
             desks: [],
           }}
@@ -310,6 +543,42 @@ const NewBookingDialog = ({
 
             return (
               <FormStackColumn onSubmit={handleSubmit}>
+                <FormFieldLabel label="User" useWiderSpace>
+                  <Autocomplete
+                    name="member"
+                    multiple={false}
+                    required={requiredFields.member}
+                    options={customers}
+                    getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
+                    getOptionLabel={(option: string | OrganizationMemberDetails) =>
+                      getCustomerFullName((option as OrganizationMemberDetails).customer)
+                    }
+                    renderOption={(props, option) => {
+                      const castedOption = (option as OrganizationMemberDetails).customer;
+
+                      return (
+                        <li {...props}>
+                          <BodyIconTypography
+                            label={getCustomerFullName(castedOption)}
+                            startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
+                          />
+                        </li>
+                      );
+                    }}
+                    filterOptions={(options, params) => {
+                      if (params.inputValue !== peopleNameSearchText) {
+                        debounceSearchTextChange(params.inputValue);
+                      }
+
+                      return options;
+                    }}
+                    selectOnFocus
+                    clearOnBlur
+                    handleHomeEndKeys
+                    onChange={(_, option) => handleMemberChange(option as OrganizationMemberDetails)}
+                  />
+                </FormFieldLabel>
+
                 <FormFieldLabel label="Date" useWiderSpace>
                   <DatePicker name="date" required={requiredFields.date} />
                 </FormFieldLabel>
@@ -324,31 +593,90 @@ const NewBookingDialog = ({
                   />
                 </FormFieldLabel>
 
-                <BookingDetailsSelector
-                  rootDataRelay={rootData}
-                  rootDataOrganizationMembersRelay={rootData}
-                  rootDataAvailableLocationDesksRelay={rootData}
-                  defaultOrganizationId={organizationId}
-                  organizationName="organization"
-                  organizationRequired={requiredFields.organization}
-                  hideOrganizationControl={hideOrganizationControl}
-                  organizationMemberName="member"
-                  organizationMemberRequired={requiredFields.member}
-                  hideOrganizationMemberControl={!!!rootData.organizationBookingPermissions?.canAddBookingOnBehalf}
-                  defaultTeamId={defaultTeamId}
-                  teamName="team"
-                  teamRequired={requiredFields.team}
-                  defaultLocationId={locationId}
-                  locationName="location"
-                  locationRequired={requiredFields.location}
-                  hideLocationControl={hideLocationControl}
-                  deskName="desks"
-                  deskRequired={requiredFields.desks}
-                  defaultDeskIds={[]}
-                  hideDesksControl={false}
-                  bookingFrom={from}
-                  bookingTo={to}
-                />
+                <FormFieldLabel label="Team" useWiderSpace>
+                  <Autocomplete
+                    name="team"
+                    multiple={false}
+                    required={requiredFields.team}
+                    options={teams}
+                    getOptionValue={(option) => (option as TeamDetails).id}
+                    getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
+                    renderOption={(props, option) => {
+                      const castedOption = option as TeamDetails;
+
+                      return (
+                        <li {...props}>
+                          <BodyIconTypography label={castedOption.name} />
+                        </li>
+                      );
+                    }}
+                    filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
+                    selectOnFocus
+                    clearOnBlur
+                    handleHomeEndKeys
+                    onChange={(_, option) => handleTeamChange(option as TeamDetails)}
+                  />
+                </FormFieldLabel>
+
+                <FormFieldLabel label="Location" useWiderSpace>
+                  <Autocomplete
+                    name="location"
+                    multiple={false}
+                    required={requiredFields.location}
+                    options={locations}
+                    getOptionValue={(option) => (option as LocationDetails).id}
+                    getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
+                    renderOption={(props, option) => {
+                      const castedOption = option as LocationDetails;
+
+                      return (
+                        <li {...props}>
+                          <BodyIconTypography label={castedOption.name} />
+                        </li>
+                      );
+                    }}
+                    filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
+                    selectOnFocus
+                    clearOnBlur
+                    handleHomeEndKeys
+                    onChange={(_, option) => handleLocationChange(option as LocationDetails)}
+                  />
+                </FormFieldLabel>
+
+                {locationId && (
+                  <FormFieldLabel label="Desks" useWiderSpace>
+                    {desks.length > 0 && (
+                      <Autocomplete
+                        name="desks"
+                        multiple={true}
+                        required={requiredFields.desks}
+                        options={desks}
+                        getOptionValue={(option) => (option as DeskDetails).uniqueId}
+                        getOptionLabel={(option: string | DeskDetails) => (option as DeskDetails).name}
+                        renderOption={(props, option) => {
+                          const castedOption = option as DeskDetails;
+
+                          return (
+                            <li {...props}>
+                              <StackRow sx={{ alignItems: 'center' }}>
+                                <BodyIconTypography label={castedOption.name} />
+                                <Zones zones={castedOption.zones} />
+                              </StackRow>
+                            </li>
+                          );
+                        }}
+                        disableCloseOnSelect
+                        filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                      />
+                    )}
+
+                    {desks.length === 0 && <BodyIconTypography label="There are currently no available desks in the chosen location." />}
+                  </FormFieldLabel>
+                )}
+
                 <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
               </FormStackColumn>
             );

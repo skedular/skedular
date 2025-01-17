@@ -101,13 +101,7 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
         <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <PushToRight />
-        <NewBookingButton
-          hideLocationControl={false}
-          hideOrganizationControl={true}
-          onReloadRequired={onReloadRequired}
-          defaultDate={today}
-          organizationId={organizationId}
-        />
+        <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationId={organizationId} />
       </GridContainer>
       <Bookings
         rootDataRelay={rootData}

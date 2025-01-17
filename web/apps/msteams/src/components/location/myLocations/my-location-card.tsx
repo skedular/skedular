@@ -212,12 +212,9 @@ const MyLocationCard = ({
               </Link>
               <PushToRight />
               <NewBookingButton
-                hideLocationControl={false}
-                hideOrganizationControl={true}
                 onReloadRequired={onReloadRequired}
                 defaultDate={defaultDate}
                 organizationId={organizationId}
-                locationId={locationDetails.id}
                 label="Book Now"
                 hideIcon
                 variant="contained"

@@ -104,13 +104,7 @@ const bookingSchema = object({
   desk: array().nullable(),
 });
 
-const EditBooking = ({
-  rootDataRelay,
-  rootDataTeamsRelay,
-  rootDataOrganizationMembersRelay,
-  rootDataAvailableLocationDesksRelay,
-  organizationId,
-}: Props) => {
+const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay, rootDataAvailableLocationDesksRelay }: Props) => {
   const rootData = useFragment<editBooking_query$key>(
     graphql`
       fragment editBooking_query on Query {
@@ -535,8 +529,7 @@ const EditBooking = ({
       return;
     }
 
-    const teamId = option?.id;
-    setTeamId(teamId);
+    setTeamId(option?.id);
   };
 
   const handleLocationChange = (option: LocationDetails | null) => {
@@ -575,9 +568,9 @@ const EditBooking = ({
         <Form
           onSubmit={handleSaveClick}
           initialValues={{
+            member: customerId,
             date: from,
             notes: booking.notes,
-            member: customerId,
             team: teamId,
             location: locationId,
             desks: booking.desks ? booking.desks.map(({ uniqueId }) => uniqueId) : [],
@@ -595,20 +588,6 @@ const EditBooking = ({
                 </StackColumn>
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Date">
-                    <DatePicker name="date" required={requiredFields.date} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Notes">
-                    <TextField
-                      name="notes"
-                      required={requiredFields.notes}
-                      helperText="e.g. I will be half an hour late this morning"
-                      multiline
-                      rows={2}
-                    />
-                  </FormFieldLabel>
-
                   <FormFieldLabel label="User">
                     <Autocomplete
                       name="member"
@@ -642,6 +621,20 @@ const EditBooking = ({
                       clearOnBlur
                       handleHomeEndKeys
                       onChange={(_, option) => handleMemberChange(option as OrganizationMemberDetails)}
+                    />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Date">
+                    <DatePicker name="date" required={requiredFields.date} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Notes">
+                    <TextField
+                      name="notes"
+                      required={requiredFields.notes}
+                      helperText="e.g. I will be half an hour late this morning"
+                      multiline
+                      rows={2}
                     />
                   </FormFieldLabel>
 

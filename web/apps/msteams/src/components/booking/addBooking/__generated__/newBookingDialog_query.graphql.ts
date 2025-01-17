@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aba65e52c6ed6a971625539cf40b8138>>
+ * @generated SignedSource<<ea0b94a3223e29c0c0a209bb6616e62c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,13 +11,19 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type newBookingDialog_query$data = {
+  readonly locations: {
+    readonly __id: string;
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+      };
+    }>;
+    readonly totalCount: number | null | undefined;
+  } | null | undefined;
   readonly me: {
     readonly id: string;
   } | null | undefined;
-  readonly organizationBookingPermissions: {
-    readonly canAddBookingOnBehalf: boolean;
-  } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingDetailsSelector_availableLocationDesks_query" | "bookingDetailsSelector_organizationMembers_query" | "bookingDetailsSelector_query">;
   readonly " $fragmentType": "newBookingDialog_query";
 };
 export type newBookingDialog_query$key = {
@@ -25,8 +31,20 @@ export type newBookingDialog_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "locationsSortingValues"
+    },
     {
       "kind": "RootArgument",
       "name": "organizationId"
@@ -44,13 +62,7 @@ const node: ReaderFragment = {
       "name": "me",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        }
+        (v0/*: any*/)
       ],
       "storageKey": null
     },
@@ -59,45 +71,84 @@ const node: ReaderFragment = {
       "args": [
         {
           "kind": "Variable",
-          "name": "organizationId",
-          "variableName": "organizationId"
+          "name": "orderBy",
+          "variableName": "locationsSortingValues"
+        },
+        {
+          "fields": [
+            {
+              "kind": "Variable",
+              "name": "organizationId",
+              "variableName": "organizationId"
+            }
+          ],
+          "kind": "ObjectValue",
+          "name": "where"
         }
       ],
-      "concreteType": "OrganizationBookingPermissions",
+      "concreteType": "LocationConnection",
       "kind": "LinkedField",
-      "name": "organizationBookingPermissions",
+      "name": "locations",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "canAddBookingOnBehalf",
+          "name": "totalCount",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LocationEdge",
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "LocationDetails",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "bookingDetailsSelector_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "bookingDetailsSelector_organizationMembers_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "bookingDetailsSelector_availableLocationDesks_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "f50610b0736332adce3f0605e092082f";
+(node as any).hash = "03d78c198e482cd6ec50d4819faa7c64";
 
 export default node;
