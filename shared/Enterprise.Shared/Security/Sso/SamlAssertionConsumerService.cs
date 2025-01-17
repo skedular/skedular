@@ -21,7 +21,7 @@ public interface ISamlAssertionConsumerService
     bool ValidateSamlResponseSignature(string samlResponse, X509Certificate2 certificate);
     string VerifyAndDecodeSamlResponse(string rawSamlData);
     SamlResponse ExtractSamlResponse(string decodedSaml);
-    void StoreSamlResponseInCookie(HttpResponse response, SamlResponse samlResponse);
+    void StoreSamlResponseInCookie(HttpResponse response, SamlResponse samlResponse, string organizationId);
 }
 
 public class SamlAssertionConsumerService : ISamlAssertionConsumerService
@@ -172,13 +172,13 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
         return response;
     }
 
-    public void StoreSamlResponseInCookie(HttpResponse response, SamlResponse samlResponse)
+    public void StoreSamlResponseInCookie(HttpResponse response, SamlResponse samlResponse, string organizationId)
     {
         //TODO : encrypt the response
-        var json = JsonSerializer.Serialize(samlResponse);
+        var serializerContent = JsonSerializer.Serialize(samlResponse);
         response.Cookies.Append(
-            "SamlResponse",
-            json,
+            organizationId,
+            serializerContent,
             new CookieOptions { HttpOnly = true, Secure = true, Expires = samlResponse.SessionNotOnOrAfter });
     }
 }

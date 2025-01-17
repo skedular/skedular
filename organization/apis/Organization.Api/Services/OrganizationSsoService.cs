@@ -9,9 +9,10 @@ public interface IOrganizationSsoService
 {
     Task<string> SsoLoginAsync(
         string organizationId,
+        string redirectUrl,
         CancellationToken cancellationToken);
 
-    Task<string> ProcessSsoResponseAsync(
+    Task ProcessSsoResponseAsync(
         HttpResponse httpResponse,
         string rawSamlResponse,
         CancellationToken cancellationToken);
@@ -22,7 +23,10 @@ public class OrganizationSsoService(
     ISamlLoginRequestFactory samlLoginRequestFactory,
     ISamlAssertionConsumerService samlAssertionConsumerService) : IOrganizationSsoService
 {
-    public async Task<string> SsoLoginAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task<string> SsoLoginAsync(
+        string organizationId,
+        string redirectUrl,
+        CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
@@ -37,11 +41,12 @@ public class OrganizationSsoService(
 
         return samlLoginRequestFactory.GenerateSamlLoginRequest(
             organizationId,
+            redirectUrl,
             existingOrganizationSsoSetting.EntityId,
             existingOrganizationSsoSetting.LoginUrl);
     }
 
-    public async Task<string> ProcessSsoResponseAsync(
+    public async Task ProcessSsoResponseAsync(
         HttpResponse httpResponse,
         string rawSamlResponse,
         CancellationToken cancellationToken)
@@ -68,8 +73,7 @@ public class OrganizationSsoService(
             throw new Unauthorized();
         }
 
-        samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, response);
-        return existingOrganizationSsoSetting.RedirectUrl;
+        samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, response, existingOrganizationSsoSetting.Id);
     }
 
     // Split and return the original ID without the prefix

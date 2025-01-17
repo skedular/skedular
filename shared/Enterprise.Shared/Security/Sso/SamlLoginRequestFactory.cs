@@ -8,21 +8,23 @@ namespace Enterprise.Shared.Security.Sso;
 
 public interface ISamlLoginRequestFactory
 {
-    string GenerateSamlLoginRequest(string organizationId, string entityId, string loginUrl);
+    string GenerateSamlLoginRequest(string organizationId, string redirectUrl, string entityId, string loginUrl);
 }
 
 public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger) : ISamlLoginRequestFactory
 {
-    public string GenerateSamlLoginRequest(string organizationId, string entityId, string loginUrl)
+    public string GenerateSamlLoginRequest(string organizationId, string redirectUrl, string entityId, string loginUrl)
     {
         var authnRequestXml = GenerateSamlRequest(organizationId, entityId);
         var compressedSamlRequest = DeflateCompress(Encoding.UTF8.GetBytes(authnRequestXml));
         var samlRequestBase64 = Convert.ToBase64String(compressedSamlRequest);
         var encodedSamlRequestUrl = HttpUtility.UrlEncode(samlRequestBase64);
+        var encodedRedirectUrl = HttpUtility.UrlEncode(redirectUrl);
+        var url = $"{loginUrl}?SAMLRequest={encodedSamlRequestUrl}&RelayState={encodedRedirectUrl}";
 
-        logger.LogDebug("{loginUrl}?SAMLRequest={encodedSamlRequestUrl}", loginUrl, encodedSamlRequestUrl);
-        Console.WriteLine($"{loginUrl}?SAMLRequest={encodedSamlRequestUrl}");
-        return $"{loginUrl}?SAMLRequest={encodedSamlRequestUrl}";
+        logger.LogDebug("{url}", url);
+
+        return url;
     }
 
     private static string GenerateSamlRequest(string organizationId, string appUrl)

@@ -793,6 +793,7 @@ type Query {
   pendingInvitationsCount: Int! @cost(weight: "10")
   slackCustomerRecordSynced: Boolean! @cost(weight: "10")
   slackVersion: Version!
+  ssoLoginUrl(organizationId: String! redirectUrl: String!): String! @cost(weight: "10")
   team(id: String!): TeamDetails @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions @cost(weight: "10")
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")

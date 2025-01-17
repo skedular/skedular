@@ -11,7 +11,6 @@ public class OrganizationSsoSetting : EntityBase
 {
     public string EntityId { get; set; }
     public string LoginUrl { get; set; }
-    public string RedirectUrl { get; set; }
     public string AppFederationMetadataUrl { get; set; }
 
     public virtual Organization Organization { get; set; }
@@ -26,7 +25,6 @@ public class OrganizationSsoConfiguration : IEntityTypeConfiguration<Organizatio
 
         builder.Property(item => item.EntityId).HasMaxLength(Constants.MaxSsoEntityIdLength);
         builder.Property(item => item.LoginUrl).HasMaxLength(Constants.MaxUrlLength);
-        builder.Property(item => item.RedirectUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.AppFederationMetadataUrl).HasMaxLength(Constants.MaxUrlLength);
 
         builder

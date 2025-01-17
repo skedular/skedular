@@ -58,14 +58,6 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> OnboardAzureTenant([Microsoft.AspNetCore.Mvc.FromQuery] string tenant, [Microsoft.AspNetCore.Mvc.FromQuery] bool admin_consent, [Microsoft.AspNetCore.Mvc.FromQuery] string state, [Microsoft.AspNetCore.Mvc.FromQuery] string? error, [Microsoft.AspNetCore.Mvc.FromQuery] string? error_description, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// sso login
-        /// </summary>
-        /// <param name="organizationId">Unique identifier for the organization initiating SSO login.</param>
-        /// <returns>sso login</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("organization/api/v1/{organizationId}/sso/login")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> SsoLogin(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-
-        /// <summary>
         /// sso acs
         /// </summary>
         /// <returns>sso acs</returns>

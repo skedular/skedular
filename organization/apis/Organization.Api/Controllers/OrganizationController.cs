@@ -50,25 +50,23 @@ public class OrganizationController(
         return Redirect(redirectUri.AbsoluteUri);
     }
 
-    public override async Task<IActionResult> SsoLogin(string organizationId,
-        CancellationToken cancellationToken = default)
-    {
-        var loginRequestUrl = await organizationSsoService.SsoLoginAsync(organizationId, cancellationToken);
-
-        return Redirect(loginRequestUrl);
-    }
-
     public override async Task<IActionResult> SsoAcs(CancellationToken cancellationToken = default)
     {
         if (!Request.Form.ContainsKey("SAMLResponse"))
         {
             throw new ArgumentException("SAMLResponse is required.");
         }
-
         var rawSamlResponse = Request.Form["SAMLResponse"].ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(rawSamlResponse);
-        var redirectUrl =
-            await organizationSsoService.ProcessSsoResponseAsync(Response, rawSamlResponse, cancellationToken);
+        
+        if (!Request.Form.ContainsKey("RelayState"))
+        {
+            throw new ArgumentException("RelayState is required.");
+        }
+        var redirectUrl = Request.Form["RelayState"].ToString();
+        ArgumentException.ThrowIfNullOrWhiteSpace(redirectUrl);
+        
+        await organizationSsoService.ProcessSsoResponseAsync(Response, rawSamlResponse, cancellationToken);
 
         return Redirect(redirectUrl);
     }

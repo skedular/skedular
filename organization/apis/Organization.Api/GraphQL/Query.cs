@@ -203,6 +203,14 @@ public class Query(IMapper mapper)
         [Service] IAzureTenantService azureTenantService,
         CancellationToken cancellationToken) =>
         await azureTenantService.GenerateAdminConsentUrlAsync(cancellationToken);
+    
+    [UseResolverScope]
+    public async Task<string> SsoLoginUrlAsync(
+        string organizationId, 
+        string redirectUrl,
+        [Service] IOrganizationSsoService organizationSsoService,
+        CancellationToken cancellationToken) =>
+        await organizationSsoService.SsoLoginAsync(organizationId, redirectUrl, cancellationToken);
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> AzureTenantOrganizationAsync(
