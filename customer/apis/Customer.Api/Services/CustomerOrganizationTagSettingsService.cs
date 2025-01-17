@@ -44,6 +44,7 @@ public class CustomerOrganizationTagSettingsService(
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             organizationTag.Organization.Id,
             false,
+            false,
             cancellationToken);
         if (organization is null)
         {

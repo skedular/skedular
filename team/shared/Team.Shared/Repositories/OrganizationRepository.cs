@@ -8,7 +8,12 @@ namespace Team.Shared.Repositories;
 public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
-    Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    Task<Organization?> GetByIdAsync(
+        string id,
+        bool includeDeletedOrganizationMembers,
+        CancellationToken cancellationToken);
+
     Organization Add(Organization team);
     Organization Update(Organization team);
     Organization Remove(Organization team);
@@ -21,13 +26,16 @@ public class OrganizationRepository(TeamDbContext dbContext, TimeProvider timePr
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdAsync(id, true, cancellationToken))!;
     }
 
-    public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+    public async Task<Organization?> GetByIdAsync(
+        string id,
+        bool includeDeletedOrganizationMembers,
+        CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Include(query =>
-                query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .Include(query => query.OrganizationMembers.Where(organizationMember =>
+                includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Teams.Where(location => !location.DeletedAt.HasValue))

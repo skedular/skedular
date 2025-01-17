@@ -18,7 +18,7 @@ public class WorkaroundService(
     public async Task RepublishOrganizationBillingInfoAsync(string organizationId, CancellationToken cancellationToken)
     {
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
         if (organization is null)
         {
             return;

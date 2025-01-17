@@ -222,6 +222,7 @@ public class TeamService(
         {
             organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 existingTeam.Organization.Id,
+                false,
                 cancellationToken);
             ArgumentNullException.ThrowIfNull(organization);
             if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
@@ -333,6 +334,7 @@ public class TeamService(
 
             var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 searchCriteria.OrganizationId,
+                false,
                 cancellationToken);
             if (organization is null)
             {
@@ -379,7 +381,7 @@ public class TeamService(
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             var organization =
-                await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+                await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
             if (organization is null)
             {
                 throw new OrganizationNotFound();

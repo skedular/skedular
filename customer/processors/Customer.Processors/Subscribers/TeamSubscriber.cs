@@ -90,6 +90,7 @@ public class TeamSubscriber(
             : await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 team.Organization.Id,
                 true,
+                true,
                 cancellationToken);
 
         existingTeam = existingTeam is null

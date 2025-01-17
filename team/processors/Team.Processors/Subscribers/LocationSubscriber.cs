@@ -35,6 +35,7 @@ public class LocationSubscriber(
                             ? null
                             : await repositoryFactory.OrganizationRepository.GetByIdAsync(
                                 location.Organization.Id,
+                                true,
                                 cancellationToken);
                     ArgumentNullException.ThrowIfNull(existingOrganization);
 

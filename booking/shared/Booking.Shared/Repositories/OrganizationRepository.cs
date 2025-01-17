@@ -11,16 +11,13 @@ public interface IOrganizationRepository : IRepository<Organization>
 
     Task<Organization?> GetByIdAsync(
         string id,
+        bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
     Organization Add(Organization organization);
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
-}
-
-internal static class OrganizationExtensions
-{
 }
 
 public class OrganizationRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -30,16 +27,17 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdAsync(id, true, cancellationToken))!;
+        return (await GetByIdAsync(id, true, true, cancellationToken))!;
     }
 
     public async Task<Organization?> GetByIdAsync(
         string id,
+        bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Include(query =>
-                query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .Include(query => query.OrganizationMembers.Where(organizationMember =>
+                includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Tags.Where(

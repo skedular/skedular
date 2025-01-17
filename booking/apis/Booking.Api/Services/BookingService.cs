@@ -142,6 +142,7 @@ public class BookingService(
             var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 existingBooking.Organization.Id,
                 false,
+                false,
                 cancellationToken);
             if (organization is null)
             {
@@ -482,6 +483,7 @@ public class BookingService(
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             booking.Organization.Id,
             false,
+            false,
             cancellationToken);
         if (organization is null)
         {
@@ -703,6 +705,7 @@ public class BookingService(
         {
             var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 booking.Organization.Id,
+                false,
                 false,
                 cancellationToken);
             if (organization is null)

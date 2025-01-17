@@ -39,7 +39,7 @@ public class OrganizationBillingService(
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -67,7 +67,7 @@ public class OrganizationBillingService(
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
         if (existingOrganization is null)
         {
             throw new OrganizationNotFound();

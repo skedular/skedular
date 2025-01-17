@@ -39,6 +39,7 @@ public class LocationAuthorizationService(
             await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 location.Organization.Id,
                 false,
+                false,
                 cancellationToken);
         if (organization is null)
         {
@@ -61,6 +62,7 @@ public class LocationAuthorizationService(
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 location.Organization.Id,
+                false,
                 false,
                 cancellationToken);
         if (organization is null)

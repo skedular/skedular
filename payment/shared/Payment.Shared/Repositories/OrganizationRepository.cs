@@ -12,6 +12,7 @@ public interface IOrganizationRepository : IRepository<Organization>
 
     Task<Organization?> GetByIdAsync(
         string id,
+        bool includeDeletedOrganizationMembers,
         bool includeAllOfferings,
         CancellationToken cancellationToken);
 
@@ -25,11 +26,12 @@ internal static class OrganizationExtensions
     internal static IIncludableQueryable<Organization, IEnumerable<OrganizationStripePaymentMethod>>
         AddDependentObjects(
             this IQueryable<Organization> originalQuery,
+            bool includeDeletedOrganizationMembers,
             bool includeAllOfferings)
     {
         var updatedQuery = originalQuery
-            .Include(query =>
-                query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .Include(query => query.OrganizationMembers.Where(organizationMember =>
+                includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities);
 
@@ -55,14 +57,15 @@ public class OrganizationRepository(PaymentDbContext dbContext, TimeProvider tim
     : RepositoryBase<PaymentDbContext, Organization>(dbContext, timeProvider), IOrganizationRepository
 {
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await GetByIdAsync(id, false, cancellationToken);
+        await GetByIdAsync(id, false, false, cancellationToken);
 
     public async Task<Organization?> GetByIdAsync(
         string id,
+        bool includeDeletedOrganizationMembers,
         bool includeAllOfferings,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .AddDependentObjects(includeAllOfferings)
+            .AddDependentObjects(includeDeletedOrganizationMembers, includeAllOfferings)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Organization Add(Organization organization)

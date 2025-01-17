@@ -34,6 +34,7 @@ public class OrganizationSubscriber(
                         await repositoryFactory.OrganizationRepository.GetByIdAsync(
                             organization.Id,
                             true,
+                            true,
                             cancellationToken);
                     if (existingOrganization is not null &&
                         existingOrganization.EventRaisedAt > organization.EventRaisedAt)

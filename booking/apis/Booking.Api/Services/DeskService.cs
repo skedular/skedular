@@ -52,7 +52,11 @@ public class DeskService(
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             var organization =
-                await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
+                await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                    organizationId, 
+                    false,
+                    false,
+                    cancellationToken);
             if (organization is null)
             {
                 throw new OrganizationNotFound();
@@ -109,7 +113,11 @@ public class DeskService(
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                organizationId,
+                false,
+                false,
+                cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();

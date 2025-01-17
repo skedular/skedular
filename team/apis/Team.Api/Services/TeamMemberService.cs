@@ -252,6 +252,7 @@ public class TeamMemberService(
         {
             organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 existingTeam.Organization.Id,
+                false,
                 cancellationToken);
             ArgumentNullException.ThrowIfNull(organization);
             if (!ignoreAuthorizationCheck &&
@@ -392,6 +393,7 @@ public class TeamMemberService(
         {
             var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 existingTeam.Organization.Id,
+                false,
                 cancellationToken);
             ArgumentNullException.ThrowIfNull(organization);
 
@@ -501,6 +503,7 @@ public class TeamMemberService(
         {
             organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 existingTeam.Organization.Id,
+                false,
                 cancellationToken);
             ArgumentNullException.ThrowIfNull(organization);
             if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))

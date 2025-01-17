@@ -42,6 +42,7 @@ public class OrganizationAuthorizationService(
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             organizationId,
+            false,
             cancellationToken);
 
         if (organization is null)
