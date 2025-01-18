@@ -5,13 +5,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {
+  AppBarWithStackColumn,
   BodyIconTypography,
   FormFieldLabel,
   FormStackColumn,
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
-  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import {
@@ -175,7 +175,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Desk Information">
+        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Desk Information">
           <Form
             onSubmit={handleDeskDetailUpdateClick}
             initialValues={{
@@ -220,7 +220,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
               </FormStackColumn>
             )}
           />
-        </StackColumnWithSaveExitCancelAppBar>
+        </AppBarWithStackColumn>
       </Box>
     </Box>
   );

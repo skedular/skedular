@@ -1,3 +1,4 @@
+export { default as AppBarWithStackColumn } from './appbar-with-stack-column';
 export { default as BodyIconTypography } from './body-icon-typography';
 export { default as CaptionIconTypography } from './caption-icon-typography';
 export { default as ColorPicker } from './color-picker';
@@ -16,7 +17,6 @@ export { default as SmallHeadingIconTypography } from './small-heading-icon-typo
 export { default as SmallIconTypography } from './small-icon-typography';
 export { default as SmallSubtitleIconTypography } from './small-subtitle-icon-typography';
 export { default as StackColumn } from './stack-column';
-export { default as StackColumnWithSaveExitCancelAppBar } from './stack-column-with-save-exit-cancel-appbar';
 export { default as StackRow } from './stack-row';
 export { default as SubtitleIconTypography } from './subtitle-icon-typography';
 export { default as TwoButtonsCardActions } from './two-buttons-card-actions';

@@ -12,13 +12,13 @@ import Divider from '@mui/material/Divider';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
+  AppBarWithStackColumn,
   BodyIconTypography,
   FormFieldLabel,
   FormStackColumn,
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
-  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
@@ -573,7 +573,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Booking Information">
+        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Booking Information">
           <Form
             onSubmit={handleBookingDetailUpdateClick}
             initialValues={{
@@ -744,7 +744,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
               );
             }}
           />
-        </StackColumnWithSaveExitCancelAppBar>
+        </AppBarWithStackColumn>
       </Box>
     </Box>
   );

@@ -4,13 +4,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {
+  AppBarWithStackColumn,
   BodyIconTypography,
   FormFieldLabel,
   FormStackColumn,
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
-  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
@@ -36,7 +36,7 @@ type Props = {
   organizationId?: string;
   onAdded: (locationId: string) => void;
   onCancel: () => void;
-  saveAndExitLabel?: string;
+  addLabel?: string;
 };
 
 type LocationDetails = {
@@ -53,7 +53,7 @@ const locationSchema = object({
   physicalAddress: string().nullable(),
 });
 
-const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, saveAndExitLabel }: Props) => {
+const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addLabel }: Props) => {
   const [commitAddLocation] = useMutation<addLocation_addLocationMutation>(graphql`
     mutation addLocation_addLocationMutation($input: AddLocationInput!) @raw_response_type {
       addLocation(input: $input) {
@@ -184,7 +184,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, save
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Add Location">
+        <AppBarWithStackColumn onClose={handleCloseClick} label="Add Location">
           <Form
             onSubmit={handleLocationAddClick}
             initialValues={{}}
@@ -218,14 +218,14 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, save
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
                     <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                      <SmallIconTypography label={saveAndExitLabel ?? 'Add'} />
+                      <SmallIconTypography label={addLabel ?? 'Add'} />
                     </Button>
                   </StackRow>
                 </StackColumn>
               </FormStackColumn>
             )}
           />
-        </StackColumnWithSaveExitCancelAppBar>
+        </AppBarWithStackColumn>
       </Box>
     </Box>
   );

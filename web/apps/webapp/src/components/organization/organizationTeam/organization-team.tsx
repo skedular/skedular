@@ -18,6 +18,7 @@ import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
+  AppBarWithStackColumn,
   BodyIconTypography,
   FormFieldLabel,
   FormStackColumn,
@@ -26,7 +27,6 @@ import {
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
-  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
@@ -792,7 +792,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       <Box sx={{ display: 'flex' }}>
         <OrganizationTeamLeftSideNavigationMenuContent organizationId={organizationId} teamId={teamId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-          <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Team Information">
+          <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Team Information">
             <Form
               onSubmit={handleTeamDetailUpdateClick}
               initialValues={{
@@ -937,7 +937,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                 sx={defaultGridStyle}
               />
             </StackRow>
-          </StackColumnWithSaveExitCancelAppBar>
+          </AppBarWithStackColumn>
         </Box>
       </Box>
 

@@ -17,7 +17,7 @@ type Props = {
   useChildrenPadding?: boolean;
 };
 
-const StackColumnWithSaveExitCancelAppBar = ({ children, label, onClose, hideClose, useChildrenPadding }: PropsWithChildren<Props>) => {
+const AppBarWithStackColumn = ({ children, label, onClose, hideClose, useChildrenPadding }: PropsWithChildren<Props>) => {
   const paletteMode = useContext(PaletteModeContext);
   const childrenSx = useChildrenPadding ? { maxWidth: maxScreenWidth, padding: defaultPadding } : { maxWidth: maxScreenWidth };
 
@@ -61,4 +61,4 @@ const StackColumnWithSaveExitCancelAppBar = ({ children, label, onClose, hideClo
   );
 };
 
-export default StackColumnWithSaveExitCancelAppBar;
+export default AppBarWithStackColumn;

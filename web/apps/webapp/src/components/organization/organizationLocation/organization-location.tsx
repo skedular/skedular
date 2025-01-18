@@ -15,6 +15,7 @@ import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import {
+  AppBarWithStackColumn,
   BodyIconTypography,
   FormFieldLabel,
   FormStackColumn,
@@ -23,7 +24,6 @@ import {
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
-  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
@@ -727,7 +727,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       <Box sx={{ display: 'flex' }}>
         <OrganizationLocationLeftSideNavigationMenuContent organizationId={organizationId} locationId={locationId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-          <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Location Information">
+          <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Location Information">
             <Form
               onSubmit={handleLocationDetailUpdateClick}
               initialValues={{
@@ -867,7 +867,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                 sx={defaultGridStyle}
               />
             </StackRow>
-          </StackColumnWithSaveExitCancelAppBar>
+          </AppBarWithStackColumn>
         </Box>
       </Box>
 

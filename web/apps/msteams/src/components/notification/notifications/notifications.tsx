@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { SmallIconTypography, StackColumn, StackColumnWithSaveExitCancelAppBar, StackRow } from '@repo/shared/components/commons';
+import { AppBarWithStackColumn, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
   errorNotificationOptions,
@@ -574,7 +574,7 @@ const Notifications = ({ queryReference }: Props) => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Notifications" />
+        <AppBarWithStackColumn onClose={handleCloseClick} label="Notifications" />
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
             <DataGrid

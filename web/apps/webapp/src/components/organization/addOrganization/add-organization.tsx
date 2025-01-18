@@ -6,13 +6,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {
+  AppBarWithStackColumn,
   BodyIconTypography,
   FormFieldLabel,
   FormStackColumn,
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
-  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
@@ -42,7 +42,7 @@ type Props = {
   showCancel: boolean;
   onAdded: (id: string) => void;
   onCancel?: () => void;
-  saveAndExitLabel?: string;
+  addLabel?: string;
 };
 
 const RootQuery = graphql`
@@ -71,7 +71,7 @@ const organizationSchema = object({
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
-const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded, onCancel, saveAndExitLabel }: Props) => {
+const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded, onCancel, addLabel }: Props) => {
   const rootData = usePreloadedQuery<addOrganization_rootQuery>(RootQuery, queryReference);
   const [commitAddOrganization] = useMutation<addOrganization_addOrganizationMutation>(graphql`
     mutation addOrganization_addOrganizationMutation($input: AddOrganizationInput!) @raw_response_type {
@@ -178,7 +178,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <StackColumnWithSaveExitCancelAppBar onClose={onCancel} label="Add Organization" hideClose={!showCancel}>
+        <AppBarWithStackColumn onClose={onCancel} label="Add Organization" hideClose={!showCancel}>
           <Form
             onSubmit={handleOrganizationAddClick}
             initialValues={{
@@ -225,14 +225,14 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
                     <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                      <SmallIconTypography label={saveAndExitLabel ?? 'Add'} />
+                      <SmallIconTypography label={addLabel ?? 'Add'} />
                     </Button>
                   </StackRow>
                 </StackColumn>
               </FormStackColumn>
             )}
           />
-        </StackColumnWithSaveExitCancelAppBar>
+        </AppBarWithStackColumn>
       </Box>
     </Box>
   );
@@ -245,10 +245,10 @@ type RelayProps = {
   showCancel: boolean;
   onAdded: (id: string) => void;
   onCancel?: () => void;
-  saveAndExitLabel?: string;
+  addLabel?: string;
 };
 
-const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCancel, saveAndExitLabel }: RelayProps) => {
+const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCancel, addLabel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addOrganization_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -282,7 +282,7 @@ const AddOrganizationWithRelay = ({ onReloadRequired, showCancel, onAdded, onCan
         showCancel={showCancel}
         onAdded={onAdded}
         onCancel={onCancel}
-        saveAndExitLabel={saveAndExitLabel}
+        addLabel={addLabel}
       />
     </ErrorBoundary>
   );

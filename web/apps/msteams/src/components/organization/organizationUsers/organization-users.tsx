@@ -8,13 +8,13 @@ import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
+  AppBarWithStackColumn,
   BodyIconTypography,
   GridContainer,
   PushToRight,
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
-  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
@@ -726,7 +726,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       <Box sx={{ display: 'flex' }}>
         <OrganizationUsersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-          <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Organization Users">
+          <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Organization Users">
             <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <SectionIconTypography label="Organization Users" />
               <BodyIconTypography label="View users in your organization" />
@@ -798,7 +798,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
                 sx={defaultGridStyle}
               />
             </StackRow>
-          </StackColumnWithSaveExitCancelAppBar>
+          </AppBarWithStackColumn>
         </Box>
       </Box>
 

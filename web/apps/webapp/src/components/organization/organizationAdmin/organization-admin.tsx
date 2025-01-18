@@ -30,6 +30,7 @@ import ListItem from '@mui/material/ListItem';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import {
+  AppBarWithStackColumn,
   BodyIconTypography,
   CreditCard,
   FormFieldLabel,
@@ -40,7 +41,6 @@ import {
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
-  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import { CustomTag } from '@repo/shared/components/customTag';
@@ -1100,7 +1100,7 @@ const OrganizationAdmin = ({
       <Box sx={{ display: 'flex' }}>
         <OrganizationAdminLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-          <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Organization Information">
+          <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Organization Information">
             <Form
               onSubmit={handleOrganizationDetailUpdateClick}
               initialValues={{
@@ -1512,7 +1512,7 @@ const OrganizationAdmin = ({
                 ))}
               </StackRow>
             )}
-          </StackColumnWithSaveExitCancelAppBar>
+          </AppBarWithStackColumn>
         </Box>
       </Box>
 

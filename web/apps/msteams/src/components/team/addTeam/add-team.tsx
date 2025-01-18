@@ -2,13 +2,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {
+  AppBarWithStackColumn,
   BodyIconTypography,
   FormFieldLabel,
   FormStackColumn,
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
-  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
@@ -45,7 +45,7 @@ type Props = {
   organizationId: string;
   onAdded: (teamId: string) => void;
   onCancel: () => void;
-  saveAndExitLabel?: string;
+  addLabel?: string;
 };
 
 const RootQuery = graphql`
@@ -82,7 +82,7 @@ const teamSchema = object({
   primaryLocationId: string().nullable(),
 });
 
-const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel, saveAndExitLabel }: Props) => {
+const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel, addLabel }: Props) => {
   const rootData = usePreloadedQuery<addTeam_rootQuery>(RootQuery, queryReference);
   const [commitAddTeam] = useMutation<addTeam_addTeamMutation>(graphql`
     mutation addTeam_addTeamMutation($input: AddTeamInput!) @raw_response_type {
@@ -217,7 +217,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Add Team">
+        <AppBarWithStackColumn onClose={handleCloseClick} label="Add Team">
           <Form
             onSubmit={handleTeamAddClick}
             initialValues={{
@@ -277,14 +277,14 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
                     <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                      <SmallIconTypography label={saveAndExitLabel ?? 'Add'} />
+                      <SmallIconTypography label={addLabel ?? 'Add'} />
                     </Button>
                   </StackRow>
                 </StackColumn>
               </FormStackColumn>
             )}
           />
-        </StackColumnWithSaveExitCancelAppBar>
+        </AppBarWithStackColumn>
       </Box>
     </Box>
   );
@@ -297,10 +297,10 @@ type RelayProps = {
   onReloadRequired: () => void;
   onAdded: (teamId: string) => void;
   onCancel: () => void;
-  saveAndExitLabel?: string;
+  addLabel?: string;
 };
 
-const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancel, saveAndExitLabel }: RelayProps) => {
+const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancel, addLabel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addTeam_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -340,7 +340,7 @@ const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancel,
         organizationId={organizationId}
         onAdded={onAdded}
         onCancel={onCancel}
-        saveAndExitLabel={saveAndExitLabel}
+        addLabel={addLabel}
       />
     </ErrorBoundary>
   );
