@@ -119,6 +119,7 @@ public interface IMapper
     ZoneEdge MapToGrpcResponseZone(Edge<Tag> src);
     Tag MapTo(AddZoneInput src);
     Tag MapTo(UpdateZoneInput src);
+    IEnumerable<OrganizationFeatureSetDetails> MapTo(Offering offering);
 }
 
 public class Mapper : IMapper
@@ -306,7 +307,7 @@ public class Mapper : IMapper
                 .Select(item =>
                 {
                     var offering = item.GetOffering();
-                    return new OrganizationAvailableOfferingDetails
+                    return new OrganizationOfferingDetails
                     {
                         Code = item.ToOfferingCode(),
                         Name = offering.Name,
@@ -328,7 +329,7 @@ public class Mapper : IMapper
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)).ToArray(),
             AvailableOfferings = availableOfferings,
-            Offering = MapTo(organizationOffering),
+            ActiveOffering = MapTo(organizationOffering),
             CanModify = src.CanModify,
             CanDelete = src.CanDelete,
             CanInvitePeople = src.CanInvitePeople,
@@ -677,6 +678,8 @@ public class Mapper : IMapper
             Type = OrganizationTagType.Zone
         };
 
+    public IEnumerable<OrganizationFeatureSetDetails> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
+
     private IEnumerable<OrganizationMember> MapTo(IEnumerable<Shared.Database.Entities.OrganizationMember> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
@@ -786,15 +789,15 @@ public class Mapper : IMapper
             PhoneNumber = src.PhoneNumber
         };
 
-    private static OrganizationOfferingDetails MapTo(OrganizationOffering? src)
+    private OrganizationActiveOfferingDetails MapTo(OrganizationOffering? src)
     {
         if (src is null)
         {
-            return new OrganizationOfferingDetails();
+            return new OrganizationActiveOfferingDetails();
         }
 
         var offering = src.Code.GetOffering();
-        return new OrganizationOfferingDetails
+        return new OrganizationActiveOfferingDetails
         {
             Id = src.Id,
             Code = src.Code.ToOfferingCode(),
@@ -806,9 +809,6 @@ public class Mapper : IMapper
             Free = src.Code.IsFreeOffering()
         };
     }
-
-    private static IEnumerable<OrganizationFeatureSetDetails> MapTo(Offering offering) =>
-        offering.FeatureSets.Select(MapTo);
 
     private static OrganizationFeatureSetDetails MapTo(FeatureSetCode item)
     {

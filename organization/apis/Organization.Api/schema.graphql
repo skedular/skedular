@@ -43,17 +43,20 @@ type Mutation {
   deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload @cost(weight: "10")
 }
 
-type OrganizationAnalytics {
-  memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
-  dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
-}
-
-type OrganizationAvailableOfferingDetails {
+type OrganizationActiveOfferingDetails {
   code: String!
   name: String!
+  start: DateTime!
+  end: DateTime!
   unitPrice: Int!
   featureSet: [OrganizationFeatureSetDetails!]!
   free: Boolean!
+  id: ID!
+}
+
+type OrganizationAnalytics {
+  memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
+  dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
 }
 
 type OrganizationConnection {
@@ -92,8 +95,8 @@ type OrganizationDetails {
   agreedToTermsOfUse: Boolean!
   termsOfUse: OrganizationTermsOfUse
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
-  availableOfferings: [OrganizationAvailableOfferingDetails!]!
-  offering: OrganizationOfferingDetails!
+  availableOfferings: [OrganizationOfferingDetails!]!
+  activeOffering: OrganizationActiveOfferingDetails!
   hasAttachedPaymentMethod: Boolean!
   hasFutureBooking: Boolean!
   hasLocation: Boolean!
@@ -170,12 +173,9 @@ type OrganizationMembersDetailsPayload {
 type OrganizationOfferingDetails {
   code: String!
   name: String!
-  start: DateTime!
-  end: DateTime!
   unitPrice: Int!
   featureSet: [OrganizationFeatureSetDetails!]!
   free: Boolean!
-  id: ID!
 }
 
 type OrganizationPayload {
@@ -243,6 +243,7 @@ type Query {
   zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
+  organizationOffering(code: String!): OrganizationOfferingDetails @cost(weight: "10")
 }
 
 type RejectInvitationToJoinOrganizationPayload {

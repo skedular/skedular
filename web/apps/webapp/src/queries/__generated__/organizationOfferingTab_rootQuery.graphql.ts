@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5fd9f7713e70023d894eb38d527b9fff>>
+ * @generated SignedSource<<86213e6788e677a15758985e9e48913c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -108,7 +108,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "OrganizationAvailableOfferingDetails",
+            "concreteType": "OrganizationOfferingDetails",
             "kind": "LinkedField",
             "name": "availableOfferings",
             "plural": true,
@@ -152,7 +152,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "OrganizationAvailableOfferingDetails",
+            "concreteType": "OrganizationOfferingDetails",
             "kind": "LinkedField",
             "name": "availableOfferings",
             "plural": true,
@@ -168,9 +168,9 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "OrganizationOfferingDetails",
+            "concreteType": "OrganizationActiveOfferingDetails",
             "kind": "LinkedField",
-            "name": "offering",
+            "name": "activeOffering",
             "plural": false,
             "selections": [
               (v2/*: any*/),
@@ -214,12 +214,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9e514e8c2dace259c36b3470b0cf4adf",
+    "cacheID": "7b0dec4164de2f90e7a791053d9546b1",
     "id": null,
     "metadata": {},
     "name": "organizationOfferingTab_rootQuery",
     "operationKind": "query",
-    "text": "query organizationOfferingTab_rootQuery(\n  $organizationId: String!\n) {\n  organization(id: $organizationId) {\n    id\n    availableOfferings {\n      code\n    }\n  }\n  ...organizationOffering_query\n  ...organizationAvailableOfferings_query\n}\n\nfragment organizationAvailableOfferings_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    hasAttachedPaymentMethod\n    availableOfferings {\n      code\n      name\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n    }\n  }\n}\n\nfragment organizationOffering_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    offering {\n      id\n      name\n      start\n      end\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n      free\n    }\n  }\n}\n"
+    "text": "query organizationOfferingTab_rootQuery(\n  $organizationId: String!\n) {\n  organization(id: $organizationId) {\n    id\n    availableOfferings {\n      code\n    }\n  }\n  ...organizationOffering_query\n  ...organizationAvailableOfferings_query\n}\n\nfragment organizationAvailableOfferings_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    hasAttachedPaymentMethod\n    availableOfferings {\n      code\n      name\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n    }\n  }\n}\n\nfragment organizationOffering_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    activeOffering {\n      id\n      name\n      start\n      end\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n      free\n    }\n  }\n}\n"
   }
 };
 })();

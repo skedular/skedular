@@ -497,6 +497,17 @@ type NotificationTeamDetails {
   uniqueId: ID!
 }
 
+type OrganizationActiveOfferingDetails {
+  code: String!
+  end: DateTime!
+  featureSet: [OrganizationFeatureSetDetails!]!
+  free: Boolean!
+  id: ID!
+  name: String!
+  start: DateTime!
+  unitPrice: Int!
+}
+
 type OrganizationAnalytics {
   dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
   memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
@@ -505,14 +516,6 @@ type OrganizationAnalytics {
 type OrganizationAvailableDesks {
   availableDesksCount: Int!
   desksCount: Int!
-}
-
-type OrganizationAvailableOfferingDetails {
-  code: String!
-  featureSet: [OrganizationFeatureSetDetails!]!
-  free: Boolean!
-  name: String!
-  unitPrice: Int!
 }
 
 type OrganizationBillingInfo {
@@ -580,8 +583,9 @@ type OrganizationDailyBookingsTotal {
 
 type OrganizationDetails {
   about: String
+  activeOffering: OrganizationActiveOfferingDetails!
   agreedToTermsOfUse: Boolean!
-  availableOfferings: [OrganizationAvailableOfferingDetails!]!
+  availableOfferings: [OrganizationOfferingDetails!]!
   canDelete: Boolean!
   canInvitePeople: Boolean!
   canModify: Boolean!
@@ -596,7 +600,6 @@ type OrganizationDetails {
   logoUrl: String
   members: [OrganizationMemberDetails!]!
   name: String!
-  offering: OrganizationOfferingDetails!
   termsOfUse: OrganizationTermsOfUse
   website: String
 }
@@ -663,12 +666,9 @@ type OrganizationMembersDetailsPayload {
 
 type OrganizationOfferingDetails {
   code: String!
-  end: DateTime!
   featureSet: [OrganizationFeatureSetDetails!]!
   free: Boolean!
-  id: ID!
   name: String!
-  start: DateTime!
   unitPrice: Int!
 }
 
@@ -785,6 +785,7 @@ type Query {
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): OrganizationMemberConnection @cost(weight: "10")
+  organizationOffering(code: String!): OrganizationOfferingDetails @cost(weight: "10")
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!] @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): OrganizationConnection @cost(weight: "10")
   organizationVersion: Version!

@@ -155,7 +155,7 @@ const OrganizationAdmin = ({
             name
           }
           hasAttachedPaymentMethod
-          offering {
+          activeOffering {
             id
             name
             start
@@ -868,7 +868,7 @@ const OrganizationAdmin = ({
     }
 
     const toastId = themedToast(
-      <NotificationContent content={`Cancelling organization '${rootData.organization.name}' offering...`} />,
+      <NotificationContent content={`Cancelling organization '${rootData.organization.name}' active offering...`} />,
       infoNotificationOptions,
     );
 
@@ -885,7 +885,7 @@ const OrganizationAdmin = ({
             ...errorNotificationOptions,
             render: (
               <NotificationContent
-                content={`Failed to cancel organization '${rootData.organization?.name}' offering. Error: ${joinErrors(errors)}.`}
+                content={`Failed to cancel organization '${rootData.organization?.name}' active offering. Error: ${joinErrors(errors)}.`}
               />
             ),
           });
@@ -897,7 +897,7 @@ const OrganizationAdmin = ({
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization '${rootData.organization?.name}' offering cancelled.`} />,
+          render: <NotificationContent content={`Organization '${rootData.organization?.name}' active offering cancelled.`} />,
         });
 
         onReloadRequired();
@@ -906,7 +906,9 @@ const OrganizationAdmin = ({
         toast.update(toastId, {
           ...errorNotificationOptions,
           render: (
-            <NotificationContent content={`Failed to cancel organization '${rootData.organization?.name}' offering. Error: ${error.message}.`} />
+            <NotificationContent
+              content={`Failed to cancel organization '${rootData.organization?.name}' active offering. Error: ${error.message}.`}
+            />
           ),
         });
 
@@ -921,7 +923,7 @@ const OrganizationAdmin = ({
     }
 
     const toastId = themedToast(
-      <NotificationContent content={`Updating organization '${rootData.organization.name} offering'...`} />,
+      <NotificationContent content={`Updating organization '${rootData.organization.name} active offering'...`} />,
       infoNotificationOptions,
     );
 
@@ -938,7 +940,9 @@ const OrganizationAdmin = ({
           toast.update(toastId, {
             ...errorNotificationOptions,
             render: (
-              <NotificationContent content={`Failed to update organization ${rootData.organization?.name} offering. Error: ${joinErrors(errors)}.`} />
+              <NotificationContent
+                content={`Failed to update organization ${rootData.organization?.name} active offering. Error: ${joinErrors(errors)}.`}
+              />
             ),
           });
 
@@ -949,7 +953,7 @@ const OrganizationAdmin = ({
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${rootData.organization?.name} offering updated.`} />,
+          render: <NotificationContent content={`Organization ${rootData.organization?.name} active offering updated.`} />,
         });
 
         onReloadRequired();
@@ -957,7 +961,9 @@ const OrganizationAdmin = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization ${rootData.organization?.name} offering. Error: ${error.message}.`} />,
+          render: (
+            <NotificationContent content={`Failed to update organization ${rootData.organization?.name} active offering. Error: ${error.message}.`} />
+          ),
         });
 
         onReloadRequired();
@@ -1090,7 +1096,7 @@ const OrganizationAdmin = ({
   const paymentMethodExist =
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails &&
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
-  const offering = rootData.organization ? rootData.organization.offering : null;
+  const activeOffering = rootData.organization ? rootData.organization.activeOffering : null;
   const availableOfferingExist =
     rootData.organization && rootData.organization.availableOfferings ? rootData.organization.availableOfferings.length > 0 : false;
   const availableOfferings = rootData.organization && rootData.organization.availableOfferings ? rootData.organization.availableOfferings : [];
@@ -1429,14 +1435,14 @@ const OrganizationAdmin = ({
               <Divider />
             </StackColumn>
 
-            {offering && (
+            {activeOffering && (
               <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                 <Card sx={{ width: { xs: '100%', sm: 500 } }}>
                   <CardHeader
                     title={
                       <>
-                        <BodyIconTypography label={offering.name} invertDefaultColor />
-                        <BodyIconTypography label={`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
+                        <BodyIconTypography label={activeOffering.name} invertDefaultColor />
+                        <BodyIconTypography label={`Unit price: $${(activeOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
                       </>
                     }
                   />
@@ -1444,14 +1450,14 @@ const OrganizationAdmin = ({
                   <CardContent sx={{ marginLeft: 1 }}>
                     <List sx={{ listStyleType: 'disc' }}>
                       Feature set:
-                      {offering.featureSet.map(({ name, description }, index) => (
+                      {activeOffering.featureSet.map(({ name, description }, index) => (
                         <ListItem key={index} sx={{ display: 'list-item' }}>
                           <SmallIconTypography label={`${name}: ${description}`} />
                         </ListItem>
                       ))}
                     </List>
 
-                    {!offering.free && (
+                    {!activeOffering.free && (
                       <CardActions sx={{ justifyContent: 'flex-end' }}>
                         <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick}>
                           Cancel

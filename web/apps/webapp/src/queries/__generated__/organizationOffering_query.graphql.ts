@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2311a9b9223f9aa30c4ad5371fc5139>>
+ * @generated SignedSource<<602a0ca3449980eaae8644d0a6fd6547>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationOffering_query$data = {
   readonly organization: {
-    readonly id: string;
-    readonly name: string;
-    readonly offering: {
+    readonly activeOffering: {
       readonly end: any;
       readonly featureSet: ReadonlyArray<{
         readonly description: string;
@@ -26,6 +24,8 @@ export type organizationOffering_query$data = {
       readonly start: any;
       readonly unitPrice: number;
     };
+    readonly id: string;
+    readonly name: string;
   } | null | undefined;
   readonly " $fragmentType": "organizationOffering_query";
 };
@@ -79,9 +79,9 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "OrganizationOfferingDetails",
+          "concreteType": "OrganizationActiveOfferingDetails",
           "kind": "LinkedField",
-          "name": "offering",
+          "name": "activeOffering",
           "plural": false,
           "selections": [
             (v0/*: any*/),
@@ -145,6 +145,6 @@ return {
 };
 })();
 
-(node as any).hash = "2b3b8591a608825785a7f5da1ae1fb2a";
+(node as any).hash = "c16c29809b9682ca6a006deef58fd0c4";
 
 export default node;

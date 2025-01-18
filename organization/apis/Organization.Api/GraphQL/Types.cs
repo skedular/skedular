@@ -118,8 +118,8 @@ public class OrganizationAnalytics
     [GraphQLName("dailyBookingsTotals")] public OrganizationDailyBookingsTotal[] DailyBookingsTotals { get; set; } = [];
 }
 
-[GraphQLName("OrganizationAvailableOfferingDetails")]
-public class OrganizationAvailableOfferingDetails
+[GraphQLName("OrganizationOfferingDetails")]
+public class OrganizationOfferingDetails
 {
     [GraphQLName("code")] public string Code { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
@@ -171,9 +171,9 @@ public class OrganizationDetails : Node
     public OrganizationIndustrySubCategoryReferenceDetails[] IndustrySubCategories { get; set; } = [];
 
     [GraphQLName("availableOfferings")]
-    public OrganizationAvailableOfferingDetails[] AvailableOfferings { get; set; } = [];
+    public OrganizationOfferingDetails[] AvailableOfferings { get; set; } = [];
 
-    [GraphQLName("offering")] public OrganizationOfferingDetails Offering { get; set; }
+    [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; }
 
     [GraphQLName("hasAttachedPaymentMethod")]
     public bool HasAttachedPaymentMethod { get; set; }
@@ -273,8 +273,8 @@ public class OrganizationMemberWhereInput
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
 
-[GraphQLName("OrganizationOfferingDetails")]
-public class OrganizationOfferingDetails : Node
+[GraphQLName("OrganizationActiveOfferingDetails")]
+public class OrganizationActiveOfferingDetails : Node
 {
     [GraphQLName("code")] public string Code { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;

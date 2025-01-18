@@ -1,5 +1,6 @@
 using System.Reflection;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -203,10 +204,10 @@ public class Query(IMapper mapper)
         [Service] IAzureTenantService azureTenantService,
         CancellationToken cancellationToken) =>
         await azureTenantService.GenerateAdminConsentUrlAsync(cancellationToken);
-    
+
     [UseResolverScope]
     public async Task<string> SsoLoginUrlAsync(
-        string organizationId, 
+        string organizationId,
         string redirectUrl,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
@@ -280,6 +281,23 @@ public class Query(IMapper mapper)
     {
         var tag = await tagService.GetByIdAsync(id, cancellationToken);
         return mapper.MapTo(tag);
+    }
+
+    [UseResolverScope]
+    public OrganizationOfferingDetails? OrganizationOffering(string code, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(code);
+
+        var matchedOffering = Offerings.AllOfferings.FirstOrDefault(item => item.ToOfferingCode() == code);
+        var offering = matchedOffering.GetOffering();
+        return new OrganizationOfferingDetails
+        {
+            Code = matchedOffering.ToOfferingCode(),
+            Name = offering.Name,
+            UnitPrice = offering.UnitPrice,
+            FeatureSet = mapper.MapTo(offering).ToArray(),
+            Free = matchedOffering.IsFreeOffering()
+        };
     }
 
     private async Task<OrganizationTagConnection?> OrganizationTagsAsync(

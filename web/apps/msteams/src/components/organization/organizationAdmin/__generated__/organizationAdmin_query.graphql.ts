@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3b8f550bb72b876bc4040e77812ac00a>>
+ * @generated SignedSource<<d8481e7ffe6cbe5b8e28305206cab7d1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,18 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
   readonly organization: {
     readonly about: string | null | undefined;
+    readonly activeOffering: {
+      readonly end: any;
+      readonly featureSet: ReadonlyArray<{
+        readonly description: string;
+        readonly name: string;
+      }>;
+      readonly free: boolean;
+      readonly id: string;
+      readonly name: string;
+      readonly start: any;
+      readonly unitPrice: number;
+    };
     readonly availableOfferings: ReadonlyArray<{
       readonly code: string;
       readonly featureSet: ReadonlyArray<{
@@ -31,18 +43,6 @@ export type organizationAdmin_query$data = {
     }>;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
-    readonly offering: {
-      readonly end: any;
-      readonly featureSet: ReadonlyArray<{
-        readonly description: string;
-        readonly name: string;
-      }>;
-      readonly free: boolean;
-      readonly id: string;
-      readonly name: string;
-      readonly start: any;
-      readonly unitPrice: number;
-    };
     readonly website: string | null | undefined;
   } | null | undefined;
   readonly organizationBillingInfo: {
@@ -190,9 +190,9 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "OrganizationOfferingDetails",
+          "concreteType": "OrganizationActiveOfferingDetails",
           "kind": "LinkedField",
-          "name": "offering",
+          "name": "activeOffering",
           "plural": false,
           "selections": [
             (v0/*: any*/),
@@ -226,7 +226,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "OrganizationAvailableOfferingDetails",
+          "concreteType": "OrganizationOfferingDetails",
           "kind": "LinkedField",
           "name": "availableOfferings",
           "plural": true,
@@ -353,6 +353,6 @@ return {
 };
 })();
 
-(node as any).hash = "739131f46df3ccbec6a9949b93722040";
+(node as any).hash = "464b65db9f753e2777f6e67462f7eff1";
 
 export default node;
