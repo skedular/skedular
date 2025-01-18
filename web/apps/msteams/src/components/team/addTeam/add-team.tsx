@@ -1,11 +1,15 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {
   BodyIconTypography,
   FormFieldLabel,
+  FormStackColumn,
   SectionIconTypography,
+  SmallIconTypography,
   StackColumn,
   StackColumnWithSaveExitCancelAppBar,
+  StackRow,
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
@@ -103,10 +107,10 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validate = makeValidate(teamSchema);
-  const requiredFields = makeRequired(teamSchema);
+  const validateTeamDetails = makeValidate(teamSchema);
+  const requiredTeamDetailsFields = makeRequired(teamSchema);
 
-  const handleCancelClick = () => {
+  const handleCloseClick = () => {
     commitCompleteTeamOnboarding({
       variables: {
         input: {
@@ -124,7 +128,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
     });
   };
 
-  const handleTeamCreateClick = ({ name, about, timezone, organizationMemberIds, primaryLocationId }: TeamDetails) => {
+  const handleTeamAddClick = ({ name, about, timezone, organizationMemberIds, primaryLocationId }: TeamDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -213,72 +217,74 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <Form
-          onSubmit={handleTeamCreateClick}
-          initialValues={{
-            name: '',
-            about: null,
-            organizationMemberIds: [],
-            primaryLocationId: null,
-          }}
-          validate={validate}
-          render={({ handleSubmit }) => (
-            <StackColumnWithSaveExitCancelAppBar
-              onSubmit={handleSubmit}
-              onCancel={handleCancelClick}
-              label="Add Team"
-              saveAndExitLabel={saveAndExitLabel}
-            >
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <SectionIconTypography label="Team Setup" />
-                <BodyIconTypography label="Edit your team name and details" />
-                <Divider />
-              </StackColumn>
+        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Add Team">
+          <Form
+            onSubmit={handleTeamAddClick}
+            initialValues={{
+              organizationMemberIds: [],
+            }}
+            validate={validateTeamDetails}
+            render={({ handleSubmit }) => (
+              <FormStackColumn onSubmit={handleSubmit}>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Team Setup" />
+                  <BodyIconTypography label="Edit your team name and details" />
+                  <Divider />
+                </StackColumn>
 
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <FormFieldLabel label="Name">
-                  <TextField name="name" required={requiredFields.name} />
-                </FormFieldLabel>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredTeamDetailsFields.name} />
+                  </FormFieldLabel>
 
-                <FormFieldLabel label="About">
-                  <TextField name="about" required={requiredFields.about} multiline rows={3} />
-                </FormFieldLabel>
+                  <FormFieldLabel label="About">
+                    <TextField name="about" required={requiredTeamDetailsFields.about} multiline rows={3} />
+                  </FormFieldLabel>
 
-                <FormFieldLabel label="Timezone">
-                  <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-                </FormFieldLabel>
-              </StackColumn>
+                  <FormFieldLabel label="Timezone">
+                    <SingleChoinceTimezone name="timezone" required={requiredTeamDetailsFields.timezone} />
+                  </FormFieldLabel>
+                </StackColumn>
 
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <SectionIconTypography label="Location Settings" />
-                <BodyIconTypography label="Assign team to locations" />
-                <Divider />
-              </StackColumn>
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <FormFieldLabel label="Primary Location">
-                  <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredFields.primaryLocationId} />
-                </FormFieldLabel>
-              </StackColumn>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Location Settings" />
+                  <BodyIconTypography label="Assign team to locations" />
+                  <Divider />
+                </StackColumn>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Primary Location">
+                    <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
+                  </FormFieldLabel>
+                </StackColumn>
 
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <SectionIconTypography label="Team Members" />
-                <BodyIconTypography label="Manage your team members" />
-                <Divider />
-              </StackColumn>
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <FormFieldLabel label="Organization Users">
-                  <OrganizationMemberSelector
-                    rootDataRelay={rootData}
-                    name="organizationMemberIds"
-                    required={requiredFields.organizationMemberIds}
-                    multiple={true}
-                    useMemberId={true}
-                  />
-                </FormFieldLabel>
-              </StackColumn>
-            </StackColumnWithSaveExitCancelAppBar>
-          )}
-        />
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Team Members" />
+                  <BodyIconTypography label="Manage your team members" />
+                  <Divider />
+                </StackColumn>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Organization Users">
+                    <OrganizationMemberSelector
+                      rootDataRelay={rootData}
+                      name="organizationMemberIds"
+                      required={requiredTeamDetailsFields.organizationMemberIds}
+                      multiple={true}
+                      useMemberId={true}
+                    />
+                  </FormFieldLabel>
+                </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackRow>
+                    <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                      <SmallIconTypography label={saveAndExitLabel ?? 'Add'} />
+                    </Button>
+                  </StackRow>
+                </StackColumn>
+              </FormStackColumn>
+            )}
+          />
+        </StackColumnWithSaveExitCancelAppBar>
       </Box>
     </Box>
   );

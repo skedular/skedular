@@ -1,11 +1,15 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {
   BodyIconTypography,
   FormFieldLabel,
+  FormStackColumn,
   SectionIconTypography,
+  SmallIconTypography,
   StackColumn,
   StackColumnWithSaveExitCancelAppBar,
+  StackRow,
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import {
@@ -77,10 +81,10 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, save
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validate = makeValidate(locationSchema);
-  const requiredFields = makeRequired(locationSchema);
+  const validateLocationDetails = makeValidate(locationSchema);
+  const requiredLocationDetailsFields = makeRequired(locationSchema);
 
-  const handleCancelClick = () => {
+  const handleCloseClick = () => {
     commitCompleteLocationOnboarding({
       variables: {
         input: {
@@ -98,7 +102,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, save
     });
   };
 
-  const handleLocationCreateClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
+  const handleLocationAddClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
 
@@ -181,48 +185,48 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, save
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <Form
-          onSubmit={handleLocationCreateClick}
-          initialValues={{
-            name: '',
-            about: null,
-            organizationId,
-            physicalAddress: null,
-          }}
-          validate={validate}
-          render={({ handleSubmit }) => (
-            <StackColumnWithSaveExitCancelAppBar
-              onSubmit={handleSubmit}
-              onCancel={handleCancelClick}
-              label="Add Location"
-              saveAndExitLabel={saveAndExitLabel}
-            >
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <SectionIconTypography label="Location Setup" />
-                <BodyIconTypography label="Edit your location name and details" />
-                <Divider />
-              </StackColumn>
+        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Add Location">
+          <Form
+            onSubmit={handleLocationAddClick}
+            initialValues={{}}
+            validate={validateLocationDetails}
+            render={({ handleSubmit }) => (
+              <FormStackColumn onSubmit={handleSubmit}>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Location Setup" />
+                  <BodyIconTypography label="Edit your location name and details" />
+                  <Divider />
+                </StackColumn>
 
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <FormFieldLabel label="Name">
-                  <TextField name="name" required={requiredFields.name} />
-                </FormFieldLabel>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredLocationDetailsFields.name} />
+                  </FormFieldLabel>
 
-                <FormFieldLabel label="About">
-                  <TextField name="about" required={requiredFields.about} multiline rows={3} />
-                </FormFieldLabel>
+                  <FormFieldLabel label="About">
+                    <TextField name="about" required={requiredLocationDetailsFields.about} multiline rows={3} />
+                  </FormFieldLabel>
 
-                <FormFieldLabel label="Timezone">
-                  <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-                </FormFieldLabel>
+                  <FormFieldLabel label="Timezone">
+                    <SingleChoinceTimezone name="timezone" required={requiredLocationDetailsFields.timezone} />
+                  </FormFieldLabel>
 
-                <FormFieldLabel label="Physical Address">
-                  <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
-                </FormFieldLabel>
-              </StackColumn>
-            </StackColumnWithSaveExitCancelAppBar>
-          )}
-        />
+                  <FormFieldLabel label="Physical Address">
+                    <TextField name="physicalAddress" required={requiredLocationDetailsFields.physicalAddress} multiline rows={5} />
+                  </FormFieldLabel>
+                </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackRow>
+                    <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                      <SmallIconTypography label={saveAndExitLabel ?? 'Add'} />
+                    </Button>
+                  </StackRow>
+                </StackColumn>
+              </FormStackColumn>
+            )}
+          />
+        </StackColumnWithSaveExitCancelAppBar>
       </Box>
     </Box>
   );

@@ -1,3 +1,4 @@
+import { getOrganizationBaseLink } from '@/components/organization';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import { TeamSelector } from '@/components/team/teamSelector';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
@@ -25,6 +26,7 @@ import {
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
+  StackColumnWithSaveExitCancelAppBar,
   StackRow,
 } from '@repo/shared/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
@@ -45,9 +47,10 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, maxScreenWidth } from '@repo/shared/libs/theme';
+import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
+import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
@@ -206,6 +209,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const router = useRouter();
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>([]);
@@ -589,6 +593,10 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     });
   };
 
+  const handleCloseClick = () => {
+    router.push(getOrganizationBaseLink(organizationId));
+  };
+
   const rows: RowType[] = members.map((member) => ({
     id: member.id,
     avatar: member.customer,
@@ -717,7 +725,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       <Box sx={{ display: 'flex' }}>
         <OrganizationUsersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-          <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+          <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Organization Users">
             <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <SectionIconTypography label="Organization Users" />
               <BodyIconTypography label="View users in your organization" />
@@ -789,7 +797,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
                 sx={defaultGridStyle}
               />
             </StackRow>
-          </StackColumn>
+          </StackColumnWithSaveExitCancelAppBar>
         </Box>
       </Box>
 

@@ -143,7 +143,7 @@ const LocationAboutTab = ({ queryReference, organizationId }: Props) => {
   };
 
   if (!rootData.location) {
-    return null;
+    return <></>;
   }
 
   const location = rootData.location;

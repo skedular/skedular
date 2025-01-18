@@ -1,11 +1,14 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import {
   BodyIconTypography,
   FormFieldLabel,
+  FormStackColumn,
   SectionIconTypography,
+  SmallIconTypography,
   StackColumn,
   StackColumnWithSaveExitCancelAppBar,
   StackRow,
@@ -309,8 +312,8 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   const [, setPage] = useState(0);
   const [pageSize] = useState(20);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-  const validate = makeValidate(bookingSchema);
-  const requiredFields = makeRequired(bookingSchema);
+  const validateBookingDetails = makeValidate(bookingSchema);
+  const requiredBookingDetailsFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(dayjs(rootData.booking?.from));
   const [customerId, setCustomerId] = useState<string | undefined>(rootData.booking?.customer?.uniqueId);
   const [teamId, setTeamId] = useState<string | undefined>(rootData.booking?.team?.uniqueId);
@@ -418,11 +421,11 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     [defaultDeskIds, handleRefetchAvailableLocationDesks, from, locationId],
   );
 
-  const handleCancelClick = () => {
+  const handleCloseClick = () => {
     navigate(-1);
   };
 
-  const handleSaveClick = ({
+  const handleBookingDetailUpdateClick = ({
     date,
     member: memberId,
     notes,
@@ -486,7 +489,6 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
         });
 
         UpdateGlobalReloadId();
-        navigate(-1);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -572,168 +574,178 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <Form
-          onSubmit={handleSaveClick}
-          initialValues={{
-            member: customerId,
-            date: from,
-            notes: booking.notes,
-            team: teamId,
-            location: locationId,
-            desks: booking.desks ? booking.desks.map(({ uniqueId }) => uniqueId) : [],
-          }}
-          validate={validate}
-          render={({ handleSubmit, values }) => {
-            setFrom(values.date);
+        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Booking Information">
+          <Form
+            onSubmit={handleBookingDetailUpdateClick}
+            initialValues={{
+              member: customerId,
+              date: from,
+              notes: booking.notes,
+              team: teamId,
+              location: locationId,
+              desks: booking.desks ? booking.desks.map(({ uniqueId }) => uniqueId) : [],
+            }}
+            validate={validateBookingDetails}
+            render={({ handleSubmit, values }) => {
+              setFrom(values.date);
 
-            return (
-              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Edit Booking Information">
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <SectionIconTypography label="Edit Booking" />
-                  <BodyIconTypography label="Edit your booking details" />
-                  <Divider />
-                </StackColumn>
+              return (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <SectionIconTypography label="Edit Booking" />
+                    <BodyIconTypography label="Edit your booking details" />
+                    <Divider />
+                  </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="User">
-                    <Autocomplete
-                      name="member"
-                      multiple={false}
-                      required={requiredFields.member}
-                      options={customers}
-                      getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
-                      getOptionLabel={(option: string | OrganizationMemberDetails) =>
-                        getCustomerFullName((option as OrganizationMemberDetails).customer)
-                      }
-                      renderOption={(props, option) => {
-                        const castedOption = (option as OrganizationMemberDetails).customer;
-
-                        return (
-                          <li {...props}>
-                            <BodyIconTypography
-                              label={getCustomerFullName(castedOption)}
-                              startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
-                            />
-                          </li>
-                        );
-                      }}
-                      filterOptions={(options, params) => {
-                        if (params.inputValue !== peopleNameSearchText) {
-                          debounceSearchTextChange(params.inputValue);
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="User">
+                      <Autocomplete
+                        name="member"
+                        multiple={false}
+                        required={requiredBookingDetailsFields.member}
+                        options={customers}
+                        getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
+                        getOptionLabel={(option: string | OrganizationMemberDetails) =>
+                          getCustomerFullName((option as OrganizationMemberDetails).customer)
                         }
+                        renderOption={(props, option) => {
+                          const castedOption = (option as OrganizationMemberDetails).customer;
 
-                        return options;
-                      }}
-                      selectOnFocus
-                      clearOnBlur
-                      handleHomeEndKeys
-                      onChange={(_, option) => handleMemberChange(option as OrganizationMemberDetails)}
-                    />
-                  </FormFieldLabel>
+                          return (
+                            <li {...props}>
+                              <BodyIconTypography
+                                label={getCustomerFullName(castedOption)}
+                                startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
+                              />
+                            </li>
+                          );
+                        }}
+                        filterOptions={(options, params) => {
+                          if (params.inputValue !== peopleNameSearchText) {
+                            debounceSearchTextChange(params.inputValue);
+                          }
 
-                  <FormFieldLabel label="Date">
-                    <DatePicker name="date" required={requiredFields.date} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Notes">
-                    <TextField
-                      name="notes"
-                      required={requiredFields.notes}
-                      helperText="e.g. I will be half an hour late this morning"
-                      multiline
-                      rows={2}
-                    />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Team">
-                    <Autocomplete
-                      name="team"
-                      multiple={false}
-                      required={requiredFields.team}
-                      options={teams}
-                      getOptionValue={(option) => (option as TeamDetails).id}
-                      getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
-                      renderOption={(props, option) => {
-                        const castedOption = option as TeamDetails;
-
-                        return (
-                          <li {...props}>
-                            <BodyIconTypography label={castedOption.name} />
-                          </li>
-                        );
-                      }}
-                      filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
-                      selectOnFocus
-                      clearOnBlur
-                      handleHomeEndKeys
-                      onChange={(_, option) => handleTeamChange(option as TeamDetails)}
-                    />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Location">
-                    <Autocomplete
-                      name="location"
-                      multiple={false}
-                      required={requiredFields.location}
-                      options={locations}
-                      getOptionValue={(option) => (option as LocationDetails).id}
-                      getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
-                      renderOption={(props, option) => {
-                        const castedOption = option as LocationDetails;
-
-                        return (
-                          <li {...props}>
-                            <BodyIconTypography label={castedOption.name} />
-                          </li>
-                        );
-                      }}
-                      filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
-                      selectOnFocus
-                      clearOnBlur
-                      handleHomeEndKeys
-                      onChange={(_, option) => handleLocationChange(option as LocationDetails)}
-                    />
-                  </FormFieldLabel>
-
-                  {locationId && (
-                    <FormFieldLabel label="Desks">
-                      {desks.length > 0 && (
-                        <Autocomplete
-                          name="desks"
-                          multiple={true}
-                          required={requiredFields.desks}
-                          options={desks}
-                          getOptionValue={(option) => (option as DeskDetails).uniqueId}
-                          getOptionLabel={(option: string | DeskDetails) => (option as DeskDetails).name}
-                          renderOption={(props, option) => {
-                            const castedOption = option as DeskDetails;
-
-                            return (
-                              <li {...props}>
-                                <StackRow sx={{ alignItems: 'center' }}>
-                                  <BodyIconTypography label={castedOption.name} />
-                                  <CustomTags customTags={castedOption.customTags} />
-                                  <Zones zones={castedOption.zones} hideIcon />
-                                </StackRow>
-                              </li>
-                            );
-                          }}
-                          disableCloseOnSelect
-                          filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
-                          selectOnFocus
-                          clearOnBlur
-                          handleHomeEndKeys
-                        />
-                      )}
-
-                      {desks.length === 0 && <BodyIconTypography label="There are currently no available desks in the chosen location." />}
+                          return options;
+                        }}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        onChange={(_, option) => handleMemberChange(option as OrganizationMemberDetails)}
+                      />
                     </FormFieldLabel>
-                  )}
-                </StackColumn>
-              </StackColumnWithSaveExitCancelAppBar>
-            );
-          }}
-        />
+
+                    <FormFieldLabel label="Date">
+                      <DatePicker name="date" required={requiredBookingDetailsFields.date} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Notes">
+                      <TextField
+                        name="notes"
+                        required={requiredBookingDetailsFields.notes}
+                        helperText="e.g. I will be half an hour late this morning"
+                        multiline
+                        rows={2}
+                      />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Team">
+                      <Autocomplete
+                        name="team"
+                        multiple={false}
+                        required={requiredBookingDetailsFields.team}
+                        options={teams}
+                        getOptionValue={(option) => (option as TeamDetails).id}
+                        getOptionLabel={(option: string | TeamDetails) => (option as TeamDetails).name}
+                        renderOption={(props, option) => {
+                          const castedOption = option as TeamDetails;
+
+                          return (
+                            <li {...props}>
+                              <BodyIconTypography label={castedOption.name} />
+                            </li>
+                          );
+                        }}
+                        filterOptions={(options, params) => filterTeam(options as TeamDetails[], params)}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        onChange={(_, option) => handleTeamChange(option as TeamDetails)}
+                      />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Location">
+                      <Autocomplete
+                        name="location"
+                        multiple={false}
+                        required={requiredBookingDetailsFields.location}
+                        options={locations}
+                        getOptionValue={(option) => (option as LocationDetails).id}
+                        getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
+                        renderOption={(props, option) => {
+                          const castedOption = option as LocationDetails;
+
+                          return (
+                            <li {...props}>
+                              <BodyIconTypography label={castedOption.name} />
+                            </li>
+                          );
+                        }}
+                        filterOptions={(options, params) => filterLocation(options as LocationDetails[], params)}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
+                        onChange={(_, option) => handleLocationChange(option as LocationDetails)}
+                      />
+                    </FormFieldLabel>
+
+                    {locationId && (
+                      <FormFieldLabel label="Desks">
+                        {desks.length > 0 && (
+                          <Autocomplete
+                            name="desks"
+                            multiple={true}
+                            required={requiredBookingDetailsFields.desks}
+                            options={desks}
+                            getOptionValue={(option) => (option as DeskDetails).uniqueId}
+                            getOptionLabel={(option: string | DeskDetails) => (option as DeskDetails).name}
+                            renderOption={(props, option) => {
+                              const castedOption = option as DeskDetails;
+
+                              return (
+                                <li {...props}>
+                                  <StackRow sx={{ alignItems: 'center' }}>
+                                    <BodyIconTypography label={castedOption.name} />
+                                    <CustomTags customTags={castedOption.customTags} />
+                                    <Zones zones={castedOption.zones} hideIcon />
+                                  </StackRow>
+                                </li>
+                              );
+                            }}
+                            disableCloseOnSelect
+                            filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                          />
+                        )}
+
+                        {desks.length === 0 && <BodyIconTypography label="There are currently no available desks in the chosen location." />}
+                      </FormFieldLabel>
+                    )}
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                        <SmallIconTypography label="Update" />
+                      </Button>
+                    </StackRow>
+                  </StackColumn>
+                </FormStackColumn>
+              );
+            }}
+          />
+        </StackColumnWithSaveExitCancelAppBar>
       </Box>
     </Box>
   );

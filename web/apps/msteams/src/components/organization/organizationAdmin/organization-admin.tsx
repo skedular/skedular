@@ -14,6 +14,7 @@ import {
   BodyIconTypography,
   CreditCard,
   FormFieldLabel,
+  FormStackColumn,
   GridContainer,
   LeadIconTypography,
   PushToRight,
@@ -89,6 +90,16 @@ type OrganizationDetails = {
   about: string | null;
   website: string | null;
   industrySubCategoryIds: string[];
+};
+
+const organizationSchema = object({
+  name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
+  about: string().nullable(),
+  website: string().nullable(),
+  industrySubCategoryIds: array().nullable(),
+});
+
+type OrganizationBillingDetails = {
   billingEmail: string;
   billingAddressLine1: string | null;
   billingAddressLine2: string | null;
@@ -99,11 +110,7 @@ type OrganizationDetails = {
   billingCountry: string | null;
 };
 
-const organizationSchema = object({
-  name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
-  about: string().nullable(),
-  website: string().nullable(),
-  industrySubCategoryIds: array().nullable(),
+const organizationBillingSchema = object({
   billingEmail: string().email(({ value }) => `${value} is not a valid email`),
   billingAddressLine1: string().nullable(),
   billingAddressLine2: string().nullable(),
@@ -352,8 +359,10 @@ const OrganizationAdmin = ({
   const [searchParams] = useSearchParams();
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-  const validate = makeValidate(organizationSchema);
-  const requiredFields = makeRequired(organizationSchema);
+  const validateOrganizationDetails = makeValidate(organizationSchema);
+  const requiredOrganizationDetailsFields = makeRequired(organizationSchema);
+  const validateOrganizationBilling = makeValidate(organizationBillingSchema);
+  const requiredOrganizationBillingFields = makeRequired(organizationBillingSchema);
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
   const [customTagNameSearchText, setCustomTagNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>([]);
@@ -460,31 +469,12 @@ const OrganizationAdmin = ({
     });
   }, [refetchOrganizationPaymentMethodsDetails]);
 
-  const handleDetailUpdateClick = ({
-    name,
-    about,
-    website,
-    industrySubCategoryIds,
-    billingEmail,
-    billingAddressLine1,
-    billingAddressLine2,
-    billingSuburb,
-    billingCity,
-    billingProvince,
-    billingZipcode,
-    billingCountry,
-  }: OrganizationDetails) => {
+  const handleOrganizationDetailUpdateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
     if (!rootData.organization) {
       return;
     }
 
-    if (!rootData.organizationBillingInfo) {
-      return;
-    }
-
     const organization = rootData.organization;
-    const organizationBillingInfo = rootData.organizationBillingInfo;
-
     const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
     const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}'...`} />, infoNotificationOptions);
 
@@ -509,59 +499,9 @@ const OrganizationAdmin = ({
           return;
         }
 
-        commitSetOrganizationBillingInfo({
-          variables: {
-            input: {
-              clientMutationId: nanoid(),
-              organizationId: organization.id,
-              email: billingEmail,
-              addressLine1: billingAddressLine1,
-              addressLine2: billingAddressLine2,
-              suburb: billingSuburb,
-              city: billingCity,
-              province: billingProvince,
-              zipcode: billingZipcode,
-              country: billingCountry,
-            },
-          },
-          onCompleted: (_, errors) => {
-            if (errors && errors.length > 0) {
-              toast.update(toastId, {
-                ...errorNotificationOptions,
-                render: <NotificationContent content={`Failed to update organization '${organization?.name}'. Error: ${joinErrors(errors)}.`} />,
-              });
-
-              return;
-            }
-
-            toast.update(toastId, {
-              ...successNotificationOptions,
-              render: <NotificationContent content={`Organization ${name} details updated.`} />,
-            });
-
-            navigate(getOrganizationBaseLink(organizationId));
-          },
-          onError: (error) => {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update organization '${organization?.name}'. Error: ${error.message}.`} />,
-            });
-          },
-          optimisticResponse: {
-            setOrganizationBillingInfo: {
-              organizationBillingInfo: {
-                id: organizationBillingInfo.id,
-                email: billingEmail,
-                addressLine1: billingAddressLine1,
-                addressLine2: billingAddressLine2,
-                suburb: billingSuburb,
-                city: billingCity,
-                province: billingProvince,
-                zipcode: billingZipcode,
-                country: billingCountry,
-              },
-            },
-          },
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${name} details updated.`} />,
         });
       },
       onError: (error) => {
@@ -581,6 +521,77 @@ const OrganizationAdmin = ({
               .flatMap((mainCategory) => mainCategory.subCategories)
               .filter(({ id }) => selectedIndustrySubCategoryIds.find((selectedIndustrySubCategoryId) => selectedIndustrySubCategoryId === id))
               .map(({ id, name }) => ({ id, name })),
+          },
+        },
+      },
+    });
+  };
+
+  const handleOrganizationBillingDetailUpdateClick = ({
+    billingEmail,
+    billingAddressLine1,
+    billingAddressLine2,
+    billingSuburb,
+    billingCity,
+    billingProvince,
+    billingZipcode,
+    billingCountry,
+  }: OrganizationBillingDetails) => {
+    if (!rootData.organizationBillingInfo) {
+      return;
+    }
+
+    const organizationBillingInfo = rootData.organizationBillingInfo;
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing...`} />, infoNotificationOptions);
+
+    commitSetOrganizationBillingInfo({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          organizationId: organization.id,
+          email: billingEmail,
+          addressLine1: billingAddressLine1,
+          addressLine2: billingAddressLine2,
+          suburb: billingSuburb,
+          city: billingCity,
+          province: billingProvince,
+          zipcode: billingZipcode,
+          country: billingCountry,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization '${organization?.name}' billing updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        setOrganizationBillingInfo: {
+          organizationBillingInfo: {
+            id: organizationBillingInfo.id,
+            email: billingEmail,
+            addressLine1: billingAddressLine1,
+            addressLine2: billingAddressLine2,
+            suburb: billingSuburb,
+            city: billingCity,
+            province: billingProvince,
+            zipcode: billingZipcode,
+            country: billingCountry,
           },
         },
       },
@@ -808,7 +819,7 @@ const OrganizationAdmin = ({
     setIsAddPaymentMethodDialogOpen(false);
   };
 
-  const handleCancelClick = () => {
+  const handleCloseClick = () => {
     navigate(getOrganizationBaseLink(organizationId));
   };
 
@@ -1088,504 +1099,419 @@ const OrganizationAdmin = ({
       <Box sx={{ display: 'flex' }}>
         <OrganizationAdminLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-          <Form
-            onSubmit={handleDetailUpdateClick}
-            initialValues={{
-              name: organization.name,
-              about: organization.about,
-              website: organization.website,
-              industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
-              billingEmail,
-              billingAddressLine1,
-              billingAddressLine2,
-              billingSuburb,
-              billingCity,
-              billingProvince,
-              billingZipcode,
-              billingCountry,
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Edit Organization Information">
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                  ref={(divElement) => {
-                    sectionRefs.current['setup'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label="Organization Setup" />
-                  <BodyIconTypography label="Edit your organization details" />
-                  <Divider />
-                </StackColumn>
-
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
-                  <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredFields.name} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="About">
-                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Website">
-                    <TextField name="website" required={requiredFields.about} helperText="https://" />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Industry">
-                    <OrganizationMultipleChoicesIndustries
-                      rootDataRelay={rootData}
-                      name="industrySubCategoryIds"
-                      required={requiredFields.industrySubCategoryIds}
-                    />
-                  </FormFieldLabel>
-                </StackColumn>
-
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                  ref={(divElement) => {
-                    sectionRefs.current['billing-payment-setup'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label="Billing & Payment Setup" />
-                  <BodyIconTypography label="Edit your organization billing and payment details" />
-                  <Divider />
-                </StackColumn>
-
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
-                  <FormFieldLabel label="Email">
-                    <TextField name="billingEmail" required={requiredFields.billingEmail} helperText="Email to send invoice to" />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Address line 1">
-                    <TextField name="billingAddressLine1" required={requiredFields.billingAddressLine1} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Address line 2">
-                    <TextField name="billingAddressLine2" required={requiredFields.billingAddressLine2} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Suburb">
-                    <TextField name="billingSuburb" required={requiredFields.billingSuburb} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="City">
-                    <TextField name="billingCity" required={requiredFields.billingCity} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Province">
-                    <TextField name="billingProvince" required={requiredFields.billingProvince} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Zipcode">
-                    <TextField name="billingZipcode" required={requiredFields.billingZipcode} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Country">
-                    <SingleChoiceCountry name="billingCountry" required={requiredFields.billingCountry} />
-                  </FormFieldLabel>
-                </StackColumn>
-
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                >
-                  <BodyIconTypography label="Edit your payment method" />
-                  <Divider />
-                </StackColumn>
-
-                {paymentMethodExist && (
+          <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Organization Information">
+            <Form
+              onSubmit={handleOrganizationDetailUpdateClick}
+              initialValues={{
+                name: organization.name,
+                about: organization.about,
+                website: organization.website,
+                industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
+              }}
+              validate={validateOrganizationDetails}
+              render={({ handleSubmit }) => (
+                <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
+                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    ref={(divElement) => {
+                      sectionRefs.current['setup'] = divElement;
                     }}
                   >
-                    <StackRow>
-                      {rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.map((item) => (
-                        <StackColumn key={item.id}>
-                          <CreditCard
-                            lastFourDigits={item.cardLastFourDigit}
-                            expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`}
-                            cardBrand={item.cardBrand}
-                          />
-                          <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>
-                            <BodyIconTypography
-                              label="Remove Payment Method"
-                              invertDefaultColor={paletteMode === 'dark'}
-                              startElement={<DeleteIcon />}
-                            />
-                          </Button>
-                        </StackColumn>
-                      ))}
-                    </StackRow>
+                    <SectionIconTypography label="Organization Setup" />
+                    <BodyIconTypography label="Edit your organization details" />
+                    <Divider />
                   </StackColumn>
-                )}
 
-                {!paymentMethodExist && (
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredOrganizationDetailsFields.name} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="About">
+                      <TextField name="about" required={requiredOrganizationDetailsFields.about} multiline rows={3} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Website">
+                      <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Industry">
+                      <OrganizationMultipleChoicesIndustries
+                        rootDataRelay={rootData}
+                        name="industrySubCategoryIds"
+                        required={requiredOrganizationDetailsFields.industrySubCategoryIds}
+                      />
+                    </FormFieldLabel>
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
-                      <SmallIconTypography label="No payment method setup yet" />
-                      <PushToRight />
-                      <Button variant="text" onClick={onAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
-                        <LeadIconTypography label={'Add Payment Method'} endElement={<NewIcon fontSize="large" />} />
+                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                        <SmallIconTypography label="Update" />
                       </Button>
                     </StackRow>
                   </StackColumn>
-                )}
+                </FormStackColumn>
+              )}
+            />
 
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                  ref={(divElement) => {
-                    sectionRefs.current['sso-setup'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label="SSO Setup" />
-                  <BodyIconTypography label="Edit your organization SSO settings" />
-                  <Divider />
-                </StackColumn>
-
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                  ref={(divElement) => {
-                    sectionRefs.current['zones-setup'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label="Zones Setup" />
-                  <BodyIconTypography label="Edit your organization zones details" />
-                  <Divider />
-                </StackColumn>
-
-                <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-                  <PushToRight />
-                  <Search size="small" placeholder="Search for zones" defaultValue={zoneNameSearchText} onChange={handleZonesSearchTextChange} />
-                </GridContainer>
-
-                {seledctedZones.length > 0 && (
-                  <StackRow
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        backgroundColor: (theme) => theme.palette.background.paper,
-                        padding: defaultGridActionPadding,
-                        border: 1,
-                        borderColor: (theme) => theme.palette.divider,
-                        borderRadius: 2,
-                        flexGrow: 1,
-                      }}
-                    >
-                      <StackRow sx={{ alignItems: 'center' }}>
-                        <SmallIconTypography label={`${seledctedZones.length} records selected`} />
-                        <PushToRight />
-                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveZonesClick}>
-                          Remove Zone
-                        </Button>
-                      </StackRow>
-                    </Box>
-                  </StackRow>
-                )}
-
-                <StackRow
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                  }}
-                >
-                  <PushToRight />
-                  <AddOrganizationZoneButton organizationId={organizationId} connectionIds={zonesConnectionIds} />
-                </StackRow>
-
-                <StackRow
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                  }}
-                >
-                  <DataGrid
-                    checkboxSelection
-                    rowSelectionModel={seledctedZones}
-                    onRowSelectionModelChange={handleSelectedZonesChanged}
-                    rows={zoneRows}
-                    columns={zoneColumns}
-                    hideFooterPagination={zoneRows.length <= 10}
-                    initialState={{
-                      pagination: {
-                        rowCount: zoneRows.length,
-                        paginationModel: {
-                          pageSize: 10,
-                        },
-                      },
-                    }}
-                    pageSizeOptions={[10]}
-                    ignoreDiacritics
-                    disableRowSelectionOnClick
-                    getRowHeight={() => 'auto'}
-                    rowSpacingType="margin"
-                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                    sx={defaultGridStyle}
-                  />
-                </StackRow>
-
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                  ref={(divElement) => {
-                    sectionRefs.current['tags-setup'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label="Tags Setup" />
-                  <BodyIconTypography label="Edit your organization tags details" />
-                  <Divider />
-                </StackColumn>
-
-                <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-                  <PushToRight />
-                  <Search
-                    size="small"
-                    placeholder="Search for tags"
-                    defaultValue={customTagNameSearchText}
-                    onChange={handleCustomTagsSearchTextChange}
-                  />
-                </GridContainer>
-
-                {seledctedCustomTags.length > 0 && (
-                  <StackRow
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        backgroundColor: (theme) => theme.palette.background.paper,
-                        padding: defaultGridActionPadding,
-                        border: 1,
-                        borderColor: (theme) => theme.palette.divider,
-                        borderRadius: 2,
-                        flexGrow: 1,
-                      }}
-                    >
-                      <StackRow sx={{ alignItems: 'center' }}>
-                        <SmallIconTypography label={`${seledctedCustomTags.length} records selected`} />
-                        <PushToRight />
-                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveCustomTagsClick}>
-                          Remove Tag
-                        </Button>
-                      </StackRow>
-                    </Box>
-                  </StackRow>
-                )}
-
-                <StackRow
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                  }}
-                >
-                  <PushToRight />
-                  <AddOrganizationCustomTagButton organizationId={organizationId} connectionIds={customTagsConnectionIds} />
-                </StackRow>
-
-                <StackRow
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                  }}
-                >
-                  <DataGrid
-                    checkboxSelection
-                    rowSelectionModel={seledctedCustomTags}
-                    onRowSelectionModelChange={handleSelectedCustomTagsChanged}
-                    rows={customTagRows}
-                    columns={customTagColumns}
-                    hideFooterPagination={customTagRows.length <= 10}
-                    initialState={{
-                      pagination: {
-                        rowCount: customTagRows.length,
-                        paginationModel: {
-                          pageSize: 10,
-                        },
-                      },
-                    }}
-                    pageSizeOptions={[10]}
-                    ignoreDiacritics
-                    disableRowSelectionOnClick
-                    getRowHeight={() => 'auto'}
-                    rowSpacingType="margin"
-                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                    sx={defaultGridStyle}
-                  />
-                </StackRow>
-
-                <StackColumn
-                  sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
-                  }}
-                  ref={(divElement) => {
-                    sectionRefs.current['subscriptions'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label="Subscriptions" />
-                  <BodyIconTypography label="Active Offering" />
-                  <Divider />
-                </StackColumn>
-
-                {offering && (
+            <Form
+              onSubmit={handleOrganizationBillingDetailUpdateClick}
+              initialValues={{
+                billingEmail,
+                billingAddressLine1,
+                billingAddressLine2,
+                billingSuburb,
+                billingCity,
+                billingProvince,
+                billingZipcode,
+                billingCountry,
+              }}
+              validate={validateOrganizationBilling}
+              render={({ handleSubmit }) => (
+                <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
+                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    ref={(divElement) => {
+                      sectionRefs.current['billing-payment-setup'] = divElement;
                     }}
                   >
-                    <Card sx={{ width: { xs: '100%', sm: 500 } }}>
-                      <CardHeader
-                        title={
-                          <>
-                            <BodyIconTypography label={offering.name} invertDefaultColor />
-                            <BodyIconTypography label={`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
-                          </>
-                        }
+                    <SectionIconTypography label="Billing & Payment Setup" />
+                    <BodyIconTypography label="Edit your organization billing and payment details" />
+                    <Divider />
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Email">
+                      <TextField
+                        name="billingEmail"
+                        required={requiredOrganizationBillingFields.billingEmail}
+                        helperText="Email to send invoice to"
                       />
+                    </FormFieldLabel>
 
-                      <CardContent sx={{ marginLeft: 1 }}>
-                        <List sx={{ listStyleType: 'disc' }}>
-                          Feature set:
-                          {offering.featureSet.map(({ name, description }, index) => (
-                            <ListItem key={index} sx={{ display: 'list-item' }}>
-                              <SmallIconTypography label={`${name}: ${description}`} />
-                            </ListItem>
-                          ))}
-                        </List>
+                    <FormFieldLabel label="Address line 1">
+                      <TextField name="billingAddressLine1" required={requiredOrganizationBillingFields.billingAddressLine1} />
+                    </FormFieldLabel>
 
-                        {!offering.free && (
-                          <CardActions sx={{ justifyContent: 'flex-end' }}>
-                            <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick}>
-                              Cancel
-                            </Button>
-                          </CardActions>
-                        )}
-                      </CardContent>
-                    </Card>
+                    <FormFieldLabel label="Address line 2">
+                      <TextField name="billingAddressLine2" required={requiredOrganizationBillingFields.billingAddressLine2} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Suburb">
+                      <TextField name="billingSuburb" required={requiredOrganizationBillingFields.billingSuburb} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="City">
+                      <TextField name="billingCity" required={requiredOrganizationBillingFields.billingCity} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Province">
+                      <TextField name="billingProvince" required={requiredOrganizationBillingFields.billingProvince} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Zipcode">
+                      <TextField name="billingZipcode" required={requiredOrganizationBillingFields.billingZipcode} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Country">
+                      <SingleChoiceCountry name="billingCountry" required={requiredOrganizationBillingFields.billingCountry} />
+                    </FormFieldLabel>
                   </StackColumn>
-                )}
 
-                <StackColumn
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                        <SmallIconTypography label="Update" />
+                      </Button>
+                    </StackRow>
+                  </StackColumn>
+                </FormStackColumn>
+              )}
+            />
+
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <BodyIconTypography label="Edit your payment method" />
+              <Divider />
+            </StackColumn>
+
+            {paymentMethodExist && (
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackRow>
+                  {rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.map((item) => (
+                    <StackColumn key={item.id}>
+                      <CreditCard
+                        lastFourDigits={item.cardLastFourDigit}
+                        expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`}
+                        cardBrand={item.cardBrand}
+                      />
+                      <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>
+                        <BodyIconTypography label="Remove Payment Method" invertDefaultColor={paletteMode === 'dark'} startElement={<DeleteIcon />} />
+                      </Button>
+                    </StackColumn>
+                  ))}
+                </StackRow>
+              </StackColumn>
+            )}
+
+            {!paymentMethodExist && (
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <StackRow>
+                  <SmallIconTypography label="No payment method setup yet" />
+                  <PushToRight />
+                  <Button variant="text" onClick={onAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
+                    <LeadIconTypography label={'Add Payment Method'} endElement={<NewIcon fontSize="large" />} />
+                  </Button>
+                </StackRow>
+              </StackColumn>
+            )}
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['sso-setup'] = divElement;
+              }}
+            >
+              <SectionIconTypography label="SSO Setup" />
+              <BodyIconTypography label="Edit your organization SSO settings" />
+              <Divider />
+            </StackColumn>
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['zones-setup'] = divElement;
+              }}
+            >
+              <SectionIconTypography label="Zones Setup" />
+              <BodyIconTypography label="Edit your organization zones details" />
+              <Divider />
+            </StackColumn>
+
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+              <PushToRight />
+              <Search size="small" placeholder="Search for zones" defaultValue={zoneNameSearchText} onChange={handleZonesSearchTextChange} />
+            </GridContainer>
+
+            {seledctedZones.length > 0 && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                <Box
                   sx={{
-                    paddingLeft: defaultPadding,
-                    paddingRight: defaultPadding,
-                    paddingTop: defaultPadding,
+                    backgroundColor: (theme) => theme.palette.background.paper,
+                    padding: defaultGridActionPadding,
+                    border: 1,
+                    borderColor: (theme) => theme.palette.divider,
+                    borderRadius: 2,
+                    flexGrow: 1,
                   }}
                 >
-                  <BodyIconTypography label="Available Offerings" />
-                  <Divider />
-                </StackColumn>
-
-                {!availableOfferingExist && (
-                  <StackColumn
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
-                    <BodyIconTypography label="No offering is available" />
-                  </StackColumn>
-                )}
-
-                {availableOfferingExist && (
-                  <StackRow
-                    sx={{
-                      paddingLeft: defaultPadding,
-                      paddingRight: defaultPadding,
-                      paddingTop: defaultPadding,
-                    }}
-                  >
-                    {availableOfferings.map((availableOffering) => (
-                      <Card key={availableOffering.code} sx={{ width: { xs: '100%', sm: 500 } }}>
-                        <CardHeader
-                          title={
-                            <>
-                              <BodyIconTypography label={availableOffering.name} invertDefaultColor />
-                              <BodyIconTypography label={`Unit price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
-                            </>
-                          }
-                        />
-
-                        <CardContent sx={{ marginLeft: 1 }}>
-                          <List sx={{ listStyleType: 'disc' }}>
-                            Feature set:
-                            {availableOffering.featureSet.map(({ name, description }, index) => (
-                              <ListItem key={index} sx={{ display: 'list-item' }}>
-                                <SmallIconTypography label={`${name}: ${description}`} />
-                              </ListItem>
-                            ))}
-                          </List>
-                          {!rootData.organization?.hasAttachedPaymentMethod && (
-                            <SmallIconTypography label="You need to have payment method setup in order to upgrade to this offering. Please setup payment method under Billing tab." />
-                          )}
-                        </CardContent>
-
-                        {rootData.organization?.hasAttachedPaymentMethod && (
-                          <CardActions sx={{ justifyContent: 'flex-end' }}>
-                            <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)}>
-                              Upgrade
-                            </Button>
-                          </CardActions>
-                        )}
-                      </Card>
-                    ))}
+                  <StackRow sx={{ alignItems: 'center' }}>
+                    <SmallIconTypography label={`${seledctedZones.length} records selected`} />
+                    <PushToRight />
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveZonesClick}>
+                      Remove Zone
+                    </Button>
                   </StackRow>
-                )}
-              </StackColumnWithSaveExitCancelAppBar>
+                </Box>
+              </StackRow>
             )}
-          />
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <PushToRight />
+              <AddOrganizationZoneButton organizationId={organizationId} connectionIds={zonesConnectionIds} />
+            </StackRow>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedZones}
+                onRowSelectionModelChange={handleSelectedZonesChanged}
+                rows={zoneRows}
+                columns={zoneColumns}
+                hideFooterPagination={zoneRows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: zoneRows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+              />
+            </StackRow>
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['tags-setup'] = divElement;
+              }}
+            >
+              <SectionIconTypography label="Tags Setup" />
+              <BodyIconTypography label="Edit your organization tags details" />
+              <Divider />
+            </StackColumn>
+
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+              <PushToRight />
+              <Search size="small" placeholder="Search for tags" defaultValue={customTagNameSearchText} onChange={handleCustomTagsSearchTextChange} />
+            </GridContainer>
+
+            {seledctedCustomTags.length > 0 && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                <Box
+                  sx={{
+                    backgroundColor: (theme) => theme.palette.background.paper,
+                    padding: defaultGridActionPadding,
+                    border: 1,
+                    borderColor: (theme) => theme.palette.divider,
+                    borderRadius: 2,
+                    flexGrow: 1,
+                  }}
+                >
+                  <StackRow sx={{ alignItems: 'center' }}>
+                    <SmallIconTypography label={`${seledctedCustomTags.length} records selected`} />
+                    <PushToRight />
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveCustomTagsClick}>
+                      Remove Tag
+                    </Button>
+                  </StackRow>
+                </Box>
+              </StackRow>
+            )}
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <PushToRight />
+              <AddOrganizationCustomTagButton organizationId={organizationId} connectionIds={customTagsConnectionIds} />
+            </StackRow>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedCustomTags}
+                onRowSelectionModelChange={handleSelectedCustomTagsChanged}
+                rows={customTagRows}
+                columns={customTagColumns}
+                hideFooterPagination={customTagRows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: customTagRows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+              />
+            </StackRow>
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['subscriptions'] = divElement;
+              }}
+            >
+              <SectionIconTypography label="Subscriptions" />
+              <BodyIconTypography label="Active Offering" />
+              <Divider />
+            </StackColumn>
+
+            {offering && (
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <Card sx={{ width: { xs: '100%', sm: 500 } }}>
+                  <CardHeader
+                    title={
+                      <>
+                        <BodyIconTypography label={offering.name} invertDefaultColor />
+                        <BodyIconTypography label={`Unit price: $${(offering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
+                      </>
+                    }
+                  />
+
+                  <CardContent sx={{ marginLeft: 1 }}>
+                    <List sx={{ listStyleType: 'disc' }}>
+                      Feature set:
+                      {offering.featureSet.map(({ name, description }, index) => (
+                        <ListItem key={index} sx={{ display: 'list-item' }}>
+                          <SmallIconTypography label={`${name}: ${description}`} />
+                        </ListItem>
+                      ))}
+                    </List>
+
+                    {!offering.free && (
+                      <CardActions sx={{ justifyContent: 'flex-end' }}>
+                        <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick}>
+                          Cancel
+                        </Button>
+                      </CardActions>
+                    )}
+                  </CardContent>
+                </Card>
+              </StackColumn>
+            )}
+
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <BodyIconTypography label="Available Offerings" />
+              <Divider />
+            </StackColumn>
+
+            {!availableOfferingExist && (
+              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                <BodyIconTypography label="No offering is available" />
+              </StackColumn>
+            )}
+
+            {availableOfferingExist && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                {availableOfferings.map((availableOffering) => (
+                  <Card key={availableOffering.code} sx={{ width: { xs: '100%', sm: 500 } }}>
+                    <CardHeader
+                      title={
+                        <>
+                          <BodyIconTypography label={availableOffering.name} invertDefaultColor />
+                          <BodyIconTypography label={`Unit price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
+                        </>
+                      }
+                    />
+
+                    <CardContent sx={{ marginLeft: 1 }}>
+                      <List sx={{ listStyleType: 'disc' }}>
+                        Feature set:
+                        {availableOffering.featureSet.map(({ name, description }, index) => (
+                          <ListItem key={index} sx={{ display: 'list-item' }}>
+                            <SmallIconTypography label={`${name}: ${description}`} />
+                          </ListItem>
+                        ))}
+                      </List>
+                      {!rootData.organization?.hasAttachedPaymentMethod && (
+                        <SmallIconTypography label="You need to have payment method setup in order to upgrade to this offering. Please setup payment method under Billing tab." />
+                      )}
+                    </CardContent>
+
+                    {rootData.organization?.hasAttachedPaymentMethod && (
+                      <CardActions sx={{ justifyContent: 'flex-end' }}>
+                        <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)}>
+                          Upgrade
+                        </Button>
+                      </CardActions>
+                    )}
+                  </Card>
+                ))}
+              </StackRow>
+            )}
+          </StackColumnWithSaveExitCancelAppBar>
         </Box>
       </Box>
 

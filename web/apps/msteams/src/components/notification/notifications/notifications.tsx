@@ -20,6 +20,7 @@ import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import type { notifications_acceptInvitationToJoinLocationMutation } from './__generated__/notifications_acceptInvitationToJoinLocationMutation.graphql';
 import type { notifications_acceptInvitationToJoinOrganizationMutation } from './__generated__/notifications_acceptInvitationToJoinOrganizationMutation.graphql';
@@ -122,6 +123,7 @@ const Notifications = ({ queryReference }: Props) => {
     }
   `);
 
+  const navigate = useNavigate();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [rejectedIds, setRejectedIds] = useState<string[]>([]);
@@ -130,6 +132,10 @@ const Notifications = ({ queryReference }: Props) => {
     () => (rootData.myNotifications ? rootData.myNotifications.edges.map((edge) => edge.node) : []),
     [rootData.myNotifications],
   );
+
+  const handleCloseClick = () => {
+    navigate(-1);
+  };
 
   const handleRejectInvitationToJoinOrganizationClick = (id: string) => {
     const notification = myNotifications.find((item) => item.id === id);
@@ -568,7 +574,7 @@ const Notifications = ({ queryReference }: Props) => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <StackColumnWithSaveExitCancelAppBar hideCancel hideSaveAndExit label="Notifications"></StackColumnWithSaveExitCancelAppBar>
+        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Notifications" />
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
             <DataGrid

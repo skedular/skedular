@@ -3,13 +3,17 @@ import type { addOrganization_addOrganizationMutation } from '@/queries/__genera
 import type { addOrganization_completeOrganizationOnboardingMutation } from '@/queries/__generated__/addOrganization_completeOrganizationOnboardingMutation.graphql';
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {
   BodyIconTypography,
   FormFieldLabel,
+  FormStackColumn,
   SectionIconTypography,
+  SmallIconTypography,
   StackColumn,
   StackColumnWithSaveExitCancelAppBar,
+  StackRow,
 } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import {
@@ -92,10 +96,10 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validate = makeValidate(organizationSchema);
-  const requiredFields = makeRequired(organizationSchema);
+  const validateOrganizationDetails = makeValidate(organizationSchema);
+  const requiredOrganizationDetailsFields = makeRequired(organizationSchema);
 
-  const handleOrganizationCreateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -174,53 +178,61 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <Form
-          onSubmit={handleOrganizationCreateClick}
-          initialValues={{
-            name: '',
-            about: null,
-            website: null,
-          }}
-          validate={validate}
-          render={({ handleSubmit }) => (
-            <StackColumnWithSaveExitCancelAppBar
-              onSubmit={handleSubmit}
-              onCancel={onCancel}
-              label="Add Organization"
-              hideCancel={!showCancel}
-              saveAndExitLabel={saveAndExitLabel}
-            >
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <SectionIconTypography label="Organization Setup" />
-                <BodyIconTypography label="Edit your organization name and details" />
-                <Divider />
-              </StackColumn>
+        <StackColumnWithSaveExitCancelAppBar onClose={onCancel} label="Add Organization" hideClose={!showCancel}>
+          <Form
+            onSubmit={handleOrganizationAddClick}
+            initialValues={{
+              name: '',
+              about: null,
+              website: null,
+            }}
+            validate={validateOrganizationDetails}
+            render={({ handleSubmit }) => (
+              <FormStackColumn onSubmit={handleSubmit}>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Organization Setup" />
+                  <BodyIconTypography label="Edit your organization name and details" />
+                  <Divider />
+                </StackColumn>
 
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <FormFieldLabel label="Name">
-                  <TextField name="name" required={requiredFields.name} />
-                </FormFieldLabel>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredOrganizationDetailsFields.name} />
+                  </FormFieldLabel>
 
-                <FormFieldLabel label="About">
-                  <TextField name="about" required={requiredFields.about} multiline rows={3} />
-                </FormFieldLabel>
+                  <FormFieldLabel label="About">
+                    <TextField name="about" required={requiredOrganizationDetailsFields.about} multiline rows={3} />
+                  </FormFieldLabel>
 
-                <FormFieldLabel label="Website">
-                  <TextField name="website" required={requiredFields.about} helperText="https://" />
-                </FormFieldLabel>
+                  <FormFieldLabel label="Website">
+                    <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
+                  </FormFieldLabel>
 
-                <FormFieldLabel label="Industry">
-                  <OrganizationMultipleChoicesIndustries
+                  <FormFieldLabel label="Industry">
+                    <OrganizationMultipleChoicesIndustries
+                      rootDataRelay={rootData}
+                      name="industrySubCategoryIds"
+                      required={requiredOrganizationDetailsFields.industrySubCategoryIds}
+                    />
+                  </FormFieldLabel>
+                  <OrganizationTermsOfUse
                     rootDataRelay={rootData}
-                    name="industrySubCategoryIds"
-                    required={requiredFields.industrySubCategoryIds}
+                    name="agreedToTermsOfUse"
+                    required={requiredOrganizationDetailsFields.agreedToTermsOfUse}
                   />
-                </FormFieldLabel>
-                <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
-              </StackColumn>
-            </StackColumnWithSaveExitCancelAppBar>
-          )}
-        />
+                </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackRow>
+                    <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                      <SmallIconTypography label={saveAndExitLabel ?? 'Add'} />
+                    </Button>
+                  </StackRow>
+                </StackColumn>
+              </FormStackColumn>
+            )}
+          />
+        </StackColumnWithSaveExitCancelAppBar>
       </Box>
     </Box>
   );

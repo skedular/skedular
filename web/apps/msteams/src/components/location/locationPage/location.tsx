@@ -97,7 +97,7 @@ const Location = ({ queryReference, onReloadRequired, locationId, organizationId
   };
 
   if (!rootData.location) {
-    return null;
+    return <></>;
   }
 
   return (

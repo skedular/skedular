@@ -1,11 +1,15 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {
   BodyIconTypography,
   FormFieldLabel,
+  FormStackColumn,
   SectionIconTypography,
+  SmallIconTypography,
   StackColumn,
   StackColumnWithSaveExitCancelAppBar,
+  StackRow,
 } from '@repo/shared/components/commons';
 import {
   errorNotificationOptions,
@@ -100,14 +104,14 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
   const navigate = useNavigate();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validate = makeValidate(deskSchema);
-  const requiredFields = makeRequired(deskSchema);
+  const validateDeskDetails = makeValidate(deskSchema);
+  const requiredDeskDetailsFields = makeRequired(deskSchema);
 
-  const handleCancelClick = () => {
+  const handleCloseClick = () => {
     navigate(-1);
   };
 
-  const handleSaveClick = ({ name, customTagIds, zoneIds }: DeskDetails) => {
+  const handleDeskDetailUpdateClick = ({ name, customTagIds, zoneIds }: DeskDetails) => {
     if (!rootData.desk) {
       return;
     }
@@ -141,8 +145,6 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           ...successNotificationOptions,
           render: <NotificationContent content={`Desk ${name} updated.`} />,
         });
-
-        navigate(-1);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -174,42 +176,52 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <Form
-          onSubmit={handleSaveClick}
-          initialValues={{
-            name: desk.name,
-            customTagIds: desk.customTags.map(({ uniqueId }) => uniqueId),
-            zoneIds: desk.zones.map(({ uniqueId }) => uniqueId),
-          }}
-          validate={validate}
-          render={({ handleSubmit }) => (
-            <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Edit Desk Information">
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <SectionIconTypography label="Desk Setup" />
-                <BodyIconTypography label="Edit your desk name and details" />
-                <Divider />
-              </StackColumn>
+        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Desk Information">
+          <Form
+            onSubmit={handleDeskDetailUpdateClick}
+            initialValues={{
+              name: desk.name,
+              customTagIds: desk.customTags.map(({ uniqueId }) => uniqueId),
+              zoneIds: desk.zones.map(({ uniqueId }) => uniqueId),
+            }}
+            validate={validateDeskDetails}
+            render={({ handleSubmit }) => (
+              <FormStackColumn onSubmit={handleSubmit}>
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Desk Setup" />
+                  <BodyIconTypography label="Edit your desk name and details" />
+                  <Divider />
+                </StackColumn>
 
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <FormFieldLabel label="Name">
-                  <TextField name="name" required={requiredFields.name} helperText="Add your desk name" />
-                </FormFieldLabel>
-
-                {organizationId && (
-                  <FormFieldLabel label="Tags">
-                    <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} />
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Name">
+                    <TextField name="name" required={requiredDeskDetailsFields.name} helperText="Add your desk name" />
                   </FormFieldLabel>
-                )}
 
-                {organizationId && (
-                  <FormFieldLabel label="Zones">
-                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
-                  </FormFieldLabel>
-                )}
-              </StackColumn>
-            </StackColumnWithSaveExitCancelAppBar>
-          )}
-        />
+                  {organizationId && (
+                    <FormFieldLabel label="Tags">
+                      <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredDeskDetailsFields.customTagIds} />
+                    </FormFieldLabel>
+                  )}
+
+                  {organizationId && (
+                    <FormFieldLabel label="Zones">
+                      <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredDeskDetailsFields.zoneIds} />
+                    </FormFieldLabel>
+                  )}
+                </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackRow>
+                    <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                      <SmallIconTypography label="Update" />
+                    </Button>
+                  </StackRow>
+                </StackColumn>
+              </FormStackColumn>
+            )}
+          />
+        </StackColumnWithSaveExitCancelAppBar>
       </Box>
     </Box>
   );

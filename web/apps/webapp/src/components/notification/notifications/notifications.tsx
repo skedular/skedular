@@ -23,6 +23,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
+import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -121,6 +122,7 @@ const Notifications = ({ queryReference }: Props) => {
     }
   `);
 
+  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [rejectedIds, setRejectedIds] = useState<string[]>([]);
@@ -129,6 +131,10 @@ const Notifications = ({ queryReference }: Props) => {
     () => (rootData.myNotifications ? rootData.myNotifications.edges.map((edge) => edge.node) : []),
     [rootData.myNotifications],
   );
+
+  const handleCloseClick = () => {
+    router.back();
+  };
 
   const handleRejectInvitationToJoinOrganizationClick = (id: string) => {
     const notification = myNotifications.find((item) => item.id === id);
@@ -567,7 +573,7 @@ const Notifications = ({ queryReference }: Props) => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <StackColumnWithSaveExitCancelAppBar hideCancel hideSaveAndExit label="Notifications"></StackColumnWithSaveExitCancelAppBar>
+        <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Notifications" />
         <StackColumn sx={{ maxWidth: maxScreenWidth }}>
           <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
             <DataGrid

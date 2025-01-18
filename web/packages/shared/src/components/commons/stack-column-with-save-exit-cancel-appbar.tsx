@@ -1,10 +1,6 @@
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
-import { Theme } from '@mui/material/styles';
-import type { SxProps } from '@mui/system';
-import { ResponsiveStyleValue } from '@mui/system';
 import { useContext, type PropsWithChildren } from 'react';
 import { PaletteModeContext } from '../../libs/providers';
 import { coal, defaultPadding, maxScreenWidth, sandstone } from '../../libs/theme';
@@ -14,47 +10,19 @@ import SmallIconTypography from './small-icon-typography';
 import StackColumn from './stack-column';
 import StackRow from './stack-row';
 
-interface AnyObject {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
-
 type Props = {
-  sx?: SxProps<Theme>;
-  spacing?: ResponsiveStyleValue<number | string>;
   label: string;
-  onSubmit?: (event?: Partial<Pick<React.SyntheticEvent, 'preventDefault' | 'stopPropagation'>>) => Promise<AnyObject | undefined> | undefined;
-  onCancel?: () => void;
-  hideCancel?: boolean;
-  hideSaveAndExit?: boolean;
+  onClose?: () => void;
+  hideClose?: boolean;
   useChildrenPadding?: boolean;
-  saveAndExitLabel?: string;
 };
 
-const StackColumnWithSaveExitCancelAppBar = ({
-  children,
-  sx,
-  spacing,
-  label,
-  onSubmit,
-  onCancel,
-  hideCancel,
-  hideSaveAndExit,
-  useChildrenPadding,
-  saveAndExitLabel,
-}: PropsWithChildren<Props>) => {
+const StackColumnWithSaveExitCancelAppBar = ({ children, label, onClose, hideClose, useChildrenPadding }: PropsWithChildren<Props>) => {
   const paletteMode = useContext(PaletteModeContext);
   const childrenSx = useChildrenPadding ? { maxWidth: maxScreenWidth, padding: defaultPadding } : { maxWidth: maxScreenWidth };
 
   return (
-    <Stack
-      direction="column"
-      spacing={spacing === undefined ? 1 : spacing}
-      sx={{ padding: 0, ...sx }}
-      component="form"
-      noValidate
-      onSubmit={onSubmit}
-    >
+    <StackColumn>
       <AppBar position="sticky">
         <Toolbar
           sx={{
@@ -67,7 +35,7 @@ const StackColumnWithSaveExitCancelAppBar = ({
 
           <PushToRight />
           <StackRow>
-            {!hideCancel && (
+            {!hideClose && (
               <Button
                 sx={{
                   border: 1,
@@ -79,15 +47,9 @@ const StackColumnWithSaveExitCancelAppBar = ({
                 }}
                 variant="contained"
                 color="inherit"
-                onClick={onCancel}
+                onClick={onClose}
               >
-                <SmallIconTypography label="Cancel" invertDefaultColor />
-              </Button>
-            )}
-
-            {!hideSaveAndExit && (
-              <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                <SmallIconTypography label={saveAndExitLabel ?? 'Save & Exit'} />
+                <SmallIconTypography label="Close" invertDefaultColor />
               </Button>
             )}
           </StackRow>
@@ -95,7 +57,7 @@ const StackColumnWithSaveExitCancelAppBar = ({
       </AppBar>
 
       <StackColumn sx={childrenSx}>{children}</StackColumn>
-    </Stack>
+    </StackColumn>
   );
 };
 

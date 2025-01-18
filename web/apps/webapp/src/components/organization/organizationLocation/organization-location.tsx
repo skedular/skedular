@@ -17,6 +17,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
   BodyIconTypography,
   FormFieldLabel,
+  FormStackColumn,
   GridContainer,
   PushToRight,
   SectionIconTypography,
@@ -69,7 +70,7 @@ type Props = {
 type LocationDetails = {
   name: string;
   about: string | null;
-  timezone?: string;
+  timezone: string;
   physicalAddress: string;
 };
 
@@ -96,7 +97,7 @@ type DeskRowType = {
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   about: string().nullable(),
-  timezone: string().nullable(),
+  timezone: string().required('Timezone is required'),
   physicalAddress: string().nullable(),
 });
 
@@ -235,8 +236,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-  const validate = makeValidate(locationSchema);
-  const requiredFields = makeRequired(locationSchema);
+  const validateLocationDetails = makeValidate(locationSchema);
+  const requiredLocationDetailsFields = makeRequired(locationSchema);
   const [deskNameSearchText, setDeskNameSearchText] = useState<string>('');
   const [deskCustomTagIds, setDeskCustomTagIds] = useState<string[]>([]);
   const [deskZoneIds, setDeskZoneIds] = useState<string[]>([]);
@@ -298,7 +299,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     [refetchDesks],
   );
 
-  const handleDetailUpdateClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
+  const handleLocationDetailUpdateClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
     if (!rootData.location) {
       return;
     }
@@ -333,8 +334,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
           ...successNotificationOptions,
           render: <NotificationContent content={`Location ${name} details updated.`} />,
         });
-
-        router.push(getModernOrganizationLocationsBaseLink(organizationId));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -358,7 +357,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     });
   };
 
-  const handleCancelClick = () => {
+  const handleCloseClick = () => {
     router.push(getModernOrganizationLocationsBaseLink(organizationId));
   };
 
@@ -717,6 +716,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     },
   ];
 
+  if (!rootData.location) {
+    return <></>;
+  }
+
   const location = rootData.location;
 
   return (
@@ -724,137 +727,147 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       <Box sx={{ display: 'flex' }}>
         <OrganizationLocationLeftSideNavigationMenuContent organizationId={organizationId} locationId={locationId} hideIcons />
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
-          <Form
-            onSubmit={handleDetailUpdateClick}
-            initialValues={{
-              name: location.name,
-              about: location.about,
-              timezone: location.timezone,
-              physicalAddress: location.physicalAddress?.formattedAddress,
-            }}
-            validate={validate}
-            render={({ handleSubmit }) => (
-              <StackColumnWithSaveExitCancelAppBar onSubmit={handleSubmit} onCancel={handleCancelClick} label="Edit Location Information">
-                <StackColumn
-                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                  ref={(divElement) => {
-                    sectionRefs.current['setup'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label="Location Setup" />
-                  <BodyIconTypography label="Edit your location name and details" />
-                  <Divider />
-                </StackColumn>
-
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredFields.name} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="About">
-                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Timezone">
-                    <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="Physical Address">
-                    <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
-                  </FormFieldLabel>
-                </StackColumn>
-
-                <StackColumn
-                  sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                  ref={(divElement) => {
-                    sectionRefs.current['manage-desks'] = divElement;
-                  }}
-                >
-                  <SectionIconTypography label=" Manage Desks" />
-                  <BodyIconTypography label="Manage your location desks details" />
-                  <Divider />
-                </StackColumn>
-
-                <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-                  <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
-                  <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
-                  <PushToRight />
-                  <Search size="small" placeholder="Search for desks" defaultValue={deskNameSearchText} onChange={handleDeskNameSearchTextChange} />
-                </GridContainer>
-
-                {seledctedDesks.length > 0 && (
-                  <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                    <Box
-                      sx={{
-                        backgroundColor: (theme) => theme.palette.background.paper,
-                        padding: defaultGridActionPadding,
-                        border: 1,
-                        borderColor: (theme) => theme.palette.divider,
-                        borderRadius: 2,
-                        flexGrow: 1,
-                      }}
-                    >
-                      <StackRow sx={{ alignItems: 'center' }}>
-                        <SmallIconTypography label={`${seledctedDesks.length} records selected`} />
-                        <PushToRight />
-                        <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateDesksClick}>
-                          Deactivate Desk
-                        </Button>
-                        <Button size="medium" variant="contained" color="secondary" onClick={handleActivateDesksClick}>
-                          Activate Desk
-                        </Button>
-                        <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveDesksClick}>
-                          Remove Desk
-                        </Button>
-                      </StackRow>
-                    </Box>
-                  </StackRow>
-                )}
-
-                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                  <PushToRight />
-                  <AddDeskButton
-                    onReloadRequired={onReloadRequired}
-                    organizationId={organizationId}
-                    locationId={locationId}
-                    connectionIds={desksConnectionIds}
-                  />
-                  <BulkAddDeskButton
-                    onReloadRequired={onReloadRequired}
-                    organizationId={organizationId}
-                    locationId={locationId}
-                    connectionIds={desksConnectionIds}
-                  />
-                </StackRow>
-
-                <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                  <DataGrid
-                    checkboxSelection
-                    rowSelectionModel={seledctedDesks}
-                    onRowSelectionModelChange={handleSelectedDesksChanged}
-                    rows={deskRows}
-                    columns={deskColumns}
-                    hideFooterPagination={deskRows.length <= 10}
-                    initialState={{
-                      pagination: {
-                        rowCount: deskRows.length,
-                        paginationModel: {
-                          pageSize: 10,
-                        },
-                      },
+          <StackColumnWithSaveExitCancelAppBar onClose={handleCloseClick} label="Edit Location Information">
+            <Form
+              onSubmit={handleLocationDetailUpdateClick}
+              initialValues={{
+                name: location.name,
+                about: location.about,
+                timezone: location.timezone ?? '',
+                physicalAddress: location.physicalAddress?.formattedAddress,
+              }}
+              validate={validateLocationDetails}
+              render={({ handleSubmit }) => (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <StackColumn
+                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    ref={(divElement) => {
+                      sectionRefs.current['setup'] = divElement;
                     }}
-                    pageSizeOptions={[10]}
-                    ignoreDiacritics
-                    disableRowSelectionOnClick
-                    getRowHeight={() => 'auto'}
-                    rowSpacingType="margin"
-                    getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                    sx={defaultGridStyle}
-                  />
-                </StackRow>
-              </StackColumnWithSaveExitCancelAppBar>
+                  >
+                    <SectionIconTypography label="Location Setup" />
+                    <BodyIconTypography label="Edit your location name and details" />
+                    <Divider />
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredLocationDetailsFields.name} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="About">
+                      <TextField name="about" required={requiredLocationDetailsFields.about} multiline rows={3} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Timezone">
+                      <SingleChoinceTimezone name="timezone" required={requiredLocationDetailsFields.timezone} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Physical Address">
+                      <TextField name="physicalAddress" required={requiredLocationDetailsFields.physicalAddress} multiline rows={5} />
+                    </FormFieldLabel>
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                        <SmallIconTypography label="Update" />
+                      </Button>
+                    </StackRow>
+                  </StackColumn>
+                </FormStackColumn>
+              )}
+            />
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['manage-desks'] = divElement;
+              }}
+            >
+              <SectionIconTypography label=" Manage Desks" />
+              <BodyIconTypography label="Manage your location desks details" />
+              <Divider />
+            </StackColumn>
+
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+              <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
+              <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
+              <PushToRight />
+              <Search size="small" placeholder="Search for desks" defaultValue={deskNameSearchText} onChange={handleDeskNameSearchTextChange} />
+            </GridContainer>
+
+            {seledctedDesks.length > 0 && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                <Box
+                  sx={{
+                    backgroundColor: (theme) => theme.palette.background.paper,
+                    padding: defaultGridActionPadding,
+                    border: 1,
+                    borderColor: (theme) => theme.palette.divider,
+                    borderRadius: 2,
+                    flexGrow: 1,
+                  }}
+                >
+                  <StackRow sx={{ alignItems: 'center' }}>
+                    <SmallIconTypography label={`${seledctedDesks.length} records selected`} />
+                    <PushToRight />
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateDesksClick}>
+                      Deactivate Desk
+                    </Button>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateDesksClick}>
+                      Activate Desk
+                    </Button>
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveDesksClick}>
+                      Remove Desk
+                    </Button>
+                  </StackRow>
+                </Box>
+              </StackRow>
             )}
-          />
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <PushToRight />
+              <AddDeskButton
+                onReloadRequired={onReloadRequired}
+                organizationId={organizationId}
+                locationId={locationId}
+                connectionIds={desksConnectionIds}
+              />
+              <BulkAddDeskButton
+                onReloadRequired={onReloadRequired}
+                organizationId={organizationId}
+                locationId={locationId}
+                connectionIds={desksConnectionIds}
+              />
+            </StackRow>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedDesks}
+                onRowSelectionModelChange={handleSelectedDesksChanged}
+                rows={deskRows}
+                columns={deskColumns}
+                hideFooterPagination={deskRows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: deskRows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+              />
+            </StackRow>
+          </StackColumnWithSaveExitCancelAppBar>
         </Box>
       </Box>
 
