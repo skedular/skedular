@@ -320,18 +320,19 @@ public class TeamService(
             throw new InvalidOperationException();
         }
 
-        if (string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
+        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
         {
-            // Ensure we do not return other customer team by forcing CustomerId as search criteria
-            searchCriteria.CustomerId = customer.Id;
+            if (string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
+            {
+                // Ensure we do not return other customer team by forcing CustomerId as search criteria
+                searchCriteria.CustomerId = customer.Id;
+            }
         }
         else
         {
             // TODO: 20250117 - Morteza: We currently only support returning teams for others customer when we are part
             // of same organization meaning organization ID is then required. We for now do not support use cases where
             // team is created without organization attached.    
-            ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.OrganizationId);
-
             var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 searchCriteria.OrganizationId,
                 false,
@@ -346,10 +347,19 @@ public class TeamService(
                 throw new Unauthorized();
             }
 
-            if (organization.OrganizationMembers.All(member => member.Customer.Id != searchCriteria.CustomerId) ||
-                organization.OrganizationMembers.All(member => member.Customer.Id != customer.Id))
+            if (string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
             {
-                throw new Unauthorized();
+                if (organization.OrganizationMembers.All(member => member.Customer.Id != customer.Id))
+                {
+                    throw new Unauthorized();
+                }
+            }
+            else
+            {
+                if (organization.OrganizationMembers.All(member => member.Customer.Id != searchCriteria.CustomerId))
+                {
+                    throw new Unauthorized();
+                }
             }
         }
 
