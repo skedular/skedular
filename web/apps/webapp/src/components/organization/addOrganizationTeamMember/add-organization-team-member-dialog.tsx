@@ -199,7 +199,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
   const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Add Team Member" />
       <DialogContent>
         <Form

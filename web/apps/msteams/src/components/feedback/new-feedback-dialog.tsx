@@ -105,7 +105,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Send us feedback" />
       <DialogContent>
         <Form

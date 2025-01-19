@@ -528,7 +528,7 @@ const NewBookingDialog = ({
   }
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Make a booking" />
       <DialogContent>
         <Form

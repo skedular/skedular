@@ -116,7 +116,7 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Invite Members" />
       <DialogContent>
         <Form

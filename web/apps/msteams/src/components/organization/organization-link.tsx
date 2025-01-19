@@ -118,6 +118,10 @@ const OrganizationLink = ({
     }
   };
 
+  const handleCloseClick = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
     <>
       <StackRow>
@@ -133,7 +137,7 @@ const OrganizationLink = ({
           </Button>
         )}
       </StackRow>
-      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={handleCloseClick} fullWidth>
         <DialogContent>
           <OrganizationBookingsCard organizationId={id} organizationName={name} organizationsConnectionIds={[]} />
         </DialogContent>

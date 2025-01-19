@@ -509,7 +509,7 @@ const TeamMembersTab = ({ queryReference, organizationId }: Props) => {
         </Paper>
       )}
 
-      <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} fullWidth>
+      <Dialog TransitionComponent={DialogTransition} open={invitePeopleDialogOpen} onClose={handleCancelInvitingPeopleClick} fullWidth>
         <DefaultDialogTitle title="Invite Members" />
         <DialogContent>
           <Form

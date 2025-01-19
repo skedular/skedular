@@ -123,7 +123,7 @@ const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Add Zone" />
       <DialogContent>
         <Form

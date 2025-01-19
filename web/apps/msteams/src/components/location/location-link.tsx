@@ -79,6 +79,10 @@ const LocationLink = ({
     }
   };
 
+  const handleCloseClick = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
     <>
       <StackRow>
@@ -94,7 +98,7 @@ const LocationLink = ({
           </Button>
         )}
       </StackRow>
-      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={handleCloseClick} fullWidth>
         <DialogContent>
           <LocationBookingsCard
             organizationId={organizationId}

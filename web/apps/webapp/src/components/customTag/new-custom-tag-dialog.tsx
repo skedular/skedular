@@ -114,7 +114,7 @@ const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCance
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Add Tag" />
       <DialogContent>
         <Form

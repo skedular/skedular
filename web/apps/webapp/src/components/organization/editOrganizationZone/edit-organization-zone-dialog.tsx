@@ -147,7 +147,7 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
   }
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Edit Zone" />
       <DialogContent>
         <Form

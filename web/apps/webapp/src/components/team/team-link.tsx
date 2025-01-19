@@ -66,6 +66,10 @@ const TeamLink = ({
     }
   };
 
+  const handleCloseClick = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
     <>
       <StackRow>
@@ -82,7 +86,7 @@ const TeamLink = ({
         )}
       </StackRow>
 
-      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+      <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={handleCloseClick} fullWidth>
         <DialogContent>
           <TeamBookingsCard organizationId={organizationId} organizationName={organizationName} teamId={id} teamName={name} teamsConnectionIds={[]} />
         </DialogContent>

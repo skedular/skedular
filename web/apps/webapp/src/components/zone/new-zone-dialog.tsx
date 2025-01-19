@@ -114,7 +114,7 @@ const NewZoneDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCancel, or
   };
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} fullWidth>
+    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Add Zone" />
       <DialogContent>
         <Form
