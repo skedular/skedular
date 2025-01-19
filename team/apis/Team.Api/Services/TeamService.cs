@@ -360,8 +360,7 @@ public class TeamService(
             }
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await repositoryFactory.TeamRepository.GetPaginatedTeamsAsync(
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.TeamRepository.GetPaginatedTeamsAsync(
                 paginationInputParam,
                 searchCriteria,
                 orderByFields,
@@ -387,8 +386,10 @@ public class TeamService(
 
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            var organization =
-                await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                organizationId, 
+                false,
+                cancellationToken);
             if (organization is null)
             {
                 throw new OrganizationNotFound();
