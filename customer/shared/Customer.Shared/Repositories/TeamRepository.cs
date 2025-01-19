@@ -29,17 +29,19 @@ public class TeamRepository(CustomerDbContext dbContext, TimeProvider timeProvid
 
     public async Task<Team?> GetByIdAsync(
         string id,
-        bool includeDeletedTeamMembers, 
+        bool includeDeletedTeamMembers,
         CancellationToken cancellationToken) =>
         await DbContext.Team
             .Include(query => query.TeamMembers.Where(
                 teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query => query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
+            .Include(query => query.TeamMembers.Where(
+                teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationMember)
             .ThenInclude(query => query.Organization)
-            .Include(query => query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
+            .Include(query => query.TeamMembers.Where(
+                teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationMember)
             .ThenInclude(query => query.Customer)
             .Include(query => query.Organization)

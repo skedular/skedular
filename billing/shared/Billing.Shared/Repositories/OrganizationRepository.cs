@@ -40,8 +40,8 @@ internal static class OrganizationExtensions
         includeAllOfferings
             ? originalQuery.Include(query => query.OrganizationOfferings
                     .OrderByDescending(organizationOffering => organizationOffering.End))
-                .Include(query => query.OrganizationMembers.Where(organizationMember =>
-                    includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
+                .Include(query => query.OrganizationMembers.Where(
+                    organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
                 .ThenInclude(query => query.Customer)
                 .ThenInclude(query => query.Identities)
             : originalQuery.Include(query => query.OrganizationOfferings

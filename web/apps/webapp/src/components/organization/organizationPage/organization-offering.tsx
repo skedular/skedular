@@ -125,7 +125,7 @@ const OrganizationOffering = ({ rootDataRelay, onReloadRequired }: Props) => {
 
   return (
     <>
-      <LeadIconTypography label="Active offering" />
+      <LeadIconTypography label="Active Offering" />
       <Card sx={{ maxWidth: 500, height: '100%' }}>
         <CardHeader
           title={

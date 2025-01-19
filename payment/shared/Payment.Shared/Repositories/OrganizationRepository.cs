@@ -30,8 +30,8 @@ internal static class OrganizationExtensions
             bool includeAllOfferings)
     {
         var updatedQuery = originalQuery
-            .Include(query => query.OrganizationMembers.Where(organizationMember =>
-                includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
+            .Include(query => query.OrganizationMembers.Where(
+                organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities);
 
