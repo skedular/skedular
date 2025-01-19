@@ -322,11 +322,8 @@ public class TeamService(
 
         if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
         {
-            if (string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
-            {
                 // Ensure we do not return other customer team by forcing CustomerId as search criteria
                 searchCriteria.CustomerId = customer.Id;
-            }
         }
         else
         {
