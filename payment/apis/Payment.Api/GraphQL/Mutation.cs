@@ -14,8 +14,9 @@ public class Mutation(StripeConfiguration stripeConfiguration)
         [Service] IPaymentService paymentService,
         CancellationToken cancellationToken)
     {
-        var clientSecret =
-            await paymentService.AddOrganizationPaymentMethodIntentAsync(input.OrganizationId, cancellationToken);
+        var clientSecret = await paymentService.AddOrganizationPaymentMethodIntentAsync(
+            input.OrganizationId,
+            cancellationToken);
         return new AddOrganizationPaymentMethodIntentResponse
         {
             ClientMutationId = input.ClientMutationId,

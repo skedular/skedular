@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d8481e7ffe6cbe5b8e28305206cab7d1>>
+ * @generated SignedSource<<465ff56742ee914c111ad6e7d4bd42ff>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,9 @@ export type organizationAdmin_query$data = {
   readonly organization: {
     readonly about: string | null | undefined;
     readonly activeOffering: {
+      readonly colorTiltingAngle: string;
       readonly end: any;
+      readonly endColor: string;
       readonly featureSet: ReadonlyArray<{
         readonly description: string;
         readonly name: string;
@@ -23,15 +25,19 @@ export type organizationAdmin_query$data = {
       readonly id: string;
       readonly name: string;
       readonly start: any;
+      readonly startColor: string;
       readonly unitPrice: number;
     };
     readonly availableOfferings: ReadonlyArray<{
       readonly code: string;
+      readonly colorTiltingAngle: string;
+      readonly endColor: string;
       readonly featureSet: ReadonlyArray<{
         readonly description: string;
         readonly name: string;
       }>;
       readonly name: string;
+      readonly startColor: string;
       readonly unitPrice: number;
     }>;
     readonly canModify: boolean;
@@ -93,10 +99,31 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "unitPrice",
+  "name": "startColor",
   "storageKey": null
 },
 v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "endColor",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "colorTiltingAngle",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "unitPrice",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationFeatureSetDetails",
@@ -197,6 +224,9 @@ return {
           "selections": [
             (v0/*: any*/),
             (v1/*: any*/),
+            (v3/*: any*/),
+            (v4/*: any*/),
+            (v5/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -211,8 +241,8 @@ return {
               "name": "end",
               "storageKey": null
             },
-            (v3/*: any*/),
-            (v4/*: any*/),
+            (v6/*: any*/),
+            (v7/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -240,7 +270,10 @@ return {
             },
             (v1/*: any*/),
             (v3/*: any*/),
-            (v4/*: any*/)
+            (v4/*: any*/),
+            (v5/*: any*/),
+            (v6/*: any*/),
+            (v7/*: any*/)
           ],
           "storageKey": null
         }
@@ -353,6 +386,6 @@ return {
 };
 })();
 
-(node as any).hash = "464b65db9f753e2777f6e67462f7eff1";
+(node as any).hash = "69323d403cf42c45bd2f083fe53feb97";
 
 export default node;

@@ -90,6 +90,9 @@ public class PaymentSubscriber(
             {
                 if (organizationOffering.Code.IsFreeOffering())
                 {
+                    await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                    await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+
                     return;
                 }
 

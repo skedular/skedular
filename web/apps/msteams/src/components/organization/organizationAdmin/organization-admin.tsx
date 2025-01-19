@@ -5,9 +5,13 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import {
@@ -26,7 +30,7 @@ import {
 } from '@repo/shared/components/commons';
 import { CustomTag } from '@repo/shared/components/customTag';
 import { SingleChoiceCountry } from '@repo/shared/components/forms';
-import { DeleteIcon, EllipseMenuIcon, NewIcon } from '@repo/shared/components/icons';
+import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, TickIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -45,7 +49,11 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { getOrganizationBaseLink, OrganizationMultipleChoicesIndustries } from 'components/organization';
+import {
+  getModernOrganizationAdminBillingAndPaymentBaseLink,
+  getOrganizationBaseLink,
+  OrganizationMultipleChoicesIndustries,
+} from 'components/organization';
 import { AddOrganizationCustomTagButton } from 'components/organization/addOrganizationCustomTag';
 import { AddOrganizationPaymentMethodDialog } from 'components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from 'components/organization/addOrganizationZone';
@@ -159,6 +167,9 @@ const OrganizationAdmin = ({
           activeOffering {
             id
             name
+            startColor
+            endColor
+            colorTiltingAngle
             start
             end
             unitPrice
@@ -171,6 +182,9 @@ const OrganizationAdmin = ({
           availableOfferings {
             code
             name
+            startColor
+            endColor
+            colorTiltingAngle
             unitPrice
             featureSet {
               name
@@ -1432,93 +1446,132 @@ const OrganizationAdmin = ({
               }}
             >
               <SectionIconTypography label="Subscriptions" />
-              <BodyIconTypography label="Active Offering" />
               <Divider />
             </StackColumn>
 
-            {activeOffering && (
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <Card sx={{ width: { xs: '100%', sm: 500 } }}>
-                  <CardHeader
-                    title={
-                      <>
-                        <BodyIconTypography label={activeOffering.name} invertDefaultColor />
-                        <BodyIconTypography label={`Unit price: $${(activeOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
-                      </>
-                    }
-                  />
+            <GridContainer
+              spacing={1}
+              sx={{
+                paddingLeft: defaultPadding,
+                paddingRight: defaultPadding,
+                paddingTop: defaultPadding,
+                justifyContent: 'space-between',
+                alignItems: 'stretch',
+              }}
+            >
+              {activeOffering && (
+                <Grid>
+                  <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%' }}>
+                    <CardHeader
+                      title={
+                        <>
+                          <BodyIconTypography label={activeOffering.name} invertDefaultColor />
+                          <BodyIconTypography label={`Unit Price: $${(activeOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
+                        </>
+                      }
+                      sx={{
+                        background: `linear-gradient(${activeOffering.colorTiltingAngle}, ${activeOffering.startColor}, ${activeOffering.endColor})`,
+                      }}
+                    />
 
-                  <CardContent sx={{ marginLeft: 1 }}>
-                    <List sx={{ listStyleType: 'disc' }}>
-                      Feature set:
-                      {activeOffering.featureSet.map(({ name, description }, index) => (
-                        <ListItem key={index} sx={{ display: 'list-item' }}>
-                          <SmallIconTypography label={`${name}: ${description}`} />
-                        </ListItem>
-                      ))}
-                    </List>
+                    <CardContent sx={{ marginLeft: 1 }}>
+                      <List sx={{ padding: 0 }}>
+                        <BodyIconTypography label="Feature:" />
+                        {activeOffering.featureSet.map(({ name, description }, index) => (
+                          <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
+                            <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
+                              <TickIcon fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText>
+                              <SmallIconTypography label={`${name}: ${description}`} />
+                            </ListItemText>
+                          </ListItem>
+                        ))}
+                      </List>
 
-                    {!activeOffering.free && (
-                      <CardActions sx={{ justifyContent: 'flex-end' }}>
-                        <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick}>
-                          Cancel
-                        </Button>
-                      </CardActions>
-                    )}
-                  </CardContent>
-                </Card>
-              </StackColumn>
-            )}
+                      {!activeOffering.free && (
+                        <CardActions sx={{ justifyContent: 'flex-end' }}>
+                          <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick}>
+                            Cancel
+                          </Button>
+                        </CardActions>
+                      )}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              )}
 
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <BodyIconTypography label="Available Offerings" />
-              <Divider />
-            </StackColumn>
-
-            {!availableOfferingExist && (
-              <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <BodyIconTypography label="No active offering is available" />
-              </StackColumn>
-            )}
-
-            {availableOfferingExist && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                {availableOfferings.map((availableOffering) => (
-                  <Card key={availableOffering.code} sx={{ width: { xs: '100%', sm: 500 } }}>
+              {availableOfferings.map((availableOffering) => (
+                <Grid key={availableOffering.code}>
+                  <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%' }}>
                     <CardHeader
                       title={
                         <>
                           <BodyIconTypography label={availableOffering.name} invertDefaultColor />
-                          <BodyIconTypography label={`Unit price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
+                          {availableOffering.unitPrice > 0 && (
+                            <BodyIconTypography label={`Unit Price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
+                          )}
+                          {availableOffering.unitPrice < 0 && <BodyIconTypography label={`Unit Price: Contact Sales`} invertDefaultColor />}
                         </>
                       }
+                      sx={{
+                        background: `linear-gradient(${availableOffering.colorTiltingAngle}, ${availableOffering.startColor}, ${availableOffering.endColor})`,
+                      }}
                     />
 
                     <CardContent sx={{ marginLeft: 1 }}>
-                      <List sx={{ listStyleType: 'disc' }}>
-                        Feature set:
+                      <List sx={{ padding: 0 }}>
+                        <BodyIconTypography label="Feature:" />
                         {availableOffering.featureSet.map(({ name, description }, index) => (
-                          <ListItem key={index} sx={{ display: 'list-item' }}>
-                            <SmallIconTypography label={`${name}: ${description}`} />
+                          <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
+                            <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
+                              <TickIcon fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText>
+                              <SmallIconTypography label={`${name}: ${description}`} />
+                            </ListItemText>
                           </ListItem>
                         ))}
+
+                        {!rootData.organization?.hasAttachedPaymentMethod && (
+                          <ListItem alignItems="flex-start" sx={{ padding: 0, paddingTop: 1 }}>
+                            <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
+                              <ErrorIcon fontSize="large" sx={{ color: 'red' }} />
+                            </ListItemIcon>
+                            <ListItemText>
+                              <SmallIconTypography label="You need to have payment method setup in order to upgrade to this offering." color="red" />
+                            </ListItemText>
+                          </ListItem>
+                        )}
                       </List>
-                      {!rootData.organization?.hasAttachedPaymentMethod && (
-                        <SmallIconTypography label="You need to have payment method setup in order to upgrade to this active offering. Please setup payment method under Billing tab." />
-                      )}
                     </CardContent>
 
-                    {rootData.organization?.hasAttachedPaymentMethod && (
+                    {!rootData.organization?.hasAttachedPaymentMethod && (
                       <CardActions sx={{ justifyContent: 'flex-end' }}>
-                        <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)}>
+                        <Link href={getModernOrganizationAdminBillingAndPaymentBaseLink(organizationId)}>
+                          <Button color="primary" variant="contained" sx={{ textTransform: 'none' }}>
+                            Add Payment Method
+                          </Button>
+                        </Link>
+                      </CardActions>
+                    )}
+
+                    {rootData.organization?.hasAttachedPaymentMethod && availableOffering.unitPrice > 0 && (
+                      <CardActions sx={{ justifyContent: 'flex-end' }}>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={() => handleUpgradeOfferingClick(availableOffering.code)}
+                          sx={{ textTransform: 'none' }}
+                        >
                           Upgrade
                         </Button>
                       </CardActions>
                     )}
                   </Card>
-                ))}
-              </StackRow>
-            )}
+                </Grid>
+              ))}
+            </GridContainer>
           </AppBarWithStackColumn>
         </Box>
       </Box>

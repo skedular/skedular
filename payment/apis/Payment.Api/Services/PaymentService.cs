@@ -189,7 +189,8 @@ public class PaymentService(
         _ = repositoryFactory.OrganizationStripePaymentMethodRepository.Remove(organizationStripePaymentMethod);
         _ = await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork
             .SaveChangesAsync(cancellationToken);
-        await PublishOrganizationPaymentMethodStateAsync(organizationStripePaymentMethod.Organization.Id,
+        await PublishOrganizationPaymentMethodStateAsync(
+            organizationStripePaymentMethod.Organization.Id,
             cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
@@ -198,8 +199,9 @@ public class PaymentService(
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+            organizationId, 
+            cancellationToken);
         ArgumentNullException.ThrowIfNull(organization);
 
         var hasAttachedPaymentMethod =
