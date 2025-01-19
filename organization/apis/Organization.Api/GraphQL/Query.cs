@@ -290,13 +290,17 @@ public class Query(IMapper mapper)
 
         var matchedOffering = Offerings.AllOfferings.FirstOrDefault(item => item.ToOfferingCode() == code);
         var offering = matchedOffering.GetOffering();
+
         return new OrganizationOfferingDetails
         {
             Code = matchedOffering.ToOfferingCode(),
             Name = offering.Name,
             UnitPrice = offering.UnitPrice,
             FeatureSet = mapper.MapTo(offering).ToArray(),
-            Free = matchedOffering.IsFreeOffering()
+            Free = matchedOffering.IsFreeOffering(),
+            StartColor = offering.StartColor,
+            EndColor = offering.EndColor,
+            ColorTiltingAngle = offering.ColorTiltingAngle,
         };
     }
 

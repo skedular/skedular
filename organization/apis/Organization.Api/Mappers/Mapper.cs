@@ -313,7 +313,10 @@ public class Mapper : IMapper
                         Name = offering.Name,
                         UnitPrice = offering.UnitPrice,
                         FeatureSet = MapTo(offering).ToArray(),
-                        Free = item.IsFreeOffering()
+                        Free = item.IsFreeOffering(),
+                        StartColor = offering.StartColor,
+                        EndColor = offering.EndColor,
+                        ColorTiltingAngle = offering.ColorTiltingAngle,
                     };
                 }).ToArray();
 
@@ -806,7 +809,10 @@ public class Mapper : IMapper
             End = src.End,
             UnitPrice = src.UnitPrice,
             FeatureSet = MapTo(offering).ToArray(),
-            Free = src.Code.IsFreeOffering()
+            Free = src.Code.IsFreeOffering(),
+            StartColor = offering.StartColor,
+            EndColor = offering.EndColor,
+            ColorTiltingAngle = offering.ColorTiltingAngle,
         };
     }
 

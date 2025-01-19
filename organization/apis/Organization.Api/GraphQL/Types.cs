@@ -118,16 +118,6 @@ public class OrganizationAnalytics
     [GraphQLName("dailyBookingsTotals")] public OrganizationDailyBookingsTotal[] DailyBookingsTotals { get; set; } = [];
 }
 
-[GraphQLName("OrganizationOfferingDetails")]
-public class OrganizationOfferingDetails
-{
-    [GraphQLName("code")] public string Code { get; set; } = string.Empty;
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
-    [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
-    [GraphQLName("free")] public bool Free { get; set; }
-}
-
 [GraphQLName("OrganizationConnection")]
 public class OrganizationConnection : Connection<OrganizationEdge>;
 
@@ -271,19 +261,6 @@ public class OrganizationMemberWhereInput
 {
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-}
-
-[GraphQLName("OrganizationActiveOfferingDetails")]
-public class OrganizationActiveOfferingDetails : Node
-{
-    [GraphQLName("code")] public string Code { get; set; } = string.Empty;
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("start")] public DateTimeOffset Start { get; set; }
-    [GraphQLName("end")] public DateTimeOffset End { get; set; }
-    [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
-    [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
-    [GraphQLName("free")] public bool Free { get; set; }
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationOrderInput")]
@@ -486,4 +463,33 @@ public class OrganizationTagsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("organizationTags")] public OrganizationTagDetails[] OrganizationTags { get; set; } = [];
+}
+
+[GraphQLName("OrganizationOfferingDetails")]
+public class OrganizationOfferingDetails
+{
+    [GraphQLName("code")] public string Code { get; set; } = string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
+    [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
+    [GraphQLName("free")] public bool Free { get; set; }
+    [GraphQLName("startColor")] public string StartColor { get; set; } = string.Empty;
+    [GraphQLName("endColor")] public string EndColor { get; set; } = string.Empty;
+    [GraphQLName("colorTiltingAngle")] public string ColorTiltingAngle { get; set; } = string.Empty;
+}
+
+[GraphQLName("OrganizationActiveOfferingDetails")]
+public class OrganizationActiveOfferingDetails : Node
+{
+    [GraphQLName("code")] public string Code { get; set; } = string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("start")] public DateTimeOffset Start { get; set; }
+    [GraphQLName("end")] public DateTimeOffset End { get; set; }
+    [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
+    [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
+    [GraphQLName("free")] public bool Free { get; set; }
+    [GraphQLName("startColor")] public string StartColor { get; set; } = string.Empty;
+    [GraphQLName("endColor")] public string EndColor { get; set; } = string.Empty;
+    [GraphQLName("colorTiltingAngle")] public string ColorTiltingAngle { get; set; } = string.Empty;
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

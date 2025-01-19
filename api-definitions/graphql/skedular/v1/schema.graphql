@@ -499,12 +499,15 @@ type NotificationTeamDetails {
 
 type OrganizationActiveOfferingDetails {
   code: String!
+  colorTiltingAngle: String!
   end: DateTime!
+  endColor: String!
   featureSet: [OrganizationFeatureSetDetails!]!
   free: Boolean!
   id: ID!
   name: String!
   start: DateTime!
+  startColor: String!
   unitPrice: Int!
 }
 
@@ -666,9 +669,12 @@ type OrganizationMembersDetailsPayload {
 
 type OrganizationOfferingDetails {
   code: String!
+  colorTiltingAngle: String!
+  endColor: String!
   featureSet: [OrganizationFeatureSetDetails!]!
   free: Boolean!
   name: String!
+  startColor: String!
   unitPrice: Int!
 }
 

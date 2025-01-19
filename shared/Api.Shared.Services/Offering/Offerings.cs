@@ -3,6 +3,9 @@
 public class Offering
 {
     public string Name { get; set; } = string.Empty;
+    public string StartColor { get; set; } = string.Empty;
+    public string EndColor { get; set; } = string.Empty;
+    public string ColorTiltingAngle { get; set; } = string.Empty;
     public IReadOnlyCollection<FeatureSetCode> FeatureSets { get; set; } = [];
     public int UnitPrice { get; set; }
     public int MaxUserCount { get; set; }
@@ -30,6 +33,9 @@ public static class Offerings
             OfferingCode.EarlyBirdV1, new Offering
             {
                 Name = "Early bird",
+                StartColor = "#2575FC",
+                EndColor = "#6A11CB",
+                ColorTiltingAngle = "135deg",
                 FeatureSets =
                 [
                     FeatureSetCode.OrganizationUnlimitedUsers,
@@ -46,6 +52,9 @@ public static class Offerings
             OfferingCode.FreeTierV1, new Offering
             {
                 Name = "Free",
+                StartColor = "#A8E063",
+                EndColor = "#56AB2F",
+                ColorTiltingAngle = "135deg",
                 FeatureSets =
                 [
                     FeatureSetCode.OrganizationUpTo10Users,
@@ -62,6 +71,9 @@ public static class Offerings
             OfferingCode.PayAsYouGoV1, new Offering
             {
                 Name = "Pay as you go",
+                StartColor = "#D9AFD9",
+                EndColor = "#845EC2",
+                ColorTiltingAngle = "135deg",
                 FeatureSets =
                 [
                     FeatureSetCode.OrganizationUnlimitedUsers,
@@ -78,6 +90,9 @@ public static class Offerings
             OfferingCode.Simple100V1, new Offering
             {
                 Name = "Simple 100",
+                StartColor = "#FDBB2D",
+                EndColor = "#FF5733",
+                ColorTiltingAngle = "135deg",
                 FeatureSets =
                 [
                     FeatureSetCode.OrganizationUpTo100Users,
@@ -94,6 +109,9 @@ public static class Offerings
             OfferingCode.EnterpriseCustomV1, new Offering
             {
                 Name = "Enterprise",
+                StartColor = "#56CCF2",
+                EndColor = "#2F80ED",
+                ColorTiltingAngle = "135deg",
                 FeatureSets =
                 [
                     FeatureSetCode.OrganizationUpToXUsers,

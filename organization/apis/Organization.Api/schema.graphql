@@ -51,6 +51,9 @@ type OrganizationActiveOfferingDetails {
   unitPrice: Int!
   featureSet: [OrganizationFeatureSetDetails!]!
   free: Boolean!
+  startColor: String!
+  endColor: String!
+  colorTiltingAngle: String!
   id: ID!
 }
 
@@ -176,6 +179,9 @@ type OrganizationOfferingDetails {
   unitPrice: Int!
   featureSet: [OrganizationFeatureSetDetails!]!
   free: Boolean!
+  startColor: String!
+  endColor: String!
+  colorTiltingAngle: String!
 }
 
 type OrganizationPayload {

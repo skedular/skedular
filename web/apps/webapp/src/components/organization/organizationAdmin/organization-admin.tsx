@@ -158,6 +158,9 @@ const OrganizationAdmin = ({
           activeOffering {
             id
             name
+            startColor
+            endColor
+            colorTiltingAngle
             start
             end
             unitPrice
@@ -170,6 +173,9 @@ const OrganizationAdmin = ({
           availableOfferings {
             code
             name
+            startColor
+            endColor
+            colorTiltingAngle
             unitPrice
             featureSet {
               name
@@ -1445,6 +1451,9 @@ const OrganizationAdmin = ({
                         <BodyIconTypography label={`Unit price: $${(activeOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
                       </>
                     }
+                    sx={{
+                      background: `linear-gradient(${activeOffering.colorTiltingAngle}, ${activeOffering.startColor}, ${activeOffering.endColor})`,
+                    }}
                   />
 
                   <CardContent sx={{ marginLeft: 1 }}>
@@ -1491,6 +1500,9 @@ const OrganizationAdmin = ({
                           <BodyIconTypography label={`Unit price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
                         </>
                       }
+                      sx={{
+                        background: `linear-gradient(${availableOffering.colorTiltingAngle}, ${availableOffering.startColor}, ${availableOffering.endColor})`,
+                      }}
                     />
 
                     <CardContent sx={{ marginLeft: 1 }}>
