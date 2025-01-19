@@ -271,6 +271,7 @@ type LocationAddressDetails {
 type LocationAnalytics {
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
   desksOccupancyPercentage: [DesksOccupancyPercentage!]!
+  name: String!
 }
 
 type LocationBookingPermissions {
@@ -771,6 +772,7 @@ type Query {
   locationMemberRoles: [LocationMemberRole!]!
   locationMembers(after: String before: String first: Int last: Int orderBy: [LocationMemberOrderInput!] where: LocationMemberWhereInput!): LocationMemberConnection @cost(weight: "10")
   locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): LocationConnection @cost(weight: "10")
+  locationsAnalytics(from: DateTime! orderBy: [LocationOrderInput!] until: DateTime! where: LocationWhereInput!): [LocationAnalytics!]! @cost(weight: "10")
   locationVersion: Version!
   me: CustomerDetails @cost(weight: "10")
   msTeamsCustomerRecordSynced: Boolean! @cost(weight: "10")

@@ -49,6 +49,9 @@ export const getModernOrganizationLocationManageDesksBaseLink = (id: string, loc
 export const getModernOrganizationLocationDeskBaseLink = (id: string, locationId: string, deskId: string) =>
   `${getOrganizationBaseLink(id)}/locations/${locationId}/desks/${deskId}`;
 
+export const getModernOrganizationAnalyticsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/analytics?section=organization`;
+export const getModernOrganizationLocationsAnalyticsLocationsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/analytics?section=locations`;
+
 export const getModernOrganizationAdminSetupBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=setup`;
 export const getModernOrganizationAdminBillingAndPaymentBaseLink = (id: string) =>
   `${getOrganizationBaseLink(id)}/admin?section=billing-payment-setup`;

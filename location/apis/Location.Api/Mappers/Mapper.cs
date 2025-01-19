@@ -55,6 +55,7 @@ public interface IMapper
     IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src);
 
     LocationAnalytics MapTo(
+        string name,
         IEnumerable<LocationDesksOccupancyPercentage> locationDesksOccupancyPercentage,
         IEnumerable<LocationDailyBookingsTotal> locationDailyBookingsTotal);
 
@@ -296,15 +297,17 @@ public class Mapper : IMapper
         src.Select(MapTo)!;
 
     public LocationAnalytics MapTo(
+        string name,
         IEnumerable<LocationDesksOccupancyPercentage> locationDesksOccupancyPercentage,
         IEnumerable<LocationDailyBookingsTotal> locationDailyBookingsTotal) =>
         new()
         {
-            DesksOccupancyPercentage = locationDesksOccupancyPercentage.Select(item =>
-                    new DesksOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
+            Name = name,
+            DesksOccupancyPercentage = locationDesksOccupancyPercentage
+                .Select(item => new DesksOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
                 .ToArray(),
-            DailyBookingsTotals = locationDailyBookingsTotal.Select(item =>
-                    new GraphQL.LocationDailyBookingsTotal { Date = item.Date, Total = item.Total })
+            DailyBookingsTotals = locationDailyBookingsTotal
+                .Select(item =>new GraphQL.LocationDailyBookingsTotal { Date = item.Date, Total = item.Total })
                 .ToArray()
         };
 

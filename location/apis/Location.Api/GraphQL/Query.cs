@@ -22,10 +22,7 @@ public class Query(IMapper mapper)
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return new Version
-        {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        };
+        return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }
 
     [UseResolverScope]
@@ -46,11 +43,8 @@ public class Query(IMapper mapper)
     public async Task<LocationDetails?> LocationAsync(
         string id,
         [Service] ILocationService locationService,
-        CancellationToken cancellationToken)
-    {
-        var location = await locationService.GetByIdAsync(id, false, cancellationToken);
-        return mapper.MapTo(location);
-    }
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await locationService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     public async Task<LocationConnection?> LocationsAsync(
@@ -69,25 +63,22 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await locationService.GetPaginatedLocationsAsync(
-                new PaginationInputParam(after, first, before, last),
-                new LocationSearchCriteria(
-                    where.OrganizationId,
-                    where.NameContains,
-                    where.ZoneIds ?? [],
-                    where.CustomTagIds ?? []),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending
-                            ? OrderDirection.Ascending
-                            : OrderDirection.Descending;
-                        return new LocationOrder(direction, item.Field);
-                    }).ToList(),
-                false,
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await locationService.GetPaginatedLocationsAsync(
+            new PaginationInputParam(after, first, before, last),
+            new LocationSearchCriteria(
+                where.OrganizationId,
+                where.NameContains,
+                where.ZoneIds ?? [],
+                where.CustomTagIds ?? []),
+            orderBy is null
+                ? []
+                : orderBy.Select(item =>
+                {
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    return new LocationOrder(direction, item.Field);
+                }).ToList(),
+            false,
+            cancellationToken);
 
         return new LocationConnection
         {
@@ -115,8 +106,7 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var locations = await locationService.GetMyLocationsAsync(organizationId, cancellationToken);
-        return mapper.MapTo(locations).ToArray();
+        return mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, cancellationToken)).ToArray();
     }
 
     [UseResolverScope]
@@ -138,20 +128,17 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await locationMemberService.GetPaginatedLocationMembersAsync(
-                new PaginationInputParam(after, first, before, last),
-                new LocationMemberSearchCriteria(where.LocationId, where.NameContains),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending
-                            ? OrderDirection.Ascending
-                            : OrderDirection.Descending;
-                        return new LocationMemberOrder(direction, item.Field);
-                    }).ToList(),
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await locationMemberService.GetPaginatedLocationMembersAsync(
+            new PaginationInputParam(after, first, before, last),
+            new LocationMemberSearchCriteria(where.LocationId, where.NameContains),
+            orderBy is null
+                ? []
+                : orderBy.Select(item =>
+                {
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    return new LocationMemberOrder(direction, item.Field);
+                }).ToList(),
+            cancellationToken);
 
         return new LocationMemberConnection
         {
@@ -184,20 +171,17 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await deskService.GetPaginatedDesksAsync(
-                new PaginationInputParam(after, first, before, last),
-                new DeskSearchCriteria(where.LocationId, where.NameContains, where.ZoneIds, where.CustomTagIds),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending
-                            ? OrderDirection.Ascending
-                            : OrderDirection.Descending;
-                        return new DeskOrder(direction, item.Field);
-                    }).ToList(),
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await deskService.GetPaginatedDesksAsync(
+            new PaginationInputParam(after, first, before, last),
+            new DeskSearchCriteria(where.LocationId, where.NameContains, where.ZoneIds, where.CustomTagIds),
+            orderBy is null
+                ? []
+                : orderBy.Select(item =>
+                {
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    return new DeskOrder(direction, item.Field);
+                }).ToList(),
+            cancellationToken);
 
         return new DeskConnection
         {
@@ -214,19 +198,6 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<LocationAnalytics?> LocationAnalyticsAsync(
-        string locationId,
-        DateTimeOffset from,
-        DateTimeOffset until,
-        [Service] ILocationAnalyticsService locationAnalyticsService,
-        CancellationToken cancellationToken)
-    {
-        var (desksOccupancyPercentages, locationDailyBookingsTotals) =
-            await locationAnalyticsService.GetAnalyticsAsync(locationId, from, until, cancellationToken);
-        return mapper.MapTo(desksOccupancyPercentages, locationDailyBookingsTotals);
-    }
-
-    [UseResolverScope]
     public async Task<DeskDetails?> DeskAsync(
         string id,
         [Service] IDeskService deskService,
@@ -234,5 +205,48 @@ public class Query(IMapper mapper)
     {
         var desk = await deskService.GetByIdAsync(id, cancellationToken);
         return mapper.MapTo(desk);
+    }
+
+    [UseResolverScope]
+    public async Task<LocationAnalytics?> LocationAnalyticsAsync(
+        string locationId,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        [Service] ILocationAnalyticsService locationAnalyticsService,
+        CancellationToken cancellationToken)
+    {
+        var locationAnalytics = await locationAnalyticsService.GetAnalyticsAsync(locationId, from, until, cancellationToken);
+        return mapper.MapTo(locationAnalytics.Name, locationAnalytics.DesksOccupancyPercentage, locationAnalytics.DailyBookingsTotal);
+    }
+
+    [UseResolverScope]
+    public async Task<LocationAnalytics[]> LocationsAnalyticsAsync(
+        DateTimeOffset from,
+        DateTimeOffset until,
+        LocationWhereInput where,
+        LocationOrderInput[]? orderBy,
+        [Service] ILocationAnalyticsService locationAnalyticsService,
+        CancellationToken cancellationToken)
+    {
+        var locationsAnalytics = await locationAnalyticsService.GetAnalyticsAsync(
+            from,
+            until,
+            new LocationSearchCriteria(
+                where.OrganizationId,
+                where.NameContains,
+                where.ZoneIds ?? [],
+                where.CustomTagIds ?? []),
+            orderBy is null
+                ? []
+                : orderBy.Select(item =>
+                {
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    return new LocationOrder(direction, item.Field);
+                }).ToList(), cancellationToken);
+
+        return locationsAnalytics
+            .Select(locationAnalytics =>
+                mapper.MapTo(locationAnalytics.Name, locationAnalytics.DesksOccupancyPercentage, locationAnalytics.DailyBookingsTotal))
+            .ToArray();
     }
 }

@@ -1,6 +1,7 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Repositories;
@@ -11,12 +12,11 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationAnalyticsService
 {
-    Task<(ICollection<OrganizationMemberAttendancePercentage>, ICollection<OrganizationDailyBookingsTotal>)>
-        GetAnalyticsAsync(
-            string organizationId,
-            DateTimeOffset from,
-            DateTimeOffset until,
-            CancellationToken cancellationToken);
+    Task<OrganizationAnalytics> GetAnalyticsAsync(
+        string organizationId,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationAnalyticsService(
@@ -24,8 +24,7 @@ public class OrganizationAnalyticsService(
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService) : IOrganizationAnalyticsService
 {
-    public async Task<(ICollection<OrganizationMemberAttendancePercentage>, ICollection<OrganizationDailyBookingsTotal>
-            )>
+    public async Task<OrganizationAnalytics>
         GetAnalyticsAsync(
             string organizationId,
             DateTimeOffset from,
@@ -35,8 +34,7 @@ public class OrganizationAnalyticsService(
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -44,15 +42,15 @@ public class OrganizationAnalyticsService(
 
         if (!organizationAuthorizationService.CanViewAnalytics(organization, customer))
         {
-            return ([], []);
+            return new OrganizationAnalytics(organizationId, [], []);
         }
 
-        var bookings = await repositoryFactory.BookingRepository.Query(new Specification<Booking>
-        {
-            Criteria = query =>
-                !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.From >= from &&
-                query.To <= until.AddDays(1)
-        }).AsNoTracking().ToListAsync(cancellationToken);
+        var bookings = await repositoryFactory.BookingRepository
+            .Query(new Specification<Booking>
+            {
+                Criteria = query =>
+                    !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.From >= from && query.To <= until.AddDays(1)
+            }).AsNoTracking().ToListAsync(cancellationToken);
 
         var dailyMemberCounts = await repositoryFactory.DailyMemberCountRecordingRepository
             .Query(new Specification<DailyMemberCountRecording>
@@ -77,10 +75,7 @@ public class OrganizationAnalyticsService(
                     item.Date.Month == booking.From.Month &&
                     item.Date.Day == booking.From.Day);
 
-            return new OrganizationMemberAttendancePercentage
-            {
-                Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100
-            };
+            return new OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
         }).ToList();
 
         var organizationDailyBookingsTotals = dailyMemberCounts.Select(item =>
@@ -94,6 +89,6 @@ public class OrganizationAnalyticsService(
             return new OrganizationDailyBookingsTotal { Date = item.Date, Total = matchedBookingsCount };
         }).ToList();
 
-        return (organizationMemberAttendancePercentages, organizationDailyBookingsTotals);
+        return new OrganizationAnalytics(organizationId, organizationMemberAttendancePercentages, organizationDailyBookingsTotals);
     }
 }

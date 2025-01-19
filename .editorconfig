@@ -288,3 +288,6 @@ dotnet_code_quality.CA1822.api_surface = private
 
 # xUnit1003: Theory methods must have test data
 dotnet_diagnostic.xUnit1003.severity = none
+
+[*]
+max_line_length = 150

@@ -67,6 +67,7 @@ type LocationAddressDetails {
 }
 
 type LocationAnalytics {
+  name: String!
   desksOccupancyPercentage: [DesksOccupancyPercentage!]!
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
 }
@@ -194,8 +195,9 @@ type Query {
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   locationMembers(after: String first: Int before: String last: Int where: LocationMemberWhereInput! orderBy: [LocationMemberOrderInput!]): LocationMemberConnection @cost(weight: "10")
   desks(after: String first: Int before: String last: Int where: DeskWhereInput! orderBy: [DeskOrderInput!]): DeskConnection @cost(weight: "10")
-  locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
   desk(id: String!): DeskDetails @cost(weight: "10")
+  locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
+  locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput! orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
 }
 
 type RejectInvitationToJoinLocationPayload {

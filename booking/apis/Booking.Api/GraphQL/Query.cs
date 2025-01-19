@@ -91,9 +91,7 @@ public class Query(IMapper mapper)
                     ? []
                     : orderBy.Select(item =>
                     {
-                        var direction = item.Direction == OrderDirection.Ascending
-                            ? OrderDirection.Ascending
-                            : OrderDirection.Descending;
+                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
                         return new BookingOrder(direction, item.Field);
                     }).ToList(),
                 false,

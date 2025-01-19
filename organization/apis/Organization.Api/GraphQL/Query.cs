@@ -23,10 +23,7 @@ public class Query(IMapper mapper)
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return new Version
-        {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        };
+        return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }
 
     [UseResolverScope]
@@ -38,11 +35,8 @@ public class Query(IMapper mapper)
     [UseResolverScope]
     public async Task<OrganizationTermsOfUse> ActiveOrganizationTermsOfUseAsync(
         [Service] IOrganizationTermsOfUseService organizationTermsOfUseService,
-        CancellationToken cancellationToken)
-    {
-        var termsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken);
-        return mapper.MapTo(termsOfUse)!;
-    }
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken))!;
 
     [UseResolverScope]
     public OrganizationMemberRole[] OrganizationMemberRoles() =>
@@ -56,21 +50,15 @@ public class Query(IMapper mapper)
     public async Task<OrganizationIndustryMainCategoryReferenceDetails[]>
         OrganizationIndustryMainCategoriesReferencesAsync(
             [Service] IIndustryMainCategoryService industryMainCategoryService,
-            CancellationToken cancellationToken)
-    {
-        var industryMainCategories = await industryMainCategoryService.GetAllAsync(cancellationToken);
-        return mapper.MapTo(industryMainCategories).ToArray();
-    }
+            CancellationToken cancellationToken) =>
+        mapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken)).ToArray();
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> OrganizationAsync(
         string id,
         [Service] IOrganizationService organizationService,
-        CancellationToken cancellationToken)
-    {
-        var organization = await organizationService.GetByIdAsync(id, cancellationToken);
-        return mapper.MapTo(organization);
-    }
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await organizationService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationConnection?> OrganizationsAsync(
@@ -89,20 +77,17 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await organizationService.GetPaginatedOrganizationsAsync(
-                new PaginationInputParam(after, first, before, last),
-                new OrganizationSearchCriteria(where.NameContains),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending
-                            ? OrderDirection.Ascending
-                            : OrderDirection.Descending;
-                        return new OrganizationOrder(direction, item.Field);
-                    }).ToList(),
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await organizationService.GetPaginatedOrganizationsAsync(
+            new PaginationInputParam(after, first, before, last),
+            new OrganizationSearchCriteria(where.NameContains),
+            orderBy is null
+                ? []
+                : orderBy.Select(item =>
+                {
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    return new OrganizationOrder(direction, item.Field);
+                }).ToList(),
+            cancellationToken);
 
         return new OrganizationConnection
         {
@@ -129,8 +114,7 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var organizations = await organizationService.GetMyOrganizationsAsync(cancellationToken);
-        return mapper.MapTo(organizations).ToArray();
+        return mapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken)).ToArray();
     }
 
     [UseResolverScope]
@@ -151,20 +135,17 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await organizationMemberService.GetPaginatedOrganizationMembersAsync(
-                new PaginationInputParam(after, first, before, last),
-                new OrganizationMemberSearchCriteria(where.OrganizationId, where.NameContains),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending
-                            ? OrderDirection.Ascending
-                            : OrderDirection.Descending;
-                        return new OrganizationMemberOrder(direction, item.Field);
-                    }).ToList(),
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
+            new PaginationInputParam(after, first, before, last),
+            new OrganizationMemberSearchCriteria(where.OrganizationId, where.NameContains),
+            orderBy is null
+                ? []
+                : orderBy.Select(item =>
+                {
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    return new OrganizationMemberOrder(direction, item.Field);
+                }).ToList(),
+            cancellationToken);
 
         return new OrganizationMemberConnection
         {
@@ -188,9 +169,8 @@ public class Query(IMapper mapper)
         [Service] IOrganizationAnalyticsService organizationAnalyticsService,
         CancellationToken cancellationToken)
     {
-        var (organizationMemberAttendancePercentages, organizationDailyBookingsTotals) =
-            await organizationAnalyticsService.GetAnalyticsAsync(organizationId, from, until, cancellationToken);
-        return mapper.MapTo(organizationMemberAttendancePercentages, organizationDailyBookingsTotals);
+        var organizationAnalytics = await organizationAnalyticsService.GetAnalyticsAsync(organizationId, from, until, cancellationToken);
+        return mapper.MapTo(organizationAnalytics.MemberAttendancePercentage, organizationAnalytics.DailyBookingsTotal);
     }
 
     [UseResolverScope]
@@ -267,21 +247,15 @@ public class Query(IMapper mapper)
     public async Task<OrganizationTagDetails?> ZoneAsync(
         string id,
         [Service] ITagService tagService,
-        CancellationToken cancellationToken)
-    {
-        var tag = await tagService.GetByIdAsync(id, cancellationToken);
-        return mapper.MapTo(tag);
-    }
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationTagDetails?> CustomTagAsync(
         string id,
         [Service] ITagService tagService,
-        CancellationToken cancellationToken)
-    {
-        var tag = await tagService.GetByIdAsync(id, cancellationToken);
-        return mapper.MapTo(tag);
-    }
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public OrganizationOfferingDetails? OrganizationOffering(string code, CancellationToken cancellationToken)
@@ -300,7 +274,7 @@ public class Query(IMapper mapper)
             Free = matchedOffering.IsFreeOffering(),
             StartColor = offering.StartColor,
             EndColor = offering.EndColor,
-            ColorTiltingAngle = offering.ColorTiltingAngle,
+            ColorTiltingAngle = offering.ColorTiltingAngle
         };
     }
 
@@ -320,20 +294,17 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await tagService.GetPaginatedTagsAsync(
-                new PaginationInputParam(after, first, before, last),
-                tagSearchCriteria,
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending
-                            ? OrderDirection.Ascending
-                            : OrderDirection.Descending;
-                        return new TagOrder(direction, item.Field);
-                    }).ToList(),
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
+            new PaginationInputParam(after, first, before, last),
+            tagSearchCriteria,
+            orderBy is null
+                ? []
+                : orderBy.Select(item =>
+                {
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    return new TagOrder(direction, item.Field);
+                }).ToList(),
+            cancellationToken);
 
         return new OrganizationTagConnection
         {

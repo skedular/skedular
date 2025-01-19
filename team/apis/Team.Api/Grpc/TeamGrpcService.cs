@@ -88,9 +88,6 @@ public class TeamGrpcService(
                 request.Where.PrimaryLocationIds),
             request.OrderBy.Select(item =>
             {
-                var direction = item.Direction == OrderDirection.Ascending
-                    ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                    : Enterprise.Shared.Pagination.OrderDirection.Descending;
                 var field = item.Field switch
                 {
                     TeamOrderField.Name => Shared.Models.TeamOrderField.Name,
@@ -98,6 +95,9 @@ public class TeamGrpcService(
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
+                var direction = item.Direction == OrderDirection.Ascending
+                    ? Enterprise.Shared.Pagination.OrderDirection.Ascending
+                    : Enterprise.Shared.Pagination.OrderDirection.Descending;
                 return new TeamOrder(direction, field);
             }).ToList(),
             context.CancellationToken);

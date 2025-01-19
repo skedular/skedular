@@ -146,6 +146,8 @@ public class InviteCustomersToJoinLocationPayload
 [GraphQLName("LocationAnalytics")]
 public class LocationAnalytics
 {
+    [GraphQLName("name")] public required string Name { get; set; }
+
     [GraphQLName("desksOccupancyPercentage")]
     public DesksOccupancyPercentage[] DesksOccupancyPercentage { get; set; } = [];
 

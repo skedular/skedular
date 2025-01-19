@@ -21,22 +21,11 @@ namespace Location.Api.Services;
 
 public interface ILocationService
 {
-    Task<Shared.Models.Location> AddAsync(
-        Shared.Models.Location location,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken);
-
+    Task<Shared.Models.Location> AddAsync(Shared.Models.Location location, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Shared.Models.Location> UpdateAsync(Shared.Models.Location location, CancellationToken cancellationToken);
     Task<Shared.Models.Location> DeleteAsync(string locationId, CancellationToken cancellationToken);
-
-    Task<Shared.Models.Location?> GetByIdAsync(
-        string locationId,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken);
-
-    Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(
-        string? organizationId,
-        CancellationToken cancellationToken);
+    Task<Shared.Models.Location?> GetByIdAsync(string locationId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
+    Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(string? organizationId, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int )> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
@@ -68,9 +57,7 @@ public class LocationService(
         Organization? organization = null;
         if (location.Organization is not null)
         {
-            organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                location.Organization.Id,
-                cancellationToken);
+            organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
 
             if (!ignoreAuthorizationCheck)
             {
@@ -94,8 +81,7 @@ public class LocationService(
 
         if (!string.IsNullOrWhiteSpace(location.Id))
         {
-            var existingLocation =
-                await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
+            var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
             if (existingLocation is not null)
             {
                 if (!ignoreAuthorizationCheck && customer is null)
@@ -120,10 +106,7 @@ public class LocationService(
             cancellationToken);
 
         var locationEntity = mapper.MapTo(location, organization);
-        var physicalAddress = location.PhysicalAddress is null
-            ? null
-            : mapper.MapTo(location.PhysicalAddress, locationEntity);
-
+        var physicalAddress = location.PhysicalAddress is null ? null : mapper.MapTo(location.PhysicalAddress, locationEntity);
         if (string.IsNullOrWhiteSpace(location.Organization?.Id))
         {
             var locationMembers = new List<LocationMember>();
@@ -131,10 +114,7 @@ public class LocationService(
             {
                 locationMembers.Add(new LocationMember
                 {
-                    Id = randomHelper.Generate(),
-                    Role = LocationRoleConstants.Owner,
-                    Customer = customerEntity,
-                    Location = locationEntity
+                    Id = randomHelper.Generate(), Role = LocationRoleConstants.Owner, Customer = customerEntity, Location = locationEntity
                 });
             }
 
@@ -151,10 +131,7 @@ public class LocationService(
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
         location = mapper.MapTo(locationEntity);
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            [location],
-            repositoryFactory.LocationRepository.UnitOfWork,
-            cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([location], repositoryFactory.LocationRepository.UnitOfWork, cancellationToken);
 
         await repositoryFactory.AddressRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -163,15 +140,12 @@ public class LocationService(
         return location;
     }
 
-    public async Task<Shared.Models.Location> UpdateAsync(
-        Shared.Models.Location location,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Location> UpdateAsync(Shared.Models.Location location, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(location.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
         if (existingLocation is null)
         {
             throw new LocationNotFound();
@@ -191,8 +165,7 @@ public class LocationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
         if (existingLocation is null)
         {
             throw new LocationNotFound();
@@ -215,19 +188,13 @@ public class LocationService(
 
         var deletedLocation = mapper.MapTo(repositoryFactory.LocationRepository.Remove(existingLocation));
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            [deletedLocation],
-            repositoryFactory.LocationRepository.UnitOfWork,
-            cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([deletedLocation], repositoryFactory.LocationRepository.UnitOfWork, cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedLocation;
     }
 
-    public async Task<Shared.Models.Location?> GetByIdAsync(
-        string locationId,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Location?> GetByIdAsync(string locationId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(locationId))
         {
@@ -291,9 +258,7 @@ public class LocationService(
         return (paginatedInfo, mappedLocations, totalCount);
     }
 
-    public async Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(
-        string? organizationId,
-        CancellationToken cancellationToken)
+    public async Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(string? organizationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
 
@@ -351,16 +316,11 @@ public class LocationService(
         }
         else if (location.PhysicalAddress is not null && existingLocation.PhysicalAddress is not null)
         {
-            physicalAddress = mapper.MergeToEntity(
-                location.PhysicalAddress,
-                existingLocation.PhysicalAddress,
-                existingLocation);
+            physicalAddress = mapper.MergeToEntity(location.PhysicalAddress, existingLocation.PhysicalAddress, existingLocation);
             repositoryFactory.AddressRepository.Update(physicalAddress);
         }
 
-        location = mapper.MapTo(
-            repositoryFactory.LocationRepository.Update(
-                mapper.MergeTo(location, existingLocation, physicalAddress)));
+        location = mapper.MapTo(repositoryFactory.LocationRepository.Update(mapper.MergeTo(location, existingLocation, physicalAddress)));
 
         await locationOutboxPublisher.PublishLocationAsync(
             [location],
@@ -410,8 +370,7 @@ public class LocationService(
                 CanModify = locationAuthorizationService.CanModify(locationEdge, customer),
                 CanDelete = locationAuthorizationService.CanDelete(locationEdge, customer),
                 CanInvitePeople = locationAuthorizationService.CanInvitePeople(locationEdge, customer),
-                CanCancelPeopleExistingInvitations =
-                    locationAuthorizationService.CanCancelPeopleExistingInvitations(locationEdge, customer),
+                CanCancelPeopleExistingInvitations = locationAuthorizationService.CanCancelPeopleExistingInvitations(locationEdge, customer),
                 CanViewAnalytics = locationAuthorizationService.CanViewAnalytics(locationEdge, customer)
             };
         }
