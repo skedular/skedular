@@ -835,3 +835,7 @@ tempkey.jwk
 /venv/
 .vscode
 pact
+
+# hotchocolate generated files
+*.fsp
+*.fgp
