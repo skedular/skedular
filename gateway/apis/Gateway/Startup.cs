@@ -36,9 +36,9 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             });
         }
 
-        // services
-        //     .AddReverseProxy()
-        //     .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
+        services
+            .AddReverseProxy()
+            .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
 
         services.AddHealthChecks();
     }
