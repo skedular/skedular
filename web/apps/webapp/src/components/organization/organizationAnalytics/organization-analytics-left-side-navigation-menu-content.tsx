@@ -1,4 +1,4 @@
-import { getModernOrganizationAdminSetupBaseLink } from '@/components/organization';
+import { getModernOrganizationAnalyticsBaseLink, getModernOrganizationLocationsAnalyticsLocationsBaseLink } from '@/components/organization';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -53,8 +53,8 @@ const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationId, co
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const organizatinAnalyticsLink = getModernOrganizationAdminSetupBaseLink(organizationId);
-  const locationsAnalyticsLink = getModernOrganizationAdminSetupBaseLink(organizationId);
+  const organizatinAnalyticsLink = getModernOrganizationAnalyticsBaseLink(organizationId);
+  const locationsAnalyticsLink = getModernOrganizationLocationsAnalyticsLocationsBaseLink(organizationId);
 
   return (
     <List

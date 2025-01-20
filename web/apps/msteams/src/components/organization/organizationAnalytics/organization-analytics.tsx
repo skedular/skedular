@@ -94,7 +94,7 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationId
             <Divider />
           </StackColumn>
 
-          <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+          <GridContainer sx={{ padding: defaultPadding }}>
             <Grid>
               <OrganizationBookingInsightRoot onReloadRequired={onReloadRequired} organizationId={organizationId} hideOrganizationDetails />
             </Grid>
@@ -113,7 +113,7 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationId
             <Divider />
           </StackColumn>
 
-          <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+          <GridContainer sx={{ padding: defaultPadding }}>
             <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
           </GridContainer>
 
@@ -121,7 +121,7 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationId
             <>
               {locationIdsToDisplay.map((locationId) => (
                 <>
-                  <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+                  <GridContainer sx={{ padding: defaultPadding }}>
                     <Grid>
                       <LocationBookingInsightRoot onReloadRequired={onReloadRequired} locationId={locationId} />
                     </Grid>
