@@ -31,6 +31,13 @@ export const getModernOrganizationBookingsBaseLink = (id: string) => `${getOrgan
 
 export const getModernOrganizationUsersBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/users`;
 
+export const getModernOrganizationUserProfileBaseLink = (id: string, customerId: string) =>
+  `${getOrganizationBaseLink(id)}/users/${customerId}?section=profile`;
+export const getModernOrganizationUserManageTeamsBaseLink = (id: string, customerId: string) =>
+  `${getOrganizationBaseLink(id)}/users/${customerId}?section=manage-teams`;
+export const getModernOrganizationUserManageBaseLink = (id: string, customerId: string) =>
+  `${getOrganizationBaseLink(id)}/users/${customerId}?section=manage-user`;
+
 export const getModernOrganizationTeamsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/teams`;
 export const getModernOrganizationTeamSetupBaseLink = (id: string, teamId: string) => `${getOrganizationBaseLink(id)}/teams/${teamId}?section=setup`;
 export const getModernOrganizationTeamMembersBaseLink = (id: string, teamId: string) =>

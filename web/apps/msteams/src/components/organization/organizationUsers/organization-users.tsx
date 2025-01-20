@@ -38,7 +38,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { getOrganizationBaseLink } from 'components/organization';
+import { getModernOrganizationUserProfileBaseLink, getOrganizationBaseLink } from 'components/organization';
 import { InvitePeopleToJoinOrganizationButton } from 'components/organization/invitePeopleToJoinOrganization';
 import { TeamSelector } from 'components/team/teamSelector';
 import { nanoid } from 'nanoid';
@@ -219,6 +219,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditOrganizationUser],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateOrganizationUser],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateOrganizationUser],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveOrganizationUser],
@@ -409,6 +410,14 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     setMoreActionsAnchorEl(null);
 
     switch (id) {
+      case MoreActionsMenuOptionType.EditOrganizationUser:
+        if (!memberDetails) {
+          return;
+        }
+
+        navigate(getModernOrganizationUserProfileBaseLink(organizationId, memberDetails.customer.uniqueId));
+        break;
+
       case MoreActionsMenuOptionType.DeactivateOrganizationUser:
         handleDeactivateUserClick();
         break;
