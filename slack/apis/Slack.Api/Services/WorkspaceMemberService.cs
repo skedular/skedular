@@ -104,8 +104,7 @@ public class WorkspaceMemberService(
                 await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                     new Admin_SetDefaultOrganizationInput
                     {
-                        OrganizationId = workspace.Organization.Id,
-                        CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
+                        OrganizationId = workspace.Organization.Id, CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
                     },
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
@@ -144,8 +143,7 @@ public class WorkspaceMemberService(
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = workspace.Organization.Id,
-                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            OrganizationId = workspace.Organization.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -156,8 +154,7 @@ public class WorkspaceMemberService(
                     await customerServiceClient.Admin_AddDefaultLocationAsync(
                         new Admin_AddDefaultLocationInput
                         {
-                            LocationId = getLocationsResponse.Edges.First().Node.Id,
-                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            LocationId = getLocationsResponse.Edges.First().Node.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);

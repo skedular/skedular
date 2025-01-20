@@ -84,7 +84,7 @@ public class Query(IMapper mapper)
                 ? []
                 : orderBy.Select(item =>
                 {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                     return new OrganizationOrder(direction, item.Field);
                 }).ToList(),
             cancellationToken);
@@ -142,7 +142,7 @@ public class Query(IMapper mapper)
                 ? []
                 : orderBy.Select(item =>
                 {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                     return new OrganizationMemberOrder(direction, item.Field);
                 }).ToList(),
             cancellationToken);
@@ -301,7 +301,7 @@ public class Query(IMapper mapper)
                 ? []
                 : orderBy.Select(item =>
                 {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                     return new TagOrder(direction, item.Field);
                 }).ToList(),
             cancellationToken);

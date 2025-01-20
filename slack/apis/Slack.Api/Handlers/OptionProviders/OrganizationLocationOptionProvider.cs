@@ -34,16 +34,10 @@ public class OrganizationLocationOptionProvider(
             After = string.Empty,
             Last = -1,
             Before = string.Empty,
-            Where = new LocationWhereInput
-            {
-                OrganizationId = workspaceEntity.Organization.Id, NameContains = request.Value
-            }
+            Where = new LocationWhereInput { OrganizationId = workspaceEntity.Organization.Id, NameContains = request.Value }
         };
 
-        getPaginatedMembersInput.OrderBy.Add(new LocationOrderInput
-        {
-            Direction = OrderDirection.Ascending, Field = LocationOrderField.Name
-        });
+        getPaginatedMembersInput.OrderBy.Add(new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name });
 
         var memberConnection = await locationServiceClient.GetPaginatedLocationsAsync(
             getPaginatedMembersInput,

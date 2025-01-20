@@ -8,10 +8,12 @@ namespace Booking.Shared.Repositories;
 public interface ITeamRepository : IRepository<Team>
 {
     Task<Team> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
+
     Task<Team?> GetByIdAsync(
         string id,
         bool includeDeletedTeamMembers,
         CancellationToken cancellationToken);
+
     Team Add(Team team);
     Team Update(Team team);
     Team Remove(Team team);

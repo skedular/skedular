@@ -19,9 +19,7 @@ public class Mutation(StripeConfiguration stripeConfiguration)
             cancellationToken);
         return new AddOrganizationPaymentMethodIntentResponse
         {
-            ClientMutationId = input.ClientMutationId,
-            ClientSecret = clientSecret,
-            PublishedKeys = stripeConfiguration.PublishableKey
+            ClientMutationId = input.ClientMutationId, ClientSecret = clientSecret, PublishedKeys = stripeConfiguration.PublishableKey
         };
     }
 

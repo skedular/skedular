@@ -93,12 +93,7 @@ public class Mapper(IContext context) : IMapper
         };
 
     public Identity MapToIdentity() =>
-        new()
-        {
-            Id = context.GetVerifiableToken().ToSafeString(),
-            Email = context.GetEmail(),
-            EmailVerified = context.GetEmailVerified()
-        };
+        new() { Id = context.GetVerifiableToken().ToSafeString(), Email = context.GetEmail(), EmailVerified = context.GetEmailVerified() };
 
     public CustomerDetails MapTo(Shared.Models.Customer src) =>
         new()
@@ -138,9 +133,7 @@ public class Mapper(IContext context) : IMapper
                 ? null
                 : new CustomerOrganizationDetails
                 {
-                    UniqueId = src.DefaultOrganization.Id,
-                    Name = src.DefaultOrganization.Name,
-                    LogoUrl = src.DefaultOrganization.LogoUrl
+                    UniqueId = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name, LogoUrl = src.DefaultOrganization.LogoUrl
                 },
             DefaultLocations = src.DefaultLocations.Select(item => new CustomerLocationDetails
             {
@@ -151,9 +144,7 @@ public class Mapper(IContext context) : IMapper
                         ? null
                         : new CustomerOrganizationDetails
                         {
-                            UniqueId = item.Organization.Id,
-                            Name = item.Organization.Name,
-                            LogoUrl = item.Organization.LogoUrl
+                            UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl
                         }
             }).ToArray(),
             PreferredZones =
@@ -181,9 +172,7 @@ public class Mapper(IContext context) : IMapper
                         ? null
                         : new CustomerOrganizationDetails
                         {
-                            UniqueId = item.Organization.Id,
-                            Name = item.Organization.Name,
-                            LogoUrl = item.Organization.LogoUrl
+                            UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl
                         }
             }).ToArray()
         };
@@ -293,10 +282,7 @@ public class Mapper(IContext context) : IMapper
             PhoneNumber = src.PhoneNumber,
             Identities =
                 src.Identities.Select(item =>
-                        new Shared.Models.Identity
-                        {
-                            Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
-                        })
+                        new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                     .ToList(),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
@@ -384,10 +370,7 @@ public class Mapper(IContext context) : IMapper
                 Name = item.Name.ToSafeString(),
                 Organization = string.IsNullOrWhiteSpace(item.Organization?.Id)
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
-                    : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
-                    {
-                        Id = item.Organization.Id
-                    }
+                    : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
         customer.DefaultTeams.AddRange(src.DefaultTeams.Select(item =>
             new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Team
@@ -396,20 +379,14 @@ public class Mapper(IContext context) : IMapper
                 Name = item.Name.ToSafeString(),
                 Organization = string.IsNullOrWhiteSpace(item.Organization?.Id)
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
-                    : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
-                    {
-                        Id = item.Organization.Id
-                    }
+                    : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
         customer.PreferredDesks.AddRange(src.PreferredDesks.Select(item =>
             new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Desk
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
-                Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
-                {
-                    Id = item.Location.Id
-                }
+                Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id }
             }));
         customer.PreferredOrganizationTags.AddRange(src.PreferredOrganizationTags.Select(item =>
             new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.OrganizationTag
@@ -423,10 +400,7 @@ public class Mapper(IContext context) : IMapper
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 Color = item.Color.ToSafeString(),
-                Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
-                {
-                    Id = item.Organization.Id
-                }
+                Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
         return customer;
     }

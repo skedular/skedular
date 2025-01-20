@@ -69,9 +69,7 @@ public class AzureTenantOnboardingService(
         };
         var azureTenant = new AzureTenant
         {
-            Id = tenantId,
-            InstalledByUserId = azureInstallStateUserIdLookup.InstalledByUserId,
-            Organization = organization
+            Id = tenantId, InstalledByUserId = azureInstallStateUserIdLookup.InstalledByUserId, Organization = organization
         };
         organization.AzureTenants = [azureTenant];
 

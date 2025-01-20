@@ -702,12 +702,7 @@ public class HomePage(
             First = first.ToNullInt(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new BookingWhereInput
-            {
-                FromGTE = from.ToTimestamp(),
-                FromLTE = until.ToTimestamp(),
-                IncludeMineOnly = includeMyBookingsOnly
-            }
+            Where = new BookingWhereInput { FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = includeMyBookingsOnly }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
         getPaginatedBookingsInput.OrderBy.AddRange([
@@ -731,10 +726,7 @@ public class HomePage(
         {
             First = -1,
             Last = -1,
-            Where = new BookingWhereInput
-            {
-                FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = true
-            }
+            Where = new BookingWhereInput { FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = true }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
         getPaginatedBookingsInput.OrderBy.AddRange([
@@ -763,24 +755,12 @@ public class HomePage(
             Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
             Options =
             [
-                new Option
-                {
-                    Value = BookingActionTypes.Bookings, Text = "Bookings".ToPlainTextWithIcon(Icons.Bookings)
-                },
-                new Option
-                {
-                    Value = LocationActionTypes.Locations, Text = "Locations".ToPlainTextWithIcon(Icons.Locations)
-                },
+                new Option { Value = BookingActionTypes.Bookings, Text = "Bookings".ToPlainTextWithIcon(Icons.Bookings) },
+                new Option { Value = LocationActionTypes.Locations, Text = "Locations".ToPlainTextWithIcon(Icons.Locations) },
                 new Option { Value = TeamActionTypes.Teams, Text = "Teams".ToPlainTextWithIcon(Icons.Teams) },
-                new Option
-                {
-                    Value = CustomTagActionTypes.CustomTags, Text = "Tags".ToPlainTextWithIcon(Icons.CustomTags)
-                },
+                new Option { Value = CustomTagActionTypes.CustomTags, Text = "Tags".ToPlainTextWithIcon(Icons.CustomTags) },
                 new Option { Value = ZoneActionTypes.Zones, Text = "Zones".ToPlainTextWithIcon(Icons.Zones) },
-                new Option
-                {
-                    Value = SettingsActionTypes.Settings, Text = "Settings".ToPlainTextWithIcon(Icons.Settings)
-                }
+                new Option { Value = SettingsActionTypes.Settings, Text = "Settings".ToPlainTextWithIcon(Icons.Settings) }
             ]
         };
 
@@ -814,10 +794,7 @@ public class HomePage(
         {
             Elements =
             [
-                new DatePicker
-                {
-                    ActionId = BookingDatePicker, InitialDate = pageContext.HomePage.SelectedDate.ToDateTime()
-                }
+                new DatePicker { ActionId = BookingDatePicker, InitialDate = pageContext.HomePage.SelectedDate.ToDateTime() }
             ]
         };
 
@@ -887,10 +864,7 @@ public class HomePage(
             ];
         }
 
-        var totalBookingsCount = new SectionBlock
-        {
-            Text = $"Total bookings: {bookingConnection.TotalCount}".ToMarkdown()
-        };
+        var totalBookingsCount = new SectionBlock { Text = $"Total bookings: {bookingConnection.TotalCount}".ToMarkdown() };
         if (bookingConnection.TotalCount <= BookingsPageSize)
         {
             return [totalBookingsCount];
@@ -910,9 +884,7 @@ public class HomePage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageBookings,
-                Text = Icons.FirstPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageBookings, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.HomePage.Pagination.First = null;
@@ -922,9 +894,7 @@ public class HomePage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageBookings,
-                Text = Icons.PreviousPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageBookings, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -937,9 +907,7 @@ public class HomePage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageBookings,
-                Text = Icons.NextPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageBookings, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.HomePage.Pagination.First = null;
@@ -949,9 +917,7 @@ public class HomePage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageBookings,
-                Text = Icons.LastPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageBookings, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 

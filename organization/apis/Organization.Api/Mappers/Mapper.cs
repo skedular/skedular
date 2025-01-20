@@ -316,7 +316,7 @@ public class Mapper : IMapper
                         Free = item.IsFreeOffering(),
                         StartColor = offering.StartColor,
                         EndColor = offering.EndColor,
-                        ColorTiltingAngle = offering.ColorTiltingAngle,
+                        ColorTiltingAngle = offering.ColorTiltingAngle
                     };
                 }).ToArray();
 
@@ -361,10 +361,7 @@ public class Mapper : IMapper
         new()
         {
             MemberAttendancePercentage = organizationMemberAttendancePercentages.Select(item =>
-                    new GraphQL.OrganizationMemberAttendancePercentage
-                    {
-                        Date = item.Date, Percentage = item.Percentage
-                    })
+                    new GraphQL.OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = item.Percentage })
                 .ToArray(),
             DailyBookingsTotals = organizationDailyBookingsTotals.Select(item =>
                     new GraphQL.OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Total })
@@ -615,13 +612,7 @@ public class Mapper : IMapper
     public CustomTag MapToGrpcResponseCustomTag(Tag? src) =>
         src is null
             ? new CustomTag()
-            : new CustomTag
-            {
-                Id = src.Id,
-                Name = src.Name.ToSafeString(),
-                Description = src.Description.ToSafeString(),
-                Color = src.Color
-            };
+            : new CustomTag { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color };
 
     public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponseCustomTag(src.Node) };
@@ -650,13 +641,7 @@ public class Mapper : IMapper
     public Zone MapToGrpcResponseZone(Tag? src) =>
         src is null
             ? new Zone()
-            : new Zone
-            {
-                Id = src.Id,
-                Name = src.Name.ToSafeString(),
-                Description = src.Description.ToSafeString(),
-                Color = src.Color
-            };
+            : new Zone { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color };
 
     public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponseZone(src.Node) };
@@ -673,13 +658,7 @@ public class Mapper : IMapper
         };
 
     public Tag MapTo(UpdateZoneInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
-            Type = OrganizationTagType.Zone
-        };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Type = OrganizationTagType.Zone };
 
     public IEnumerable<OrganizationFeatureSetDetails> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
 
@@ -812,7 +791,7 @@ public class Mapper : IMapper
             Free = src.Code.IsFreeOffering(),
             StartColor = offering.StartColor,
             EndColor = offering.EndColor,
-            ColorTiltingAngle = offering.ColorTiltingAngle,
+            ColorTiltingAngle = offering.ColorTiltingAngle
         };
     }
 

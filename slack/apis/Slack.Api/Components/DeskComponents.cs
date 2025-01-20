@@ -49,12 +49,7 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
 
         return
         [
-            new Button
-            {
-                ActionId = DeskActionTypes.AddDesk,
-                Text = "Add Desk".ToPlainTextWithIcon(Icons.New),
-                Value = context
-            }
+            new Button { ActionId = DeskActionTypes.AddDesk, Text = "Add Desk".ToPlainTextWithIcon(Icons.New), Value = context }
         ];
     }
 
@@ -75,12 +70,7 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
 
         return
         [
-            new Button
-            {
-                ActionId = DeskActionTypes.BulkAddDesks,
-                Text = "Bulk Add Desks".ToPlainTextWithIcon(Icons.New),
-                Value = context
-            }
+            new Button { ActionId = DeskActionTypes.BulkAddDesks, Text = "Bulk Add Desks".ToPlainTextWithIcon(Icons.New), Value = context }
         ];
     }
 
@@ -187,9 +177,7 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
 
         var actionMenu = new StaticSelectMenu
         {
-            ActionId = DeskActionTypes.ActionsMenu,
-            Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
-            Options = []
+            ActionId = DeskActionTypes.ActionsMenu, Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto), Options = []
         };
 
         if (canModify)
@@ -204,8 +192,7 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{DeskActionTypes.RemoveDesk}{desk.Id}",
-                Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
+                Value = $"{DeskActionTypes.RemoveDesk}{desk.Id}", Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
             });
         }
 

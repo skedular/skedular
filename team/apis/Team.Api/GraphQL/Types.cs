@@ -298,7 +298,7 @@ public class AddTeamMemberInput
 public class CustomerTeamWhereInput
 {
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
-    [GraphQLName("customerId")] public string CustomerId { get; set; }= string.Empty;
+    [GraphQLName("customerId")] public string CustomerId { get; set; } = string.Empty;
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("primaryLocationIds")] public string[]? PrimaryLocationIds { get; set; }
 }

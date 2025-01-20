@@ -30,10 +30,7 @@ public class ExtractShould
     [AutoFakeItEasyData]
     public void Extract_All_Matching_Fields(HeaderPropagatorFunctions functions)
     {
-        var destination = new Headers
-        {
-            { "my key", "one"u8.ToArray() }, { "my key", "two"u8.ToArray() }, { "my key", "three"u8.ToArray() }
-        };
+        var destination = new Headers { { "my key", "one"u8.ToArray() }, { "my key", "two"u8.ToArray() }, { "my key", "three"u8.ToArray() } };
         var extract = functions.Extract(destination, "my key").ToArray();
         extract.Should().HaveCount(3);
         extract[0].Should().Be("one");

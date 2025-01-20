@@ -509,10 +509,7 @@ public class DesksPage(
             {
                 Elements =
                 [
-                    new DatePicker
-                    {
-                        ActionId = BookingDatePicker, InitialDate = pageContext.DesksPage.SelectedDate.ToDateTime()
-                    }
+                    new DatePicker { ActionId = BookingDatePicker, InitialDate = pageContext.DesksPage.SelectedDate.ToDateTime() }
                 ]
             }
         ];
@@ -604,9 +601,7 @@ public class DesksPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageDesks,
-                Text = Icons.FirstPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageDesks, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.DesksPage.Pagination.First = null;
@@ -616,9 +611,7 @@ public class DesksPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageDesks,
-                Text = Icons.PreviousPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageDesks, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -631,9 +624,7 @@ public class DesksPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageDesks,
-                Text = Icons.NextPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageDesks, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.DesksPage.Pagination.First = null;
@@ -643,9 +634,7 @@ public class DesksPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageDesks,
-                Text = Icons.LastPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageDesks, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -670,10 +659,7 @@ public class DesksPage(
         {
             BlockId = DeskActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = DeskActionTypes.Name, InitialValue = desk.Name.ToSafeString()
-            },
+            Element = new PlainTextInput { ActionId = DeskActionTypes.Name, InitialValue = desk.Name.ToSafeString() },
             Optional = false
         };
 
@@ -685,10 +671,7 @@ public class DesksPage(
                 new CheckboxGroup
                 {
                     ActionId = DeskActionTypes.Deactivated,
-                    Options = new List<Option>
-                    {
-                        new() { Text = "Deactivated".ToPlainText(), Value = DeskActionTypes.Deactivated }
-                    }
+                    Options = new List<Option> { new() { Text = "Deactivated".ToPlainText(), Value = DeskActionTypes.Deactivated } }
                 },
             Optional = true
         };
@@ -703,11 +686,7 @@ public class DesksPage(
                     ActionId = DeskActionTypes.RequireBookingApproval,
                     Options = new List<Option>
                     {
-                        new()
-                        {
-                            Text = "Require Booking Approval".ToPlainText(),
-                            Value = DeskActionTypes.RequireBookingApproval
-                        }
+                        new() { Text = "Require Booking Approval".ToPlainText(), Value = DeskActionTypes.RequireBookingApproval }
                     }
                 },
             Optional = true
@@ -807,10 +786,7 @@ public class DesksPage(
             locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
-        var confirmationMessage = new SectionBlock
-        {
-            Text = $"Are you sure you want to remove the desk {desk.Name.ToSafeString()}?"
-        };
+        var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the desk {desk.Name.ToSafeString()}?" };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(
@@ -913,8 +889,7 @@ public class DesksPage(
         getPaginatedZonesInput.OrderBy.AddRange([
             new ZoneOrderInput
             {
-                Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending,
-                Field = ZoneOrderField.ZoneName
+                Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending, Field = ZoneOrderField.ZoneName
             }
         ]);
 
@@ -968,8 +943,7 @@ public class DesksPage(
         getPaginatedBookingsInput.OrderBy.AddRange([
             new BookingOrderInput
             {
-                Direction = global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending,
-                Field = BookingOrderField.From
+                Direction = global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending, Field = BookingOrderField.From
             }
         ]);
 

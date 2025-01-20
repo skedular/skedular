@@ -26,12 +26,7 @@ public class CommonComponents(IHomePageContextService homePageContextService) : 
 
         return
         [
-            new Button
-            {
-                ActionId = CommonActionTypes.SendUsFeedback,
-                Text = "Send us feedback".ToPlainTextWithIcon(Icons.Feedback),
-                Value = context
-            }
+            new Button { ActionId = CommonActionTypes.SendUsFeedback, Text = "Send us feedback".ToPlainTextWithIcon(Icons.Feedback), Value = context }
         ];
     }
 
@@ -47,10 +42,7 @@ public class CommonComponents(IHomePageContextService homePageContextService) : 
 
         return
         [
-            new Button
-            {
-                ActionId = CommonActionTypes.Back, Text = "Back".ToPlainTextWithIcon(Icons.Back), Value = context
-            }
+            new Button { ActionId = CommonActionTypes.Back, Text = "Back".ToPlainTextWithIcon(Icons.Back), Value = context }
         ];
     }
 

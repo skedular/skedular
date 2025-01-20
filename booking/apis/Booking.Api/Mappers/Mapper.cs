@@ -458,28 +458,19 @@ public class Mapper : IMapper
         Shared.Models.Organization? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization
-            {
-                Id = src.Id, Name = src.Name.ToSafeString()
-            };
+            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location? MapToGrpcResponse(
         Shared.Models.Location? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location
-            {
-                Id = src.Id, Name = src.Name.ToSafeString()
-            };
+            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team?
         MapToGrpcResponse(Shared.Models.Team? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team
-            {
-                Id = src.Id, Name = src.Name.ToSafeString()
-            };
+            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk MapToGrpcResponse(Shared.Models.Desk src)
     {
@@ -489,10 +480,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Location = src.Location is null
                 ? null
-                : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location
-                {
-                    Id = src.Location.Id, Name = src.Location.Name.ToSafeString()
-                }
+                : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Location.Id, Name = src.Location.Name.ToSafeString() }
         };
 
         desk.OrganizationCustomTags.AddRange(MapToGrpcResponseCustomTags(src.OrganizationTags));
@@ -533,26 +521,17 @@ public class Mapper : IMapper
     private static BookingOrganizationDetails? MapTo(Shared.Models.Organization? src) =>
         src is null
             ? null
-            : new BookingOrganizationDetails
-            {
-                UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name
-            };
+            : new BookingOrganizationDetails { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
 
     private static BookingLocationDetails? MapTo(Shared.Models.Location? src) =>
         src is null
             ? null
-            : new BookingLocationDetails
-            {
-                UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name
-            };
+            : new BookingLocationDetails { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
 
     private static BookingTeamDetails? MapTo(Shared.Models.Team? src) =>
         src is null
             ? null
-            : new BookingTeamDetails
-            {
-                UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name
-            };
+            : new BookingTeamDetails { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
 
     private static BookingDeskDetails MapTo(Shared.Models.Desk src) =>
         new()

@@ -200,10 +200,7 @@ public class EditTeamButtonHandler(
                                     },
                                 Status = TeamMemberStatus.Active,
                                 Customer = new Customer { Id = customerId },
-                                OrganizationMember = new OrganizationMember
-                                {
-                                    Id = organizationMemberId, Customer = new Customer { Id = customerId }
-                                }
+                                OrganizationMember = new OrganizationMember { Id = organizationMemberId, Customer = new Customer { Id = customerId } }
                             };
                         }));
                 }
@@ -229,10 +226,7 @@ public class EditTeamButtonHandler(
                 if (slackUpdateChannel is ChannelSelectValue value)
                 {
                     var teamEntity = await repositoryFactory.TeamRepository
-                        .Query(new Specification<Shared.Database.Entities.Team>
-                            {
-                                Criteria = query => query.Id == context.TeamId
-                            }
+                        .Query(new Specification<Shared.Database.Entities.Team> { Criteria = query => query.Id == context.TeamId }
                             .AddInclude(query => query.DailyUpdateChannel))
                         .FirstOrDefaultAsync(cancellationToken);
                     if (teamEntity is not null)

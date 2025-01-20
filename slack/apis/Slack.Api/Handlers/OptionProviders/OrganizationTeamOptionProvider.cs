@@ -34,16 +34,10 @@ public class OrganizationTeamOptionProvider(
             After = string.Empty,
             Last = -1,
             Before = string.Empty,
-            Where = new TeamWhereInput
-            {
-                OrganizationId = workspaceEntity.Organization.Id, NameContains = request.Value
-            }
+            Where = new TeamWhereInput { OrganizationId = workspaceEntity.Organization.Id, NameContains = request.Value }
         };
 
-        getPaginatedMembersInput.OrderBy.Add(new TeamOrderInput
-        {
-            Direction = OrderDirection.Ascending, Field = TeamOrderField.Name
-        });
+        getPaginatedMembersInput.OrderBy.Add(new TeamOrderInput { Direction = OrderDirection.Ascending, Field = TeamOrderField.Name });
 
         var memberConnection = await teamServiceClient.GetPaginatedTeamsAsync(
             getPaginatedMembersInput,

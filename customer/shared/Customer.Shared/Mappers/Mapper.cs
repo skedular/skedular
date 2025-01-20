@@ -47,10 +47,7 @@ public class Mapper : IMapper
         customer.Identities.AddRange(MapTo(src.Identities));
         customer.DefaultLocations.AddRange(
             src.DefaultLocations.Select(item =>
-                new Location
-                {
-                    Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id
-                })
+                new Location { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
         );
         customer.DefaultDesks.AddRange(
             src.PreferredDesks.Select(item =>
@@ -58,10 +55,7 @@ public class Mapper : IMapper
         );
         customer.DefaultTeams.AddRange(
             src.DefaultTeams.Select(item =>
-                new Team
-                {
-                    Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id
-                })
+                new Team { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
         );
         customer.DefaultOrganizationTags.AddRange(
             src.PreferredOrganizationTags.Select(item =>

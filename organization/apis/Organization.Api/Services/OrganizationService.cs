@@ -114,10 +114,7 @@ public class OrganizationService(
 
         var industrySubCategoryIds = organization.IndustrySubCategories.Select(item => item.Id).ToList();
         var industrySubCategories = await repositoryFactory.IndustrySubCategoryRepository
-            .Query(new Specification<IndustrySubCategory>
-                {
-                    Criteria = query => industrySubCategoryIds.Contains(query.Id)
-                }
+            .Query(new Specification<IndustrySubCategory> { Criteria = query => industrySubCategoryIds.Contains(query.Id) }
                 .AddInclude(query => query.IndustryMainCategory))
             .ToListAsync(cancellationToken);
 

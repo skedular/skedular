@@ -24,47 +24,27 @@ public class Features
     {
         {
             FeatureSetCode.OrganizationUpToXUsers,
-            new Feature
-            {
-                Name = "For up to X users", Description = "Allow up to X monthly active users in an organization"
-            }
+            new Feature { Name = "For up to X users", Description = "Allow up to X monthly active users in an organization" }
         },
         {
             FeatureSetCode.OrganizationUpTo10Users,
-            new Feature
-            {
-                Name = "For up to 10 users", Description = "Allow up to 10 monthly active users in an organization"
-            }
+            new Feature { Name = "For up to 10 users", Description = "Allow up to 10 monthly active users in an organization" }
         },
         {
             FeatureSetCode.OrganizationUpTo100Users,
-            new Feature
-            {
-                Name = "For up to 100 users",
-                Description = "Allow up to 100 monthly active users in an organization"
-            }
+            new Feature { Name = "For up to 100 users", Description = "Allow up to 100 monthly active users in an organization" }
         },
         {
             FeatureSetCode.OrganizationUnlimitedUsers,
-            new Feature
-            {
-                Name = "Unlimited users", Description = "Allow unlimited monthly active users in an organization"
-            }
+            new Feature { Name = "Unlimited users", Description = "Allow unlimited monthly active users in an organization" }
         },
         {
             FeatureSetCode.OrganizationUpToOneLocation,
-            new Feature
-            {
-                Name = "Up to 1 location in an organization",
-                Description = "Allow creating one location in an organization"
-            }
+            new Feature { Name = "Up to 1 location in an organization", Description = "Allow creating one location in an organization" }
         },
         {
             FeatureSetCode.OrganizationUpToOneTeam,
-            new Feature
-            {
-                Name = "Up to 1 team in an organization", Description = "Allow creating one team in an organization"
-            }
+            new Feature { Name = "Up to 1 team in an organization", Description = "Allow creating one team in an organization" }
         },
         {
             FeatureSetCode.OrganizationUnlimitedLocations,

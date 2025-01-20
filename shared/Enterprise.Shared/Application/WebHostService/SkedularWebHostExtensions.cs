@@ -60,16 +60,14 @@ public static class SkedularWebHostExtensions
             LivenessPath,
             new HealthCheckOptions
             {
-                Predicate = r => r.Tags.Contains(HealthCheckTags.Liveness) || r.Name.Contains("self"),
-                ResponseWriter = WriteResponseAsync
+                Predicate = r => r.Tags.Contains(HealthCheckTags.Liveness) || r.Name.Contains("self"), ResponseWriter = WriteResponseAsync
             });
 
         app.UseHealthChecks(
             ReadinessPath,
             new HealthCheckOptions
             {
-                Predicate = r => r.Tags.Contains(HealthCheckTags.Readiness) || r.Name.Contains("services"),
-                ResponseWriter = WriteResponseAsync
+                Predicate = r => r.Tags.Contains(HealthCheckTags.Readiness) || r.Name.Contains("services"), ResponseWriter = WriteResponseAsync
             });
 
         // Health checks must go before any middleware

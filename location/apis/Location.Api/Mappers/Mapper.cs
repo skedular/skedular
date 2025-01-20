@@ -307,7 +307,7 @@ public class Mapper : IMapper
                 .Select(item => new DesksOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
                 .ToArray(),
             DailyBookingsTotals = locationDailyBookingsTotal
-                .Select(item =>new GraphQL.LocationDailyBookingsTotal { Date = item.Date, Total = item.Total })
+                .Select(item => new GraphQL.LocationDailyBookingsTotal { Date = item.Date, Total = item.Total })
                 .ToArray()
         };
 
@@ -333,10 +333,7 @@ public class Mapper : IMapper
     {
         var location = new Shared.Models.Location
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
-            Name = src.Name,
-            About = src.About,
-            Timezone = src.Timezone
+            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id, Name = src.Name, About = src.About, Timezone = src.Timezone
         };
 
         location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
@@ -485,10 +482,7 @@ public class Mapper : IMapper
     {
         var desk = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk
         {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval
+            Id = src.Id, Name = src.Name.ToSafeString(), Deactivated = src.Deactivated, RequireBookingApproval = src.RequireBookingApproval
         };
 
         desk.OrganizationCustomTags.AddRange(MapToGrpcResponseOrganizationCustomTags(src.CustomTags));
@@ -604,10 +598,7 @@ public class Mapper : IMapper
     private static LocationOrganizationDetails? MapTo(Shared.Models.Organization? src) =>
         src is null
             ? null
-            : new LocationOrganizationDetails
-            {
-                UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl
-            };
+            : new LocationOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
 
     private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 

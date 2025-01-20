@@ -105,10 +105,7 @@ public class OutboxBackgroundService<TDbContext>(
             {
                 var message = new Message<byte[]?, byte[]>
                 {
-                    Headers = kafkaHeaders,
-                    Key = outboxEvent.Key,
-                    Value = outboxEvent.Payload,
-                    Timestamp = new Timestamp(outboxEvent.Timestamp)
+                    Headers = kafkaHeaders, Key = outboxEvent.Key, Value = outboxEvent.Payload, Timestamp = new Timestamp(outboxEvent.Timestamp)
                 };
 
                 try
@@ -142,8 +139,7 @@ public class OutboxBackgroundService<TDbContext>(
                         "retry",
                         new Dictionary<string, string>
                         {
-                            [nameof(outboxEvent.LastRetry)] = outboxEvent.LastRetry?.ToString("O")!,
-                            [nameof(LogLevel)] = level.ToString("G")
+                            [nameof(outboxEvent.LastRetry)] = outboxEvent.LastRetry?.ToString("O")!, [nameof(LogLevel)] = level.ToString("G")
                         });
 
                     logger.Log(

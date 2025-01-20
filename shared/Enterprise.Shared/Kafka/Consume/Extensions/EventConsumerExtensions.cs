@@ -11,9 +11,5 @@ public static class EventConsumerExtensions
         int delayBaseSeconds) where TEvent : IEvent =>
         Enumerable.Range(0, count)
             .Select(index =>
-                new RetryTopicSetting
-                {
-                    Topic = @event.GetRetryTopicName(prefix, index),
-                    RetryDelaySeconds = Math.Pow(2, index) * delayBaseSeconds
-                });
+                new RetryTopicSetting { Topic = @event.GetRetryTopicName(prefix, index), RetryDelaySeconds = Math.Pow(2, index) * delayBaseSeconds });
 }

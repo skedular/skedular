@@ -75,10 +75,8 @@ public class AzureTenantService(
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
 
                 return await repositoryFactory.AzureTenantRepository.Query(
-                    new Specification<AzureTenant>
-                    {
-                        Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString()
-                    }).AsNoTracking().AnyAsync(cancellationToken);
+                        new Specification<AzureTenant> { Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString() })
+                    .AsNoTracking().AnyAsync(cancellationToken);
             });
     }
 
@@ -96,10 +94,7 @@ public class AzureTenantService(
             : applicationConfiguration.ApiBaseDomain;
 
         var installStateUserIdLookup = repositoryFactory.AzureInstallStateUserIdLookupRepository.Add(
-            new AzureInstallStateUserIdLookup
-            {
-                Id = randomHelper.Generate(), InstalledByUserId = context.GetVerifiableToken()
-            });
+            new AzureInstallStateUserIdLookup { Id = randomHelper.Generate(), InstalledByUserId = context.GetVerifiableToken() });
 
         var tenantId = context.GetAzureTenantId();
         var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
@@ -160,10 +155,8 @@ public class AzureTenantService(
 
         var tenantId = context.GetAzureTenantId();
         var tenant = await repositoryFactory.AzureTenantRepository.Query(
-            new Specification<AzureTenant>
-            {
-                Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString()
-            }).AsNoTracking().FirstOrDefaultAsync(cancellationToken);
+                new Specification<AzureTenant> { Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString() }).AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
         return tenant is null ? null : mapper.MapTo(tenant.Organization);
     }
 }

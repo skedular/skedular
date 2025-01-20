@@ -322,8 +322,8 @@ public class TeamService(
 
         if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
         {
-                // Ensure we do not return other customer team by forcing CustomerId as search criteria
-                searchCriteria.CustomerId = customer.Id;
+            // Ensure we do not return other customer team by forcing CustomerId as search criteria
+            searchCriteria.CustomerId = customer.Id;
         }
         else
         {
@@ -361,10 +361,10 @@ public class TeamService(
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.TeamRepository.GetPaginatedTeamsAsync(
-                paginationInputParam,
-                searchCriteria,
-                orderByFields,
-                cancellationToken);
+            paginationInputParam,
+            searchCriteria,
+            orderByFields,
+            cancellationToken);
 
         var mappedTeams = new List<Edge<Shared.Models.Team>>();
         foreach (var edge in edges)
@@ -387,7 +387,7 @@ public class TeamService(
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                organizationId, 
+                organizationId,
                 false,
                 cancellationToken);
             if (organization is null)
@@ -500,10 +500,7 @@ public class TeamService(
 
         var now = timeProvider.GetUtcNow();
         mappedTeam.HasFutureBooking = await repositoryFactory.BookingRepository
-            .Query(new Specification<Booking>
-            {
-                Criteria = query => !query.DeletedAt.HasValue && query.Team.Id == team.Id && query.From >= now
-            })
+            .Query(new Specification<Booking> { Criteria = query => !query.DeletedAt.HasValue && query.Team.Id == team.Id && query.From >= now })
             .AnyAsync(cancellationToken);
 
         return mappedTeam;

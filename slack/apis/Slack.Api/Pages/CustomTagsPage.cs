@@ -524,9 +524,7 @@ public class CustomTagsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageCustomTags,
-                Text = Icons.FirstPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageCustomTags, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.CustomTagsPage.Pagination.First = null;
@@ -536,9 +534,7 @@ public class CustomTagsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageCustomTags,
-                Text = Icons.PreviousPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageCustomTags, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -551,9 +547,7 @@ public class CustomTagsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageCustomTags,
-                Text = Icons.NextPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageCustomTags, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.CustomTagsPage.Pagination.First = null;
@@ -563,9 +557,7 @@ public class CustomTagsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageCustomTags,
-                Text = Icons.LastPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageCustomTags, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -590,10 +582,7 @@ public class CustomTagsPage(
         {
             BlockId = CustomTagActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = CustomTagActionTypes.Name, InitialValue = customTag.Name.ToSafeString()
-            },
+            Element = new PlainTextInput { ActionId = CustomTagActionTypes.Name, InitialValue = customTag.Name.ToSafeString() },
             Optional = false
         };
 
@@ -603,9 +592,7 @@ public class CustomTagsPage(
             Label = "Description".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = CustomTagActionTypes.Description,
-                InitialValue = customTag.Description.ToSafeString(),
-                Multiline = true
+                ActionId = CustomTagActionTypes.Description, InitialValue = customTag.Description.ToSafeString(), Multiline = true
             },
             Optional = true
         };
@@ -640,10 +627,7 @@ public class CustomTagsPage(
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
-        var confirmationMessage = new SectionBlock
-        {
-            Text = $"Are you sure you want to remove the tag {customTag.Name.ToSafeString()}?"
-        };
+        var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the tag {customTag.Name.ToSafeString()}?" };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(

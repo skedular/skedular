@@ -34,16 +34,10 @@ public class OrganizationMemberAndCustomerPairOptionProvider(
             After = string.Empty,
             Last = -1,
             Before = string.Empty,
-            Where = new MemberWhereInput
-            {
-                OrganizationId = workspaceEntity.Organization.Id, NameContains = request.Value
-            }
+            Where = new MemberWhereInput { OrganizationId = workspaceEntity.Organization.Id, NameContains = request.Value }
         };
 
-        getPaginatedMembersInput.OrderBy.Add(new MemberOrderInput
-        {
-            Direction = OrderDirection.Ascending, Field = MemberOrderField.Name
-        });
+        getPaginatedMembersInput.OrderBy.Add(new MemberOrderInput { Direction = OrderDirection.Ascending, Field = MemberOrderField.Name });
 
         var memberConnection = await organizationServiceClient.GetPaginatedMembersAsync(
             getPaginatedMembersInput,

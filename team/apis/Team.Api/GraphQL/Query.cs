@@ -22,10 +22,7 @@ public class Query(IMapper mapper)
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return new Version
-        {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        };
+        return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }
 
     [UseResolverScope]
@@ -73,7 +70,7 @@ public class Query(IMapper mapper)
             await teamService.GetPaginatedTeamsAsync(
                 new PaginationInputParam(after, first, before, last),
                 new TeamSearchCriteria(
-                    where.OrganizationId, 
+                    where.OrganizationId,
                     null,
                     where.NameContains,
                     where.PrimaryLocationIds),
@@ -81,7 +78,7 @@ public class Query(IMapper mapper)
                     ? []
                     : orderBy.Select(item =>
                     {
-                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                         return new TeamOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);
@@ -99,7 +96,7 @@ public class Query(IMapper mapper)
             TotalCount = totalCount
         };
     }
-    
+
     [UseResolverScope]
     public async Task<TeamConnection?> CustomerTeamsAsync(
         string? after,
@@ -121,7 +118,7 @@ public class Query(IMapper mapper)
             await teamService.GetPaginatedTeamsAsync(
                 new PaginationInputParam(after, first, before, last),
                 new TeamSearchCriteria(
-                    where.OrganizationId, 
+                    where.OrganizationId,
                     where.CustomerId,
                     where.NameContains,
                     where.PrimaryLocationIds),
@@ -129,7 +126,7 @@ public class Query(IMapper mapper)
                     ? []
                     : orderBy.Select(item =>
                     {
-                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                         return new TeamOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);
@@ -191,7 +188,7 @@ public class Query(IMapper mapper)
                     ? []
                     : orderBy.Select(item =>
                     {
-                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                         return new TeamMemberOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);

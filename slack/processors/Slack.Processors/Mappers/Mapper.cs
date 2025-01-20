@@ -102,10 +102,7 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             Timezone = customer.Timezone.ToSafeString(),
             Identities = customer.Identities
-                .Select(item => new Identity
-                {
-                    Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
-                })
+                .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }
@@ -184,10 +181,7 @@ public class Mapper : IMapper
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
-        var organization = new Organization
-        {
-            Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt
-        };
+        var organization = new Organization { Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
         {
@@ -234,10 +228,7 @@ public class Mapper : IMapper
 
         return new Team
         {
-            Id = teamAfterState.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Timezone = teamAfterState.Timezone.ToSafeString()
+            Id = teamAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt, Timezone = teamAfterState.Timezone.ToSafeString()
         };
     }
 
@@ -361,10 +352,7 @@ public class Mapper : IMapper
         };
 
         input.Identities.Add(
-            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity
-            {
-                Id = src.Id, Email = src.Email, EmailVerified = true
-            });
+            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
         input.DefaultLocations.AddRange(defaultLocations.Select(item =>
             new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
@@ -567,7 +555,7 @@ public class Mapper : IMapper
         IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone> src) => src.Select(MapTo);
 
     private static OrganizationZone MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()};
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static Team? MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? src) =>
         string.IsNullOrWhiteSpace(src?.Id) ? null : new Team { Id = src.Id, Name = src.Name.ToSafeString() };

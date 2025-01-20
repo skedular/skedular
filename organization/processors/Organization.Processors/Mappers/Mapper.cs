@@ -118,10 +118,7 @@ public class Mapper : IMapper
             PhotoUrl512 = customer.PhotoUrl512,
             PhoneNumber = customer.PhoneNumber,
             Identities = customer.Identities.Select(item =>
-                    new Identity
-                    {
-                        Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
-                    })
+                    new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }
@@ -336,10 +333,7 @@ public class Mapper : IMapper
         };
 
         input.Identities.Add(
-            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity
-            {
-                Id = src.Id, Email = src.Email, EmailVerified = true
-            });
+            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
         input.DefaultLocations.AddRange(defaultLocations.Select(item =>
             new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location

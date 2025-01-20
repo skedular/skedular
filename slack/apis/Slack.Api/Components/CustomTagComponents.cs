@@ -43,12 +43,7 @@ public class CustomTagComponents(ICustomerService customerService, IOrganization
 
         return
         [
-            new Button
-            {
-                ActionId = CustomTagActionTypes.AddCustomTag,
-                Text = "Add Tag".ToPlainTextWithIcon(Icons.New),
-                Value = context
-            }
+            new Button { ActionId = CustomTagActionTypes.AddCustomTag, Text = "Add Tag".ToPlainTextWithIcon(Icons.New), Value = context }
         ];
     }
 
@@ -110,17 +105,14 @@ public class CustomTagComponents(ICustomerService customerService, IOrganization
 
         var actionMenu = new StaticSelectMenu
         {
-            ActionId = CustomTagActionTypes.ActionsMenu,
-            Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
-            Options = []
+            ActionId = CustomTagActionTypes.ActionsMenu, Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto), Options = []
         };
 
         if (canModify)
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{CustomTagActionTypes.EditCustomTag}{customTag.Id}",
-                Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
+                Value = $"{CustomTagActionTypes.EditCustomTag}{customTag.Id}", Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
             });
         }
 
@@ -128,8 +120,7 @@ public class CustomTagComponents(ICustomerService customerService, IOrganization
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{CustomTagActionTypes.RemoveCustomTag}{customTag.Id}",
-                Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
+                Value = $"{CustomTagActionTypes.RemoveCustomTag}{customTag.Id}", Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
             });
         }
 

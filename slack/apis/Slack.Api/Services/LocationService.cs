@@ -87,9 +87,7 @@ public class LocationService(
             var locationConnection = await locationServiceClient.GetPaginatedLocationsAsync(
                 new GetPaginatedLocationsInput
                 {
-                    First = -1,
-                    Last = -1,
-                    Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
+                    First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
                 },
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
                 cancellationToken: cancellationToken);

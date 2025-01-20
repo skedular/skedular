@@ -81,10 +81,7 @@ public class AddTeamButtonHandler(
         {
             BlockId = TeamActionTypes.PrimaryLocation,
             Label = "Primary Location".ToPlainText(),
-            Element = new ExternalSelectMenu
-            {
-                ActionId = OptionLoaderKeys.OrganizationLocationKey, InitialOption = null, MinQueryLength = 0
-            },
+            Element = new ExternalSelectMenu { ActionId = OptionLoaderKeys.OrganizationLocationKey, InitialOption = null, MinQueryLength = 0 },
             Optional = true
         };
 
@@ -100,10 +97,7 @@ public class AddTeamButtonHandler(
         {
             BlockId = OptionLoaderKeys.OrganizationMemberAndCustomerPairKey,
             Label = "Members".ToPlainText(),
-            Element = new ExternalMultiSelectMenu
-            {
-                ActionId = OptionLoaderKeys.OrganizationMemberAndCustomerPairKey, MinQueryLength = 0
-            },
+            Element = new ExternalMultiSelectMenu { ActionId = OptionLoaderKeys.OrganizationMemberAndCustomerPairKey, MinQueryLength = 0 },
             Optional = false
         };
 

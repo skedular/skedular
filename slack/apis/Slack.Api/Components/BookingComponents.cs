@@ -66,12 +66,7 @@ public class BookingComponents(
 
         return
         [
-            new Button
-            {
-                ActionId = BookingActionTypes.AddBooking,
-                Text = "Make a booking".ToPlainTextWithIcon(Icons.New),
-                Value = context
-            }
+            new Button { ActionId = BookingActionTypes.AddBooking, Text = "Make a booking".ToPlainTextWithIcon(Icons.New), Value = context }
         ];
     }
 
@@ -136,10 +131,7 @@ public class BookingComponents(
 
         if (!string.IsNullOrWhiteSpace(booking.Location?.Id))
         {
-            blocks.Add(new SectionBlock
-            {
-                Text = booking.Location.Name.ToSafeString().ToPlainTextWithIcon(Icons.Location)
-            });
+            blocks.Add(new SectionBlock { Text = booking.Location.Name.ToSafeString().ToPlainTextWithIcon(Icons.Location) });
         }
 
         if (!string.IsNullOrWhiteSpace(booking.Team?.Id))

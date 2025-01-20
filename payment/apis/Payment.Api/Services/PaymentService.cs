@@ -164,10 +164,8 @@ public class PaymentService(
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organizationStripePaymentMethod = await repositoryFactory.OrganizationStripePaymentMethodRepository
-            .Query(new Specification<OrganizationStripePaymentMethod>
-            {
-                Criteria = query => query.Id == paymentMethodId
-            }.AddInclude(query => query.Organization)).FirstAsync(cancellationToken);
+            .Query(new Specification<OrganizationStripePaymentMethod> { Criteria = query => query.Id == paymentMethodId }.AddInclude(query =>
+                query.Organization)).FirstAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 organizationStripePaymentMethod.Organization.Id,
@@ -200,7 +198,7 @@ public class PaymentService(
         CancellationToken cancellationToken)
     {
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-            organizationId, 
+            organizationId,
             cancellationToken);
         ArgumentNullException.ThrowIfNull(organization);
 

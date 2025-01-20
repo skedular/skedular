@@ -53,7 +53,7 @@ public class DeskService(
         {
             var organization =
                 await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                    organizationId, 
+                    organizationId,
                     false,
                     false,
                     cancellationToken);

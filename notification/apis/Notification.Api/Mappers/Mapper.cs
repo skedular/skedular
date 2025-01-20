@@ -148,26 +148,18 @@ public class Mapper : IMapper
             ? null
             : new NotificationOrganizationDetails
             {
-                UniqueId = src.Id,
-                Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
-                LogoUrl = src.LogoUrl
+                UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name, LogoUrl = src.LogoUrl
             };
 
     private static NotificationLocationDetails? MapTo(Location? src) =>
         src is null
             ? null
-            : new NotificationLocationDetails
-            {
-                UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name
-            };
+            : new NotificationLocationDetails { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
 
     private static NotificationTeamDetails? MapTo(Team? src) =>
         src is null
             ? null
-            : new NotificationTeamDetails
-            {
-                UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name
-            };
+            : new NotificationTeamDetails { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) =>
         src.Select(MapTo);

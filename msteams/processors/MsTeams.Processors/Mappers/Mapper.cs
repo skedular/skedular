@@ -144,10 +144,7 @@ public class Mapper : IMapper
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
-        var organization = new Organization
-        {
-            Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt
-        };
+        var organization = new Organization { Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt };
 
         organization.AzureTenants = organizationAfterState.AzureTenantIds
             .Select(item =>
@@ -257,10 +254,7 @@ public class Mapper : IMapper
 
         return new Team
         {
-            Id = teamAfterState.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Timezone = teamAfterState.Timezone.ToSafeString()
+            Id = teamAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt, Timezone = teamAfterState.Timezone.ToSafeString()
         };
     }
 

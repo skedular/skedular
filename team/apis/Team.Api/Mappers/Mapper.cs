@@ -505,11 +505,7 @@ public class Mapper : IMapper
             Customer = new Customer { Id = src.Customer.Id },
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
                 ? null
-                : new OrganizationMember
-                {
-                    Id = src.OrganizationMember.Id,
-                    Customer = new Customer { Id = src.OrganizationMember.Customer.Id }
-                },
+                : new OrganizationMember { Id = src.OrganizationMember.Id, Customer = new Customer { Id = src.OrganizationMember.Customer.Id } },
             Team = team
         };
 

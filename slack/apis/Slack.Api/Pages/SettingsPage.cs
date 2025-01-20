@@ -273,10 +273,7 @@ public class SettingsPage(
                 Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
                 Options =
                 [
-                    new Option
-                    {
-                        Value = BillingActionTypes.Billing, Text = "Billing".ToPlainTextWithIcon(Icons.Billing)
-                    }
+                    new Option { Value = BillingActionTypes.Billing, Text = "Billing".ToPlainTextWithIcon(Icons.Billing) }
                 ]
             });
         }
@@ -335,8 +332,7 @@ public class SettingsPage(
             [
                 new ChannelSelectMenu
                 {
-                    ActionId = UpdateOrganizationSlackUpdateChannel,
-                    InitialChannel = workspace.Organization.DailyUpdateChannel?.Id
+                    ActionId = UpdateOrganizationSlackUpdateChannel, InitialChannel = workspace.Organization.DailyUpdateChannel?.Id
                 }
             ]
         };
@@ -363,15 +359,9 @@ public class SettingsPage(
 
         var email = new SectionBlock { Text = $"Email: {billingInfo.Email.ToSafeString()}".ToPlainText() };
 
-        var addressLine1 = new SectionBlock
-        {
-            Text = $"Address Line 1: {billingInfo.AddressLine1.ToSafeString()}".ToPlainText()
-        };
+        var addressLine1 = new SectionBlock { Text = $"Address Line 1: {billingInfo.AddressLine1.ToSafeString()}".ToPlainText() };
 
-        var addressLine2 = new SectionBlock
-        {
-            Text = $"Address Line 2: {billingInfo.AddressLine2.ToSafeString()}".ToPlainText()
-        };
+        var addressLine2 = new SectionBlock { Text = $"Address Line 2: {billingInfo.AddressLine2.ToSafeString()}".ToPlainText() };
 
         var suburb = new SectionBlock { Text = $"Suburb: {billingInfo.Suburb.ToSafeString()}".ToPlainText() };
         var city = new SectionBlock { Text = $"City: {billingInfo.City.ToSafeString()}".ToPlainText() };
@@ -426,11 +416,7 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.AddressLine1,
             Label = "Address line 1".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = BillingActionTypes.AddressLine1,
-                InitialValue = billingInfo.AddressLine1.ToSafeString()
-            },
+            Element = new PlainTextInput { ActionId = BillingActionTypes.AddressLine1, InitialValue = billingInfo.AddressLine1.ToSafeString() },
             Optional = true
         };
 
@@ -438,11 +424,7 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.AddressLine2,
             Label = "Address line 2".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = BillingActionTypes.AddressLine2,
-                InitialValue = billingInfo.AddressLine2.ToSafeString()
-            },
+            Element = new PlainTextInput { ActionId = BillingActionTypes.AddressLine2, InitialValue = billingInfo.AddressLine2.ToSafeString() },
             Optional = true
         };
 
@@ -450,10 +432,7 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.Suburb,
             Label = "Suburb".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = BillingActionTypes.Suburb, InitialValue = billingInfo.Suburb.ToSafeString()
-            },
+            Element = new PlainTextInput { ActionId = BillingActionTypes.Suburb, InitialValue = billingInfo.Suburb.ToSafeString() },
             Optional = true
         };
 
@@ -461,10 +440,7 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.City,
             Label = "City".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = BillingActionTypes.City, InitialValue = billingInfo.City.ToSafeString()
-            },
+            Element = new PlainTextInput { ActionId = BillingActionTypes.City, InitialValue = billingInfo.City.ToSafeString() },
             Optional = true
         };
 
@@ -472,10 +448,7 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.Province,
             Label = "Province".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = BillingActionTypes.Province, InitialValue = billingInfo.Province.ToSafeString()
-            },
+            Element = new PlainTextInput { ActionId = BillingActionTypes.Province, InitialValue = billingInfo.Province.ToSafeString() },
             Optional = true
         };
 
@@ -483,10 +456,7 @@ public class SettingsPage(
         {
             BlockId = BillingActionTypes.Zipcode,
             Label = "Zipcode".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = BillingActionTypes.Zipcode, InitialValue = billingInfo.Zipcode.ToSafeString()
-            },
+            Element = new PlainTextInput { ActionId = BillingActionTypes.Zipcode, InitialValue = billingInfo.Zipcode.ToSafeString() },
             Optional = true
         };
 

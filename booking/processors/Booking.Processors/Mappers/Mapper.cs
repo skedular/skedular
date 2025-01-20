@@ -145,10 +145,7 @@ public class Mapper : IMapper
             PhotoUrl192 = customer.PhotoUrl192,
             PhotoUrl512 = customer.PhotoUrl512,
             Identities = customer.Identities.Select(item =>
-                    new Shared.Models.Identity
-                    {
-                        Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
-                    })
+                    new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList(),
             DefaultOrganization = string.IsNullOrWhiteSpace(customer.DefaultOrganizationId)
                 ? null
@@ -172,10 +169,7 @@ public class Mapper : IMapper
                         : new Organization { Id = item.OrganizationId }
             }).ToList(),
             PreferredOrganizationTags = customer.DefaultOrganizationTags.Select(item =>
-                    new Shared.Models.OrganizationTag
-                    {
-                        Id = item.Id, Organization = new Organization { Id = item.OrganizationId }
-                    })
+                    new Shared.Models.OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.OrganizationId } })
                 .ToList()
         };
     }

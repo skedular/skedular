@@ -275,8 +275,7 @@ public class SlackInternalSubscriber(
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = workspace.Organization.Id,
-                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
+                            OrganizationId = workspace.Organization.Id, CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -317,8 +316,7 @@ public class SlackInternalSubscriber(
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = workspace.Organization.Id,
-                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            OrganizationId = workspace.Organization.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -329,8 +327,7 @@ public class SlackInternalSubscriber(
                     await customerServiceClient.Admin_AddDefaultLocationAsync(
                         new Admin_AddDefaultLocationInput
                         {
-                            LocationId = getLocationsResponse.Edges.First().Node.Id,
-                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            LocationId = getLocationsResponse.Edges.First().Node.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -378,10 +375,7 @@ public class SlackInternalSubscriber(
 
                 return new OrganizationMember
                 {
-                    Id = randomHelper.Generate(),
-                    Customer = new Customer { Id = customerId },
-                    Role = role,
-                    IsOrganizationOnboardingDone = true
+                    Id = randomHelper.Generate(), Customer = new Customer { Id = customerId }, Role = role, IsOrganizationOnboardingDone = true
                 };
             }
 
@@ -464,8 +458,7 @@ public class SlackInternalSubscriber(
         getPaginatedBookingsInput.OrderBy.AddRange([
             new BookingOrderInput
             {
-                Direction = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending,
-                Field = BookingOrderField.From
+                Direction = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending, Field = BookingOrderField.From
             }
         ]);
         var bookingConnection = await bookingServiceClient.Admin_GetPaginatedBookingsAsync(
@@ -507,10 +500,7 @@ public class SlackInternalSubscriber(
 
             if (bookingConnection.TotalCount > LocationBookingsPageSize)
             {
-                blocks.Add(new SectionBlock
-                {
-                    Text = "*To see other bookings, check the Skedular application in Slack*".ToMarkdown()
-                });
+                blocks.Add(new SectionBlock { Text = "*To see other bookings, check the Skedular application in Slack*".ToMarkdown() });
             }
 
             blocks.Add(new DividerBlock());
@@ -537,10 +527,7 @@ public class SlackInternalSubscriber(
             ]
         });
 
-        var message = new Message
-        {
-            Channel = locationEntity.DailyUpdateChannel.Id, Blocks = blocks, Text = "Who's in today?"
-        };
+        var message = new Message { Channel = locationEntity.DailyUpdateChannel.Id, Blocks = blocks, Text = "Who's in today?" };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.Chat.PostMessage(message, cancellationToken);
@@ -601,8 +588,7 @@ public class SlackInternalSubscriber(
         getPaginatedBookingsInput.OrderBy.AddRange([
             new BookingOrderInput
             {
-                Direction = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending,
-                Field = BookingOrderField.From
+                Direction = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending, Field = BookingOrderField.From
             }
         ]);
         var bookingConnection = await bookingServiceClient.Admin_GetPaginatedBookingsAsync(
@@ -644,10 +630,7 @@ public class SlackInternalSubscriber(
 
             if (bookingConnection.TotalCount > TeamBookingsPageSize)
             {
-                blocks.Add(new SectionBlock
-                {
-                    Text = "*To see other bookings, check the Skedular application in Slack*".ToMarkdown()
-                });
+                blocks.Add(new SectionBlock { Text = "*To see other bookings, check the Skedular application in Slack*".ToMarkdown() });
             }
 
             blocks.Add(new DividerBlock());
@@ -674,10 +657,7 @@ public class SlackInternalSubscriber(
             ]
         });
 
-        var message = new Message
-        {
-            Channel = teamEntity.DailyUpdateChannel.Id, Blocks = blocks, Text = "Who's in today?"
-        };
+        var message = new Message { Channel = teamEntity.DailyUpdateChannel.Id, Blocks = blocks, Text = "Who's in today?" };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.Chat.PostMessage(message, cancellationToken);
@@ -732,17 +712,13 @@ public class SlackInternalSubscriber(
             First = -1,
             Before = string.Empty,
             Last = -1,
-            Where = new BookingWhereInput
-            {
-                FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = true
-            }
+            Where = new BookingWhereInput { FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = true }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
         getPaginatedBookingsInput.OrderBy.AddRange([
             new BookingOrderInput
             {
-                Direction = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending,
-                Field = BookingOrderField.From
+                Direction = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending, Field = BookingOrderField.From
             }
         ]);
         var bookingConnection = await bookingServiceClient.GetPaginatedBookingsAsync(

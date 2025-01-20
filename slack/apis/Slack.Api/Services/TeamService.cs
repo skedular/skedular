@@ -85,10 +85,7 @@ public class TeamService(
         {
             await _cachedTeamsLock.WaitAsync(cancellationToken);
             var teamConnection = await teamServiceClient.GetPaginatedTeamsAsync(
-                new GetPaginatedTeamsInput
-                {
-                    First = -1, Last = -1, Where = new TeamWhereInput { OrganizationId = workspace.Organization.Id }
-                },
+                new GetPaginatedTeamsInput { First = -1, Last = -1, Where = new TeamWhereInput { OrganizationId = workspace.Organization.Id } },
                 teamConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
                 cancellationToken: cancellationToken);
             _cachedTeams = teamConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();

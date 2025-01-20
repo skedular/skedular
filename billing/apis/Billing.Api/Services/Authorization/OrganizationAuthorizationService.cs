@@ -52,8 +52,7 @@ public class OrganizationAuthorizationService(
 
         return new OrganizationLevelPermissions
         {
-            CanViewBillingInfo = CanViewBillingInfo(organization, customer),
-            CanManageBillingInfo = CanManageBillingInfo(organization, customer)
+            CanViewBillingInfo = CanViewBillingInfo(organization, customer), CanManageBillingInfo = CanManageBillingInfo(organization, customer)
         };
     }
 }

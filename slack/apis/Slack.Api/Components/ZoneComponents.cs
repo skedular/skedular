@@ -43,12 +43,7 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationServi
 
         return
         [
-            new Button
-            {
-                ActionId = ZoneActionTypes.AddZone,
-                Text = "Add Zone".ToPlainTextWithIcon(Icons.New),
-                Value = context
-            }
+            new Button { ActionId = ZoneActionTypes.AddZone, Text = "Add Zone".ToPlainTextWithIcon(Icons.New), Value = context }
         ];
     }
 
@@ -110,9 +105,7 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationServi
 
         var actionMenu = new StaticSelectMenu
         {
-            ActionId = ZoneActionTypes.ActionsMenu,
-            Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
-            Options = []
+            ActionId = ZoneActionTypes.ActionsMenu, Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto), Options = []
         };
 
         if (canModify)
@@ -127,8 +120,7 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationServi
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{ZoneActionTypes.RemoveZone}{zone.Id}",
-                Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
+                Value = $"{ZoneActionTypes.RemoveZone}{zone.Id}", Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
             });
         }
 

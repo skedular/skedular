@@ -80,13 +80,7 @@ public class WorkspaceOnboardingService(
             cancellationToken: cancellationToken);
 
         await organizationServiceClient.Admin_AddAsync(
-            new Admin_AddInput
-            {
-                Id = organization.Id,
-                Name = name.ToSafeString(),
-                AgreedToTermsOfUse = true,
-                TermsOfUseId = activeTermsOfUse.Id
-            },
+            new Admin_AddInput { Id = organization.Id, Name = name.ToSafeString(), AgreedToTermsOfUse = true, TermsOfUseId = activeTermsOfUse.Id },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
     }

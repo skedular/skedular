@@ -24,10 +24,7 @@ public class BillingGrpcService(
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
-        {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }
 
     public override async Task<OrganizationPermissions> GetOrganizationPermissions(
@@ -42,8 +39,7 @@ public class BillingGrpcService(
                 context.CancellationToken);
         return new OrganizationPermissions
         {
-            CanViewBillingInfo = permissions.CanViewBillingInfo,
-            CanManageBillingInfo = permissions.CanManageBillingInfo
+            CanViewBillingInfo = permissions.CanViewBillingInfo, CanManageBillingInfo = permissions.CanManageBillingInfo
         };
     }
 

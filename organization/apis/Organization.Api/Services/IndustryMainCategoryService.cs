@@ -22,10 +22,7 @@ public class IndustryMainCategoryService(IRepositoryFactory repositoryFactory, I
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
 
                 var industryMainCategories = await repositoryFactory.IndustryMainCategoryRepository
-                    .Query(new Specification<Shared.Database.Entities.IndustryMainCategory>
-                        {
-                            Criteria = query => !query.DeletedAt.HasValue
-                        }
+                    .Query(new Specification<Shared.Database.Entities.IndustryMainCategory> { Criteria = query => !query.DeletedAt.HasValue }
                         .AddInclude(query => query.IndustrySubCategories)
                         .ApplyOrderBy(query => query.Name))
                     .AsNoTracking().ToListAsync(cancellationToken);

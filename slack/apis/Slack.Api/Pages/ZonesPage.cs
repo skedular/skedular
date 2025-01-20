@@ -524,9 +524,7 @@ public class ZonesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageZones,
-                Text = Icons.FirstPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageZones, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.ZonesPage.Pagination.First = null;
@@ -536,9 +534,7 @@ public class ZonesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageZones,
-                Text = Icons.PreviousPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageZones, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -551,9 +547,7 @@ public class ZonesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageZones,
-                Text = Icons.NextPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageZones, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.ZonesPage.Pagination.First = null;
@@ -563,9 +557,7 @@ public class ZonesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageZones,
-                Text = Icons.LastPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageZones, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -590,10 +582,7 @@ public class ZonesPage(
         {
             BlockId = ZoneActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = ZoneActionTypes.Name, InitialValue = zone.Name.ToSafeString()
-            },
+            Element = new PlainTextInput { ActionId = ZoneActionTypes.Name, InitialValue = zone.Name.ToSafeString() },
             Optional = false
         };
 
@@ -603,9 +592,7 @@ public class ZonesPage(
             Label = "Description".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = ZoneActionTypes.Description,
-                InitialValue = zone.Description.ToSafeString(),
-                Multiline = true
+                ActionId = ZoneActionTypes.Description, InitialValue = zone.Description.ToSafeString(), Multiline = true
             },
             Optional = true
         };
@@ -640,10 +627,7 @@ public class ZonesPage(
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
-        var confirmationMessage = new SectionBlock
-        {
-            Text = $"Are you sure you want to remove the zone {zone.Name.ToSafeString()}?"
-        };
+        var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the zone {zone.Name.ToSafeString()}?" };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(

@@ -50,10 +50,7 @@ public class SettingsComponents(
 
         return
         [
-            new SectionBlock
-            {
-                Text = "*Setting default location makes make a bookings easier. Setup one now?*".ToMarkdown()
-            },
+            new SectionBlock { Text = "*Setting default location makes make a bookings easier. Setup one now?*".ToMarkdown() },
             new ActionsBlock
             {
                 Elements =
@@ -102,10 +99,7 @@ public class SettingsComponents(
 
         return
         [
-            new SectionBlock
-            {
-                Text = "*Setting preferred zones makes make a bookings easier. Setup one now?*".ToMarkdown()
-            },
+            new SectionBlock { Text = "*Setting preferred zones makes make a bookings easier. Setup one now?*".ToMarkdown() },
             new ActionsBlock
             {
                 Elements =
@@ -156,10 +150,7 @@ public class SettingsComponents(
 
         return
         [
-            new SectionBlock
-            {
-                Text = "*Setting preferred desks makes make a bookings easier. Setup one now?*".ToMarkdown()
-            },
+            new SectionBlock { Text = "*Setting preferred desks makes make a bookings easier. Setup one now?*".ToMarkdown() },
             new ActionsBlock
             {
                 Elements =

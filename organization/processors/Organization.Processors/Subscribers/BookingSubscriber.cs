@@ -124,9 +124,7 @@ public class BookingSubscriber(
             ? repositoryFactory.OrganizationOfferingActiveMemberRepository.Add(
                 new OrganizationOfferingActiveMember
                 {
-                    Id = randomHelper.Generate(),
-                    OrganizationMember = organizationMember,
-                    OrganizationOffering = organizationOffering
+                    Id = randomHelper.Generate(), OrganizationMember = organizationMember, OrganizationOffering = organizationOffering
                 })
             : repositoryFactory.OrganizationOfferingActiveMemberRepository.Update(organizationOfferingActiveMember);
 

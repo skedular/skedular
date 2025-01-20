@@ -383,10 +383,7 @@ public class TeamsPage(
         var teams = teamConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var teamIds = teams.Select(item => item.Id).ToList();
         var teamsWithChannel = await repositoryFactory.TeamRepository
-            .Query(new Specification<Team>
-                {
-                    Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id)
-                }
+            .Query(new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id) }
                 .AddInclude(query => query.DailyUpdateChannel))
             .ToListAsync(cancellationToken);
         teams = teams.Select(item =>
@@ -531,9 +528,7 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageTeams,
-                Text = Icons.FirstPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageTeams, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.TeamsPage.Pagination.First = null;
@@ -543,9 +538,7 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageTeams,
-                Text = Icons.PreviousPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageTeams, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -558,9 +551,7 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageTeams,
-                Text = Icons.NextPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageTeams, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
 
             pageContext.TeamsPage.Pagination.First = null;
@@ -570,9 +561,7 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageTeams,
-                Text = Icons.LastPage.ToPlainText(),
-                Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageTeams, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
             });
         }
 
@@ -597,10 +586,7 @@ public class TeamsPage(
         {
             BlockId = TeamActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = TeamActionTypes.Name, InitialValue = team.Name.ToSafeString()
-            },
+            Element = new PlainTextInput { ActionId = TeamActionTypes.Name, InitialValue = team.Name.ToSafeString() },
             Optional = false
         };
 
@@ -608,10 +594,7 @@ public class TeamsPage(
         {
             BlockId = TeamActionTypes.About,
             Label = "About".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = TeamActionTypes.About, InitialValue = team.About.ToSafeString(), Multiline = true
-            },
+            Element = new PlainTextInput { ActionId = TeamActionTypes.About, InitialValue = team.About.ToSafeString(), Multiline = true },
             Optional = true
         };
 
@@ -641,10 +624,7 @@ public class TeamsPage(
                 InitialOption =
                     team.PrimaryLocation is null
                         ? null
-                        : new Option
-                        {
-                            Text = team.PrimaryLocation.Name.ToOptionText(), Value = team.PrimaryLocation.Id
-                        },
+                        : new Option { Text = team.PrimaryLocation.Name.ToOptionText(), Value = team.PrimaryLocation.Id },
                 MinQueryLength = 3
             },
             Optional = true
@@ -661,8 +641,7 @@ public class TeamsPage(
             Label = "Slack update channel".ToPlainText(),
             Element = new ChannelSelectMenu
             {
-                ActionId = TeamActionTypes.SlackUpdateChannel,
-                InitialChannel = teamEntity?.DailyUpdateChannel?.Id
+                ActionId = TeamActionTypes.SlackUpdateChannel, InitialChannel = teamEntity?.DailyUpdateChannel?.Id
             },
             Optional = true
         };
@@ -719,10 +698,7 @@ public class TeamsPage(
             teamConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
-        var confirmationMessage = new SectionBlock
-        {
-            Text = $"Are you sure you want to remove the team {team.Name.ToSafeString()}?"
-        };
+        var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the team {team.Name.ToSafeString()}?" };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(

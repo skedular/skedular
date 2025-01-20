@@ -74,9 +74,7 @@ public class ProducerFactory(
 
         var config = new ProducerConfig(kafkaConfiguration.ProducerSettings)
         {
-            ClientId = clientNaming.GetClientId(),
-            EnableIdempotence = false,
-            BootstrapServers = kafkaConfiguration.BootstrapServers
+            ClientId = clientNaming.GetClientId(), EnableIdempotence = false, BootstrapServers = kafkaConfiguration.BootstrapServers
         };
 
         if (kafkaConfiguration.SecurityProtocol is not null)

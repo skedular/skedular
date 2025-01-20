@@ -79,10 +79,7 @@ public class Mapper : IMapper
 
         var organization = new Organization
         {
-            Id = organizationAfterState.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Name = organizationAfterState.Name
+            Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt, Name = organizationAfterState.Name
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>

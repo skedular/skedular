@@ -63,10 +63,7 @@ public class Mutation(IMapper mapper)
             input.Deactivated,
             input.RequireBookingApproval,
             cancellationToken);
-        return new BulkDeskPayload
-        {
-            ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray()
-        };
+        return new BulkDeskPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray() };
     }
 
     [UseResolverScope]
@@ -96,10 +93,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var desks = await deskService.DeleteAsync(input.Ids, cancellationToken);
-        return new DesksPayload
-        {
-            ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray()
-        };
+        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray() };
     }
 
     [UseResolverScope]
@@ -109,10 +103,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var desks = await deskService.ActivateAsync(input.Ids, cancellationToken);
-        return new DesksPayload
-        {
-            ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray()
-        };
+        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray() };
     }
 
     [UseResolverScope]
@@ -122,10 +113,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var desks = await deskService.DeactivateAsync(input.Ids, cancellationToken);
-        return new DesksPayload
-        {
-            ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray()
-        };
+        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray() };
     }
 
     [UseResolverScope]
@@ -139,10 +127,7 @@ public class Mutation(IMapper mapper)
                 input.Id,
                 input.Role,
                 cancellationToken);
-        return new LocationMemberDetailsPayload
-        {
-            ClientMutationId = input.ClientMutationId, Member = mapper.MapTo(locationMember)
-        };
+        return new LocationMemberDetailsPayload { ClientMutationId = input.ClientMutationId, Member = mapper.MapTo(locationMember) };
     }
 
     [UseResolverScope]

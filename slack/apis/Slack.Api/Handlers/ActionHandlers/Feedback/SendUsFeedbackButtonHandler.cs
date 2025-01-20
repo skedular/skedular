@@ -48,10 +48,7 @@ public class SendUsFeedbackButtonHandler(
                 cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
-        var greetings = new SectionBlock
-        {
-            Text = $"Hi <@{workspaceMemberEntity.Id}>, what feedback would you like to share with us?".ToMarkdown()
-        };
+        var greetings = new SectionBlock { Text = $"Hi <@{workspaceMemberEntity.Id}>, what feedback would you like to share with us?".ToMarkdown() };
 
         var feedback = new InputBlock
         {

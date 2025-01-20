@@ -74,7 +74,7 @@ public class Query(IMapper mapper)
                 ? []
                 : orderBy.Select(item =>
                 {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                     return new LocationOrder(direction, item.Field);
                 }).ToList(),
             false,
@@ -135,7 +135,7 @@ public class Query(IMapper mapper)
                 ? []
                 : orderBy.Select(item =>
                 {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                     return new LocationMemberOrder(direction, item.Field);
                 }).ToList(),
             cancellationToken);
@@ -178,7 +178,7 @@ public class Query(IMapper mapper)
                 ? []
                 : orderBy.Select(item =>
                 {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                     return new DeskOrder(direction, item.Field);
                 }).ToList(),
             cancellationToken);
@@ -240,7 +240,7 @@ public class Query(IMapper mapper)
                 ? []
                 : orderBy.Select(item =>
                 {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                     return new LocationOrder(direction, item.Field);
                 }).ToList(), cancellationToken);
 

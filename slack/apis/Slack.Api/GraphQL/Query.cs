@@ -17,10 +17,7 @@ public class Query
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return new Version
-        {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        };
+        return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }
 
     [UseResolverScope]

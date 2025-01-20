@@ -85,10 +85,7 @@ public class AddBookingButtonHandler(
         {
             BlockId = NotesKey,
             Label = "Notes".ToPlainText(),
-            Element = new PlainTextInput
-            {
-                ActionId = NotesKey, Placeholder = "e.g. I will be there from 9am", Multiline = true
-            },
+            Element = new PlainTextInput { ActionId = NotesKey, Placeholder = "e.g. I will be there from 9am", Multiline = true },
             Optional = true
         };
 
@@ -331,11 +328,7 @@ public class AddBookingButtonHandler(
                 {
                     ActionId = OptionLoaderKeys.OrganizationMemberKey,
                     InitialOption =
-                        new Option
-                        {
-                            Text = customerToAddToBooking.GetCustomerName().ToOptionText(),
-                            Value = customerToAddToBooking.Id
-                        },
+                        new Option { Text = customerToAddToBooking.GetCustomerName().ToOptionText(), Value = customerToAddToBooking.Id },
                     MinQueryLength = 0
                 },
                 Optional = false
@@ -389,10 +382,7 @@ public class AddBookingButtonHandler(
                 {
                     ActionId = OptionLoaderKeys.OrganizationLocationKey,
                     InitialOption =
-                        new Option
-                        {
-                            Text = locationToAddToBooking.Name.ToOptionText(), Value = locationToAddToBooking.Id
-                        },
+                        new Option { Text = locationToAddToBooking.Name.ToOptionText(), Value = locationToAddToBooking.Id },
                     MinQueryLength = 0
                 },
                 Optional = true

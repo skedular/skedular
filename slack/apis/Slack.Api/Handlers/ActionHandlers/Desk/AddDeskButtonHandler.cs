@@ -76,10 +76,7 @@ public class AddDeskButtonHandler(
                 new CheckboxGroup
                 {
                     ActionId = DeskActionTypes.Deactivated,
-                    Options = new List<Option>
-                    {
-                        new() { Text = "Deactivated".ToPlainText(), Value = DeskActionTypes.Deactivated }
-                    }
+                    Options = new List<Option> { new() { Text = "Deactivated".ToPlainText(), Value = DeskActionTypes.Deactivated } }
                 },
             Optional = true
         };
@@ -94,11 +91,7 @@ public class AddDeskButtonHandler(
                     ActionId = DeskActionTypes.RequireBookingApproval,
                     Options = new List<Option>
                     {
-                        new()
-                        {
-                            Text = "Require Booking Approval".ToPlainText(),
-                            Value = DeskActionTypes.RequireBookingApproval
-                        }
+                        new() { Text = "Require Booking Approval".ToPlainText(), Value = DeskActionTypes.RequireBookingApproval }
                     }
                 },
             Optional = true

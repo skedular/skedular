@@ -78,10 +78,7 @@ public class EditBookingButtonHandler(
             }
         }
 
-        var bookingDate = new SectionBlock
-        {
-            Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar)
-        };
+        var bookingDate = new SectionBlock { Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar) };
 
         var organizationMember = new InputBlock
         {
@@ -91,10 +88,7 @@ public class EditBookingButtonHandler(
             {
                 ActionId = OptionLoaderKeys.OrganizationMemberKey,
                 InitialOption =
-                    new Option
-                    {
-                        Text = booking.Customer.GetCustomerName().ToOptionText(), Value = booking.Customer.Id
-                    },
+                    new Option { Text = booking.Customer.GetCustomerName().ToOptionText(), Value = booking.Customer.Id },
                 MinQueryLength = 0
             },
             Optional = false
@@ -122,10 +116,7 @@ public class EditBookingButtonHandler(
             Label = "Notes".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = NotesKey,
-                Placeholder = "e.g. I will be there from 9am",
-                Multiline = true,
-                InitialValue = booking.Notes
+                ActionId = NotesKey, Placeholder = "e.g. I will be there from 9am", Multiline = true, InitialValue = booking.Notes
             },
             Optional = true
         };
@@ -225,9 +216,7 @@ public class EditBookingButtonHandler(
                 {
                     var getPaginatedLocationsInput = new GetPaginatedLocationsInput
                     {
-                        First = -1,
-                        Last = -1,
-                        Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
+                        First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
                     };
                     getPaginatedLocationsInput.OrderBy.AddRange([
                         new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
@@ -386,11 +375,7 @@ public class EditBookingButtonHandler(
                 })
                 .ToList();
 
-            return new OptionGroup
-            {
-                Label = item.Name,
-                Options = new List<Option> { locationWithoutDesk }.Concat(locationWithDesks).ToList()
-            };
+            return new OptionGroup { Label = item.Name, Options = new List<Option> { locationWithoutDesk }.Concat(locationWithDesks).ToList() };
         }).ToList();
 
         var deskIds = booking.Desks.Select(item => item.Id).ToList();
@@ -405,9 +390,6 @@ public class EditBookingButtonHandler(
                 .ToList()
         };
 
-        return new InputBlock
-        {
-            BlockId = LocationsDesksKey, Label = "Location/Desks".ToPlainText(), Element = menu, Optional = true
-        };
+        return new InputBlock { BlockId = LocationsDesksKey, Label = "Location/Desks".ToPlainText(), Element = menu, Optional = true };
     }
 }

@@ -65,18 +65,12 @@ public class BulkAddDesksButtonHandler(
 
         var prefix = new InputBlock
         {
-            BlockId = NamePrefixKey,
-            Label = "Prefix".ToPlainText(),
-            Element = new PlainTextInput { ActionId = NamePrefixKey },
-            Optional = false
+            BlockId = NamePrefixKey, Label = "Prefix".ToPlainText(), Element = new PlainTextInput { ActionId = NamePrefixKey }, Optional = false
         };
 
         var count = new InputBlock
         {
-            BlockId = CountKey,
-            Label = "Count".ToPlainText(),
-            Element = new NumberInput { ActionId = CountKey, MinInteger = 1 },
-            Optional = false
+            BlockId = CountKey, Label = "Count".ToPlainText(), Element = new NumberInput { ActionId = CountKey, MinInteger = 1 }, Optional = false
         };
 
         var deactivated = new InputBlock
@@ -87,10 +81,7 @@ public class BulkAddDesksButtonHandler(
                 new CheckboxGroup
                 {
                     ActionId = DeskActionTypes.Deactivated,
-                    Options = new List<Option>
-                    {
-                        new() { Text = "Deactivated".ToPlainText(), Value = DeskActionTypes.Deactivated }
-                    }
+                    Options = new List<Option> { new() { Text = "Deactivated".ToPlainText(), Value = DeskActionTypes.Deactivated } }
                 },
             Optional = true
         };
@@ -105,11 +96,7 @@ public class BulkAddDesksButtonHandler(
                     ActionId = DeskActionTypes.RequireBookingApproval,
                     Options = new List<Option>
                     {
-                        new()
-                        {
-                            Text = "Require Booking Approval".ToPlainText(),
-                            Value = DeskActionTypes.RequireBookingApproval
-                        }
+                        new() { Text = "Require Booking Approval".ToPlainText(), Value = DeskActionTypes.RequireBookingApproval }
                     }
                 },
             Optional = true

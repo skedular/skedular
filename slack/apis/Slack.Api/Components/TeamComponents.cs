@@ -42,12 +42,7 @@ public class TeamComponents(ICustomerService customerService, IOrganizationServi
 
         return
         [
-            new Button
-            {
-                ActionId = TeamActionTypes.AddTeam,
-                Text = "Add Team".ToPlainTextWithIcon(Icons.New),
-                Value = context
-            }
+            new Button { ActionId = TeamActionTypes.AddTeam, Text = "Add Team".ToPlainTextWithIcon(Icons.New), Value = context }
         ];
     }
 
@@ -114,11 +109,7 @@ public class TeamComponents(ICustomerService customerService, IOrganizationServi
             Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
             Options =
             [
-                new Option
-                {
-                    Value = $"{BookingActionTypes.Bookings}{team.Id}",
-                    Text = "Bookings".ToOptionPlainTextWithIcon(Icons.Bookings)
-                }
+                new Option { Value = $"{BookingActionTypes.Bookings}{team.Id}", Text = "Bookings".ToOptionPlainTextWithIcon(Icons.Bookings) }
             ]
         };
 
@@ -134,8 +125,7 @@ public class TeamComponents(ICustomerService customerService, IOrganizationServi
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{TeamActionTypes.RemoveTeam}{team.Id}",
-                Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
+                Value = $"{TeamActionTypes.RemoveTeam}{team.Id}", Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
             });
         }
 

@@ -26,10 +26,8 @@ public class OrganizationTermsOfUseService(
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
 
                 var termsOfUse = await repositoryFactory.TermsOfUseRepository
-                    .Query(new Specification<Shared.Database.Entities.TermsOfUse>
-                    {
-                        Criteria = query => !query.DeletedAt.HasValue && query.Active
-                    }).AsNoTracking().FirstAsync(cancellationToken);
+                    .Query(new Specification<Shared.Database.Entities.TermsOfUse> { Criteria = query => !query.DeletedAt.HasValue && query.Active })
+                    .AsNoTracking().FirstAsync(cancellationToken);
 
                 return mapper.MapTo(termsOfUse)!;
             }))!;
@@ -37,8 +35,6 @@ public class OrganizationTermsOfUseService(
     public async Task<Shared.Database.Entities.TermsOfUse> GetActiveTermsOfUseEntityAsync(
         CancellationToken cancellationToken) =>
         await repositoryFactory.TermsOfUseRepository
-            .Query(new Specification<Shared.Database.Entities.TermsOfUse>
-            {
-                Criteria = query => !query.DeletedAt.HasValue && query.Active
-            }).FirstAsync(cancellationToken);
+            .Query(new Specification<Shared.Database.Entities.TermsOfUse> { Criteria = query => !query.DeletedAt.HasValue && query.Active })
+            .FirstAsync(cancellationToken);
 }

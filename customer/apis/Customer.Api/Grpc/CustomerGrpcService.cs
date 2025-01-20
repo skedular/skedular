@@ -33,10 +33,7 @@ public class CustomerGrpcService(
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
-        {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_Get(
@@ -73,10 +70,7 @@ public class CustomerGrpcService(
         var (exist, customer) =
             await customerService.AnyCustomerExistByEmailAsync(request.Email, context.CancellationToken);
 
-        return new AnyCustomerExistByEmailResponse
-        {
-            Exist = exist, Customer = customer is null ? null : mapper.MapToGrpcResponse(customer)
-        };
+        return new AnyCustomerExistByEmailResponse { Exist = exist, Customer = customer is null ? null : mapper.MapToGrpcResponse(customer) };
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_Add(

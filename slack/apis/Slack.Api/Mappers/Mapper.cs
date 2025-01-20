@@ -171,10 +171,7 @@ public class Mapper : IMapper
             {
                 Id = item.Id,
                 Organization =
-                    new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
-                    {
-                        Id = defaultOrganization.Id
-                    }
+                    new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
             }));
 
         return input;
@@ -218,10 +215,7 @@ public class Mapper : IMapper
 
         customer.DefaultOrganization = string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id)
             ? null
-            : new Shared.Models.Organization
-            {
-                Id = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name.ToSafeString()
-            };
+            : new Shared.Models.Organization { Id = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name.ToSafeString() };
 
         customer.DefaultLocations =
             src.DefaultLocations.Select(item => new Shared.Models.Location
@@ -246,9 +240,7 @@ public class Mapper : IMapper
         customer.PreferredDesks =
             src.PreferredDesks.Select(item => new Desk
             {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Location = new Shared.Models.Location { Id = item.Location.Id }
+                Id = item.Id, Name = item.Name.ToSafeString(), Location = new Shared.Models.Location { Id = item.Location.Id }
             }).ToList();
 
         customer.PreferredOrganizationTags =
@@ -628,13 +620,7 @@ public class Mapper : IMapper
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
 
     public OrganizationZone MapTo(Zone src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
-            Color = src.Color.ToSafeString()
-        };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static Workspace MergeToEntity(Shared.Models.Workspace src, Workspace dest, Organization organization)
     {
@@ -682,10 +668,7 @@ public class Mapper : IMapper
             Customer = MapTo(src.Customer),
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
                 ? null
-                : new OrganizationMember
-                {
-                    Id = src.OrganizationMember.Id, Customer = MapTo(src.OrganizationMember.Customer)
-                },
+                : new OrganizationMember { Id = src.OrganizationMember.Id, Customer = MapTo(src.OrganizationMember.Customer) },
             Team = team
         };
 
@@ -855,7 +838,7 @@ public class Mapper : IMapper
 
     private static OrganizationZone MapTo(
         global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()};
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static IEnumerable<OrganizationCustomTag> MapTo(
         IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag> src) =>
@@ -869,5 +852,5 @@ public class Mapper : IMapper
         IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone> src) => src.Select(MapTo);
 
     private static OrganizationZone MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()};
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 }

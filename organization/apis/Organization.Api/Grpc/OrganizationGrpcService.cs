@@ -36,10 +36,7 @@ public class OrganizationGrpcService(
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return Task.FromResult(new Version
-        {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        });
+        return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }
 
     public override async Task<TermsOfUse> GetActiveOrganizationTermsOfUse(

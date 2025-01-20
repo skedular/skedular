@@ -248,8 +248,7 @@ public class OrganizationInternalSubscriber(
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = azureTenant.Organization.Id,
-                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
+                            OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -291,8 +290,7 @@ public class OrganizationInternalSubscriber(
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = azureTenant.Organization.Id,
-                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -303,8 +301,7 @@ public class OrganizationInternalSubscriber(
                     await customerServiceClient.Admin_AddDefaultLocationAsync(
                         new Admin_AddDefaultLocationInput
                         {
-                            LocationId = getLocationsResponse.Edges.First().Node.Id,
-                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            LocationId = getLocationsResponse.Edges.First().Node.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);

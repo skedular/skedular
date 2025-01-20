@@ -56,16 +56,18 @@ public class OrganizationController(
         {
             throw new ArgumentException("SAMLResponse is required.");
         }
+
         var rawSamlResponse = Request.Form["SAMLResponse"].ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(rawSamlResponse);
-        
+
         if (!Request.Form.ContainsKey("RelayState"))
         {
             throw new ArgumentException("RelayState is required.");
         }
+
         var redirectUrl = Request.Form["RelayState"].ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(redirectUrl);
-        
+
         await organizationSsoService.ProcessSsoResponseAsync(Response, rawSamlResponse, cancellationToken);
 
         return Redirect(redirectUrl);

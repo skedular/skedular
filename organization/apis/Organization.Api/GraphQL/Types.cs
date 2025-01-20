@@ -157,11 +157,9 @@ public class OrganizationDetails : Node
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }
 
-    [GraphQLName("industrySubCategories")]
-    public OrganizationIndustrySubCategoryReferenceDetails[] IndustrySubCategories { get; set; } = [];
+    [GraphQLName("industrySubCategories")] public OrganizationIndustrySubCategoryReferenceDetails[] IndustrySubCategories { get; set; } = [];
 
-    [GraphQLName("availableOfferings")]
-    public OrganizationOfferingDetails[] AvailableOfferings { get; set; } = [];
+    [GraphQLName("availableOfferings")] public OrganizationOfferingDetails[] AvailableOfferings { get; set; } = [];
 
     [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; }
 
@@ -195,8 +193,7 @@ public class OrganizationIndustryMainCategoryReferenceDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 
-    [GraphQLName("subCategories")]
-    public OrganizationIndustrySubCategoryReferenceDetails[] SubCategories { get; set; } = [];
+    [GraphQLName("subCategories")] public OrganizationIndustrySubCategoryReferenceDetails[] SubCategories { get; set; } = [];
 
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }

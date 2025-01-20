@@ -42,12 +42,7 @@ public class LocationComponents(ICustomerService customerService, IOrganizationS
 
         return
         [
-            new Button
-            {
-                ActionId = LocationActionTypes.AddLocation,
-                Text = "Add Location".ToPlainTextWithIcon(Icons.New),
-                Value = context
-            }
+            new Button { ActionId = LocationActionTypes.AddLocation, Text = "Add Location".ToPlainTextWithIcon(Icons.New), Value = context }
         ];
     }
 
@@ -114,26 +109,10 @@ public class LocationComponents(ICustomerService customerService, IOrganizationS
             Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
             Options =
             [
-                new Option
-                {
-                    Value = $"{BookingActionTypes.Bookings}{location.Id}",
-                    Text = "Bookings".ToOptionPlainTextWithIcon(Icons.Bookings)
-                },
-                new Option
-                {
-                    Value = $"{ZoneActionTypes.Zones}{location.Id}",
-                    Text = "Zones".ToOptionPlainTextWithIcon(Icons.Zones)
-                },
-                new Option
-                {
-                    Value = $"{CustomTagActionTypes.CustomTags}{location.Id}",
-                    Text = "Tags".ToOptionPlainTextWithIcon(Icons.CustomTags)
-                },
-                new Option
-                {
-                    Value = $"{DeskActionTypes.Desks}{location.Id}",
-                    Text = "Desks".ToOptionPlainTextWithIcon(Icons.Desks)
-                }
+                new Option { Value = $"{BookingActionTypes.Bookings}{location.Id}", Text = "Bookings".ToOptionPlainTextWithIcon(Icons.Bookings) },
+                new Option { Value = $"{ZoneActionTypes.Zones}{location.Id}", Text = "Zones".ToOptionPlainTextWithIcon(Icons.Zones) },
+                new Option { Value = $"{CustomTagActionTypes.CustomTags}{location.Id}", Text = "Tags".ToOptionPlainTextWithIcon(Icons.CustomTags) },
+                new Option { Value = $"{DeskActionTypes.Desks}{location.Id}", Text = "Desks".ToOptionPlainTextWithIcon(Icons.Desks) }
             ]
         };
 
@@ -141,8 +120,7 @@ public class LocationComponents(ICustomerService customerService, IOrganizationS
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{LocationActionTypes.EditLocation}{location.Id}",
-                Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
+                Value = $"{LocationActionTypes.EditLocation}{location.Id}", Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
             });
         }
 
@@ -150,8 +128,7 @@ public class LocationComponents(ICustomerService customerService, IOrganizationS
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{LocationActionTypes.RemoveLocation}{location.Id}",
-                Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
+                Value = $"{LocationActionTypes.RemoveLocation}{location.Id}", Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
             });
         }
 

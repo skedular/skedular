@@ -170,10 +170,7 @@ public class LocationInvitationService(
         {
             repositoryFactory.LocationMemberRepository.Add(new LocationMember
             {
-                Id = randomHelper.Generate(),
-                Role = joinInvitation.Role,
-                Location = location,
-                Customer = customerEntity
+                Id = randomHelper.Generate(), Role = joinInvitation.Role, Location = location, Customer = customerEntity
             });
 
             await locationOutboxPublisher.PublishLocationAsync(

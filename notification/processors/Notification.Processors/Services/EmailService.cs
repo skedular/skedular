@@ -32,9 +32,7 @@ public class EmailService : IEmailService
             Source = sender,
             Destination = new Destination
             {
-                ToAddresses = toAddresses.ToList(),
-                CcAddresses = ccAddresses.ToList(),
-                BccAddresses = bccAddresses.ToList()
+                ToAddresses = toAddresses.ToList(), CcAddresses = ccAddresses.ToList(), BccAddresses = bccAddresses.ToList()
             },
             Template = templateId,
             TemplateData = templateData

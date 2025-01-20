@@ -21,10 +21,7 @@ public class Query(IMapper mapper)
         var version = assembly.GetName().Version;
         ArgumentNullException.ThrowIfNull(version);
 
-        return new Version
-        {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
-        };
+        return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }
 
     [UseResolverScope]
@@ -54,7 +51,7 @@ public class Query(IMapper mapper)
                     ? []
                     : orderBy.Select(item =>
                     {
-                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending: OrderDirection.Descending;
+                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
                         return new CustomerOrder(direction, item.Field);
                     }).ToList(),
                 cancellationToken);

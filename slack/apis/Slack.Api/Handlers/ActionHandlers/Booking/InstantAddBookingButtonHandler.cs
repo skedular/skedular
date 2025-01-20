@@ -64,12 +64,7 @@ public class InstantAddBookingButtonHandler(
                 First = 1,
                 Before = string.Empty,
                 Last = -1,
-                Where = new BookingWhereInput
-                {
-                    FromGTE = context.From.ToTimestamp(),
-                    FromLTE = context.To.ToTimestamp(),
-                    IncludeMineOnly = true
-                }
+                Where = new BookingWhereInput { FromGTE = context.From.ToTimestamp(), FromLTE = context.To.ToTimestamp(), IncludeMineOnly = true }
             };
             getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
             if (!string.IsNullOrWhiteSpace(context.LocationId))
@@ -109,10 +104,7 @@ public class InstantAddBookingButtonHandler(
                     addInput,
                     bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
                     cancellationToken: cancellationToken));
-                var blocks = new List<Block>
-                {
-                    new SectionBlock { Text = "Your booking on is now confirmed.".ToMarkdown() }
-                };
+                var blocks = new List<Block> { new SectionBlock { Text = "Your booking on is now confirmed.".ToMarkdown() } };
                 var bookingCardBlocks = bookingComponents.GetBookingCard(
                     workspace,
                     booking,

@@ -95,10 +95,7 @@ public class Mapper : IMapper
             PhotoUrl512 = customer.PhotoUrl512,
             PhoneNumber = customer.PhoneNumber,
             Identities = customer.Identities.Select(item =>
-                    new Shared.Models.Identity
-                    {
-                        Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
-                    })
+                    new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }

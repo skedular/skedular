@@ -80,10 +80,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             PhotoUrl192 = customer.PhotoUrl192,
             PhotoUrl512 = customer.PhotoUrl512,
             Identities = customer.Identities.Select(item =>
-                    new Shared.Models.Identity
-                    {
-                        Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified
-                    })
+                    new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }

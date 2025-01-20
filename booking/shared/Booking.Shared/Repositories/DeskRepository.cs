@@ -107,8 +107,8 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
                                  !query.Deactivated &&
                                  query.Location != null &&
                                  (string.IsNullOrWhiteSpace(organizationId) || (query.Location.Organization != null &&
-                                     query.Location.Organization.Id ==
-                                     organizationId)) &&
+                                                                                query.Location.Organization.Id ==
+                                                                                organizationId)) &&
                                  (string.IsNullOrWhiteSpace(locationId) || query.Location.Id == locationId) &&
                                  (
                                      string.IsNullOrWhiteSpace(organizationId) ||
