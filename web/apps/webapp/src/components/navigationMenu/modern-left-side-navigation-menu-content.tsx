@@ -2,6 +2,7 @@ import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/
 import {
   getModernOrganizationAdminSetupBaseLink,
   getModernOrganizationAdminSubscriptionsBaseLink,
+  getModernOrganizationAnalyticsBaseLink,
   getModernOrganizationBookingsBaseLink,
   getModernOrganizationLocationsBaseLink,
   getModernOrganizationTeamsBaseLink,
@@ -18,6 +19,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import {
+  AnalyticsIcon,
   BookingIcon,
   CollpaseDrawerIcon,
   HomeIcon,
@@ -51,6 +53,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
         organization(id: $organizationId) @include(if: $organizationExists) {
           id
           canModify
+          canViewAnalytics
           availableOfferings {
             code
           }
@@ -133,6 +136,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
   const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
   const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
   const organizationMembersBaseLink = getModernOrganizationUsersBaseLink(rootData.organization.id);
+  const organizationAnalyticsSetupBaseLink = getModernOrganizationAnalyticsBaseLink(rootData.organization.id);
   const organizationAdminSetupBaseLink = getModernOrganizationAdminSetupBaseLink(rootData.organization.id);
 
   return (
@@ -282,6 +286,32 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
               </ListItemButton>
             </Link>
           </ListItem>
+
+          {rootData.organization.canViewAnalytics && (
+            <ListItem disablePadding>
+              <Link component={NextLink} href={organizationAnalyticsSetupBaseLink}>
+                <ListItemButton
+                  selected={pathName.startsWith(organizationAnalyticsSetupBaseLink)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAnalyticsSetupBaseLink)) }}
+                >
+                  {collapsed && (
+                    <BodyIconTypography
+                      startElement={!hideIcons && <AnalyticsIcon color="inherit" />}
+                      invertDefaultColor={pathName.startsWith(organizationAnalyticsSetupBaseLink) && paletteMode === 'dark'}
+                    />
+                  )}
+                  {!collapsed && (
+                    <BodyIconTypography
+                      label="Analytics"
+                      startElement={!hideIcons && <AnalyticsIcon color="inherit" />}
+                      spacing={3}
+                      invertDefaultColor={pathName.startsWith(organizationAnalyticsSetupBaseLink) && paletteMode === 'dark'}
+                    />
+                  )}
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          )}
 
           {rootData.organization.canModify && (
             <ListItem disablePadding>

@@ -31,6 +31,7 @@ const RootQuery = graphql`
     $teamIds: [String!]!
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaTo: DateTime!
+    $locationsSortingValues: [LocationOrderInput!]
   ) {
     organization(id: $organizationId) {
       id
@@ -142,6 +143,12 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
         bookingsSearchCriteriaTo,
         locationIds: [],
         teamIds: [],
+        locationsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
       },
       {
         fetchPolicy: 'store-and-network',

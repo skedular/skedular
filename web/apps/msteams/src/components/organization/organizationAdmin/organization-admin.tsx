@@ -1112,8 +1112,6 @@ const OrganizationAdmin = ({
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails &&
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
   const activeOffering = rootData.organization ? rootData.organization.activeOffering : null;
-  const availableOfferingExist =
-    rootData.organization && rootData.organization.availableOfferings ? rootData.organization.availableOfferings.length > 0 : false;
   const availableOfferings = rootData.organization && rootData.organization.availableOfferings ? rootData.organization.availableOfferings : [];
 
   return (
@@ -1449,16 +1447,7 @@ const OrganizationAdmin = ({
               <Divider />
             </StackColumn>
 
-            <GridContainer
-              spacing={1}
-              sx={{
-                paddingLeft: defaultPadding,
-                paddingRight: defaultPadding,
-                paddingTop: defaultPadding,
-                justifyContent: 'space-between',
-                alignItems: 'stretch',
-              }}
-            >
+            <GridContainer spacing={1} sx={{ padding: defaultPadding, justifyContent: 'space-between', alignItems: 'stretch' }}>
               {activeOffering && (
                 <Grid>
                   <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%' }}>

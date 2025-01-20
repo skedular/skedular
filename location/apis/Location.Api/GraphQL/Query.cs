@@ -67,6 +67,7 @@ public class Query(IMapper mapper)
             new PaginationInputParam(after, first, before, last),
             new LocationSearchCriteria(
                 where.OrganizationId,
+                where.LocationIds,
                 where.NameContains,
                 where.ZoneIds ?? [],
                 where.CustomTagIds ?? []),
@@ -233,6 +234,7 @@ public class Query(IMapper mapper)
             until,
             new LocationSearchCriteria(
                 where.OrganizationId,
+                where.LocationIds,
                 where.NameContains,
                 where.ZoneIds ?? [],
                 where.CustomTagIds ?? []),

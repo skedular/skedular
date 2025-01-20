@@ -281,6 +281,7 @@ public class OrganizationTagDetails
 public class LocationWhereInput
 {
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("locationIds")] public string[]? LocationIds { get; set; } = [];
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("zoneIds")] public string[]? ZoneIds { get; set; }
     [GraphQLName("customTagIds")] public string[]? CustomTagIds { get; set; }

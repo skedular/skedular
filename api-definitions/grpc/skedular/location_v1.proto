@@ -141,9 +141,10 @@ message GetPaginatedLocationsInput {
 
 message LocationWhereInput {
     string organizationId = 1;
-    string nameContains = 2;
-    repeated string zoneIds = 3;
-    repeated string customTagIds = 4;
+    repeated string locationIds = 2;
+    string nameContains = 3;
+    repeated string zoneIds = 4;
+    repeated string customTagIds = 5;
 }
 
 message LocationOrderInput {

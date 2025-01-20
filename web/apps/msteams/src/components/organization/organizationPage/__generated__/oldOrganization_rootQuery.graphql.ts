@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<91c573ed2d7a3521f5b4bf357feb74d4>>
+ * @generated SignedSource<<be185fef56be6011131edd0cd1033702>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type oldOrganization_rootQuery$variables = {
 export type oldOrganization_rootQuery$data = {
   readonly organization: {
     readonly canModify: boolean;
-    readonly canViewAnalytics: boolean;
     readonly id: string;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
@@ -76,13 +75,6 @@ v1 = [
         "kind": "ScalarField",
         "name": "canModify",
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "canViewAnalytics",
-        "storageKey": null
       }
     ],
     "storageKey": null
@@ -106,16 +98,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "3113d824ba53969ae9aa1a3a4e4823ea",
+    "cacheID": "bc69396f4c1125081333d970c321f0ec",
     "id": null,
     "metadata": {},
     "name": "oldOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query oldOrganization_rootQuery(\n  $organizationId: String!\n) {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    canModify\n    canViewAnalytics\n  }\n}\n"
+    "text": "query oldOrganization_rootQuery(\n  $organizationId: String!\n) {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    canModify\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "477acec354e194a94501045b4eae263b";
+(node as any).hash = "731458a89c9192d5151b24acd29d7647";
 
 export default node;

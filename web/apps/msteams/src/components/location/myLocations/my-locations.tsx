@@ -209,14 +209,11 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation],
   ];
 
-  const locations = useMemo(() => {
-    if (!rootDataRefetchable.locations) {
-      return [];
-    }
-
-    return rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name));
-  }, [rootDataRefetchable.locations]);
-
+  const locations = useMemo(
+    () =>
+      rootDataRefetchable.locations ? rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)) : [],
+    [rootDataRefetchable.locations],
+  );
   const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
 
   const organizationMembers = useMemo(() => {

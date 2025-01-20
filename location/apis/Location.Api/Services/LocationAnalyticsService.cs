@@ -53,7 +53,8 @@ public class LocationAnalyticsService(
             return new LocationAnalytics(locationId, string.Empty, [], []);
         }
 
-        return (await GetAnalyticsAsync([locationId],
+        return (await GetAnalyticsAsync(
+            [locationId],
             new Dictionary<string, string> { { location.Id, location.Name } },
             from,
             until,
@@ -107,11 +108,14 @@ public class LocationAnalyticsService(
         CancellationToken cancellationToken)
     {
         var bookings = await repositoryFactory.BookingRepository.Query(new Specification<Booking>
-            {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && locationIds.Contains(query.Location.Id) && query.From >= from && query.To <= until.AddDays(1)
-            }.AddInclude(query => query.Desks))
-            .AsNoTracking().ToListAsync(cancellationToken);
+                {
+                    Criteria = query =>
+                        !query.DeletedAt.HasValue && locationIds.Contains(query.Location.Id) && query.From >= from && query.To <= until.AddDays(1)
+                }
+                .AddInclude(query => query.Desks)
+                .AddInclude(query => query.Location))
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
         var dailyDeskCounts = await repositoryFactory.DailyDeskCountRecordingRepository
             .Query(new Specification<DailyDeskCountRecording>
@@ -120,7 +124,8 @@ public class LocationAnalyticsService(
                         !query.DeletedAt.HasValue && locationIds.Contains(query.Location.Id) && query.Date >= from &&
                         query.Date <= until
                 }
-                .ApplyOrderBy(query => query.Date))
+                .ApplyOrderBy(query => query.Date)
+                .AddInclude(query => query.Location))
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 

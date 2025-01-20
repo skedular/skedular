@@ -21,7 +21,12 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query teams_rootQuery($organizationId: String!, $primaryLocationIds: [String!], $teamsSortingValues: [TeamOrderInput!]) {
+  query teams_rootQuery(
+    $organizationId: String!
+    $primaryLocationIds: [String!]
+    $teamsSortingValues: [TeamOrderInput!]
+    $locationsSortingValues: [LocationOrderInput!]
+  ) {
     ...locationSelector_allLocations_query
     ...myTeams_teams_query
   }
@@ -69,6 +74,12 @@ const TeamsWithRelay = ({ organizationId }: RelayProps) => {
       {
         organizationId,
         teamsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        locationsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

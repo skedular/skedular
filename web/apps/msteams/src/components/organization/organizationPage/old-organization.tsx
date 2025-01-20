@@ -17,7 +17,6 @@ import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import type { oldOrganization_rootQuery } from './__generated__/oldOrganization_rootQuery.graphql';
 import OrganizationAboutTab from './organization-about-tab';
-import OrganizationAnalyticsTab from './organization-analytics-tab';
 import OrganizationBillingTab from './organization-billing-tab';
 import OrganizationCustomTagsTab from './organization-custom-tags-tab';
 import OrganizationLocationsTab from './organization-locations-tab';
@@ -39,7 +38,6 @@ const RootQuery = graphql`
       name
       logoUrl
       canModify
-      canViewAnalytics
     }
   }
 `;
@@ -71,7 +69,6 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
   const zonesTabIndex = tabCount++;
   const offeringTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
   const billingTabIndex = rootData.organization?.canModify ? tabCount++ : -1;
-  const analyticsTabIndex = rootData.organization?.canViewAnalytics ? tabCount++ : -1;
 
   if (tab === 'bookings') {
     initialTabIndex = bookingTabIndex;
@@ -91,8 +88,6 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
     initialTabIndex = offeringTabIndex;
   } else if (tab === 'billing') {
     initialTabIndex = billingTabIndex;
-  } else if (tab === 'analytics') {
-    initialTabIndex = analyticsTabIndex;
   }
 
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
@@ -120,8 +115,6 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
       tab = 'offering';
     } else if (newValue === billingTabIndex) {
       tab = 'billing';
-    } else if (newValue === analyticsTabIndex) {
-      tab = 'analytics';
     }
 
     if (tab) {
@@ -152,7 +145,6 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
         <Tab label="Zones" />
         {rootData.organization.canModify && <Tab label="Offering" />}
         {rootData.organization.canModify && <Tab label="Billing" />}
-        {rootData.organization.canViewAnalytics && <Tab label="Analytics" />}
       </Tabs>
 
       {tabIndex === bookingTabIndex && <OldBookings onReloadRequired={onReloadRequired} organizationId={organizationId} />}
@@ -167,9 +159,6 @@ const OldOrganization = ({ queryReference, onReloadRequired, organizationId }: P
       )}
       {tabIndex === billingTabIndex && rootData.organization.canModify && (
         <OrganizationBillingTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
-      )}
-      {tabIndex === analyticsTabIndex && rootData.organization.canViewAnalytics && (
-        <OrganizationAnalyticsTab onReloadRequired={onReloadRequired} organizationId={organizationId} />
       )}
     </>
   );

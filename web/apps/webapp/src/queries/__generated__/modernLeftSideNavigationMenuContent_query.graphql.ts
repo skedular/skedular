@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1cb523de9da7330eb0d9d35770a4d9b0>>
+ * @generated SignedSource<<ac39684cdceb37ad2a478abfcebca32a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type modernLeftSideNavigationMenuContent_query$data = {
       readonly code: string;
     }>;
     readonly canModify: boolean;
+    readonly canViewAnalytics: boolean;
     readonly id: string;
   } | null | undefined;
   readonly " $fragmentType": "modernLeftSideNavigationMenuContent_query";
@@ -76,6 +77,13 @@ const node: ReaderFragment = {
             {
               "alias": null,
               "args": null,
+              "kind": "ScalarField",
+              "name": "canViewAnalytics",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
               "concreteType": "OrganizationOfferingDetails",
               "kind": "LinkedField",
               "name": "availableOfferings",
@@ -101,6 +109,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b156e3e23c209c10b6e4f3018e1e6df7";
+(node as any).hash = "b14ae2c474be660a1404d7c44b056f1c";
 
 export default node;

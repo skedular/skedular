@@ -77,6 +77,7 @@ public class LocationGrpcService(
                 request.Last.FromNullInt()),
             new LocationSearchCriteria(
                 request.Where.OrganizationId,
+                request.Where.LocationIds.ToArray(),
                 request.Where.NameContains,
                 request.Where.ZoneIds.ToArray(),
                 request.Where.CustomTagIds.ToArray()),
@@ -147,6 +148,7 @@ public class LocationGrpcService(
                 request.Last.FromNullInt()),
             new LocationSearchCriteria(
                 request.Where.OrganizationId,
+                request.Where.LocationIds.ToArray(),
                 request.Where.NameContains,
                 request.Where.ZoneIds.ToArray(),
                 request.Where.CustomTagIds.ToArray()),

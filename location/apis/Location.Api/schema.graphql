@@ -329,6 +329,7 @@ input LocationOrderInput {
 
 input LocationWhereInput {
   organizationId: String
+  locationIds: [String!]
   nameContains: String
   zoneIds: [String!]
   customTagIds: [String!]
