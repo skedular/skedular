@@ -108,6 +108,7 @@ type Mutation {
   removeCustomerDefaultDesk(input: RemoveCustomerDefaultDeskInput!): CustomerPayload @cost(weight: "10")
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload @cost(weight: "10")
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
+  updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   addCustomerDefaultOrganizationTag(input: AddCustomerDefaultOrganizationTagInput!): CustomerPayload @cost(weight: "10")
   removeCustomerDefaultOrganizationTag(input: RemoveCustomerDefaultOrganizationTagInput!): CustomerPayload @cost(weight: "10")
 }
@@ -122,6 +123,7 @@ type PageInfo {
 type Query {
   customerVersion: Version!
   me: CustomerDetails @cost(weight: "10")
+  customer(id: String!): CustomerDetails @cost(weight: "10")
   customersByDefaultLocation(after: String first: Int before: String last: Int where: CustomersByDefaultLocationWhereInput! orderBy: [CustomerOrderInput!]): CustomerConnection @cost(weight: "10")
 }
 
@@ -229,6 +231,19 @@ input SubmitCustomerFeedbackInput {
   id: String
   feedbackContent: String!
   channel: FeedbackChannelType!
+}
+
+input UpdateCustomerDetailsInput {
+  clientMutationId: String
+  id: String!
+  timezone: String
+  designation: String
+  title: String
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  phoneNumber: String
 }
 
 input UpdateMyCustomerDetailsInput {

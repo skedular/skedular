@@ -11,13 +11,8 @@ public interface ICachedCustomerService
 {
     Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
-
-    Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
-        CancellationToken cancellationToken);
-
-    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByIdAsync(
-        string id,
-        CancellationToken cancellationToken);
+    Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
+    Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByIdAsync(string id, CancellationToken cancellationToken);
 
     Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(
         string verifiableToken,
@@ -49,16 +44,14 @@ public class CachedCustomerService(
         }
     }
 
-    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetAsync(
-        CancellationToken cancellationToken)
+    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
         return await GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
     }
 
-    public async Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
-        CancellationToken cancellationToken)
+    public async Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(context.GetVerifiableToken()))
         {
@@ -75,9 +68,7 @@ public class CachedCustomerService(
         }
     }
 
-    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByIdAsync(
-        string id,
-        CancellationToken cancellationToken)
+    public async Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 

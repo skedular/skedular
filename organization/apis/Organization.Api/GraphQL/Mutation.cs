@@ -45,10 +45,7 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)
     {
-        await organizationOfferingService.UpdateOfferingAsync(
-            input.Id,
-            input.OfferingCode.ToOfferingCode(),
-            cancellationToken);
+        await organizationOfferingService.UpdateOfferingAsync(input.Id, input.OfferingCode.ToOfferingCode(), cancellationToken);
         return new UpdateOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
     }
 
@@ -68,11 +65,7 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
-        var organizationMember =
-            await organizationMemberService.ChangeRoleAsync(
-                input.Id,
-                input.Role,
-                cancellationToken);
+        var organizationMember = await organizationMemberService.ChangeRoleAsync(input.Id, input.Role, cancellationToken);
         return new OrganizationMemberDetailsPayload { ClientMutationId = input.ClientMutationId, Member = mapper.MapTo(organizationMember) };
     }
 
@@ -82,11 +75,7 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
-        var organizationMembers =
-            await organizationMemberService.ChangeStatusAsync(
-                input.Ids,
-                input.Status,
-                cancellationToken);
+        var organizationMembers = await organizationMemberService.ChangeStatusAsync(input.Ids, input.Status, cancellationToken);
         return new OrganizationMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
@@ -112,8 +101,7 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationInvitationService organizationInvitationService,
         CancellationToken cancellationToken)
     {
-        await organizationInvitationService.InviteMembersByEmailsAsync(input.OrganizationId, input.Emails,
-            cancellationToken);
+        await organizationInvitationService.InviteMembersByEmailsAsync(input.OrganizationId, input.Emails, cancellationToken);
         return new InviteCustomersToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
@@ -153,9 +141,7 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
-        await organizationMemberService.CompleteOrganizationMemberOnboardingAsync(
-            input.OrganizationId,
-            cancellationToken);
+        await organizationMemberService.CompleteOrganizationMemberOnboardingAsync(input.OrganizationId, cancellationToken);
         return new OrganizationMemberPayload { ClientMutationId = input.ClientMutationId };
     }
 
@@ -166,7 +152,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tag = await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken);
-        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)! };
     }
 
     [UseResolverScope]
@@ -176,7 +162,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tag = await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)! };
     }
 
     [UseResolverScope]
@@ -186,7 +172,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tag = await tagService.DeleteAsync(input.Id, cancellationToken);
-        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)! };
     }
 
     [UseResolverScope]
@@ -196,7 +182,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tags = await tagService.DeleteAsync(input.Ids, cancellationToken);
-        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray() };
+        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray()! };
     }
 
     [UseResolverScope]
@@ -206,7 +192,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tag = await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken);
-        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)! };
     }
 
     [UseResolverScope]
@@ -216,7 +202,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tag = await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)! };
     }
 
     [UseResolverScope]
@@ -226,7 +212,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tag = await tagService.DeleteAsync(input.Id, cancellationToken);
-        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag) };
+        return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)! };
     }
 
     [UseResolverScope]
@@ -236,6 +222,6 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var tags = await tagService.DeleteAsync(input.Ids, cancellationToken);
-        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray() };
+        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray()! };
     }
 }

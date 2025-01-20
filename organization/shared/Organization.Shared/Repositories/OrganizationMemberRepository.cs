@@ -55,6 +55,11 @@ internal static class OrganizationMemberExtensions
                  EF.Functions.ILike(item.Customer.FamilyName, $"%{searchCriteria.NameContains}%")));
         }
 
+        if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
+        {
+            query = query.Where(item => item.Customer.Id == searchCriteria.CustomerId);    
+        }
+
         return query;
     }
 

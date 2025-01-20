@@ -39,14 +39,11 @@ public class OrganizationGrpcService(
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }
 
-    public override async Task<TermsOfUse> GetActiveOrganizationTermsOfUse(
-        GetActiveOrganizationTermsOfUseInput request,
-        ServerCallContext context)
+    public override async Task<TermsOfUse> GetActiveOrganizationTermsOfUse(GetActiveOrganizationTermsOfUseInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await organizationTermsOfUseService.GetActiveTermsOfUseAsync(context.CancellationToken));
+        return mapper.MapToGrpcResponse(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Admin_Add(
@@ -82,29 +79,19 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await organizationMemberService.AddMemberAsync(
-                request.Id,
-                mapper.MapTo(request),
-                context.CancellationToken));
+        return mapper.MapToGrpcResponse(await organizationMemberService.AddMemberAsync(request.Id, mapper.MapTo(request), context.CancellationToken));
     }
 
-    public override async Task<MemberConnection> GetPaginatedMembers(GetPaginatedMembersInput request,
-        ServerCallContext context)
+    public override async Task<MemberConnection> GetPaginatedMembers(GetPaginatedMembersInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
-            new OrganizationMemberSearchCriteria(request.Where.OrganizationId, request.Where.NameContains),
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new OrganizationMemberSearchCriteria(request.Where.OrganizationId, request.Where.NameContains, request.Where.CustomerId),
             request.OrderBy.Select(item =>
             {
-                var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
+                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
@@ -143,8 +130,7 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        var permissions =
-            await organizationAuthorizationService.GetPermissionsAsync(request.Id, context.CancellationToken);
+        var permissions = await organizationAuthorizationService.GetPermissionsAsync(request.Id, context.CancellationToken);
         return new Permissions
         {
             CanView = permissions.CanView,
@@ -156,26 +142,16 @@ public class OrganizationGrpcService(
         };
     }
 
-    public override async Task<CustomTagConnection> GetPaginatedCustomTags(
-        GetPaginatedCustomTagsInput request,
-        ServerCallContext context)
+    public override async Task<CustomTagConnection> GetPaginatedCustomTags(GetPaginatedCustomTagsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
-            new TagSearchCriteria(
-                request.Where.OrganizationId,
-                OrganizationTagTypeConstants.Custom,
-                request.Where.NameContains),
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new TagSearchCriteria(request.Where.OrganizationId, OrganizationTagTypeConstants.Custom, request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
-                var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
+                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
@@ -216,16 +192,14 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseCustomTag(
-            await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return mapper.MapToGrpcResponseCustomTag(await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<CustomTag> UpdateCustomTag(UpdateCustomTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseCustomTag(await tagService.UpdateAsync(mapper.MapTo(request),
-            context.CancellationToken));
+        return mapper.MapToGrpcResponseCustomTag(await tagService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<CustomTag> RemoveCustomTag(RemoveCustomTagInput request, ServerCallContext context)
@@ -235,26 +209,16 @@ public class OrganizationGrpcService(
         return mapper.MapToGrpcResponseCustomTag(await tagService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<ZoneConnection> GetPaginatedZones(
-        GetPaginatedZonesInput request,
-        ServerCallContext context)
+    public override async Task<ZoneConnection> GetPaginatedZones(GetPaginatedZonesInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
-            new TagSearchCriteria(
-                request.Where.OrganizationId,
-                OrganizationTagTypeConstants.Zone,
-                request.Where.NameContains),
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new TagSearchCriteria(request.Where.OrganizationId, OrganizationTagTypeConstants.Zone, request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
-                var direction = item.Direction ==
-                                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
+                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
                     ? OrderDirection.Ascending
                     : OrderDirection.Descending;
                 var field = item.Field switch
@@ -295,16 +259,14 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseZone(
-            await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return mapper.MapToGrpcResponseZone(await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<Zone> UpdateZone(UpdateZoneInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseZone(await tagService.UpdateAsync(mapper.MapTo(request),
-            context.CancellationToken));
+        return mapper.MapToGrpcResponseZone(await tagService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<Zone> RemoveZone(RemoveZoneInput request, ServerCallContext context)

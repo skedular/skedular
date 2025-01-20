@@ -108,7 +108,6 @@ const MyTeams = ({ rootDataRelay, primaryLocationIds, viewMode }: Props) => {
               hasFutureBooking
               canModify
               canDelete
-
               ...myTeamCard_TeamDetails
             }
           }

@@ -36,14 +36,12 @@ public class CustomerGrpcService(
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_Get(
-        Admin_GetInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
+        Admin_Get(Admin_GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await customerService.GetByIdAsync(request.CustomerId, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await customerService.GetByIdAsync(request.CustomerId, true, context.CancellationToken));
     }
 
     public override async Task<AnyCustomerExistByVerifiableTokenResponse> Admin_AnyCustomerExistByVerifiableToken(
@@ -51,10 +49,7 @@ public class CustomerGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        var (exist, customer) =
-            await customerService.AnyCustomerExistByVerifiableTokenAsync(
-                request.VerifiableToken,
-                context.CancellationToken);
+        var (exist, customer) = await customerService.AnyCustomerExistByVerifiableTokenAsync(request.VerifiableToken, context.CancellationToken);
 
         return new AnyCustomerExistByVerifiableTokenResponse
         {
@@ -62,47 +57,42 @@ public class CustomerGrpcService(
         };
     }
 
-    public override async Task<AnyCustomerExistByEmailResponse> Admin_AnyCustomerExistByEmail(
-        Admin_AnyCustomerExistByEmailInput request, ServerCallContext context)
+    public override async Task<AnyCustomerExistByEmailResponse>
+        Admin_AnyCustomerExistByEmail(Admin_AnyCustomerExistByEmailInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        var (exist, customer) =
-            await customerService.AnyCustomerExistByEmailAsync(request.Email, context.CancellationToken);
+        var (exist, customer) = await customerService.AnyCustomerExistByEmailAsync(request.Email, context.CancellationToken);
 
         return new AnyCustomerExistByEmailResponse { Exist = exist, Customer = customer is null ? null : mapper.MapToGrpcResponse(customer) };
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_Add(
-        Admin_AddInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
+        Admin_Add(Admin_AddInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await customerService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_AddIdentity(
-        Admin_AddIdentityInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerService.AddIdentityAsync(mapper.MapTo(request), context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_UpdateIdentity(
-        Admin_UpdateIdentityInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerService.UpdateIdentityAsync(mapper.MapTo(request), context.CancellationToken));
+        return mapper.MapToGrpcResponse(await customerService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        Admin_SetDefaultOrganization(
-            Admin_SetDefaultOrganizationInput request, ServerCallContext context)
+        Admin_AddIdentity(Admin_AddIdentityInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(await customerService.AddIdentityAsync(mapper.MapTo(request), context.CancellationToken));
+    }
+
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
+        Admin_UpdateIdentity(Admin_UpdateIdentityInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(await customerService.UpdateIdentityAsync(mapper.MapTo(request), context.CancellationToken));
+    }
+
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
+        Admin_SetDefaultOrganization(Admin_SetDefaultOrganizationInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -112,8 +102,7 @@ public class CustomerGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        Admin_AddDefaultLocation(
-            Admin_AddDefaultLocationInput request, ServerCallContext context)
+        Admin_AddDefaultLocation(Admin_AddDefaultLocationInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -122,8 +111,8 @@ public class CustomerGrpcService(
                 request.LocationId, request.CustomerId, true, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Admin_AddDefaultTeam(
-        Admin_AddDefaultTeamInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
+        Admin_AddDefaultTeam(Admin_AddDefaultTeamInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -132,9 +121,7 @@ public class CustomerGrpcService(
                 request.TeamId, request.CustomerId, true, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Get(
-        GetInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> Get(GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -142,20 +129,15 @@ public class CustomerGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        DismissDefaultLocationOnboardingSetup(
-            DismissDefaultLocationOnboardingSetupInput request,
-            ServerCallContext context)
+        DismissDefaultLocationOnboardingSetup(DismissDefaultLocationOnboardingSetupInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await customerSettingsService.CompleteDefaultLocationOnboardingAsync(context.CancellationToken));
+        return mapper.MapToGrpcResponse(await customerSettingsService.CompleteDefaultLocationOnboardingAsync(context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        DismissSetupPreferredZones(
-            DismissSetupPreferredZonesInput request,
-            ServerCallContext context)
+        DismissSetupPreferredZones(DismissSetupPreferredZonesInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -164,14 +146,11 @@ public class CustomerGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        DismissSetupPreferredDesks(
-            DismissSetupPreferredDesksInput request,
-            ServerCallContext context)
+        DismissSetupPreferredDesks(DismissSetupPreferredDesksInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await customerSettingsService.CompletePreferredDeskOnboardingAsync(context.CancellationToken));
+        return mapper.MapToGrpcResponse(await customerSettingsService.CompletePreferredDeskOnboardingAsync(context.CancellationToken));
     }
 
     public override async Task<Feedback> SubmitFeedback(SubmitFeedbackInput request, ServerCallContext context)
@@ -198,8 +177,7 @@ public class CustomerGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        SetDefaultOrganization(
-            SetDefaultOrganizationInput request, ServerCallContext context)
+        SetDefaultOrganization(SetDefaultOrganizationInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -209,8 +187,7 @@ public class CustomerGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        AddDefaultLocation(
-            AddDefaultLocationInput request, ServerCallContext context)
+        AddDefaultLocation(AddDefaultLocationInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -219,8 +196,8 @@ public class CustomerGrpcService(
                 request.LocationId, null, false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddDefaultTeam(
-        AddDefaultTeamInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
+        AddDefaultTeam(AddDefaultTeamInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -230,8 +207,7 @@ public class CustomerGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        ClearDefaultOrganization(
-            ClearDefaultOrganizationInput request, ServerCallContext context)
+        ClearDefaultOrganization(ClearDefaultOrganizationInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -240,8 +216,8 @@ public class CustomerGrpcService(
                 context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemoveDefaultLocation(
-        RemoveDefaultLocationInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
+        RemoveDefaultLocation(RemoveDefaultLocationInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -250,8 +226,8 @@ public class CustomerGrpcService(
                 request.LocationId, null, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemoveDefaultTeam(
-        RemoveDefaultTeamInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
+        RemoveDefaultTeam(RemoveDefaultTeamInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -260,8 +236,8 @@ public class CustomerGrpcService(
                 request.TeamId, null, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddPreferredDesk(
-        AddPreferredDeskInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
+        AddPreferredDesk(AddPreferredDeskInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
@@ -270,8 +246,8 @@ public class CustomerGrpcService(
                 request.DeskId, null, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemovePreferredDesk(
-        RemovePreferredDeskInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
+        RemovePreferredDesk(RemovePreferredDeskInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 

@@ -1,8 +1,8 @@
 'use client';
 
-import { OrganizationAnalytics } from '@/components/organization/organizationAnalytics';
+import { OrganizationUser } from '@/components/organization/organizationUser';
 import { RootShell } from '@/components/rootShell';
-import type { pageOrganizationAnalytics_rootQuery } from '@/queries/__generated__/pageOrganizationAnalytics_rootQuery.graphql';
+import type { pageOrganizationUser_rootQuery } from '@/queries/__generated__/pageOrganizationUser_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
@@ -10,6 +10,7 @@ import { BodyIconTypography, StackColumn } from '@repo/shared/components/commons
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { getCustomerFullName } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -17,22 +18,26 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
-  queryReference: PreloadedQuery<pageOrganizationAnalytics_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<pageOrganizationUser_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
+  customerId: string;
 };
 
 const RootQuery = graphql`
-  query pageOrganizationAnalytics_rootQuery($organizationId: String!, $locationsSortingValues: [LocationOrderInput!]) {
-    organization(id: $organizationId) {
+  query pageOrganizationUser_rootQuery($organizationId: String!, $customerId: String!, $teamsSortingValues: [TeamOrderInput!]) {
+    customer(id: $customerId) {
       name
+      givenName
+      middleName
+      familyName
     }
-    ...organizationAnalytics_query
+    ...organizationUser_query
   }
 `;
 
-const AnalyticsPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
-  const rootData = usePreloadedQuery<pageOrganizationAnalytics_rootQuery>(RootQuery, queryReference);
+const UserPage = ({ queryReference, onReloadRequired, organizationId, customerId }: Props) => {
+  const rootData = usePreloadedQuery<pageOrganizationUser_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
   const handleBackClick = () => {
@@ -46,8 +51,8 @@ const AnalyticsPage = ({ queryReference, onReloadRequired, organizationId }: Pro
       </Button>
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Breadcrumbs>
-          <BodyIconTypography label="Analytics" />
-          <BodyIconTypography label={rootData.organization?.name} />
+          <BodyIconTypography label="User" />
+          <BodyIconTypography label={getCustomerFullName(rootData.customer)} />
         </Breadcrumbs>
       </Box>
     </StackColumn>
@@ -55,18 +60,18 @@ const AnalyticsPage = ({ queryReference, onReloadRequired, organizationId }: Pro
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationAnalytics rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
+      <OrganizationUser rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} customerId={customerId} />
     </RootShell>
   );
 };
 
-const MemoAnalyticsPage = memo(AnalyticsPage);
+const MemoUserPage = memo(UserPage);
 
-const AnalyticsPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageOrganizationAnalytics_rootQuery>(RootQuery);
+const UserPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<pageOrganizationUser_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
-  const { organizationId } = useParams();
+  const { organizationId, customerId } = useParams();
   let finalOrganizationId = '';
 
   if (typeof organizationId === 'string') {
@@ -81,11 +86,26 @@ const AnalyticsPageWithRelay = () => {
     throw new Error('organizationId is required');
   }
 
+  let finalCustomerId = '';
+
+  if (typeof customerId === 'string') {
+    finalCustomerId = customerId;
+  } else if (Array.isArray(customerId)) {
+    if (typeof customerId[0] === 'undefined') {
+      throw new Error('customerId is required');
+    }
+
+    finalCustomerId = customerId[0];
+  } else {
+    throw new Error('customerId is required');
+  }
+
   useEffect(() => {
     loadQuery(
       {
         organizationId: finalOrganizationId,
-        locationsSortingValues: [
+        customerId: finalCustomerId,
+        teamsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',
@@ -96,7 +116,7 @@ const AnalyticsPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationId, finalCustomerId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -110,9 +130,14 @@ const AnalyticsPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAnalyticsPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoUserPage
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={finalOrganizationId}
+        customerId={finalCustomerId}
+      />
     </ErrorBoundary>
   );
 };
 
-export default memo(AnalyticsPageWithRelay);
+export default memo(UserPageWithRelay);

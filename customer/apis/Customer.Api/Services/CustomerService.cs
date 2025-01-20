@@ -18,35 +18,20 @@ namespace Customer.Api.Services;
 
 public interface ICustomerService
 {
-    Task<Shared.Models.Customer> GetByIdAsync(string customerId, CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Shared.Models.Customer> GetMeAsync(bool addCustomerIfNotExist, CancellationToken cancellationToken);
+    Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
+    Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByEmailAsync(string email, CancellationToken cancellationToken);
 
-    Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(
-        string verifiableToken,
-        CancellationToken cancellationToken);
-
-    Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByEmailAsync(
-        string email,
-        CancellationToken cancellationToken);
-
-    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Customer>>, int )> GetPaginatedCustomersAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Customer>>, int)> GetPaginatedCustomersAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
         ICollection<CustomerOrder> orderByFields,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Customer> AddAsync(
-        Shared.Models.Customer customer,
-        bool sendNewCustomerJoinedEmail,
-        CancellationToken cancellationToken);
-
-    Task<Shared.Models.Customer> AddIdentityAsync(
-        Identity identity,
-        CancellationToken cancellationToken);
-
-    Task<Shared.Models.Customer> UpdateIdentityAsync(
-        Identity identity,
-        CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> AddAsync(Shared.Models.Customer customer, bool sendNewCustomerJoinedEmail, CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> AddIdentityAsync(Identity identity, CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> UpdateIdentityAsync(Identity identity, CancellationToken cancellationToken);
 }
 
 public class CustomerService(
@@ -60,22 +45,39 @@ public class CustomerService(
     ICachedCustomerService cachedCustomerService,
     TimeProvider timeProvider) : ICustomerService
 {
-    public async Task<Shared.Models.Customer> GetByIdAsync(string customerId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken);
         if (customer is null)
         {
             throw new CustomerNotFound();
         }
 
+        if (!ignoreAuthorizationCheck)
+        {
+            var (_, callingCustomer) = await cachedCustomerService.GetAsync(cancellationToken);
+
+            var askingCustomerOrganizationIds = (await repositoryFactory.OrganizationRepository
+                    .GetByCustomerIdAsync(customer.Id, cancellationToken))
+                .Select(item => item.Id)
+                .ToList();
+            var callingCustomerOrganizationIds = (await repositoryFactory.OrganizationRepository
+                    .GetByCustomerIdAsync(callingCustomer.Id, cancellationToken))
+                .Select(item => item.Id)
+                .ToList();
+
+            if (!askingCustomerOrganizationIds.Any(id => callingCustomerOrganizationIds.Contains(id)))
+            {
+                throw new Unauthorized();
+            }
+        }
+
         return mapper.MapTo(customer);
     }
 
-    public async Task<Shared.Models.Customer> GetMeAsync(
-        bool addCustomerIfNotExist,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> GetMeAsync(bool addCustomerIfNotExist, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
@@ -97,10 +99,7 @@ public class CustomerService(
         string verifiableToken,
         CancellationToken cancellationToken)
     {
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-            verifiableToken,
-            cancellationToken);
-
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken);
         return customer is null ? (false, null) : (true, mapper.MapTo(customer));
     }
 
@@ -108,10 +107,7 @@ public class CustomerService(
         string email,
         CancellationToken cancellationToken)
     {
-        var customer = await repositoryFactory.CustomerRepository.GetByEmailAsync(
-            email,
-            cancellationToken);
-
+        var customer = await repositoryFactory.CustomerRepository.GetByEmailAsync(email, cancellationToken);
         return customer is null ? (false, null) : (true, mapper.MapTo(customer));
     }
 
@@ -121,12 +117,11 @@ public class CustomerService(
         ICollection<CustomerOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var (paginatedInfo, edges, totalCount) =
-            await repositoryFactory.CustomerRepository.GetPaginatedCustomersAsync(
-                paginationInputParam,
-                searchCriteria,
-                orderByFields,
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.CustomerRepository.GetPaginatedCustomersAsync(
+            paginationInputParam,
+            searchCriteria,
+            orderByFields,
+            cancellationToken);
 
         return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
     }
@@ -136,10 +131,7 @@ public class CustomerService(
         bool sendNewCustomerJoinedEmail,
         CancellationToken cancellationToken)
     {
-        var existingCustomer =
-            await repositoryFactory.CustomerRepository.GetByIdAsync(
-                customer.Id,
-                cancellationToken);
+        var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken);
         if (existingCustomer is not null)
         {
             return mapper.MapTo(existingCustomer);
@@ -161,33 +153,24 @@ public class CustomerService(
             throw new InvalidOperationException("identity.Id is empty");
         }
 
-        existingCustomer =
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                identityToAddOrUpdate.Id,
-                cancellationToken);
-
+        existingCustomer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identityToAddOrUpdate.Id, cancellationToken);
         if (existingCustomer is null &&
             identityToAddOrUpdate.Email is not null &&
             !string.IsNullOrWhiteSpace(identityToAddOrUpdate.Email))
         {
-            existingCustomer =
-                await repositoryFactory.CustomerRepository.GetByEmailAsync(
-                    identityToAddOrUpdate.Email,
-                    cancellationToken);
+            existingCustomer = await repositoryFactory.CustomerRepository.GetByEmailAsync(identityToAddOrUpdate.Email, cancellationToken);
         }
 
         var defaultOrganization = customer.DefaultOrganization is null
             ? null
-            : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(customer.DefaultOrganization.Id,
-                cancellationToken);
+            : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(customer.DefaultOrganization.Id, cancellationToken);
 
         var defaultLocations = new List<Location>();
         foreach (var location in customer.DefaultLocations)
         {
             var organization = location.Organization is null
                 ? null
-                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id,
-                    cancellationToken);
+                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
 
             defaultLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(
                 location.Id,
@@ -200,39 +183,27 @@ public class CustomerService(
         {
             var organization = team.Organization is null
                 ? null
-                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id,
-                    cancellationToken);
+                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
 
-            defaultTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(
-                team.Id,
-                organization,
-                cancellationToken));
+            defaultTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken));
         }
 
         var preferredDesks = new List<Desk>();
         foreach (var desk in customer.PreferredDesks)
         {
-            var location =
-                await repositoryFactory.LocationRepository.UpsertNakedAsync(desk.Location.Id, null, cancellationToken);
-
-            preferredDesks.Add(await repositoryFactory.DeskRepository.UpsertNakedAsync(
-                desk.Id,
-                location,
-                cancellationToken));
+            var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(desk.Location.Id, null, cancellationToken);
+            preferredDesks.Add(await repositoryFactory.DeskRepository.UpsertNakedAsync(desk.Id, location, cancellationToken));
         }
 
         var preferredOrganizationTags = new List<OrganizationTag>();
         foreach (var organizationTag in customer.PreferredOrganizationTags)
         {
-            var organization =
-                await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                    organizationTag.Organization.Id,
-                    cancellationToken);
-
-            preferredOrganizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(
-                organizationTag.Id,
-                organization,
-                cancellationToken));
+            var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationTag.Organization.Id, cancellationToken);
+            preferredOrganizationTags.Add(
+                await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(
+                    organizationTag.Id,
+                    organization,
+                    cancellationToken));
         }
 
         await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -270,10 +241,7 @@ public class CustomerService(
             customer = mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer));
         }
 
-        await customerOutboxPublisher.PublishCustomerAsync(
-            [customer],
-            repositoryFactory.CustomerRepository.UnitOfWork,
-            cancellationToken);
+        await customerOutboxPublisher.PublishCustomerAsync([customer], repositoryFactory.CustomerRepository.UnitOfWork, cancellationToken);
 
         if (sendNewCustomerJoinedEmail)
         {
@@ -287,9 +255,7 @@ public class CustomerService(
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByIdAsync(
-            customer.Id,
-            cancellationToken))!);
+        return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken))!);
     }
 
     public async Task<Shared.Models.Customer> AddIdentityAsync(
@@ -299,8 +265,7 @@ public class CustomerService(
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Customer.Id);
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Id);
 
-        var existingCustomer =
-            await repositoryFactory.CustomerRepository.GetByIdAsync(identity.Customer.Id, cancellationToken);
+        var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(identity.Customer.Id, cancellationToken);
         if (existingCustomer is null)
         {
             throw new CustomerNotFound();
@@ -326,9 +291,7 @@ public class CustomerService(
             await transaction.CommitAsync(cancellationToken);
         }
 
-        return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-            identity.Id,
-            cancellationToken))!);
+        return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
     }
 
     public async Task<Shared.Models.Customer> UpdateIdentityAsync(
@@ -338,8 +301,7 @@ public class CustomerService(
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Customer.Id);
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Id);
 
-        var existingCustomer =
-            await repositoryFactory.CustomerRepository.GetByIdAsync(identity.Customer.Id, cancellationToken);
+        var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(identity.Customer.Id, cancellationToken);
         if (existingCustomer is null)
         {
             throw new CustomerNotFound();
@@ -368,7 +330,6 @@ public class CustomerService(
             await transaction.CommitAsync(cancellationToken);
         }
 
-        return mapper.MapTo((
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
+        return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
     }
 }

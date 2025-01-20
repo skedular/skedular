@@ -28,6 +28,7 @@ export enum MoreActionsMenuOptionType {
   RemoveAsPreferredTeam,
   RemoveTeam,
   RemoveOrganizationUser,
+  EditOrganizationUser,
   DeactivateOrganizationUser,
   ActivateOrganizationUser,
   RemoveTeamMember,
@@ -136,6 +137,11 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.DeactivateOrganizationUser]: {
     id: MoreActionsMenuOptionType.DeactivateOrganizationUser,
     label: 'Deactivate User',
+  },
+  [MoreActionsMenuOptionType.EditOrganizationUser]: {
+    id: MoreActionsMenuOptionType.EditOrganizationUser,
+    label: 'Edit User',
+    icon: <EditIcon color="primary" />,
   },
   [MoreActionsMenuOptionType.ActivateOrganizationUser]: {
     id: MoreActionsMenuOptionType.ActivateOrganizationUser,

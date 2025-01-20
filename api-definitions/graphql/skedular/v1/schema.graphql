@@ -431,6 +431,7 @@ type Mutation {
   setOrganizationBillingInfo(input: SetOrganizationBillingInfoInput!): OrganizationBillingInfoPayload @cost(weight: "10")
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload @cost(weight: "10")
   updateBooking(input: UpdateBookingInput!): BookingPayload @cost(weight: "10")
+  updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   updateDesk(input: UpdateDeskInput!): DeskPayload @cost(weight: "10")
   updateLocation(input: UpdateLocationInput!): LocationPayload @cost(weight: "10")
@@ -757,6 +758,7 @@ type Query {
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): BookingConnection @cost(weight: "10")
   bookingVersion: Version!
+  customer(id: String!): CustomerDetails @cost(weight: "10")
   customersByDefaultLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByDefaultLocationWhereInput!): CustomerConnection @cost(weight: "10")
   customerTeams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: CustomerTeamWhereInput!): TeamConnection @cost(weight: "10")
   customerVersion: Version!
@@ -1373,6 +1375,7 @@ input OrganizationMemberOrderInput {
 }
 
 input OrganizationMemberWhereInput {
+  customerId: String
   nameContains: String
   organizationId: String!
 }
@@ -1512,6 +1515,19 @@ input UpdateCustomTagInput {
   description: String
   id: String!
   name: String!
+}
+
+input UpdateCustomerDetailsInput {
+  clientMutationId: String
+  designation: String
+  familyName: String
+  givenName: String
+  id: String!
+  middleName: String
+  name: String
+  phoneNumber: String
+  timezone: String
+  title: String
 }
 
 input UpdateDeskInput {

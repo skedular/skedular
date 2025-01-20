@@ -137,7 +137,7 @@ public class Query(IMapper mapper)
 
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
             new PaginationInputParam(after, first, before, last),
-            new OrganizationMemberSearchCriteria(where.OrganizationId, where.NameContains),
+            new OrganizationMemberSearchCriteria(where.OrganizationId, where.NameContains, where.CustomerId),
             orderBy is null
                 ? []
                 : orderBy.Select(item =>

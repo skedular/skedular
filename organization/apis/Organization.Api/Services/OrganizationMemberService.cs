@@ -165,10 +165,9 @@ public class OrganizationMemberService(
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var distinctOrganizationMemberIds = ids.Distinct().ToList();
-        var organizationMembers =
-            await repositoryFactory.OrganizationMemberRepository.GetByIdsAsync(
-                distinctOrganizationMemberIds,
-                cancellationToken);
+        var organizationMembers = await repositoryFactory.OrganizationMemberRepository.GetByIdsAsync(
+            distinctOrganizationMemberIds, 
+            cancellationToken);
         if (organizationMembers.Count != distinctOrganizationMemberIds.Count)
         {
             throw new OrganizationMemberNotFound();

@@ -144,6 +144,7 @@ message GetPaginatedMembersInput {
 message MemberWhereInput {
     string organizationId  = 1;
     string nameContains  = 2;
+    string customerId  = 3;
 }
 
 message MemberOrderInput {

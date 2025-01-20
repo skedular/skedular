@@ -372,6 +372,7 @@ input OrganizationMemberOrderInput {
 input OrganizationMemberWhereInput {
   organizationId: String!
   nameContains: String
+  customerId: String
 }
 
 input OrganizationOrderInput {

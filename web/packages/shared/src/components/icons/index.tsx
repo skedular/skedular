@@ -9,7 +9,7 @@ import Info from '@mui/icons-material/Info';
 import Link from '@mui/icons-material/Link';
 import LocalOffer from '@mui/icons-material/LocalOffer';
 import NotificationsActive from '@mui/icons-material/NotificationsActive';
-import Person from '@mui/icons-material/Person';
+import People from '@mui/icons-material/People';
 import Place from '@mui/icons-material/Place';
 import Refresh from '@mui/icons-material/Refresh';
 import Settings from '@mui/icons-material/Settings';
@@ -53,7 +53,7 @@ export { default as MoreItemsIcon } from '@mui/icons-material/MoreHoriz';
 export { default as EllipseMenuIcon } from '@mui/icons-material/MoreVert';
 export { default as ExpandIcon } from '@mui/icons-material/OpenInFull';
 export { default as BillingAndPaymentIcon } from '@mui/icons-material/Payment';
-export { default as CustomerIcon } from '@mui/icons-material/Person';
+export { default as CustomerIcon, default as ProfileIcon } from '@mui/icons-material/Person';
 export { default as InviteMemberIcon } from '@mui/icons-material/PersonAdd';
 export { default as InvitePeopleIcon } from '@mui/icons-material/PersonAddAlt1';
 export { default as RemoveIcon } from '@mui/icons-material/Remove';
@@ -78,10 +78,10 @@ type Props = {
 
 export const MembersIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
-    <Person fontSize={fontSize} sx={sx} color={color} />
+    <People fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Members'}>
-      <Person fontSize={fontSize} sx={sx} color={color} />
+      <People fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 

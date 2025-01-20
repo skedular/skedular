@@ -1,4 +1,4 @@
-import { getOrganizationBaseLink } from '@/components/organization';
+import { getModernOrganizationUserProfileBaseLink, getOrganizationBaseLink } from '@/components/organization';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import { TeamSelector } from '@/components/team/teamSelector';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
@@ -218,6 +218,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditOrganizationUser],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateOrganizationUser],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateOrganizationUser],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveOrganizationUser],
@@ -296,7 +297,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     setSeledctedMembers(newRowSelectionModel);
   };
 
-  const handleDeactivateMembersClick = () => {
+  const handleDeactivateUsersClick = () => {
     const toastId = themedToast(<NotificationContent content={'Deactivating users...'} />, infoNotificationOptions);
 
     commitChangeOrganizationMembersStatus({
@@ -408,6 +409,14 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     setMoreActionsAnchorEl(null);
 
     switch (id) {
+      case MoreActionsMenuOptionType.EditOrganizationUser:
+        if (!memberDetails) {
+          return;
+        }
+
+        router.push(getModernOrganizationUserProfileBaseLink(organizationId, memberDetails.customer.uniqueId));
+        break;
+
       case MoreActionsMenuOptionType.DeactivateOrganizationUser:
         handleDeactivateUserClick();
         break;
@@ -613,9 +622,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       field: 'avatar',
       headerName: '',
       editable: false,
-      renderCell: (params) => (
-        <CustomerAvatar key={params.value?.uniqueId} name={params.value} photo={{ url: params.value?.photoUrl }} size="medium" showFullName />
-      ),
+      renderCell: (params) => <CustomerAvatar name={params.value} photo={{ url: params.value?.photoUrl }} size="medium" showFullName />,
       display: 'flex',
     },
     {
@@ -753,7 +760,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
                   <StackRow sx={{ alignItems: 'center' }}>
                     <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
                     <PushToRight />
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateMembersClick}>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUsersClick}>
                       Deactivate User
                     </Button>
                     <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUsersClick}>
