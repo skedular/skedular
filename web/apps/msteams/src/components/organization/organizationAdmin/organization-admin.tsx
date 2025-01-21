@@ -424,6 +424,8 @@ const OrganizationAdmin = ({
   const [isEditZoneDialogOpen, setIsEditZoneDialogOpen] = useState(false);
   const [isEditCustomTagDialogOpen, setIsEditCustomTagDialogOpen] = useState(false);
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
+  const [preferredZones, setPreferredZones] = useState(rootData.me?.preferredZones.map(({ uniqueId }) => uniqueId) ?? []);
+  const [preferredCustomTags, setPreferredCustomTags] = useState(rootData.me?.preferredCustomTags.map(({ uniqueId }) => uniqueId) ?? []);
 
   const zoneMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditZone],
@@ -1064,6 +1066,8 @@ const OrganizationAdmin = ({
           ...successNotificationOptions,
           render: <NotificationContent content={`Zone '${organizationTagDetails.name}' has been set as the preferred zone.`} />,
         });
+
+        setPreferredZones(preferredZones.concat([organizationTagDetails.id]));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1072,18 +1076,6 @@ const OrganizationAdmin = ({
             <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />
           ),
         });
-      },
-      optimisticResponse: {
-        addCustomerDefaultOrganizationTag: {
-          customer: {
-            id: rootData.me.id,
-            preferredZones: rootData.me.preferredZones.concat([
-              {
-                uniqueId: organizationTagDetails.id,
-              },
-            ]),
-          },
-        },
       },
     });
   };
@@ -1132,6 +1124,8 @@ const OrganizationAdmin = ({
           ...successNotificationOptions,
           render: <NotificationContent content={`Zone '${organizationTagDetails.name}' has been removed as your preferred zone.`} />,
         });
+
+        setPreferredZones(preferredZones.filter((item) => item !== organizationTagDetails.id));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1143,18 +1137,10 @@ const OrganizationAdmin = ({
           ),
         });
       },
-      optimisticResponse: {
-        removeCustomerDefaultOrganizationTag: {
-          customer: {
-            id: rootData.me.id,
-            preferredZones: rootData.me.preferredZones.filter(({ uniqueId }) => uniqueId === organizationTagDetails.id),
-          },
-        },
-      },
     });
   };
 
-  const handleSetAsPreferredTagClicked = (id: string) => {
+  const handleSetAsPreferredCustomTagClicked = (id: string) => {
     if (!rootData.me) {
       return;
     }
@@ -1198,6 +1184,8 @@ const OrganizationAdmin = ({
           ...successNotificationOptions,
           render: <NotificationContent content={`Tag '${organizationTagDetails.name}' has been set as the preferred tag.`} />,
         });
+
+        setPreferredCustomTags(preferredCustomTags.concat([organizationTagDetails.id]));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1207,22 +1195,10 @@ const OrganizationAdmin = ({
           ),
         });
       },
-      optimisticResponse: {
-        addCustomerDefaultOrganizationTag: {
-          customer: {
-            id: rootData.me.id,
-            preferredTags: rootData.me.preferredCustomTags.concat([
-              {
-                uniqueId: organizationTagDetails.id,
-              },
-            ]),
-          },
-        },
-      },
     });
   };
 
-  const handleRemoveAsPreferredTagClicked = (id: string) => {
+  const handleRemoveAsPreferredCustomTagClicked = (id: string) => {
     if (!rootData.me) {
       return;
     }
@@ -1266,6 +1242,8 @@ const OrganizationAdmin = ({
           ...successNotificationOptions,
           render: <NotificationContent content={`Tag '${organizationTagDetails.name}' has been removed as your preferred tag.`} />,
         });
+
+        setPreferredCustomTags(preferredCustomTags.filter((item) => item !== organizationTagDetails.id));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1276,14 +1254,6 @@ const OrganizationAdmin = ({
             />
           ),
         });
-      },
-      optimisticResponse: {
-        removeCustomerDefaultOrganizationTag: {
-          customer: {
-            id: rootData.me.id,
-            preferredTags: rootData.me.preferredCustomTags.filter(({ uniqueId }) => uniqueId === organizationTagDetails.id),
-          },
-        },
       },
     });
   };
@@ -1300,7 +1270,7 @@ const OrganizationAdmin = ({
     id: zone.id,
     name: zone.name,
     description: zone.description,
-    preferred: !!rootData.me?.preferredZones.find((item) => item.uniqueId === zone.id),
+    preferred: preferredZones.includes(zone.id),
   }));
 
   const zoneColumns: GridColDef<(typeof zoneRows)[number]>[] = [
@@ -1335,14 +1305,14 @@ const OrganizationAdmin = ({
         const id = params.id as string;
         if (params.value) {
           return (
-            <IconButton onClick={() => handleRemoveAsPreferredTagClicked(id)}>
+            <IconButton onClick={() => handleRemoveAsPreferredZoneClicked(id)}>
               <PreferredIcon />
             </IconButton>
           );
         }
 
         return (
-          <IconButton onClick={() => handleSetAsPreferredTagClicked(id)}>
+          <IconButton onClick={() => handleSetAsPreferredZoneClicked(id)}>
             <NotPreferredIcon />
           </IconButton>
         );
@@ -1375,7 +1345,7 @@ const OrganizationAdmin = ({
     id: customTag.id,
     name: customTag.name,
     description: customTag.description,
-    preferred: !!rootData.me?.preferredCustomTags.find((item) => item.uniqueId === customTag.id),
+    preferred: preferredCustomTags.includes(customTag.id),
   }));
 
   const customTagColumns: GridColDef<(typeof customTagRows)[number]>[] = [
@@ -1410,14 +1380,14 @@ const OrganizationAdmin = ({
         const id = params.id as string;
         if (params.value) {
           return (
-            <IconButton onClick={() => handleRemoveAsPreferredTagClicked(id)}>
+            <IconButton onClick={() => handleRemoveAsPreferredCustomTagClicked(id)}>
               <PreferredIcon />
             </IconButton>
           );
         }
 
         return (
-          <IconButton onClick={() => handleSetAsPreferredTagClicked(id)}>
+          <IconButton onClick={() => handleSetAsPreferredCustomTagClicked(id)}>
             <NotPreferredIcon />
           </IconButton>
         );

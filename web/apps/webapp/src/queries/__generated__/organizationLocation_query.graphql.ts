@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<94c00eaa7f960dc96f1239d3b5374084>>
+ * @generated SignedSource<<373008badd45cecb451d7f76c685c57a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,12 @@ export type organizationLocation_query$data = {
     } | null | undefined;
     readonly timezone: string | null | undefined;
   } | null | undefined;
+  readonly me: {
+    readonly id: string;
+    readonly preferredDesks: ReadonlyArray<{
+      readonly uniqueId: string;
+    }>;
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "zoneSelector_allZones_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
@@ -28,7 +34,15 @@ export type organizationLocation_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationLocation_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -39,6 +53,36 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "organizationLocation_query",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CustomerDetails",
+      "kind": "LinkedField",
+      "name": "me",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CustomerDeskDetails",
+          "kind": "LinkedField",
+          "name": "preferredDesks",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "uniqueId",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": [
@@ -53,13 +97,7 @@ const node: ReaderFragment = {
       "name": "location",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -116,7 +154,8 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "959a4b4d49ceafdcf66acf0d6adba5b0";
+(node as any).hash = "6da9728969d4039f5e50c27a0a5ccb85";
 
 export default node;

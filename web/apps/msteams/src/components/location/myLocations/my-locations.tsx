@@ -239,6 +239,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
+  const [preferredLocations, setPreferredLocations] = useState(rootData.me?.defaultLocations.map(({ uniqueId }) => uniqueId) ?? []);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation],
@@ -382,6 +383,8 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
           ...successNotificationOptions,
           render: <NotificationContent content={`Location '${locationDetails.name}' has been set as the preferred location.`} />,
         });
+
+        setPreferredLocations(preferredLocations.concat([locationDetails.id]));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -390,19 +393,6 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
             <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />
           ),
         });
-      },
-
-      optimisticResponse: {
-        addCustomerDefaultLocation: {
-          customer: {
-            id: rootData.me.id,
-            defaultLocations: rootData.me.defaultLocations.concat([
-              {
-                uniqueId: locationDetails.id,
-              },
-            ]),
-          },
-        },
       },
     });
   };
@@ -447,6 +437,8 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
           ...successNotificationOptions,
           render: <NotificationContent content={`Location '${locationDetails.name}' has been removed as your preferred location.`} />,
         });
+
+        setPreferredLocations(preferredLocations.filter((item) => item !== locationDetails.id));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -457,14 +449,6 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
             />
           ),
         });
-      },
-      optimisticResponse: {
-        addCustomerDefaultLocation: {
-          customer: {
-            id: rootData.me.id,
-            defaultLocations: rootData.me.defaultLocations.filter(({ uniqueId }) => uniqueId === locationDetails.id),
-          },
-        },
       },
     });
   };
@@ -488,7 +472,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       zones,
       teammates: organizationMembers.map(({ customer }) => customer),
       physicalAddress: location.physicalAddress?.formattedAddress,
-      preferred: !!rootData.me?.defaultLocations.find((item) => item.uniqueId === location.id),
+      preferred: preferredLocations.includes(location.id),
     };
   });
 

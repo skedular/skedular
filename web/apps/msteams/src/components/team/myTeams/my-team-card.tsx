@@ -263,19 +263,6 @@ const MyTeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates 
           render: <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />,
         });
       },
-
-      optimisticResponse: {
-        addCustomerDefaultTeam: {
-          customer: {
-            id: rootData.me.id,
-            defaultTeams: rootData.me.defaultTeams.concat([
-              {
-                uniqueId: teamDetails.id,
-              },
-            ]),
-          },
-        },
-      },
     });
   };
 
@@ -322,14 +309,6 @@ const MyTeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates 
             <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />
           ),
         });
-      },
-      optimisticResponse: {
-        addCustomerDefaultTeam: {
-          customer: {
-            id: rootData.me.id,
-            defaultTeams: rootData.me.defaultTeams.filter(({ uniqueId }) => uniqueId === teamDetails.id),
-          },
-        },
       },
     });
   };

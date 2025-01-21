@@ -291,19 +291,6 @@ const MyLocationCard = ({
           ),
         });
       },
-
-      optimisticResponse: {
-        addCustomerDefaultLocation: {
-          customer: {
-            id: rootData.me.id,
-            defaultLocations: rootData.me.defaultLocations.concat([
-              {
-                uniqueId: locationDetails.id,
-              },
-            ]),
-          },
-        },
-      },
     });
   };
 
@@ -352,14 +339,6 @@ const MyLocationCard = ({
             />
           ),
         });
-      },
-      optimisticResponse: {
-        addCustomerDefaultLocation: {
-          customer: {
-            id: rootData.me.id,
-            defaultLocations: rootData.me.defaultLocations.filter(({ uniqueId }) => uniqueId === locationDetails.id),
-          },
-        },
       },
     });
   };

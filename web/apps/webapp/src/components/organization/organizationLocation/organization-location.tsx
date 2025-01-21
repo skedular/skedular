@@ -2,11 +2,13 @@ import { AddDeskButton } from '@/components/desk/addDesk';
 import { BulkAddDeskButton } from '@/components/desk/bulkAddDesk';
 import { getModernOrganizationLocationDeskBaseLink, getModernOrganizationLocationsBaseLink } from '@/components/organization';
 import type { organizationLocation_activateDesksMutation } from '@/queries/__generated__/organizationLocation_activateDesksMutation.graphql';
+import type { organizationLocation_addCustomerDefaultDeskMutation } from '@/queries/__generated__/organizationLocation_addCustomerDefaultDeskMutation.graphql';
 import type { organizationLocation_deactivateDesksMutation } from '@/queries/__generated__/organizationLocation_deactivateDesksMutation.graphql';
 import type { organizationLocation_deleteDesksMutation } from '@/queries/__generated__/organizationLocation_deleteDesksMutation.graphql';
 import type { organizationLocation_desks_query$key } from '@/queries/__generated__/organizationLocation_desks_query.graphql';
 import type { organizationLocation_desks_refetchableFragment } from '@/queries/__generated__/organizationLocation_desks_refetchableFragment.graphql';
 import type { organizationLocation_query$key } from '@/queries/__generated__/organizationLocation_query.graphql';
+import type { organizationLocation_removeCustomerDefaultDeskMutation } from '@/queries/__generated__/organizationLocation_removeCustomerDefaultDeskMutation.graphql';
 import type { organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -28,7 +30,7 @@ import {
 } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
+import { DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -92,6 +94,7 @@ type DeskRowType = {
   customTags: CustomTagDetails[];
   zones: ZoneDetails[];
   status: boolean;
+  preferred: boolean;
 };
 
 const locationSchema = object({
@@ -105,6 +108,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
       fragment organizationLocation_query on Query {
+        me {
+          id
+          preferredDesks {
+            uniqueId
+          }
+        }
         location(id: $locationId) {
           id
           name
@@ -229,6 +238,32 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     }
   `);
 
+  const [commitAddCustomerDefaultDesk] = useMutation<organizationLocation_addCustomerDefaultDeskMutation>(graphql`
+    mutation organizationLocation_addCustomerDefaultDeskMutation($input: AddCustomerDefaultDeskInput!) {
+      addCustomerDefaultDesk(input: $input) {
+        customer {
+          id
+          preferredDesks {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveCustomerDefaultDesk] = useMutation<organizationLocation_removeCustomerDefaultDeskMutation>(graphql`
+    mutation organizationLocation_removeCustomerDefaultDeskMutation($input: RemoveCustomerDefaultDeskInput!) {
+      removeCustomerDefaultDesk(input: $input) {
+        customer {
+          id
+          preferredDesks {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -245,6 +280,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   const [seledctedDesks, setSeledctedDesks] = useState<GridRowSelectionModel>([]);
   const [deskMoreActionsAnchorEl, setDeskMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const deskMoreActionsMenuOpen = Boolean(deskMoreActionsAnchorEl);
+  const [preferredDesks, setPreferredDesks] = useState(rootData.me?.preferredDesks.map(({ uniqueId }) => uniqueId) ?? []);
 
   const deskMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditDesk],
@@ -635,6 +671,113 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     });
   };
 
+  const handleSetAsPreferredDeskClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const deskDetails = desks.find((item) => item.id === id);
+    if (!deskDetails) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Setting desk '${deskDetails.name}' as your preferred desk...`} />,
+      infoNotificationOptions,
+    );
+
+    commitAddCustomerDefaultDesk({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          deskId: deskDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to set desk '${deskDetails.name}' as your preferred desk. Error: ${joinErrors(errors)}.`} />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk '${deskDetails.name}' has been set as the preferred desk.`} />,
+        });
+
+        setPreferredDesks(preferredDesks.concat([deskDetails.id]));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set desk '${deskDetails.name}' as your preferred desk. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredDeskClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const deskDetails = desks.find((item) => item.id === id);
+    if (!deskDetails) {
+      return;
+    }
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Removing desk '${deskDetails.name}' as your preferred desk...`} />,
+      infoNotificationOptions,
+    );
+
+    commitRemoveCustomerDefaultDesk({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          deskId: deskDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the desk '${deskDetails.name}' as your preferred desk. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Desk '${deskDetails.name}' has been removed as your preferred desk.`} />,
+        });
+
+        setPreferredDesks(preferredDesks.filter((item) => item !== deskDetails.id));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to remove the desk '${deskDetails.name}' as your preferred desk. Error: ${error.message}.`} />
+          ),
+        });
+      },
+    });
+  };
+
   if (!rootData.location) {
     return <></>;
   }
@@ -645,6 +788,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     customTags: desk.customTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
     zones: desk.zones.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
     status: !desk.deactivated,
+    preferred: preferredDesks.includes(desk.id),
   }));
 
   const deskColumns: GridColDef<(typeof deskRows)[number]>[] = [
@@ -692,6 +836,28 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
           )}
         </StackRow>
       ),
+      display: 'flex',
+    },
+    {
+      field: 'preferred',
+      headerName: 'Preferred?',
+      editable: false,
+      renderCell: (params) => {
+        const id = params.id as string;
+        if (params.value) {
+          return (
+            <IconButton onClick={() => handleRemoveAsPreferredDeskClicked(id)}>
+              <PreferredIcon />
+            </IconButton>
+          );
+        }
+
+        return (
+          <IconButton onClick={() => handleSetAsPreferredDeskClicked(id)}>
+            <NotPreferredIcon />
+          </IconButton>
+        );
+      },
       display: 'flex',
     },
     {

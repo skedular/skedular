@@ -182,6 +182,7 @@ const MyTeams = ({ rootDataRelay, rootDataTeamsRelay, primaryLocationIds, viewMo
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
+  const [preferredTeams, setPreferredTeams] = useState(rootData.me?.defaultTeams.map(({ uniqueId }) => uniqueId) ?? []);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam],
@@ -318,25 +319,14 @@ const MyTeams = ({ rootDataRelay, rootDataTeamsRelay, primaryLocationIds, viewMo
           ...successNotificationOptions,
           render: <NotificationContent content={`Team '${teamDetails.name}' has been set as the preferred team.`} />,
         });
+
+        setPreferredTeams(preferredTeams.concat([teamDetails.id]));
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
           render: <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />,
         });
-      },
-
-      optimisticResponse: {
-        addCustomerDefaultTeam: {
-          customer: {
-            id: rootData.me.id,
-            defaultTeams: rootData.me.defaultTeams.concat([
-              {
-                uniqueId: teamDetails.id,
-              },
-            ]),
-          },
-        },
       },
     });
   };
@@ -381,6 +371,8 @@ const MyTeams = ({ rootDataRelay, rootDataTeamsRelay, primaryLocationIds, viewMo
           ...successNotificationOptions,
           render: <NotificationContent content={`Team '${teamDetails.name}' has been removed as your preferred team.`} />,
         });
+
+        setPreferredTeams(preferredTeams.filter((item) => item !== teamDetails.id));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -390,14 +382,6 @@ const MyTeams = ({ rootDataRelay, rootDataTeamsRelay, primaryLocationIds, viewMo
           ),
         });
       },
-      optimisticResponse: {
-        addCustomerDefaultTeam: {
-          customer: {
-            id: rootData.me.id,
-            defaultTeams: rootData.me.defaultTeams.filter(({ uniqueId }) => uniqueId === teamDetails.id),
-          },
-        },
-      },
     });
   };
 
@@ -406,7 +390,7 @@ const MyTeams = ({ rootDataRelay, rootDataTeamsRelay, primaryLocationIds, viewMo
       id: team.id,
       team,
       teammates: team.members.filter(({ organizationMember }) => !!organizationMember).map(({ organizationMember }) => organizationMember!.customer),
-      preferred: !!rootData.me?.defaultTeams.find((item) => item.uniqueId === team.id),
+      preferred: preferredTeams.includes(team.id),
     };
   });
 

@@ -1139,7 +1139,7 @@ const OrganizationAdmin = ({
     });
   };
 
-  const handleSetAsPreferredTagClicked = (id: string) => {
+  const handleSetAsPreferredCustomTagClicked = (id: string) => {
     if (!rootData.me) {
       return;
     }
@@ -1197,7 +1197,7 @@ const OrganizationAdmin = ({
     });
   };
 
-  const handleRemoveAsPreferredTagClicked = (id: string) => {
+  const handleRemoveAsPreferredCustomTagClicked = (id: string) => {
     if (!rootData.me) {
       return;
     }
@@ -1379,14 +1379,14 @@ const OrganizationAdmin = ({
         const id = params.id as string;
         if (params.value) {
           return (
-            <IconButton onClick={() => handleRemoveAsPreferredTagClicked(id)}>
+            <IconButton onClick={() => handleRemoveAsPreferredCustomTagClicked(id)}>
               <PreferredIcon />
             </IconButton>
           );
         }
 
         return (
-          <IconButton onClick={() => handleSetAsPreferredTagClicked(id)}>
+          <IconButton onClick={() => handleSetAsPreferredCustomTagClicked(id)}>
             <NotPreferredIcon />
           </IconButton>
         );
