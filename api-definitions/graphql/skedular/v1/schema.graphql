@@ -502,6 +502,7 @@ type NotificationTeamDetails {
 type OrganizationActiveOfferingDetails {
   code: String!
   colorTiltingAngle: String!
+  earlyBird: Boolean!
   end: DateTime!
   endColor: String!
   featureSet: [OrganizationFeatureSetDetails!]!
@@ -672,6 +673,7 @@ type OrganizationMembersDetailsPayload {
 type OrganizationOfferingDetails {
   code: String!
   colorTiltingAngle: String!
+  earlyBird: Boolean!
   endColor: String!
   featureSet: [OrganizationFeatureSetDetails!]!
   free: Boolean!

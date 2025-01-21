@@ -272,6 +272,7 @@ public class Query(IMapper mapper)
             UnitPrice = offering.UnitPrice,
             FeatureSet = mapper.MapTo(offering).ToArray(),
             Free = matchedOffering.IsFreeOffering(),
+            EarlyBird = matchedOffering.IsEarlyBirdOffering(),
             StartColor = offering.StartColor,
             EndColor = offering.EndColor,
             ColorTiltingAngle = offering.ColorTiltingAngle

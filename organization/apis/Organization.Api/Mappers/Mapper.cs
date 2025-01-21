@@ -314,6 +314,7 @@ public class Mapper : IMapper
                         UnitPrice = offering.UnitPrice,
                         FeatureSet = MapTo(offering).ToArray(),
                         Free = item.IsFreeOffering(),
+                        EarlyBird = item.IsEarlyBirdOffering(),
                         StartColor = offering.StartColor,
                         EndColor = offering.EndColor,
                         ColorTiltingAngle = offering.ColorTiltingAngle
@@ -789,6 +790,7 @@ public class Mapper : IMapper
             UnitPrice = src.UnitPrice,
             FeatureSet = MapTo(offering).ToArray(),
             Free = src.Code.IsFreeOffering(),
+            EarlyBird = src.Code.IsEarlyBirdOffering(),
             StartColor = offering.StartColor,
             EndColor = offering.EndColor,
             ColorTiltingAngle = offering.ColorTiltingAngle

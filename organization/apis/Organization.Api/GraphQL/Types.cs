@@ -471,6 +471,7 @@ public class OrganizationOfferingDetails
     [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
     [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
     [GraphQLName("free")] public bool Free { get; set; }
+    [GraphQLName("earlyBird")] public bool EarlyBird { get; set; }
     [GraphQLName("startColor")] public string StartColor { get; set; } = string.Empty;
     [GraphQLName("endColor")] public string EndColor { get; set; } = string.Empty;
     [GraphQLName("colorTiltingAngle")] public string ColorTiltingAngle { get; set; } = string.Empty;
@@ -486,6 +487,7 @@ public class OrganizationActiveOfferingDetails : Node
     [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
     [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
     [GraphQLName("free")] public bool Free { get; set; }
+    [GraphQLName("earlyBird")] public bool EarlyBird { get; set; }
     [GraphQLName("startColor")] public string StartColor { get; set; } = string.Empty;
     [GraphQLName("endColor")] public string EndColor { get; set; } = string.Empty;
     [GraphQLName("colorTiltingAngle")] public string ColorTiltingAngle { get; set; } = string.Empty;

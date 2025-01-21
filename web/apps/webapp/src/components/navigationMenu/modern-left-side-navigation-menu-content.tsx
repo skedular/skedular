@@ -54,8 +54,9 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
           id
           canModify
           canViewAnalytics
-          availableOfferings {
-            code
+          activeOffering {
+            free
+            earlyBird
           }
         }
       }
@@ -346,7 +347,7 @@ const ModernLeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableC
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
-              {rootData.organization.availableOfferings.length > 0 && (
+              {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
                 <Button
                   href={getModernOrganizationAdminSubscriptionsBaseLink(finalOrganizationId)}
                   variant="contained"
