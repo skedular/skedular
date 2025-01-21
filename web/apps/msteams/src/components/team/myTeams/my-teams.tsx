@@ -17,7 +17,7 @@ import {
   StackColumn,
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
-import { EllipseMenuIcon } from '@repo/shared/components/icons';
+import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -38,16 +38,20 @@ import graphql from 'babel-plugin-relay/macro';
 import { getModernOrganizationTeamSetupBaseLink } from 'components/organization';
 import { nanoid } from 'nanoid';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { useMutation, useRefetchableFragment } from 'react-relay';
+import { useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import type { myTeams_addCustomerDefaultTeamMutation } from './__generated__/myTeams_addCustomerDefaultTeamMutation.graphql';
 import type { myTeams_deleteTeamMutation } from './__generated__/myTeams_deleteTeamMutation.graphql';
+import type { myTeams_query$key } from './__generated__/myTeams_query.graphql';
+import type { myTeams_removeCustomerDefaultTeamMutation } from './__generated__/myTeams_removeCustomerDefaultTeamMutation.graphql';
 import type { myTeams_teams_query$key } from './__generated__/myTeams_teams_query.graphql';
 import type { myTeams_teams_refetchableFragment } from './__generated__/myTeams_teams_refetchableFragment.graphql';
 import MyTeamCard from './my-team-card';
 
 type Props = {
-  rootDataRelay: myTeams_teams_query$key;
+  rootDataRelay: myTeams_query$key;
+  rootDataTeamsRelay: myTeams_teams_query$key;
   onReloadRequired: () => void;
   primaryLocationIds: string[];
   viewMode: 'list' | 'grid';
@@ -72,7 +76,22 @@ type RowType = {
   teammates: ReadonlyArray<CustomerDetails>;
 };
 
-const MyTeams = ({ rootDataRelay, primaryLocationIds, viewMode }: Props) => {
+const MyTeams = ({ rootDataRelay, rootDataTeamsRelay, primaryLocationIds, viewMode }: Props) => {
+  const rootData = useFragment<myTeams_query$key>(
+    graphql`
+      fragment myTeams_query on Query {
+        me {
+          id
+          defaultTeams {
+            uniqueId
+          }
+        }
+        ...myTeamCard__query
+      }
+    `,
+    rootDataRelay,
+  );
+
   const [rootDataRefetchable, refetch] = useRefetchableFragment<myTeams_teams_refetchableFragment, myTeams_teams_query$key>(
     graphql`
       fragment myTeams_teams_query on Query
@@ -109,14 +128,13 @@ const MyTeams = ({ rootDataRelay, primaryLocationIds, viewMode }: Props) => {
               hasFutureBooking
               canModify
               canDelete
-
               ...myTeamCard_TeamDetails
             }
           }
         }
       }
     `,
-    rootDataRelay,
+    rootDataTeamsRelay,
   );
 
   const [commitDeleteTeam] = useMutation<myTeams_deleteTeamMutation>(graphql`
@@ -124,6 +142,32 @@ const MyTeams = ({ rootDataRelay, primaryLocationIds, viewMode }: Props) => {
       deleteTeam(input: $input) {
         team {
           id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitAddCustomerDefaultTeam] = useMutation<myTeams_addCustomerDefaultTeamMutation>(graphql`
+    mutation myTeams_addCustomerDefaultTeamMutation($input: AddCustomerDefaultTeamInput!) {
+      addCustomerDefaultTeam(input: $input) {
+        customer {
+          id
+          defaultTeams {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveCustomerDefaultTeam] = useMutation<myTeams_removeCustomerDefaultTeamMutation>(graphql`
+    mutation myTeams_removeCustomerDefaultTeamMutation($input: RemoveCustomerDefaultTeamInput!) {
+      removeCustomerDefaultTeam(input: $input) {
+        customer {
+          id
+          defaultTeams {
+            uniqueId
+          }
         }
       }
     }
@@ -235,6 +279,127 @@ const MyTeams = ({ rootDataRelay, primaryLocationIds, viewMode }: Props) => {
     });
   };
 
+  const handleSetAsPreferredTeamClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const teamDetails = teams.find((item) => item.id === id);
+    if (!teamDetails) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Setting team '${teamDetails.name}' as your preferred team...`} />,
+      infoNotificationOptions,
+    );
+
+    commitAddCustomerDefaultTeam({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          teamId: teamDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`} />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team '${teamDetails.name}' has been set as the preferred team.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />,
+        });
+      },
+
+      optimisticResponse: {
+        addCustomerDefaultTeam: {
+          customer: {
+            id: rootData.me.id,
+            defaultTeams: rootData.me.defaultTeams.concat([
+              {
+                uniqueId: teamDetails.id,
+              },
+            ]),
+          },
+        },
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredTeamClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const teamDetails = teams.find((item) => item.id === id);
+    if (!teamDetails) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Removing team '${teamDetails.name}' as your preferred team...`} />,
+      infoNotificationOptions,
+    );
+
+    commitRemoveCustomerDefaultTeam({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          teamId: teamDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team '${teamDetails.name}' has been removed as your preferred team.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />
+          ),
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultTeam: {
+          customer: {
+            id: rootData.me.id,
+            defaultTeams: rootData.me.defaultTeams.filter(({ uniqueId }) => uniqueId === teamDetails.id),
+          },
+        },
+      },
+    });
+  };
+
   const rows: RowType[] = teams.map((team) => {
     return {
       id: team.id,
@@ -265,6 +430,30 @@ const MyTeams = ({ rootDataRelay, primaryLocationIds, viewMode }: Props) => {
       ),
       display: 'flex',
       minWidth: 300,
+    },
+    {
+      field: 'preferredTeam',
+      headerName: '',
+      editable: false,
+      renderCell: (params) => {
+        const teamId = params.id as string;
+        const isPreferred = rootData.me?.defaultTeams.find((item) => item.uniqueId === teamId);
+
+        if (isPreferred) {
+          return (
+            <IconButton onClick={() => handleRemoveAsPreferredTeamClicked(teamId)}>
+              <PreferredIcon />
+            </IconButton>
+          );
+        }
+
+        return (
+          <IconButton onClick={() => handleSetAsPreferredTeamClicked(teamId)}>
+            <NotPreferredIcon />
+          </IconButton>
+        );
+      },
+      display: 'flex',
     },
     {
       field: 'moreActions',
@@ -304,6 +493,7 @@ const MyTeams = ({ rootDataRelay, primaryLocationIds, viewMode }: Props) => {
             {teams.map((team) => (
               <Grid key={team.id}>
                 <MyTeamCard
+                  rootDataRelay={rootData}
                   teamDetailsRelay={team}
                   connectionIds={connectionIds}
                   teammates={team.members

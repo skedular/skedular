@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f6c198dcf8f65f490a634bcc1793500>>
+ * @generated SignedSource<<49c2bb2cfaf4d809a3670891d27f503d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -64,6 +64,7 @@ export type organizationUser_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"myTeamCard__query">;
   readonly " $fragmentType": "organizationUser_query";
 };
 export type organizationUser_query$key = {
@@ -445,6 +446,11 @@ return {
         (v9/*: any*/)
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "myTeamCard__query"
     }
   ],
   "type": "Query",
@@ -452,6 +458,6 @@ return {
 };
 })();
 
-(node as any).hash = "b10e87a40fd190b2aca3f1e488baef41";
+(node as any).hash = "f82139f27faa6fe9d993427f2ffe2c69";
 
 export default node;

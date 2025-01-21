@@ -28,6 +28,7 @@ const RootQuery = graphql`
     $locationsSortingValues: [LocationOrderInput!]
   ) {
     ...locationSelector_allLocations_query
+    ...myTeams_query
     ...myTeams_teams_query
   }
 `;
@@ -53,7 +54,13 @@ const Teams = ({ queryReference, onReloadRequired, organizationId }: Props) => {
         <PushToRight />
         <NewTeamButton organizationId={organizationId} />
       </GridContainer>
-      <MyTeams rootDataRelay={rootData} onReloadRequired={onReloadRequired} primaryLocationIds={locationIds} viewMode={viewMode} />
+      <MyTeams
+        rootDataRelay={rootData}
+        rootDataTeamsRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        primaryLocationIds={locationIds}
+        viewMode={viewMode}
+      />
     </StackColumn>
   );
 };

@@ -174,7 +174,7 @@ const MyLocationCard = ({
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const isPreferred = useMemo(
-    () => rootData.me?.defaultLocations.some((item) => item.uniqueId == locationDetails.id),
+    () => rootData.me?.defaultLocations.some((item) => item.uniqueId === locationDetails.id),
     [locationDetails.id, rootData.me?.defaultLocations],
   );
 

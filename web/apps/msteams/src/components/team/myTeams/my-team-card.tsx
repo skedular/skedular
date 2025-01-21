@@ -9,8 +9,15 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import { EllipseMenuIcon, TeamIcon } from '@repo/shared/components/icons';
+import {
+  DefaultDialogTitle,
+  LeadIconTypography,
+  PushToRight,
+  SmallIconTypography,
+  StackRow,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
+import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon, TeamIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -30,14 +37,18 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getModernOrganizationTeamSetupBaseLink } from 'components/organization';
 import { nanoid } from 'nanoid';
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import type { myTeamCard__query$key } from './__generated__/myTeamCard__query.graphql';
+import type { myTeamCard_addCustomerDefaultTeamMutation } from './__generated__/myTeamCard_addCustomerDefaultTeamMutation.graphql';
 import type { myTeamCard_deleteTeamMutation } from './__generated__/myTeamCard_deleteTeamMutation.graphql';
+import type { myTeamCard_removeCustomerDefaultTeamMutation } from './__generated__/myTeamCard_removeCustomerDefaultTeamMutation.graphql';
 import type { myTeamCard_TeamDetails$key } from './__generated__/myTeamCard_TeamDetails.graphql';
 
 type Props = {
+  rootDataRelay: myTeamCard__query$key;
   teamDetailsRelay: myTeamCard_TeamDetails$key;
   connectionIds: string[];
   teammates: CustomerDetails[];
@@ -52,7 +63,21 @@ type CustomerDetails = {
   photoUrl?: string | null | undefined;
 };
 
-const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
+const MyTeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }: Props) => {
+  const rootData = useFragment(
+    graphql`
+      fragment myTeamCard__query on Query {
+        me {
+          id
+          defaultTeams {
+            uniqueId
+          }
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
   const teamDetails = useFragment(
     graphql`
       fragment myTeamCard_TeamDetails on TeamDetails {
@@ -92,12 +117,42 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
     }
   `);
 
+  const [commitAddCustomerDefaultTeam] = useMutation<myTeamCard_addCustomerDefaultTeamMutation>(graphql`
+    mutation myTeamCard_addCustomerDefaultTeamMutation($input: AddCustomerDefaultTeamInput!) {
+      addCustomerDefaultTeam(input: $input) {
+        customer {
+          id
+          defaultTeams {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveCustomerDefaultTeam] = useMutation<myTeamCard_removeCustomerDefaultTeamMutation>(graphql`
+    mutation myTeamCard_removeCustomerDefaultTeamMutation($input: RemoveCustomerDefaultTeamInput!) {
+      removeCustomerDefaultTeam(input: $input) {
+        customer {
+          id
+          defaultTeams {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
   const navigate = useNavigate();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
+  const isPreferred = useMemo(
+    () => rootData.me?.defaultTeams.some((item) => item.uniqueId === teamDetails.id),
+    [teamDetails.id, rootData.me?.defaultTeams],
+  );
 
   let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam]];
 
@@ -168,14 +223,140 @@ const MyTeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
     });
   };
 
+  const handleSetAsPreferredTeamClicked = () => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Setting team '${teamDetails.name}' as your preferred team...`} />,
+      infoNotificationOptions,
+    );
+
+    commitAddCustomerDefaultTeam({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          teamId: teamDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`} />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team '${teamDetails.name}' has been set as the preferred team.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />,
+        });
+      },
+
+      optimisticResponse: {
+        addCustomerDefaultTeam: {
+          customer: {
+            id: rootData.me.id,
+            defaultTeams: rootData.me.defaultTeams.concat([
+              {
+                uniqueId: teamDetails.id,
+              },
+            ]),
+          },
+        },
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredTeamClicked = () => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Removing team '${teamDetails.name}' as your preferred team...`} />,
+      infoNotificationOptions,
+    );
+
+    commitRemoveCustomerDefaultTeam({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          teamId: teamDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team '${teamDetails.name}' has been removed as your preferred team.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />
+          ),
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultTeam: {
+          customer: {
+            id: rootData.me.id,
+            defaultTeams: rootData.me.defaultTeams.filter(({ uniqueId }) => uniqueId === teamDetails.id),
+          },
+        },
+      },
+    });
+  };
+
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 400 } }}>
         <CardHeader
           title={
-            <Link href={editLink}>
-              <LeadIconTypography startElement={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} invertDefaultColor />
-            </Link>
+            <StackRow>
+              <Link href={editLink}>
+                <LeadIconTypography startElement={<TeamIcon />} label={teamDetails.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+              </Link>
+              <PushToRight />
+              <Box color={paletteMode === 'dark' ? coal : sandstone}>
+                {isPreferred && (
+                  <IconButton onClick={handleRemoveAsPreferredTeamClicked} color="inherit">
+                    <PreferredIcon />
+                  </IconButton>
+                )}
+                {!isPreferred && (
+                  <IconButton onClick={handleSetAsPreferredTeamClicked} color="inherit">
+                    <NotPreferredIcon />
+                  </IconButton>
+                )}
+              </Box>
+            </StackRow>
           }
           action={
             <>

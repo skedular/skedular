@@ -134,6 +134,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
             }
           }
         }
+        ...myTeamCard__query
       }
     `,
     rootDataRelay,
@@ -517,6 +518,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
             {teams.map((team) => (
               <Grid key={team.id}>
                 <MyTeamCard
+                  rootDataRelay={rootData}
                   teamDetailsRelay={team}
                   connectionIds={connectionIds}
                   teammates={team.members
