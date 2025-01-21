@@ -1,7 +1,10 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { getModernOrganizationLocationSetupBaseLink } from '@/components/organization';
+import type { myLocationCard__query$key } from '@/queries/__generated__/myLocationCard__query.graphql';
+import type { myLocationCard_addCustomerDefaultLocationMutation } from '@/queries/__generated__/myLocationCard_addCustomerDefaultLocationMutation.graphql';
 import type { myLocationCard_deleteLocationMutation } from '@/queries/__generated__/myLocationCard_deleteLocationMutation.graphql';
 import type { myLocationCard_LocationDetails$key } from '@/queries/__generated__/myLocationCard_LocationDetails.graphql';
+import type { myLocationCard_removeCustomerDefaultLocationMutation } from '@/queries/__generated__/myLocationCard_removeCustomerDefaultLocationMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -24,7 +27,7 @@ import {
   StackRow,
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
-import { DeskIcon, EllipseMenuIcon, LocationIcon } from '@repo/shared/components/icons';
+import { DeskIcon, EllipseMenuIcon, LocationIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -46,11 +49,12 @@ import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 
 type Props = {
+  rootDataRelay: myLocationCard__query$key;
   locationDetailsRelay: myLocationCard_LocationDetails$key;
   onReloadRequired: () => void;
   organizationId: string;
@@ -71,6 +75,7 @@ type CustomerDetails = {
 };
 
 const MyLocationCard = ({
+  rootDataRelay,
   locationDetailsRelay,
   connectionIds,
   onReloadRequired,
@@ -80,6 +85,20 @@ const MyLocationCard = ({
   availablePercentage,
   defaultDate,
 }: Props) => {
+  const rootData = useFragment(
+    graphql`
+      fragment myLocationCard__query on Query {
+        me {
+          id
+          defaultLocations {
+            uniqueId
+          }
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
   const locationDetails = useFragment(
     graphql`
       fragment myLocationCard_LocationDetails on LocationDetails {
@@ -122,12 +141,42 @@ const MyLocationCard = ({
     }
   `);
 
+  const [commitAddCustomerDefaultLocation] = useMutation<myLocationCard_addCustomerDefaultLocationMutation>(graphql`
+    mutation myLocationCard_addCustomerDefaultLocationMutation($input: AddCustomerDefaultLocationInput!) {
+      addCustomerDefaultLocation(input: $input) {
+        customer {
+          id
+          defaultLocations {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveCustomerDefaultLocation] = useMutation<myLocationCard_removeCustomerDefaultLocationMutation>(graphql`
+    mutation myLocationCard_removeCustomerDefaultLocationMutation($input: RemoveCustomerDefaultLocationInput!) {
+      removeCustomerDefaultLocation(input: $input) {
+        customer {
+          id
+          defaultLocations {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
-  const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
+  const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
+  const isPreferred = useMemo(
+    () => rootData.me?.defaultLocations.some((item) => item.uniqueId == locationDetails.id),
+    [locationDetails.id, rootData.me?.defaultLocations],
+  );
 
   let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation]];
 
@@ -156,11 +205,11 @@ const MyLocationCard = ({
   };
 
   const handleRemoveTeamClicked = () => {
-    setTeamRemoveConfirmationDialogOpen(true);
+    setLocationRemoveConfirmationDialogOpen(true);
   };
 
   const handleCancelRemovingTeamClick = () => {
-    setTeamRemoveConfirmationDialogOpen(false);
+    setLocationRemoveConfirmationDialogOpen(false);
   };
 
   const handleConfirmRemovingTeamClick = () => {
@@ -198,6 +247,123 @@ const MyLocationCard = ({
     });
   };
 
+  const handleSetAsPreferredLocationClicked = () => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />,
+      infoNotificationOptions,
+    );
+
+    commitAddCustomerDefaultLocation({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          locationId: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' has been set as the preferred location.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />
+          ),
+        });
+      },
+
+      optimisticResponse: {
+        addCustomerDefaultLocation: {
+          customer: {
+            id: rootData.me.id,
+            defaultLocations: rootData.me.defaultLocations.concat([
+              {
+                uniqueId: locationDetails.id,
+              },
+            ]),
+          },
+        },
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredLocationClicked = () => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />,
+      infoNotificationOptions,
+    );
+
+    commitRemoveCustomerDefaultLocation({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          locationId: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' has been removed as your preferred location.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent
+              content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`}
+            />
+          ),
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultLocation: {
+          customer: {
+            id: rootData.me.id,
+            defaultLocations: rootData.me.defaultLocations.filter(({ uniqueId }) => uniqueId === locationDetails.id),
+          },
+        },
+      },
+    });
+  };
+
   const desksCount = locationDetails.desks.length;
   const zones = locationDetails.zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }));
 
@@ -221,6 +387,19 @@ const MyLocationCard = ({
                 variant="contained"
                 size="small"
               />
+
+              <Box color={paletteMode === 'dark' ? coal : sandstone}>
+                {isPreferred && (
+                  <IconButton onClick={handleRemoveAsPreferredLocationClicked} color="inherit">
+                    <PreferredIcon />
+                  </IconButton>
+                )}
+                {!isPreferred && (
+                  <IconButton onClick={handleSetAsPreferredLocationClicked} color="inherit">
+                    <NotPreferredIcon />
+                  </IconButton>
+                )}
+              </Box>
             </StackRow>
           }
           action={
@@ -279,7 +458,7 @@ const MyLocationCard = ({
         options={moreActionsOption}
       />
 
-      <Dialog TransitionComponent={DialogTransition} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
+      <Dialog TransitionComponent={DialogTransition} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
         <DefaultDialogTitle title="Remove Location" />
         <DialogContent>
           <DialogContentText>

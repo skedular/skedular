@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c8dce1429663e80aae4a33d874297683>>
+ * @generated SignedSource<<9940b8d75292c3781760c95d96ef8eda>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,12 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type myLocations_query$data = {
+  readonly me: {
+    readonly defaultLocations: ReadonlyArray<{
+      readonly uniqueId: string;
+    }>;
+    readonly id: string;
+  } | null | undefined;
   readonly organizationMembers: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -28,6 +34,7 @@ export type myLocations_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"myLocationCard__query">;
   readonly " $fragmentType": "myLocations_query";
 };
 export type myLocations_query$key = {
@@ -35,7 +42,22 @@ export type myLocations_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"myLocations_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "uniqueId",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -50,6 +72,30 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "myLocations_query",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CustomerDetails",
+      "kind": "LinkedField",
+      "name": "me",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CustomerLocationDetails",
+          "kind": "LinkedField",
+          "name": "defaultLocations",
+          "plural": true,
+          "selections": [
+            (v1/*: any*/)
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": [
@@ -98,13 +144,7 @@ const node: ReaderFragment = {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
+                (v0/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -113,13 +153,7 @@ const node: ReaderFragment = {
                   "name": "customer",
                   "plural": false,
                   "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "uniqueId",
-                      "storageKey": null
-                    },
+                    (v1/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -178,12 +212,18 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "myLocationCard__query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "8ef9f4557329965fa49d6d1754fb2393";
+(node as any).hash = "ec31417abf3e5a3ba6fe07be0934ed5b";
 
 export default node;

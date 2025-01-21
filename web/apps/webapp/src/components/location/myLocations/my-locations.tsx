@@ -1,9 +1,11 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { getModernOrganizationLocationSetupBaseLink } from '@/components/organization';
+import type { myLocations_addCustomerDefaultLocationMutation } from '@/queries/__generated__/myLocations_addCustomerDefaultLocationMutation.graphql';
 import type { myLocations_deleteLocationMutation } from '@/queries/__generated__/myLocations_deleteLocationMutation.graphql';
 import type { myLocations_locations_availableOrganizationDesks_query$key } from '@/queries/__generated__/myLocations_locations_availableOrganizationDesks_query.graphql';
 import type { myLocations_locations_availableOrganizationDesks_refetchableFragment } from '@/queries/__generated__/myLocations_locations_availableOrganizationDesks_refetchableFragment.graphql';
 import type { myLocations_query$key } from '@/queries/__generated__/myLocations_query.graphql';
+import type { myLocations_removeCustomerDefaultLocationMutation } from '@/queries/__generated__/myLocations_removeCustomerDefaultLocationMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -24,7 +26,7 @@ import {
   StackColumn,
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
-import { EllipseMenuIcon } from '@repo/shared/components/icons';
+import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -96,6 +98,12 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
   const rootData = useFragment<myLocations_query$key>(
     graphql`
       fragment myLocations_query on Query {
+        me {
+          id
+          defaultLocations {
+            uniqueId
+          }
+        }
         organizationMembers(where: { organizationId: $organizationId }, orderBy: $organizationMembersSortingValues) {
           __id
           totalCount
@@ -113,6 +121,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
             }
           }
         }
+        ...myLocationCard__query
       }
     `,
     rootDataRelay,
@@ -188,6 +197,32 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       deleteLocation(input: $input) {
         location {
           id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitAddCustomerDefaultLocation] = useMutation<myLocations_addCustomerDefaultLocationMutation>(graphql`
+    mutation myLocations_addCustomerDefaultLocationMutation($input: AddCustomerDefaultLocationInput!) {
+      addCustomerDefaultLocation(input: $input) {
+        customer {
+          id
+          defaultLocations {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveCustomerDefaultLocation] = useMutation<myLocations_removeCustomerDefaultLocationMutation>(graphql`
+    mutation myLocations_removeCustomerDefaultLocationMutation($input: RemoveCustomerDefaultLocationInput!) {
+      removeCustomerDefaultLocation(input: $input) {
+        customer {
+          id
+          defaultLocations {
+            uniqueId
+          }
         }
       }
     }
@@ -305,6 +340,133 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     });
   };
 
+  const handleSetAsPreferredLocationClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const locationDetails = locations.find((item) => item.id === id);
+    if (!locationDetails) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />,
+      infoNotificationOptions,
+    );
+
+    commitAddCustomerDefaultLocation({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          locationId: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' has been set as the preferred location.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />
+          ),
+        });
+      },
+
+      optimisticResponse: {
+        addCustomerDefaultLocation: {
+          customer: {
+            id: rootData.me.id,
+            defaultLocations: rootData.me.defaultLocations.concat([
+              {
+                uniqueId: locationDetails.id,
+              },
+            ]),
+          },
+        },
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredLocationClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const locationDetails = locations.find((item) => item.id === id);
+    if (!locationDetails) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />,
+      infoNotificationOptions,
+    );
+
+    commitRemoveCustomerDefaultLocation({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          locationId: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' has been removed as your preferred location.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent
+              content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`}
+            />
+          ),
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultLocation: {
+          customer: {
+            id: rootData.me.id,
+            defaultLocations: rootData.me.defaultLocations.filter(({ uniqueId }) => uniqueId === locationDetails.id),
+          },
+        },
+      },
+    });
+  };
+
   const rows: RowType[] = locations.map((location) => {
     const desksCount = location.desks.length;
     const availableDesksCount = rootDataRefetchable.availableDesks
@@ -338,7 +500,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
     },
     {
       field: 'desksCount',
-      headerName: 'Desks count',
+      headerName: 'Desks Count',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value.desksCount} />,
       display: 'flex',
@@ -407,6 +569,30 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       minWidth: 140,
     },
     {
+      field: 'preferredLocation',
+      headerName: '',
+      editable: false,
+      renderCell: (params) => {
+        const locationId = params.id as string;
+        const isPreferred = rootData.me?.defaultLocations.find((item) => item.uniqueId === locationId);
+
+        if (isPreferred) {
+          return (
+            <IconButton onClick={() => handleRemoveAsPreferredLocationClicked(locationId)}>
+              <PreferredIcon />
+            </IconButton>
+          );
+        }
+
+        return (
+          <IconButton onClick={() => handleSetAsPreferredLocationClicked(locationId)}>
+            <NotPreferredIcon />
+          </IconButton>
+        );
+      },
+      display: 'flex',
+    },
+    {
       field: 'moreActions',
       headerName: '',
       editable: false,
@@ -451,6 +637,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
               return (
                 <Grid key={location.id}>
                   <MyLocationCard
+                    rootDataRelay={rootData}
                     locationDetailsRelay={location}
                     onReloadRequired={onReloadRequired}
                     organizationId={organizationId}
