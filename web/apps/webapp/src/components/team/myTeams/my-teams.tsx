@@ -73,6 +73,7 @@ type RowType = {
   id: string;
   team: TeamDetails;
   teammates: ReadonlyArray<CustomerDetails>;
+  preferred: boolean;
 };
 
 const MyTeams = ({ rootDataRelay, rootDataTeamsRelay, primaryLocationIds, viewMode }: Props) => {
@@ -404,6 +405,7 @@ const MyTeams = ({ rootDataRelay, rootDataTeamsRelay, primaryLocationIds, viewMo
       id: team.id,
       team,
       teammates: team.members.filter(({ organizationMember }) => !!organizationMember).map(({ organizationMember }) => organizationMember!.customer),
+      preferred: !!rootData.me?.defaultTeams.find((item) => item.uniqueId === team.id),
     };
   });
 
@@ -431,23 +433,21 @@ const MyTeams = ({ rootDataRelay, rootDataTeamsRelay, primaryLocationIds, viewMo
       minWidth: 300,
     },
     {
-      field: 'preferredTeam',
-      headerName: '',
+      field: 'preferred',
+      headerName: 'Preferred?',
       editable: false,
       renderCell: (params) => {
-        const teamId = params.id as string;
-        const isPreferred = rootData.me?.defaultTeams.find((item) => item.uniqueId === teamId);
-
-        if (isPreferred) {
+        const id = params.id as string;
+        if (params.value) {
           return (
-            <IconButton onClick={() => handleRemoveAsPreferredTeamClicked(teamId)}>
+            <IconButton onClick={() => handleRemoveAsPreferredTeamClicked(id)}>
               <PreferredIcon />
             </IconButton>
           );
         }
 
         return (
-          <IconButton onClick={() => handleSetAsPreferredTeamClicked(teamId)}>
+          <IconButton onClick={() => handleSetAsPreferredTeamClicked(id)}>
             <NotPreferredIcon />
           </IconButton>
         );

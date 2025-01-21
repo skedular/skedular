@@ -29,7 +29,7 @@ import {
 } from '@repo/shared/components/commons';
 import { CustomTag } from '@repo/shared/components/customTag';
 import { SingleChoiceCountry } from '@repo/shared/components/forms';
-import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, TickIcon } from '@repo/shared/components/icons';
+import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, NotPreferredIcon, PreferredIcon, TickIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -62,6 +62,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { array, object, string } from 'yup';
 import EditOrganizationCustomTagDialog from '../editOrganizationCustomTag/edit-organization-custom-tag-dialog';
+import type { organizationAdmin_addCustomerDefaultOrganizationTagMutation } from './__generated__/organizationAdmin_addCustomerDefaultOrganizationTagMutation.graphql';
 import type { organizationAdmin_cancelOrganizationOfferingMutation } from './__generated__/organizationAdmin_cancelOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_customTags_query$key } from './__generated__/organizationAdmin_customTags_query.graphql';
 import type { organizationAdmin_customTags_refetchableFragment } from './__generated__/organizationAdmin_customTags_refetchableFragment.graphql';
@@ -70,6 +71,7 @@ import type { organizationAdmin_deleteZonesMutation } from './__generated__/orga
 import type { organizationAdmin_organizationPaymentMethodsDetails_query$key } from './__generated__/organizationAdmin_organizationPaymentMethodsDetails_query.graphql';
 import type { organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment } from './__generated__/organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment.graphql';
 import type { organizationAdmin_query$key } from './__generated__/organizationAdmin_query.graphql';
+import type { organizationAdmin_removeCustomerDefaultOrganizationTagMutation } from './__generated__/organizationAdmin_removeCustomerDefaultOrganizationTagMutation.graphql';
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from './__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdmin_setOrganizationBillingInfoMutation } from './__generated__/organizationAdmin_setOrganizationBillingInfoMutation.graphql';
 import type { organizationAdmin_updateOrganizationMutation } from './__generated__/organizationAdmin_updateOrganizationMutation.graphql';
@@ -128,12 +130,14 @@ type ZoneRowType = {
   id: string;
   name: string;
   description: string | null | undefined;
+  preferred: boolean;
 };
 
 type CustomTagRowType = {
   id: string;
   name: string;
   description: string | null | undefined;
+  preferred: boolean;
 };
 
 const OrganizationAdmin = ({
@@ -147,6 +151,15 @@ const OrganizationAdmin = ({
   const rootData = useFragment<organizationAdmin_query$key>(
     graphql`
       fragment organizationAdmin_query on Query {
+        me {
+          id
+          preferredZones {
+            uniqueId
+          }
+          preferredCustomTags {
+            uniqueId
+          }
+        }
         organization(id: $organizationId) {
           id
           name
@@ -357,6 +370,32 @@ const OrganizationAdmin = ({
     mutation organizationAdmin_updateOrganizationOfferingMutation($input: UpdateOrganizationOfferingInput!) {
       updateOrganizationOffering(input: $input) {
         clientMutationId
+      }
+    }
+  `);
+
+  const [commitAddCustomerDefaultOrganizationTag] = useMutation<organizationAdmin_addCustomerDefaultOrganizationTagMutation>(graphql`
+    mutation organizationAdmin_addCustomerDefaultOrganizationTagMutation($input: AddCustomerDefaultOrganizationTagInput!) {
+      addCustomerDefaultOrganizationTag(input: $input) {
+        customer {
+          id
+          preferredZones {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveCustomerDefaultOrganizationTag] = useMutation<organizationAdmin_removeCustomerDefaultOrganizationTagMutation>(graphql`
+    mutation organizationAdmin_removeCustomerDefaultOrganizationTagMutation($input: RemoveCustomerDefaultOrganizationTagInput!) {
+      removeCustomerDefaultOrganizationTag(input: $input) {
+        customer {
+          id
+          preferredZones {
+            uniqueId
+          }
+        }
       }
     }
   `);
@@ -981,6 +1020,274 @@ const OrganizationAdmin = ({
     });
   };
 
+  const handleSetAsPreferredZoneClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const organizationTagDetails = zones.find((item) => item.id === id);
+    if (!organizationTagDetails) {
+      return;
+    }
+
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Setting zone '${organizationTagDetails.name}' as your preferred zone...`} />,
+      infoNotificationOptions,
+    );
+
+    commitAddCustomerDefaultOrganizationTag({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          organizationTagId: organizationTagDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zone '${organizationTagDetails.name}' has been set as the preferred zone.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />
+          ),
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultOrganizationTag: {
+          customer: {
+            id: rootData.me.id,
+            preferredZones: rootData.me.preferredZones.concat([
+              {
+                uniqueId: organizationTagDetails.id,
+              },
+            ]),
+          },
+        },
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredZoneClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const organizationTagDetails = zones.find((item) => item.id === id);
+    if (!organizationTagDetails) {
+      return;
+    }
+
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Removing zone '${organizationTagDetails.name}' as your preferred zone...`} />,
+      infoNotificationOptions,
+    );
+
+    commitRemoveCustomerDefaultOrganizationTag({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          organizationTagId: organizationTagDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Zone '${organizationTagDetails.name}' has been removed as your preferred zone.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent
+              content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`}
+            />
+          ),
+        });
+      },
+      optimisticResponse: {
+        removeCustomerDefaultOrganizationTag: {
+          customer: {
+            id: rootData.me.id,
+            preferredZones: rootData.me.preferredZones.filter(({ uniqueId }) => uniqueId === organizationTagDetails.id),
+          },
+        },
+      },
+    });
+  };
+
+  const handleSetAsPreferredTagClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const organizationTagDetails = customTags.find((item) => item.id === id);
+    if (!organizationTagDetails) {
+      return;
+    }
+
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Setting tag '${organizationTagDetails.name}' as your preferred tag...`} />,
+      infoNotificationOptions,
+    );
+
+    commitAddCustomerDefaultOrganizationTag({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          organizationTagId: organizationTagDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to set tag '${organizationTagDetails.name}' as your preferred tag. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Tag '${organizationTagDetails.name}' has been set as the preferred tag.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent content={`Failed to set tag '${organizationTagDetails.name}' as your preferred tag. Error: ${error.message}.`} />
+          ),
+        });
+      },
+      optimisticResponse: {
+        addCustomerDefaultOrganizationTag: {
+          customer: {
+            id: rootData.me.id,
+            preferredTags: rootData.me.preferredCustomTags.concat([
+              {
+                uniqueId: organizationTagDetails.id,
+              },
+            ]),
+          },
+        },
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredTagClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const organizationTagDetails = customTags.find((item) => item.id === id);
+    if (!organizationTagDetails) {
+      return;
+    }
+
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(
+      <NotificationContent content={`Removing tag '${organizationTagDetails.name}' as your preferred tag...`} />,
+      infoNotificationOptions,
+    );
+
+    commitRemoveCustomerDefaultOrganizationTag({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          organizationTagId: organizationTagDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: (
+              <NotificationContent
+                content={`Failed to remove the tag '${organizationTagDetails.name}' as your preferred tag. Error: ${joinErrors(errors)}.`}
+              />
+            ),
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Tag '${organizationTagDetails.name}' has been removed as your preferred tag.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: (
+            <NotificationContent
+              content={`Failed to remove the tag '${organizationTagDetails.name}' as your preferred tag. Error: ${error.message}.`}
+            />
+          ),
+        });
+      },
+      optimisticResponse: {
+        removeCustomerDefaultOrganizationTag: {
+          customer: {
+            id: rootData.me.id,
+            preferredTags: rootData.me.preferredCustomTags.filter(({ uniqueId }) => uniqueId === organizationTagDetails.id),
+          },
+        },
+      },
+    });
+  };
+
   if (!rootData.organization) {
     return <></>;
   }
@@ -993,6 +1300,7 @@ const OrganizationAdmin = ({
     id: zone.id,
     name: zone.name,
     description: zone.description,
+    preferred: !!rootData.me?.preferredZones.find((item) => item.uniqueId === zone.id),
   }));
 
   const zoneColumns: GridColDef<(typeof zoneRows)[number]>[] = [
@@ -1020,6 +1328,28 @@ const OrganizationAdmin = ({
       minWidth: 200,
     },
     {
+      field: 'preferred',
+      headerName: 'Preferred?',
+      editable: false,
+      renderCell: (params) => {
+        const id = params.id as string;
+        if (params.value) {
+          return (
+            <IconButton onClick={() => handleRemoveAsPreferredTagClicked(id)}>
+              <PreferredIcon />
+            </IconButton>
+          );
+        }
+
+        return (
+          <IconButton onClick={() => handleSetAsPreferredTagClicked(id)}>
+            <NotPreferredIcon />
+          </IconButton>
+        );
+      },
+      display: 'flex',
+    },
+    {
       field: 'moreActions',
       headerName: '',
       editable: false,
@@ -1045,6 +1375,7 @@ const OrganizationAdmin = ({
     id: customTag.id,
     name: customTag.name,
     description: customTag.description,
+    preferred: !!rootData.me?.preferredCustomTags.find((item) => item.uniqueId === customTag.id),
   }));
 
   const customTagColumns: GridColDef<(typeof customTagRows)[number]>[] = [
@@ -1070,6 +1401,28 @@ const OrganizationAdmin = ({
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
       minWidth: 200,
+    },
+    {
+      field: 'preferred',
+      headerName: 'Preferred?',
+      editable: false,
+      renderCell: (params) => {
+        const id = params.id as string;
+        if (params.value) {
+          return (
+            <IconButton onClick={() => handleRemoveAsPreferredTagClicked(id)}>
+              <PreferredIcon />
+            </IconButton>
+          );
+        }
+
+        return (
+          <IconButton onClick={() => handleSetAsPreferredTagClicked(id)}>
+            <NotPreferredIcon />
+          </IconButton>
+        );
+      },
+      display: 'flex',
     },
     {
       field: 'moreActions',

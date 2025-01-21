@@ -92,6 +92,7 @@ type RowType = {
   desksAvailability: DesksAvailabilityDetails;
   zones: ZoneDetails[];
   teammates: ReadonlyArray<CustomerDetails>;
+  preferred: boolean;
 };
 
 const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired, organizationId, customTagIds, zoneIds, viewMode }: Props) => {
@@ -486,6 +487,7 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       zones,
       teammates: organizationMembers.map(({ customer }) => customer),
       physicalAddress: location.physicalAddress?.formattedAddress,
+      preferred: !!rootData.me?.defaultLocations.find((item) => item.uniqueId === location.id),
     };
   });
 
@@ -569,23 +571,21 @@ const MyLocations = ({ rootDataRelay, rootDataRefetchableRelay, onReloadRequired
       minWidth: 140,
     },
     {
-      field: 'preferredLocation',
-      headerName: '',
+      field: 'preferred',
+      headerName: 'Preferred?',
       editable: false,
       renderCell: (params) => {
-        const locationId = params.id as string;
-        const isPreferred = rootData.me?.defaultLocations.find((item) => item.uniqueId === locationId);
-
-        if (isPreferred) {
+        const id = params.id as string;
+        if (params.value) {
           return (
-            <IconButton onClick={() => handleRemoveAsPreferredLocationClicked(locationId)}>
+            <IconButton onClick={() => handleRemoveAsPreferredLocationClicked(id)}>
               <PreferredIcon />
             </IconButton>
           );
         }
 
         return (
-          <IconButton onClick={() => handleSetAsPreferredLocationClicked(locationId)}>
+          <IconButton onClick={() => handleSetAsPreferredLocationClicked(id)}>
             <NotPreferredIcon />
           </IconButton>
         );

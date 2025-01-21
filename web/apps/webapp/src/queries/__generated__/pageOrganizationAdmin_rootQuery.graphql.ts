@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<261062cd324821747524c1badf733496>>
+ * @generated SignedSource<<eba0e0008aa1d1d095c674d4001bdd30>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -115,15 +115,24 @@ v12 = {
   ],
   "storageKey": null
 },
-v13 = {
+v13 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "uniqueId",
+    "storageKey": null
+  }
+],
+v14 = {
   "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
 },
-v14 = [
-  (v13/*: any*/)
-],
 v15 = [
+  (v14/*: any*/)
+],
+v16 = [
   {
     "fields": [
       {
@@ -131,13 +140,13 @@ v15 = [
         "name": "nameContains",
         "variableName": "zoneNameSearchText"
       },
-      (v13/*: any*/)
+      (v14/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v16 = [
+v17 = [
   {
     "alias": null,
     "args": null,
@@ -229,7 +238,7 @@ v16 = [
     ]
   }
 ],
-v17 = [
+v18 = [
   {
     "kind": "Literal",
     "name": "orderBy",
@@ -247,7 +256,7 @@ v17 = [
         "name": "nameContains",
         "variableName": "customTagNameSearchText"
       },
-      (v13/*: any*/)
+      (v14/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
@@ -434,6 +443,38 @@ return {
       {
         "alias": null,
         "args": null,
+        "concreteType": "CustomerDetails",
+        "kind": "LinkedField",
+        "name": "me",
+        "plural": false,
+        "selections": [
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "CustomerOrganizationTagDetails",
+            "kind": "LinkedField",
+            "name": "preferredZones",
+            "plural": true,
+            "selections": (v13/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "CustomerOrganizationTagDetails",
+            "kind": "LinkedField",
+            "name": "preferredCustomTags",
+            "plural": true,
+            "selections": (v13/*: any*/),
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
         "concreteType": "OrganizationIndustryMainCategoryReferenceDetails",
         "kind": "LinkedField",
         "name": "organizationIndustryMainCategoriesReferences",
@@ -456,7 +497,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v14/*: any*/),
+        "args": (v15/*: any*/),
         "concreteType": "OrganizationBillingInfo",
         "kind": "LinkedField",
         "name": "organizationBillingInfo",
@@ -524,7 +565,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v14/*: any*/),
+        "args": (v15/*: any*/),
         "concreteType": "OrganizationPaymentMethod",
         "kind": "LinkedField",
         "name": "organizationPaymentMethodsDetails",
@@ -564,17 +605,17 @@ return {
       },
       {
         "alias": null,
-        "args": (v15/*: any*/),
+        "args": (v16/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "zones",
         "plural": false,
-        "selections": (v16/*: any*/),
+        "selections": (v17/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v15/*: any*/),
+        "args": (v16/*: any*/),
         "filters": [
           "where"
         ],
@@ -585,17 +626,17 @@ return {
       },
       {
         "alias": null,
-        "args": (v17/*: any*/),
+        "args": (v18/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "customTags",
         "plural": false,
-        "selections": (v16/*: any*/),
+        "selections": (v17/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v17/*: any*/),
+        "args": (v18/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -608,12 +649,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a688d874d4528e8524409d67bc77e76b",
+    "cacheID": "a5cbc923d35a0dc9e9a5d39b8a82cc8e",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $customTagNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_organizationPaymentMethodsDetails_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_customTags_query\n}\n\nfragment organizationAdmin_customTags_query on Query {\n  customTags(where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationAdmin_organizationPaymentMethodsDetails_query on Query {\n  organizationPaymentMethodsDetails(organizationId: $organizationId) {\n    id\n    cardBrand\n    cardExpiryMonth\n    cardExpiryYear\n    cardLastFourDigit\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    hasAttachedPaymentMethod\n    activeOffering {\n      id\n      name\n      startColor\n      endColor\n      colorTiltingAngle\n      start\n      end\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n      free\n    }\n    availableOfferings {\n      code\n      name\n      startColor\n      endColor\n      colorTiltingAngle\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  organizationBillingInfo(organizationId: $organizationId) {\n    id\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationAdmin_zones_query on Query {\n  zones(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $customTagNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_organizationPaymentMethodsDetails_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_customTags_query\n}\n\nfragment organizationAdmin_customTags_query on Query {\n  customTags(where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationAdmin_organizationPaymentMethodsDetails_query on Query {\n  organizationPaymentMethodsDetails(organizationId: $organizationId) {\n    id\n    cardBrand\n    cardExpiryMonth\n    cardExpiryYear\n    cardLastFourDigit\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  me {\n    id\n    preferredZones {\n      uniqueId\n    }\n    preferredCustomTags {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    hasAttachedPaymentMethod\n    activeOffering {\n      id\n      name\n      startColor\n      endColor\n      colorTiltingAngle\n      start\n      end\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n      free\n    }\n    availableOfferings {\n      code\n      name\n      startColor\n      endColor\n      colorTiltingAngle\n      unitPrice\n      featureSet {\n        name\n        description\n      }\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  organizationBillingInfo(organizationId: $organizationId) {\n    id\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationAdmin_zones_query on Query {\n  zones(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();

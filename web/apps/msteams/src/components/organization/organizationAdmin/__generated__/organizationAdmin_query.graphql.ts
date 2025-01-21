@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<465ff56742ee914c111ad6e7d4bd42ff>>
+ * @generated SignedSource<<464f7a99801ab2f72343bfbf0faee232>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,15 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
+  readonly me: {
+    readonly id: string;
+    readonly preferredCustomTags: ReadonlyArray<{
+      readonly uniqueId: string;
+    }>;
+    readonly preferredZones: ReadonlyArray<{
+      readonly uniqueId: string;
+    }>;
+  } | null | undefined;
   readonly organization: {
     readonly about: string | null | undefined;
     readonly activeOffering: {
@@ -84,46 +93,55 @@ var v0 = {
   "name": "id",
   "storageKey": null
 },
-v1 = {
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "uniqueId",
+    "storageKey": null
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = [
+v3 = [
   (v0/*: any*/),
-  (v1/*: any*/)
+  (v2/*: any*/)
 ],
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "startColor",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "endColor",
   "storageKey": null
 },
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "colorTiltingAngle",
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "unitPrice",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationFeatureSetDetails",
@@ -131,7 +149,7 @@ v7 = {
   "name": "featureSet",
   "plural": true,
   "selections": [
-    (v1/*: any*/),
+    (v2/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -155,6 +173,38 @@ return {
   "selections": [
     {
       "alias": null,
+      "args": null,
+      "concreteType": "CustomerDetails",
+      "kind": "LinkedField",
+      "name": "me",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CustomerOrganizationTagDetails",
+          "kind": "LinkedField",
+          "name": "preferredZones",
+          "plural": true,
+          "selections": (v1/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CustomerOrganizationTagDetails",
+          "kind": "LinkedField",
+          "name": "preferredCustomTags",
+          "plural": true,
+          "selections": (v1/*: any*/),
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
       "args": [
         {
           "kind": "Variable",
@@ -168,7 +218,7 @@ return {
       "plural": false,
       "selections": [
         (v0/*: any*/),
-        (v1/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -204,7 +254,7 @@ return {
           "kind": "LinkedField",
           "name": "industrySubCategories",
           "plural": true,
-          "selections": (v2/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -223,10 +273,10 @@ return {
           "plural": false,
           "selections": [
             (v0/*: any*/),
-            (v1/*: any*/),
-            (v3/*: any*/),
+            (v2/*: any*/),
             (v4/*: any*/),
             (v5/*: any*/),
+            (v6/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -241,8 +291,8 @@ return {
               "name": "end",
               "storageKey": null
             },
-            (v6/*: any*/),
             (v7/*: any*/),
+            (v8/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -268,12 +318,12 @@ return {
               "name": "code",
               "storageKey": null
             },
-            (v1/*: any*/),
-            (v3/*: any*/),
+            (v2/*: any*/),
             (v4/*: any*/),
             (v5/*: any*/),
             (v6/*: any*/),
-            (v7/*: any*/)
+            (v7/*: any*/),
+            (v8/*: any*/)
           ],
           "storageKey": null
         }
@@ -295,7 +345,7 @@ return {
           "kind": "LinkedField",
           "name": "subCategories",
           "plural": true,
-          "selections": (v2/*: any*/),
+          "selections": (v3/*: any*/),
           "storageKey": null
         }
       ],
@@ -386,6 +436,6 @@ return {
 };
 })();
 
-(node as any).hash = "69323d403cf42c45bd2f083fe53feb97";
+(node as any).hash = "7474b16d25f0ba3aef5f260908397c56";
 
 export default node;
