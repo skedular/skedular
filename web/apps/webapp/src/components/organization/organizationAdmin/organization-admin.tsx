@@ -1,8 +1,4 @@
-import {
-  getModernOrganizationAdminBillingAndPaymentBaseLink,
-  getOrganizationBaseLink,
-  OrganizationMultipleChoicesIndustries,
-} from '@/components/organization';
+import { getOrganizationBaseLink, OrganizationMultipleChoicesIndustries } from '@/components/organization';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
@@ -30,7 +26,6 @@ import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -73,7 +68,6 @@ import { defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@rep
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import NextLink from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -821,15 +815,15 @@ const OrganizationAdmin = ({
     setIsEditCustomTagDialogOpen(false);
   };
 
-  const onEditCustomTagCancel = () => {
+  const handleEditCustomTagCancel = () => {
     setIsEditCustomTagDialogOpen(false);
   };
 
-  const onAddPaymentMethodClicked = () => {
+  const handleAddPaymentMethodClicked = () => {
     setIsAddPaymentMethodDialogOpen(true);
   };
 
-  const onAddPaymentMethodCancel = () => {
+  const handleAddPaymentMethodCancel = () => {
     setIsAddPaymentMethodDialogOpen(false);
   };
 
@@ -1279,8 +1273,8 @@ const OrganizationAdmin = ({
                 <StackRow>
                   <SmallIconTypography label="No payment method setup yet" />
                   <PushToRight />
-                  <Button variant="text" onClick={onAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
-                    <LeadIconTypography label={'Add Payment Method'} endElement={<NewIcon fontSize="large" />} />
+                  <Button variant="text" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
+                    <LeadIconTypography label="Add Payment Method" endElement={<NewIcon fontSize="large" />} />
                   </Button>
                 </StackRow>
               </StackColumn>
@@ -1537,11 +1531,9 @@ const OrganizationAdmin = ({
 
                     {!rootData.organization?.hasAttachedPaymentMethod && (
                       <CardActions sx={{ justifyContent: 'flex-end' }}>
-                        <Link component={NextLink} href={getModernOrganizationAdminBillingAndPaymentBaseLink(organizationId)}>
-                          <Button color="primary" variant="contained" sx={{ textTransform: 'none' }}>
-                            Add Payment Method
-                          </Button>
-                        </Link>
+                        <Button variant="contained" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
+                          <SmallIconTypography label="Add Payment Method" />
+                        </Button>
                       </CardActions>
                     )}
 
@@ -1595,7 +1587,7 @@ const OrganizationAdmin = ({
           customTagId={selectedCustomTagId}
           isDialogOpen={isEditCustomTagDialogOpen}
           onAddClicked={handleEditCustomTagClick}
-          onCancel={onEditCustomTagCancel}
+          onCancel={handleEditCustomTagCancel}
         />
       )}
 
@@ -1603,7 +1595,7 @@ const OrganizationAdmin = ({
         <AddOrganizationPaymentMethodDialog
           organizationId={organizationId}
           isDialogOpen={isAddPaymentMethodDialogOpen}
-          onCancel={onAddPaymentMethodCancel}
+          onCancel={handleAddPaymentMethodCancel}
         />
       )}
     </>
