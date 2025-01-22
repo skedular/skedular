@@ -67,7 +67,7 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
   const [endWeek, setEndWeek] = useState(endOfWeek(defaultStartWeek).add(-1, 'milliseconds'));
   const [locationIds, setLocationIds] = useState<string[]>([]);
   const [teamIds, setTeamIds] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
   const handleWeehChanged = (date: Dayjs) => {
     setStartWeek(date);

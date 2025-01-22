@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<332551c546a5ba367d757eb168047c6a>>
+ * @generated SignedSource<<cf0bf2d84eaf805e2d3816123b10022b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type bookings_query$data = {
+export type bookingCard_query$data = {
   readonly me: {
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
@@ -19,19 +19,18 @@ export type bookings_query$data = {
     readonly name: string | null | undefined;
     readonly photoUrl: string | null | undefined;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"bookingCard_query">;
-  readonly " $fragmentType": "bookings_query";
+  readonly " $fragmentType": "bookingCard_query";
 };
-export type bookings_query$key = {
-  readonly " $data"?: bookings_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"bookings_query">;
+export type bookingCard_query$key = {
+  readonly " $data"?: bookingCard_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"bookingCard_query">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "bookings_query",
+  "name": "bookingCard_query",
   "selections": [
     {
       "alias": null,
@@ -85,17 +84,12 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "bookingCard_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "cada531181cf7a7752d7cabf2d23fd8e";
+(node as any).hash = "64f358e7d976d898d8a86937377ec102";
 
 export default node;

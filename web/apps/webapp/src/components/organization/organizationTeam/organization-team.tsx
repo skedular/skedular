@@ -688,6 +688,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       editable: false,
       renderCell: (params) => <CustomerAvatar name={params.value} photo={{ url: params.value?.photoUrl }} size="medium" showFullName />,
       display: 'flex',
+      maxWidth: 20,
     },
     {
       field: 'name',

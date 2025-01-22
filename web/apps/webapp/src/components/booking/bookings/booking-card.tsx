@@ -1,6 +1,9 @@
 import { getModernOrganizationBookingBaseLink } from '@/components/organization';
+import type { bookingCard_addBookingMutation } from '@/queries/__generated__/bookingCard_addBookingMutation.graphql';
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
 import type { bookingCard_deleteBookingMutation } from '@/queries/__generated__/bookingCard_deleteBookingMutation.graphql';
+import type { bookingCard_query$key } from '@/queries/__generated__/bookingCard_query.graphql';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -9,9 +12,9 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
+import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
-import { CalendarIcon, DeskIcon, EllipseMenuIcon, LocationIcon, NotesIcon, TeamIcon } from '@repo/shared/components/icons';
+import { CalendarIcon, DeskIcon, EllipseMenuIcon, JoinIcon, LocationIcon, NotesIcon, TeamIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -37,9 +40,11 @@ import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 
 type Props = {
+  rootDataRelay: bookingCard_query$key;
   bookingDetailsRelay: bookingCard_BookingDetails$key;
   organizationId: string;
   connectionIds: string[];
+  canJoinBooking: boolean;
 };
 
 type CustomTagDetails = {
@@ -54,7 +59,23 @@ type ZoneDetails = {
   color?: string | null | undefined;
 };
 
-const BookingCard = ({ bookingDetailsRelay, organizationId, connectionIds }: Props) => {
+const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, connectionIds, canJoinBooking }: Props) => {
+  const rootData = useFragment<bookingCard_query$key>(
+    graphql`
+      fragment bookingCard_query on Query {
+        me {
+          id
+          name
+          givenName
+          middleName
+          familyName
+          photoUrl
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
   const bookingDetails = useFragment(
     graphql`
       fragment bookingCard_BookingDetails on BookingDetails {
@@ -69,6 +90,9 @@ const BookingCard = ({ bookingDetailsRelay, organizationId, connectionIds }: Pro
           middleName
           familyName
           photoUrl
+        }
+        organization {
+          uniqueId
         }
         location {
           uniqueId
@@ -102,6 +126,50 @@ const BookingCard = ({ bookingDetailsRelay, organizationId, connectionIds }: Pro
       deleteBooking(input: $input) {
         booking {
           id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitAddBooking] = useMutation<bookingCard_addBookingMutation>(graphql`
+    mutation bookingCard_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
+      addBooking(input: $input) {
+        booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
+          id
+          from
+          to
+          notes
+          type
+          customer {
+            uniqueId
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
+          }
+          location {
+            uniqueId
+            name
+          }
+          team {
+            uniqueId
+            name
+          }
+          desks {
+            uniqueId
+            name
+            customTags {
+              uniqueId
+              name
+              color
+            }
+            zones {
+              uniqueId
+              name
+              color
+            }
+          }
         }
       }
     }
@@ -184,6 +252,109 @@ const BookingCard = ({ bookingDetailsRelay, organizationId, connectionIds }: Pro
     });
   };
 
+  const handleJoinClick = () => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const id = nanoid();
+    const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
+    const type = 'WorkingFromOffice';
+
+    commitAddBooking({
+      variables: {
+        connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          id,
+          customerId: rootData.me.id,
+          from: bookingDetails.from,
+          to: bookingDetails.to,
+          organizationId: bookingDetails.organization?.uniqueId,
+          locationId: bookingDetails.location?.uniqueId,
+          teamId: bookingDetails.team?.uniqueId,
+          deskIds: [],
+          type,
+        },
+      },
+      onCompleted: (response, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        const booking = response.addBooking?.booking!;
+        let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
+
+        if (booking.location) {
+          message += ` from the "${booking.location!.name}"`;
+        }
+
+        if (booking.desks.length > 0) {
+          message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
+
+          const zones = booking.desks.flatMap(({ zones }) => zones);
+          if (zones.length > 0) {
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+
+            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
+          }
+        }
+
+        message += ` on ${toShortDate(booking.from)}.`;
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={message} />,
+        });
+
+        UpdateGlobalReloadId();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        addBooking: {
+          booking: {
+            id,
+            from: bookingDetails.from,
+            to: bookingDetails.to,
+            notes: null,
+            type,
+            customer: {
+              uniqueId: rootData.me.id,
+              name: rootData.me.name,
+              givenName: rootData.me.givenName,
+              middleName: rootData.me.middleName,
+              familyName: rootData.me.familyName,
+              photoUrl: rootData.me.photoUrl,
+            },
+            location: bookingDetails.location
+              ? {
+                  uniqueId: bookingDetails.location.uniqueId,
+                  name: bookingDetails.location.name,
+                }
+              : null,
+            team: bookingDetails.team
+              ? {
+                  uniqueId: bookingDetails.team.uniqueId,
+                  name: bookingDetails.team.name,
+                }
+              : null,
+            desks: [],
+          },
+        },
+      },
+    });
+  };
+
   const date = dayjs(bookingDetails.from);
   const desks = bookingDetails.desks.map((desk) => desk.name).join(', ');
   const customTags = bookingDetails.desks
@@ -207,17 +378,26 @@ const BookingCard = ({ bookingDetailsRelay, organizationId, connectionIds }: Pro
 
   return (
     <>
-      <Card sx={{ width: { xs: '100%', sm: 315 } }}>
+      <Card sx={{ width: { xs: '100%', sm: 380 } }}>
         <CardHeader
           title={
-            <Link component={NextLink} href={getModernOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
-              <LeadIconTypography
-                startElement={<LocationIcon />}
-                label={bookingDetails.location?.name}
-                sx={{ flexWrap: undefined }}
-                invertDefaultColor
-              />
-            </Link>
+            <StackRow>
+              <Link component={NextLink} href={getModernOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
+                <LeadIconTypography
+                  startElement={<LocationIcon />}
+                  label={bookingDetails.location?.name}
+                  sx={{ flexWrap: undefined }}
+                  invertDefaultColor
+                />
+              </Link>
+
+              <PushToRight />
+              {canJoinBooking && (
+                <Button size="small" onClick={handleJoinClick}>
+                  <JoinIcon />
+                </Button>
+              )}
+            </StackRow>
           }
           action={
             <>

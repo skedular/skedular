@@ -1,3 +1,4 @@
+import AddCircle from '@mui/icons-material/AddCircle';
 import Business from '@mui/icons-material/Business';
 import CorporateFare from '@mui/icons-material/CorporateFare';
 import DateRange from '@mui/icons-material/DateRange';
@@ -19,7 +20,7 @@ import WbIridescent from '@mui/icons-material/WbIridescent';
 import type { SxProps, Theme } from '@mui/system';
 import TooltipIcon from './tooltip-icon';
 
-export { default as AddIcon, default as JoinIcon, default as NewIcon } from '@mui/icons-material/AddCircle';
+export { default as AddIcon, default as NewIcon } from '@mui/icons-material/AddCircle';
 export { default as AnalyticsIcon } from '@mui/icons-material/Analytics';
 export { default as CollpaseDrawerIcon } from '@mui/icons-material/ArrowBackIos';
 export { default as AscDirectionIcon } from '@mui/icons-material/ArrowDownward';
@@ -75,6 +76,15 @@ type Props = {
   excludeTooltip?: boolean;
   tip?: string;
 };
+
+export const JoinIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
+  excludeTooltip ? (
+    <AddCircle fontSize={fontSize} sx={sx} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'Join'}>
+      <AddCircle fontSize={fontSize} sx={sx} color={color} />
+    </TooltipIcon>
+  );
 
 export const MembersIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (

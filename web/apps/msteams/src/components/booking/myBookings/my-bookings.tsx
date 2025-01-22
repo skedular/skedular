@@ -426,7 +426,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       sortable: true,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
-      minWidth: 300,
+      minWidth: 200,
     },
     {
       field: 'moreActions',

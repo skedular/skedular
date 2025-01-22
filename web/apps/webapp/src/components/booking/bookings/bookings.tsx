@@ -1,17 +1,20 @@
 import { getModernOrganizationBookingBaseLink } from '@/components/organization';
+import type { bookings_addBookingMutation } from '@/queries/__generated__/bookings_addBookingMutation.graphql';
 import type { bookings_bookings_query$key } from '@/queries/__generated__/bookings_bookings_query.graphql';
 import type { bookings_bookings_refetchableFragment } from '@/queries/__generated__/bookings_bookings_refetchableFragment.graphql';
 import type { bookings_deleteBookingMutation } from '@/queries/__generated__/bookings_deleteBookingMutation.graphql';
 import type { bookings_query$key } from '@/queries/__generated__/bookings_query.graphql';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
+import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
-import { EllipseMenuIcon } from '@repo/shared/components/icons';
+import { EllipseMenuIcon, JoinIcon } from '@repo/shared/components/icons';
 import {
   MoreActionsMenu,
   moreActionsMenuAllOptions,
@@ -83,12 +86,14 @@ type TeamDetails = {
 
 type RowType = {
   id: string;
+  avatar: CustomerDetails;
   user: CustomerDetails;
   location?: LocationDetails | null | undefined;
   team?: TeamDetails | null | undefined;
   desks: ReadonlyArray<DeskDetails>;
   customTags: ReadonlyArray<CustomTagDetails>;
   zones: ReadonlyArray<ZoneDetails>;
+  canJoinBooking: Boolean;
 };
 
 const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, to, locationIds, teamIds, viewMode }: Props) => {
@@ -97,7 +102,13 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       fragment bookings_query on Query {
         me {
           id
+          name
+          givenName
+          middleName
+          familyName
+          photoUrl
         }
+        ...bookingCard_query
       }
     `,
     rootDataRelay,
@@ -137,6 +148,9 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
                 familyName
                 photoUrl
               }
+              organization {
+                uniqueId
+              }
               location {
                 uniqueId
                 name
@@ -173,6 +187,50 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       deleteBooking(input: $input) {
         booking {
           id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitAddBooking] = useMutation<bookings_addBookingMutation>(graphql`
+    mutation bookings_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
+      addBooking(input: $input) {
+        booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
+          id
+          from
+          to
+          notes
+          type
+          customer {
+            uniqueId
+            name
+            givenName
+            middleName
+            familyName
+            photoUrl
+          }
+          location {
+            uniqueId
+            name
+          }
+          team {
+            uniqueId
+            name
+          }
+          desks {
+            uniqueId
+            name
+            customTags {
+              uniqueId
+              name
+              color
+            }
+            zones {
+              uniqueId
+              name
+              color
+            }
+          }
         }
       }
     }
@@ -294,6 +352,115 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
     });
   };
 
+  const handleJoinClick = (bookingId: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const bookingDetails = bookings.find((item) => item.id === bookingId);
+    if (!bookingDetails) {
+      return;
+    }
+
+    const shortDateFormatFrom = toShortDate(bookingDetails.from);
+    const id = nanoid();
+    const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
+    const type = 'WorkingFromOffice';
+
+    commitAddBooking({
+      variables: {
+        connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          id,
+          customerId: rootData.me.id,
+          from: bookingDetails.from,
+          to: bookingDetails.to,
+          organizationId: bookingDetails.organization?.uniqueId,
+          locationId: bookingDetails.location?.uniqueId,
+          teamId: bookingDetails.team?.uniqueId,
+          deskIds: [],
+          type,
+        },
+      },
+      onCompleted: (response, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        const booking = response.addBooking?.booking!;
+        let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
+
+        if (booking.location) {
+          message += ` from the "${booking.location!.name}"`;
+        }
+
+        if (booking.desks.length > 0) {
+          message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
+
+          const zones = booking.desks.flatMap(({ zones }) => zones);
+          if (zones.length > 0) {
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+
+            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
+          }
+        }
+
+        message += ` on ${toShortDate(booking.from)}.`;
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={message} />,
+        });
+
+        UpdateGlobalReloadId();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        addBooking: {
+          booking: {
+            id,
+            from: bookingDetails.from,
+            to: bookingDetails.to,
+            notes: null,
+            type,
+            customer: {
+              uniqueId: rootData.me.id,
+              name: rootData.me.name,
+              givenName: rootData.me.givenName,
+              middleName: rootData.me.middleName,
+              familyName: rootData.me.familyName,
+              photoUrl: rootData.me.photoUrl,
+            },
+            location: bookingDetails.location
+              ? {
+                  uniqueId: bookingDetails.location.uniqueId,
+                  name: bookingDetails.location.name,
+                }
+              : null,
+            team: bookingDetails.team
+              ? {
+                  uniqueId: bookingDetails.team.uniqueId,
+                  name: bookingDetails.team.name,
+                }
+              : null,
+            desks: [],
+          },
+        },
+      },
+    });
+  };
+
   const rows: RowType[] = bookings.map((booking) => {
     const customTags = booking.desks
       .flatMap(({ customTags }) => customTags)
@@ -314,8 +481,21 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
         return acc;
       }, []);
 
+    const canJoinBooking =
+      booking.customer.uniqueId === rootData.me?.id
+        ? false
+        : !!!bookings
+            .filter((otherBooking) => otherBooking.customer.uniqueId === rootData.me?.id)
+            .find((myBooking) => {
+              const from = dayjs(booking.from);
+              const myFrom = dayjs(myBooking.from);
+
+              return from.year() === myFrom.year() && from.month() === myFrom.month() && from.date() === myFrom.date();
+            });
+
     return {
       id: booking.id,
+      avatar: booking.customer,
       user: booking.customer,
       location: booking.location,
       team: booking.team,
@@ -323,10 +503,19 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       customTags,
       zones,
       date: toShortDateWithAdditionalDayInfo(dayjs(booking.from)),
+      canJoinBooking,
     };
   });
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
+    {
+      field: 'avatar',
+      headerName: '',
+      editable: false,
+      renderCell: (params) => <CustomerAvatar name={params.value} photo={{ url: params.value?.photoUrl }} size="medium" showFullName />,
+      display: 'flex',
+      maxWidth: 20,
+    },
     {
       field: 'user',
       headerName: 'User',
@@ -393,7 +582,24 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       sortable: true,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
-      minWidth: 300,
+      minWidth: 200,
+    },
+    {
+      field: 'canJoinBooking',
+      headerName: 'Join',
+      editable: false,
+      renderCell: (params) => {
+        if (!params.value) {
+          return <></>;
+        }
+
+        return (
+          <Button size="small" onClick={() => handleJoinClick(params.id as string)}>
+            <JoinIcon />
+          </Button>
+        );
+      },
+      display: 'flex',
     },
     {
       field: 'moreActions',
@@ -432,10 +638,27 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           <GridContainer>
             {bookings.map((booking) => {
               const key = convertDateToKey(booking.from);
+              const canJoinBooking =
+                booking.customer.uniqueId === rootData.me?.id
+                  ? false
+                  : !!!bookings
+                      .filter((otherBooking) => otherBooking.customer.uniqueId === rootData.me?.id)
+                      .find((myBooking) => {
+                        const from = dayjs(booking.from);
+                        const myFrom = dayjs(myBooking.from);
+
+                        return from.year() === myFrom.year() && from.month() === myFrom.month() && from.date() === myFrom.date();
+                      });
 
               return (
                 <Grid key={booking.id}>
-                  <BookingCard bookingDetailsRelay={booking} organizationId={organizationId} connectionIds={connectionIds} />
+                  <BookingCard
+                    rootDataRelay={rootData}
+                    bookingDetailsRelay={booking}
+                    organizationId={organizationId}
+                    connectionIds={connectionIds}
+                    canJoinBooking={canJoinBooking}
+                  />
                 </Grid>
               );
             })}
