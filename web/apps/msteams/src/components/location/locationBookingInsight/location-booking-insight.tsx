@@ -6,7 +6,6 @@ import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
 import { SectionIconTypography } from '@repo/shared/components/commons';
 import { toDayAndMonthDate } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { LocationLink } from 'components/location';
 import { Dayjs } from 'dayjs';
 import { memo, useCallback, useTransition } from 'react';
 import { useFragment, useRefetchableFragment } from 'react-relay';
@@ -16,10 +15,9 @@ import type { locationBookingInsight_query$key } from './__generated__/locationB
 type Props = {
   rootDataRelay: locationBookingInsight_query$key;
   rootDataLocationAnalyticsRelay: locationBookingInsight_locationAnalytics_query$key;
-  hideLocationDetails?: boolean;
 };
 
-const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay, hideLocationDetails }: Props) => {
+const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment locationBookingInsight_query on Query {
@@ -97,21 +95,7 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay,
 
   return (
     <Card sx={{ maxWidth: 500, height: '100%' }}>
-      <CardHeader
-        title={
-          <>
-            <SectionIconTypography label="Booking Insights" invertDefaultColor />
-            {!hideLocationDetails && (
-              <LocationLink
-                organizationId={rootData.location.organization.uniqueId}
-                id={rootData.location.id}
-                name={rootData.location?.name}
-                analayticsLink
-              />
-            )}
-          </>
-        }
-      />
+      <CardHeader title={<SectionIconTypography label="Booking Insights" invertDefaultColor />} />
       <CardContent>
         <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'total' }]} {...chartSettings} />

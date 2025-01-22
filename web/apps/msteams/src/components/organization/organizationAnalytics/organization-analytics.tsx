@@ -96,10 +96,10 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationId
 
           <GridContainer sx={{ padding: defaultPadding }}>
             <Grid>
-              <OrganizationBookingInsightRoot onReloadRequired={onReloadRequired} organizationId={organizationId} hideOrganizationDetails />
+              <OrganizationBookingInsightRoot onReloadRequired={onReloadRequired} organizationId={organizationId} />
             </Grid>
             <Grid>
-              <OrganizationMemberAttendancyInsightRoot onReloadRequired={onReloadRequired} organizationId={organizationId} hideOrganizationDetails />
+              <OrganizationMemberAttendancyInsightRoot onReloadRequired={onReloadRequired} organizationId={organizationId} />
             </Grid>
           </GridContainer>
 

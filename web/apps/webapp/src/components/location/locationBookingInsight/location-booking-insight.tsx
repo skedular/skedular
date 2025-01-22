@@ -1,4 +1,3 @@
-import { LocationLink } from '@/components/location';
 import type { locationBookingInsight_locationAnalytics_query$key } from '@/queries/__generated__/locationBookingInsight_locationAnalytics_query.graphql';
 import type { locationBookingInsight_query$key } from '@/queries/__generated__/locationBookingInsight_query.graphql';
 import Card from '@mui/material/Card';
@@ -15,10 +14,9 @@ import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 type Props = {
   rootDataRelay: locationBookingInsight_query$key;
   rootDataLocationAnalyticsRelay: locationBookingInsight_locationAnalytics_query$key;
-  hideLocationDetails?: boolean;
 };
 
-const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay, hideLocationDetails }: Props) => {
+const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment locationBookingInsight_query on Query {
@@ -96,21 +94,7 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay,
 
   return (
     <Card sx={{ maxWidth: 500, height: '100%' }}>
-      <CardHeader
-        title={
-          <>
-            <SectionIconTypography label="Booking Insights" invertDefaultColor />
-            {!hideLocationDetails && (
-              <LocationLink
-                organizationId={rootData.location.organization?.uniqueId}
-                id={rootData.location.id}
-                name={rootData.location?.name}
-                analayticsLink
-              />
-            )}
-          </>
-        }
-      />
+      <CardHeader title={<SectionIconTypography label="Booking Insights" invertDefaultColor />} />
       <CardContent>
         <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'total' }]} {...chartSettings} />

@@ -1,4 +1,3 @@
-import { LocationLink } from '@/components/location';
 import type { locationDeskOccupancyInsight_locationAnalytics_query$key } from '@/queries/__generated__/locationDeskOccupancyInsight_locationAnalytics_query.graphql';
 import type { locationDeskOccupancyInsight_query$key } from '@/queries/__generated__/locationDeskOccupancyInsight_query.graphql';
 import Card from '@mui/material/Card';
@@ -16,10 +15,9 @@ import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 type Props = {
   rootDataRelay: locationDeskOccupancyInsight_query$key;
   rootDataLocationAnalyticsRelay: locationDeskOccupancyInsight_locationAnalytics_query$key;
-  hideLocationDetails?: boolean;
 };
 
-const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay, hideLocationDetails }: Props) => {
+const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment locationDeskOccupancyInsight_query on Query {
@@ -103,21 +101,7 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
 
   return (
     <Card sx={{ maxWidth: 500, height: '100%' }}>
-      <CardHeader
-        title={
-          <>
-            <SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />
-            {!hideLocationDetails && (
-              <LocationLink
-                organizationId={rootData.location.organization?.uniqueId}
-                id={rootData.location.id}
-                name={rootData.location?.name}
-                analayticsLink
-              />
-            )}
-          </>
-        }
-      />
+      <CardHeader title={<SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />} />
       <CardContent>
         <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'percentage' }]} {...chartSettings} />

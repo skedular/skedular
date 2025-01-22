@@ -1,6 +1,5 @@
 'use client';
 
-import { Location } from '@/components/location/locationPage';
 import { OrganizationLocation } from '@/components/organization/organizationLocation';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationLocation_rootQuery } from '@/queries/__generated__/pageOrganizationLocation_rootQuery.graphql';
@@ -11,10 +10,9 @@ import { BodyIconTypography, StackColumn } from '@repo/shared/components/commons
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -45,44 +43,35 @@ type Props = {
 
 const LocationPage = ({ queryReference, onReloadRequired, organizationId, locationId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationLocation_rootQuery>(RootQuery, queryReference);
-  const switchToModernUI = useContext(SwitchToModernUIContext);
   const router = useRouter();
 
   const handleBackClick = () => {
     router.back();
   };
 
-  if (switchToModernUI) {
-    const breadcrumbs = (
-      <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-        <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-          {'< back'}
-        </Button>
-        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <Breadcrumbs>
-            <BodyIconTypography label="Location Settings" />
-            <BodyIconTypography label={rootData.location?.name} />
-          </Breadcrumbs>
-        </Box>
-      </StackColumn>
-    );
-
-    return (
-      <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-        <OrganizationLocation
-          rootDataRelay={rootData}
-          rootDataDesksRelay={rootData}
-          onReloadRequired={onReloadRequired}
-          organizationId={organizationId}
-          locationId={locationId}
-        />
-      </RootShell>
-    );
-  }
+  const breadcrumbs = (
+    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
+      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
+        {'< back'}
+      </Button>
+      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+        <Breadcrumbs>
+          <BodyIconTypography label="Location Settings" />
+          <BodyIconTypography label={rootData.location?.name} />
+        </Breadcrumbs>
+      </Box>
+    </StackColumn>
+  );
 
   return (
-    <RootShell>
-      <Location organizationId={organizationId} locationId={locationId} />
+    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+      <OrganizationLocation
+        rootDataRelay={rootData}
+        rootDataDesksRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
+        locationId={locationId}
+      />
     </RootShell>
   );
 };

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a2ed22b58c1d01d6debae4c8c57da58a>>
+ * @generated SignedSource<<86fbeca00bd698297d355d52bce231d3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,14 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type appBar_query$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"modernAppBar_query" | "oldAppBar_query">;
+  readonly me: {
+    readonly email: string | null | undefined;
+    readonly familyName: string | null | undefined;
+    readonly givenName: string | null | undefined;
+    readonly middleName: string | null | undefined;
+    readonly photoUrl: string | null | undefined;
+  } | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"newFeedbackDialog_query">;
   readonly " $fragmentType": "appBar_query";
 };
 export type appBar_query$key = {
@@ -26,20 +33,61 @@ const node: ReaderFragment = {
   "name": "appBar_query",
   "selections": [
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "modernAppBar_query"
+      "concreteType": "CustomerDetails",
+      "kind": "LinkedField",
+      "name": "me",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "email",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "givenName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "middleName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "familyName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "photoUrl",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "oldAppBar_query"
+      "name": "newFeedbackDialog_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "4463166c0cab98c1407778600d16934d";
+(node as any).hash = "9ad2dca11cde66de464273bebf2cea5b";
 
 export default node;

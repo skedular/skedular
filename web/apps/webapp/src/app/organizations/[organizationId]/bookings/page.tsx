@@ -1,14 +1,11 @@
 'use client';
 
-import { OldBookings } from '@/components/booking';
 import { OrganizationBookings } from '@/components/organization/organizationPage';
 import { RootShell } from '@/components/rootShell';
-import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { useParams } from 'next/navigation';
-import { memo, useContext } from 'react';
+import { memo } from 'react';
 
 const OrganizationsPage = () => {
-  const switchToModernUI = useContext(SwitchToModernUIContext);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -28,8 +25,7 @@ const OrganizationsPage = () => {
 
   return (
     <RootShell>
-      {switchToModernUI && <OrganizationBookings organizationId={finalOrganizationId} />}
-      {!switchToModernUI && <OldBookings onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />}
+      <OrganizationBookings organizationId={finalOrganizationId} />
     </RootShell>
   );
 };

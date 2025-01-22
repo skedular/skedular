@@ -1,6 +1,4 @@
-import { OrganizationLink } from '@/components/organization';
 import type { organizationBookingInsight_organizationAnalytics_query$key } from '@/queries/__generated__/organizationBookingInsight_organizationAnalytics_query.graphql';
-import type { organizationBookingInsight_query$key } from '@/queries/__generated__/organizationBookingInsight_query.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -10,28 +8,14 @@ import { SectionIconTypography } from '@repo/shared/components/commons';
 import { toDayAndMonthDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { memo, useCallback, useTransition } from 'react';
-import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
+import { graphql, useRefetchableFragment } from 'react-relay';
 
 type Props = {
-  rootDataRelay: organizationBookingInsight_query$key;
   rootDataOrganizationAnalyticsRelay: organizationBookingInsight_organizationAnalytics_query$key;
   organizationId: string;
-  hideOrganizationDetails?: boolean;
 };
 
-const OrganizationBookingInsight = ({ rootDataRelay, rootDataOrganizationAnalyticsRelay, organizationId, hideOrganizationDetails }: Props) => {
-  const rootData = useFragment(
-    graphql`
-      fragment organizationBookingInsight_query on Query {
-        organization(id: $organizationId) {
-          name
-          logoUrl
-        }
-      }
-    `,
-    rootDataRelay,
-  );
-
+const OrganizationBookingInsight = ({ rootDataOrganizationAnalyticsRelay, organizationId }: Props) => {
   const [rootDataOrganizationAnalytics, refetch] = useRefetchableFragment(
     graphql`
       fragment organizationBookingInsight_organizationAnalytics_query on Query
@@ -95,14 +79,7 @@ const OrganizationBookingInsight = ({ rootDataRelay, rootDataOrganizationAnalyti
 
   return (
     <Card sx={{ maxWidth: 500, height: '100%' }}>
-      <CardHeader
-        title={
-          <>
-            <SectionIconTypography label="Booking Insights" invertDefaultColor />
-            {!hideOrganizationDetails && <OrganizationLink id={organizationId} name={rootData.organization?.name} analayticsLink />}
-          </>
-        }
-      />
+      <CardHeader title={<SectionIconTypography label="Booking Insights" invertDefaultColor />} />
       <CardContent>
         <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'total' }]} {...chartSettings} />

@@ -2,7 +2,7 @@ import { app } from '@microsoft/teams-js';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
-import { DatePickerLocalizationProvider, GlobalReloadIdProvider, SwitchToModernUIProvider, ThemeProvider } from '@repo/shared/libs/providers';
+import { DatePickerLocalizationProvider, GlobalReloadIdProvider, ThemeProvider } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Home } from 'app/';
@@ -10,12 +10,7 @@ import { Install } from 'app/install';
 import { Locations } from 'app/locations';
 import { Notifications } from 'app/notifications';
 import { Organization } from 'app/organizations/organization';
-import { AddOrganizationLocation } from 'app/organizations/organization/locations/add';
-import { OrganizationLocation } from 'app/organizations/organization/locations/location';
-import { AddOrganizationTeam } from 'app/organizations/organization/teams/add';
-import { OrganizationTeam } from 'app/organizations/organization/teams/team';
 import { OrganizationMembers } from 'app/organizations/organization/users';
-import { Settings } from 'app/settings';
 import { StartInstall } from 'app/start-install';
 import { Teams } from 'app/teams';
 import { LogRocketProvider, RelayProvider, TeamsFxContext } from 'libs/providers';
@@ -51,32 +46,12 @@ const router = createBrowserRouter([
     element: <Locations />,
   },
   {
-    path: '/organizations/:organizationId/locations/add',
-    element: <AddOrganizationLocation />,
-  },
-  {
-    path: '/organizations/:organizationId/locations/:locationId',
-    element: <OrganizationLocation />,
-  },
-  {
     path: '/organizations/:organizationId/teams',
     element: <Teams />,
   },
   {
-    path: '/organizations/:organizationId/teams/add',
-    element: <AddOrganizationTeam />,
-  },
-  {
-    path: '/organizations/:organizationId/teams/:teamId',
-    element: <OrganizationTeam />,
-  },
-  {
     path: '/:organizationId/notifications',
     element: <Notifications />,
-  },
-  {
-    path: '/:organizationId/settings',
-    element: <Settings />,
   },
 ]);
 
@@ -129,16 +104,14 @@ const App = () => {
     <>
       <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
         <GlobalReloadIdProvider>
-          <SwitchToModernUIProvider>
-            <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
-              <CssBaseline />
-              <DatePickerLocalizationProvider>
-                <RelayProvider token={token}>
-                  <RouterProvider router={router} />
-                </RelayProvider>
-              </DatePickerLocalizationProvider>
-            </ThemeProvider>
-          </SwitchToModernUIProvider>
+          <ThemeProvider mode={themeString === 'dark' ? 'dark' : 'light'}>
+            <CssBaseline />
+            <DatePickerLocalizationProvider>
+              <RelayProvider token={token}>
+                <RouterProvider router={router} />
+              </RelayProvider>
+            </DatePickerLocalizationProvider>
+          </ThemeProvider>
         </GlobalReloadIdProvider>
       </TeamsFxContext.Provider>
       <Analytics />

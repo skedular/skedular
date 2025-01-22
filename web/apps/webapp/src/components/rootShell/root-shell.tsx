@@ -48,7 +48,6 @@ const RootQuery = graphql`
     slackCustomerRecordSynced
     teamCustomerRecordSynced
     pendingInvitationsCount
-    ...oldAppBar_query
     ...appBar_query
     ...leftSideNavigationMenu_query
   }

@@ -10,7 +10,6 @@ import {
   GlobalReloadIdProvider,
   PaletteModeContext,
   PaletteModeProvider,
-  SwitchToModernUIProvider,
   ThemeProvider,
 } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
@@ -31,16 +30,14 @@ const RootLayout = ({ children }: PropsWithChildren) => {
   return (
     <GlobalReloadIdProvider>
       <SelectedOrganizationProvider>
-        <SwitchToModernUIProvider>
-          <ThemeProvider mode={paletteMode}>
-            <CssBaseline />
-            <DatePickerLocalizationProvider>
-              <NextAuthProvider>
-                <RelayProvider>{children}</RelayProvider>
-              </NextAuthProvider>
-            </DatePickerLocalizationProvider>
-          </ThemeProvider>
-        </SwitchToModernUIProvider>
+        <ThemeProvider mode={paletteMode}>
+          <CssBaseline />
+          <DatePickerLocalizationProvider>
+            <NextAuthProvider>
+              <RelayProvider>{children}</RelayProvider>
+            </NextAuthProvider>
+          </DatePickerLocalizationProvider>
+        </ThemeProvider>
       </SelectedOrganizationProvider>
     </GlobalReloadIdProvider>
   );

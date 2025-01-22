@@ -7,7 +7,6 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { startOfDay } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { OrganizationLink } from 'components/organization';
 import { nanoid } from 'nanoid';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -19,27 +18,18 @@ type Props = {
   queryReference: PreloadedQuery<organizationMemberAttendancyInsightRoot_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
-  hideOrganizationDetails?: boolean;
 };
 
 const RootQuery = graphql`
   query organizationMemberAttendancyInsightRoot_rootQuery($organizationId: String!, $from: DateTime!, $to: DateTime!) {
-    ...organizationMemberAttendancyInsight_query
     ...organizationMemberAttendancyInsight_organizationAnalytics_query
   }
 `;
 
-const OrganizationMemberAttendancyInsightRoot = ({ queryReference, onReloadRequired, organizationId, hideOrganizationDetails }: Props) => {
+const OrganizationMemberAttendancyInsightRoot = ({ queryReference, organizationId }: Props) => {
   const rootData = usePreloadedQuery<organizationMemberAttendancyInsightRoot_rootQuery>(RootQuery, queryReference);
 
-  return (
-    <OrganizationMemberAttendancyInsight
-      rootDataRelay={rootData}
-      rootDataOrganizationAnalyticsRelay={rootData}
-      organizationId={organizationId}
-      hideOrganizationDetails={hideOrganizationDetails}
-    />
-  );
+  return <OrganizationMemberAttendancyInsight rootDataOrganizationAnalyticsRelay={rootData} organizationId={organizationId} />;
 };
 
 const MemoOrganizationMemberAttendancysCard = memo(OrganizationMemberAttendancyInsightRoot);
@@ -47,16 +37,9 @@ const MemoOrganizationMemberAttendancysCard = memo(OrganizationMemberAttendancyI
 type RelayProps = {
   onReloadRequired: () => void;
   organizationId: string;
-  organizationName?: string;
-  hideOrganizationDetails?: boolean;
 };
 
-const OrganizationMemberAttendancyInsightRootWithRelay = ({
-  onReloadRequired,
-  organizationId,
-  organizationName,
-  hideOrganizationDetails,
-}: RelayProps) => {
+const OrganizationMemberAttendancyInsightRootWithRelay = ({ onReloadRequired, organizationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationMemberAttendancyInsightRoot_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -88,14 +71,7 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({
   if (!queryReference) {
     return (
       <Card sx={{ maxWidth: 500, height: '100%' }}>
-        <CardHeader
-          title={
-            <>
-              <SectionIconTypography label="Member Attendancy Insights" invertDefaultColor />
-              {!hideOrganizationDetails && <OrganizationLink id={organizationId} name={organizationName} analayticsLink />}
-            </>
-          }
-        />
+        <CardHeader title={<SectionIconTypography label="Member Attendancy Insights" invertDefaultColor />} />
         <CardContent>
           <Skeleton variant="rounded" width={470} height={350} />
         </CardContent>
@@ -109,7 +85,6 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
         organizationId={organizationId}
-        hideOrganizationDetails={hideOrganizationDetails}
       />
     </ErrorBoundary>
   );

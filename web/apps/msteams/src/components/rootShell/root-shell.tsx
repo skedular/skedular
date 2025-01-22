@@ -39,7 +39,6 @@ const RootQuery = graphql`
     paymentCustomerRecordSynced
     slackCustomerRecordSynced
     teamCustomerRecordSynced
-    ...oldAppBar_query
     ...appBar_query
   }
 `;

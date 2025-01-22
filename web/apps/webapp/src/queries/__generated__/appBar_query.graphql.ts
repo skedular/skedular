@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a2ed22b58c1d01d6debae4c8c57da58a>>
+ * @generated SignedSource<<208af71a37ca8c1e39d26f12e8a3e827>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,22 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type appBar_query$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"modernAppBar_query" | "oldAppBar_query">;
+  readonly me: {
+    readonly email: string | null | undefined;
+    readonly familyName: string | null | undefined;
+    readonly givenName: string | null | undefined;
+    readonly middleName: string | null | undefined;
+    readonly photoUrl: string | null | undefined;
+  } | null | undefined;
+  readonly myOrganizations: ReadonlyArray<{
+    readonly canModify: boolean;
+    readonly canViewAnalytics: boolean;
+    readonly id: string;
+    readonly logoUrl: string | null | undefined;
+    readonly name: string;
+  }> | null | undefined;
+  readonly pendingInvitationsCount: number;
+  readonly " $fragmentSpreads": FragmentRefs<"mobileLeftSideNavigationMenu_query" | "newFeedbackDialog_query">;
   readonly " $fragmentType": "appBar_query";
 };
 export type appBar_query$key = {
@@ -26,20 +41,119 @@ const node: ReaderFragment = {
   "name": "appBar_query",
   "selections": [
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "modernAppBar_query"
+      "concreteType": "CustomerDetails",
+      "kind": "LinkedField",
+      "name": "me",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "email",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "givenName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "middleName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "familyName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "photoUrl",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "OrganizationDetails",
+      "kind": "LinkedField",
+      "name": "myOrganizations",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "logoUrl",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canModify",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canViewAnalytics",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "pendingInvitationsCount",
+      "storageKey": null
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "oldAppBar_query"
+      "name": "mobileLeftSideNavigationMenu_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "newFeedbackDialog_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "4463166c0cab98c1407778600d16934d";
+(node as any).hash = "e05f75072733dd46927ce7643b4b8aa9";
 
 export default node;

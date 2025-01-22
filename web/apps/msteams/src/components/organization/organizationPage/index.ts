@@ -1,9 +1,1 @@
 export { default as Organization } from './organization';
-export { default as OrganizationAbout } from './organization-about-tab';
-export { default as OrganizationBilling } from './organization-billing-tab';
-export { default as OrganizationCustomTags } from './organization-custom-tags-tab';
-export { default as OrganizationLocations } from './organization-locations-tab';
-export { default as OrganizationMembers } from './organization-members-tab';
-export { default as OrganizationOffering } from './organization-offering-tab';
-export { default as OrganizationTeams } from './organization-teams-tab';
-export { default as OrganizationZones } from './organization-zones-tab';

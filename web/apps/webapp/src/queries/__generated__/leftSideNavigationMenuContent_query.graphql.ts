@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c3326dde0680abf30d15e35e68fae873>>
+ * @generated SignedSource<<ff88387cdbf4e2affb66af0ba7949a61>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,15 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type leftSideNavigationMenuContent_query$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"modernLeftSideNavigationMenuContent_query">;
+  readonly organization?: {
+    readonly activeOffering: {
+      readonly earlyBird: boolean;
+      readonly free: boolean;
+    };
+    readonly canModify: boolean;
+    readonly canViewAnalytics: boolean;
+    readonly id: string;
+  } | null | undefined;
   readonly " $fragmentType": "leftSideNavigationMenuContent_query";
 };
 export type leftSideNavigationMenuContent_query$key = {
@@ -20,21 +28,95 @@ export type leftSideNavigationMenuContent_query$key = {
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "organizationExists"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "leftSideNavigationMenuContent_query",
   "selections": [
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "modernLeftSideNavigationMenuContent_query"
+      "condition": "organizationExists",
+      "kind": "Condition",
+      "passingValue": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": [
+            {
+              "kind": "Variable",
+              "name": "id",
+              "variableName": "organizationId"
+            }
+          ],
+          "concreteType": "OrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "id",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "canModify",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "canViewAnalytics",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationActiveOfferingDetails",
+              "kind": "LinkedField",
+              "name": "activeOffering",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "free",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "earlyBird",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ]
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "66f730e93a37de395480280fae825eea";
+(node as any).hash = "874ff49cd16a0bad23ee0a302c9e3457";
 
 export default node;

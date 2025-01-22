@@ -1,6 +1,4 @@
-import { OrganizationLink } from '@/components/organization';
 import type { organizationMemberAttendancyInsight_organizationAnalytics_query$key } from '@/queries/__generated__/organizationMemberAttendancyInsight_organizationAnalytics_query.graphql';
-import type { organizationMemberAttendancyInsight_query$key } from '@/queries/__generated__/organizationMemberAttendancyInsight_query.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -11,33 +9,14 @@ import { SectionIconTypography } from '@repo/shared/components/commons';
 import { toDayAndMonthDate, toFixed } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { memo, useCallback, useTransition } from 'react';
-import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
+import { graphql, useRefetchableFragment } from 'react-relay';
 
 type Props = {
-  rootDataRelay: organizationMemberAttendancyInsight_query$key;
   rootDataOrganizationAnalyticsRelay: organizationMemberAttendancyInsight_organizationAnalytics_query$key;
   organizationId: string;
-  hideOrganizationDetails?: boolean;
 };
 
-const OrganizationMemberAttendancyInsight = ({
-  rootDataRelay,
-  rootDataOrganizationAnalyticsRelay,
-  organizationId,
-  hideOrganizationDetails,
-}: Props) => {
-  const rootData = useFragment(
-    graphql`
-      fragment organizationMemberAttendancyInsight_query on Query {
-        organization(id: $organizationId) {
-          name
-          logoUrl
-        }
-      }
-    `,
-    rootDataRelay,
-  );
-
+const OrganizationMemberAttendancyInsight = ({ rootDataOrganizationAnalyticsRelay, organizationId }: Props) => {
   const [rootDataOrganizationAnalytics, refetch] = useRefetchableFragment(
     graphql`
       fragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query
@@ -109,14 +88,7 @@ const OrganizationMemberAttendancyInsight = ({
 
   return (
     <Card sx={{ maxWidth: 500, height: '100%' }}>
-      <CardHeader
-        title={
-          <>
-            <SectionIconTypography label="Member Attendancy Insights" invertDefaultColor />
-            {!hideOrganizationDetails && <OrganizationLink id={organizationId} name={rootData.organization?.name} analayticsLink />}
-          </>
-        }
-      />
+      <CardHeader title={<SectionIconTypography label="Member Attendancy Insights" invertDefaultColor />} />
       <CardContent>
         <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         <BarChart

@@ -1,13 +1,8 @@
 'use client';
 
-import { Dashboard } from '@/components/customer/dashboard';
 import { RootShell } from '@/components/rootShell';
 import { memo } from 'react';
 
-const Home = () => (
-  <RootShell>
-    <Dashboard />
-  </RootShell>
-);
+const Home = () => <RootShell />;
 
 export default memo(Home);

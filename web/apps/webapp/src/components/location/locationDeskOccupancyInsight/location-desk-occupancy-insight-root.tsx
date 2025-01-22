@@ -16,7 +16,6 @@ import LocationDeskOccupancyInsight from './location-desk-occupancy-insight';
 type Props = {
   queryReference: PreloadedQuery<locationDeskOccupancyInsightRoot_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  hideLocationDetails?: boolean;
 };
 
 const RootQuery = graphql`
@@ -26,31 +25,20 @@ const RootQuery = graphql`
   }
 `;
 
-const LocationDeskOccupancyInsightRoot = ({ queryReference, hideLocationDetails }: Props) => {
+const LocationDeskOccupancyInsightRoot = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<locationDeskOccupancyInsightRoot_rootQuery>(RootQuery, queryReference);
 
-  return (
-    <LocationDeskOccupancyInsight rootDataRelay={rootData} rootDataLocationAnalyticsRelay={rootData} hideLocationDetails={hideLocationDetails} />
-  );
+  return <LocationDeskOccupancyInsight rootDataRelay={rootData} rootDataLocationAnalyticsRelay={rootData} />;
 };
 
 const MemoLocationDeskOccupancyInsightRoot = memo(LocationDeskOccupancyInsightRoot);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationId?: string;
   locationId: string;
-  locationName?: string;
-  hideLocationDetails?: boolean;
 };
 
-const LocationDeskOccupancyInsightRootWithRelay = ({
-  organizationId,
-  onReloadRequired,
-  locationId,
-  locationName,
-  hideLocationDetails,
-}: RelayProps) => {
+const LocationDeskOccupancyInsightRootWithRelay = ({ onReloadRequired, locationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationDeskOccupancyInsightRoot_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -92,11 +80,7 @@ const LocationDeskOccupancyInsightRootWithRelay = ({
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationDeskOccupancyInsightRoot
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        hideLocationDetails={hideLocationDetails}
-      />
+      <MemoLocationDeskOccupancyInsightRoot queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

@@ -7,7 +7,6 @@ import { AnalyticsDaterangeSelector } from '@repo/shared/components/analytics';
 import { SectionIconTypography } from '@repo/shared/components/commons';
 import { toDayAndMonthDate, toFixed } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { LocationLink } from 'components/location';
 import { Dayjs } from 'dayjs';
 import { memo, useCallback, useTransition } from 'react';
 import { useFragment, useRefetchableFragment } from 'react-relay';
@@ -17,10 +16,9 @@ import type { locationDeskOccupancyInsight_query$key } from './__generated__/loc
 type Props = {
   rootDataRelay: locationDeskOccupancyInsight_query$key;
   rootDataLocationAnalyticsRelay: locationDeskOccupancyInsight_locationAnalytics_query$key;
-  hideLocationDetails?: boolean;
 };
 
-const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay, hideLocationDetails }: Props) => {
+const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment locationDeskOccupancyInsight_query on Query {
@@ -104,21 +102,7 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
 
   return (
     <Card sx={{ maxWidth: 500, height: '100%' }}>
-      <CardHeader
-        title={
-          <>
-            <SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />
-            {!hideLocationDetails && (
-              <LocationLink
-                organizationId={rootData.location.organization.uniqueId}
-                id={rootData.location.id}
-                name={rootData.location?.name}
-                analayticsLink
-              />
-            )}
-          </>
-        }
-      />
+      <CardHeader title={<SectionIconTypography label="Desk Occupancy Insights" invertDefaultColor />} />
       <CardContent>
         <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
         <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'percentage' }]} {...chartSettings} />

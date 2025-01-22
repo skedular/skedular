@@ -17,7 +17,6 @@ import LocationBookingInsight from './location-booking-insight';
 type Props = {
   queryReference: PreloadedQuery<locationBookingInsightRoot_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  hideLocationDetails?: boolean;
 };
 
 const RootQuery = graphql`
@@ -27,10 +26,10 @@ const RootQuery = graphql`
   }
 `;
 
-const LocationBookingInsightRoot = ({ queryReference, hideLocationDetails }: Props) => {
+const LocationBookingInsightRoot = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<locationBookingInsightRoot_rootQuery>(RootQuery, queryReference);
 
-  return <LocationBookingInsight rootDataRelay={rootData} rootDataLocationAnalyticsRelay={rootData} hideLocationDetails={hideLocationDetails} />;
+  return <LocationBookingInsight rootDataRelay={rootData} rootDataLocationAnalyticsRelay={rootData} />;
 };
 
 const MemoLocationBookingInsightRoot = memo(LocationBookingInsightRoot);
@@ -38,10 +37,9 @@ const MemoLocationBookingInsightRoot = memo(LocationBookingInsightRoot);
 type RelayProps = {
   onReloadRequired: () => void;
   locationId: string;
-  hideLocationDetails?: boolean;
 };
 
-const LocationBookingInsightRootWithRelay = ({ onReloadRequired, locationId, hideLocationDetails }: RelayProps) => {
+const LocationBookingInsightRootWithRelay = ({ onReloadRequired, locationId }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<locationBookingInsightRoot_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -83,11 +81,7 @@ const LocationBookingInsightRootWithRelay = ({ onReloadRequired, locationId, hid
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationBookingInsightRoot
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        hideLocationDetails={hideLocationDetails}
-      />
+      <MemoLocationBookingInsightRoot queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };

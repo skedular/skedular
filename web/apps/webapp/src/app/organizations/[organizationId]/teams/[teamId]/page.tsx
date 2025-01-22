@@ -2,7 +2,6 @@
 
 import { OrganizationTeam } from '@/components/organization/organizationTeam';
 import { RootShell } from '@/components/rootShell';
-import { Team } from '@/components/team/teamPage';
 import type { pageOrganizationTeam_rootQuery } from '@/queries/__generated__/pageOrganizationTeam_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -11,10 +10,9 @@ import { BodyIconTypography, StackColumn } from '@repo/shared/components/commons
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -37,44 +35,35 @@ type Props = {
 
 const TeamPage = ({ queryReference, onReloadRequired, organizationId, teamId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationTeam_rootQuery>(RootQuery, queryReference);
-  const switchToModernUI = useContext(SwitchToModernUIContext);
   const router = useRouter();
 
   const handleBackClick = () => {
     router.back();
   };
 
-  if (switchToModernUI) {
-    const breadcrumbs = (
-      <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
-        <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
-          {'< back'}
-        </Button>
-        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <Breadcrumbs>
-            <BodyIconTypography label="Team Settings" />
-            <BodyIconTypography label={rootData.team?.name} />
-          </Breadcrumbs>
-        </Box>
-      </StackColumn>
-    );
-
-    return (
-      <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-        <OrganizationTeam
-          rootDataRelay={rootData}
-          rootDataTeamMembersRelay={rootData}
-          onReloadRequired={onReloadRequired}
-          organizationId={organizationId}
-          teamId={teamId}
-        />
-      </RootShell>
-    );
-  }
+  const breadcrumbs = (
+    <StackColumn sx={{ alignItems: 'flex-start' }} spacing={0}>
+      <Button variant="text" onClick={handleBackClick} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
+        {'< back'}
+      </Button>
+      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+        <Breadcrumbs>
+          <BodyIconTypography label="Team Settings" />
+          <BodyIconTypography label={rootData.team?.name} />
+        </Breadcrumbs>
+      </Box>
+    </StackColumn>
+  );
 
   return (
-    <RootShell>
-      <Team organizationId={organizationId} teamId={teamId} />
+    <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
+      <OrganizationTeam
+        rootDataRelay={rootData}
+        rootDataTeamMembersRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
+        teamId={teamId}
+      />
     </RootShell>
   );
 };

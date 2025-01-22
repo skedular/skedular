@@ -1,4 +1,3 @@
-import { OrganizationLink } from '@/components/organization';
 import type { organizationMemberAttendancyInsightRoot_rootQuery } from '@/queries/__generated__/organizationMemberAttendancyInsightRoot_rootQuery.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -18,27 +17,18 @@ type Props = {
   queryReference: PreloadedQuery<organizationMemberAttendancyInsightRoot_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
-  hideOrganizationDetails?: boolean;
 };
 
 const RootQuery = graphql`
   query organizationMemberAttendancyInsightRoot_rootQuery($organizationId: String!, $from: DateTime!, $to: DateTime!) {
-    ...organizationMemberAttendancyInsight_query
     ...organizationMemberAttendancyInsight_organizationAnalytics_query
   }
 `;
 
-const OrganizationMemberAttendancyInsightRoot = ({ queryReference, onReloadRequired, organizationId, hideOrganizationDetails }: Props) => {
+const OrganizationMemberAttendancyInsightRoot = ({ queryReference, organizationId }: Props) => {
   const rootData = usePreloadedQuery<organizationMemberAttendancyInsightRoot_rootQuery>(RootQuery, queryReference);
 
-  return (
-    <OrganizationMemberAttendancyInsight
-      rootDataRelay={rootData}
-      rootDataOrganizationAnalyticsRelay={rootData}
-      organizationId={organizationId}
-      hideOrganizationDetails={hideOrganizationDetails}
-    />
-  );
+  return <OrganizationMemberAttendancyInsight rootDataOrganizationAnalyticsRelay={rootData} organizationId={organizationId} />;
 };
 
 const MemoOrganizationMemberAttendancysCard = memo(OrganizationMemberAttendancyInsightRoot);
@@ -47,15 +37,9 @@ type RelayProps = {
   onReloadRequired: () => void;
   organizationId: string;
   organizationName?: string;
-  hideOrganizationDetails?: boolean;
 };
 
-const OrganizationMemberAttendancyInsightRootWithRelay = ({
-  organizationId,
-  onReloadRequired,
-  organizationName,
-  hideOrganizationDetails,
-}: RelayProps) => {
+const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, onReloadRequired }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationMemberAttendancyInsightRoot_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -91,7 +75,6 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({
           title={
             <>
               <SectionIconTypography label="Member Attendancy Insights" invertDefaultColor />
-              {!hideOrganizationDetails && <OrganizationLink id={organizationId} name={organizationName} analayticsLink />}
             </>
           }
         />
@@ -108,7 +91,6 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
         organizationId={organizationId}
-        hideOrganizationDetails={hideOrganizationDetails}
       />
     </ErrorBoundary>
   );

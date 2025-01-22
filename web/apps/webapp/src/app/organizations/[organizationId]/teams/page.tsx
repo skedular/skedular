@@ -1,14 +1,11 @@
 'use client';
 
-import { OrganizationTeams } from '@/components/organization/organizationPage';
 import { RootShell } from '@/components/rootShell';
 import { Teams } from '@/components/team/teams';
-import { SwitchToModernUIContext } from '@repo/shared/libs/providers';
 import { useParams } from 'next/navigation';
-import { memo, useContext } from 'react';
+import { memo } from 'react';
 
 const OrganizationsPage = () => {
-  const switchToModernUI = useContext(SwitchToModernUIContext);
   const { organizationId } = useParams();
   let finalOrganizationId = '';
 
@@ -28,8 +25,7 @@ const OrganizationsPage = () => {
 
   return (
     <RootShell>
-      {!switchToModernUI && <OrganizationTeams onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />}
-      {switchToModernUI && <Teams organizationId={finalOrganizationId} />}
+      <Teams organizationId={finalOrganizationId} />
     </RootShell>
   );
 };
