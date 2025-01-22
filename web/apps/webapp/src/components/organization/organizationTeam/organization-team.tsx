@@ -11,6 +11,7 @@ import type { organizationTeam_updateTeamMutation } from '@/queries/__generated_
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -862,8 +863,21 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                 sectionRefs.current['members'] = divElement;
               }}
             >
-              <SectionIconTypography label="Team Members" />
-              <BodyIconTypography label="Manage your team members" />
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Team Members" />
+                  <BodyIconTypography label="Manage your team members" />
+                </Grid>
+
+                <Grid>
+                  <AddOrganizationTeamMemberButton
+                    onReloadRequired={onReloadRequired}
+                    connectionIds={connectionIds}
+                    organizationId={organizationId}
+                    teamId={teamId}
+                  />
+                </Grid>
+              </GridContainer>
               <Divider />
             </StackColumn>
 
@@ -900,16 +914,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                 </Box>
               </StackRow>
             )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <PushToRight />
-              <AddOrganizationTeamMemberButton
-                onReloadRequired={onReloadRequired}
-                connectionIds={connectionIds}
-                organizationId={organizationId}
-                teamId={teamId}
-              />
-            </StackRow>
 
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
               <DataGrid

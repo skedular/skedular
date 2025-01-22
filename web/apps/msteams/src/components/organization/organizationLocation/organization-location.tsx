@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
@@ -952,11 +953,29 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                 sectionRefs.current['manage-desks'] = divElement;
               }}
             >
-              <SectionIconTypography label=" Manage Desks" />
-              <BodyIconTypography label="Manage your location desks details" />
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label=" Manage Desks" />
+                  <BodyIconTypography label="Manage your location desks details" />
+                </Grid>
+
+                <Grid>
+                  <AddDeskButton
+                    onReloadRequired={onReloadRequired}
+                    organizationId={organizationId}
+                    locationId={locationId}
+                    connectionIds={desksConnectionIds}
+                  />
+                  <BulkAddDeskButton
+                    onReloadRequired={onReloadRequired}
+                    organizationId={organizationId}
+                    locationId={locationId}
+                    connectionIds={desksConnectionIds}
+                  />
+                </Grid>
+              </GridContainer>
               <Divider />
             </StackColumn>
-
             <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
               <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
               <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
@@ -992,22 +1011,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                 </Box>
               </StackRow>
             )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <PushToRight />
-              <AddDeskButton
-                onReloadRequired={onReloadRequired}
-                organizationId={organizationId}
-                locationId={locationId}
-                connectionIds={desksConnectionIds}
-              />
-              <BulkAddDeskButton
-                onReloadRequired={onReloadRequired}
-                organizationId={organizationId}
-                locationId={locationId}
-                connectionIds={desksConnectionIds}
-              />
-            </StackRow>
 
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
               <DataGrid

@@ -13,6 +13,7 @@ import type { organizationUsers_rootQuery } from '@/queries/__generated__/organi
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -735,8 +736,16 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Organization Users">
             <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <SectionIconTypography label="Organization Users" />
-              <BodyIconTypography label="View users in your organization" />
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Organization Users" />
+                  <BodyIconTypography label="View users in your organization" />
+                </Grid>
+
+                <Grid>
+                  <InvitePeopleToJoinOrganizationButton organizationId={organizationId} />
+                </Grid>
+              </GridContainer>
               <Divider />
             </StackColumn>
 
@@ -774,11 +783,6 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
                 </Box>
               </StackRow>
             )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <PushToRight />
-              <InvitePeopleToJoinOrganizationButton organizationId={organizationId} />
-            </StackRow>
 
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
               <DataGrid

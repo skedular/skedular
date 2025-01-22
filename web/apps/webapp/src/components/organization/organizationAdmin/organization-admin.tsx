@@ -1568,7 +1568,20 @@ const OrganizationAdmin = ({
             />
 
             <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <BodyIconTypography label="Edit your payment method" />
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Payment Method" />
+                  <BodyIconTypography label="Edit your payment method" />
+                </Grid>
+
+                <Grid>
+                  {!paymentMethodExist && (
+                    <Button variant="text" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
+                      <LeadIconTypography label="Add Payment Method" endElement={<NewIcon fontSize="large" />} />
+                    </Button>
+                  )}
+                </Grid>
+              </GridContainer>
               <Divider />
             </StackColumn>
 
@@ -1593,13 +1606,7 @@ const OrganizationAdmin = ({
 
             {!paymentMethodExist && (
               <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                <StackRow>
-                  <SmallIconTypography label="No payment method setup yet" />
-                  <PushToRight />
-                  <Button variant="text" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
-                    <LeadIconTypography label="Add Payment Method" endElement={<NewIcon fontSize="large" />} />
-                  </Button>
-                </StackRow>
+                <SmallIconTypography label="No payment method setup yet" />
               </StackColumn>
             )}
 
@@ -1620,8 +1627,16 @@ const OrganizationAdmin = ({
                 sectionRefs.current['zones-setup'] = divElement;
               }}
             >
-              <SectionIconTypography label="Zones Setup" />
-              <BodyIconTypography label="Edit your organization zones details" />
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Zones Setup" />
+                  <BodyIconTypography label="Edit your organization zones details" />
+                </Grid>
+
+                <Grid>
+                  <AddOrganizationZoneButton organizationId={organizationId} connectionIds={zonesConnectionIds} />
+                </Grid>
+              </GridContainer>
               <Divider />
             </StackColumn>
 
@@ -1652,11 +1667,6 @@ const OrganizationAdmin = ({
                 </Box>
               </StackRow>
             )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <PushToRight />
-              <AddOrganizationZoneButton organizationId={organizationId} connectionIds={zonesConnectionIds} />
-            </StackRow>
 
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
               <DataGrid
@@ -1690,8 +1700,16 @@ const OrganizationAdmin = ({
                 sectionRefs.current['tags-setup'] = divElement;
               }}
             >
-              <SectionIconTypography label="Tags Setup" />
-              <BodyIconTypography label="Edit your organization tags details" />
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Tags Setup" />
+                  <BodyIconTypography label="Edit your organization tags details" />
+                </Grid>
+
+                <Grid>
+                  <AddOrganizationCustomTagButton organizationId={organizationId} connectionIds={customTagsConnectionIds} />
+                </Grid>
+              </GridContainer>
               <Divider />
             </StackColumn>
 
@@ -1722,11 +1740,6 @@ const OrganizationAdmin = ({
                 </Box>
               </StackRow>
             )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <PushToRight />
-              <AddOrganizationCustomTagButton organizationId={organizationId} connectionIds={customTagsConnectionIds} />
-            </StackRow>
 
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
               <DataGrid
