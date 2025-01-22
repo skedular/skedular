@@ -104,7 +104,7 @@ resource "cloudflare_record" "cloudflare_dns_record_production" {
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.public_website.id
   name    = "@"
-  content = "31.220.100.177"
+  content = "35.213.255.74"
   type    = "A"
   proxied = false
   ttl     = 600
@@ -114,7 +114,7 @@ resource "cloudflare_record" "cloudflare_dns_record_production_www_public_websit
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.public_website.id
   name    = "www"
-  content = "31.220.100.177"
+  content = "35.213.255.74"
   type    = "A"
   proxied = true
   ttl     = 1
@@ -124,7 +124,7 @@ resource "cloudflare_record" "cloudflare_dns_record_production_staging" {
   count   = local.is_staging ? 1 : 0
   zone_id = data.cloudflare_zone.public_website.id
   name    = "staging"
-  content = "31.220.100.177"
+  content = "35.213.255.74"
   type    = "A"
   proxied = false
   ttl     = 600
