@@ -2,11 +2,13 @@ import { createTheme as createMuiTheme, PaletteMode, Theme } from '@mui/material
 import type { CSSProperties } from '@mui/material/styles/createTypography';
 import type { ResponsiveStyleValue, SxProps } from '@mui/system';
 import { gridClasses } from '@mui/x-data-grid';
-import getDesignTokens from './theme-primitives';
+import getDesignTokens, { coal } from './theme-primitives';
 
+export const defaultButtonStyle: SxProps<Theme> = { backgroundColor: 'white', borderColor: coal, borderWidth: 1, borderStyle: 'solid' };
 export const defaultPadding: ResponsiveStyleValue<CSSProperties['paddingTop']> = { xs: 1, sm: 1, md: 3 };
 export const defaultGridActionPadding: ResponsiveStyleValue<CSSProperties['paddingTop']> = { xs: 1, sm: 1, md: 2 };
 export const maxScreenWidth = 1600;
+
 export const defaultGridStyle: SxProps<Theme> = {
   border: 'none',
   [`& .${gridClasses.cell}`]: {
@@ -18,6 +20,7 @@ export const defaultGridStyle: SxProps<Theme> = {
     border: 'none',
   },
 };
+
 export const defaultOldGridStyle: SxProps<Theme> = {
   border: 'none',
   [`& .${gridClasses.cell}`]: {

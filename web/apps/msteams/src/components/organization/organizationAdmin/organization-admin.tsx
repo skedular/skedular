@@ -1651,7 +1651,7 @@ const OrganizationAdmin = ({
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
-                    backgroundColor: (theme) => theme.palette.background.paper,
+                    backgroundColor: 'white',
                     padding: defaultGridActionPadding,
                     border: 1,
                     borderColor: (theme) => theme.palette.divider,
@@ -1724,7 +1724,7 @@ const OrganizationAdmin = ({
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
-                    backgroundColor: (theme) => theme.palette.background.paper,
+                    backgroundColor: 'white',
                     padding: defaultGridActionPadding,
                     border: 1,
                     borderColor: (theme) => theme.palette.divider,

@@ -36,7 +36,7 @@ import {
 } from '@repo/shared/components/notification';
 import { Search } from '@repo/shared/components/search';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getOrganizationTeamsBaseLink } from 'components/links';
@@ -891,7 +891,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
-                    backgroundColor: (theme) => theme.palette.background.paper,
+                    backgroundColor: 'white',
                     padding: defaultGridActionPadding,
                     border: 1,
                     borderColor: (theme) => theme.palette.divider,
@@ -902,10 +902,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                   <StackRow sx={{ alignItems: 'center' }}>
                     <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
                     <PushToRight />
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateMembersClick}>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateMembersClick} sx={defaultButtonStyle}>
                       Deactivate Member
                     </Button>
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateMembersClick}>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateMembersClick} sx={defaultButtonStyle}>
                       Activate Member
                     </Button>
                     <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveMembersClick}>

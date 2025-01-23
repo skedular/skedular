@@ -31,7 +31,7 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultPadding } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -547,12 +547,12 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
           {member && (
             <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               {member.status === 'Active' && (
-                <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUserClick}>
+                <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUserClick} sx={defaultButtonStyle}>
                   Deactivate User
                 </Button>
               )}
               {member.status === 'Inactive' && (
-                <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUserClick}>
+                <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUserClick} sx={defaultButtonStyle}>
                   Activate User
                 </Button>
               )}

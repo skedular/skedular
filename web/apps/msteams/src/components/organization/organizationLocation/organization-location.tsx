@@ -35,7 +35,7 @@ import {
 import { Search } from '@repo/shared/components/search';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { AddDeskButton } from 'components/desk/addDesk';
@@ -987,7 +987,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
-                    backgroundColor: (theme) => theme.palette.background.paper,
+                    backgroundColor: 'white',
                     padding: defaultGridActionPadding,
                     border: 1,
                     borderColor: (theme) => theme.palette.divider,
@@ -998,10 +998,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                   <StackRow sx={{ alignItems: 'center' }}>
                     <SmallIconTypography label={`${seledctedDesks.length} records selected`} />
                     <PushToRight />
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateDesksClick}>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateDesksClick} sx={defaultButtonStyle}>
                       Deactivate Desk
                     </Button>
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateDesksClick}>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateDesksClick} sx={defaultButtonStyle}>
                       Activate Desk
                     </Button>
                     <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveDesksClick}>

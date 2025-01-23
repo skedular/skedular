@@ -48,7 +48,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
@@ -759,7 +759,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
-                    backgroundColor: (theme) => theme.palette.background.paper,
+                    backgroundColor: 'white',
                     padding: defaultGridActionPadding,
                     border: 1,
                     borderColor: (theme) => theme.palette.divider,
@@ -768,12 +768,12 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
                   }}
                 >
                   <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
+                    <SmallIconTypography label={`${seledctedMembers.length} records selected`} invertDefaultColor={paletteMode === 'dark'} />
                     <PushToRight />
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUsersClick}>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUsersClick} sx={defaultButtonStyle}>
                       Deactivate User
                     </Button>
-                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUsersClick}>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUsersClick} sx={defaultButtonStyle}>
                       Activate User
                     </Button>
                     <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUsersClick}>
