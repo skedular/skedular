@@ -385,7 +385,7 @@ const LocationCard = ({
           action={
             <>
               {moreActionsOption.length > 0 && (
-                <Box color={paletteMode === 'dark' ? coal : sandstone}>
+                <Box color={paletteMode === 'dark' ? coal : sandstone} sx={{ paddingTop: 0.5 }}>
                   <IconButton onClick={handleMoreActionsMenuClick} color="inherit">
                     <EllipseMenuIcon />
                   </IconButton>
