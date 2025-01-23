@@ -28,6 +28,7 @@ type Props = {
   variant?: 'text' | 'outlined' | 'contained';
   size?: 'small' | 'medium' | 'large';
   sx?: SxProps<Theme>;
+  invertDefaultColor?: boolean;
 };
 
 const RootQuery = graphql`
@@ -63,6 +64,7 @@ const NewBookingButton = ({
   variant,
   size,
   sx,
+  invertDefaultColor,
 }: Props) => {
   const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
   const paletteMode = useContext(PaletteModeContext);
@@ -93,21 +95,21 @@ const NewBookingButton = ({
           <SmallIconTypography
             label={label ?? 'Add Booking'}
             endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />}
-            invertDefaultColor={paletteMode === 'dark'}
+            invertDefaultColor={invertDefaultColor}
           />
         )}
         {size === 'medium' && (
           <BodyIconTypography
             label={label ?? 'Add Booking'}
             endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />}
-            invertDefaultColor={paletteMode === 'dark'}
+            invertDefaultColor={invertDefaultColor}
           />
         )}
         {(size === 'large' || !size) && (
           <LeadIconTypography
             label={label ?? 'Add Booking'}
             endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />}
-            invertDefaultColor={paletteMode === 'dark'}
+            invertDefaultColor={invertDefaultColor}
           />
         )}
       </Button>
@@ -142,6 +144,7 @@ type RelayProps = {
   variant?: 'text' | 'outlined' | 'contained';
   size?: 'small' | 'medium' | 'large';
   sx?: SxProps<Theme>;
+  invertDefaultColor?: boolean;
 };
 
 const NewBookingButtonWithRelay = ({
@@ -156,6 +159,7 @@ const NewBookingButtonWithRelay = ({
   variant,
   size,
   sx,
+  invertDefaultColor,
 }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<newBookingButton_rootQuery>(RootQuery);
 
@@ -208,6 +212,7 @@ const NewBookingButtonWithRelay = ({
         variant={variant}
         size={size}
         sx={sx}
+        invertDefaultColor={invertDefaultColor}
       />
     </ErrorBoundary>
   );

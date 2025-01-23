@@ -582,6 +582,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           hideIcon
           variant="contained"
           size="small"
+          invertDefaultColor={paletteMode === 'dark'}
         />
       ),
       display: 'flex',

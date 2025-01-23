@@ -3,6 +3,7 @@ import DialogActions from '@mui/material/DialogActions';
 import type { SxProps, Theme } from '@mui/system';
 import { useContext } from 'react';
 import { PaletteModeContext } from '../../libs/providers';
+import { defaultButtonStyle } from '../../libs/theme';
 import BodyIconTypography from './body-icon-typography';
 
 type Props = {
@@ -21,12 +22,19 @@ const TwoButtonsDialogActions = ({ sx, onPrimaryClicked, onSecondaryClicked, pri
   return (
     <DialogActions sx={sx}>
       {!hideSecondary && (
-        <Button variant="contained" onClick={onSecondaryClicked} color="secondary" disabled={disabled}>
+        <Button variant="contained" onClick={onSecondaryClicked} color="secondary" disabled={disabled} sx={defaultButtonStyle}>
           <BodyIconTypography label={secondaryLabel} invertDefaultColor={paletteMode === 'dark'} />
         </Button>
       )}
 
-      <Button variant="contained" type={onPrimaryClicked ? undefined : 'submit'} onClick={onPrimaryClicked} color="primary" disabled={disabled}>
+      <Button
+        variant="contained"
+        type={onPrimaryClicked ? undefined : 'submit'}
+        onClick={onPrimaryClicked}
+        color="primary"
+        disabled={disabled}
+        sx={{ textTransform: 'none' }}
+      >
         <BodyIconTypography label={primaryLabel} invertDefaultColor />
       </Button>
     </DialogActions>

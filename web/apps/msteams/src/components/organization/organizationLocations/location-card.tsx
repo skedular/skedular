@@ -365,6 +365,7 @@ const MyLocationCard = ({
                 variant="contained"
                 size="small"
                 sx={{ textTransform: 'none' }}
+                invertDefaultColor={paletteMode === 'dark'}
               />
               <Box color={paletteMode === 'dark' ? coal : sandstone}>
                 {isPreferred && (

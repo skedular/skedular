@@ -583,6 +583,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           variant="contained"
           size="small"
           sx={{ textTransform: 'none' }}
+          invertDefaultColor={paletteMode === 'dark'}
         />
       ),
       display: 'flex',
