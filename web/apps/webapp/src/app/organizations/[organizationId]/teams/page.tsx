@@ -1,7 +1,7 @@
 'use client';
 
+import { OrganizationTeams } from '@/components/organization/organizationTeams';
 import { RootShell } from '@/components/rootShell';
-import { Teams } from '@/components/team/teams';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
 
@@ -25,7 +25,7 @@ const OrganizationsPage = () => {
 
   return (
     <RootShell>
-      <Teams organizationId={finalOrganizationId} />
+      <OrganizationTeams organizationId={finalOrganizationId} />
     </RootShell>
   );
 };

@@ -85,7 +85,7 @@ const RootQuery = graphql`
               }
             }
           }
-          ...myTeamCard_TeamDetails
+          ...teamCard_TeamDetails
         }
       }
     }

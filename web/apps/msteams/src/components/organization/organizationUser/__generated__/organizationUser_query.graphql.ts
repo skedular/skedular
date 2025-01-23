@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afc664cf8686afc7bba75fa56c49c1cc>>
+ * @generated SignedSource<<87df11b9b471c213dc0c721cc17281ef>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -48,7 +48,7 @@ export type organizationUser_query$data = {
         readonly organization: {
           readonly uniqueId: string;
         } | null | undefined;
-        readonly " $fragmentSpreads": FragmentRefs<"myTeamCard_TeamDetails">;
+        readonly " $fragmentSpreads": FragmentRefs<"teamCard_TeamDetails">;
       };
     }>;
     readonly totalCount: number | null | undefined;
@@ -67,7 +67,7 @@ export type organizationUser_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"myTeamCard__query">;
+  readonly " $fragmentSpreads": FragmentRefs<"teamCard_query">;
   readonly " $fragmentType": "organizationUser_query";
 };
 export type organizationUser_query$key = {
@@ -359,7 +359,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "myTeamCard_TeamDetails"
+                  "name": "teamCard_TeamDetails"
                 },
                 {
                   "alias": null,
@@ -465,7 +465,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "myTeamCard__query"
+      "name": "teamCard_query"
     }
   ],
   "type": "Query",
@@ -473,6 +473,6 @@ return {
 };
 })();
 
-(node as any).hash = "fd67b73869eec124367a0485f28fa768";
+(node as any).hash = "5ea5bcc32e6b5938ec7cfae4e6b07cdd";
 
 export default node;

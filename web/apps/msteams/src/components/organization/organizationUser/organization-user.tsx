@@ -29,7 +29,7 @@ import { defaultPadding } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getModernOrganizationUsersBaseLink } from 'components/organization';
-import { MyTeamCard } from 'components/team/myTeams';
+import { TeamCard } from 'components/organization/organizationTeams';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useMemo, useRef } from 'react';
@@ -122,7 +122,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
                   }
                 }
               }
-              ...myTeamCard_TeamDetails
+              ...teamCard_TeamDetails
             }
           }
         }
@@ -137,7 +137,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
             }
           }
         }
-        ...myTeamCard__query
+        ...teamCard_query
       }
     `,
     rootDataRelay,
@@ -522,7 +522,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
           <GridContainer sx={{ padding: defaultPadding }}>
             {teams.map((team) => (
               <Grid key={team.id}>
-                <MyTeamCard
+                <TeamCard
                   rootDataRelay={rootData}
                   teamDetailsRelay={team}
                   connectionIds={connectionIds}

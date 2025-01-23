@@ -1,5 +1,5 @@
 import { getModernOrganizationUsersBaseLink } from '@/components/organization';
-import { MyTeamCard } from '@/components/team/myTeams';
+import { TeamCard } from '@/components/organization/organizationTeams';
 import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
 import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
 import type { organizationUser_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUser_removeOrganizationUsersMutation.graphql';
@@ -121,7 +121,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
                   }
                 }
               }
-              ...myTeamCard_TeamDetails
+              ...teamCard_TeamDetails
             }
           }
         }
@@ -136,7 +136,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
             }
           }
         }
-        ...myTeamCard__query
+        ...teamCard_query
       }
     `,
     rootDataRelay,
@@ -521,7 +521,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
           <GridContainer sx={{ padding: defaultPadding }}>
             {teams.map((team) => (
               <Grid key={team.id}>
-                <MyTeamCard
+                <TeamCard
                   rootDataRelay={rootData}
                   teamDetailsRelay={team}
                   connectionIds={connectionIds}

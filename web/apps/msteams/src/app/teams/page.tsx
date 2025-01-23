@@ -1,5 +1,5 @@
+import { OrganizationTeams } from 'components/organization/organizationTeams';
 import { RootShell } from 'components/rootShell';
-import { Teams } from 'components/team/teams';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ const TeamsPage = () => {
 
   return (
     <RootShell>
-      <Teams organizationId={finalOrganizationId} />
+      <OrganizationTeams organizationId={finalOrganizationId} />
     </RootShell>
   );
 };
