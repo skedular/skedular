@@ -675,6 +675,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             rowSpacingType="margin"
             getRowSpacing={() => ({ top: 3, bottom: 3 })}
             sx={defaultGridStyle}
+            localeText={{ noRowsLabel: 'No booking found' }}
           />
         )}
       </StackColumn>

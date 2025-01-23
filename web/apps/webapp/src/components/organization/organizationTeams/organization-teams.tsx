@@ -527,6 +527,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
               rowSpacingType="margin"
               getRowSpacing={() => ({ top: 3, bottom: 3 })}
               sx={defaultGridStyle}
+              localeText={{ noRowsLabel: 'No team found' }}
             />
           )}
         </StackColumn>

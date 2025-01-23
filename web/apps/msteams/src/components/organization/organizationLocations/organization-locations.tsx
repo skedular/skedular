@@ -689,6 +689,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
               rowSpacingType="margin"
               getRowSpacing={() => ({ top: 3, bottom: 3 })}
               sx={defaultGridStyle}
+              localeText={{ noRowsLabel: 'No location found' }}
             />
           )}
         </StackColumn>

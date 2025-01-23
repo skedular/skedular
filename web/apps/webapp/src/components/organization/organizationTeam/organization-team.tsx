@@ -945,6 +945,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                 rowSpacingType="margin"
                 getRowSpacing={() => ({ top: 3, bottom: 3 })}
                 sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No member found' }}
               />
             </StackRow>
           </AppBarWithStackColumn>

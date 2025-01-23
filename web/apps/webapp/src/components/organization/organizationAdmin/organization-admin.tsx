@@ -67,7 +67,7 @@ import {
 import { Search } from '@repo/shared/components/search';
 import { Zone } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -1699,6 +1699,7 @@ const OrganizationAdmin = ({
                 rowSpacingType="margin"
                 getRowSpacing={() => ({ top: 3, bottom: 3 })}
                 sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No zone found' }}
               />
             </StackRow>
 
@@ -1779,6 +1780,7 @@ const OrganizationAdmin = ({
                 rowSpacingType="margin"
                 getRowSpacing={() => ({ top: 3, bottom: 3 })}
                 sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No tag found' }}
               />
             </StackRow>
 

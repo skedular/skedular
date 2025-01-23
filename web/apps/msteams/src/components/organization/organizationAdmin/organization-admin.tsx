@@ -1700,6 +1700,7 @@ const OrganizationAdmin = ({
                 rowSpacingType="margin"
                 getRowSpacing={() => ({ top: 3, bottom: 3 })}
                 sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No zone found' }}
               />
             </StackRow>
 
@@ -1780,6 +1781,7 @@ const OrganizationAdmin = ({
                 rowSpacingType="margin"
                 getRowSpacing={() => ({ top: 3, bottom: 3 })}
                 sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No tag found' }}
               />
             </StackRow>
 
