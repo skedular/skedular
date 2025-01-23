@@ -365,6 +365,7 @@ const LocationCard = ({
                 hideIcon
                 variant="contained"
                 size="small"
+                sx={{ textTransform: 'none' }}
               />
 
               <Box color={paletteMode === 'dark' ? coal : sandstone}>

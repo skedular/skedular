@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<58d64606a5b4e283e824a71bf75a8050>>
+ * @generated SignedSource<<ea0b94a3223e29c0c0a209bb6616e62c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type newBookingDialog_query$data = {
-  readonly locations?: {
+  readonly locations: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -47,10 +47,6 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationExists"
-    },
-    {
-      "kind": "RootArgument",
       "name": "organizationId"
     }
   ],
@@ -71,88 +67,81 @@ return {
       "storageKey": null
     },
     {
-      "condition": "organizationExists",
-      "kind": "Condition",
-      "passingValue": true,
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "orderBy",
+          "variableName": "locationsSortingValues"
+        },
+        {
+          "fields": [
+            {
+              "kind": "Variable",
+              "name": "organizationId",
+              "variableName": "organizationId"
+            }
+          ],
+          "kind": "ObjectValue",
+          "name": "where"
+        }
+      ],
+      "concreteType": "LocationConnection",
+      "kind": "LinkedField",
+      "name": "locations",
+      "plural": false,
       "selections": [
         {
           "alias": null,
-          "args": [
+          "args": null,
+          "kind": "ScalarField",
+          "name": "totalCount",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LocationEdge",
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
+          "selections": [
             {
-              "kind": "Variable",
-              "name": "orderBy",
-              "variableName": "locationsSortingValues"
-            },
-            {
-              "fields": [
+              "alias": null,
+              "args": null,
+              "concreteType": "LocationDetails",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
                 {
-                  "kind": "Variable",
-                  "name": "organizationId",
-                  "variableName": "organizationId"
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
                 }
               ],
-              "kind": "ObjectValue",
-              "name": "where"
+              "storageKey": null
             }
           ],
-          "concreteType": "LocationConnection",
-          "kind": "LinkedField",
-          "name": "locations",
-          "plural": false,
+          "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
           "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "totalCount",
+              "name": "__id",
               "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "LocationEdge",
-              "kind": "LinkedField",
-              "name": "edges",
-              "plural": true,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "LocationDetails",
-                  "kind": "LinkedField",
-                  "name": "node",
-                  "plural": false,
-                  "selections": [
-                    (v0/*: any*/),
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "name",
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
-              "kind": "ClientExtension",
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__id",
-                  "storageKey": null
-                }
-              ]
             }
-          ],
-          "storageKey": null
+          ]
         }
-      ]
+      ],
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -160,6 +149,6 @@ return {
 };
 })();
 
-(node as any).hash = "30bbb76aeb46d3d62a9275906c3bbfb8";
+(node as any).hash = "03d78c198e482cd6ec50d4819faa7c64";
 
 export default node;

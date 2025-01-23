@@ -213,8 +213,7 @@ const NewBookingDialog = ({
     graphql`
       fragment newBookingDialog_availableLocationDesks_query on Query
       @refetchable(queryName: "newBookingDialog_availableLocationDesks_refetchableFragment") {
-        availableDesks(where: { locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks })
-          @include(if: $locationExists) {
+        availableDesks(where: { locationId: $locationId, date: $dateToGetAvailableDesks }) @include(if: $locationExists) {
           uniqueId
           name
           customTags {

@@ -133,7 +133,7 @@ const NewBookingDialog = ({
         me {
           id
         }
-        locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) @include(if: $organizationExists) {
+        locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
           __id
           totalCount
           edges {

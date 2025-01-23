@@ -392,7 +392,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
         <CustomTags customTags={params.value.map((zone: CustomTagDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />
       ),
       display: 'flex',
-      minWidth: 200,
+      minWidth: 150,
     },
     {
       field: 'zones',
@@ -402,7 +402,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
         <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />
       ),
       display: 'flex',
-      minWidth: 200,
+      minWidth: 150,
     },
     {
       field: 'teammates',
@@ -425,7 +425,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       sortable: true,
       renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
-      minWidth: 200,
+      minWidth: 220,
     },
     {
       field: 'moreActions',

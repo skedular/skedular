@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<344a070858eaaba362ef5dcf2eb98939>>
+ * @generated SignedSource<<daef58195a29f3adad4aecb4ab823ea4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -66,10 +66,6 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "deskIdsToIncludeToGetAvailableDesks"
-    },
-    {
-      "kind": "RootArgument",
       "name": "locationExists"
     },
     {
@@ -101,11 +97,6 @@ return {
                   "kind": "Variable",
                   "name": "date",
                   "variableName": "dateToGetAvailableDesks"
-                },
-                {
-                  "kind": "Variable",
-                  "name": "deskIdsToInclude",
-                  "variableName": "deskIdsToIncludeToGetAvailableDesks"
                 },
                 {
                   "kind": "Variable",
@@ -155,6 +146,6 @@ return {
 };
 })();
 
-(node as any).hash = "46b700ab9004b6cde9c3661de51abc33";
+(node as any).hash = "26a853db786700a95a8387d18ac67e24";
 
 export default node;

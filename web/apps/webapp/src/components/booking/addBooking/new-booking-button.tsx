@@ -1,13 +1,16 @@
 import type { newBookingButton_rootQuery } from '@/queries/__generated__/newBookingButton_rootQuery.graphql';
 import Button from '@mui/material/Button';
+import type { SxProps, Theme } from '@mui/system';
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
 import { NewIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { coal } from '@repo/shared/libs/theme';
 import { startOfDay } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import { memo, useEffect, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import NewBookingDialog from './new-booking-dialog';
@@ -24,13 +27,13 @@ type Props = {
   hideIcon?: boolean;
   variant?: 'text' | 'outlined' | 'contained';
   size?: 'small' | 'medium' | 'large';
+  sx?: SxProps<Theme>;
 };
 
 const RootQuery = graphql`
   query newBookingButton_rootQuery(
     $organizationId: String!
     $peopleNameSearchText: String
-    $organizationExists: Boolean!
     $locationId: String!
     $locationExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
@@ -59,8 +62,10 @@ const NewBookingButton = ({
   hideIcon,
   variant,
   size,
+  sx,
 }: Props) => {
   const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
+  const paletteMode = useContext(PaletteModeContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleButtonClicked = () => {
@@ -79,17 +84,31 @@ const NewBookingButton = ({
     setIsDialogOpen(false);
   };
 
+  const borderSx = variant === 'contained' ? { backgroundColor: 'white', borderColor: coal, borderWidth: 1, borderStyle: 'solid' } : {};
+
   return (
     <>
-      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth}>
+      <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ ...sx, ...borderSx }}>
         {size === 'small' && (
-          <SmallIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
+          <SmallIconTypography
+            label={label ?? 'Add Booking'}
+            endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />}
+            invertDefaultColor={paletteMode === 'dark'}
+          />
         )}
         {size === 'medium' && (
-          <BodyIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
+          <BodyIconTypography
+            label={label ?? 'Add Booking'}
+            endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />}
+            invertDefaultColor={paletteMode === 'dark'}
+          />
         )}
         {(size === 'large' || !size) && (
-          <LeadIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
+          <LeadIconTypography
+            label={label ?? 'Add Booking'}
+            endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />}
+            invertDefaultColor={paletteMode === 'dark'}
+          />
         )}
       </Button>
       <NewBookingDialog
@@ -122,6 +141,7 @@ type RelayProps = {
   hideIcon?: boolean;
   variant?: 'text' | 'outlined' | 'contained';
   size?: 'small' | 'medium' | 'large';
+  sx?: SxProps<Theme>;
 };
 
 const NewBookingButtonWithRelay = ({
@@ -135,6 +155,7 @@ const NewBookingButtonWithRelay = ({
   hideIcon,
   variant,
   size,
+  sx,
 }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<newBookingButton_rootQuery>(RootQuery);
 
@@ -144,7 +165,6 @@ const NewBookingButtonWithRelay = ({
     loadQuery(
       {
         organizationId: organizationId ?? '',
-        organizationExists: !!organizationId,
         locationId: defaultLocationId ?? '',
         locationExists: false,
         dateToGetAvailableDesks: date,
@@ -187,6 +207,7 @@ const NewBookingButtonWithRelay = ({
         hideIcon={hideIcon}
         variant={variant}
         size={size}
+        sx={sx}
       />
     </ErrorBoundary>
   );
