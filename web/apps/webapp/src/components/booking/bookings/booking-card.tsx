@@ -3,7 +3,6 @@ import type { bookingCard_addBookingMutation } from '@/queries/__generated__/boo
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
 import type { bookingCard_deleteBookingMutation } from '@/queries/__generated__/bookingCard_deleteBookingMutation.graphql';
 import type { bookingCard_query$key } from '@/queries/__generated__/bookingCard_query.graphql';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -393,9 +392,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
 
               <PushToRight />
               {canJoinBooking && (
-                <Button size="small" onClick={handleJoinClick}>
-                  <JoinIcon />
-                </Button>
+                <Box color={paletteMode === 'dark' ? coal : sandstone}>
+                  <IconButton onClick={handleJoinClick} color="inherit">
+                    <JoinIcon />
+                  </IconButton>
+                </Box>
               )}
             </StackRow>
           }

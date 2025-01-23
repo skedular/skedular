@@ -849,8 +849,8 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
-                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                        <SmallIconTypography label="Update" />
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        Update
                       </Button>
                     </StackRow>
                   </StackColumn>
@@ -908,7 +908,14 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                     <Button size="medium" variant="contained" color="secondary" onClick={handleActivateMembersClick} sx={defaultButtonStyle}>
                       Activate Member
                     </Button>
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveMembersClick}>
+                    <Button
+                      size="medium"
+                      variant="contained"
+                      color="warning"
+                      startIcon={<DeleteIcon />}
+                      onClick={handleRemoveMembersClick}
+                      sx={{ textTransform: 'none' }}
+                    >
                       Remove Member
                     </Button>
                   </StackRow>

@@ -4,7 +4,13 @@ import type { ResponsiveStyleValue, SxProps } from '@mui/system';
 import { gridClasses } from '@mui/x-data-grid';
 import getDesignTokens, { coal } from './theme-primitives';
 
-export const defaultButtonStyle: SxProps<Theme> = { backgroundColor: 'white', borderColor: coal, borderWidth: 1, borderStyle: 'solid' };
+export const defaultButtonStyle: SxProps<Theme> = {
+  backgroundColor: 'white',
+  borderColor: coal,
+  borderWidth: 1,
+  borderStyle: 'solid',
+  textTransform: 'none',
+};
 export const defaultPadding: ResponsiveStyleValue<CSSProperties['paddingTop']> = { xs: 1, sm: 1, md: 3 };
 export const defaultGridActionPadding: ResponsiveStyleValue<CSSProperties['paddingTop']> = { xs: 1, sm: 1, md: 2 };
 export const maxScreenWidth = 1600;

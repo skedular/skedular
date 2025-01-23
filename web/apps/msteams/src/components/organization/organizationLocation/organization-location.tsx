@@ -938,8 +938,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
-                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                        <SmallIconTypography label="Update" />
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        Update
                       </Button>
                     </StackRow>
                   </StackColumn>
@@ -1004,7 +1004,14 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                     <Button size="medium" variant="contained" color="secondary" onClick={handleActivateDesksClick} sx={defaultButtonStyle}>
                       Activate Desk
                     </Button>
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveDesksClick}>
+                    <Button
+                      size="medium"
+                      variant="contained"
+                      color="warning"
+                      startIcon={<DeleteIcon />}
+                      onClick={handleRemoveDesksClick}
+                      sx={{ textTransform: 'none' }}
+                    >
                       Remove Desk
                     </Button>
                   </StackRow>

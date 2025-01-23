@@ -12,7 +12,6 @@ import {
   GridContainer,
   LeadIconTypography,
   SectionIconTypography,
-  SmallIconTypography,
   StackColumn,
   StackRow,
 } from '@repo/shared/components/commons';
@@ -498,8 +497,8 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
                 {rootData.customer?.id === rootData.me?.id && (
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
-                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                        <SmallIconTypography label="Update" />
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        Update
                       </Button>
                     </StackRow>
                   </StackColumn>
@@ -557,7 +556,14 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
                   Activate User
                 </Button>
               )}
-              <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUserClick}>
+              <Button
+                size="medium"
+                variant="contained"
+                color="warning"
+                startIcon={<DeleteIcon />}
+                onClick={handleRemoveUserClick}
+                sx={{ textTransform: 'none' }}
+              >
                 Remove User
               </Button>
             </StackRow>

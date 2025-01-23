@@ -12,7 +12,6 @@ import {
   FormFieldLabel,
   FormStackColumn,
   SectionIconTypography,
-  SmallIconTypography,
   StackColumn,
   StackRow,
 } from '@repo/shared/components/commons';
@@ -27,7 +26,7 @@ import {
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultPadding } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -289,8 +288,8 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
-                    <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                      <SmallIconTypography label={addLabel ?? 'Add'} />
+                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                      {addLabel ?? 'Add'}
                     </Button>
                   </StackRow>
                 </StackColumn>

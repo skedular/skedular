@@ -7,7 +7,6 @@ import {
   FormFieldLabel,
   FormStackColumn,
   SectionIconTypography,
-  SmallIconTypography,
   StackColumn,
   StackRow,
 } from '@repo/shared/components/commons';
@@ -19,7 +18,7 @@ import {
   successNotificationOptions,
 } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultPadding } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -218,8 +217,8 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addL
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
-                    <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                      <SmallIconTypography label={addLabel ?? 'Add'} />
+                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                      Update
                     </Button>
                   </StackRow>
                 </StackColumn>

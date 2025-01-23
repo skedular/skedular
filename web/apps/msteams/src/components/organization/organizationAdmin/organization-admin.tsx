@@ -45,7 +45,7 @@ import {
 import { Search } from '@repo/shared/components/search';
 import { Zone } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getOrganizationBaseLink } from 'components/links';
@@ -1485,8 +1485,8 @@ const OrganizationAdmin = ({
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
-                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                        <SmallIconTypography label="Update" />
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        Update
                       </Button>
                     </StackRow>
                   </StackColumn>
@@ -1560,8 +1560,8 @@ const OrganizationAdmin = ({
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
-                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                        <SmallIconTypography label="Update" />
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        Update
                       </Button>
                     </StackRow>
                   </StackColumn>
@@ -1662,7 +1662,14 @@ const OrganizationAdmin = ({
                   <StackRow sx={{ alignItems: 'center' }}>
                     <SmallIconTypography label={`${seledctedZones.length} records selected`} />
                     <PushToRight />
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveZonesClick}>
+                    <Button
+                      size="medium"
+                      variant="contained"
+                      color="warning"
+                      startIcon={<DeleteIcon />}
+                      onClick={handleRemoveZonesClick}
+                      sx={{ textTransform: 'none' }}
+                    >
                       Remove Zone
                     </Button>
                   </StackRow>
@@ -1735,7 +1742,14 @@ const OrganizationAdmin = ({
                   <StackRow sx={{ alignItems: 'center' }}>
                     <SmallIconTypography label={`${seledctedCustomTags.length} records selected`} />
                     <PushToRight />
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveCustomTagsClick}>
+                    <Button
+                      size="medium"
+                      variant="contained"
+                      color="warning"
+                      startIcon={<DeleteIcon />}
+                      onClick={handleRemoveCustomTagsClick}
+                      sx={{ textTransform: 'none' }}
+                    >
                       Remove Tag
                     </Button>
                   </StackRow>

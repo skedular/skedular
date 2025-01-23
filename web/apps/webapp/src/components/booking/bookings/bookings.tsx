@@ -4,7 +4,6 @@ import type { bookings_bookings_query$key } from '@/queries/__generated__/bookin
 import type { bookings_bookings_refetchableFragment } from '@/queries/__generated__/bookings_bookings_refetchableFragment.graphql';
 import type { bookings_deleteBookingMutation } from '@/queries/__generated__/bookings_deleteBookingMutation.graphql';
 import type { bookings_query$key } from '@/queries/__generated__/bookings_query.graphql';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
@@ -594,9 +593,9 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
         }
 
         return (
-          <Button size="small" onClick={() => handleJoinClick(params.id as string)}>
+          <IconButton onClick={() => handleJoinClick(params.id as string)}>
             <JoinIcon />
-          </Button>
+          </IconButton>
         );
       },
       display: 'flex',

@@ -777,7 +777,14 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
                     <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUsersClick} sx={defaultButtonStyle}>
                       Activate User
                     </Button>
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUsersClick}>
+                    <Button
+                      size="medium"
+                      variant="contained"
+                      color="warning"
+                      startIcon={<DeleteIcon />}
+                      onClick={handleRemoveUsersClick}
+                      sx={{ textTransform: 'none' }}
+                    >
                       Remove User
                     </Button>
                   </StackRow>
