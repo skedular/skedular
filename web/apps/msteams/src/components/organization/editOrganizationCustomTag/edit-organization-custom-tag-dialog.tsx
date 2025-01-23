@@ -148,7 +148,7 @@ const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialog
   }
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={onCancel} fullWidth>
+    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Edit Tag" />
       <DialogContent>
         <Form

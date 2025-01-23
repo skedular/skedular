@@ -82,7 +82,7 @@ const AddOrganizationPaymentMethodDialog = ({ organizationId, isDialogOpen, onCa
   }, [commitAddOrganizationPaymentMethodIntent, onCancel, organizationId, themedToast]);
 
   return (
-    <Dialog TransitionComponent={DialogTransition} open={isDialogOpen} onClose={onCancel} fullWidth>
+    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Add Payment Method" />
       <DialogContent>
         {addNewPaymentMethodState === AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET && <CircularProgress />}

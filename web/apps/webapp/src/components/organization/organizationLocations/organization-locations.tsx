@@ -704,7 +704,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
       />
 
       {locationDetails && (
-        <Dialog TransitionComponent={DialogTransition} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
+        <Dialog slots={{ transition: DialogTransition }} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
           <DefaultDialogTitle title="Remove Location" />
           <DialogContent>
             <DialogContentText>

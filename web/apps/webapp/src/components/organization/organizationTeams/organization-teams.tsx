@@ -541,7 +541,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
       />
 
       {teamDetails && (
-        <Dialog TransitionComponent={DialogTransition} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
+        <Dialog slots={{ transition: DialogTransition }} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
           <DefaultDialogTitle title="Remove Team" />
           <DialogContent>
             <DialogContentText>

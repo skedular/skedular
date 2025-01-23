@@ -438,7 +438,7 @@ const LocationCard = ({
         options={moreActionsOption}
       />
 
-      <Dialog TransitionComponent={DialogTransition} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
+      <Dialog slots={{ transition: DialogTransition }} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
         <DefaultDialogTitle title="Remove Location" />
         <DialogContent>
           <DialogContentText>
