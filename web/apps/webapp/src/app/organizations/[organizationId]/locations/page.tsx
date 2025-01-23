@@ -1,6 +1,6 @@
 'use client';
 
-import { Locations } from '@/components/location/locations';
+import { OrganizationLocations } from '@/components/organization/organizationLocations';
 import { RootShell } from '@/components/rootShell';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
@@ -25,7 +25,7 @@ const OrganizationsPage = () => {
 
   return (
     <RootShell>
-      <Locations organizationId={finalOrganizationId} />
+      <OrganizationLocations organizationId={finalOrganizationId} />
     </RootShell>
   );
 };

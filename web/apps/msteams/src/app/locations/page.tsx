@@ -1,4 +1,4 @@
-import { Locations } from 'components/location/locations';
+import { OrganizationLocations } from 'components/organization/organizationLocations';
 import { RootShell } from 'components/rootShell';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -21,7 +21,7 @@ const LocationsPage = () => {
 
   return (
     <RootShell>
-      <Locations organizationId={finalOrganizationId} />
+      <OrganizationLocations organizationId={finalOrganizationId} />
     </RootShell>
   );
 };
