@@ -1,4 +1,4 @@
-import { getModernOrganizationLocationManageDesksBaseLink, getModernOrganizationLocationSetupBaseLink } from '@/components/organization';
+import { getOrganizationLocationManageDesksBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -54,8 +54,8 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getModernOrganizationLocationSetupBaseLink(organizationId, locationId);
-  const manageDesksLink = getModernOrganizationLocationManageDesksBaseLink(organizationId, locationId);
+  const setupLink = getOrganizationLocationSetupBaseLink(organizationId, locationId);
+  const manageDesksLink = getOrganizationLocationManageDesksBaseLink(organizationId, locationId);
 
   return (
     <List

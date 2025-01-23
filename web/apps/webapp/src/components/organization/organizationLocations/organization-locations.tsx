@@ -1,6 +1,6 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
+import { getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { NewLocationButton } from '@/components/location/addLocation';
-import { getModernOrganizationLocationSetupBaseLink } from '@/components/organization';
 import { CustomTagSelector } from '@/components/organization/customTagSelector';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
 import type { organizationLocations_addCustomerDefaultLocationMutation } from '@/queries/__generated__/organizationLocations_addCustomerDefaultLocationMutation.graphql';
@@ -306,7 +306,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
     switch (id) {
       case MoreActionsMenuOptionType.EditLocation:
         if (locationDetails) {
-          router.push(getModernOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id));
+          router.push(getOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id));
         }
         break;
 

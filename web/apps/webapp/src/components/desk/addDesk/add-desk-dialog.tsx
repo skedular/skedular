@@ -37,7 +37,7 @@ import { array, object, string } from 'yup';
 type Props = {
   queryReference: PreloadedQuery<addDeskDialog_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
-  organizationId?: string;
+  organizationId: string;
   locationId?: string;
   connectionIds: string[];
   isDialogOpen: boolean;
@@ -242,7 +242,7 @@ const MemoAddDeskDialog = memo(AddDeskDialog);
 
 type RelayProps = {
   onReloadRequired?: () => void;
-  organizationId?: string;
+  organizationId: string;
   locationId?: string;
   connectionIds: string[];
   isDialogOpen: boolean;

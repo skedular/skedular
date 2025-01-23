@@ -28,7 +28,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultPadding } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { getModernOrganizationUsersBaseLink } from 'components/organization';
+import { getOrganizationUsersBaseLink } from 'components/links';
 import { TeamCard } from 'components/organization/organizationTeams';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -227,7 +227,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   }, [section]);
 
   const handleCloseClick = () => {
-    navigate(getModernOrganizationUsersBaseLink(organizationId));
+    navigate(getOrganizationUsersBaseLink(organizationId));
   };
 
   const handleProfileDetailUpdateClick = ({
@@ -408,7 +408,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
           render: <NotificationContent content={'User removed.'} />,
         });
 
-        navigate(getModernOrganizationUsersBaseLink(organizationId));
+        navigate(getOrganizationUsersBaseLink(organizationId));
       },
       onError: (error) => {
         toast.update(toastId, {

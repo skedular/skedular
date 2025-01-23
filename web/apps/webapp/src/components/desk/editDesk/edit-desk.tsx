@@ -35,7 +35,7 @@ import { array, object, string } from 'yup';
 type Props = {
   rootDataRelay: editDesk_query$key;
   onReloadRequired?: () => void;
-  organizationId?: string;
+  organizationId: string;
 };
 
 type DeskDetails = {

@@ -39,8 +39,8 @@ import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
+import { getOrganizationTeamSetupBaseLink } from 'components/links';
 import { LocationSelector } from 'components/location/locationSelector';
-import { getModernOrganizationTeamSetupBaseLink } from 'components/organization';
 import { NewTeamButton } from 'components/team/addTeam';
 import { nanoid } from 'nanoid';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
@@ -235,7 +235,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
     switch (id) {
       case MoreActionsMenuOptionType.EditTeam:
         if (teamDetails) {
-          navigate(getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
+          navigate(getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
         }
 
         break;

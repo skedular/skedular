@@ -11,10 +11,8 @@ import { defaultPadding, emerald } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { AddDeskDialog } from 'components/desk/addDesk';
-import { getLocationAddLink } from 'components/location';
-import { getModernOrganizationLocationManageDesksBaseLink, getModernOrganizationUsersBaseLink } from 'components/organization';
+import { getLocationAddLink, getOrganizationLocationManageDesksBaseLink, getOrganizationUsersBaseLink, getTeamAddLink } from 'components/links';
 import { InvitePeopleToJoinOrganizationDialog } from 'components/organization/invitePeopleToJoinOrganization';
-import { getTeamAddLink } from 'components/team';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
@@ -62,7 +60,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
   const handleAddDeskClicked = (locationId: string) => {
     setIsAddDeskDialogOpen(false);
 
-    navigate(getModernOrganizationLocationManageDesksBaseLink(organizationId, locationId));
+    navigate(getOrganizationLocationManageDesksBaseLink(organizationId, locationId));
   };
 
   const handleCancelAddDeskClicked = () => {
@@ -76,7 +74,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
   const handleInvitePeopleToJoinOrganizationClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(false);
 
-    navigate(getModernOrganizationUsersBaseLink(organizationId));
+    navigate(getOrganizationUsersBaseLink(organizationId));
   };
 
   const handleInvitePeopleToJoinOrganizationCancelClicked = () => {

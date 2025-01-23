@@ -1,4 +1,4 @@
-import { getModernOrganizationBookingBaseLink } from '@/components/organization';
+import { getOrganizationBookingBaseLink } from '@/components/links';
 import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/myBookingCard_BookingDetails.graphql';
 import type { myBookingCard_deleteBookingMutation } from '@/queries/__generated__/myBookingCard_deleteBookingMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -141,7 +141,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
         if (bookingDetails) {
-          router.push(getModernOrganizationBookingBaseLink(organizationId, bookingDetails.id));
+          router.push(getOrganizationBookingBaseLink(organizationId, bookingDetails.id));
         }
 
         break;
@@ -221,7 +221,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
       <Card sx={{ width: { xs: '100%', sm: 315 } }}>
         <CardHeader
           title={
-            <Link component={NextLink} href={getModernOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
+            <Link component={NextLink} href={getOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
               <LeadIconTypography
                 startElement={<LocationIcon />}
                 label={bookingDetails.location?.name}

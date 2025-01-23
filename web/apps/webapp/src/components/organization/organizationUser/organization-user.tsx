@@ -1,4 +1,4 @@
-import { getModernOrganizationUsersBaseLink } from '@/components/organization';
+import { getOrganizationUsersBaseLink } from '@/components/links';
 import { TeamCard } from '@/components/organization/organizationTeams';
 import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
 import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
@@ -226,7 +226,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   }, [section]);
 
   const handleCloseClick = () => {
-    router.push(getModernOrganizationUsersBaseLink(organizationId));
+    router.push(getOrganizationUsersBaseLink(organizationId));
   };
 
   const handleProfileDetailUpdateClick = ({
@@ -407,7 +407,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
           render: <NotificationContent content={'User removed.'} />,
         });
 
-        router.push(getModernOrganizationUsersBaseLink(organizationId));
+        router.push(getOrganizationUsersBaseLink(organizationId));
       },
       onError: (error) => {
         toast.update(toastId, {

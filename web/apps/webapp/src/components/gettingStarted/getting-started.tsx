@@ -1,8 +1,6 @@
 import { AddDeskDialog } from '@/components/desk/addDesk';
-import { getLocationAddLink } from '@/components/location';
-import { getModernOrganizationLocationManageDesksBaseLink, getModernOrganizationUsersBaseLink } from '@/components/organization';
+import { getLocationAddLink, getOrganizationLocationManageDesksBaseLink, getOrganizationUsersBaseLink, getTeamAddLink } from '@/components/links';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
-import { getTeamAddLink } from '@/components/team';
 import type { gettingStarted_completeOrganizationMemberOnboardingMutation } from '@/queries/__generated__/gettingStarted_completeOrganizationMemberOnboardingMutation.graphql';
 import type { gettingStarted_query$key } from '@/queries/__generated__/gettingStarted_query.graphql';
 import Box from '@mui/material/Box';
@@ -62,7 +60,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
   const handleAddDeskClicked = (locationId: string) => {
     setIsAddDeskDialogOpen(false);
 
-    router.push(getModernOrganizationLocationManageDesksBaseLink(organizationId, locationId));
+    router.push(getOrganizationLocationManageDesksBaseLink(organizationId, locationId));
   };
 
   const handleCancelAddDeskClicked = () => {
@@ -76,7 +74,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
   const handleInvitePeopleToJoinOrganizationClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(false);
 
-    router.push(getModernOrganizationUsersBaseLink(organizationId));
+    router.push(getOrganizationUsersBaseLink(organizationId));
   };
 
   const handleInvitePeopleToJoinOrganizationCancelClicked = () => {

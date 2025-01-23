@@ -1,4 +1,4 @@
-import { getModernOrganizationTeamSetupBaseLink } from '@/components/organization';
+import { getOrganizationTeamSetupBaseLink } from '@/components/links';
 import type { teamCard_addCustomerDefaultTeamMutation } from '@/queries/__generated__/teamCard_addCustomerDefaultTeamMutation.graphql';
 import type { teamCard_deleteTeamMutation } from '@/queries/__generated__/teamCard_deleteTeamMutation.graphql';
 import type { teamCard_query$key } from '@/queries/__generated__/teamCard_query.graphql';
@@ -161,7 +161,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam]);
   }
 
-  const editLink = getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id);
+  const editLink = getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);

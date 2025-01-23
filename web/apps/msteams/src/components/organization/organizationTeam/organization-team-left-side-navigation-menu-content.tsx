@@ -6,11 +6,7 @@ import { BodyIconTypography } from '@repo/shared/components/commons';
 import { EditIcon, MembersIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
-import {
-  getModernOrganizationTeamLocationBaseLink,
-  getModernOrganizationTeamMembersBaseLink,
-  getModernOrganizationTeamSetupBaseLink,
-} from 'components/organization';
+import { getOrganizationTeamLocationBaseLink, getOrganizationTeamMembersBaseLink, getOrganizationTeamSetupBaseLink } from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
@@ -58,9 +54,9 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getModernOrganizationTeamSetupBaseLink(organizationId, teamId);
-  const locationLink = getModernOrganizationTeamLocationBaseLink(organizationId, teamId);
-  const memberesLink = getModernOrganizationTeamMembersBaseLink(organizationId, teamId);
+  const setupLink = getOrganizationTeamSetupBaseLink(organizationId, teamId);
+  const locationLink = getOrganizationTeamLocationBaseLink(organizationId, teamId);
+  const memberesLink = getOrganizationTeamMembersBaseLink(organizationId, teamId);
 
   return (
     <List

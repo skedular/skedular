@@ -1,6 +1,6 @@
 import { NewFeedbackDialog } from '@/components/feedback';
+import { getNotificationsBaseLink, getOrganizationAddLink, getOrganizationBaseLink } from '@/components/links';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { getNotificationsBaseLink, getOrganizationAddLink, getOrganizationBaseLink } from '@/components/organization/organization-link';
 import { SelectedOrganizationContext, UpdateSelectedOrganizationContext } from '@/libs/providers';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';

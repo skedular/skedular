@@ -6,11 +6,7 @@ import { BodyIconTypography } from '@repo/shared/components/commons';
 import { EditIcon, ProfileIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
-import {
-  getModernOrganizationUserManageBaseLink,
-  getModernOrganizationUserManageTeamsBaseLink,
-  getModernOrganizationUserProfileBaseLink,
-} from 'components/organization';
+import { getOrganizationUserManageBaseLink, getOrganizationUserManageTeamsBaseLink, getOrganizationUserProfileBaseLink } from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
@@ -58,9 +54,9 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ organizationId, custome
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const porofileLink = getModernOrganizationUserProfileBaseLink(organizationId, customerId);
-  const manageTeamsLink = getModernOrganizationUserManageTeamsBaseLink(organizationId, customerId);
-  const manageUserLink = getModernOrganizationUserManageBaseLink(organizationId, customerId);
+  const porofileLink = getOrganizationUserProfileBaseLink(organizationId, customerId);
+  const manageTeamsLink = getOrganizationUserManageTeamsBaseLink(organizationId, customerId);
+  const manageUserLink = getOrganizationUserManageBaseLink(organizationId, customerId);
 
   return (
     <List

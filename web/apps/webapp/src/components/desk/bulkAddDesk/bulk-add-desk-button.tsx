@@ -6,7 +6,7 @@ import BulkAddDeskDialog from './bulk-add-desk-dialog';
 
 type Props = {
   onReloadRequired?: () => void;
-  organizationId?: string;
+  organizationId: string;
   locationId: string;
   connectionIds: string[];
   fullWidth?: boolean;

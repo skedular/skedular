@@ -1,11 +1,11 @@
-import { getTeamAddLink } from '@/components/team';
+import { getTeamAddLink } from '@/components/links';
 import Button from '@mui/material/Button';
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
 import { NewIcon } from '@repo/shared/components/icons';
 import { memo } from 'react';
 
 type Props = {
-  organizationId?: string;
+  organizationId: string;
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;

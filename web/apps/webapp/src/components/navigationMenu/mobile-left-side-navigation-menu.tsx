@@ -1,4 +1,4 @@
-import { getNotificationsBaseLink, getOrganizationAddLink } from '@/components/organization/organization-link';
+import { getNotificationsBaseLink, getOrganizationAddLink } from '@/components/links';
 import type { mobileLeftSideNavigationMenu_query$key } from '@/queries/__generated__/mobileLeftSideNavigationMenu_query.graphql';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import { usePathname } from 'next/navigation';

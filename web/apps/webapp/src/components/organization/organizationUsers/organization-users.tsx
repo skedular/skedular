@@ -1,4 +1,4 @@
-import { getModernOrganizationUserProfileBaseLink, getOrganizationBaseLink } from '@/components/organization';
+import { getOrganizationBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import { TeamSelector } from '@/components/team/teamSelector';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
@@ -415,7 +415,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        router.push(getModernOrganizationUserProfileBaseLink(organizationId, memberDetails.customer.uniqueId));
+        router.push(getOrganizationUserProfileBaseLink(organizationId, memberDetails.customer.uniqueId));
         break;
 
       case MoreActionsMenuOptionType.DeactivateOrganizationUser:

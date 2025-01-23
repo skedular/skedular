@@ -41,7 +41,7 @@ import { array, object, string } from 'yup';
 type Props = {
   queryReference: PreloadedQuery<addTeam_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
   onAdded: (teamId: string) => void;
   onCancel: () => void;
   addLabel?: string;
@@ -306,7 +306,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
 const MemoAddTeam = memo(AddTeam);
 
 type RelayProps = {
-  organizationId?: string;
+  organizationId: string;
   onReloadRequired: () => void;
   onAdded: (teamId: string) => void;
   onCancel: () => void;

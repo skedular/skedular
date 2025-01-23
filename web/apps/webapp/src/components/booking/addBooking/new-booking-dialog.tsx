@@ -48,7 +48,7 @@ type Props = {
   isDialogOpen: boolean;
   onAddClicked: () => void;
   onCancel: () => void;
-  organizationId?: string;
+  organizationId: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
 };

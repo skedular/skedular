@@ -15,7 +15,7 @@
     "@eventcatalog/core": "2.19.3"
   },
   "devDependencies": {
-    "@astrojs/mdx": "^4.0.6",
+    "@astrojs/mdx": "^4.0.7",
     "@parcel/watcher": "2.5.0",
     "@types/lodash.merge": "4.6.9",
     "concurrently": "9.1.2",

@@ -50,7 +50,7 @@ type Props = {
   rootDataTeamsRelay: editBooking_customerTeams_query$key;
   rootDataAvailableLocationDesksRelay: editBooking_availableLocationDesks_query$key;
   onReloadRequired?: () => void;
-  organizationId?: string;
+  organizationId: string;
 };
 
 type CustomerDetails = {

@@ -40,7 +40,7 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { AddDeskButton } from 'components/desk/addDesk';
 import { BulkAddDeskButton } from 'components/desk/bulkAddDesk';
-import { getModernOrganizationLocationDeskBaseLink, getModernOrganizationLocationsBaseLink } from 'components/organization';
+import { getOrganizationLocationDeskBaseLink, getOrganizationLocationsBaseLink } from 'components/links';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
@@ -396,7 +396,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   };
 
   const handleCloseClick = () => {
-    navigate(getModernOrganizationLocationsBaseLink(organizationId));
+    navigate(getOrganizationLocationsBaseLink(organizationId));
   };
 
   const handleDeskNameSearchTextChange = (str: string) => {
@@ -429,7 +429,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     switch (id) {
       case MoreActionsMenuOptionType.EditDesk:
         if (deskDetails) {
-          navigate(getModernOrganizationLocationDeskBaseLink(organizationId, locationId, deskDetails.id));
+          navigate(getOrganizationLocationDeskBaseLink(organizationId, locationId, deskDetails.id));
           return;
         }
 

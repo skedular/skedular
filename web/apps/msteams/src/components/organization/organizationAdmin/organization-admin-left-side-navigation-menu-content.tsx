@@ -7,13 +7,13 @@ import { BillingAndPaymentIcon, CustomTagIcon, EditIcon, SSOIcon, SubscriptionsI
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
 import {
-  getModernOrganizationAdminBillingAndPaymentBaseLink,
-  getModernOrganizationAdminCustomTagsBaseLink,
-  getModernOrganizationAdminSetupBaseLink,
-  getModernOrganizationAdminSSOBaseLink,
-  getModernOrganizationAdminSubscriptionsBaseLink,
-  getModernOrganizationAdminZonesBaseLink,
-} from 'components/organization';
+  getOrganizationAdminBillingAndPaymentBaseLink,
+  getOrganizationAdminCustomTagsBaseLink,
+  getOrganizationAdminSetupBaseLink,
+  getOrganizationAdminSSOBaseLink,
+  getOrganizationAdminSubscriptionsBaseLink,
+  getOrganizationAdminZonesBaseLink,
+} from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
@@ -60,12 +60,12 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getModernOrganizationAdminSetupBaseLink(organizationId);
-  const billingAndPaymentLink = getModernOrganizationAdminBillingAndPaymentBaseLink(organizationId);
-  const ssoLink = getModernOrganizationAdminSSOBaseLink(organizationId);
-  const zonesLink = getModernOrganizationAdminZonesBaseLink(organizationId);
-  const customTagsLink = getModernOrganizationAdminCustomTagsBaseLink(organizationId);
-  const subscriptionsLink = getModernOrganizationAdminSubscriptionsBaseLink(organizationId);
+  const setupLink = getOrganizationAdminSetupBaseLink(organizationId);
+  const billingAndPaymentLink = getOrganizationAdminBillingAndPaymentBaseLink(organizationId);
+  const ssoLink = getOrganizationAdminSSOBaseLink(organizationId);
+  const zonesLink = getOrganizationAdminZonesBaseLink(organizationId);
+  const customTagsLink = getOrganizationAdminCustomTagsBaseLink(organizationId);
+  const subscriptionsLink = getOrganizationAdminSubscriptionsBaseLink(organizationId);
 
   return (
     <List

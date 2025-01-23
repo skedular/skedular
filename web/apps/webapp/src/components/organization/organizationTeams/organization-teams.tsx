@@ -1,5 +1,5 @@
+import { getOrganizationTeamSetupBaseLink } from '@/components/links';
 import { LocationSelector } from '@/components/location/locationSelector';
-import { getModernOrganizationTeamSetupBaseLink } from '@/components/organization';
 import { NewTeamButton } from '@/components/team/addTeam';
 import type { organizationTeams_addCustomerDefaultTeamMutation } from '@/queries/__generated__/organizationTeams_addCustomerDefaultTeamMutation.graphql';
 import type { organizationTeams_deleteTeamMutation } from '@/queries/__generated__/organizationTeams_deleteTeamMutation.graphql';
@@ -235,7 +235,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
     switch (id) {
       case MoreActionsMenuOptionType.EditTeam:
         if (teamDetails) {
-          router.push(getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
+          router.push(getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
         }
 
         break;

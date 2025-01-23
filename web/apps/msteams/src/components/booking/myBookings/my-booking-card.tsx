@@ -27,7 +27,7 @@ import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/li
 import { coal, sandstone } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { getModernOrganizationBookingBaseLink } from 'components/organization';
+import { getOrganizationBookingBaseLink } from 'components/links';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useState } from 'react';
@@ -141,7 +141,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
         if (bookingDetails) {
-          navigate(getModernOrganizationBookingBaseLink(organizationId, bookingDetails.id));
+          navigate(getOrganizationBookingBaseLink(organizationId, bookingDetails.id));
         }
         break;
 
@@ -220,7 +220,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
       <Card sx={{ width: { xs: '100%', sm: 315 } }}>
         <CardHeader
           title={
-            <Link href={getModernOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
+            <Link href={getOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
               <LeadIconTypography
                 startElement={<LocationIcon />}
                 label={bookingDetails.location?.name}

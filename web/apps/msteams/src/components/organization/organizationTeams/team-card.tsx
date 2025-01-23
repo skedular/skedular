@@ -35,7 +35,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, sandstone } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { getModernOrganizationTeamSetupBaseLink } from 'components/organization';
+import { getOrganizationTeamSetupBaseLink } from 'components/links';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
@@ -160,7 +160,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam]);
   }
 
-  const editLink = getModernOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id);
+  const editLink = getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);

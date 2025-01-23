@@ -1,4 +1,4 @@
-import { getModernOrganizationBookingBaseLink } from '@/components/organization';
+import { getOrganizationBookingBaseLink } from '@/components/links';
 import type { myBookings_bookings_query$key } from '@/queries/__generated__/myBookings_bookings_query.graphql';
 import type { myBookings_bookings_refetchableFragment } from '@/queries/__generated__/myBookings_bookings_refetchableFragment.graphql';
 import type { myBookings_deleteBookingMutation } from '@/queries/__generated__/myBookings_deleteBookingMutation.graphql';
@@ -255,7 +255,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        router.push(getModernOrganizationBookingBaseLink(organizationId, bookingId));
+        router.push(getOrganizationBookingBaseLink(organizationId, bookingId));
 
         break;
 

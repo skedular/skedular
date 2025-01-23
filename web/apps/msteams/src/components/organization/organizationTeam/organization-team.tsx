@@ -39,8 +39,8 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
+import { getOrganizationTeamsBaseLink } from 'components/links';
 import { SingleChoiceLocation } from 'components/location/locationSelector';
-import { getModernOrganizationTeamsBaseLink } from 'components/organization';
 import { AddOrganizationTeamMemberButton } from 'components/organization/addOrganizationTeamMember';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -373,7 +373,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleCloseClick = () => {
-    navigate(getModernOrganizationTeamsBaseLink(organizationId));
+    navigate(getOrganizationTeamsBaseLink(organizationId));
   };
 
   const handleDeactivateMembersClick = () => {

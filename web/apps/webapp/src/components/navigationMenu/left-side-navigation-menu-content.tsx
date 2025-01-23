@@ -1,14 +1,14 @@
-import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import {
-  getModernOrganizationAdminSetupBaseLink,
-  getModernOrganizationAdminSubscriptionsBaseLink,
-  getModernOrganizationAnalyticsBaseLink,
-  getModernOrganizationBookingsBaseLink,
-  getModernOrganizationLocationsBaseLink,
-  getModernOrganizationTeamsBaseLink,
-  getModernOrganizationUsersBaseLink,
+  getOrganizationAdminSetupBaseLink,
+  getOrganizationAdminSubscriptionsBaseLink,
+  getOrganizationAnalyticsBaseLink,
   getOrganizationBaseLink,
-} from '@/components/organization/organization-link';
+  getOrganizationBookingsBaseLink,
+  getOrganizationLocationsBaseLink,
+  getOrganizationTeamsBaseLink,
+  getOrganizationUsersBaseLink,
+} from '@/components/links';
+import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import type { leftSideNavigationMenuContent_query$key } from '@/queries/__generated__/leftSideNavigationMenuContent_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -133,12 +133,12 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   }
 
   const organizationBaseLink = getOrganizationBaseLink(rootData.organization.id);
-  const organizationBookingsBaseLink = getModernOrganizationBookingsBaseLink(rootData.organization.id);
-  const organizationLocationsBaseLink = getModernOrganizationLocationsBaseLink(rootData.organization.id);
-  const organizationTeamsBaseLink = getModernOrganizationTeamsBaseLink(rootData.organization.id);
-  const organizationMembersBaseLink = getModernOrganizationUsersBaseLink(rootData.organization.id);
-  const organizationAnalyticsSetupBaseLink = getModernOrganizationAnalyticsBaseLink(rootData.organization.id);
-  const organizationAdminSetupBaseLink = getModernOrganizationAdminSetupBaseLink(rootData.organization.id);
+  const organizationBookingsBaseLink = getOrganizationBookingsBaseLink(rootData.organization.id);
+  const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(rootData.organization.id);
+  const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(rootData.organization.id);
+  const organizationMembersBaseLink = getOrganizationUsersBaseLink(rootData.organization.id);
+  const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(rootData.organization.id);
+  const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(rootData.organization.id);
 
   return (
     <>
@@ -351,7 +351,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                 rootData.organization.activeOffering.free &&
                 !rootData.organization.activeOffering.earlyBird && (
                   <Button
-                    href={getModernOrganizationAdminSubscriptionsBaseLink(finalOrganizationId)}
+                    href={getOrganizationAdminSubscriptionsBaseLink(finalOrganizationId)}
                     variant="contained"
                     color="secondary"
                     sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}

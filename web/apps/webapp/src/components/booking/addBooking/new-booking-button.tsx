@@ -16,7 +16,7 @@ type Props = {
   queryReference: PreloadedQuery<newBookingButton_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
   connectionIds?: string[];
-  organizationId?: string;
+  organizationId: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
   fullWidth?: boolean;
@@ -114,7 +114,7 @@ const MemoNewBookingButton = memo(NewBookingButton);
 type RelayProps = {
   onReloadRequired?: () => void;
   connectionIds?: string[];
-  organizationId?: string;
+  organizationId: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
   fullWidth?: boolean;

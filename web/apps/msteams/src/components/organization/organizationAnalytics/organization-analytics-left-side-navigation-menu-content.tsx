@@ -6,7 +6,7 @@ import { BodyIconTypography } from '@repo/shared/components/commons';
 import { LocationIcon, OrganizationIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
-import { getModernOrganizationAnalyticsBaseLink, getModernOrganizationLocationsAnalyticsLocationsBaseLink } from 'components/organization';
+import { getOrganizationAnalyticsBaseLink, getOrganizationLocationsAnalyticsLocationsBaseLink } from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
@@ -53,8 +53,8 @@ const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationId, co
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const organizatinAnalyticsLink = getModernOrganizationAnalyticsBaseLink(organizationId);
-  const locationsAnalyticsLink = getModernOrganizationLocationsAnalyticsLocationsBaseLink(organizationId);
+  const organizatinAnalyticsLink = getOrganizationAnalyticsBaseLink(organizationId);
+  const locationsAnalyticsLink = getOrganizationLocationsAnalyticsLocationsBaseLink(organizationId);
 
   return (
     <List

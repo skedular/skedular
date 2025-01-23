@@ -42,8 +42,8 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import { NewBookingButton } from 'components/booking/addBooking';
+import { getOrganizationLocationSetupBaseLink } from 'components/links';
 import { NewLocationButton } from 'components/location/addLocation';
-import { getModernOrganizationLocationSetupBaseLink } from 'components/organization';
 import { CustomTagSelector } from 'components/organization/customTagSelector';
 import { ZoneSelector } from 'components/organization/zoneSelector';
 import { nanoid } from 'nanoid';
@@ -306,7 +306,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
     switch (id) {
       case MoreActionsMenuOptionType.EditLocation:
         if (locationDetails) {
-          navigate(getModernOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id));
+          navigate(getOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id));
         }
         break;
 

@@ -33,7 +33,7 @@ import { object, string } from 'yup';
 
 type Props = {
   onReloadRequired: () => void;
-  organizationId?: string;
+  organizationId: string;
   onAdded: (locationId: string) => void;
   onCancel: () => void;
   addLabel?: string;

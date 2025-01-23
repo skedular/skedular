@@ -6,7 +6,7 @@ import { BodyIconTypography } from '@repo/shared/components/commons';
 import { EditIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
-import { getModernOrganizationLocationSetupBaseLink } from 'components/organization';
+import { getOrganizationLocationSetupBaseLink } from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
@@ -54,7 +54,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getModernOrganizationLocationSetupBaseLink(organizationId, locationId);
+  const setupLink = getOrganizationLocationSetupBaseLink(organizationId, locationId);
 
   return (
     <List

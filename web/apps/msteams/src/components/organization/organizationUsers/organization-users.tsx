@@ -39,7 +39,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { getModernOrganizationUserProfileBaseLink, getOrganizationBaseLink } from 'components/organization';
+import { getOrganizationBaseLink, getOrganizationUserProfileBaseLink } from 'components/links';
 import { InvitePeopleToJoinOrganizationButton } from 'components/organization/invitePeopleToJoinOrganization';
 import { TeamSelector } from 'components/team/teamSelector';
 import { nanoid } from 'nanoid';
@@ -416,7 +416,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
           return;
         }
 
-        navigate(getModernOrganizationUserProfileBaseLink(organizationId, memberDetails.customer.uniqueId));
+        navigate(getOrganizationUserProfileBaseLink(organizationId, memberDetails.customer.uniqueId));
         break;
 
       case MoreActionsMenuOptionType.DeactivateOrganizationUser:

@@ -6,7 +6,7 @@ import { BodyIconTypography } from '@repo/shared/components/commons';
 import { MembersIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
-import { getModernOrganizationUsersBaseLink } from 'components/organization';
+import { getOrganizationUsersBaseLink } from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
@@ -44,7 +44,7 @@ const OrganizationUsersLeftSideNavigationMenuContent = ({ organizationId, collap
     ...selectedListItemPaddings,
   };
 
-  const memberesLink = getModernOrganizationUsersBaseLink(organizationId);
+  const memberesLink = getOrganizationUsersBaseLink(organizationId);
 
   return (
     <List

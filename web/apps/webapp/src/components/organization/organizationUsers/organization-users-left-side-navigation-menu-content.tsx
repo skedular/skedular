@@ -1,4 +1,4 @@
-import { getModernOrganizationUsersBaseLink } from '@/components/organization';
+import { getOrganizationUsersBaseLink } from '@/components/links';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -51,7 +51,7 @@ const OrganizationUsersLeftSideNavigationMenuContent = ({ organizationId, collap
     },
   };
 
-  const memberesLink = getModernOrganizationUsersBaseLink(organizationId);
+  const memberesLink = getOrganizationUsersBaseLink(organizationId);
 
   return (
     <List

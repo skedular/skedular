@@ -36,7 +36,7 @@ import type { editDesk_updateDeskMutation } from './__generated__/editDesk_updat
 type Props = {
   rootDataRelay: editDesk_query$key;
   onReloadRequired?: () => void;
-  organizationId?: string;
+  organizationId: string;
 };
 
 type DeskDetails = {

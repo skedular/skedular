@@ -10,7 +10,7 @@ import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   rootDataRelay: organizationMemberSelector_query$key;
-  organizationId?: string;
+  organizationId: string;
   name: string;
   required?: boolean;
   readOnly?: boolean;

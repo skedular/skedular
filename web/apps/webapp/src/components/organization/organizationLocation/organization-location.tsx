@@ -1,6 +1,6 @@
 import { AddDeskButton } from '@/components/desk/addDesk';
 import { BulkAddDeskButton } from '@/components/desk/bulkAddDesk';
-import { getModernOrganizationLocationDeskBaseLink, getModernOrganizationLocationsBaseLink } from '@/components/organization';
+import { getOrganizationLocationDeskBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import type { organizationLocation_activateDesksMutation } from '@/queries/__generated__/organizationLocation_activateDesksMutation.graphql';
 import type { organizationLocation_addCustomerDefaultDeskMutation } from '@/queries/__generated__/organizationLocation_addCustomerDefaultDeskMutation.graphql';
 import type { organizationLocation_deactivateDesksMutation } from '@/queries/__generated__/organizationLocation_deactivateDesksMutation.graphql';
@@ -395,7 +395,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   };
 
   const handleCloseClick = () => {
-    router.push(getModernOrganizationLocationsBaseLink(organizationId));
+    router.push(getOrganizationLocationsBaseLink(organizationId));
   };
 
   const handleDeskNameSearchTextChange = (str: string) => {
@@ -428,7 +428,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     switch (id) {
       case MoreActionsMenuOptionType.EditDesk:
         if (deskDetails) {
-          router.push(getModernOrganizationLocationDeskBaseLink(organizationId, locationId, deskDetails.id));
+          router.push(getOrganizationLocationDeskBaseLink(organizationId, locationId, deskDetails.id));
           return;
         }
 

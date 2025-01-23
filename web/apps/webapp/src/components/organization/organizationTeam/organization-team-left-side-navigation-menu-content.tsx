@@ -1,8 +1,4 @@
-import {
-  getModernOrganizationTeamLocationBaseLink,
-  getModernOrganizationTeamMembersBaseLink,
-  getModernOrganizationTeamSetupBaseLink,
-} from '@/components/organization';
+import { getOrganizationTeamLocationBaseLink, getOrganizationTeamMembersBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -58,9 +54,9 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getModernOrganizationTeamSetupBaseLink(organizationId, teamId);
-  const locationLink = getModernOrganizationTeamLocationBaseLink(organizationId, teamId);
-  const memberesLink = getModernOrganizationTeamMembersBaseLink(organizationId, teamId);
+  const setupLink = getOrganizationTeamSetupBaseLink(organizationId, teamId);
+  const locationLink = getOrganizationTeamLocationBaseLink(organizationId, teamId);
+  const memberesLink = getOrganizationTeamMembersBaseLink(organizationId, teamId);
 
   return (
     <List

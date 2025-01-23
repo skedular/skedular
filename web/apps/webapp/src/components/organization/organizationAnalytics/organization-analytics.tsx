@@ -1,7 +1,7 @@
+import { getOrganizationBaseLink } from '@/components/links';
 import { LocationBookingInsightRoot } from '@/components/location/locationBookingInsight';
 import { LocationDeskOccupancyInsightRoot } from '@/components/location/locationDeskOccupancyInsight';
 import { LocationSelector } from '@/components/location/locationSelector';
-import { getOrganizationBaseLink } from '@/components/organization';
 import { OrganizationBookingInsightRoot } from '@/components/organization/organizationBookingInsight';
 import { OrganizationMemberAttendancyInsightRoot } from '@/components/organization/organizationMemberAttendancyInsight';
 import type { organizationAnalytics_query$key } from '@/queries/__generated__/organizationAnalytics_query.graphql';

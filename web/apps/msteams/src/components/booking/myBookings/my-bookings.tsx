@@ -26,7 +26,7 @@ import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/li
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { getModernOrganizationBookingBaseLink } from 'components/organization';
+import { getOrganizationBookingBaseLink } from 'components/links';
 import dayjs, { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, startTransition, useCallback, useContext, useEffect, useMemo, useState } from 'react';
@@ -256,7 +256,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        navigate(getModernOrganizationBookingBaseLink(organizationId, bookingId));
+        navigate(getOrganizationBookingBaseLink(organizationId, bookingId));
 
         break;
 

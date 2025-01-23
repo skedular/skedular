@@ -1,5 +1,5 @@
+import { getOrganizationTeamsBaseLink } from '@/components/links';
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
-import { getModernOrganizationTeamsBaseLink } from '@/components/organization';
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
 import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
 import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
@@ -372,7 +372,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleCloseClick = () => {
-    router.push(getModernOrganizationTeamsBaseLink(organizationId));
+    router.push(getOrganizationTeamsBaseLink(organizationId));
   };
 
   const handleDeactivateMembersClick = () => {

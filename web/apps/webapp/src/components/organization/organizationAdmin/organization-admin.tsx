@@ -1,4 +1,5 @@
-import { getOrganizationBaseLink, OrganizationMultipleChoicesIndustries } from '@/components/organization';
+import { getOrganizationBaseLink } from '@/components/links';
+import { OrganizationMultipleChoicesIndustries } from '@/components/organization';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';

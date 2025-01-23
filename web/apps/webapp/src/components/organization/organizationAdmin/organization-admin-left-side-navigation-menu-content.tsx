@@ -1,11 +1,11 @@
 import {
-  getModernOrganizationAdminBillingAndPaymentBaseLink,
-  getModernOrganizationAdminCustomTagsBaseLink,
-  getModernOrganizationAdminSetupBaseLink,
-  getModernOrganizationAdminSSOBaseLink,
-  getModernOrganizationAdminSubscriptionsBaseLink,
-  getModernOrganizationAdminZonesBaseLink,
-} from '@/components/organization';
+  getOrganizationAdminBillingAndPaymentBaseLink,
+  getOrganizationAdminCustomTagsBaseLink,
+  getOrganizationAdminSetupBaseLink,
+  getOrganizationAdminSSOBaseLink,
+  getOrganizationAdminSubscriptionsBaseLink,
+  getOrganizationAdminZonesBaseLink,
+} from '@/components/links';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -60,12 +60,12 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getModernOrganizationAdminSetupBaseLink(organizationId);
-  const billingAndPaymentLink = getModernOrganizationAdminBillingAndPaymentBaseLink(organizationId);
-  const ssoLink = getModernOrganizationAdminSSOBaseLink(organizationId);
-  const zonesLink = getModernOrganizationAdminZonesBaseLink(organizationId);
-  const customTagsLink = getModernOrganizationAdminCustomTagsBaseLink(organizationId);
-  const subscriptionsLink = getModernOrganizationAdminSubscriptionsBaseLink(organizationId);
+  const setupLink = getOrganizationAdminSetupBaseLink(organizationId);
+  const billingAndPaymentLink = getOrganizationAdminBillingAndPaymentBaseLink(organizationId);
+  const ssoLink = getOrganizationAdminSSOBaseLink(organizationId);
+  const zonesLink = getOrganizationAdminZonesBaseLink(organizationId);
+  const customTagsLink = getOrganizationAdminCustomTagsBaseLink(organizationId);
+  const subscriptionsLink = getOrganizationAdminSubscriptionsBaseLink(organizationId);
 
   return (
     <List
