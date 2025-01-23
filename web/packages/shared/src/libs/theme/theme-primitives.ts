@@ -71,16 +71,16 @@ export const warning = {
 
 // flame
 export const error = {
-  50: 'hsl(15, 98%, 71%)',
-  100: 'hsl(15, 98%, 71%)',
-  200: 'hsl(15, 98%, 71%)',
-  300: 'hsl(15, 98%, 71%)',
-  400: 'hsl(15, 98%, 71%)',
-  500: 'hsl(15, 98%, 71%)',
-  600: 'hsl(15, 98%, 71%)',
-  700: 'hsl(15, 98%, 71%)',
-  800: 'hsl(15, 98%, 71%)',
-  900: 'hsl(15, 98%, 71%)',
+  50: 'hsl(0, 60%, 50%)',
+  100: 'hsl(0, 60%, 50%)',
+  200: 'hsl(0, 60%, 50%)',
+  300: 'hsl(0, 60%, 50%)',
+  400: 'hsl(0, 60%, 50%)',
+  500: 'hsl(0, 60%, 50%)',
+  600: 'hsl(0, 60%, 50%)',
+  700: 'hsl(0, 60%, 50%)',
+  800: 'hsl(0, 60%, 50%)',
+  900: 'hsl(0, 60%, 50%)',
 };
 
 const getDesignTokens = (mode: PaletteMode) => {
@@ -112,6 +112,11 @@ const getDesignTokens = (mode: PaletteMode) => {
           main: brand2[500],
           dark: brand2[700],
         }),
+      },
+      warning: {
+        main: error[500],
+        light: error[300],
+        dark: error[700],
       },
       grey: {
         ...(mode === 'dark' ? brand2 : gray),
