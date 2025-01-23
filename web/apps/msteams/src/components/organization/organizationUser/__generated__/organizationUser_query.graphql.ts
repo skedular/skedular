@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<49c2bb2cfaf4d809a3670891d27f503d>>
+ * @generated SignedSource<<afc664cf8686afc7bba75fa56c49c1cc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -52,6 +52,9 @@ export type organizationUser_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
+  } | null | undefined;
+  readonly me: {
+    readonly id: string;
   } | null | undefined;
   readonly organizationMembers: {
     readonly __id: string;
@@ -197,6 +200,18 @@ return {
   },
   "name": "organizationUser_query",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CustomerDetails",
+      "kind": "LinkedField",
+      "name": "me",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/)
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": [
@@ -458,6 +473,6 @@ return {
 };
 })();
 
-(node as any).hash = "f82139f27faa6fe9d993427f2ffe2c69";
+(node as any).hash = "fd67b73869eec124367a0485f28fa768";
 
 export default node;

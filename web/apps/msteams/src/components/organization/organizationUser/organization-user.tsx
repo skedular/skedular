@@ -78,6 +78,9 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   const rootData = useFragment<organizationUser_query$key>(
     graphql`
       fragment organizationUser_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
+        me {
+          id
+        }
         customer(id: $customerId) {
           id
           email
@@ -492,13 +495,15 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
                   </FormFieldLabel>
                 </StackColumn>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <StackRow>
-                    <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
-                      <SmallIconTypography label="Update" />
-                    </Button>
-                  </StackRow>
-                </StackColumn>
+                {rootData.customer?.id === rootData.me?.id && (
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      <Button variant="contained" color="primary" type="submit" sx={{ textTransform: 'none' }}>
+                        <SmallIconTypography label="Update" />
+                      </Button>
+                    </StackRow>
+                  </StackColumn>
+                )}
               </FormStackColumn>
             )}
           />
