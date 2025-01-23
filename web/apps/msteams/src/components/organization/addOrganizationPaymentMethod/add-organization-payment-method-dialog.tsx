@@ -84,7 +84,7 @@ const AddOrganizationPaymentMethodDialog = ({ organizationId, isDialogOpen, onCa
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Add Payment Method" />
-      <DialogContent>
+      <DialogContent sx={{ marginTop: 2 }}>
         {addNewPaymentMethodState === AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET && <CircularProgress />}
         {addNewPaymentMethodState === AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_DETAILS && stripePromise && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>

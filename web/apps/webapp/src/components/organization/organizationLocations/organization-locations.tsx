@@ -706,7 +706,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
       {locationDetails && (
         <Dialog slots={{ transition: DialogTransition }} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
           <DefaultDialogTitle title="Remove Location" />
-          <DialogContent>
+          <DialogContent sx={{ marginTop: 2 }}>
             <DialogContentText>
               {locationDetails.hasFutureBooking
                 ? `Bookings are scheduled for the location "${locationDetails.name}". Are you sure you want to remove it?`

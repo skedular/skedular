@@ -145,7 +145,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Add Desk" />
-      <DialogContent>
+      <DialogContent sx={{ marginTop: 2 }}>
         <Form
           onSubmit={handleAddClick}
           initialValues={{

@@ -106,7 +106,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Send us feedback" />
-      <DialogContent>
+      <DialogContent sx={{ marginTop: 2 }}>
         <Form
           onSubmit={handleSubmitFeedbackClick}
           initialValues={{

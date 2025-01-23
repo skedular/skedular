@@ -117,7 +117,7 @@ const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCance
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Add Tag" />
-      <DialogContent>
+      <DialogContent sx={{ marginTop: 2 }}>
         <Form
           onSubmit={handleAddClick}
           initialValues={{

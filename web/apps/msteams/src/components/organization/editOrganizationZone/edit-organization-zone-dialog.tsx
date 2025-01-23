@@ -150,7 +150,7 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Edit Zone" />
-      <DialogContent>
+      <DialogContent sx={{ marginTop: 2 }}>
         <Form
           onSubmit={handleAddClick}
           initialValues={{

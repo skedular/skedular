@@ -124,7 +124,7 @@ const AddOrganizationZoneDialog = ({ organizationId, connectionIds, isDialogOpen
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Add Zone" />
-      <DialogContent>
+      <DialogContent sx={{ marginTop: 2 }}>
         <Form
           onSubmit={handleAddClick}
           initialValues={{}}

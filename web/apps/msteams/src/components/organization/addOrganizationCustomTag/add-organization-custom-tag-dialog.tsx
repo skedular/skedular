@@ -125,7 +125,7 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
       <DefaultDialogTitle title="Add CustomTag" />
-      <DialogContent>
+      <DialogContent sx={{ marginTop: 2 }}>
         <Form
           onSubmit={handleAddClick}
           initialValues={{}}

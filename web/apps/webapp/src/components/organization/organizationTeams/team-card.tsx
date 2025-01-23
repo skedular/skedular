@@ -373,7 +373,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
 
       <Dialog slots={{ transition: DialogTransition }} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
         <DefaultDialogTitle title="Remove Team" />
-        <DialogContent>
+        <DialogContent sx={{ marginTop: 2 }}>
           <DialogContentText>
             {teamDetails.hasFutureBooking
               ? `Bookings are scheduled for the team "${teamDetails.name}". Are you sure you want to remove it?`
