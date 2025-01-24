@@ -18,30 +18,12 @@ import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import {
-  DefaultDialogTitle,
-  GridContainer,
-  PushToRight,
-  SectionIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  TwoButtonsDialogActions,
-} from '@repo/shared/components/commons';
+import { DefaultDialogTitle, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
-import {
-  MoreActionsMenu,
-  moreActionsMenuAllOptions,
-  MoreActionsMenuItemType,
-  MoreActionsMenuOptionType,
-} from '@repo/shared/components/moreActionsMenu';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { DialogTransition } from '@repo/shared/components/transitions';
@@ -108,12 +90,8 @@ const Teams = ({ queryReference, organizationId }: Props) => {
       fragment organizationTeams_teams_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationTeams_teams_refetchableFragment") {
-        teams(
-          first: $count
-          after: $cursor
-          where: { organizationId: $organizationId, primaryLocationIds: $primaryLocationIds }
-          orderBy: $teamsSortingValues
-        ) @connection(key: "organizationTeams_teams") {
+        teams(first: $count, after: $cursor, where: { organizationId: $organizationId, primaryLocationIds: $primaryLocationIds }, orderBy: $teamsSortingValues)
+          @connection(key: "organizationTeams_teams") {
           __id
           totalCount
           edges {
@@ -303,10 +281,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Setting team '${teamDetails.name}' as your preferred team...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Setting team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
 
     commitAddCustomerDefaultTeam({
       variables: {
@@ -319,9 +294,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`} />
-            ),
+            render: <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -353,10 +326,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Removing team '${teamDetails.name}' as your preferred team...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Removing team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
 
     commitRemoveCustomerDefaultTeam({
       variables: {
@@ -369,11 +339,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -389,9 +355,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />
-          ),
+          render: <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />,
         });
       },
     });
@@ -507,9 +471,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
                     rootDataRelay={rootData}
                     teamDetailsRelay={team}
                     connectionIds={connectionIds}
-                    teammates={team.members
-                      .filter(({ organizationMember }) => !!organizationMember)!
-                      .map(({ organizationMember }) => organizationMember!.customer)}
+                    teammates={team.members.filter(({ organizationMember }) => !!organizationMember)!.map(({ organizationMember }) => organizationMember!.customer)}
                   />
                 </Grid>
               ))}
@@ -533,12 +495,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
         </StackColumn>
       </StackColumn>
 
-      <MoreActionsMenu
-        anchorEl={moreActionsAnchorEl}
-        open={moreActionsMenuOpen}
-        onMenuItemClick={handleMoreActionsMenuItemClick}
-        options={moreActionsOption}
-      />
+      <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
 
       {teamDetails && (
         <Dialog slots={{ transition: DialogTransition }} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>

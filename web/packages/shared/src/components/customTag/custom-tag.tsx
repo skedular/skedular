@@ -16,10 +16,7 @@ type Props = {
 
 const CustomTag = ({ customTag, showFullName }: Props) => (
   <Tooltip title={customTag.name}>
-    <Chip
-      label={`#${customTag.name}`}
-      sx={{ maxWidth: showFullName ? undefined : 100, backgroundColor: customTag.color ?? stringToColor(customTag.id) }}
-    />
+    <Chip label={`#${customTag.name}`} sx={{ maxWidth: showFullName ? undefined : 100, backgroundColor: customTag.color ?? stringToColor(customTag.id) }} />
   </Tooltip>
 );
 

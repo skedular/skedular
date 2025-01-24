@@ -12,7 +12,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint",
     "lint-fix": "eslint --fix",
-    "format": "prettier --write --single-quote true --trailing-comma all --print-width 150 ./src && pnpm lint-fix",
+    "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix",
     "remove-relay-generated-files": "find ./src -type d -name __generated__ -exec rm -rf {} +",
     "relay": "relay-compiler relay.config.js"
   },

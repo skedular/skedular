@@ -14,15 +14,9 @@ type Props = {
 
 const NewOrganizationButton = ({ fullWidth, label, hideIcon, variant, size }: Props) => (
   <Button href={getOrganizationAddLink()} variant={variant ?? 'text'} fullWidth={fullWidth}>
-    {size === 'small' && (
-      <SmallIconTypography label={label ?? 'Add Organization'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
-    )}
-    {size === 'medium' && (
-      <BodyIconTypography label={label ?? 'Add Organization'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
-    )}
-    {(size === 'large' || !size) && (
-      <LeadIconTypography label={label ?? 'Add Organization'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
-    )}
+    {size === 'small' && <SmallIconTypography label={label ?? 'Add Organization'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
+    {size === 'medium' && <BodyIconTypography label={label ?? 'Add Organization'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
+    {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Organization'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
   </Button>
 );
 

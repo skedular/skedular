@@ -31,13 +31,7 @@ const GoogleAnalytics = ({ ignoreOptOutCookie, forceOverride }: Props) => {
     }
   }, [ignoreOptOutCookie, forceOverride]);
 
-  return (
-    <>
-      {shouldUseAnalytics && process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID && (
-        <GA gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID} />
-      )}
-    </>
-  );
+  return <>{shouldUseAnalytics && process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID && <GA gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID} />}</>;
 };
 
 export default GoogleAnalytics;

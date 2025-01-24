@@ -31,13 +31,7 @@ const GoogleTagManager = ({ ignoreOptOutCookie, forceOverride }: Props) => {
     }
   }, [ignoreOptOutCookie, forceOverride]);
 
-  return (
-    <>
-      {shouldUseAnalytics && process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID && (
-        <GTM gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID} />
-      )}
-    </>
-  );
+  return <>{shouldUseAnalytics && process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID && <GTM gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID} />}</>;
 };
 
 export default GoogleTagManager;

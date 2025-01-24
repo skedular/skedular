@@ -20,18 +20,8 @@ import {
 } from '@repo/shared/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
-import {
-  MoreActionsMenu,
-  moreActionsMenuAllOptions,
-  MoreActionsMenuItemType,
-  MoreActionsMenuOptionType,
-} from '@repo/shared/components/moreActionsMenu';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
@@ -50,10 +40,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from './__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
 import type { organizationUsers_changeOrganizationUsersStatusMutation } from './__generated__/organizationUsers_changeOrganizationUsersStatusMutation.graphql';
-import type {
-  OrganizationMemberRole,
-  organizationUsers_organizationMembers_query$key,
-} from './__generated__/organizationUsers_organizationMembers_query.graphql';
+import type { OrganizationMemberRole, organizationUsers_organizationMembers_query$key } from './__generated__/organizationUsers_organizationMembers_query.graphql';
 import type { organizationUsers_organizationUsers_refetchableFragment } from './__generated__/organizationUsers_organizationUsers_refetchableFragment.graphql';
 import type { organizationUsers_removeOrganizationUsersMutation } from './__generated__/organizationUsers_removeOrganizationUsersMutation.graphql';
 import type { organizationUsers_rootQuery } from './__generated__/organizationUsers_rootQuery.graphql';
@@ -777,14 +764,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
                     <Button size="medium" variant="contained" color="secondary" onClick={handleActivateUsersClick} sx={defaultButtonStyle}>
                       Activate User
                     </Button>
-                    <Button
-                      size="medium"
-                      variant="contained"
-                      color="warning"
-                      startIcon={<DeleteIcon />}
-                      onClick={handleRemoveUsersClick}
-                      sx={{ textTransform: 'none' }}
-                    >
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUsersClick} sx={{ textTransform: 'none' }}>
                       Remove User
                     </Button>
                   </StackRow>
@@ -827,12 +807,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         </Box>
       </Box>
 
-      <MoreActionsMenu
-        anchorEl={moreActionsAnchorEl}
-        open={moreActionsMenuOpen}
-        onMenuItemClick={handleMoreActionsMenuItemClick}
-        options={moreActionsOption}
-      />
+      <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
     </>
   );
 };

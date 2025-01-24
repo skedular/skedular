@@ -6,10 +6,7 @@ export const SelectedOrganizationContext = createContext<string | undefined>(und
 export const UpdateSelectedOrganizationContext = createContext<(selectedOrganizationId: string) => void>(() => {});
 
 const SelectedOrganizationProvider = ({ children }: PropsWithChildren) => {
-  const [persistedSelectedOrganizationId, setPersistedSelectedOrganizationId] = useLocalStorage<string | undefined>(
-    'selectedOrganizationId',
-    undefined,
-  );
+  const [persistedSelectedOrganizationId, setPersistedSelectedOrganizationId] = useLocalStorage<string | undefined>('selectedOrganizationId', undefined);
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(undefined);
 
   useEffect(() => setSelectedOrganizationId(persistedSelectedOrganizationId ?? undefined), [persistedSelectedOrganizationId]);

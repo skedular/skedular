@@ -171,12 +171,7 @@ const OrganizationWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganization
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
-        defaultStartWeek={startWeek}
-      />
+      <MemoOrganization queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} defaultStartWeek={startWeek} />
     </ErrorBoundary>
   );
 };

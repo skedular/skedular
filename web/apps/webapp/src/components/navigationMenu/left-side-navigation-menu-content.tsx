@@ -18,17 +18,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
-import {
-  AnalyticsIcon,
-  BookingIcon,
-  CollpaseDrawerIcon,
-  HomeIcon,
-  LocationIcon,
-  MembersIcon,
-  SettingsIcon,
-  TeamIcon,
-  UpgradeIcon,
-} from '@repo/shared/components/icons';
+import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import Image from 'next/image';
@@ -170,15 +160,9 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
 
           <ListItem disablePadding>
             <Link component={NextLink} href={organizationBaseLink}>
-              <ListItemButton
-                selected={pathName === organizationBaseLink}
-                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === organizationBaseLink) }}
-              >
+              <ListItemButton selected={pathName === organizationBaseLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === organizationBaseLink) }}>
                 {collapsed && (
-                  <BodyIconTypography
-                    startElement={!hideIcons && <HomeIcon color="inherit" />}
-                    invertDefaultColor={pathName === organizationBaseLink && paletteMode === 'dark'}
-                  />
+                  <BodyIconTypography startElement={!hideIcons && <HomeIcon color="inherit" />} invertDefaultColor={pathName === organizationBaseLink && paletteMode === 'dark'} />
                 )}
                 {!collapsed && (
                   <BodyIconTypography
@@ -347,18 +331,16 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
-              {rootData.organization.activeOffering &&
-                rootData.organization.activeOffering.free &&
-                !rootData.organization.activeOffering.earlyBird && (
-                  <Button
-                    href={getOrganizationAdminSubscriptionsBaseLink(finalOrganizationId)}
-                    variant="contained"
-                    color="secondary"
-                    sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}
-                  >
-                    <BodyIconTypography label="Upgrade Plan" endElement={<UpgradeIcon fontSize="medium" />} color="inherit" />
-                  </Button>
-                )}
+              {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
+                <Button
+                  href={getOrganizationAdminSubscriptionsBaseLink(finalOrganizationId)}
+                  variant="contained"
+                  color="secondary"
+                  sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}
+                >
+                  <BodyIconTypography label="Upgrade Plan" endElement={<UpgradeIcon fontSize="medium" />} color="inherit" />
+                </Button>
+              )}
 
               <InvitePeopleToJoinOrganizationButton
                 variant="contained"

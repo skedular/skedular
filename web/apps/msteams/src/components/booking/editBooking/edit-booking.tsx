@@ -3,22 +3,9 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import {
-  AppBarWithStackColumn,
-  BodyIconTypography,
-  FormFieldLabel,
-  FormStackColumn,
-  SectionIconTypography,
-  StackColumn,
-  StackRow,
-} from '@repo/shared/components/commons';
+import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@repo/shared/libs/theme';
@@ -213,8 +200,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   const [rootDataTeams, refetchTeams] = useRefetchableFragment<editBooking_customerTeams_refetchableFragment, editBooking_customerTeams_query$key>(
     graphql`
       fragment editBooking_customerTeams_query on Query @refetchable(queryName: "editBooking_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues)
-          @include(if: $customerExists) {
+        customerTeams(where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
           __id
           totalCount
           edges {
@@ -235,8 +221,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   >(
     graphql`
       fragment editBooking_availableLocationDesks_query on Query @refetchable(queryName: "editBooking_availableLocationDesks_refetchableFragment") {
-        availableDesks(where: { locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks })
-          @include(if: $locationExists) {
+        availableDesks(where: { locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks }) @include(if: $locationExists) {
           uniqueId
           name
           customTags {
@@ -336,14 +321,8 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     return rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node);
   }, [rootDataOrganizationMembers.organizationMembers]);
 
-  const teams = useMemo<TeamDetails[]>(
-    () => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []),
-    [rootDataTeams.customerTeams],
-  );
-  const locations = useMemo<LocationDetails[]>(
-    () => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []),
-    [rootData.locations],
-  );
+  const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
+  const locations = useMemo<LocationDetails[]>(() => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
 
   const desks = useMemo<DeskDetails[]>(
     () =>
@@ -415,24 +394,13 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   );
 
   useEffect(() => handleRefetchTeams(rootData.booking?.customer?.uniqueId), [handleRefetchTeams, rootData.booking?.customer?.uniqueId]);
-  useEffect(
-    () => handleRefetchAvailableLocationDesks(defaultDeskIds, from, locationId),
-    [defaultDeskIds, handleRefetchAvailableLocationDesks, from, locationId],
-  );
+  useEffect(() => handleRefetchAvailableLocationDesks(defaultDeskIds, from, locationId), [defaultDeskIds, handleRefetchAvailableLocationDesks, from, locationId]);
 
   const handleCloseClick = () => {
     navigate(-1);
   };
 
-  const handleBookingDetailUpdateClick = ({
-    date,
-    member: memberId,
-    notes,
-    organization: organizationId,
-    location: locationId,
-    team: teamId,
-    desks: deskIds,
-  }: BookingDetails) => {
+  const handleBookingDetailUpdateClick = ({ date, member: memberId, notes, organization: organizationId, location: locationId, team: teamId, desks: deskIds }: BookingDetails) => {
     if (!rootData.booking) {
       return;
     }
@@ -466,9 +434,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
           organizationId,
           locationId,
           teamId,
-          deskIds: locationId
-            ? deskIds.filter((deskId) => rootDataAvailableLocationDesks.availableDesks?.find((availableDesk) => availableDesk.uniqueId === deskId))
-            : [],
+          deskIds: locationId ? deskIds.filter((deskId) => rootDataAvailableLocationDesks.availableDesks?.find((availableDesk) => availableDesk.uniqueId === deskId)) : [],
           type,
         },
       },
@@ -604,9 +570,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
                         required={requiredBookingDetailsFields.member}
                         options={customers}
                         getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
-                        getOptionLabel={(option: string | OrganizationMemberDetails) =>
-                          getCustomerFullName((option as OrganizationMemberDetails).customer)
-                        }
+                        getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
                         renderOption={(props, option) => {
                           const castedOption = (option as OrganizationMemberDetails).customer;
 
@@ -638,13 +602,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Notes">
-                      <TextField
-                        name="notes"
-                        required={requiredBookingDetailsFields.notes}
-                        helperText="e.g. I will be half an hour late this morning"
-                        multiline
-                        rows={2}
-                      />
+                      <TextField name="notes" required={requiredBookingDetailsFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Team">

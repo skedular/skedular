@@ -70,10 +70,7 @@ const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationId, co
     >
       <ListItem disablePadding>
         <Link component={NextLink} href={organizatinAnalyticsLink}>
-          <ListItemButton
-            selected={fullPath === organizatinAnalyticsLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === organizatinAnalyticsLink) }}
-          >
+          <ListItemButton selected={fullPath === organizatinAnalyticsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === organizatinAnalyticsLink) }}>
             {collapsed && (
               <BodyIconTypography
                 startElement={!hideIcons && <OrganizationIcon color="inherit" />}
@@ -95,10 +92,7 @@ const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationId, co
 
       <ListItem disablePadding>
         <Link component={NextLink} href={locationsAnalyticsLink}>
-          <ListItemButton
-            selected={fullPath === locationsAnalyticsLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === locationsAnalyticsLink) }}
-          >
+          <ListItemButton selected={fullPath === locationsAnalyticsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === locationsAnalyticsLink) }}>
             {collapsed && (
               <BodyIconTypography
                 startElement={!hideIcons && <LocationIcon color="inherit" />}

@@ -15,28 +15,10 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import {
-  DefaultDialogTitle,
-  LeadIconTypography,
-  PushToRight,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-  TwoButtonsDialogActions,
-} from '@repo/shared/components/commons';
+import { DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon, TeamIcon } from '@repo/shared/components/icons';
-import {
-  MoreActionsMenu,
-  moreActionsMenuAllOptions,
-  MoreActionsMenuItemType,
-  MoreActionsMenuOptionType,
-} from '@repo/shared/components/moreActionsMenu';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, sandstone } from '@repo/shared/libs/theme';
@@ -150,10 +132,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
-  const isPreferred = useMemo(
-    () => rootData.me?.defaultTeams.some((item) => item.uniqueId === teamDetails.id),
-    [teamDetails.id, rootData.me?.defaultTeams],
-  );
+  const isPreferred = useMemo(() => rootData.me?.defaultTeams.some((item) => item.uniqueId === teamDetails.id), [teamDetails.id, rootData.me?.defaultTeams]);
 
   let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam]];
 
@@ -229,10 +208,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Setting team '${teamDetails.name}' as your preferred team...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Setting team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
 
     commitAddCustomerDefaultTeam({
       variables: {
@@ -245,9 +221,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`} />
-            ),
+            render: <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -272,10 +246,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Removing team '${teamDetails.name}' as your preferred team...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Removing team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
 
     commitRemoveCustomerDefaultTeam({
       variables: {
@@ -288,11 +259,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -306,9 +273,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />
-          ),
+          render: <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />,
         });
       },
     });
@@ -364,12 +329,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
         </CardContent>
       </Card>
 
-      <MoreActionsMenu
-        anchorEl={moreActionsAnchorEl}
-        open={moreActionsMenuOpen}
-        onMenuItemClick={handleMoreActionsMenuItemClick}
-        options={moreActionsOption}
-      />
+      <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
 
       <Dialog slots={{ transition: DialogTransition }} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
         <DefaultDialogTitle title="Remove Team" />

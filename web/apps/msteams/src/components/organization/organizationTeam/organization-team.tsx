@@ -22,18 +22,8 @@ import {
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
-import {
-  MoreActionsMenu,
-  moreActionsMenuAllOptions,
-  MoreActionsMenuItemType,
-  MoreActionsMenuOptionType,
-} from '@repo/shared/components/moreActionsMenu';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { Search } from '@repo/shared/components/search';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
@@ -123,16 +113,12 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     rootDataRelay,
   );
 
-  const [rootDataTeamMembers, refetchTeamMembers] = useRefetchableFragment<
-    organizationTeam_teamMembers_refetchableFragment,
-    organizationTeam_teamMembers_query$key
-  >(
+  const [rootDataTeamMembers, refetchTeamMembers] = useRefetchableFragment<organizationTeam_teamMembers_refetchableFragment, organizationTeam_teamMembers_query$key>(
     graphql`
       fragment organizationTeam_teamMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationTeam_teamMembers_refetchableFragment") {
-        teamMembers(first: $count, after: $cursor, where: { teamId: $teamId, nameContains: $peopleNameSearchText })
-          @connection(key: "teamMembers_teamMembers") {
+        teamMembers(first: $count, after: $cursor, where: { teamId: $teamId, nameContains: $peopleNameSearchText }) @connection(key: "teamMembers_teamMembers") {
           __id
           totalCount
           edges {
@@ -273,10 +259,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     });
   }, [section]);
 
-  const connectionIds = useMemo(
-    () => (rootDataTeamMembers.teamMembers ? [rootDataTeamMembers.teamMembers.__id] : []),
-    [rootDataTeamMembers.teamMembers],
-  );
+  const connectionIds = useMemo(() => (rootDataTeamMembers.teamMembers ? [rootDataTeamMembers.teamMembers.__id] : []), [rootDataTeamMembers.teamMembers]);
   const members = useMemo(
     () =>
       rootDataTeamMembers.teamMembers
@@ -871,12 +854,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                 </Grid>
 
                 <Grid>
-                  <AddOrganizationTeamMemberButton
-                    onReloadRequired={onReloadRequired}
-                    connectionIds={connectionIds}
-                    organizationId={organizationId}
-                    teamId={teamId}
-                  />
+                  <AddOrganizationTeamMemberButton onReloadRequired={onReloadRequired} connectionIds={connectionIds} organizationId={organizationId} teamId={teamId} />
                 </Grid>
               </GridContainer>
               <Divider />
@@ -908,14 +886,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                     <Button size="medium" variant="contained" color="secondary" onClick={handleActivateMembersClick} sx={defaultButtonStyle}>
                       Activate Member
                     </Button>
-                    <Button
-                      size="medium"
-                      variant="contained"
-                      color="warning"
-                      startIcon={<DeleteIcon />}
-                      onClick={handleRemoveMembersClick}
-                      sx={{ textTransform: 'none' }}
-                    >
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveMembersClick} sx={{ textTransform: 'none' }}>
                       Remove Member
                     </Button>
                   </StackRow>
@@ -953,12 +924,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         </Box>
       </Box>
 
-      <MoreActionsMenu
-        anchorEl={moreActionsAnchorEl}
-        open={moreActionsMenuOpen}
-        onMenuItemClick={handleMoreActionsMenuItemClick}
-        options={moreActionsOption}
-      />
+      <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
     </>
   );
 };

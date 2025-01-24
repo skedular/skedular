@@ -57,15 +57,7 @@ const Day = (
   const { day, selectedDay, hoveredDay, ...other } = props;
 
   return (
-    <CustomPickersDay
-      {...other}
-      day={day}
-      sx={{ px: 2.5 }}
-      disableMargin
-      selected={false}
-      isSelected={isInSameWeek(day, selectedDay)}
-      isHovered={isInSameWeek(day, hoveredDay)}
-    />
+    <CustomPickersDay {...other} day={day} sx={{ px: 2.5 }} disableMargin selected={false} isSelected={isInSameWeek(day, selectedDay)} isHovered={isInSameWeek(day, hoveredDay)} />
   );
 };
 

@@ -168,12 +168,7 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoModernOrganization
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
-        defaultStartWeek={startWeek}
-      />
+      <MemoModernOrganization queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} defaultStartWeek={startWeek} />
     </ErrorBoundary>
   );
 };

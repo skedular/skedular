@@ -16,17 +16,7 @@ type Props = {
 };
 
 const LargeHeadingIconTypography = ({ startElement, endElement, stackMode, label, noWrap, sx, spacing, color }: Props) => (
-  <IconTypography
-    startElement={startElement}
-    endElement={endElement}
-    stackMode={stackMode}
-    label={label}
-    noWrap={noWrap}
-    variant="h2"
-    sx={sx}
-    spacing={spacing}
-    color={color}
-  />
+  <IconTypography startElement={startElement} endElement={endElement} stackMode={stackMode} label={label} noWrap={noWrap} variant="h2" sx={sx} spacing={spacing} color={color} />
 );
 
 export default LargeHeadingIconTypography;

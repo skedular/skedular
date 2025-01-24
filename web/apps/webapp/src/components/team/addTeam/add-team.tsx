@@ -6,23 +6,10 @@ import type { addTeam_rootQuery } from '@/queries/__generated__/addTeam_rootQuer
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import {
-  AppBarWithStackColumn,
-  BodyIconTypography,
-  FormFieldLabel,
-  FormStackColumn,
-  SectionIconTypography,
-  StackColumn,
-  StackRow,
-} from '@repo/shared/components/commons';
+import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { Loading } from '@repo/shared/components/loading';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
@@ -254,11 +241,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
                     </StackColumn>
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                       <FormFieldLabel label="Primary Location">
-                        <SingleChoiceLocation
-                          rootDataRelay={rootData}
-                          id="primaryLocationId"
-                          required={requiredTeamDetailsFields.primaryLocationId}
-                        />
+                        <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
                       </FormFieldLabel>
                     </StackColumn>
                   </>

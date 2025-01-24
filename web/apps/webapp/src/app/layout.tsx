@@ -5,13 +5,7 @@ import { GoogleAnalyticsProvider, LogRocketProvider, NextAuthProvider, RelayProv
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
-import {
-  DatePickerLocalizationProvider,
-  GlobalReloadIdProvider,
-  PaletteModeContext,
-  PaletteModeProvider,
-  ThemeProvider,
-} from '@repo/shared/libs/providers';
+import { DatePickerLocalizationProvider, GlobalReloadIdProvider, PaletteModeContext, PaletteModeProvider, ThemeProvider } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Barlow, Inter } from 'next/font/google';
@@ -73,11 +67,7 @@ const ThemedRootLayout = ({ children }: PropsWithChildren) => (
     <GoogleAnalytics ignoreOptOutCookie={true} forceOverride={false} />
     <GoogleTagManager ignoreOptOutCookie={true} forceOverride={false} />
     <LogRocketProvider ignoreOptOutCookie={true} forceOverride={false} logRocketAppId={process.env.NEXT_PUBLIC_LOGROCKET_APP_ID} />
-    <GoogleAnalyticsProvider
-      ignoreOptOutCookie={true}
-      forceOverride={false}
-      googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}
-    />
+    <GoogleAnalyticsProvider ignoreOptOutCookie={true} forceOverride={false} googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID} />
   </html>
 );
 

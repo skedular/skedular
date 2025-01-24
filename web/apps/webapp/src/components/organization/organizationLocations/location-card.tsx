@@ -18,28 +18,10 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import {
-  DefaultDialogTitle,
-  LeadIconTypography,
-  PushToRight,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-  TwoButtonsDialogActions,
-} from '@repo/shared/components/commons';
+import { DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { DeskIcon, EllipseMenuIcon, LocationIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
-import {
-  MoreActionsMenu,
-  moreActionsMenuAllOptions,
-  MoreActionsMenuItemType,
-  MoreActionsMenuOptionType,
-} from '@repo/shared/components/moreActionsMenu';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
@@ -173,10 +155,7 @@ const LocationCard = ({
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
-  const isPreferred = useMemo(
-    () => rootData.me?.defaultLocations.some((item) => item.uniqueId === locationDetails.id),
-    [locationDetails.id, rootData.me?.defaultLocations],
-  );
+  const isPreferred = useMemo(() => rootData.me?.defaultLocations.some((item) => item.uniqueId === locationDetails.id), [locationDetails.id, rootData.me?.defaultLocations]);
 
   let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation]];
 
@@ -252,10 +231,7 @@ const LocationCard = ({
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
 
     commitAddCustomerDefaultLocation({
       variables: {
@@ -268,11 +244,7 @@ const LocationCard = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -286,9 +258,7 @@ const LocationCard = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />
-          ),
+          render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />,
         });
       },
     });
@@ -299,10 +269,7 @@ const LocationCard = ({
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
 
     commitRemoveCustomerDefaultLocation({
       variables: {
@@ -315,11 +282,7 @@ const LocationCard = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -333,11 +296,7 @@ const LocationCard = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent
-              content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`}
-            />
-          ),
+          render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />,
         });
       },
     });
@@ -432,12 +391,7 @@ const LocationCard = ({
         </CardContent>
       </Card>
 
-      <MoreActionsMenu
-        anchorEl={moreActionsAnchorEl}
-        open={moreActionsMenuOpen}
-        onMenuItemClick={handleMoreActionsMenuItemClick}
-        options={moreActionsOption}
-      />
+      <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
 
       <Dialog slots={{ transition: DialogTransition }} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
         <DefaultDialogTitle title="Remove Location" />

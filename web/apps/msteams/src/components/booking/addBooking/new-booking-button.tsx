@@ -92,25 +92,13 @@ const NewBookingButton = ({
     <>
       <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ ...sx, ...borderSx }}>
         {size === 'small' && (
-          <SmallIconTypography
-            label={label ?? 'Add Booking'}
-            endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />}
-            invertDefaultColor={invertDefaultColor}
-          />
+          <SmallIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} invertDefaultColor={invertDefaultColor} />
         )}
         {size === 'medium' && (
-          <BodyIconTypography
-            label={label ?? 'Add Booking'}
-            endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />}
-            invertDefaultColor={invertDefaultColor}
-          />
+          <BodyIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} invertDefaultColor={invertDefaultColor} />
         )}
         {(size === 'large' || !size) && (
-          <LeadIconTypography
-            label={label ?? 'Add Booking'}
-            endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />}
-            invertDefaultColor={invertDefaultColor}
-          />
+          <LeadIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} invertDefaultColor={invertDefaultColor} />
         )}
       </Button>
       <NewBookingDialog

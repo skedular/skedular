@@ -9,16 +9,5 @@ export default withAuth({
 });
 
 export const config = {
-  matcher: [
-    '/',
-    '/organizations',
-    '/organizations/:slug*',
-    '/locations',
-    '/locations/:slug*',
-    '/teams',
-    '/teams/:slug*',
-    '/notifications',
-    '/notifications/:slug*',
-    '/settings',
-  ],
+  matcher: ['/', '/organizations', '/organizations/:slug*', '/notifications', '/notifications/:slug*'],
 };

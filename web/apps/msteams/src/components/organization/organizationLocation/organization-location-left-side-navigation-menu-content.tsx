@@ -71,12 +71,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
       <ListItem disablePadding>
         <Link href={setupLink}>
           <ListItemButton selected={fullPath === setupLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === setupLink) }}>
-            {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <EditIcon color="inherit" />}
-                invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
-              />
-            )}
+            {collapsed && <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'} />}
             {!collapsed && (
               <BodyIconTypography
                 label="Location Setup"

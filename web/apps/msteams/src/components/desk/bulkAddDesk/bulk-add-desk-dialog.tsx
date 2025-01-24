@@ -1,20 +1,8 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import {
-  DefaultDialogTitle,
-  FormFieldLabel,
-  FormStackColumn,
-  LeadIconTypography,
-  SmallIconTypography,
-  TwoButtonsDialogActions,
-} from '@repo/shared/components/commons';
+import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { DialogTransition } from '@repo/shared/components/transitions';
@@ -198,15 +186,7 @@ type RelayProps = {
   onCancel: () => void;
 };
 
-const BulkAddDeskDialogWithRelay = ({
-  onReloadRequired,
-  organizationId,
-  locationId,
-  connectionIds,
-  isDialogOpen,
-  onAddClicked,
-  onCancel,
-}: RelayProps) => {
+const BulkAddDeskDialogWithRelay = ({ onReloadRequired, organizationId, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<bulkAddDeskDialog_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();

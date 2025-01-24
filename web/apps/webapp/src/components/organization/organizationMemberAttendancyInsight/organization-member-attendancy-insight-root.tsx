@@ -87,11 +87,7 @@ const OrganizationMemberAttendancyInsightRootWithRelay = ({ organizationId, onRe
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationMemberAttendancysCard
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
-      />
+      <MemoOrganizationMemberAttendancysCard queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
     </ErrorBoundary>
   );
 };

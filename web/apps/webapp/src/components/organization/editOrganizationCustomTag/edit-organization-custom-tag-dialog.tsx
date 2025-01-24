@@ -12,12 +12,7 @@ import {
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { DialogTransition } from '@repo/shared/components/transitions';

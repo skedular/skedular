@@ -28,17 +28,15 @@ enum AddOrganizationPaymentMethodState {
 }
 
 const AddOrganizationPaymentMethodDialog = ({ organizationId, isDialogOpen, onCancel }: Props) => {
-  const [commitAddOrganizationPaymentMethodIntent] = useMutation<addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation>(
-    graphql`
-      mutation addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation($input: AddOrganizationPaymentMethodIntentInput!) {
-        addOrganizationPaymentMethodIntent(input: $input) {
-          clientMutationId
-          publishedKeys
-          clientSecret
-        }
+  const [commitAddOrganizationPaymentMethodIntent] = useMutation<addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation>(graphql`
+    mutation addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation($input: AddOrganizationPaymentMethodIntentInput!) {
+      addOrganizationPaymentMethodIntent(input: $input) {
+        clientMutationId
+        publishedKeys
+        clientSecret
       }
-    `,
-  );
+    }
+  `);
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;

@@ -13,12 +13,7 @@ import {
   SmallIconTypography,
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
@@ -221,9 +216,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
                     required={requiredFields.member}
                     options={customers}
                     getOptionValue={(option) => (option as OrganizationMemberDetails).id}
-                    getOptionLabel={(option: string | OrganizationMemberDetails) =>
-                      getCustomerFullName((option as OrganizationMemberDetails).customer)
-                    }
+                    getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
                     renderOption={(props, option) => {
                       const castedOption = (option as OrganizationMemberDetails).customer;
 

@@ -27,14 +27,7 @@ const TwoButtonsDialogActions = ({ sx, onPrimaryClicked, onSecondaryClicked, pri
         </Button>
       )}
 
-      <Button
-        variant="contained"
-        type={onPrimaryClicked ? undefined : 'submit'}
-        onClick={onPrimaryClicked}
-        color="primary"
-        disabled={disabled}
-        sx={{ textTransform: 'none' }}
-      >
+      <Button variant="contained" type={onPrimaryClicked ? undefined : 'submit'} onClick={onPrimaryClicked} color="primary" disabled={disabled} sx={{ textTransform: 'none' }}>
         <BodyIconTypography label={primaryLabel} invertDefaultColor />
       </Button>
     </DialogActions>

@@ -36,8 +36,7 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
 
   const [rootDataLocationAnalytics, refetch] = useRefetchableFragment(
     graphql`
-      fragment locationDeskOccupancyInsight_locationAnalytics_query on Query
-      @refetchable(queryName: "locationDeskOccupancyInsight_locationAnalytics_refetchableFragment") {
+      fragment locationDeskOccupancyInsight_locationAnalytics_query on Query @refetchable(queryName: "locationDeskOccupancyInsight_locationAnalytics_refetchableFragment") {
         locationAnalytics(locationId: $locationId, from: $from, until: $to) {
           desksOccupancyPercentage {
             date

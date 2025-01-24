@@ -65,13 +65,7 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, locati
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationLocation
-        rootDataRelay={rootData}
-        rootDataDesksRelay={rootData}
-        onReloadRequired={onReloadRequired}
-        organizationId={organizationId}
-        locationId={locationId}
-      />
+      <OrganizationLocation rootDataRelay={rootData} rootDataDesksRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />
     </RootShell>
   );
 };
@@ -147,12 +141,7 @@ const LocationPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationPage
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationId={finalOrganizationId}
-        locationId={finalLocationId}
-      />
+      <MemoLocationPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} locationId={finalLocationId} />
     </ErrorBoundary>
   );
 };

@@ -57,13 +57,7 @@ const TeamPage = ({ queryReference, onReloadRequired, organizationId, teamId }: 
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationTeam
-        rootDataRelay={rootData}
-        rootDataTeamMembersRelay={rootData}
-        onReloadRequired={onReloadRequired}
-        organizationId={organizationId}
-        teamId={teamId}
-      />
+      <OrganizationTeam rootDataRelay={rootData} rootDataTeamMembersRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} teamId={teamId} />
     </RootShell>
   );
 };
@@ -128,12 +122,7 @@ const TeamPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoTeamPage
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationId={finalOrganizationId}
-        teamId={finalTeamId}
-      />
+      <MemoTeamPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} teamId={finalTeamId} />
     </ErrorBoundary>
   );
 };

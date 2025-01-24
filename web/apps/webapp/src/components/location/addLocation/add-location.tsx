@@ -3,22 +3,9 @@ import type { addLocation_completeLocationOnboardingMutation } from '@/queries/_
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import {
-  AppBarWithStackColumn,
-  BodyIconTypography,
-  FormFieldLabel,
-  FormStackColumn,
-  SectionIconTypography,
-  StackColumn,
-  StackRow,
-} from '@repo/shared/components/commons';
+import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';

@@ -60,10 +60,7 @@ const OrganizationUsersLeftSideNavigationMenuContent = ({ organizationId, collap
     >
       <ListItem disablePadding>
         <Link href={memberesLink}>
-          <ListItemButton
-            selected={pathName === memberesLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === memberesLink) }}
-          >
+          <ListItemButton selected={pathName === memberesLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName === memberesLink) }}>
             {collapsed && (
               <BodyIconTypography
                 startElement={!hideIcons && <MembersIcon excludeTooltip color="inherit" />}

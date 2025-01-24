@@ -45,15 +45,7 @@ const RootQuery = graphql`
 
 const maxRetryAttemptsToReload = 20;
 
-const RootShell = ({
-  queryReference,
-  children,
-  onReloadRequired,
-  collapsed,
-  hideWelcomeMessage,
-  showBreadcrumps,
-  breadcrumbs,
-}: PropsWithChildren<Props>) => {
+const RootShell = ({ queryReference, children, onReloadRequired, collapsed, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
 
   const [reloadCount, setReloadCount] = useState(0);

@@ -10,12 +10,7 @@ import {
   SmallIconTypography,
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';

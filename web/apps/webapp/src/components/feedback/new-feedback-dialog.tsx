@@ -4,12 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import Typography from '@mui/material/Typography';
 import { BodyIconTypography, DefaultDialogTitle, FormStackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerShortName, joinErrors } from '@repo/shared/libs/utils';

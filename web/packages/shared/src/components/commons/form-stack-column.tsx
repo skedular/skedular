@@ -15,14 +15,7 @@ type Props = {
 };
 
 const FormStackColumn = ({ children, sx, spacing, onSubmit }: PropsWithChildren<Props>) => (
-  <Stack
-    direction="column"
-    spacing={spacing === undefined ? 1 : spacing}
-    sx={{ paddingTop: 0, ...sx }}
-    component="form"
-    noValidate
-    onSubmit={onSubmit}
-  >
+  <Stack direction="column" spacing={spacing === undefined ? 1 : spacing} sx={{ paddingTop: 0, ...sx }} component="form" noValidate onSubmit={onSubmit}>
     {children}
   </Stack>
 );

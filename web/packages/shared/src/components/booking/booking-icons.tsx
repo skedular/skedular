@@ -7,7 +7,6 @@ type Props = {
   booking?: BookingDetails;
 };
 
-const BookingIcon = ({ booking }: Props) =>
-  booking ? <WorkingFromOfficeIcon tip={getBookingSummaryMessage(booking, false)} /> : <WorkingFromHomeIcon />;
+const BookingIcon = ({ booking }: Props) => (booking ? <WorkingFromOfficeIcon tip={getBookingSummaryMessage(booking, false)} /> : <WorkingFromHomeIcon />);
 
 export default memo(BookingIcon);

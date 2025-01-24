@@ -141,12 +141,7 @@ const LocationPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoLocationPage
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationId={finalOrganizationId}
-        deskId={finalDeskId}
-      />
+      <MemoLocationPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} deskId={finalDeskId} />
     </ErrorBoundary>
   );
 };

@@ -72,12 +72,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
       <ListItem disablePadding>
         <Link component={NextLink} href={setupLink}>
           <ListItemButton selected={fullPath === setupLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === setupLink) }}>
-            {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <EditIcon color="inherit" />}
-                invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
-              />
-            )}
+            {collapsed && <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'} />}
             {!collapsed && (
               <BodyIconTypography
                 label="Location Setup"
@@ -93,10 +88,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
 
       <ListItem disablePadding>
         <Link component={NextLink} href={manageDesksLink}>
-          <ListItemButton
-            selected={fullPath === manageDesksLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageDesksLink) }}
-          >
+          <ListItemButton selected={fullPath === manageDesksLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageDesksLink) }}>
             {collapsed && (
               <BodyIconTypography
                 startElement={!hideIcons && <DeskIcon color="inherit" excludeTooltip />}

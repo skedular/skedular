@@ -9,7 +9,7 @@
     "start": "cross-env PORT=15000 next start",
     "lint": "next lint",
     "lint-fix": "next lint --fix",
-    "format": "prettier --write --single-quote true --trailing-comma all --print-width 150 ./src && pnpm lint-fix",
+    "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix",
     "relay": "relay-compiler relay.config.js"
   },
   "dependencies": {

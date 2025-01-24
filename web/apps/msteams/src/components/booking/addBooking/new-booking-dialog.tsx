@@ -2,21 +2,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import {
-  BodyIconTypography,
-  DefaultDialogTitle,
-  FormFieldLabel,
-  FormStackColumn,
-  StackRow,
-  TwoButtonsDialogActions,
-} from '@repo/shared/components/commons';
+import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
@@ -184,14 +172,10 @@ const NewBookingDialog = ({
     rootDataOrganizationMembersRelay,
   );
 
-  const [rootDataTeams, refetchTeams] = useRefetchableFragment<
-    newBookingDialog_customerTeams_refetchableFragment,
-    newBookingDialog_customerTeams_query$key
-  >(
+  const [rootDataTeams, refetchTeams] = useRefetchableFragment<newBookingDialog_customerTeams_refetchableFragment, newBookingDialog_customerTeams_query$key>(
     graphql`
       fragment newBookingDialog_customerTeams_query on Query @refetchable(queryName: "newBookingDialog_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues)
-          @include(if: $customerExists) {
+        customerTeams(where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
           __id
           totalCount
           edges {
@@ -211,8 +195,7 @@ const NewBookingDialog = ({
     newBookingDialog_availableLocationDesks_query$key
   >(
     graphql`
-      fragment newBookingDialog_availableLocationDesks_query on Query
-      @refetchable(queryName: "newBookingDialog_availableLocationDesks_refetchableFragment") {
+      fragment newBookingDialog_availableLocationDesks_query on Query @refetchable(queryName: "newBookingDialog_availableLocationDesks_refetchableFragment") {
         availableDesks(where: { locationId: $locationId, date: $dateToGetAvailableDesks }) @include(if: $locationExists) {
           uniqueId
           name
@@ -305,14 +288,8 @@ const NewBookingDialog = ({
     return rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node);
   }, [rootDataOrganizationMembers.organizationMembers]);
 
-  const teams = useMemo<TeamDetails[]>(
-    () => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []),
-    [rootDataTeams.customerTeams],
-  );
-  const locations = useMemo<LocationDetails[]>(
-    () => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []),
-    [rootData.locations],
-  );
+  const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
+  const locations = useMemo<LocationDetails[]>(() => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
 
   const desks = useMemo<DeskDetails[]>(
     () =>
@@ -555,9 +532,7 @@ const NewBookingDialog = ({
                     required={requiredFields.member}
                     options={customers}
                     getOptionValue={(option) => (option as OrganizationMemberDetails).customer.uniqueId}
-                    getOptionLabel={(option: string | OrganizationMemberDetails) =>
-                      getCustomerFullName((option as OrganizationMemberDetails).customer)
-                    }
+                    getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
                     renderOption={(props, option) => {
                       const castedOption = (option as OrganizationMemberDetails).customer;
 
@@ -589,13 +564,7 @@ const NewBookingDialog = ({
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Notes" useWiderSpace>
-                  <TextField
-                    name="notes"
-                    required={requiredFields.notes}
-                    helperText="e.g. I will be half an hour late this morning"
-                    multiline
-                    rows={2}
-                  />
+                  <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Team" useWiderSpace>

@@ -141,9 +141,7 @@ const RootShell = ({
             breadcrumbs={breadcrumbs}
           />
           {!rootData.myOrganizations ||
-            (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && (
-              <OrganizationOnboarding onReloadRequired={onReloadRequired} />
-            ))}
+            (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding onReloadRequired={onReloadRequired} />)}
           {!rootData.myOrganizations || (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />)}
           {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <>{children}</>}
         </Box>
@@ -162,14 +160,7 @@ type RelayProps = {
   breadcrumbs?: React.ReactNode | JSX.Element;
 };
 
-const RootShellWithRelay = ({
-  children,
-  collapsed,
-  hideOrganizationSelector,
-  hideWelcomeMessage,
-  showBreadcrumps,
-  breadcrumbs,
-}: PropsWithChildren<RelayProps>) => {
+const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hideWelcomeMessage, showBreadcrumps, breadcrumbs }: PropsWithChildren<RelayProps>) => {
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();

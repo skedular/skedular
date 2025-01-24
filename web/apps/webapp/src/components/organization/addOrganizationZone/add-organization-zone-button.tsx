@@ -37,15 +37,9 @@ const AddOrganizationZoneButton = ({ organizationId, onReloadRequired, connectio
   return (
     <>
       <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ textTransform: 'none' }}>
-        {size === 'small' && (
-          <SmallIconTypography label={label ?? 'Add Zone'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
-        )}
-        {size === 'medium' && (
-          <BodyIconTypography label={label ?? 'Add Zone'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
-        )}
-        {(size === 'large' || !size) && (
-          <LeadIconTypography label={label ?? 'Add Zone'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
-        )}
+        {size === 'small' && <SmallIconTypography label={label ?? 'Add Zone'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
+        {size === 'medium' && <BodyIconTypography label={label ?? 'Add Zone'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
+        {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Zone'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
       </Button>
       <AddOrganizationZoneDialog
         organizationId={organizationId}

@@ -14,18 +14,8 @@ import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
 import { CalendarIcon, DeskIcon, EllipseMenuIcon, JoinIcon, LocationIcon, NotesIcon, TeamIcon } from '@repo/shared/components/icons';
-import {
-  MoreActionsMenu,
-  moreActionsMenuAllOptions,
-  MoreActionsMenuItemType,
-  MoreActionsMenuOptionType,
-} from '@repo/shared/components/moreActionsMenu';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { coal, sandstone } from '@repo/shared/libs/theme';
@@ -382,12 +372,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           title={
             <StackRow>
               <Link component={NextLink} href={getOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
-                <LeadIconTypography
-                  startElement={<LocationIcon />}
-                  label={bookingDetails.location?.name}
-                  sx={{ flexWrap: undefined }}
-                  invertDefaultColor
-                />
+                <LeadIconTypography startElement={<LocationIcon />} label={bookingDetails.location?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
 
               <PushToRight />
@@ -413,11 +398,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           }
         />
         <CardContent>
-          <SmallIconTypography
-            startElement={<CalendarIcon />}
-            label={toShortDateWithAdditionalDayInfo(date)}
-            sx={{ paddingTop: 1, paddingBottom: 1 }}
-          />
+          <SmallIconTypography startElement={<CalendarIcon />} label={toShortDateWithAdditionalDayInfo(date)} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <SmallIconTypography
             label={getCustomerFullName(bookingDetails.customer)}
@@ -425,11 +406,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
             sx={{ paddingTop: 1, paddingBottom: 1 }}
           />
           <Divider />
-          <SmallIconTypography
-            startElement={<TeamIcon />}
-            label={bookingDetails.team ? bookingDetails.team.name : 'N/A'}
-            sx={{ paddingTop: 1, paddingBottom: 1 }}
-          />
+          <SmallIconTypography startElement={<TeamIcon />} label={bookingDetails.team ? bookingDetails.team.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <SmallIconTypography startElement={<DeskIcon />} label={desks.length === 0 ? 'N/A' : desks} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
@@ -438,25 +415,13 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
             sx={{ paddingTop: 1, paddingBottom: 1 }}
           />
           <Divider />
-          <Zones
-            zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))}
-            sx={{ paddingTop: 1, paddingBottom: 1 }}
-          />
+          <Zones zones={zones.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
-          <SmallIconTypography
-            startElement={<NotesIcon />}
-            label={bookingDetails.notes ? bookingDetails.notes : 'N/A'}
-            sx={{ paddingTop: 1, paddingBottom: 1 }}
-          />
+          <SmallIconTypography startElement={<NotesIcon />} label={bookingDetails.notes ? bookingDetails.notes : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
         </CardContent>
       </Card>
 
-      <MoreActionsMenu
-        anchorEl={moreActionsAnchorEl}
-        open={moreActionsMenuOpen}
-        onMenuItemClick={handleMoreActionsMenuItemClick}
-        options={moreActionsOption}
-      />
+      <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
     </>
   );
 };

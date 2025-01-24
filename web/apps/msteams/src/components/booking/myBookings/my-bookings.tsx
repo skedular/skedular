@@ -9,18 +9,8 @@ import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
 import { EllipseMenuIcon } from '@repo/shared/components/icons';
-import {
-  MoreActionsMenu,
-  moreActionsMenuAllOptions,
-  MoreActionsMenuItemType,
-  MoreActionsMenuOptionType,
-} from '@repo/shared/components/moreActionsMenu';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
@@ -389,9 +379,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       field: 'customTags',
       headerName: 'Tags',
       editable: false,
-      renderCell: (params) => (
-        <CustomTags customTags={params.value.map((zone: CustomTagDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />
-      ),
+      renderCell: (params) => <CustomTags customTags={params.value.map((zone: CustomTagDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },
@@ -399,9 +387,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       field: 'zones',
       headerName: 'Zones',
       editable: false,
-      renderCell: (params) => (
-        <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />
-      ),
+      renderCell: (params) => <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },
@@ -499,12 +485,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
         )}
       </StackColumn>
 
-      <MoreActionsMenu
-        anchorEl={moreActionsAnchorEl}
-        open={moreActionsMenuOpen}
-        onMenuItemClick={handleMoreActionsMenuItemClick}
-        options={moreActionsOption}
-      />
+      <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
     </>
   );
 };

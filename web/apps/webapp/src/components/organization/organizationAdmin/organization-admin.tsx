@@ -52,18 +52,8 @@ import {
 import { CustomTag } from '@repo/shared/components/customTag';
 import { SingleChoiceCountry } from '@repo/shared/components/forms';
 import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, NotPreferredIcon, PreferredIcon, TickIcon } from '@repo/shared/components/icons';
-import {
-  MoreActionsMenu,
-  moreActionsMenuAllOptions,
-  MoreActionsMenuItemType,
-  MoreActionsMenuOptionType,
-} from '@repo/shared/components/moreActionsMenu';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { Search } from '@repo/shared/components/search';
 import { Zone } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
@@ -247,8 +237,7 @@ const OrganizationAdmin = ({
       fragment organizationAdmin_zones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationAdmin_zones_refetchableFragment") {
-        zones(first: $count, after: $cursor, where: { organizationId: $organizationId, nameContains: $zoneNameSearchText })
-          @connection(key: "organizationAdmin_zones") {
+        zones(first: $count, after: $cursor, where: { organizationId: $organizationId, nameContains: $zoneNameSearchText }) @connection(key: "organizationAdmin_zones") {
           __id
           totalCount
           edges {
@@ -265,10 +254,7 @@ const OrganizationAdmin = ({
     rootDataZonesRelay,
   );
 
-  const [rootDataCustomTags, refetchCustomTags] = useRefetchableFragment<
-    organizationAdmin_customTags_refetchableFragment,
-    organizationAdmin_customTags_query$key
-  >(
+  const [rootDataCustomTags, refetchCustomTags] = useRefetchableFragment<organizationAdmin_customTags_refetchableFragment, organizationAdmin_customTags_query$key>(
     graphql`
       fragment organizationAdmin_customTags_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
@@ -446,10 +432,7 @@ const OrganizationAdmin = ({
     return rootDataZones.zones.edges.map(({ node }) => node);
   }, [rootDataZones.zones]);
 
-  const customTagsConnectionIds = useMemo(
-    () => (rootDataCustomTags.customTags ? [rootDataCustomTags.customTags.__id] : []),
-    [rootDataCustomTags.customTags],
-  );
+  const customTagsConnectionIds = useMemo(() => (rootDataCustomTags.customTags ? [rootDataCustomTags.customTags.__id] : []), [rootDataCustomTags.customTags]);
   const customTags = useMemo(() => {
     if (!rootDataCustomTags.customTags) {
       return [];
@@ -918,10 +901,7 @@ const OrganizationAdmin = ({
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Cancelling organization '${rootData.organization.name}' active offering...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Cancelling organization '${rootData.organization.name}' active offering...`} />, infoNotificationOptions);
 
     commitCancelOrganizationOffering({
       variables: {
@@ -934,11 +914,7 @@ const OrganizationAdmin = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to cancel organization '${rootData.organization?.name}' active offering. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to cancel organization '${rootData.organization?.name}' active offering. Error: ${joinErrors(errors)}.`} />,
           });
 
           onReloadRequired();
@@ -956,11 +932,7 @@ const OrganizationAdmin = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent
-              content={`Failed to cancel organization '${rootData.organization?.name}' active offering. Error: ${error.message}.`}
-            />
-          ),
+          render: <NotificationContent content={`Failed to cancel organization '${rootData.organization?.name}' active offering. Error: ${error.message}.`} />,
         });
 
         onReloadRequired();
@@ -973,10 +945,7 @@ const OrganizationAdmin = ({
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Updating organization '${rootData.organization.name} active offering'...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${rootData.organization.name} active offering'...`} />, infoNotificationOptions);
 
     commitUpdateOrganizationOffering({
       variables: {
@@ -990,11 +959,7 @@ const OrganizationAdmin = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to update organization ${rootData.organization?.name} active offering. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to update organization ${rootData.organization?.name} active offering. Error: ${joinErrors(errors)}.`} />,
           });
 
           onReloadRequired();
@@ -1012,9 +977,7 @@ const OrganizationAdmin = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent content={`Failed to update organization ${rootData.organization?.name} active offering. Error: ${error.message}.`} />
-          ),
+          render: <NotificationContent content={`Failed to update organization ${rootData.organization?.name} active offering. Error: ${error.message}.`} />,
         });
 
         onReloadRequired();
@@ -1036,10 +999,7 @@ const OrganizationAdmin = ({
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Setting zone '${organizationTagDetails.name}' as your preferred zone...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Setting zone '${organizationTagDetails.name}' as your preferred zone...`} />, infoNotificationOptions);
 
     commitAddCustomerDefaultOrganizationTag({
       variables: {
@@ -1052,11 +1012,7 @@ const OrganizationAdmin = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -1072,9 +1028,7 @@ const OrganizationAdmin = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />
-          ),
+          render: <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />,
         });
       },
     });
@@ -1094,10 +1048,7 @@ const OrganizationAdmin = ({
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Removing zone '${organizationTagDetails.name}' as your preferred zone...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Removing zone '${organizationTagDetails.name}' as your preferred zone...`} />, infoNotificationOptions);
 
     commitRemoveCustomerDefaultOrganizationTag({
       variables: {
@@ -1110,11 +1061,7 @@ const OrganizationAdmin = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -1130,11 +1077,7 @@ const OrganizationAdmin = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent
-              content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`}
-            />
-          ),
+          render: <NotificationContent content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${error.message}.`} />,
         });
       },
     });
@@ -1154,10 +1097,7 @@ const OrganizationAdmin = ({
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Setting tag '${organizationTagDetails.name}' as your preferred tag...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Setting tag '${organizationTagDetails.name}' as your preferred tag...`} />, infoNotificationOptions);
 
     commitAddCustomerDefaultOrganizationTag({
       variables: {
@@ -1170,11 +1110,7 @@ const OrganizationAdmin = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to set tag '${organizationTagDetails.name}' as your preferred tag. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to set tag '${organizationTagDetails.name}' as your preferred tag. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -1190,9 +1126,7 @@ const OrganizationAdmin = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent content={`Failed to set tag '${organizationTagDetails.name}' as your preferred tag. Error: ${error.message}.`} />
-          ),
+          render: <NotificationContent content={`Failed to set tag '${organizationTagDetails.name}' as your preferred tag. Error: ${error.message}.`} />,
         });
       },
     });
@@ -1212,10 +1146,7 @@ const OrganizationAdmin = ({
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Removing tag '${organizationTagDetails.name}' as your preferred tag...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Removing tag '${organizationTagDetails.name}' as your preferred tag...`} />, infoNotificationOptions);
 
     commitRemoveCustomerDefaultOrganizationTag({
       variables: {
@@ -1228,11 +1159,7 @@ const OrganizationAdmin = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to remove the tag '${organizationTagDetails.name}' as your preferred tag. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to remove the tag '${organizationTagDetails.name}' as your preferred tag. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -1248,11 +1175,7 @@ const OrganizationAdmin = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent
-              content={`Failed to remove the tag '${organizationTagDetails.name}' as your preferred tag. Error: ${error.message}.`}
-            />
-          ),
+          render: <NotificationContent content={`Failed to remove the tag '${organizationTagDetails.name}' as your preferred tag. Error: ${error.message}.`} />,
         });
       },
     });
@@ -1427,8 +1350,7 @@ const OrganizationAdmin = ({
   const billingZipcode = organizationBillingInfo.zipcode ? organizationBillingInfo.zipcode : '';
   const billingCountry = organizationBillingInfo.country ? organizationBillingInfo.country : '';
   const paymentMethodExist =
-    rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails &&
-    rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
+    rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails && rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
   const activeOffering = rootData.organization ? rootData.organization.activeOffering : null;
   const availableOfferings = rootData.organization && rootData.organization.availableOfferings ? rootData.organization.availableOfferings : [];
 
@@ -1521,11 +1443,7 @@ const OrganizationAdmin = ({
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Email">
-                      <TextField
-                        name="billingEmail"
-                        required={requiredOrganizationBillingFields.billingEmail}
-                        helperText="Email to send invoice to"
-                      />
+                      <TextField name="billingEmail" required={requiredOrganizationBillingFields.billingEmail} helperText="Email to send invoice to" />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Address line 1">
@@ -1591,11 +1509,7 @@ const OrganizationAdmin = ({
                 <StackRow>
                   {rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.map((item) => (
                     <StackColumn key={item.id}>
-                      <CreditCard
-                        lastFourDigits={item.cardLastFourDigit}
-                        expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`}
-                        cardBrand={item.cardBrand}
-                      />
+                      <CreditCard lastFourDigits={item.cardLastFourDigit} expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`} cardBrand={item.cardBrand} />
                       <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>
                         <BodyIconTypography label="Remove Payment Method" invertDefaultColor={paletteMode === 'dark'} startElement={<DeleteIcon />} />
                       </Button>
@@ -1661,14 +1575,7 @@ const OrganizationAdmin = ({
                   <StackRow sx={{ alignItems: 'center' }}>
                     <SmallIconTypography label={`${seledctedZones.length} records selected`} />
                     <PushToRight />
-                    <Button
-                      size="medium"
-                      variant="contained"
-                      color="warning"
-                      startIcon={<DeleteIcon />}
-                      onClick={handleRemoveZonesClick}
-                      sx={{ textTransform: 'none' }}
-                    >
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveZonesClick} sx={{ textTransform: 'none' }}>
                       Remove Zone
                     </Button>
                   </StackRow>
@@ -1742,14 +1649,7 @@ const OrganizationAdmin = ({
                   <StackRow sx={{ alignItems: 'center' }}>
                     <SmallIconTypography label={`${seledctedCustomTags.length} records selected`} />
                     <PushToRight />
-                    <Button
-                      size="medium"
-                      variant="contained"
-                      color="warning"
-                      startIcon={<DeleteIcon />}
-                      onClick={handleRemoveCustomTagsClick}
-                      sx={{ textTransform: 'none' }}
-                    >
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveCustomTagsClick} sx={{ textTransform: 'none' }}>
                       Remove Tag
                     </Button>
                   </StackRow>
@@ -1844,9 +1744,7 @@ const OrganizationAdmin = ({
                       title={
                         <>
                           <BodyIconTypography label={availableOffering.name} invertDefaultColor />
-                          {availableOffering.unitPrice > 0 && (
-                            <BodyIconTypography label={`Unit Price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
-                          )}
+                          {availableOffering.unitPrice > 0 && <BodyIconTypography label={`Unit Price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />}
                           {availableOffering.unitPrice < 0 && <BodyIconTypography label={`Unit Price: Contact Sales`} invertDefaultColor />}
                         </>
                       }
@@ -1892,12 +1790,7 @@ const OrganizationAdmin = ({
 
                     {rootData.organization?.hasAttachedPaymentMethod && availableOffering.unitPrice > 0 && (
                       <CardActions sx={{ justifyContent: 'flex-end' }}>
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          onClick={() => handleUpgradeOfferingClick(availableOffering.code)}
-                          sx={{ textTransform: 'none' }}
-                        >
+                        <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)} sx={{ textTransform: 'none' }}>
                           Upgrade
                         </Button>
                       </CardActions>
@@ -1910,12 +1803,7 @@ const OrganizationAdmin = ({
         </Box>
       </Box>
 
-      <MoreActionsMenu
-        anchorEl={zoneMoreActionsAnchorEl}
-        open={zoneMoreActionsMenuOpen}
-        onMenuItemClick={handleZoneMoreActionsMenuItemClick}
-        options={zoneMoreActionsOption}
-      />
+      <MoreActionsMenu anchorEl={zoneMoreActionsAnchorEl} open={zoneMoreActionsMenuOpen} onMenuItemClick={handleZoneMoreActionsMenuItemClick} options={zoneMoreActionsOption} />
 
       <MoreActionsMenu
         anchorEl={customTagMoreActionsAnchorEl}
@@ -1945,11 +1833,7 @@ const OrganizationAdmin = ({
       )}
 
       {!paymentMethodExist && isAddPaymentMethodDialogOpen && (
-        <AddOrganizationPaymentMethodDialog
-          organizationId={organizationId}
-          isDialogOpen={isAddPaymentMethodDialogOpen}
-          onCancel={handleAddPaymentMethodCancel}
-        />
+        <AddOrganizationPaymentMethodDialog organizationId={organizationId} isDialogOpen={isAddPaymentMethodDialogOpen} onCancel={handleAddPaymentMethodCancel} />
       )}
     </>
   );

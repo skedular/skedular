@@ -14,12 +14,7 @@ import {
   TwoButtonsDialogActions,
 } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { DialogTransition } from '@repo/shared/components/transitions';
@@ -111,10 +106,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
   const filterLocation = createFilterOptions<LocationDetails>();
-  const locations = useMemo<LocationDetails[]>(
-    () => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []),
-    [rootData.locations],
-  );
+  const locations = useMemo<LocationDetails[]>(() => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
 
   const handleAddClick = ({ location: locationId, name, customTagIds, zoneIds }: DeskDetails) => {
     const id = nanoid();
@@ -250,15 +242,7 @@ type RelayProps = {
   onCancel: () => void;
 };
 
-const AddDeskDialogWithRelay = ({
-  onReloadRequired,
-  organizationId,
-  locationId,
-  connectionIds,
-  isDialogOpen,
-  onAddClicked,
-  onCancel,
-}: RelayProps) => {
+const AddDeskDialogWithRelay = ({ onReloadRequired, organizationId, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addDeskDialog_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();

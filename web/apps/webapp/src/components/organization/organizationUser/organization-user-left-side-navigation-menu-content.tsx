@@ -72,15 +72,9 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ organizationId, custome
     >
       <ListItem disablePadding>
         <Link component={NextLink} href={porofileLink}>
-          <ListItemButton
-            selected={fullPath === porofileLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === porofileLink) }}
-          >
+          <ListItemButton selected={fullPath === porofileLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === porofileLink) }}>
             {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <ProfileIcon color="inherit" />}
-                invertDefaultColor={fullPath === porofileLink && paletteMode === 'dark'}
-              />
+              <BodyIconTypography startElement={!hideIcons && <ProfileIcon color="inherit" />} invertDefaultColor={fullPath === porofileLink && paletteMode === 'dark'} />
             )}
             {!collapsed && (
               <BodyIconTypography
@@ -97,15 +91,9 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ organizationId, custome
 
       <ListItem disablePadding>
         <Link component={NextLink} href={manageTeamsLink}>
-          <ListItemButton
-            selected={fullPath === manageTeamsLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageTeamsLink) }}
-          >
+          <ListItemButton selected={fullPath === manageTeamsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageTeamsLink) }}>
             {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <EditIcon color="inherit" />}
-                invertDefaultColor={fullPath === manageTeamsLink && paletteMode === 'dark'}
-              />
+              <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === manageTeamsLink && paletteMode === 'dark'} />
             )}
             {!collapsed && (
               <BodyIconTypography
@@ -122,15 +110,9 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ organizationId, custome
 
       <ListItem disablePadding>
         <Link component={NextLink} href={manageUserLink}>
-          <ListItemButton
-            selected={fullPath === manageUserLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageUserLink) }}
-          >
+          <ListItemButton selected={fullPath === manageUserLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageUserLink) }}>
             {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <EditIcon color="inherit" />}
-                invertDefaultColor={fullPath === manageUserLink && paletteMode === 'dark'}
-              />
+              <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === manageUserLink && paletteMode === 'dark'} />
             )}
             {!collapsed && (
               <BodyIconTypography

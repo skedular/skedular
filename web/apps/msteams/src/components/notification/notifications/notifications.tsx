@@ -4,12 +4,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { AppBarWithStackColumn, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
@@ -128,10 +123,7 @@ const Notifications = ({ queryReference }: Props) => {
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [rejectedIds, setRejectedIds] = useState<string[]>([]);
   const [acceptedIds, setAcceptedIds] = useState<string[]>([]);
-  const myNotifications = useMemo(
-    () => (rootData.myNotifications ? rootData.myNotifications.edges.map((edge) => edge.node) : []),
-    [rootData.myNotifications],
-  );
+  const myNotifications = useMemo(() => (rootData.myNotifications ? rootData.myNotifications.edges.map((edge) => edge.node) : []), [rootData.myNotifications]);
 
   const handleCloseClick = () => {
     navigate(-1);
@@ -143,10 +135,7 @@ const Notifications = ({ queryReference }: Props) => {
       return <></>;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Rejecting invitation to join organization '${notification.organization?.name}'...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Rejecting invitation to join organization '${notification.organization?.name}'...`} />, infoNotificationOptions);
 
     commitRejectInvitationToJoinOrganization({
       variables: {
@@ -159,11 +148,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to reject invitation to join organization '${notification.organization?.name}'. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to reject invitation to join organization '${notification.organization?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -179,11 +164,7 @@ const Notifications = ({ queryReference }: Props) => {
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent
-              content={`Failed to reject invitation to join organization '${notification.organization?.name}'. Error: ${error.message}.`}
-            />
-          ),
+          render: <NotificationContent content={`Failed to reject invitation to join organization '${notification.organization?.name}'. Error: ${error.message}.`} />,
         });
       },
     });
@@ -195,10 +176,7 @@ const Notifications = ({ queryReference }: Props) => {
       return <></>;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Accpeting invitation to join organization '${notification.organization?.name}'...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join organization '${notification.organization?.name}'...`} />, infoNotificationOptions);
 
     commitAcceptInvitationToJoinOrganization({
       variables: {
@@ -211,11 +189,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to accept invitation to join organization '${notification.organization?.name}'. Error: ${joinErrors(errors)}`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to accept invitation to join organization '${notification.organization?.name}'. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -231,11 +205,7 @@ const Notifications = ({ queryReference }: Props) => {
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent
-              content={`Failed to accept invitation to join organization '${notification.organization?.name}'. Error: ${error.message}.`}
-            />
-          ),
+          render: <NotificationContent content={`Failed to accept invitation to join organization '${notification.organization?.name}'. Error: ${error.message}.`} />,
         });
       },
     });
@@ -247,10 +217,7 @@ const Notifications = ({ queryReference }: Props) => {
       return <></>;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Rejecting invitation to join location '${notification.location?.name}'...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Rejecting invitation to join location '${notification.location?.name}'...`} />, infoNotificationOptions);
 
     commitRejectInvitationToJoinLocation({
       variables: {
@@ -263,11 +230,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to reject invitation to join location '${notification.location?.name}'. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to reject invitation to join location '${notification.location?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -283,11 +246,7 @@ const Notifications = ({ queryReference }: Props) => {
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent
-              content={`Failed to reject invitation to join location '${notification.location?.name}'. Error: ${error.message}.`}
-            />
-          ),
+          render: <NotificationContent content={`Failed to reject invitation to join location '${notification.location?.name}'. Error: ${error.message}.`} />,
         });
       },
     });
@@ -299,10 +258,7 @@ const Notifications = ({ queryReference }: Props) => {
       return <></>;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Accpeting invitation to join location '${notification.location?.name}'...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join location '${notification.location?.name}'...`} />, infoNotificationOptions);
 
     commitAcceptInvitationToJoinLocation({
       variables: {
@@ -315,11 +271,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to accept invitation to join location '${notification.location?.name}'. Error: ${joinErrors(errors)}`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to accept invitation to join location '${notification.location?.name}'. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -335,11 +287,7 @@ const Notifications = ({ queryReference }: Props) => {
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent
-              content={`Failed to accept invitation to join location '${notification.location?.name}'. Error: ${error.message}.`}
-            />
-          ),
+          render: <NotificationContent content={`Failed to accept invitation to join location '${notification.location?.name}'. Error: ${error.message}.`} />,
         });
       },
     });
@@ -351,10 +299,7 @@ const Notifications = ({ queryReference }: Props) => {
       return <></>;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Rejecting invitation to join team '${notification.team?.name}'...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Rejecting invitation to join team '${notification.team?.name}'...`} />, infoNotificationOptions);
 
     commitRejectInvitationToJoinTeam({
       variables: {
@@ -367,9 +312,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent content={`Failed to reject invitation to join team '${notification.team?.name}'. Error: ${joinErrors(errors)}.`} />
-            ),
+            render: <NotificationContent content={`Failed to reject invitation to join team '${notification.team?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -397,10 +340,7 @@ const Notifications = ({ queryReference }: Props) => {
       return <></>;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Accpeting invitation to join team '${notification.team?.name}'...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join team '${notification.team?.name}'...`} />, infoNotificationOptions);
 
     commitAcceptInvitationToJoinTeam({
       variables: {
@@ -413,9 +353,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent content={`Failed to accept invitation to join team '${notification.team?.name}'. Error: ${joinErrors(errors)}`} />
-            ),
+            render: <NotificationContent content={`Failed to accept invitation to join team '${notification.team?.name}'. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -464,25 +402,13 @@ const Notifications = ({ queryReference }: Props) => {
 
         switch (notification.notificationType) {
           case 'InvitationToJoinOrganization':
-            return (
-              <SmallIconTypography
-                label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join organization "${notification.organization?.name}"`}
-              />
-            );
+            return <SmallIconTypography label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join organization "${notification.organization?.name}"`} />;
 
           case 'InvitationToJoinLocation':
-            return (
-              <SmallIconTypography
-                label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join location "${notification.location?.name}"`}
-              />
-            );
+            return <SmallIconTypography label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join location "${notification.location?.name}"`} />;
 
           case 'InvitationToJoinTeam':
-            return (
-              <SmallIconTypography
-                label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join team "${notification.team?.name}"`}
-              />
-            );
+            return <SmallIconTypography label={`"${getCustomerFullName(notification.invitedBy)}" has invited you to join team "${notification.team?.name}"`} />;
 
           default:
             return <></>;
@@ -514,12 +440,7 @@ const Notifications = ({ queryReference }: Props) => {
           case 'InvitationToJoinOrganization':
             return (
               <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => handleRejectInvitationToJoinOrganizationClick(id)}
-                  sx={{ textTransform: 'none' }}
-                >
+                <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinOrganizationClick(id)} sx={{ textTransform: 'none' }}>
                   <SmallIconTypography label="Reject" />
                 </Button>
                 <Button variant="contained" onClick={() => handleAcceptInvitationToJoinOrganizationClick(id)} sx={{ textTransform: 'none' }}>
@@ -531,12 +452,7 @@ const Notifications = ({ queryReference }: Props) => {
           case 'InvitationToJoinLocation':
             return (
               <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => handleRejectInvitationToJoinLocationClick(id)}
-                  sx={{ textTransform: 'none' }}
-                >
+                <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinLocationClick(id)} sx={{ textTransform: 'none' }}>
                   <SmallIconTypography label="Reject" />
                 </Button>
                 <Button variant="contained" onClick={() => handleAcceptInvitationToJoinLocationClick(id)} sx={{ textTransform: 'none' }}>
@@ -548,12 +464,7 @@ const Notifications = ({ queryReference }: Props) => {
           case 'InvitationToJoinTeam':
             return (
               <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => handleRejectInvitationToJoinTeamClick(id)}
-                  sx={{ textTransform: 'none' }}
-                >
+                <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinTeamClick(id)} sx={{ textTransform: 'none' }}>
                   <SmallIconTypography label="Reject" />
                 </Button>
                 <Button variant="contained" onClick={() => handleAcceptInvitationToJoinTeamClick(id)} sx={{ textTransform: 'none' }}>

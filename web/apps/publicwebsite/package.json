@@ -9,7 +9,7 @@
     "start": "cross-env PORT=15001 next start",
     "lint": "next lint",
     "lint-fix": "next lint --fix",
-    "format": "prettier --write --single-quote true --trailing-comma all --print-width 150 ./src && pnpm lint-fix"
+    "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix"
   },
   "dependencies": {
     "@date-io/core": "^3.2.0",

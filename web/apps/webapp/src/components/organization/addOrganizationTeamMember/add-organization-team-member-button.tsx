@@ -33,17 +33,7 @@ const RootQuery = graphql`
   }
 `;
 
-const AddOrganizationTeamMemberButton = ({
-  queryReference,
-  onReloadRequired,
-  connectionIds,
-  teamId,
-  fullWidth,
-  label,
-  hideIcon,
-  variant,
-  size,
-}: Props) => {
+const AddOrganizationTeamMemberButton = ({ queryReference, onReloadRequired, connectionIds, teamId, fullWidth, label, hideIcon, variant, size }: Props) => {
   const rootData = usePreloadedQuery<addOrganizationTeamMemberButton_rootQuery>(RootQuery, queryReference);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -66,15 +56,9 @@ const AddOrganizationTeamMemberButton = ({
   return (
     <>
       <Button variant={variant ?? 'text'} onClick={handleButtonClicked} fullWidth={fullWidth} sx={{ textTransform: 'none' }}>
-        {size === 'small' && (
-          <SmallIconTypography label={label ?? 'Add Member'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
-        )}
-        {size === 'medium' && (
-          <BodyIconTypography label={label ?? 'Add Member'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
-        )}
-        {(size === 'large' || !size) && (
-          <LeadIconTypography label={label ?? 'Add Member'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
-        )}
+        {size === 'small' && <SmallIconTypography label={label ?? 'Add Member'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
+        {size === 'medium' && <BodyIconTypography label={label ?? 'Add Member'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
+        {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Member'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
       </Button>
       <AddOrganizationTeamMemberDialog
         rootDataRelay={rootData}
@@ -102,17 +86,7 @@ type RelayProps = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const AddOrganizationTeamMemberButtonWithRelay = ({
-  organizationId,
-  onReloadRequired,
-  connectionIds,
-  teamId,
-  fullWidth,
-  label,
-  hideIcon,
-  variant,
-  size,
-}: RelayProps) => {
+const AddOrganizationTeamMemberButtonWithRelay = ({ organizationId, onReloadRequired, connectionIds, teamId, fullWidth, label, hideIcon, variant, size }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addOrganizationTeamMemberButton_rootQuery>(RootQuery);
 
   useEffect(() => {

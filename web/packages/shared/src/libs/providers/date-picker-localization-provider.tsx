@@ -10,8 +10,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
 
-const DatePickerLocalizationProvider = ({ children }: PropsWithChildren) => (
-  <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>
-);
+const DatePickerLocalizationProvider = ({ children }: PropsWithChildren) => <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>;
 
 export default DatePickerLocalizationProvider;

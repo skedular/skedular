@@ -66,26 +66,12 @@ const OrganizationOnboarding = ({ queryReference, onReloadRequired }: Props) => 
           <StepLabel>Create Team</StepLabel>
         </Step>
       </Stepper>
-      {activeStep === 0 && (
-        <AddOrganization onReloadRequired={() => {}} showCancel={false} onAdded={handleOrganizationAdded} addLabel="Create Organization" />
-      )}
+      {activeStep === 0 && <AddOrganization onReloadRequired={() => {}} showCancel={false} onAdded={handleOrganizationAdded} addLabel="Create Organization" />}
       {activeStep === 1 && organizationId && (
-        <AddLocation
-          organizationId={organizationId}
-          onReloadRequired={() => {}}
-          onAdded={handleLocationAdded}
-          onCancel={handleLocationDismissed}
-          addLabel="Create Location"
-        />
+        <AddLocation organizationId={organizationId} onReloadRequired={() => {}} onAdded={handleLocationAdded} onCancel={handleLocationDismissed} addLabel="Create Location" />
       )}
       {activeStep === 2 && organizationId && (
-        <AddTeam
-          organizationId={organizationId}
-          onReloadRequired={() => {}}
-          onAdded={handleTeamAdded}
-          onCancel={handleTeamDismissed}
-          addLabel="Create Team"
-        />
+        <AddTeam organizationId={organizationId} onReloadRequired={() => {}} onAdded={handleTeamAdded} onCancel={handleTeamDismissed} addLabel="Create Team" />
       )}
     </StackColumn>
   );

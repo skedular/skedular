@@ -18,15 +18,7 @@ import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
 import { CustomerAvatar, OrganizationAvatar } from '@repo/shared/components/avatars';
-import {
-  BodyIconTypography,
-  CaptionIconTypography,
-  LeadIconTypography,
-  PushToRight,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-} from '@repo/shared/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { AddIcon, FeedbackIcon, HamburgerMenuIcon, LogoutIcon, NotificationsIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
@@ -251,9 +243,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
           {!hideWelcomeMessage && (
             <>
-              {!hideOrganizationSelector && !hideOrganizationSelector && rootData.myOrganizations.length !== 0 && (
-                <Divider orientation="vertical" flexItem />
-              )}
+              {!hideOrganizationSelector && !hideOrganizationSelector && rootData.myOrganizations.length !== 0 && <Divider orientation="vertical" flexItem />}
               <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
             </>
           )}

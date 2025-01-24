@@ -1,5 +1,5 @@
 import { AddDeskDialog } from '@/components/desk/addDesk';
-import { getLocationAddLink, getOrganizationLocationManageDesksBaseLink, getOrganizationUsersBaseLink, getTeamAddLink } from '@/components/links';
+import { getOrganizationLocationAddLink, getOrganizationLocationManageDesksBaseLink, getOrganizationTeamAddLink, getOrganizationUsersBaseLink } from '@/components/links';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
 import type { gettingStarted_completeOrganizationMemberOnboardingMutation } from '@/queries/__generated__/gettingStarted_completeOrganizationMemberOnboardingMutation.graphql';
 import type { gettingStarted_query$key } from '@/queries/__generated__/gettingStarted_query.graphql';
@@ -91,19 +91,13 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          themedToast(
-            <NotificationContent content={`Failed to dismiss organization onboarding. Error: ${joinErrors(errors)}.`} />,
-            errorNotificationOptions,
-          );
+          themedToast(<NotificationContent content={`Failed to dismiss organization onboarding. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
         }
 
         onReloadRequired();
       },
       onError: (error) => {
-        themedToast(
-          <NotificationContent content={`Failed to dismiss organization onboarding. Error: ${error.message}}.`} />,
-          errorNotificationOptions,
-        );
+        themedToast(<NotificationContent content={`Failed to dismiss organization onboarding. Error: ${error.message}}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -137,7 +131,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Let's start by setting up the organization's first location." />
-                <Link component={NextLink} href={getLocationAddLink(organizationId)}>
+                <Link component={NextLink} href={getOrganizationLocationAddLink(organizationId)}>
                   <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                     <LeadIconTypography
                       label="Create Location"
@@ -153,7 +147,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Create teams that regularly work or meet together." />
-                <Link component={NextLink} href={getTeamAddLink(organizationId)}>
+                <Link component={NextLink} href={getOrganizationTeamAddLink(organizationId)}>
                   <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                     <LeadIconTypography
                       label="Create Team"

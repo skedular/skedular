@@ -130,12 +130,7 @@ const UserPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoUserPage
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationId={finalOrganizationId}
-        customerId={finalCustomerId}
-      />
+      <MemoUserPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} customerId={finalCustomerId} />
     </ErrorBoundary>
   );
 };

@@ -18,8 +18,7 @@ type Props = {
 const OrganizationBookingInsight = ({ rootDataOrganizationAnalyticsRelay, organizationId }: Props) => {
   const [rootDataOrganizationAnalytics, refetch] = useRefetchableFragment(
     graphql`
-      fragment organizationBookingInsight_organizationAnalytics_query on Query
-      @refetchable(queryName: "organizationBookingInsight_organizationAnalytics_refetchableFragment") {
+      fragment organizationBookingInsight_organizationAnalytics_query on Query @refetchable(queryName: "organizationBookingInsight_organizationAnalytics_refetchableFragment") {
         organizationAnalytics(organizationId: $organizationId, from: $from, until: $to) {
           dailyBookingsTotals {
             date

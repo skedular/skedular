@@ -1,20 +1,8 @@
 import type { invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import {
-  DefaultDialogTitle,
-  FormFieldLabel,
-  FormStackColumn,
-  LeadIconTypography,
-  SmallIconTypography,
-  TwoButtonsDialogActions,
-} from '@repo/shared/components/commons';
-import {
-  NotificationContent,
-  errorNotificationOptions,
-  infoNotificationOptions,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import { NotificationContent, errorNotificationOptions, infoNotificationOptions, successNotificationOptions } from '@repo/shared/components/notification';
 import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { joinErrors } from '@repo/shared/libs/utils';
@@ -51,15 +39,13 @@ const peopleToInviteSchema = object({
 });
 
 const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, onCancel, organizationId }: Props) => {
-  const [commitInviteCustomersToJoinOrganization] = useMutation<invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation>(
-    graphql`
-      mutation invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation($input: InviteCustomersToJoinOrganizationInput!) {
-        inviteCustomersToJoinOrganization(input: $input) {
-          clientMutationId
-        }
+  const [commitInviteCustomersToJoinOrganization] = useMutation<invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation>(graphql`
+    mutation invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation($input: InviteCustomersToJoinOrganizationInput!) {
+      inviteCustomersToJoinOrganization(input: $input) {
+        clientMutationId
       }
-    `,
-  );
+    }
+  `);
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;

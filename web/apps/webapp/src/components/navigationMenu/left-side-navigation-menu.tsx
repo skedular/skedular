@@ -49,13 +49,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, collapsed, hideIcons }: Props) 
       }}
       variant="permanent"
     >
-      <LeftSideNavigationMenuContent
-        rootDataRelay={rootData}
-        collapsed={isCollpased}
-        enableCollapseButton
-        toggleCollapse={toggleCollapse}
-        hideIcons={hideIcons}
-      />
+      <LeftSideNavigationMenuContent rootDataRelay={rootData} collapsed={isCollpased} enableCollapseButton toggleCollapse={toggleCollapse} hideIcons={hideIcons} />
     </Drawer>
   );
 };

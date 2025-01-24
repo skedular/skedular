@@ -6,14 +6,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import {
-  BodyIconTypography,
-  CaptionIconTypography,
-  LeadIconTypography,
-  PushToRight,
-  SmallIconTypography,
-  StackColumn,
-} from '@repo/shared/components/commons';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';

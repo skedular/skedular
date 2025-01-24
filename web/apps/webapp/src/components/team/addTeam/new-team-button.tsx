@@ -1,4 +1,4 @@
-import { getTeamAddLink } from '@/components/links';
+import { getOrganizationTeamAddLink } from '@/components/links';
 import Button from '@mui/material/Button';
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
 import { NewIcon } from '@repo/shared/components/icons';
@@ -14,16 +14,10 @@ type Props = {
 };
 
 const NewTeamButton = ({ organizationId, fullWidth, label, hideIcon, variant, size }: Props) => (
-  <Button href={getTeamAddLink(organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth}>
-    {size === 'small' && (
-      <SmallIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />
-    )}
-    {size === 'medium' && (
-      <BodyIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />
-    )}
-    {(size === 'large' || !size) && (
-      <LeadIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />
-    )}
+  <Button href={getOrganizationTeamAddLink(organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth}>
+    {size === 'small' && <SmallIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
+    {size === 'medium' && <BodyIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
+    {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
   </Button>
 );
 

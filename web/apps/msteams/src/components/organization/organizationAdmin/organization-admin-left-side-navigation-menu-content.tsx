@@ -82,12 +82,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
       <ListItem disablePadding>
         <Link href={setupLink}>
           <ListItemButton selected={fullPath === setupLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === setupLink) }}>
-            {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <EditIcon color="inherit" />}
-                invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
-              />
-            )}
+            {collapsed && <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'} />}
             {!collapsed && (
               <BodyIconTypography
                 label="Organization Setup"
@@ -103,10 +98,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
 
       <ListItem disablePadding>
         <Link href={billingAndPaymentLink}>
-          <ListItemButton
-            selected={fullPath === billingAndPaymentLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === billingAndPaymentLink) }}
-          >
+          <ListItemButton selected={fullPath === billingAndPaymentLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === billingAndPaymentLink) }}>
             {collapsed && (
               <BodyIconTypography
                 startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
@@ -129,12 +121,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
       <ListItem disablePadding>
         <Link href={ssoLink}>
           <ListItemButton selected={fullPath === ssoLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === ssoLink) }}>
-            {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <SSOIcon color="inherit" />}
-                invertDefaultColor={fullPath === ssoLink && paletteMode === 'dark'}
-              />
-            )}
+            {collapsed && <BodyIconTypography startElement={!hideIcons && <SSOIcon color="inherit" />} invertDefaultColor={fullPath === ssoLink && paletteMode === 'dark'} />}
             {!collapsed && (
               <BodyIconTypography
                 label="SSO Setup"
@@ -151,12 +138,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
       <ListItem disablePadding>
         <Link href={zonesLink}>
           <ListItemButton selected={fullPath === zonesLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === zonesLink) }}>
-            {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <ZoneIcon color="inherit" />}
-                invertDefaultColor={fullPath === zonesLink && paletteMode === 'dark'}
-              />
-            )}
+            {collapsed && <BodyIconTypography startElement={!hideIcons && <ZoneIcon color="inherit" />} invertDefaultColor={fullPath === zonesLink && paletteMode === 'dark'} />}
             {!collapsed && (
               <BodyIconTypography
                 label="Zone Setup"
@@ -172,15 +154,9 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
 
       <ListItem disablePadding>
         <Link href={customTagsLink}>
-          <ListItemButton
-            selected={fullPath === customTagsLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === customTagsLink) }}
-          >
+          <ListItemButton selected={fullPath === customTagsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === customTagsLink) }}>
             {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <CustomTagIcon color="inherit" />}
-                invertDefaultColor={fullPath === customTagsLink && paletteMode === 'dark'}
-              />
+              <BodyIconTypography startElement={!hideIcons && <CustomTagIcon color="inherit" />} invertDefaultColor={fullPath === customTagsLink && paletteMode === 'dark'} />
             )}
             {!collapsed && (
               <BodyIconTypography
@@ -197,10 +173,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
 
       <ListItem disablePadding>
         <Link href={subscriptionsLink}>
-          <ListItemButton
-            selected={fullPath === subscriptionsLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === subscriptionsLink) }}
-          >
+          <ListItemButton selected={fullPath === subscriptionsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === subscriptionsLink) }}>
             {collapsed && (
               <BodyIconTypography
                 startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}

@@ -10,30 +10,12 @@ import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
-import {
-  DefaultDialogTitle,
-  GridContainer,
-  PushToRight,
-  SectionIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  TwoButtonsDialogActions,
-} from '@repo/shared/components/commons';
+import { DefaultDialogTitle, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@repo/shared/components/commons';
 import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import { ListGridToggle } from '@repo/shared/components/listGridToggle';
 import { Loading } from '@repo/shared/components/loading';
-import {
-  MoreActionsMenu,
-  moreActionsMenuAllOptions,
-  MoreActionsMenuItemType,
-  MoreActionsMenuOptionType,
-} from '@repo/shared/components/moreActionsMenu';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { DialogTransition } from '@repo/shared/components/transitions';
@@ -154,12 +136,8 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
       fragment organizationLocations_locations_availableOrganizationDesks_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationLocations_locations_availableOrganizationDesks_refetchableFragment") {
-        locations(
-          first: $count
-          after: $cursor
-          where: { organizationId: $organizationId, zoneIds: $zoneIds, customTagIds: $customTagIds }
-          orderBy: $locationsSortingValues
-        ) @connection(key: "organizationLocations_locations") {
+        locations(first: $count, after: $cursor, where: { organizationId: $organizationId, zoneIds: $zoneIds, customTagIds: $customTagIds }, orderBy: $locationsSortingValues)
+          @connection(key: "organizationLocations_locations") {
           __id
           totalCount
           edges {
@@ -193,14 +171,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           }
         }
         availableDesks(
-          where: {
-            organizationId: $organizationId
-            date: $todayDate
-            deskIdsToInclude: []
-            zoneIds: $zoneIds
-            customTagIds: $customTagIds
-            combineCustomTagsZones: true
-          }
+          where: { organizationId: $organizationId, date: $todayDate, deskIdsToInclude: [], zoneIds: $zoneIds, customTagIds: $customTagIds, combineCustomTagsZones: true }
         ) {
           location {
             uniqueId
@@ -267,8 +238,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
   ];
 
   const locations = useMemo(
-    () =>
-      rootDataRefetchable.locations ? rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)) : [],
+    () => (rootDataRefetchable.locations ? rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)) : []),
     [rootDataRefetchable.locations],
   );
   const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
@@ -373,10 +343,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
 
     commitAddCustomerDefaultLocation({
       variables: {
@@ -389,11 +356,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -409,9 +372,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />
-          ),
+          render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />,
         });
       },
     });
@@ -427,10 +388,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
 
     commitRemoveCustomerDefaultLocation({
       variables: {
@@ -443,11 +401,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -463,11 +417,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent
-              content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`}
-            />
-          ),
+          render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${error.message}.`} />,
         });
       },
     });
@@ -487,9 +437,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
 
   const rows: RowType[] = locations.map((location) => {
     const desksCount = location.desks.length;
-    const availableDesksCount = rootDataRefetchable.availableDesks
-      ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length
-      : 0;
+    const availableDesksCount = rootDataRefetchable.availableDesks ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length : 0;
     const availablePercentage = (availableDesksCount / desksCount) * 100;
     const zones = location.zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }));
 
@@ -696,12 +644,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
         </StackColumn>
       </StackColumn>
 
-      <MoreActionsMenu
-        anchorEl={moreActionsAnchorEl}
-        open={moreActionsMenuOpen}
-        onMenuItemClick={handleMoreActionsMenuItemClick}
-        options={moreActionsOption}
-      />
+      <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
 
       {locationDetails && (
         <Dialog slots={{ transition: DialogTransition }} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>

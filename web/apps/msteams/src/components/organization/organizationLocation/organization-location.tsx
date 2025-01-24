@@ -20,18 +20,8 @@ import {
 import { CustomTags } from '@repo/shared/components/customTag';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
-import {
-  MoreActionsMenu,
-  moreActionsMenuAllOptions,
-  MoreActionsMenuItemType,
-  MoreActionsMenuOptionType,
-} from '@repo/shared/components/moreActionsMenu';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { Search } from '@repo/shared/components/search';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
@@ -137,11 +127,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       fragment organizationLocation_desks_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationLocation_desks_refetchableFragment") {
-        desks(
-          first: $count
-          after: $cursor
-          where: { locationId: $locationId, nameContains: $deskNameSearchText, customTagIds: $deskCustomTagIds, zoneIds: $deskZoneIds }
-        ) @connection(key: "organizationLocation_desks") {
+        desks(first: $count, after: $cursor, where: { locationId: $locationId, nameContains: $deskNameSearchText, customTagIds: $deskCustomTagIds, zoneIds: $deskZoneIds })
+          @connection(key: "organizationLocation_desks") {
           __id
           totalCount
           edges {
@@ -683,10 +670,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Setting desk '${deskDetails.name}' as your preferred desk...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Setting desk '${deskDetails.name}' as your preferred desk...`} />, infoNotificationOptions);
 
     commitAddCustomerDefaultDesk({
       variables: {
@@ -699,9 +683,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent content={`Failed to set desk '${deskDetails.name}' as your preferred desk. Error: ${joinErrors(errors)}.`} />
-            ),
+            render: <NotificationContent content={`Failed to set desk '${deskDetails.name}' as your preferred desk. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -736,10 +718,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       return;
     }
 
-    const toastId = themedToast(
-      <NotificationContent content={`Removing desk '${deskDetails.name}' as your preferred desk...`} />,
-      infoNotificationOptions,
-    );
+    const toastId = themedToast(<NotificationContent content={`Removing desk '${deskDetails.name}' as your preferred desk...`} />, infoNotificationOptions);
 
     commitRemoveCustomerDefaultDesk({
       variables: {
@@ -752,11 +731,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: (
-              <NotificationContent
-                content={`Failed to remove the desk '${deskDetails.name}' as your preferred desk. Error: ${joinErrors(errors)}.`}
-              />
-            ),
+            render: <NotificationContent content={`Failed to remove the desk '${deskDetails.name}' as your preferred desk. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -772,9 +747,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: (
-            <NotificationContent content={`Failed to remove the desk '${deskDetails.name}' as your preferred desk. Error: ${error.message}.`} />
-          ),
+          render: <NotificationContent content={`Failed to remove the desk '${deskDetails.name}' as your preferred desk. Error: ${error.message}.`} />,
         });
       },
     });
@@ -960,18 +933,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                 </Grid>
 
                 <Grid>
-                  <AddDeskButton
-                    onReloadRequired={onReloadRequired}
-                    organizationId={organizationId}
-                    locationId={locationId}
-                    connectionIds={desksConnectionIds}
-                  />
-                  <BulkAddDeskButton
-                    onReloadRequired={onReloadRequired}
-                    organizationId={organizationId}
-                    locationId={locationId}
-                    connectionIds={desksConnectionIds}
-                  />
+                  <AddDeskButton onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} connectionIds={desksConnectionIds} />
+                  <BulkAddDeskButton onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} connectionIds={desksConnectionIds} />
                 </Grid>
               </GridContainer>
               <Divider />
@@ -1004,14 +967,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                     <Button size="medium" variant="contained" color="secondary" onClick={handleActivateDesksClick} sx={defaultButtonStyle}>
                       Activate Desk
                     </Button>
-                    <Button
-                      size="medium"
-                      variant="contained"
-                      color="warning"
-                      startIcon={<DeleteIcon />}
-                      onClick={handleRemoveDesksClick}
-                      sx={{ textTransform: 'none' }}
-                    >
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveDesksClick} sx={{ textTransform: 'none' }}>
                       Remove Desk
                     </Button>
                   </StackRow>
@@ -1049,12 +1005,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
         </Box>
       </Box>
 
-      <MoreActionsMenu
-        anchorEl={deskMoreActionsAnchorEl}
-        open={deskMoreActionsMenuOpen}
-        onMenuItemClick={handleDeskMoreActionsMenuItemClick}
-        options={deskMoreActionsOption}
-      />
+      <MoreActionsMenu anchorEl={deskMoreActionsAnchorEl} open={deskMoreActionsMenuOpen} onMenuItemClick={handleDeskMoreActionsMenuItemClick} options={deskMoreActionsOption} />
     </>
   );
 };

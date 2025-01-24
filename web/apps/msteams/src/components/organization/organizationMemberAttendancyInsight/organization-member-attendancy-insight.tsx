@@ -92,12 +92,7 @@ const OrganizationMemberAttendancyInsight = ({ rootDataOrganizationAnalyticsRela
       <CardHeader title={<SectionIconTypography label="Member Attendancy Insights" invertDefaultColor />} />
       <CardContent>
         <AnalyticsDaterangeSelector defaultPeriod="month" onDateRangeChange={handleDateRangeChange} />
-        <BarChart
-          dataset={dataset}
-          xAxis={[{ scaleType: 'band', dataKey: 'date' }]}
-          series={[{ dataKey: 'percentage', valueFormatter }]}
-          {...chartSettings}
-        />
+        <BarChart dataset={dataset} xAxis={[{ scaleType: 'band', dataKey: 'date' }]} series={[{ dataKey: 'percentage', valueFormatter }]} {...chartSettings} />
       </CardContent>
     </Card>
   );

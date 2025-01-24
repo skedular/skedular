@@ -17,12 +17,7 @@ import {
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { DeleteIcon } from '@repo/shared/components/icons';
-import {
-  errorNotificationOptions,
-  infoNotificationOptions,
-  NotificationContent,
-  successNotificationOptions,
-} from '@repo/shared/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
@@ -93,12 +88,8 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
           timezone
           phoneNumber
         }
-        customerTeams(
-          first: $count
-          after: $cursor
-          where: { organizationId: $organizationId, customerId: $customerId }
-          orderBy: $teamsSortingValues
-        ) @connection(key: "organizationUser_customerTeams") {
+        customerTeams(first: $count, after: $cursor, where: { organizationId: $organizationId, customerId: $customerId }, orderBy: $teamsSortingValues)
+          @connection(key: "organizationUser_customerTeams") {
           __id
           totalCount
           edges {
@@ -229,16 +220,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     navigate(getOrganizationUsersBaseLink(organizationId));
   };
 
-  const handleProfileDetailUpdateClick = ({
-    timezone,
-    designation,
-    title,
-    name,
-    givenName,
-    middleName,
-    familyName,
-    phoneNumber,
-  }: ProfileDetailsDetails) => {
+  const handleProfileDetailUpdateClick = ({ timezone, designation, title, name, givenName, middleName, familyName, phoneNumber }: ProfileDetailsDetails) => {
     if (!rootData.customer) {
       return;
     }
@@ -525,9 +507,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
                   rootDataRelay={rootData}
                   teamDetailsRelay={team}
                   connectionIds={connectionIds}
-                  teammates={team.members
-                    .filter(({ organizationMember }) => !!organizationMember)!
-                    .map(({ organizationMember }) => organizationMember!.customer)}
+                  teammates={team.members.filter(({ organizationMember }) => !!organizationMember)!.map(({ organizationMember }) => organizationMember!.customer)}
                 />
               </Grid>
             ))}
@@ -556,14 +536,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
                   Activate User
                 </Button>
               )}
-              <Button
-                size="medium"
-                variant="contained"
-                color="warning"
-                startIcon={<DeleteIcon />}
-                onClick={handleRemoveUserClick}
-                sx={{ textTransform: 'none' }}
-              >
+              <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveUserClick} sx={{ textTransform: 'none' }}>
                 Remove User
               </Button>
             </StackRow>
