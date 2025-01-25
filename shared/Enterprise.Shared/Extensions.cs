@@ -17,10 +17,11 @@ public static class Extensions
             configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         ArgumentNullException.ThrowIfNull(applicationConfiguration);
 
-        if (!string.IsNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS?.ApiKey))
-        {
-            services.AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = applicationConfiguration.IdentityProviders.WorkOS.ApiKey }));
-        }
+        ArgumentNullException.ThrowIfNull(applicationConfiguration.IdentityProviders.WorkOS);
+        ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.ApiKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.Issuer);
+
+        services.AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = applicationConfiguration.IdentityProviders.WorkOS.ApiKey }));
 
         return services
             .AddScoped<IGrpcAuthenticator, GrpcAuthenticator>()
@@ -30,14 +31,7 @@ public static class Extensions
             .AddSingleton<IAzureEntraTokenService, AzureEntraTokenService>()
             .AddSingleton<IEnumerable<ITokenService>>(sp =>
             {
-                var tokenServices = new List<ITokenService>();
-
-                if (applicationConfiguration.IdentityProviders.WorkOS is not null &&
-                    applicationConfiguration.IdentityProviders.WorkOS.JwksUri is not null &&
-                    !string.IsNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.Issuer))
-                {
-                    tokenServices.Add(sp.GetRequiredService<IWorkOSTokenService>());
-                }
+                var tokenServices = new List<ITokenService> { sp.GetRequiredService<IWorkOSTokenService>() };
 
                 if (applicationConfiguration.IdentityProviders.Cognito is not null &&
                     applicationConfiguration.IdentityProviders.Cognito.JwksUri is not null &&
