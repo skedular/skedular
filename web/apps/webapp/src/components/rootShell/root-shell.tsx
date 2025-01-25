@@ -133,7 +133,7 @@ const RootShell = ({
       <Observability />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
-        <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />
+        {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />}
         <Box sx={{ flexGrow: 1 }}>
           <AppBar
             rootDataRelay={rootData}
