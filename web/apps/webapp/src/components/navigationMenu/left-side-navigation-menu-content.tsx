@@ -20,13 +20,21 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
+import {
+  coal,
+  defaultPadding,
+  emerald,
+  getSelectedListItemBorderRadius,
+  sandstone,
+  secondDrawerCollapsedDrawerWidth,
+  secondDrawerExpandedDrawerWidth,
+  selectedListItemPaddings,
+} from '@repo/shared/libs/theme';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { collapsedDrawerWidth, expandedDrawerWidth } from './commons';
 
 type Props = {
   rootDataRelay: leftSideNavigationMenuContent_query$key;
@@ -57,7 +65,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
   const { organizationId } = useParams();
-  const maxWidth = collapsed ? collapsedDrawerWidth : expandedDrawerWidth;
+  const maxWidth = collapsed ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
   const logoUrl =
     paletteMode === 'dark'
       ? collapsed

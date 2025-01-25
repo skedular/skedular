@@ -14,12 +14,10 @@ type Props = {
   label: string;
   onClose?: () => void;
   hideClose?: boolean;
-  useChildrenPadding?: boolean;
 };
 
-const AppBarWithStackColumn = ({ children, label, onClose, hideClose, useChildrenPadding }: PropsWithChildren<Props>) => {
+const AppBarWithStackColumn = ({ children, label, onClose, hideClose }: PropsWithChildren<Props>) => {
   const paletteMode = useContext(PaletteModeContext);
-  const childrenSx = useChildrenPadding ? { maxWidth: maxScreenWidth, padding: defaultPadding } : { maxWidth: maxScreenWidth };
 
   return (
     <StackColumn>
@@ -56,7 +54,7 @@ const AppBarWithStackColumn = ({ children, label, onClose, hideClose, useChildre
         </Toolbar>
       </AppBar>
 
-      <StackColumn sx={childrenSx}>{children}</StackColumn>
+      <StackColumn sx={{ maxWidth: maxScreenWidth, paddingBottom: defaultPadding }}>{children}</StackColumn>
     </StackColumn>
   );
 };

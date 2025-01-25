@@ -35,7 +35,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
@@ -43,7 +43,6 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransit
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
-import { expandedDrawerWidthPx } from './commons';
 import OrganizationUsersLeftSideNavigationMenuContent from './organization-users-left-side-navigation-menu-content';
 
 type Props = {
@@ -720,7 +719,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     <>
       <Box sx={{ display: 'flex' }}>
         <OrganizationUsersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
-        <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+        <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Organization Users">
             <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <GridContainer sx={{ justifyContent: 'space-between' }}>

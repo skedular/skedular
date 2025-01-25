@@ -25,7 +25,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { Search } from '@repo/shared/components/search';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { AddDeskButton } from 'components/desk/addDesk';
@@ -50,7 +50,6 @@ import type { organizationLocation_desks_refetchableFragment } from './__generat
 import type { organizationLocation_query$key } from './__generated__/organizationLocation_query.graphql';
 import type { organizationLocation_removeCustomerDefaultDeskMutation } from './__generated__/organizationLocation_removeCustomerDefaultDeskMutation.graphql';
 import type { organizationLocation_updateLocationMutation } from './__generated__/organizationLocation_updateLocationMutation.graphql';
-import { expandedDrawerWidthPx } from './commons';
 import OrganizationLocationLeftSideNavigationMenuContent from './organization-location-left-side-navigation-menu-content';
 
 type Props = {
@@ -867,7 +866,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     <>
       <Box sx={{ display: 'flex' }}>
         <OrganizationLocationLeftSideNavigationMenuContent organizationId={organizationId} locationId={locationId} hideIcons />
-        <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+        <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Location Information">
             <Form
               onSubmit={handleLocationDetailUpdateClick}

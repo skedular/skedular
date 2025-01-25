@@ -1,6 +1,6 @@
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
+import { secondDrawerExpandedDrawerWidth } from '@repo/shared/libs/theme';
 import { memo } from 'react';
-import { expandedDrawerWidth } from './commons';
 import LeftSideNavigationMenuContent from './left-side-navigation-menu-content';
 
 type Props = {
@@ -16,9 +16,9 @@ const MobileLeftSideNavigationMenu = ({ open, toggleDrawer }: Props) => {
       onClose={toggleDrawer(false)}
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        width: expandedDrawerWidth + 10,
+        width: secondDrawerExpandedDrawerWidth + 10,
         [`& .${drawerClasses.paper}`]: {
-          width: expandedDrawerWidth + 10,
+          width: secondDrawerExpandedDrawerWidth + 10,
         },
       }}
     >

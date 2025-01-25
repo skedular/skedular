@@ -22,6 +22,7 @@ export const getOrganizationAdminSSOBaseLink = (id: string) => `${getOrganizatio
 export const getOrganizationAdminZonesBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=zones-setup`;
 export const getOrganizationAdminCustomTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=tags-setup`;
 export const getOrganizationAdminSubscriptionsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=subscriptions`;
+export const getOrganizationAdminManageOrganizationBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=manage-organization`;
 export const getOrganizationTeamAddLink = (id: string) => `${getOrganizationBaseLink(id)}/teams/add`;
 export const getOrganizationLocationAddLink = (id: string) => `${getOrganizationBaseLink(id)}/locations/add`;
 export const getNotificationsBaseLink = () => `/notifications`;

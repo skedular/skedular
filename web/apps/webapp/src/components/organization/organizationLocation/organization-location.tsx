@@ -37,7 +37,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { Search } from '@repo/shared/components/search';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -49,7 +49,6 @@ import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import CustomTagSelector from '../customTagSelector/custom-tag-selector';
 import ZoneSelector from '../zoneSelector/zone-selector';
-import { expandedDrawerWidthPx } from './commons';
 import OrganizationLocationLeftSideNavigationMenuContent from './organization-location-left-side-navigation-menu-content';
 
 type Props = {
@@ -866,7 +865,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     <>
       <Box sx={{ display: 'flex' }}>
         <OrganizationLocationLeftSideNavigationMenuContent organizationId={organizationId} locationId={locationId} hideIcons />
-        <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+        <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Location Information">
             <Form
               onSubmit={handleLocationDetailUpdateClick}

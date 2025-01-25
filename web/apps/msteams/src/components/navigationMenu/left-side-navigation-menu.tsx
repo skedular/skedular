@@ -1,6 +1,6 @@
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
+import { secondDrawerCollapsedDrawerWidth, secondDrawerExpandedDrawerWidth } from '@repo/shared/libs/theme';
 import { memo, useState } from 'react';
-import { collapsedDrawerWidth, expandedDrawerWidth } from './commons';
 import LeftSideNavigationMenuContent from './left-side-navigation-menu-content';
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 const LeftSideNavigationMenu = ({ collapsed, hideIcons }: Props) => {
   const [isCollpased, setIsCollpased] = useState(collapsed);
-  const drawerWidth = isCollpased ? collapsedDrawerWidth : expandedDrawerWidth;
+  const drawerWidth = isCollpased ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
 
   const toggleCollapse = (collapsed: boolean) => {
     setIsCollpased(collapsed);

@@ -5,11 +5,17 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { LocationIcon, OrganizationIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
+import {
+  getSelectedListItemBorderRadius,
+  sandstone,
+  secondDrawerCollapsedDrawerWidth,
+  secondDrawerCollapsedDrawerWidthPx,
+  secondDrawerExpandedDrawerWidth,
+  secondDrawerExpandedDrawerWidthPx,
+} from '@repo/shared/libs/theme';
 import { getOrganizationAnalyticsBaseLink, getOrganizationLocationsAnalyticsLocationsBaseLink } from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
 
 type Props = {
   organizationId: string;
@@ -22,7 +28,7 @@ const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationId, co
   const pathname = location.pathname;
   const [searchParams] = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
-  const maxWidth = collapsed ? collapsedDrawerWidth : expandedDrawerWidth;
+  const maxWidth = collapsed ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
   const styles = {
     width: maxWidth,
     borderRadius: 4,
@@ -65,7 +71,7 @@ const OrganizationAnalyticsLeftSideNavigationMenuContent = ({ organizationId, co
         paddingTop: { xs: 1, sm: 1, md: 3 },
         height: '100vh',
         position: 'fixed',
-        width: collapsed ? collapsedDrawerWidthPx : expandedDrawerWidthPx,
+        width: collapsed ? secondDrawerCollapsedDrawerWidthPx : secondDrawerExpandedDrawerWidthPx,
       }}
     >
       <ListItem disablePadding>

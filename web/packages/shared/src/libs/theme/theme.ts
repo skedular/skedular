@@ -44,4 +44,9 @@ export const getSelectedListItemBorderRadius = (selected: boolean): number => (s
 
 const createTheme = (mode: PaletteMode): Theme => createMuiTheme(getDesignTokens(mode));
 
+export const secondDrawerExpandedDrawerWidth = 210;
+export const secondDrawerCollapsedDrawerWidth = 80;
+export const secondDrawerExpandedDrawerWidthPx = '230px';
+export const secondDrawerCollapsedDrawerWidthPx = '100px';
+
 export default createTheme;

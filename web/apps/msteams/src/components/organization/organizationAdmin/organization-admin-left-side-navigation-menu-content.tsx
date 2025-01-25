@@ -5,10 +5,18 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { BillingAndPaymentIcon, CustomTagIcon, EditIcon, SSOIcon, SubscriptionsIcon, ZoneIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { getSelectedListItemBorderRadius, sandstone } from '@repo/shared/libs/theme';
+import {
+  getSelectedListItemBorderRadius,
+  sandstone,
+  secondDrawerCollapsedDrawerWidth,
+  secondDrawerCollapsedDrawerWidthPx,
+  secondDrawerExpandedDrawerWidth,
+  secondDrawerExpandedDrawerWidthPx,
+} from '@repo/shared/libs/theme';
 import {
   getOrganizationAdminBillingAndPaymentBaseLink,
   getOrganizationAdminCustomTagsBaseLink,
+  getOrganizationAdminManageOrganizationBaseLink,
   getOrganizationAdminSetupBaseLink,
   getOrganizationAdminSSOBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
@@ -16,7 +24,6 @@ import {
 } from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { collapsedDrawerWidth, collapsedDrawerWidthPx, expandedDrawerWidth, expandedDrawerWidthPx } from './commons';
 
 type Props = {
   organizationId: string;
@@ -29,7 +36,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   const pathname = location.pathname;
   const [searchParams] = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
-  const maxWidth = collapsed ? collapsedDrawerWidth : expandedDrawerWidth;
+  const maxWidth = collapsed ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
   const styles = {
     width: maxWidth,
     borderRadius: 4,
@@ -66,6 +73,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   const zonesLink = getOrganizationAdminZonesBaseLink(organizationId);
   const customTagsLink = getOrganizationAdminCustomTagsBaseLink(organizationId);
   const subscriptionsLink = getOrganizationAdminSubscriptionsBaseLink(organizationId);
+  const manageOrganizationLink = getOrganizationAdminManageOrganizationBaseLink(organizationId);
 
   return (
     <List
@@ -76,7 +84,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
         paddingTop: { xs: 1, sm: 1, md: 3 },
         height: '100vh',
         position: 'fixed',
-        width: collapsed ? collapsedDrawerWidthPx : expandedDrawerWidthPx,
+        width: collapsed ? secondDrawerCollapsedDrawerWidthPx : secondDrawerExpandedDrawerWidthPx,
       }}
     >
       <ListItem disablePadding>
@@ -186,6 +194,25 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
                 startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === subscriptionsLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link href={manageOrganizationLink}>
+          <ListItemButton selected={fullPath === manageOrganizationLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageOrganizationLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === manageOrganizationLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Manage Organization"
+                startElement={!hideIcons && <EditIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === manageOrganizationLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

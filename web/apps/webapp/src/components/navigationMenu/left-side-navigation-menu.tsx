@@ -1,10 +1,10 @@
 import { getNotificationsBaseLink, getOrganizationAddLink } from '@/components/links';
 import type { leftSideNavigationMenu_query$key } from '@/queries/__generated__/leftSideNavigationMenu_query.graphql';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
+import { secondDrawerCollapsedDrawerWidth, secondDrawerExpandedDrawerWidth } from '@repo/shared/libs/theme';
 import { usePathname } from 'next/navigation';
 import { memo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { collapsedDrawerWidth, expandedDrawerWidth } from './commons';
 import LeftSideNavigationMenuContent from './left-side-navigation-menu-content';
 
 type Props = {
@@ -25,7 +25,7 @@ const LeftSideNavigationMenu = ({ rootDataRelay, collapsed, hideIcons }: Props) 
 
   const pathName = usePathname();
   const [isCollpased, setIsCollpased] = useState(collapsed);
-  const drawerWidth = isCollpased ? collapsedDrawerWidth : expandedDrawerWidth;
+  const drawerWidth = isCollpased ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
 
   const toggleCollapse = (collapsed: boolean) => {
     setIsCollpased(collapsed);

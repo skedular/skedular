@@ -36,7 +36,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { Search } from '@repo/shared/components/search';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -46,7 +46,6 @@ import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
-import { expandedDrawerWidthPx } from './commons';
 import OrganizationTeamLeftSideNavigationMenuContent from './organization-team-left-side-navigation-menu-content';
 
 type Props = {
@@ -774,7 +773,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     <>
       <Box sx={{ display: 'flex' }}>
         <OrganizationTeamLeftSideNavigationMenuContent organizationId={organizationId} teamId={teamId} hideIcons />
-        <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+        <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Team Information">
             <Form
               onSubmit={handleTeamDetailUpdateClick}

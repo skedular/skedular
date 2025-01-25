@@ -35,7 +35,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { Search } from '@repo/shared/components/search';
 import { Zone } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getOrganizationBaseLink } from 'components/links';
@@ -58,6 +58,7 @@ import type { organizationAdmin_cancelOrganizationOfferingMutation } from './__g
 import type { organizationAdmin_customTags_query$key } from './__generated__/organizationAdmin_customTags_query.graphql';
 import type { organizationAdmin_customTags_refetchableFragment } from './__generated__/organizationAdmin_customTags_refetchableFragment.graphql';
 import type { organizationAdmin_deleteCustomTagsMutation } from './__generated__/organizationAdmin_deleteCustomTagsMutation.graphql';
+import type { organizationAdmin_deleteOrganizationMutation } from './__generated__/organizationAdmin_deleteOrganizationMutation.graphql';
 import type { organizationAdmin_deleteZonesMutation } from './__generated__/organizationAdmin_deleteZonesMutation.graphql';
 import type { organizationAdmin_organizationPaymentMethodsDetails_query$key } from './__generated__/organizationAdmin_organizationPaymentMethodsDetails_query.graphql';
 import type { organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment } from './__generated__/organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment.graphql';
@@ -69,7 +70,6 @@ import type { organizationAdmin_updateOrganizationMutation } from './__generated
 import type { organizationAdmin_updateOrganizationOfferingMutation } from './__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_zones_query$key } from './__generated__/organizationAdmin_zones_query.graphql';
 import type { organizationAdmin_zones_refetchableFragment } from './__generated__/organizationAdmin_zones_refetchableFragment.graphql';
-import { expandedDrawerWidthPx } from './commons';
 import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin-left-side-navigation-menu-content';
 
 type Props = {
@@ -382,6 +382,16 @@ const OrganizationAdmin = ({
           preferredZones {
             uniqueId
           }
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteOrganization] = useMutation<organizationAdmin_deleteOrganizationMutation>(graphql`
+    mutation organizationAdmin_deleteOrganizationMutation($input: DeleteOrganizationInput!) {
+      deleteOrganization(input: $input) {
+        organization {
+          id
         }
       }
     }
@@ -1182,6 +1192,48 @@ const OrganizationAdmin = ({
     });
   };
 
+  const handleRemoveOrganizationClicked = () => {
+    if (!rootData.organization) {
+      return;
+    }
+
+    const organizationDetails = rootData.organization;
+
+    const toastId = themedToast(<NotificationContent content={`Removing organization '${organizationDetails.name}'...`} />, infoNotificationOptions);
+
+    commitDeleteOrganization({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: organizationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove the organization '${organizationDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization '${organizationDetails.name}' removed.`} />,
+        });
+
+        navigate('/');
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove the organization '${organizationDetails.name}'. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   if (!rootData.organization) {
     return <></>;
   }
@@ -1359,7 +1411,7 @@ const OrganizationAdmin = ({
     <>
       <Box sx={{ display: 'flex' }}>
         <OrganizationAdminLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
-        <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+        <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Organization Information">
             <Form
               onSubmit={handleOrganizationDetailUpdateClick}
@@ -1800,6 +1852,23 @@ const OrganizationAdmin = ({
                 </Grid>
               ))}
             </GridContainer>
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['manage-organization'] = divElement;
+              }}
+            >
+              <SectionIconTypography label="Manage" />
+              <BodyIconTypography label="Remove your organization" />
+              <Divider />
+            </StackColumn>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveOrganizationClicked} sx={{ textTransform: 'none' }}>
+                Remove Organization
+              </Button>
+            </StackRow>
           </AppBarWithStackColumn>
         </Box>
       </Box>

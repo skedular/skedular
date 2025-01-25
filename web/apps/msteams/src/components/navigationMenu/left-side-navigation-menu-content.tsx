@@ -7,10 +7,9 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { CollpaseDrawerIcon, HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
+import { getSelectedListItemBorderRadius, sandstone, secondDrawerCollapsedDrawerWidth, secondDrawerExpandedDrawerWidth, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import { memo, useContext } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { collapsedDrawerWidth, expandedDrawerWidth } from './commons';
 
 type Props = {
   collapsed?: boolean;
@@ -23,7 +22,7 @@ const LeftSideNavigationMenuContent = ({ collapsed, enableCollapseButton, toggle
   const location = useLocation();
   const pathname = location.pathname;
   const paletteMode = useContext(PaletteModeContext);
-  const maxWidth = collapsed ? collapsedDrawerWidth : expandedDrawerWidth;
+  const maxWidth = collapsed ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
   const logoUrl =
     paletteMode === 'dark'
       ? collapsed

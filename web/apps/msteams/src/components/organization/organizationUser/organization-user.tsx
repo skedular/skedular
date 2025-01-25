@@ -19,7 +19,7 @@ import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { DeleteIcon } from '@repo/shared/components/icons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultButtonStyle, defaultPadding } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getOrganizationUsersBaseLink } from 'components/links';
@@ -36,7 +36,6 @@ import type { organizationUser_changeOrganizationUsersStatusMutation } from './_
 import type { organizationUser_query$key } from './__generated__/organizationUser_query.graphql';
 import type { organizationUser_removeOrganizationUsersMutation } from './__generated__/organizationUser_removeOrganizationUsersMutation.graphql';
 import type { organizationUser_updateCustomerDetailsMutation } from './__generated__/organizationUser_updateCustomerDetailsMutation.graphql';
-import { expandedDrawerWidthPx } from './commons';
 import OrganizationUserLeftSideNavigationMenuContent from './organization-user-left-side-navigation-menu-content';
 
 type Props = {
@@ -409,7 +408,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   return (
     <Box sx={{ display: 'flex' }}>
       <OrganizationUserLeftSideNavigationMenuContent organizationId={organizationId} customerId={customerId} hideIcons />
-      <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+      <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
         <AppBarWithStackColumn onClose={handleCloseClick} label="Edit User Details">
           <Form
             onSubmit={handleProfileDetailUpdateClick}

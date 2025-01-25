@@ -1,2 +1,2 @@
-export const expandedDrawerWidth = 300;
-export const collapsedDrawerWidth = 80;
+export const secondDrawerExpandedDrawerWidth = 300;
+export const secondDrawerCollapsedDrawerWidth = 80;

@@ -26,7 +26,7 @@ import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
 import { Search } from '@repo/shared/components/search';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame } from '@repo/shared/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getOrganizationBaseLink, getOrganizationUserProfileBaseLink } from 'components/links';
@@ -44,7 +44,6 @@ import type { OrganizationMemberRole, organizationUsers_organizationMembers_quer
 import type { organizationUsers_organizationUsers_refetchableFragment } from './__generated__/organizationUsers_organizationUsers_refetchableFragment.graphql';
 import type { organizationUsers_removeOrganizationUsersMutation } from './__generated__/organizationUsers_removeOrganizationUsersMutation.graphql';
 import type { organizationUsers_rootQuery } from './__generated__/organizationUsers_rootQuery.graphql';
-import { expandedDrawerWidthPx } from './commons';
 import OrganizationUsersLeftSideNavigationMenuContent from './organization-users-left-side-navigation-menu-content';
 
 type Props = {
@@ -721,7 +720,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     <>
       <Box sx={{ display: 'flex' }}>
         <OrganizationUsersLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
-        <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+        <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Organization Users">
             <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <GridContainer sx={{ justifyContent: 'space-between' }}>

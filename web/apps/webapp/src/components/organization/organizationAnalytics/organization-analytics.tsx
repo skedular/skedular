@@ -9,11 +9,10 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import { AppBarWithStackColumn, GridContainer, SectionIconTypography, StackColumn } from '@repo/shared/components/commons';
-import { defaultPadding } from '@repo/shared/libs/theme';
+import { defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { expandedDrawerWidthPx } from './commons';
 import OrganizationAnalyticsLeftSideNavigationMenuContent from './organization-analytics-left-side-navigation-menu-content';
 
 type Props = {
@@ -81,7 +80,7 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationId
   return (
     <Box sx={{ display: 'flex' }}>
       <OrganizationAnalyticsLeftSideNavigationMenuContent organizationId={organizationId} hideIcons />
-      <Box sx={{ marginLeft: expandedDrawerWidthPx, flexGrow: 1 }}>
+      <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
         <AppBarWithStackColumn onClose={handleCloseClick} label="Analytics">
           <StackColumn
             sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
