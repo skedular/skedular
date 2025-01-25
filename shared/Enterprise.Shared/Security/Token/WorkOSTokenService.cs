@@ -80,7 +80,7 @@ public class WorkOSTokenService : IWorkOSTokenService
             if (customerHelper is not null && !await customerHelper.DoesCustomerExistAsync(sub, cancellationToken))
             {
                 var userProfile = await _workOsClient.MakeAPIRequest<Profile>(
-                    new WorkOSRequest { Method = HttpMethod.Get, AccessToken = token, Path = $"/user_management/users/{sub}" },
+                    new WorkOSRequest { Method = HttpMethod.Get, Path = $"/user_management/users/{sub}" },
                     cancellationToken);
 
                 _context.SetEmail(userProfile.Email);

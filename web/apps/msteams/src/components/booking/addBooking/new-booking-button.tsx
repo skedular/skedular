@@ -5,11 +5,10 @@ import { NewIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal } from '@repo/shared/libs/theme';
 import { startOfDay } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import type { newBookingButton_rootQuery } from './__generated__/newBookingButton_rootQuery.graphql';
@@ -67,7 +66,6 @@ const NewBookingButton = ({
   invertDefaultColor,
 }: Props) => {
   const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
-  const paletteMode = useContext(PaletteModeContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleButtonClicked = () => {

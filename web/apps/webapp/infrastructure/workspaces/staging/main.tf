@@ -19,4 +19,5 @@ module "common_resources" {
   gcp_web_credentials_client_secret = var.gcp_web_credentials_client_secret
   google_analytics_measurement_id   = "G-F9FYTVMKRC"
   google_tag_manager_container_id   = "GTM-5H8MKJPK"
+  workos_api_key                    = var.workos_api_key
 }

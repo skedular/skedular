@@ -1,5 +1,3 @@
-'use client';
-
 import { optOutCookieName } from '@/libs/cookie-consent';
 import { getCookie, hasCookie } from 'cookies-next';
 import LogRocket from 'logrocket';

@@ -55,8 +55,8 @@ resource "aws_cognito_user_pool_client" "default" {
   ]
 }
 
-data "aws_ssm_parameter" "nextauthsecret" {
-  name = module.web_common.parameter_store_name_nextauth_session
+data "aws_ssm_parameter" "workos_secret" {
+  name = module.web_common.parameter_store_name_workos_session
 }
 
 data "aws_ssm_parameter" "parameter_store_name_azure_application_id" {
@@ -80,12 +80,22 @@ resource "vercel_project" "default" {
 
   environment = [
     {
-      key    = "NEXTAUTH_SECRET"
-      value  = data.aws_ssm_parameter.nextauthsecret.value
+      key    = "WORKOS_API_KEY"
+      value  = var.workos_api_key
       target = ["development", "preview", "production"]
     },
     {
-      key    = "NEXTAUTH_URL"
+      key    = "WORKOS_CLIENT_ID"
+      value  = module.shared_common.workos_client_id
+      target = ["development", "preview", "production"]
+    },
+    {
+      key    = "WORKOS_COOKIE_PASSWORD"
+      value  = data.aws_ssm_parameter.workos_secret.value
+      target = ["development", "preview", "production"]
+    },
+    {
+      key    = "NEXT_PUBLIC_WORKOS_REDIRECT_URI"
       value  = "https://${module.shared_common.webapp_domain_name}"
       target = ["development", "preview", "production"]
     },

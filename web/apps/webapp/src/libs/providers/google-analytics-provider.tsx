@@ -1,5 +1,3 @@
-'use client';
-
 import { optOutCookieName } from '@/libs/cookie-consent';
 import { sendGTMEvent } from '@next/third-parties/google';
 import { getCookie, hasCookie } from 'cookies-next';

@@ -1,12 +1,6 @@
-import { withAuth } from 'next-auth/middleware';
+import { authkitMiddleware } from '@workos-inc/authkit-nextjs';
 
-export default withAuth({
-  callbacks: {
-    authorized({ req, token }) {
-      return !!token;
-    },
-  },
-});
+export default authkitMiddleware();
 
 export const config = {
   matcher: ['/', '/organizations', '/organizations/:slug*', '/notifications', '/notifications/:slug*'],

@@ -1,4 +1,5 @@
 import { AppBar } from '@/components/appBar';
+import { getSignInUrlAction } from '@/components/authActions';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Notifications } from '@/components/notification/notifications';
 import { Observability } from '@/components/observability';
@@ -12,9 +13,9 @@ import { LogoutIcon } from '@repo/shared/components/icons';
 import { Loading } from '@repo/shared/components/loading';
 import type { RootError } from '@repo/shared/components/relayError';
 import { RelayError } from '@repo/shared/components/relayError';
+import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { nanoid } from 'nanoid';
-import { signOut } from 'next-auth/react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
 import { memo, useCallback, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -67,6 +68,7 @@ const RootShell = ({
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
 
+  const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
   const areCustomerRecordsSync = useCallback(
     () =>
@@ -107,15 +109,15 @@ const RootShell = ({
     };
   }, [rootData.me, reloadCount, onReloadRequired, areCustomerRecordsSync]);
 
-  const handleSignOutClick = () => {
-    signOut();
+  const handleSignOutClick = async () => {
+    await signOut();
   };
 
   if (reloadCount === maxRetryAttemptsToReload) {
     return (
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
         <SmallHeadingIconTypography label="There was an issue activating your account. Kindly sign out and then sign back in to resolve the problem." />
-        <Button variant="contained" startIcon={<LogoutIcon />} onClick={handleSignOutClick}>
+        <Button variant="contained" startIcon={<LogoutIcon />} onClick={async () => await handleSignOutClick}>
           Sign out
         </Button>
       </Box>
@@ -164,6 +166,9 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
+  const { user, loading } = useAuth();
+  const [signInUrl, setSignInUrl] = useState('');
+  const router = useRouter();
   const { organizationId } = useParams();
 
   let finalOrganizationId = '';
@@ -176,6 +181,23 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   }
 
   useEffect(() => {
+    async function loadSignInUrl() {
+      setSignInUrl(await getSignInUrlAction());
+    }
+
+    loadSignInUrl();
+  }, []);
+
+  useEffect(() => {
+    if (loading || !signInUrl) {
+      return;
+    }
+
+    if (!user && signInUrl) {
+      router.push(signInUrl);
+      return;
+    }
+
     loadQuery(
       {
         organizationId: finalOrganizationId,
@@ -185,7 +207,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationId, loading, user, router, signInUrl]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

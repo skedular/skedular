@@ -1,13 +1,14 @@
 'use client';
 
 import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
-import { GoogleAnalyticsProvider, LogRocketProvider, NextAuthProvider, RelayProvider, SelectedOrganizationProvider } from '@/libs/providers';
+import { GoogleAnalyticsProvider, LogRocketProvider, RelayProvider, SelectedOrganizationProvider } from '@/libs/providers';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
 import { DatePickerLocalizationProvider, GlobalReloadIdProvider, PaletteModeContext, PaletteModeProvider, ThemeProvider } from '@repo/shared/libs/providers';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { AuthKitProvider } from '@workos-inc/authkit-nextjs/components';
 import { Barlow, Inter } from 'next/font/google';
 import Script from 'next/script';
 import type { PropsWithChildren } from 'react';
@@ -27,9 +28,9 @@ const RootLayout = ({ children }: PropsWithChildren) => {
         <ThemeProvider mode={paletteMode}>
           <CssBaseline />
           <DatePickerLocalizationProvider>
-            <NextAuthProvider>
+            <AuthKitProvider>
               <RelayProvider>{children}</RelayProvider>
-            </NextAuthProvider>
+            </AuthKitProvider>
           </DatePickerLocalizationProvider>
         </ThemeProvider>
       </SelectedOrganizationProvider>

@@ -25,3 +25,8 @@ variable "gcp_web_credentials_client_secret" {
   description = "GCP web credentials client Secret"
   default     = ""
 }
+
+variable "workos_api_key" {
+  type        = string
+  description = "WorkOS API Key"
+}

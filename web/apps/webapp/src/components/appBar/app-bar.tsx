@@ -22,7 +22,7 @@ import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRi
 import { AddIcon, FeedbackIcon, HamburgerMenuIcon, LogoutIcon, NotificationsIcon, SettingsIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext, UpdatePaletteModeContext } from '@repo/shared/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@repo/shared/libs/utils';
-import { signOut } from 'next-auth/react';
+import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import type { JSX } from 'react';
@@ -66,6 +66,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     rootDataRelay,
   );
 
+  const { signOut } = useAuth();
   const pathName = usePathname();
   const router = useRouter();
   const { organizationId } = useParams();
@@ -130,9 +131,9 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     setProfileOpenAnchorEl(null);
   };
 
-  const handleSignOutClick = () => {
+  const handleSignOutClick = async () => {
     setProfileOpenAnchorEl(null);
-    signOut();
+    await signOut();
   };
 
   const handleSubmitFeedbackClicked = () => {
@@ -335,7 +336,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
             <Divider />
 
-            <MenuItem onClick={handleSignOutClick}>
+            <MenuItem onClick={async () => await handleSignOutClick()}>
               <SmallIconTypography startElement={<LogoutIcon />} label="Sign out" />
             </MenuItem>
           </Menu>
