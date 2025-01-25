@@ -2,7 +2,6 @@ import { AppBar } from '@/components/appBar';
 import { getSignInUrlAction } from '@/components/authActions';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Notifications } from '@/components/notification/notifications';
-import { Observability } from '@/components/observability';
 import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -129,26 +128,23 @@ const RootShell = ({
   }
 
   return (
-    <>
-      <Observability />
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline enableColorScheme />
-        {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />}
-        <Box sx={{ flexGrow: 1 }}>
-          <AppBar
-            rootDataRelay={rootData}
-            hideOrganizationSelector={hideOrganizationSelector}
-            hideWelcomeMessage={hideWelcomeMessage}
-            showBreadcrumps={showBreadcrumps}
-            breadcrumbs={breadcrumbs}
-          />
-          {!rootData.myOrganizations ||
-            (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding onReloadRequired={onReloadRequired} />)}
-          {!rootData.myOrganizations || (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />)}
-          {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <>{children}</>}
-        </Box>
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline enableColorScheme />
+      {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />}
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar
+          rootDataRelay={rootData}
+          hideOrganizationSelector={hideOrganizationSelector}
+          hideWelcomeMessage={hideWelcomeMessage}
+          showBreadcrumps={showBreadcrumps}
+          breadcrumbs={breadcrumbs}
+        />
+        {!rootData.myOrganizations ||
+          (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding onReloadRequired={onReloadRequired} />)}
+        {!rootData.myOrganizations || (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />)}
+        {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <>{children}</>}
       </Box>
-    </>
+    </Box>
   );
 };
 

@@ -13,8 +13,7 @@ public static class Extensions
 {
     public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
-        var applicationConfiguration =
-            configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         ArgumentNullException.ThrowIfNull(applicationConfiguration);
 
         ArgumentNullException.ThrowIfNull(applicationConfiguration.IdentityProviders.WorkOS);
@@ -57,8 +56,7 @@ public static class Extensions
             });
     }
 
-    public static IServiceCollection AddContext(this IServiceCollection services) =>
-        services.AddSingleton<IContext, Context.Context>();
+    public static IServiceCollection AddContext(this IServiceCollection services) => services.AddSingleton<IContext, Context.Context>();
 
     public static IServiceCollection AddRandomHelper(this IServiceCollection services) =>
         services

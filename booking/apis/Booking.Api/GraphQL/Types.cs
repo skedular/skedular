@@ -147,6 +147,7 @@ public class BookingWhereInput
     [GraphQLName("organizationIds")] public string[]? OrganizationIds { get; set; }
     [GraphQLName("locationIds")] public string[]? LocationIds { get; set; }
     [GraphQLName("teamIds")] public string[]? TeamIds { get; set; }
+    [GraphQLName("customerIds")] public string[]? CustomerIds { get; set; }
     [GraphQLName("includeMineOnly")] public bool? IncludeMineOnly { get; set; }
 
     [GraphQLName("includeFutureBookingsOnly")]

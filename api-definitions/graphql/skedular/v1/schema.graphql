@@ -1099,6 +1099,7 @@ input BookingOrderInput {
 
 input BookingWhereInput {
   combineOrganizationsLocationsTeams: Boolean
+  customerIds: [String!]
   fromGT: DateTime
   fromGTE: DateTime
   fromLT: DateTime

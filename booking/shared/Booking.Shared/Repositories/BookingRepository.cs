@@ -91,9 +91,9 @@ internal static class BookingExtensions
             query = query.Where(item => item.To <= searchCriteria.ToLTE);
         }
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
+        if (searchCriteria.CustomerIds.Count != 0)
         {
-            query = query.Where(item => searchCriteria.CustomerId == item.Customer.Id);
+            query = query.Where(item => searchCriteria.CustomerIds.Contains(item.Customer.Id));
         }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.BookingType))

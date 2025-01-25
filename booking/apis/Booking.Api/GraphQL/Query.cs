@@ -33,10 +33,7 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public async Task<BookingDetails?> BookingAsync(
-        string id,
-        [Service] IBookingService bookingService,
-        CancellationToken cancellationToken)
+    public async Task<BookingDetails?> BookingAsync(string id, [Service] IBookingService bookingService, CancellationToken cancellationToken)
     {
         var booking = await bookingService.GetByIdAsync(id, cancellationToken);
         return mapper.MapTo(booking);
@@ -57,42 +54,43 @@ public class Query(IMapper mapper)
         where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
         where.LocationIds = where.LocationIds.RemoveInvalidIds();
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
+        where.CustomerIds = where.CustomerIds.RemoveInvalidIds();
 
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await bookingService.GetPaginatedBookingsAsync(
-                new PaginationInputParam(after, first, before, last),
-                new BookingSearchCriteria(
-                    where.FromGT,
-                    where.FromGTE,
-                    where.FromLT,
-                    where.FromLTE,
-                    where.ToGT,
-                    where.ToGTE,
-                    where.ToLT,
-                    where.ToLTE,
-                    where.NotesContains,
-                    where.NameContains,
-                    string.IsNullOrWhiteSpace(where.Type) ? null : where.Type,
-                    where.IncludeMineOnly,
-                    where.IncludeFutureBookingsOnly,
-                    where.CombineOrganizationsLocationsTeams,
-                    where.OrganizationIds ?? [],
-                    where.LocationIds ?? [],
-                    where.TeamIds ?? []),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                        return new BookingOrder(direction, item.Field);
-                    }).ToList(),
-                false,
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await bookingService.GetPaginatedBookingsAsync(
+            new PaginationInputParam(after, first, before, last),
+            new BookingSearchCriteria(
+                where.FromGT,
+                where.FromGTE,
+                where.FromLT,
+                where.FromLTE,
+                where.ToGT,
+                where.ToGTE,
+                where.ToLT,
+                where.ToLTE,
+                where.NotesContains,
+                where.NameContains,
+                string.IsNullOrWhiteSpace(where.Type) ? null : where.Type,
+                where.IncludeMineOnly,
+                where.IncludeFutureBookingsOnly,
+                where.CombineOrganizationsLocationsTeams,
+                where.OrganizationIds ?? [],
+                where.LocationIds ?? [],
+                where.TeamIds ?? [],
+                where.CustomerIds ?? []),
+            orderBy is null
+                ? []
+                : orderBy.Select(item =>
+                {
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
+                    return new BookingOrder(direction, item.Field);
+                }).ToList(),
+            false,
+            cancellationToken);
 
         return new BookingConnection
         {
@@ -178,7 +176,6 @@ public class Query(IMapper mapper)
         }
 
         var permissions = await organizationAuthorizationService.GetPermissionsAsync(organizationId, cancellationToken);
-
         return new OrganizationBookingPermissions
         {
             CanAddBooking = permissions.CanAddBooking,
@@ -216,7 +213,6 @@ public class Query(IMapper mapper)
         }
 
         var permissions = await locationAuthorizationService.GetPermissionsAsync(locationId, cancellationToken);
-
         return new LocationBookingPermissions
         {
             CanAddBooking = permissions.CanAddBooking,
@@ -254,7 +250,6 @@ public class Query(IMapper mapper)
         }
 
         var permissions = await teamAuthorizationService.GetPermissionsAsync(teamId, cancellationToken);
-
         return new TeamBookingPermissions
         {
             CanAddBooking = permissions.CanAddBooking,

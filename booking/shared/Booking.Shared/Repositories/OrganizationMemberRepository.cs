@@ -8,17 +8,11 @@ namespace Booking.Shared.Repositories;
 
 public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 {
-    Task<ICollection<OrganizationMember>> GetByCustomerIdAsync(
-        string customerId,
-        CancellationToken cancellationToken);
-
+    Task<ICollection<OrganizationMember>> GetByCustomerIdAsync(string customerId,CancellationToken cancellationToken);
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
     void RemoveRange(ICollection<OrganizationMember> organizationMembers);
-
-    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
-        string organizationId,
-        CancellationToken cancellationToken);
+    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId,CancellationToken cancellationToken);
 }
 
 public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvider timeProvider)

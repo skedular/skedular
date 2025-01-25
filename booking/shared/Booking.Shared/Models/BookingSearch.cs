@@ -20,7 +20,8 @@ public class BookingSearchCriteria(
     bool? combineOrganizationsLocationsTeams,
     ICollection<string> organizationIds,
     ICollection<string> locationIds,
-    ICollection<string> teamIds)
+    ICollection<string> teamIds,
+    ICollection<string> customerIds)
 {
     public DateTimeOffset? FromGT { get; } = fromGT;
     public DateTimeOffset? FromGTE { get; } = fromGTE;
@@ -35,11 +36,11 @@ public class BookingSearchCriteria(
     public bool? IncludeMineOnly { get; } = includeMineOnly;
     public bool? IncludeFutureBookingsOnly { get; } = includeFutureBookingsOnly;
     public bool? CombineOrganizationsLocationsTeams { get; } = combineOrganizationsLocationsTeams;
-    public string? CustomerId { get; set; }
     public string? BookingType { get; } = bookingType;
     public ICollection<string> OrganizationIds { get; set; } = organizationIds;
     public ICollection<string> LocationIds { get; set; } = locationIds;
     public ICollection<string> TeamIds { get; set; } = teamIds;
+    public ICollection<string> CustomerIds { get; set; } = customerIds;
 }
 // ReSharper restore InconsistentNaming
 

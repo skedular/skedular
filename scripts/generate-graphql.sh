@@ -5,6 +5,9 @@ set -x
 
 BASE_DIR="$(cd "$(dirname "${0}")/.." && pwd)"
 
+export Application__IdentityProviders__WorkOS__ApiKey=sk_test_XXXX
+export Application__IdentityProviders__WorkOS__Issuer=https://api.workos.com
+
 dotnet tool restore
 
 cd "${BASE_DIR}/billing/apis/Billing.Api"

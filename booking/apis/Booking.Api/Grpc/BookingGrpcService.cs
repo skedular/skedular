@@ -40,9 +40,7 @@ public class BookingGrpcService(
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }
 
-    public override async Task<BookingConnection> Admin_GetPaginatedBookings(
-        Admin_GetPaginatedBookingsInput request,
-        ServerCallContext context)
+    public override async Task<BookingConnection> Admin_GetPaginatedBookings(Admin_GetPaginatedBookingsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
@@ -69,7 +67,8 @@ public class BookingGrpcService(
                 request.Where.CombineOrganizationsLocationsTeams,
                 request.Where.OrganizationIds,
                 request.Where.LocationIds,
-                request.Where.TeamIds),
+                request.Where.TeamIds,
+                request.Where.CustomerIds),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
@@ -123,9 +122,7 @@ public class BookingGrpcService(
         return connection;
     }
 
-    public override async Task<BookingConnection> GetPaginatedBookings(
-        GetPaginatedBookingsInput request,
-        ServerCallContext context)
+    public override async Task<BookingConnection> GetPaginatedBookings(GetPaginatedBookingsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
@@ -152,7 +149,8 @@ public class BookingGrpcService(
                 request.Where.CombineOrganizationsLocationsTeams,
                 request.Where.OrganizationIds,
                 request.Where.LocationIds,
-                request.Where.TeamIds),
+                request.Where.TeamIds,
+                request.Where.CustomerIds),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction ==
@@ -204,16 +202,11 @@ public class BookingGrpcService(
         return connection;
     }
 
-    public override async Task<OrganizationPermissions> GetOrganizationPermissions(
-        GetOrganizationPermissionsInput request,
-        ServerCallContext context)
+    public override async Task<OrganizationPermissions> GetOrganizationPermissions(GetOrganizationPermissionsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        var permissions =
-            await organizationAuthorizationService.GetPermissionsAsync(
-                request.OrganizationId,
-                context.CancellationToken);
+        var permissions = await organizationAuthorizationService.GetPermissionsAsync(request.OrganizationId, context.CancellationToken);
         return new OrganizationPermissions
         {
             CanViewBookings = permissions.CanViewBookings,
@@ -226,14 +219,11 @@ public class BookingGrpcService(
         };
     }
 
-    public override async Task<LocationPermissions> GetLocationPermissions(
-        GetLocationPermissionsInput request,
-        ServerCallContext context)
+    public override async Task<LocationPermissions> GetLocationPermissions(GetLocationPermissionsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        var permissions =
-            await locationAuthorizationService.GetPermissionsAsync(request.LocationId, context.CancellationToken);
+        var permissions = await locationAuthorizationService.GetPermissionsAsync(request.LocationId, context.CancellationToken);
         return new LocationPermissions
         {
             CanViewBookings = permissions.CanViewBookings,
@@ -246,14 +236,11 @@ public class BookingGrpcService(
         };
     }
 
-    public override async Task<TeamPermissions> GetTeamPermissions(
-        GetTeamPermissionsInput request,
-        ServerCallContext context)
+    public override async Task<TeamPermissions> GetTeamPermissions(GetTeamPermissionsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        var permissions =
-            await teamAuthorizationService.GetPermissionsAsync(request.TeamId, context.CancellationToken);
+        var permissions = await teamAuthorizationService.GetPermissionsAsync(request.TeamId, context.CancellationToken);
         return new TeamPermissions
         {
             CanViewBookings = permissions.CanViewBookings,
@@ -267,14 +254,11 @@ public class BookingGrpcService(
     }
 
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Get(
-        GetInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Get(GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await bookingService.GetByIdAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await bookingService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Admin_Add(
@@ -284,42 +268,31 @@ public class BookingGrpcService(
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(
-            await bookingService.AddAsync(
-                mapper.MapTo(request), true, request.IgnoreDeskAvailability, context.CancellationToken));
+            await bookingService.AddAsync(mapper.MapTo(request), true, request.IgnoreDeskAvailability, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Add(
-        AddInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Add(AddInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await bookingService.AddAsync(mapper.MapTo(request), false, false, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await bookingService.AddAsync(mapper.MapTo(request), false, false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Update(
-        UpdateInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Update(UpdateInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await bookingService.UpdateAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await bookingService.UpdateAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Delete(
-        DeleteInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Delete(DeleteInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(await bookingService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<AvailableDesks> GetAvailableDesks(
-        GetAvailableDesksInput request,
-        ServerCallContext context)
+    public override async Task<AvailableDesks> GetAvailableDesks(GetAvailableDesksInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
@@ -334,7 +307,6 @@ public class BookingGrpcService(
             context.CancellationToken);
 
         var availableDesks = new AvailableDesks();
-
         availableDesks.Desks.AddRange(mapper.MapToGrpcResponse(desks));
 
         return availableDesks;

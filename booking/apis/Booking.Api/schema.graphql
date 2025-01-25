@@ -193,6 +193,7 @@ input BookingWhereInput {
   organizationIds: [String!]
   locationIds: [String!]
   teamIds: [String!]
+  customerIds: [String!]
   includeMineOnly: Boolean
   includeFutureBookingsOnly: Boolean
   combineOrganizationsLocationsTeams: Boolean

@@ -7,7 +7,6 @@ import { RelayError } from '@repo/shared/components/relayError';
 import graphql from 'babel-plugin-relay/macro';
 import { AppBar } from 'components/appBar';
 import { LeftSideNavigationMenu } from 'components/navigationMenu';
-import { Observability } from 'components/observability';
 import { nanoid } from 'nanoid';
 import type { PropsWithChildren } from 'react';
 import { memo, useCallback, useEffect, useState, useTransition } from 'react';
@@ -101,17 +100,14 @@ const RootShell = ({ queryReference, children, onReloadRequired, collapsed, hide
   }
 
   return (
-    <>
-      <Observability />
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline enableColorScheme />
-        <LeftSideNavigationMenu collapsed={collapsed} />
-        <Box sx={{ flexGrow: 1 }}>
-          <AppBar rootDataRelay={rootData} hideWelcomeMessage={hideWelcomeMessage} showBreadcrumps={showBreadcrumps} breadcrumbs={breadcrumbs} />
-          {children}
-        </Box>
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline enableColorScheme />
+      <LeftSideNavigationMenu collapsed={collapsed} />
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar rootDataRelay={rootData} hideWelcomeMessage={hideWelcomeMessage} showBreadcrumps={showBreadcrumps} breadcrumbs={breadcrumbs} />
+        {children}
       </Box>
-    </>
+    </Box>
   );
 };
 
