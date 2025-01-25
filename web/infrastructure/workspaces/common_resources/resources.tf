@@ -16,3 +16,16 @@ resource "aws_ssm_parameter" "nextauthsecret" {
   value = random_password.nextauthsecret.result
   tags  = local.tags
 }
+
+resource "random_password" "workossecret" {
+  length           = 256
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "aws_ssm_parameter" "workossecret" {
+  name  = module.common.parameter_store_name_workos_session
+  type  = "String"
+  value = random_password.workossecret.result
+  tags  = local.tags
+}

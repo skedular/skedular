@@ -68,10 +68,8 @@ public class CognitoTokenService : ICognitoTokenService
                 });
 
             var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
-            if (value is not null)
-            {
-                _context.SetVerifiableToken(value);
-            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(value);
+            _context.SetVerifiableToken(value);
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "name")?.Value;
             if (value is not null)

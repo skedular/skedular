@@ -51,10 +51,7 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
         _kafkaActivityTracer = kafkaActivityTracer;
         _topicNames = topicNames.ToList();
         _topicsToSubscribe = _topicNames.Take(topicNames.Count - 1).ToList();
-        _formattedTopicNames = _topicsToSubscribe.Count == 1
-            ? _topicsToSubscribe.First()
-            : $"\"{string.Join(",", _topicsToSubscribe)}\"";
-
+        _formattedTopicNames = _topicsToSubscribe.Count == 1 ? _topicsToSubscribe.First() : $"\"{string.Join(",", _topicsToSubscribe)}\"";
         _logger = logger;
         _kafkaTelemetryConfiguration = kafkaTelemetryConfiguration;
         _kafkaConfiguration = kafkaConfiguration;
@@ -68,29 +65,14 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
         });
     }
 
-    private void PartitionsLostHandler(
-        IConsumer<byte[], byte[]> consumer,
-        List<TopicPartitionOffset> partitionsLost) =>
-        _logger.LogInformation(
-            "[LOST] Partitions lost on {topic}: {partitions}",
-            _formattedTopicNames,
-            partitionsLost);
+    private void PartitionsLostHandler(IConsumer<byte[], byte[]> consumer, List<TopicPartitionOffset> partitionsLost) =>
+        _logger.LogInformation("[LOST] Partitions lost on {topic}: {partitions}", _formattedTopicNames, partitionsLost);
 
-    private void PartitionAssignedHandler(
-        IConsumer<byte[], byte[]> consumer,
-        List<TopicPartition> topicPartitions) =>
-        _logger.LogInformation(
-            "[ASSIGNED] Partitions assigned on {topic}: {partitions}",
-            _formattedTopicNames,
-            topicPartitions);
+    private void PartitionAssignedHandler(IConsumer<byte[], byte[]> consumer, List<TopicPartition> topicPartitions) =>
+        _logger.LogInformation("[ASSIGNED] Partitions assigned on {topic}: {partitions}", _formattedTopicNames, topicPartitions);
 
-    private void PartitionRevokedHandler(
-        IConsumer<byte[], byte[]> consumer,
-        List<TopicPartitionOffset> topicPartitionOffsets) =>
-        _logger.LogInformation(
-            "[REVOKED] Partitions revoked on {topic}: {partitions}",
-            _formattedTopicNames,
-            topicPartitionOffsets);
+    private void PartitionRevokedHandler(IConsumer<byte[], byte[]> consumer, List<TopicPartitionOffset> topicPartitionOffsets) =>
+        _logger.LogInformation("[REVOKED] Partitions revoked on {topic}: {partitions}", _formattedTopicNames, topicPartitionOffsets);
 
     /// <summary>
     ///     This method is called when the <see cref="IHostedService" /> starts. The implementation should return a task that
@@ -107,10 +89,7 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
         {
             await Task.Run(async () =>
             {
-                _logger.LogInformation(
-                    "[{Type}] Subscribing to {TopicName}",
-                    typeName,
-                    _formattedTopicNames);
+                _logger.LogInformation("[{Type}] Subscribing to {TopicName}", typeName, _formattedTopicNames);
 
                 try
                 {
@@ -118,11 +97,7 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogCritical(
-                        ex,
-                        "[{Type}] Failed to subscribe to {TopicName}",
-                        typeName,
-                        _formattedTopicNames);
+                    _logger.LogCritical(ex, "[{Type}] Failed to subscribe to {TopicName}", typeName, _formattedTopicNames);
 
                     Environment.ExitCode = KafkaExitCodes.FailedToSubscribe;
                     _hostApplicationLifetimeWrapper.StopApplication();
@@ -139,17 +114,12 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
                     switch (ex)
                     {
                         case OperationCanceledException:
-                            _logger.LogInformation(
-                                "{KafkaService}: Stopped due to cancellation",
-                                typeName);
+                            _logger.LogInformation("{KafkaService}: Stopped due to cancellation", typeName);
 
                             break;
 
                         default:
-                            _logger.LogCritical(
-                                ex,
-                                "{KafkaService}: Exception occurred while running ExecuteAsync method",
-                                typeName);
+                            _logger.LogCritical(ex, "{KafkaService}: Exception occurred while running ExecuteAsync method", typeName);
 
                             Environment.ExitCode = KafkaExitCodes.UncaughtException;
                             _hostApplicationLifetimeWrapper.StopApplication();
@@ -167,8 +137,7 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
                     {
                         _logger.LogCritical(ex, "Failed to close consumer");
 
-                        Environment.ExitCode =
-                            KafkaExitCodes.FailedToCloseConsumer;
+                        Environment.ExitCode = KafkaExitCodes.FailedToCloseConsumer;
                         _hostApplicationLifetimeWrapper.StopApplication();
                     }
                 }
@@ -182,10 +151,7 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(
-                ex,
-                "{KafkaService}: Exception occurred while running ExecuteAsync method",
-                typeName);
+            _logger.LogCritical(ex, "{KafkaService}: Exception occurred while running ExecuteAsync method", typeName);
             _hostApplicationLifetimeWrapper.StopApplication();
 
             throw;
@@ -199,9 +165,7 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
             try
             {
                 var consumeResult = _consumer.Consume(cancellationToken);
-                var activity = _kafkaTelemetryConfiguration.Enabled
-                    ? _kafkaActivityTracer.CreateConsumeActivity(consumeResult)
-                    : null;
+                var activity = _kafkaTelemetryConfiguration.Enabled ? _kafkaActivityTracer.CreateConsumeActivity(consumeResult) : null;
 
                 try
                 {
@@ -219,10 +183,7 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
             }
             catch (ConsumeException ex)
             {
-                _logger.LogError(
-                    ex,
-                    "Failed to call Consume method - Topic - {Topic}",
-                    ex.ConsumerRecord?.Topic);
+                _logger.LogError(ex, "Failed to call Consume method - Topic - {Topic}", ex.ConsumerRecord?.Topic);
 
                 if (ex.Error?.IsBrokerError == true)
                 {
@@ -283,9 +244,7 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
         return match;
     }
 
-    private async Task ProcessEventAsync(
-        ConsumeResult<byte[], byte[]> consumeResult,
-        CancellationToken cancellationToken)
+    private async Task ProcessEventAsync(ConsumeResult<byte[], byte[]> consumeResult, CancellationToken cancellationToken)
     {
         try
         {
@@ -310,10 +269,7 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
         }
         catch (KafkaException ex)
         {
-            _logger.LogWarning(
-                ex,
-                "Exception during storing OFFSET {Result}",
-                consumeResult.TopicPartitionOffset);
+            _logger.LogWarning(ex, "Exception during storing OFFSET {Result}", consumeResult.TopicPartitionOffset);
 
             switch (ex.Error)
             {
@@ -330,15 +286,13 @@ public class KafkaConsumeServiceV2<TKey, TEvent> : BackgroundService
         }
     }
 
-    private async Task PushExceptionToRetryAsync(
-        ConsumeResult<byte[], byte[]> consumeResult,
-        Exception ex,
-        CancellationToken cancellationToken)
+    private async Task PushExceptionToRetryAsync(ConsumeResult<byte[], byte[]> consumeResult, Exception ex, CancellationToken cancellationToken)
     {
         var retryTopicName = _topicNames[_topicNames.IndexOf(consumeResult.Topic) + 1];
         var topicPartition = consumeResult.TopicPartition;
 
-        _logger.LogError(ex,
+        _logger.LogError(
+            ex,
             "Failed to process the message from {Topic} - {Partition}. Moving the message to retry topic: {RetryTopicName}",
             topicPartition.Topic,
             topicPartition.Partition.Value,

@@ -1,6 +1,7 @@
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Api.Services.Authorization;
+using Enterprise.Shared.Security;
 
 namespace Customer.Api;
 
@@ -10,6 +11,7 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
+            .AddScoped<ICustomerHelper, CustomerHelper>()
             .AddScoped<ICustomerHelperService, CustomerHelperService>()
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()

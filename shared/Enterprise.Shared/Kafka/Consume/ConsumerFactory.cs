@@ -9,9 +9,7 @@ namespace Enterprise.Shared.Kafka.Consume;
 
 public interface IConsumerFactory
 {
-    IConsumer<TKey, TValue> Build<TKey, TValue>(
-        KafkaConfiguration kafkaConfiguration,
-        Action<ConsumerBuilder<TKey, TValue>>? options = null);
+    IConsumer<TKey, TValue> Build<TKey, TValue>(KafkaConfiguration kafkaConfiguration, Action<ConsumerBuilder<TKey, TValue>>? options = null);
 }
 
 public class ConsumerFactory(
@@ -26,18 +24,12 @@ public class ConsumerFactory(
         Action<ConsumerBuilder<TKey, TValue>>? options = null)
     {
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
-
-        var consumerConfig = BuildConsumerConfig(kafkaConfiguration);
-
-        return BuildConsumer(options, consumerConfig);
+        return BuildConsumer(options, BuildConsumerConfig(kafkaConfiguration));
     }
 
-    private IConsumer<TKey, TValue> BuildConsumer<TKey, TValue>(
-        Action<ConsumerBuilder<TKey, TValue>>? options,
-        ConsumerConfig consumerConfig)
+    private IConsumer<TKey, TValue> BuildConsumer<TKey, TValue>(Action<ConsumerBuilder<TKey, TValue>>? options, ConsumerConfig consumerConfig)
     {
         var builder = new ConsumerBuilder<TKey, TValue>(consumerConfig);
-
         if (!KafkaSerialization.CanSerializeNatively<TKey>())
         {
             var serializer = serviceProvider.GetRequiredService<IDeserializer<TKey>>();
@@ -51,9 +43,7 @@ public class ConsumerFactory(
         }
 
         kafkaLogger.SetLogHandler(builder);
-
         options?.Invoke(builder);
-
         return builder.Build();
     }
 
@@ -61,7 +51,6 @@ public class ConsumerFactory(
     {
         var groupId = applicationConfiguration.GetSource();
         ArgumentException.ThrowIfNullOrWhiteSpace(groupId);
-
         ArgumentException.ThrowIfNullOrEmpty(kafkaConfiguration.BootstrapServers);
         ArgumentException.ThrowIfNullOrEmpty(groupId);
 

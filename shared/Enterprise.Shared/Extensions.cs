@@ -5,6 +5,7 @@ using Enterprise.Shared.Random;
 using Enterprise.Shared.Security.Token;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WorkOS;
 
 namespace Enterprise.Shared;
 
@@ -16,14 +17,27 @@ public static class Extensions
             configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         ArgumentNullException.ThrowIfNull(applicationConfiguration);
 
+        if (!string.IsNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS?.ApiKey))
+        {
+            services.AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = applicationConfiguration.IdentityProviders.WorkOS.ApiKey }));
+        }
+
         return services
             .AddScoped<IGrpcAuthenticator, GrpcAuthenticator>()
+            .AddSingleton<IWorkOSTokenService, WorkOSTokenService>()
             .AddSingleton<ICognitoTokenService, CognitoTokenService>()
             .AddSingleton<IGoogleTokenService, GoogleTokenService>()
             .AddSingleton<IAzureEntraTokenService, AzureEntraTokenService>()
             .AddSingleton<IEnumerable<ITokenService>>(sp =>
             {
                 var tokenServices = new List<ITokenService>();
+
+                if (applicationConfiguration.IdentityProviders.WorkOS is not null &&
+                    applicationConfiguration.IdentityProviders.WorkOS.JwksUri is not null &&
+                    !string.IsNullOrWhiteSpace(applicationConfiguration.IdentityProviders.WorkOS.Issuer))
+                {
+                    tokenServices.Add(sp.GetRequiredService<IWorkOSTokenService>());
+                }
 
                 if (applicationConfiguration.IdentityProviders.Cognito is not null &&
                     applicationConfiguration.IdentityProviders.Cognito.JwksUri is not null &&

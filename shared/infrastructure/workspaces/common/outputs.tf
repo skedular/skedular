@@ -165,3 +165,7 @@ output "parameter_store_name_azure_application_secret_id_dev" {
 output "parameter_store_name_azure_application_secret_value_dev" {
   value = "azure_application_secret_value_dev"
 }
+
+output "workos_client_id" {
+  value = local.is_production ? "client_01H0Q195RQETQ0NFNDPE3GWBQK" : "client_01H0Q195NGRARQSJT1TTDAKKR9"
+}

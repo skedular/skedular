@@ -10,6 +10,7 @@ namespace Customer.Api.Services;
 public interface ICachedCustomerService
 {
     Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
+    Task<bool> DoesCustomerExistAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
     Task<(Shared.Models.Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
     Task<(Shared.Models.Customer, Shared.Database.Entities.Customer)> GetByIdAsync(string id, CancellationToken cancellationToken);
@@ -33,9 +34,14 @@ public class CachedCustomerService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
+        return await DoesCustomerExistAsync(context.GetVerifiableToken(), cancellationToken);
+    }
+
+    public async Task<bool> DoesCustomerExistAsync(string verifiableToken, CancellationToken cancellationToken)
+    {
         try
         {
-            _ = await GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
+            _ = await GetByVerifiableTokenAsync(verifiableToken, cancellationToken);
             return true;
         }
         catch (CustomerNotFound)
