@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aaccc5f9b73c7e542402bea7b1749f34>>
+ * @generated SignedSource<<162fb3b046e54967720e230971b30727>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type bookings_bookings_refetchableFragment$variables = {
   bookingsSearchCriteriaTo?: any | null | undefined;
   count?: number | null | undefined;
   cursor?: string | null | undefined;
+  customerIds?: ReadonlyArray<string> | null | undefined;
   locationIds?: ReadonlyArray<string> | null | undefined;
   organizationId: string;
   teamIds?: ReadonlyArray<string> | null | undefined;
@@ -48,6 +49,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "customerIds"
   },
   {
     "defaultValue": null,
@@ -92,6 +98,11 @@ v1 = [
         "kind": "Literal",
         "name": "combineOrganizationsLocationsTeams",
         "value": true
+      },
+      {
+        "kind": "Variable",
+        "name": "customerIds",
+        "variableName": "customerIds"
       },
       {
         "kind": "Variable",
@@ -431,16 +442,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5b9ebd906fe134c52a2232493a3db581",
+    "cacheID": "0a218fdfb1c9a64e5464534403a89629",
     "id": null,
     "metadata": {},
     "name": "bookings_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $locationIds: [String!]\n  $organizationId: String!\n  $teamIds: [String!]\n) {\n  ...bookings_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment bookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, combineOrganizationsLocationsTeams: true}, orderBy: [{field: From, direction: Ascending}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          uniqueId\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          customTags {\n            uniqueId\n            name\n            color\n          }\n          zones {\n            uniqueId\n            name\n            color\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query bookings_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $customerIds: [String!]\n  $locationIds: [String!]\n  $organizationId: String!\n  $teamIds: [String!]\n) {\n  ...bookings_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  to\n  notes\n  customer {\n    uniqueId\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organization {\n    uniqueId\n  }\n  location {\n    uniqueId\n    name\n  }\n  team {\n    uniqueId\n    name\n  }\n  desks {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment bookings_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {organizationIds: [$organizationId], locationIds: $locationIds, teamIds: $teamIds, customerIds: $customerIds, fromGTE: $bookingsSearchCriteriaFrom, fromLTE: $bookingsSearchCriteriaTo, combineOrganizationsLocationsTeams: true}, orderBy: [{field: From, direction: Ascending}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        to\n        notes\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        organization {\n          uniqueId\n        }\n        location {\n          uniqueId\n          name\n        }\n        team {\n          uniqueId\n          name\n        }\n        desks {\n          uniqueId\n          name\n          customTags {\n            uniqueId\n            name\n            color\n          }\n          zones {\n            uniqueId\n            name\n            color\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1624725446e39a08f9bec46a11b29369";
+(node as any).hash = "164add4a174456af6652cbf3a998984b";
 
 export default node;

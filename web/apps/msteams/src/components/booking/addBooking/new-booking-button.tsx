@@ -172,6 +172,12 @@ const NewBookingButtonWithRelay = ({
             field: 'Name',
           },
         ],
+        organizationMembersSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
       },
       {
         fetchPolicy: 'store-and-network',

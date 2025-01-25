@@ -46,45 +46,43 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
   };
 
   return (
-    <>
-      <DefaultSelect
-        value={id}
-        onChange={handleChanged}
-        size="small"
-        renderValue={(selectedId) => {
-          const selectedItem = allItems.find((item) => item.id === selectedId);
-          if (selectedItem) {
-            return (
-              <StackRow>
-                <LeadIconTypography label="Location" startElement={<LocationIcon />} />
-                <Divider orientation="vertical" flexItem />
-                <PushToRight />
-                <SmallIconTypography label={selectedItem.name} />
-              </StackRow>
-            );
-          }
-
+    <DefaultSelect
+      value={id}
+      onChange={handleChanged}
+      size="small"
+      renderValue={(selectedId) => {
+        const selectedItem = allItems.find((item) => item.id === selectedId);
+        if (selectedItem) {
           return (
             <StackRow>
               <LeadIconTypography label="Location" startElement={<LocationIcon />} />
               <Divider orientation="vertical" flexItem />
               <PushToRight />
-              <SmallIconTypography label="All" />
+              <SmallIconTypography label={selectedItem.name} />
             </StackRow>
           );
-        }}
-      >
-        <MenuItem value={allId}>
-          <BodyIconTypography label="All" />
-        </MenuItem>
+        }
 
-        {allItems.map((item) => (
-          <MenuItem key={item.id} value={item.id}>
-            <BodyIconTypography startElement={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
-          </MenuItem>
-        ))}
-      </DefaultSelect>
-    </>
+        return (
+          <StackRow>
+            <LeadIconTypography label="Location" startElement={<LocationIcon />} />
+            <Divider orientation="vertical" flexItem />
+            <PushToRight />
+            <SmallIconTypography label="All" />
+          </StackRow>
+        );
+      }}
+    >
+      <MenuItem value={allId}>
+        <BodyIconTypography label="All" />
+      </MenuItem>
+
+      {allItems.map((item) => (
+        <MenuItem key={item.id} value={item.id}>
+          <BodyIconTypography startElement={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
+        </MenuItem>
+      ))}
+    </DefaultSelect>
   );
 };
 

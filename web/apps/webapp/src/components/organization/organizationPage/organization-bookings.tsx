@@ -15,6 +15,7 @@ import { Dayjs } from 'dayjs';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import OrganizationUserSelector from '../organizationUserSelector/organization-user-selector';
 
 type Props = {
   queryReference: PreloadedQuery<organizationBookings_rootQuery, Record<string, unknown>>;
@@ -29,9 +30,12 @@ const RootQuery = graphql`
     $nullableOrganizationId: String
     $locationIds: [String!]!
     $teamIds: [String!]!
+    $customerIds: [String!]!
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaTo: DateTime!
     $locationsSortingValues: [LocationOrderInput!]
+    $peopleNameSearchText: String
+    $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
     organization(id: $organizationId) {
       id
@@ -53,6 +57,7 @@ const RootQuery = graphql`
         name
       }
     }
+    ...organizationUserSelector_organizationMembers_query
     ...locationSelector_allLocations_query
     ...teamSelector_allTeams_query
     ...bookings_query
@@ -65,6 +70,7 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
   const [today] = useState(startOfDay());
   const [startWeek, setStartWeek] = useState(defaultStartWeek);
   const [endWeek, setEndWeek] = useState(endOfWeek(defaultStartWeek).add(-1, 'milliseconds'));
+  const [customerIds, setCustomerIds] = useState<string[]>([]);
   const [locationIds, setLocationIds] = useState<string[]>([]);
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
@@ -72,6 +78,10 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
   const handleWeehChanged = (date: Dayjs) => {
     setStartWeek(date);
     setEndWeek(endOfWeek(date).add(-1, 'milliseconds'));
+  };
+
+  const handlCustomerChanged = (id?: string) => {
+    setCustomerIds(id ? [id] : []);
   };
 
   const handlLocationChanged = (id?: string) => {
@@ -97,6 +107,7 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth }}>
       <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+        <OrganizationUserSelector rootDataOrganizationMembersRelay={rootData} onChange={handlCustomerChanged} />
         <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
         <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
         <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
@@ -113,6 +124,7 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
         to={endWeek}
         locationIds={locationIds}
         teamIds={teamIds}
+        customerIds={customerIds}
         viewMode={viewMode}
       />
     </StackColumn>
@@ -143,7 +155,14 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
         bookingsSearchCriteriaTo,
         locationIds: [],
         teamIds: [],
+        customerIds: [],
         locationsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        organizationMembersSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

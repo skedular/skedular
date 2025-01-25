@@ -121,14 +121,10 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
   const validate = makeValidate(schema);
   const requiredFields = makeRequired(schema);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-
-  const customers = useMemo<OrganizationMemberDetails[]>(() => {
-    if (!rootData.organizationMembers) {
-      return [];
-    }
-
-    return rootData.organizationMembers.edges.map(({ node }) => node);
-  }, [rootData.organizationMembers]);
+  const customers = useMemo<OrganizationMemberDetails[]>(
+    () => (rootData.organizationMembers ? rootData.organizationMembers.edges.map(({ node }) => node) : []),
+    [rootData.organizationMembers],
+  );
 
   const handleRefetch = useCallback(
     (peopleNameSearchText: string) => {

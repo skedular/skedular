@@ -37,6 +37,7 @@ type Props = {
   to: Dayjs;
   locationIds: string[];
   teamIds: string[];
+  customerIds: string[];
   viewMode: 'list' | 'grid';
 };
 
@@ -85,7 +86,7 @@ type RowType = {
   canJoinBooking: Boolean;
 };
 
-const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, to, locationIds, teamIds, viewMode }: Props) => {
+const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, to, locationIds, teamIds, customerIds, viewMode }: Props) => {
   const rootData = useFragment<bookings_query$key>(
     graphql`
       fragment bookings_query on Query {
@@ -115,6 +116,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             organizationIds: [$organizationId]
             locationIds: $locationIds
             teamIds: $teamIds
+            customerIds: $customerIds
             fromGTE: $bookingsSearchCriteriaFrom
             fromLTE: $bookingsSearchCriteriaTo
             combineOrganizationsLocationsTeams: true
@@ -251,7 +253,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
   const convertDateToKey = (date: Dayjs) => dayjs(date).format('YYYY-MM-DD');
 
   const handleRefetch = useCallback(
-    (from: Dayjs, to: Dayjs, locationIds: string[], teamIds: string[]) => {
+    (from: Dayjs, to: Dayjs, locationIds: string[], teamIds: string[], customerIds: string[]) => {
       startTransition(() => {
         refetch(
           {
@@ -259,6 +261,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             bookingsSearchCriteriaTo: to.toISOString(),
             locationIds,
             teamIds,
+            customerIds,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -269,7 +272,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
     [refetch],
   );
 
-  useEffect(() => handleRefetch(from, to, locationIds, teamIds), [handleRefetch, from, to, locationIds, teamIds]);
+  useEffect(() => handleRefetch(from, to, locationIds, teamIds, customerIds), [handleRefetch, from, to, locationIds, teamIds, customerIds]);
 
   const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
     const bookingId = selectedBookingId;

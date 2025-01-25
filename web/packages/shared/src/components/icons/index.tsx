@@ -86,6 +86,15 @@ export const JoinIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
     </TooltipIcon>
   );
 
+export const UserIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
+  excludeTooltip ? (
+    <Person fontSize={fontSize} sx={sx} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'User'}>
+      <Person fontSize={fontSize} sx={sx} color={color} />
+    </TooltipIcon>
+  );
+
 export const MembersIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
     <Person fontSize={fontSize} sx={sx} color={color} />

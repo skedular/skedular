@@ -71,32 +71,23 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
   );
 
   const [, startTransition] = useTransition();
-  const [, setPage] = useState(0);
-  const [pageSize] = useState(20);
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');
-
-  const customers = useMemo<OrganizationMemberDetails[]>(() => {
-    if (!rootData.organizationMemberSelectorPaginatedOrganizationMembers) {
-      return [];
-    }
-
-    return rootData.organizationMemberSelectorPaginatedOrganizationMembers.edges.map(({ node }) => node);
-  }, [rootData.organizationMemberSelectorPaginatedOrganizationMembers]);
+  const customers = useMemo<OrganizationMemberDetails[]>(
+    () => (rootData.organizationMemberSelectorPaginatedOrganizationMembers ? rootData.organizationMemberSelectorPaginatedOrganizationMembers.edges.map(({ node }) => node) : []),
+    [rootData.organizationMemberSelectorPaginatedOrganizationMembers],
+  );
 
   const handleRefetch = useCallback(
-    (pageSize: number, bookingPeopleNameSearchText: string) => {
+    (bookingPeopleNameSearchText: string) => {
       startTransition(() => {
         refetch(
           {
-            count: pageSize,
+            count: 20,
             bookingPeopleNameSearchText,
             organizationExists: !!organizationId,
           },
           {
             fetchPolicy: 'store-and-network',
-            onComplete: () => {
-              setPage(0);
-            },
           },
         );
       });
@@ -107,7 +98,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
   const handleSearchTextChange = (str: string) => {
     setBookingPeopleNameSearchText(str);
 
-    handleRefetch(pageSize, str);
+    handleRefetch(str);
   };
 
   const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardDebounceTimeout);

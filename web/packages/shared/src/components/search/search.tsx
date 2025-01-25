@@ -1,5 +1,6 @@
 import Divider from '@mui/material/Divider';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import type { SxProps, Theme } from '@mui/system';
 import debounce from 'lodash.debounce';
 import { memo } from 'react';
 import { SearchRoundedIcon } from '../../components/icons';
@@ -10,10 +11,11 @@ type Props = {
   size?: 'small' | 'medium';
   placeholder?: string;
   defaultValue?: unknown;
+  sx?: SxProps<Theme>;
   onChange?: (searchTerm: string) => void;
 };
 
-const Search = ({ size, placeholder, defaultValue, onChange }: Props) => {
+const Search = ({ size, placeholder, defaultValue, sx, onChange }: Props) => {
   const handleChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!onChange) {
       return;
@@ -37,6 +39,7 @@ const Search = ({ size, placeholder, defaultValue, onChange }: Props) => {
       onChange={debounceChanged}
       defaultValue={defaultValue}
       sx={{
+        ...sx,
         '& .MuiOutlinedInput-notchedOutline': {
           borderRadius: 4,
         },

@@ -8,24 +8,23 @@ namespace Booking.Shared.Repositories;
 
 public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 {
-    Task<ICollection<OrganizationMember>> GetByCustomerIdAsync(string customerId,CancellationToken cancellationToken);
+    Task<ICollection<OrganizationMember>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
     void RemoveRange(ICollection<OrganizationMember> organizationMembers);
-    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId,CancellationToken cancellationToken);
+    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, OrganizationMember>(dbContext, timeProvider), IOrganizationMemberRepository
 {
-    public async Task<ICollection<OrganizationMember>> GetByCustomerIdAsync(
-        string customerId,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<OrganizationMember>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
             .Where(query => !query.DeletedAt.HasValue &&
                             query.Customer.Id == customerId &&
                             !query.Organization.DeletedAt.HasValue)
             .Include(query => query.Organization)
+            .Include(query => query.Customer)
             .ToListAsync(cancellationToken);
 
     public OrganizationMember Add(OrganizationMember organizationMember)
@@ -49,9 +48,7 @@ public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvid
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }
 
-    public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
-        string organizationId,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
             .Where(query => query.Organization.Id == organizationId)
             .Include(query => query.Customer)

@@ -683,11 +683,11 @@ public class BookingService(
         Shared.Models.Customer customer,
         CancellationToken cancellationToken)
     {
-        var organizationMembers = await repositoryFactory.OrganizationMemberRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
+        var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, false, false, cancellationToken);
 
-        return organizationMembers.Select(item => item.Organization.Id).ToDictionary(item => item,
-            item => organizationMembers.Where(organizationMember => organizationMember.Organization.Id == item)
-                .Select(organizationMember => organizationMember.Customer.Id).ToList());
+        return organizations.ToDictionary(
+            item => item.Id,
+            item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList());
     }
 
     private async Task<List<string>> GetCustomerLocationIdsAsync(

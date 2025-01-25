@@ -9,6 +9,12 @@ public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
 
+    Task<ICollection<Organization>> GetByCustomerIdAsync(
+        string customerId,
+        bool includeDeletedOrganizationMembers,
+        bool includeDeletedOrganizationTags,
+        CancellationToken cancellationToken);
+
     Task<Organization?> GetByIdAsync(
         string id,
         bool includeDeletedOrganizationMembers,
@@ -29,6 +35,27 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
 
         return (await GetByIdAsync(id, true, true, cancellationToken))!;
     }
+
+    public async Task<ICollection<Organization>> GetByCustomerIdAsync(
+        string customerId,
+        bool includeDeletedOrganizationMembers,
+        bool includeDeletedOrganizationTags,
+        CancellationToken cancellationToken) =>
+        await DbContext.Organization
+            .Where(query =>
+                query.OrganizationMembers
+                    .Where(item => includeDeletedOrganizationMembers || (!item.DeletedAt.HasValue && item.CustomerId == customerId))
+                    .Select(item => item.Customer.Id).Contains(customerId))
+            .Include(query => query.OrganizationMembers.Where(
+                organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query.Identities)
+            .Include(query => query.Tags.Where(
+                organizationTag => includeDeletedOrganizationTags || !organizationTag.DeletedAt.HasValue))
+            .Include(query => query.Locations)
+            .Include(query => query.Teams)
+            .Include(query => query.DefaultedByCustomers)
+            .ToListAsync(cancellationToken);
 
     public async Task<Organization?> GetByIdAsync(
         string id,

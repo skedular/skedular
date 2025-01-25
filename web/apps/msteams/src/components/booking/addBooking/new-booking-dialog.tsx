@@ -267,8 +267,6 @@ const NewBookingDialog = ({
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [, startTransition] = useTransition();
-  const [, setPage] = useState(0);
-  const [pageSize] = useState(20);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const validate = makeValidate(bookingSchema);
   const requiredFields = makeRequired(bookingSchema);
@@ -279,15 +277,10 @@ const NewBookingDialog = ({
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterDesk = createFilterOptions<DeskDetails>();
-
-  const customers = useMemo<OrganizationMemberDetails[]>(() => {
-    if (!rootDataOrganizationMembers.organizationMembers) {
-      return [];
-    }
-
-    return rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node);
-  }, [rootDataOrganizationMembers.organizationMembers]);
-
+  const customers = useMemo<OrganizationMemberDetails[]>(
+    () => (rootDataOrganizationMembers.organizationMembers ? rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node) : []),
+    [rootDataOrganizationMembers.organizationMembers],
+  );
   const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
   const locations = useMemo<LocationDetails[]>(() => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
 
@@ -309,19 +302,16 @@ const NewBookingDialog = ({
       startTransition(() => {
         refetchOrganizationMembers(
           {
-            count: pageSize,
+            count: 20,
             peopleNameSearchText,
           },
           {
             fetchPolicy: 'store-and-network',
-            onComplete: () => {
-              setPage(0);
-            },
           },
         );
       });
     },
-    [refetchOrganizationMembers, pageSize],
+    [refetchOrganizationMembers],
   );
 
   const handleRefetchTeams = useCallback(
