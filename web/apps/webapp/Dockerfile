@@ -23,6 +23,8 @@ ENV PAYMENT_ENDPOINT="https://localhost/"
 ENV SLACK_ENDPOINT="https://localhost/"
 ENV TEAM_ENDPOINT="https://localhost/"
 ENV MSTEAMS_ENDPOINT="https://localhost/"
+ENV WORKOS_API_KEY="sk_test_Sz3IQjepeSWaI4cMS4ms4sMuU"
+ENV WORKOS_CLIENT_ID="client_Sz3IQjepeSWaI4cMS4ms4sMuU"
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --recursive --frozen-lockfile
 RUN pnpm webapp#lint
