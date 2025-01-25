@@ -98,16 +98,12 @@ output "parameter_store_name_aws_github_actions_unityhubio_unityhubioassume_role
   value = "github_actions_unityhubio_unityhubio_assume_role_arn"
 }
 
-output "logrocket_publicwebsite_app_id" {
-  value = "unity-hub/unityhub-public-website-${var.environment}"
-}
-
 output "logrocket_webapp_app_id" {
-  value = "unity-hub/unityhub-web-app-${var.environment}"
+  value = "skedular/skedular-web-app-${var.environment}"
 }
 
 output "logrocket_msteams_webapp_app_id" {
-  value = "unity-hub/unityhub-msteams-web-app-${var.environment}"
+  value = "skedular/skedular-msteams-web-app-${var.environment}"
 }
 
 output "microanalytics_publicwebsite_app_id" {
