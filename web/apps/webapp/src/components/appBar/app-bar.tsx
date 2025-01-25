@@ -1,5 +1,5 @@
 import { NewFeedbackDialog } from '@/components/feedback';
-import { getNotificationsBaseLink, getOrganizationAddLink, getOrganizationBaseLink } from '@/components/links';
+import { getNotificationsBaseLink, getOrganizationAddLink, getOrganizationBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { SelectedOrganizationContext, UpdateSelectedOrganizationContext } from '@/libs/providers';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
@@ -45,6 +45,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     graphql`
       fragment appBar_query on Query {
         me {
+          id
           email
           givenName
           middleName
@@ -161,7 +162,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
     setMobileDrawerOpen(newOpen);
   };
 
-  if (!rootData.myOrganizations) {
+  if (!rootData.me || !rootData.myOrganizations) {
     return <></>;
   }
 
@@ -310,11 +311,13 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
             <Divider />
 
-            <MenuItem>
-              <Link component={NextLink} href="/settings">
-                <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
-              </Link>
-            </MenuItem>
+            {selectedOrganizationId && (
+              <MenuItem>
+                <Link component={NextLink} href={getOrganizationUserProfileBaseLink(selectedOrganizationId, rootData.me.id)}>
+                  <SmallIconTypography startElement={<SettingsIcon />} label="Settings" />
+                </Link>
+              </MenuItem>
+            )}
 
             {paletteMode === 'dark' && (
               <MenuItem onClick={handleLightThemeClicked}>

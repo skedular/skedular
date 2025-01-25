@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<208af71a37ca8c1e39d26f12e8a3e827>>
+ * @generated SignedSource<<3259ee7c544e4c8459b9aa69ad6646cd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type appBar_query$data = {
     readonly email: string | null | undefined;
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
+    readonly id: string;
     readonly middleName: string | null | undefined;
     readonly photoUrl: string | null | undefined;
   } | null | undefined;
@@ -34,7 +35,15 @@ export type appBar_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"appBar_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -48,6 +57,7 @@ const node: ReaderFragment = {
       "name": "me",
       "plural": false,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -94,13 +104,7 @@ const node: ReaderFragment = {
       "name": "myOrganizations",
       "plural": true,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -153,7 +157,8 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "e05f75072733dd46927ce7643b4b8aa9";
+(node as any).hash = "89c704526a6e5592183dd4060d2c2ef8";
 
 export default node;
