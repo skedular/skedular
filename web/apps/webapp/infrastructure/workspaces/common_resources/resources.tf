@@ -130,6 +130,11 @@ resource "vercel_project" "default" {
       target = ["development", "preview", "production"]
     },
     {
+      key    = "NEXT_PUBLIC_PAYMENT_ENDPOINT"
+      value  = "https://payment${module.shared_common.api_domain_name}"
+      target = ["development", "preview", "production"]
+    },
+    {
       key    = "COGNITO_DOMAIN"
       value  = "https://${module.shared_common.cognito_user_pool_domain}.auth.${module.shared_common.aws_region}.amazoncognito.com"
       target = ["development", "preview", "production"]

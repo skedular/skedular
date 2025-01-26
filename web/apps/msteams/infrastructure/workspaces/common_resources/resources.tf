@@ -101,6 +101,11 @@ resource "vercel_project" "default" {
       key    = "REACT_APP_MSTEAMS_ENDPOINT"
       value  = "https://${module.shared_common.api_domain_name}/msteams/api/"
       target = ["development", "preview", "production"]
+    },
+    {
+      key    = "REACT_APP_PUBLIC_PAYMENT_ENDPOINT"
+      value  = "https://payment${module.shared_common.api_domain_name}"
+      target = ["development", "preview", "production"]
     }
   ]
 }

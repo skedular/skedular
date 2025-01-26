@@ -27,7 +27,7 @@ const OrganizationPaymentMethodSetupForm = ({ onCancel }: Props) => {
     const { error } = await stripe.confirmSetup({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/api/payment/v1/organization/add-payment-method`,
+        return_url: `${process.env.REACT_APP_PUBLIC_PAYMENT_ENDPOINT}/payment/api/v1/organization/add-payment-method`,
       },
     });
 
