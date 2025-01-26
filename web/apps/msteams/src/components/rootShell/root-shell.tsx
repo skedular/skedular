@@ -40,6 +40,7 @@ const RootQuery = graphql`
     slackCustomerRecordSynced
     teamCustomerRecordSynced
     ...appBar_query
+    ...observability_query
   }
 `;
 
@@ -102,7 +103,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, collapsed, hide
 
   return (
     <>
-      <Observability />
+      <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
         <LeftSideNavigationMenu collapsed={collapsed} />

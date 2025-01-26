@@ -51,6 +51,7 @@ const RootQuery = graphql`
     pendingInvitationsCount
     ...appBar_query
     ...leftSideNavigationMenu_query
+    ...observability_query
   }
 `;
 
@@ -130,7 +131,7 @@ const RootShell = ({
 
   return (
     <>
-      <Observability />
+      <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
         {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />}
