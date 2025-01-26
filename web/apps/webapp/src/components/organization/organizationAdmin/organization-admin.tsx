@@ -1773,9 +1773,9 @@ const OrganizationAdmin = ({
                         ))}
                       </List>
 
-                      <CardActions sx={{ justifyContent: 'flex-end' }}>
+                      <CardActions sx={{ justifyContent: 'center' }}>
                         {!activeOffering.free && (
-                          <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick} sx={{ textTransform: 'none', color: 'white' }}>
+                          <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick} sx={defaultButtonStyle}>
                             Cancel
                           </Button>
                         )}
