@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<464f7a99801ab2f72343bfbf0faee232>>
+ * @generated SignedSource<<7b18540160d40838daa7ce0a92974e36>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,30 +23,23 @@ export type organizationAdmin_query$data = {
   readonly organization: {
     readonly about: string | null | undefined;
     readonly activeOffering: {
-      readonly colorTiltingAngle: string;
       readonly end: any;
-      readonly endColor: string;
-      readonly featureSet: ReadonlyArray<{
-        readonly description: string;
-        readonly name: string;
-      }>;
+      readonly featureSet: ReadonlyArray<string>;
       readonly free: boolean;
       readonly id: string;
+      readonly isEnterprise: boolean;
       readonly name: string;
       readonly start: any;
-      readonly startColor: string;
+      readonly underPriceLines: ReadonlyArray<string>;
       readonly unitPrice: number;
     };
     readonly availableOfferings: ReadonlyArray<{
       readonly code: string;
-      readonly colorTiltingAngle: string;
-      readonly endColor: string;
-      readonly featureSet: ReadonlyArray<{
-        readonly description: string;
-        readonly name: string;
-      }>;
+      readonly featureSet: ReadonlyArray<string>;
+      readonly free: boolean;
+      readonly isEnterprise: boolean;
       readonly name: string;
-      readonly startColor: string;
+      readonly underPriceLines: ReadonlyArray<string>;
       readonly unitPrice: number;
     }>;
     readonly canModify: boolean;
@@ -117,47 +110,35 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "startColor",
+  "name": "isEnterprise",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "endColor",
+  "name": "unitPrice",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "colorTiltingAngle",
+  "name": "featureSet",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "unitPrice",
+  "name": "underPriceLines",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
-  "concreteType": "OrganizationFeatureSetDetails",
-  "kind": "LinkedField",
-  "name": "featureSet",
-  "plural": true,
-  "selections": [
-    (v2/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "description",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "free",
   "storageKey": null
 };
 return {
@@ -273,10 +254,8 @@ return {
           "plural": false,
           "selections": [
             (v0/*: any*/),
-            (v2/*: any*/),
             (v4/*: any*/),
-            (v5/*: any*/),
-            (v6/*: any*/),
+            (v2/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -291,15 +270,10 @@ return {
               "name": "end",
               "storageKey": null
             },
+            (v5/*: any*/),
+            (v6/*: any*/),
             (v7/*: any*/),
-            (v8/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "free",
-              "storageKey": null
-            }
+            (v8/*: any*/)
           ],
           "storageKey": null
         },
@@ -311,6 +285,7 @@ return {
           "name": "availableOfferings",
           "plural": true,
           "selections": [
+            (v4/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -319,7 +294,6 @@ return {
               "storageKey": null
             },
             (v2/*: any*/),
-            (v4/*: any*/),
             (v5/*: any*/),
             (v6/*: any*/),
             (v7/*: any*/),
@@ -436,6 +410,6 @@ return {
 };
 })();
 
-(node as any).hash = "7474b16d25f0ba3aef5f260908397c56";
+(node as any).hash = "98901edf6adb727fb363b6b32effb8e7";
 
 export default node;

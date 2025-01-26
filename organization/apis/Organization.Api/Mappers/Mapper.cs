@@ -119,7 +119,7 @@ public interface IMapper
     ZoneEdge MapToGrpcResponseZone(Edge<Tag> src);
     Tag MapTo(AddZoneInput src);
     Tag MapTo(UpdateZoneInput src);
-    IEnumerable<OrganizationFeatureSetDetails> MapTo(Offering offering);
+    IEnumerable<string> MapTo(Offering offering);
 }
 
 public class Mapper : IMapper
@@ -309,15 +309,14 @@ public class Mapper : IMapper
                     var offering = item.GetOffering();
                     return new OrganizationOfferingDetails
                     {
+                        IsEnterprise =item.IsEnterpriseOffering(), 
                         Code = item.ToOfferingCode(),
                         Name = offering.Name,
                         UnitPrice = offering.UnitPrice,
                         FeatureSet = MapTo(offering).ToArray(),
+                        UnderPriceLines = offering.UnderPriceLines.ToArray(),
                         Free = item.IsFreeOffering(),
-                        EarlyBird = item.IsEarlyBirdOffering(),
-                        StartColor = offering.StartColor,
-                        EndColor = offering.EndColor,
-                        ColorTiltingAngle = offering.ColorTiltingAngle
+                        EarlyBird = item.IsEarlyBirdOffering()
                     };
                 }).ToArray();
 
@@ -661,7 +660,7 @@ public class Mapper : IMapper
     public Tag MapTo(UpdateZoneInput src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Type = OrganizationTagType.Zone };
 
-    public IEnumerable<OrganizationFeatureSetDetails> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
+    public IEnumerable<string> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
 
     private IEnumerable<OrganizationMember> MapTo(IEnumerable<Shared.Database.Entities.OrganizationMember> src,
         Shared.Models.Organization organization) =>
@@ -784,24 +783,19 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Code = src.Code.ToOfferingCode(),
+            IsEnterprise = src.Code.IsEnterpriseOffering(),
             Name = offering.Name,
             Start = src.Start,
             End = src.End,
             UnitPrice = src.UnitPrice,
             FeatureSet = MapTo(offering).ToArray(),
+            UnderPriceLines = offering.UnderPriceLines.ToArray(),
             Free = src.Code.IsFreeOffering(),
-            EarlyBird = src.Code.IsEarlyBirdOffering(),
-            StartColor = offering.StartColor,
-            EndColor = offering.EndColor,
-            ColorTiltingAngle = offering.ColorTiltingAngle
-        };
+            EarlyBird = src.Code.IsEarlyBirdOffering()
+       };
     }
 
-    private static OrganizationFeatureSetDetails MapTo(FeatureSetCode item)
-    {
-        var featureSet = Features.FeatureSet[item];
-        return new OrganizationFeatureSetDetails { Name = featureSet.Name, Description = featureSet.Description };
-    }
+    private static string MapTo(FeatureSetCode item) => Features.FeatureSet[item].Description;
 
     private static OrganizationIndustryMainCategoryReferenceDetails MapTo(IndustryMainCategory src)
     {

@@ -3,10 +3,8 @@
 public class Offering
 {
     public string Name { get; set; } = string.Empty;
-    public string StartColor { get; set; } = string.Empty;
-    public string EndColor { get; set; } = string.Empty;
-    public string ColorTiltingAngle { get; set; } = string.Empty;
     public IReadOnlyCollection<FeatureSetCode> FeatureSets { get; set; } = [];
+    public IReadOnlyCollection<string> UnderPriceLines { get; set; } = [];
     public int UnitPrice { get; set; }
     public int MaxUserCount { get; set; }
     public int MaxLocationCount { get; set; }
@@ -18,14 +16,16 @@ public enum OfferingCode
     EarlyBirdV1 = 0,
     FreeTierV1 = 10000,
     PayAsYouGoV1 = 20000,
-    Simple100V1 = 30000,
     EnterpriseCustomV1 = 1000000
 }
 
 public static class Offerings
 {
     public static readonly ICollection<OfferingCode> AllOfferings =
-        [OfferingCode.PayAsYouGoV1, OfferingCode.Simple100V1, OfferingCode.EnterpriseCustomV1];
+    [
+        OfferingCode.PayAsYouGoV1,
+        OfferingCode.EnterpriseCustomV1
+    ];
 
     public static IDictionary<OfferingCode, Offering> OfferingSet { get; } = new Dictionary<OfferingCode, Offering>
     {
@@ -33,95 +33,68 @@ public static class Offerings
             OfferingCode.EarlyBirdV1, new Offering
             {
                 Name = "Early bird",
-                StartColor = "#2575FC",
-                EndColor = "#6A11CB",
-                ColorTiltingAngle = "135deg",
                 FeatureSets =
                 [
-                    FeatureSetCode.OrganizationUnlimitedUsers,
                     FeatureSetCode.OrganizationUnlimitedLocations,
-                    FeatureSetCode.OrganizationUnlimitedTeams
+                    FeatureSetCode.OrganizationUnlimitedTeams,
+                    FeatureSetCode.OrganizationUnlimitedBookings
                 ],
                 UnitPrice = 0,
                 MaxUserCount = -1,
                 MaxLocationCount = -1,
-                MaxTeamCount = -1
+                MaxTeamCount = -1,
+                UnderPriceLines = ["Completely Free"]
             }
         },
         {
             OfferingCode.FreeTierV1, new Offering
             {
-                Name = "Free",
-                StartColor = "#A8E063",
-                EndColor = "#56AB2F",
-                ColorTiltingAngle = "135deg",
+                Name = "Basic",
                 FeatureSets =
                 [
-                    FeatureSetCode.OrganizationUpTo10Users,
                     FeatureSetCode.OrganizationUpToOneLocation,
-                    FeatureSetCode.OrganizationUpToOneTeam
+                    FeatureSetCode.OrganizationUpToOneTeam,
+                    FeatureSetCode.OrganizationUnlimitedBookings
                 ],
                 UnitPrice = 0,
                 MaxUserCount = 10,
                 MaxLocationCount = 1,
-                MaxTeamCount = 1
+                MaxTeamCount = 1,
+                UnderPriceLines = ["Completely Free", "Up to 10 Monthly Active Users"]
             }
         },
         {
             OfferingCode.PayAsYouGoV1, new Offering
             {
                 Name = "Pay as you go",
-                StartColor = "#D9AFD9",
-                EndColor = "#845EC2",
-                ColorTiltingAngle = "135deg",
                 FeatureSets =
                 [
-                    FeatureSetCode.OrganizationUnlimitedUsers,
                     FeatureSetCode.OrganizationUnlimitedLocations,
-                    FeatureSetCode.OrganizationUnlimitedTeams
+                    FeatureSetCode.OrganizationUnlimitedTeams,
+                    FeatureSetCode.OrganizationUnlimitedBookings
                 ],
                 UnitPrice = 300,
                 MaxUserCount = -1,
                 MaxLocationCount = -1,
-                MaxTeamCount = -1
-            }
-        },
-        {
-            OfferingCode.Simple100V1, new Offering
-            {
-                Name = "Simple 100",
-                StartColor = "#FDBB2D",
-                EndColor = "#FF5733",
-                ColorTiltingAngle = "135deg",
-                FeatureSets =
-                [
-                    FeatureSetCode.OrganizationUpTo100Users,
-                    FeatureSetCode.OrganizationUnlimitedLocations,
-                    FeatureSetCode.OrganizationUnlimitedTeams
-                ],
-                UnitPrice = 200,
-                MaxUserCount = 100,
-                MaxLocationCount = -1,
-                MaxTeamCount = -1
+                MaxTeamCount = -1,
+                UnderPriceLines = ["Per monthly active user/month", "Best for most users"]
             }
         },
         {
             OfferingCode.EnterpriseCustomV1, new Offering
             {
                 Name = "Enterprise",
-                StartColor = "#56CCF2",
-                EndColor = "#2F80ED",
-                ColorTiltingAngle = "135deg",
                 FeatureSets =
                 [
-                    FeatureSetCode.OrganizationUpToXUsers,
-                    FeatureSetCode.OrganizationUnlimitedLocations,
-                    FeatureSetCode.OrganizationUnlimitedTeams
+                    FeatureSetCode.OrganizationCompanyResources,
+                    FeatureSetCode.OrganizationAnalytics,
+                    FeatureSetCode.OrganizationPremiumSupport
                 ],
                 UnitPrice = -1,
                 MaxUserCount = -1,
                 MaxLocationCount = -1,
-                MaxTeamCount = -1
+                MaxTeamCount = -1,
+                UnderPriceLines = ["Best for large organizations with multiple locations"]
             }
         }
     };
@@ -131,6 +104,8 @@ public static class Offerings
 
     public static bool IsEarlyBirdOffering(this OfferingCode offeringCode) => offeringCode == OfferingCode.EarlyBirdV1;
 
+    public static bool IsEnterpriseOffering(this OfferingCode offeringCode) => offeringCode == OfferingCode.EnterpriseCustomV1;
+
     public static Offering GetOffering(this OfferingCode offeringCode) => OfferingSet[offeringCode];
 
     public static OfferingCode ToOfferingCode(this string code) =>
@@ -139,7 +114,6 @@ public static class Offerings
             "EARLY_BIRD_V1" => OfferingCode.EarlyBirdV1,
             "FREE_TIER_V1" => OfferingCode.FreeTierV1,
             "PAY_AS_YOU_GO_V1" => OfferingCode.PayAsYouGoV1,
-            "SIMPLE_100_V1" => OfferingCode.Simple100V1,
             "ENTERPRISE_CUSTOM_V1" => OfferingCode.EnterpriseCustomV1,
             _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code))
         };
@@ -150,7 +124,6 @@ public static class Offerings
             OfferingCode.EarlyBirdV1 => "EARLY_BIRD_V1",
             OfferingCode.FreeTierV1 => "FREE_TIER_V1",
             OfferingCode.PayAsYouGoV1 => "PAY_AS_YOU_GO_V1",
-            OfferingCode.Simple100V1 => "SIMPLE_100_V1",
             OfferingCode.EnterpriseCustomV1 => "ENTERPRISE_CUSTOM_V1",
             _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code))
         };

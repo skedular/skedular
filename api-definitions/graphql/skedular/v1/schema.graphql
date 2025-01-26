@@ -501,16 +501,15 @@ type NotificationTeamDetails {
 
 type OrganizationActiveOfferingDetails {
   code: String!
-  colorTiltingAngle: String!
   earlyBird: Boolean!
   end: DateTime!
-  endColor: String!
-  featureSet: [OrganizationFeatureSetDetails!]!
+  featureSet: [String!]!
   free: Boolean!
   id: ID!
+  isEnterprise: Boolean!
   name: String!
   start: DateTime!
-  startColor: String!
+  underPriceLines: [String!]!
   unitPrice: Int!
 }
 
@@ -615,11 +614,6 @@ type OrganizationEdge {
   node: OrganizationDetails!
 }
 
-type OrganizationFeatureSetDetails {
-  description: String!
-  name: String!
-}
-
 type OrganizationIndustryMainCategoryReferenceDetails {
   id: ID!
   name: String!
@@ -672,13 +666,12 @@ type OrganizationMembersDetailsPayload {
 
 type OrganizationOfferingDetails {
   code: String!
-  colorTiltingAngle: String!
   earlyBird: Boolean!
-  endColor: String!
-  featureSet: [OrganizationFeatureSetDetails!]!
+  featureSet: [String!]!
   free: Boolean!
+  isEnterprise: Boolean!
   name: String!
-  startColor: String!
+  underPriceLines: [String!]!
   unitPrice: Int!
 }
 

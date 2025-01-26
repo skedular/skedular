@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
@@ -17,6 +16,7 @@ import {
   AppBarWithStackColumn,
   BodyIconTypography,
   CreditCard,
+  ExtraLargeHeadingIconTypography,
   FormFieldLabel,
   FormStackColumn,
   GridContainer,
@@ -35,7 +35,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { Search } from '@repo/shared/components/search';
 import { Zone } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
+import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { getOrganizationBaseLink } from 'components/links';
@@ -165,30 +165,23 @@ const OrganizationAdmin = ({
           hasAttachedPaymentMethod
           activeOffering {
             id
+            isEnterprise
             name
-            startColor
-            endColor
-            colorTiltingAngle
             start
             end
             unitPrice
-            featureSet {
-              name
-              description
-            }
+            featureSet
+            underPriceLines
             free
           }
           availableOfferings {
+            isEnterprise
             code
             name
-            startColor
-            endColor
-            colorTiltingAngle
             unitPrice
-            featureSet {
-              name
-              description
-            }
+            featureSet
+            underPriceLines
+            free
           }
         }
         organizationIndustryMainCategoriesReferences {
@@ -1747,44 +1740,47 @@ const OrganizationAdmin = ({
               <Divider />
             </StackColumn>
 
-            <GridContainer spacing={1} sx={{ padding: defaultPadding, justifyContent: 'space-between', alignItems: 'stretch' }}>
+            <GridContainer sx={{ padding: defaultPadding, justifyContent: 'center', alignItems: 'stretch' }}>
               {activeOffering && (
                 <Grid>
-                  <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%' }}>
-                    <CardHeader
-                      title={
-                        <>
-                          <BodyIconTypography label={activeOffering.name} invertDefaultColor />
-                          <BodyIconTypography label={`Unit Price: $${(activeOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />
-                        </>
-                      }
-                      sx={{
-                        background: `linear-gradient(${activeOffering.colorTiltingAngle}, ${activeOffering.startColor}, ${activeOffering.endColor})`,
-                      }}
-                    />
-
+                  <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%', backgroundColor: 'white' }}>
                     <CardContent sx={{ marginLeft: 1 }}>
+                      <BodyIconTypography label={activeOffering.name} sx={{ color: coal }} />
+                      <StackRow spacing={0.5} sx={{ marginTop: -2 }}>
+                        <ExtraLargeHeadingIconTypography label={(activeOffering.unitPrice / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
+                        <BodyIconTypography label="$" sx={{ color: coal }} />
+                      </StackRow>
+
                       <List sx={{ padding: 0 }}>
-                        <BodyIconTypography label="Feature:" />
-                        {activeOffering.featureSet.map(({ name, description }, index) => (
+                        <Box sx={{ marginTop: 2, marginBottom: 4 }}>
+                          {activeOffering.underPriceLines.map((item, index) => (
+                            <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
+                              <ListItemText>
+                                <SmallIconTypography label={item} sx={{ color: coal }} />
+                              </ListItemText>
+                            </ListItem>
+                          ))}
+                        </Box>
+
+                        {activeOffering.featureSet.map((item, index) => (
                           <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
                             <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
-                              <TickIcon fontSize="small" />
+                              <TickIcon fontSize="small" sx={{ color: activeOffering.isEnterprise ? coal : emerald }} />
                             </ListItemIcon>
                             <ListItemText>
-                              <SmallIconTypography label={`${name}: ${description}`} />
+                              <SmallIconTypography label={item} sx={{ color: coal }} />
                             </ListItemText>
                           </ListItem>
                         ))}
                       </List>
 
-                      {!activeOffering.free && (
-                        <CardActions sx={{ justifyContent: 'flex-end' }}>
-                          <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick}>
+                      <CardActions sx={{ justifyContent: 'flex-end' }}>
+                        {!activeOffering.free && (
+                          <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick} sx={{ textTransform: 'none', color: 'white' }}>
                             Cancel
                           </Button>
-                        </CardActions>
-                      )}
+                        )}
+                      </CardActions>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -1792,30 +1788,35 @@ const OrganizationAdmin = ({
 
               {availableOfferings.map((availableOffering) => (
                 <Grid key={availableOffering.code}>
-                  <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%' }}>
-                    <CardHeader
-                      title={
-                        <>
-                          <BodyIconTypography label={availableOffering.name} invertDefaultColor />
-                          {availableOffering.unitPrice > 0 && <BodyIconTypography label={`Unit Price: $${(availableOffering.unitPrice / 100).toFixed(2)}`} invertDefaultColor />}
-                          {availableOffering.unitPrice < 0 && <BodyIconTypography label={`Unit Price: Contact Sales`} invertDefaultColor />}
-                        </>
-                      }
-                      sx={{
-                        background: `linear-gradient(${availableOffering.colorTiltingAngle}, ${availableOffering.startColor}, ${availableOffering.endColor})`,
-                      }}
-                    />
-
+                  <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%', backgroundColor: 'white' }}>
                     <CardContent sx={{ marginLeft: 1 }}>
+                      <BodyIconTypography label={availableOffering.name} sx={{ color: coal }} />
+                      <StackRow spacing={0.5} sx={{ marginTop: -2 }}>
+                        {availableOffering.unitPrice > 0 && (
+                          <ExtraLargeHeadingIconTypography label={(availableOffering.unitPrice / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
+                        )}
+                        {availableOffering.isEnterprise && <ExtraLargeHeadingIconTypography label="TBC" sx={{ paddingTop: 4, color: coal }} />}
+                        <BodyIconTypography label="$" sx={{ color: coal }} />
+                      </StackRow>
+
                       <List sx={{ padding: 0 }}>
-                        <BodyIconTypography label="Feature:" />
-                        {availableOffering.featureSet.map(({ name, description }, index) => (
+                        <Box sx={{ marginTop: 2, marginBottom: 4 }}>
+                          {availableOffering.underPriceLines.map((item, index) => (
+                            <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
+                              <ListItemText>
+                                <SmallIconTypography label={item} sx={{ color: coal }} />
+                              </ListItemText>
+                            </ListItem>
+                          ))}
+                        </Box>
+
+                        {availableOffering.featureSet.map((item, index) => (
                           <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
                             <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
-                              <TickIcon fontSize="small" />
+                              <TickIcon fontSize="small" sx={{ color: availableOffering.isEnterprise ? coal : emerald }} />
                             </ListItemIcon>
                             <ListItemText>
-                              <SmallIconTypography label={`${name}: ${description}`} />
+                              <SmallIconTypography label={item} sx={{ color: coal }} />
                             </ListItemText>
                           </ListItem>
                         ))}
@@ -1833,21 +1834,30 @@ const OrganizationAdmin = ({
                       </List>
                     </CardContent>
 
-                    {!rootData.organization?.hasAttachedPaymentMethod && (
-                      <CardActions sx={{ justifyContent: 'flex-end' }}>
-                        <Button variant="contained" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
-                          <SmallIconTypography label="Add Payment Method" />
+                    <CardActions sx={{ justifyContent: 'center' }}>
+                      {!rootData.organization?.hasAttachedPaymentMethod && (
+                        <Button variant="contained" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none', color: 'white' }}>
+                          Add Payment Method
                         </Button>
-                      </CardActions>
-                    )}
+                      )}
 
-                    {rootData.organization?.hasAttachedPaymentMethod && availableOffering.unitPrice > 0 && (
-                      <CardActions sx={{ justifyContent: 'flex-end' }}>
-                        <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)} sx={{ textTransform: 'none' }}>
+                      {rootData.organization?.hasAttachedPaymentMethod && !availableOffering.isEnterprise && (
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={() => handleUpgradeOfferingClick(availableOffering.code)}
+                          sx={{ textTransform: 'none', color: 'white' }}
+                        >
                           Upgrade
                         </Button>
-                      </CardActions>
-                    )}
+                      )}
+
+                      {rootData.organization?.hasAttachedPaymentMethod && availableOffering.isEnterprise && (
+                        <Button href="mailto:support@getskedular.com" variant="contained" sx={{ textTransform: 'none', backgroundColor: 'black', color: 'white' }}>
+                          Contact Us
+                        </Button>
+                      )}
+                    </CardActions>
                   </Card>
                 </Grid>
               ))}

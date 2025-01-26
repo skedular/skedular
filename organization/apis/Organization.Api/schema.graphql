@@ -45,16 +45,15 @@ type Mutation {
 
 type OrganizationActiveOfferingDetails {
   code: String!
+  isEnterprise: Boolean!
   name: String!
   start: DateTime!
   end: DateTime!
   unitPrice: Int!
-  featureSet: [OrganizationFeatureSetDetails!]!
+  underPriceLines: [String!]!
+  featureSet: [String!]!
   free: Boolean!
   earlyBird: Boolean!
-  startColor: String!
-  endColor: String!
-  colorTiltingAngle: String!
   id: ID!
 }
 
@@ -119,11 +118,6 @@ type OrganizationEdge {
   cursor: String!
 }
 
-type OrganizationFeatureSetDetails {
-  name: String!
-  description: String!
-}
-
 type OrganizationIndustryMainCategoryReferenceDetails {
   name: String!
   subCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
@@ -176,14 +170,13 @@ type OrganizationMembersDetailsPayload {
 
 type OrganizationOfferingDetails {
   code: String!
+  isEnterprise: Boolean!
   name: String!
   unitPrice: Int!
-  featureSet: [OrganizationFeatureSetDetails!]!
+  underPriceLines: [String!]!
+  featureSet: [String!]!
   free: Boolean!
   earlyBird: Boolean!
-  startColor: String!
-  endColor: String!
-  colorTiltingAngle: String!
 }
 
 type OrganizationPayload {

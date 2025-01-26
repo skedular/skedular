@@ -181,13 +181,6 @@ public class OrganizationDetails : Node
 [GraphQLName("OrganizationEdge")]
 public class OrganizationEdge : Edge<OrganizationDetails>;
 
-[GraphQLName("OrganizationFeatureSetDetails")]
-public class OrganizationFeatureSetDetails
-{
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("description")] public string Description { get; set; } = string.Empty;
-}
-
 [GraphQLName("OrganizationIndustryMainCategoryReferenceDetails")]
 public class OrganizationIndustryMainCategoryReferenceDetails : Node
 {
@@ -467,29 +460,27 @@ public class OrganizationTagsPayload
 public class OrganizationOfferingDetails
 {
     [GraphQLName("code")] public string Code { get; set; } = string.Empty;
+    [GraphQLName("isEnterprise")] public bool IsEnterprise { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
-    [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
+    [GraphQLName("underPriceLines")] public string[] UnderPriceLines { get; set; } = [];
+    [GraphQLName("featureSet")] public string[] FeatureSet { get; set; } = [];
     [GraphQLName("free")] public bool Free { get; set; }
     [GraphQLName("earlyBird")] public bool EarlyBird { get; set; }
-    [GraphQLName("startColor")] public string StartColor { get; set; } = string.Empty;
-    [GraphQLName("endColor")] public string EndColor { get; set; } = string.Empty;
-    [GraphQLName("colorTiltingAngle")] public string ColorTiltingAngle { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationActiveOfferingDetails")]
 public class OrganizationActiveOfferingDetails : Node
 {
     [GraphQLName("code")] public string Code { get; set; } = string.Empty;
+    [GraphQLName("isEnterprise")] public bool IsEnterprise { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("start")] public DateTimeOffset Start { get; set; }
     [GraphQLName("end")] public DateTimeOffset End { get; set; }
     [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
-    [GraphQLName("featureSet")] public OrganizationFeatureSetDetails[] FeatureSet { get; set; } = [];
+    [GraphQLName("underPriceLines")] public string[] UnderPriceLines { get; set; } = [];
+    [GraphQLName("featureSet")] public string[] FeatureSet { get; set; } = [];
     [GraphQLName("free")] public bool Free { get; set; }
     [GraphQLName("earlyBird")] public bool EarlyBird { get; set; }
-    [GraphQLName("startColor")] public string StartColor { get; set; } = string.Empty;
-    [GraphQLName("endColor")] public string EndColor { get; set; } = string.Empty;
-    [GraphQLName("colorTiltingAngle")] public string ColorTiltingAngle { get; set; } = string.Empty;
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

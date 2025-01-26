@@ -268,14 +268,13 @@ public class Query(IMapper mapper)
         return new OrganizationOfferingDetails
         {
             Code = matchedOffering.ToOfferingCode(),
+            IsEnterprise = matchedOffering.IsEnterpriseOffering(),
             Name = offering.Name,
             UnitPrice = offering.UnitPrice,
             FeatureSet = mapper.MapTo(offering).ToArray(),
+            UnderPriceLines = offering.UnderPriceLines.ToArray(),
             Free = matchedOffering.IsFreeOffering(),
-            EarlyBird = matchedOffering.IsEarlyBirdOffering(),
-            StartColor = offering.StartColor,
-            EndColor = offering.EndColor,
-            ColorTiltingAngle = offering.ColorTiltingAngle
+            EarlyBird = matchedOffering.IsEarlyBirdOffering()
         };
     }
 
