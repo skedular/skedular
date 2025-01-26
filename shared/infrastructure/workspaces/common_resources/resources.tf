@@ -163,3 +163,23 @@ resource "cloudflare_record" "cloudflare_dns_records_production" {
   proxied = false
   ttl     = 600
 }
+
+resource "cloudflare_record" "public_website_azure_custom_domain" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.public_website.id
+  name    = "@"
+  content = "MS=ms14170435"
+  type    = "TXT"
+  proxied = false
+  ttl     = 3600
+}
+
+resource "cloudflare_record" "webapp_azure_custom_domain" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.webapp.id
+  name    = "@"
+  content = "MS=ms29548806"
+  type    = "TXT"
+  proxied = false
+  ttl     = 3600
+}
