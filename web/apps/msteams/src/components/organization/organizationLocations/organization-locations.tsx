@@ -24,7 +24,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
 import { joinErrors, startOfDay } from '@repo/shared/libs/utils';
 import { NewBookingButton } from 'components/booking/addBooking';
-import { getOrganizationLocationSetupBaseLink } from 'components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from 'components/links';
 import { NewLocationButton } from 'components/location/addLocation';
 import { CustomTagSelector } from 'components/organization/customTagSelector';
 import { ZoneSelector } from 'components/organization/zoneSelector';
@@ -235,6 +235,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings],
   ];
 
   const locations = useMemo(
@@ -275,13 +276,23 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
 
     switch (id) {
       case MoreActionsMenuOptionType.EditLocation:
-        if (locationDetails) {
-          navigate(getOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id));
+        if (!locationDetails) {
+          return;
         }
+
+        navigate(getOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteLocation:
         handleRemoveLocationClicked();
+        break;
+
+      case MoreActionsMenuOptionType.ViewLocationBookings:
+        if (!locationDetails) {
+          return;
+        }
+
+        navigate(getOrganizationBookingsBaseLink(locationDetails.organization?.uniqueId!, { locationId: locationDetails.id }));
         break;
     }
   };

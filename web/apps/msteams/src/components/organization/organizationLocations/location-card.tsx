@@ -22,7 +22,7 @@ import { coal, sandstone } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
 import { NewBookingButton } from 'components/booking/addBooking';
-import { getOrganizationLocationSetupBaseLink } from 'components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from 'components/links';
 import { Dayjs } from 'dayjs';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useMemo, useState } from 'react';
@@ -163,6 +163,8 @@ const MyLocationCard = ({
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation]);
   }
 
+  moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings]);
+
   const editLink = getOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -179,6 +181,10 @@ const MyLocationCard = ({
 
       case MoreActionsMenuOptionType.DeleteLocation:
         handleRemoveTeamClicked();
+        break;
+
+      case MoreActionsMenuOptionType.ViewLocationBookings:
+        navigate(getOrganizationBookingsBaseLink(locationDetails.organization?.uniqueId!, { locationId: locationDetails.id }));
         break;
     }
   };

@@ -398,7 +398,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     });
   };
 
-  const handleViewUserBookingsClick = () => {
+  const handleViewBookingsClick = () => {
     router.push(getOrganizationBookingsBaseLink(organizationId, { customerId }));
   };
 
@@ -446,7 +446,7 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
                     </Grid>
 
                     <Grid>
-                      <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewUserBookingsClick}>
+                      <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewBookingsClick}>
                         View User Bookings
                       </Button>
                     </Grid>

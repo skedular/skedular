@@ -1,7 +1,7 @@
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { SmallIconTypography } from '../commons';
-import { DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon } from '../icons';
+import { BookingIcon, DeleteIcon, EditIcon, NotPreferredIcon, PreferredIcon } from '../icons';
 
 type Props = {
   anchorEl: null | HTMLElement;
@@ -57,7 +57,7 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.EditBooking]: {
     id: MoreActionsMenuOptionType.EditBooking,
     label: 'Edit Booking',
-    icon: <EditIcon color="primary" />,
+    icon: <EditIcon />,
   },
   [MoreActionsMenuOptionType.DeleteBooking]: {
     id: MoreActionsMenuOptionType.DeleteBooking,
@@ -67,7 +67,7 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.EditTeam]: {
     id: MoreActionsMenuOptionType.EditTeam,
     label: 'Edit Team',
-    icon: <EditIcon color="primary" />,
+    icon: <EditIcon />,
   },
   [MoreActionsMenuOptionType.DeleteTeam]: {
     id: MoreActionsMenuOptionType.DeleteTeam,
@@ -77,12 +77,12 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.SetAsPreferredTeam]: {
     id: MoreActionsMenuOptionType.SetAsPreferredTeam,
     label: 'Set as preferred team',
-    icon: <NotPreferredIcon color="primary" />,
+    icon: <NotPreferredIcon />,
   },
   [MoreActionsMenuOptionType.RemoveAsPreferredTeam]: {
     id: MoreActionsMenuOptionType.RemoveAsPreferredTeam,
     label: 'Remove as preferred team',
-    icon: <PreferredIcon color="primary" />,
+    icon: <PreferredIcon />,
   },
   [MoreActionsMenuOptionType.RemoveTeam]: {
     id: MoreActionsMenuOptionType.RemoveTeam,
@@ -100,17 +100,17 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.SetAsPreferredLocation]: {
     id: MoreActionsMenuOptionType.SetAsPreferredLocation,
     label: 'Set as preferred location',
-    icon: <NotPreferredIcon color="primary" />,
+    icon: <NotPreferredIcon />,
   },
   [MoreActionsMenuOptionType.RemoveAsPreferredLocation]: {
     id: MoreActionsMenuOptionType.RemoveAsPreferredLocation,
     label: 'Remove as preferred location',
-    icon: <PreferredIcon color="primary" />,
+    icon: <PreferredIcon />,
   },
   [MoreActionsMenuOptionType.EditLocation]: {
     id: MoreActionsMenuOptionType.EditLocation,
     label: 'Edit Location',
-    icon: <EditIcon color="primary" />,
+    icon: <EditIcon />,
   },
   [MoreActionsMenuOptionType.DeleteLocation]: {
     id: MoreActionsMenuOptionType.DeleteLocation,
@@ -120,12 +120,12 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.MarkAsDefaultOrganization]: {
     id: MoreActionsMenuOptionType.MarkAsDefaultOrganization,
     label: 'Mark as default organization',
-    icon: <NotPreferredIcon color="primary" />,
+    icon: <NotPreferredIcon />,
   },
   [MoreActionsMenuOptionType.ClearAsPreferredOrganization]: {
     id: MoreActionsMenuOptionType.ClearAsPreferredOrganization,
     label: 'Clear as default organization',
-    icon: <PreferredIcon color="primary" />,
+    icon: <PreferredIcon />,
   },
   [MoreActionsMenuOptionType.RemoveOrganization]: {
     id: MoreActionsMenuOptionType.RemoveOrganization,
@@ -144,7 +144,7 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.EditOrganizationUser]: {
     id: MoreActionsMenuOptionType.EditOrganizationUser,
     label: 'Edit User',
-    icon: <EditIcon color="primary" />,
+    icon: <EditIcon />,
   },
   [MoreActionsMenuOptionType.ActivateOrganizationUser]: {
     id: MoreActionsMenuOptionType.ActivateOrganizationUser,
@@ -166,7 +166,7 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.EditZone]: {
     id: MoreActionsMenuOptionType.EditZone,
     label: 'Edit Zone',
-    icon: <EditIcon color="primary" />,
+    icon: <EditIcon />,
   },
   [MoreActionsMenuOptionType.DeleteZone]: {
     id: MoreActionsMenuOptionType.DeleteZone,
@@ -176,7 +176,7 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.EditCustomTag]: {
     id: MoreActionsMenuOptionType.EditCustomTag,
     label: 'Edit Tag',
-    icon: <EditIcon color="primary" />,
+    icon: <EditIcon />,
   },
   [MoreActionsMenuOptionType.DeleteCustomTag]: {
     id: MoreActionsMenuOptionType.DeleteCustomTag,
@@ -186,7 +186,7 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.EditDesk]: {
     id: MoreActionsMenuOptionType.EditDesk,
     label: 'Edit Desk',
-    icon: <EditIcon color="primary" />,
+    icon: <EditIcon />,
   },
   [MoreActionsMenuOptionType.DeleteDesk]: {
     id: MoreActionsMenuOptionType.DeleteDesk,
@@ -204,14 +204,17 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.ViewUserBookings]: {
     id: MoreActionsMenuOptionType.ViewUserBookings,
     label: 'View Bookings',
+    icon: <BookingIcon />,
   },
   [MoreActionsMenuOptionType.ViewLocationBookings]: {
     id: MoreActionsMenuOptionType.ViewLocationBookings,
     label: 'View Bookings',
+    icon: <BookingIcon />,
   },
   [MoreActionsMenuOptionType.ViewTeamBookings]: {
     id: MoreActionsMenuOptionType.ViewTeamBookings,
     label: 'View Bookings',
+    icon: <BookingIcon />,
   },
 };
 

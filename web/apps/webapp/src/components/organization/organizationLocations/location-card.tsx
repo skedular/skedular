@@ -1,5 +1,5 @@
 import { NewBookingButton } from '@/components/booking/addBooking';
-import { getOrganizationLocationSetupBaseLink } from '@/components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import type { locationCard_addCustomerDefaultLocationMutation } from '@/queries/__generated__/locationCard_addCustomerDefaultLocationMutation.graphql';
 import type { locationCard_deleteLocationMutation } from '@/queries/__generated__/locationCard_deleteLocationMutation.graphql';
 import type { locationCard_LocationDetails$key } from '@/queries/__generated__/locationCard_LocationDetails.graphql';
@@ -163,6 +163,8 @@ const LocationCard = ({
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocation]);
   }
 
+  moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings]);
+
   const editLink = getOrganizationLocationSetupBaseLink(locationDetails.organization?.uniqueId!, locationDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -179,6 +181,10 @@ const LocationCard = ({
 
       case MoreActionsMenuOptionType.DeleteLocation:
         handleRemoveTeamClicked();
+        break;
+
+      case MoreActionsMenuOptionType.ViewLocationBookings:
+        router.push(getOrganizationBookingsBaseLink(locationDetails.organization?.uniqueId!, { locationId: locationDetails.id }));
         break;
     }
   };

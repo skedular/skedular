@@ -1,6 +1,6 @@
 import { AddDeskButton } from '@/components/desk/addDesk';
 import { BulkAddDeskButton } from '@/components/desk/bulkAddDesk';
-import { getOrganizationLocationDeskBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationLocationDeskBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import type { organizationLocation_activateDesksMutation } from '@/queries/__generated__/organizationLocation_activateDesksMutation.graphql';
 import type { organizationLocation_addCustomerDefaultDeskMutation } from '@/queries/__generated__/organizationLocation_addCustomerDefaultDeskMutation.graphql';
 import type { organizationLocation_deactivateDesksMutation } from '@/queries/__generated__/organizationLocation_deactivateDesksMutation.graphql';
@@ -31,7 +31,7 @@ import {
 } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
+import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { Search } from '@repo/shared/components/search';
@@ -751,6 +751,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     });
   };
 
+  const handleViewBookingsClick = () => {
+    router.push(getOrganizationBookingsBaseLink(organizationId, { locationId }));
+  };
+
   if (!rootData.location) {
     return <></>;
   }
@@ -855,10 +859,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     },
   ];
 
-  if (!rootData.location) {
-    return <></>;
-  }
-
   const location = rootData.location;
 
   return (
@@ -884,8 +884,18 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                       sectionRefs.current['setup'] = divElement;
                     }}
                   >
-                    <SectionIconTypography label="Location Setup" />
-                    <BodyIconTypography label="Edit your location name and details" />
+                    <GridContainer sx={{ justifyContent: 'space-between' }}>
+                      <Grid>
+                        <SectionIconTypography label="Location Setup" />
+                        <BodyIconTypography label="Edit your location name and details" />
+                      </Grid>
+
+                      <Grid>
+                        <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewBookingsClick}>
+                          View Location Bookings
+                        </Button>
+                      </Grid>
+                    </GridContainer>
                     <Divider />
                   </StackColumn>
 
