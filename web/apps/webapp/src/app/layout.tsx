@@ -1,7 +1,7 @@
 'use client';
 
 import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
-import { GoogleAnalyticsProvider, RelayProvider, SelectedOrganizationProvider } from '@/libs/providers';
+import { GoogleAnalyticsProvider, LogRocketProvider, RelayProvider, SelectedOrganizationProvider } from '@/libs/providers';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
 import { MuiXLicense } from '@repo/shared/libs/mui';
@@ -54,12 +54,6 @@ const ThemedRootLayout = ({ children }: PropsWithChildren) => (
         defer
       />
     )}
-    {process.env.NEXT_PUBLIC_LOGROCKET_APP_ID && (
-      <>
-        <Script src="https://cdn.lrkt-in.com/LogRocket.min.js" crossOrigin="anonymous" />
-        <Script id="logrocket-init-script">{`window.LogRocket && window.LogRocket.init(${process.env.NEXT_PUBLIC_LOGROCKET_APP_ID});`}</Script>
-      </>
-    )}
     <body className={`${inter.className} ${barlow.className}`}>
       <AppRouterCacheProvider>
         <PaletteModeProvider>
@@ -73,6 +67,7 @@ const ThemedRootLayout = ({ children }: PropsWithChildren) => (
     </body>
     <GoogleAnalytics ignoreOptOutCookie={true} forceOverride={false} />
     <GoogleTagManager ignoreOptOutCookie={true} forceOverride={false} />
+    <LogRocketProvider ignoreOptOutCookie={true} forceOverride={false} logRocketAppId={process.env.NEXT_PUBLIC_LOGROCKET_APP_ID} />
     <GoogleAnalyticsProvider ignoreOptOutCookie={true} forceOverride={false} googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID} />
   </html>
 );

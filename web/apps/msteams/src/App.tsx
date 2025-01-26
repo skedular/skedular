@@ -13,7 +13,7 @@ import { Organization } from 'app/organizations/organization';
 import { OrganizationMembers } from 'app/organizations/organization/users';
 import { StartInstall } from 'app/start-install';
 import { Teams } from 'app/teams';
-import { RelayProvider, TeamsFxContext } from 'libs/providers';
+import { LogRocketProvider, RelayProvider, TeamsFxContext } from 'libs/providers';
 import { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -117,6 +117,7 @@ const App = () => {
       <Analytics />
       <SpeedInsights />
       <MuiXLicense />
+      <LogRocketProvider logRocketAppId={process.env.REACT_APP_LOGROCKET_APP_ID!} />
       <ToastContainer position="top-right" pauseOnFocusLoss pauseOnHover hideProgressBar={false} draggable rtl={false} />
     </>
   );
