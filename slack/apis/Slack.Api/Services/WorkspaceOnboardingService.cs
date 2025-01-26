@@ -27,6 +27,7 @@ public class WorkspaceOnboardingService(
     IRandomHelper randomHelper,
     IMapper mapper,
     ISlackInternalOutboxPublisher slackInternalOutboxPublisher,
+    INotificationOutboxPublisher notificationOutboxPublisher,
     global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient
         organizationServiceClient,
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient)
@@ -36,17 +37,12 @@ public class WorkspaceOnboardingService(
     {
         ArgumentNullException.ThrowIfNull(oauthV2AccessResponse.Team);
 
-        await using var transaction =
-            await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationRepository.UnitOfWork,
-                cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(
+            repositoryFactory.OrganizationRepository.UnitOfWork,
+            cancellationToken);
 
-        var organization =
-            await repositoryFactory.OrganizationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
-
-        var exitingWorkspace =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(oauthV2AccessResponse.Team!.Id, cancellationToken);
-
+        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
+        var exitingWorkspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(oauthV2AccessResponse.Team!.Id, cancellationToken);
         var workspace = exitingWorkspace is null
             ? repositoryFactory.WorkspaceRepository.Add(mapper.MapTo(oauthV2AccessResponse, organization))
             : repositoryFactory.WorkspaceRepository.Update(mapper.MergeTo(oauthV2AccessResponse, exitingWorkspace,
@@ -63,16 +59,17 @@ public class WorkspaceOnboardingService(
             [workspace.Id],
             repositoryFactory.WorkspaceRepository.UnitOfWork,
             cancellationToken);
+        await notificationOutboxPublisher.PublishNewSlackWorkspaceJoinedSubmittedAsync(
+            mapper.MapTo(workspace),
+            repositoryFactory.WorkspaceRepository.UnitOfWork,
+            cancellationToken);
         await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
-    private async Task CreateOrganizationAsync(
-        string? name,
-        Organization organization,
-        CancellationToken cancellationToken)
+    private async Task CreateOrganizationAsync(string? name, Organization organization, CancellationToken cancellationToken)
     {
         var activeTermsOfUse = await organizationServiceClient.GetActiveOrganizationTermsOfUseAsync(
             new GetActiveOrganizationTermsOfUseInput(),
@@ -85,13 +82,9 @@ public class WorkspaceOnboardingService(
             cancellationToken: cancellationToken);
     }
 
-    private async Task CreateLocationAsync(
-        string? name,
-        Organization organization,
-        CancellationToken cancellationToken)
+    private async Task CreateLocationAsync(string? name, Organization organization, CancellationToken cancellationToken)
     {
-        var location =
-            await repositoryFactory.LocationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
+        var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
 
         await locationServiceClient.Admin_AddAsync(
             new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Admin_AddInput

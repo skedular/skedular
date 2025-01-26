@@ -17,3 +17,17 @@ resource "aws_ssm_parameter" "new_customer_feedback_email_template" {
   value = aws_ses_template.new_customer_feedback_email_template.arn
   tags  = merge(local.tags, module.common.tags)
 }
+
+resource "aws_ses_template" "new_slackworkspace_joined_email_template" {
+  name    = module.common.new_slackworkspace_joined_email_template_name
+  subject = "{{subject}}"
+  html    = file("${path.module}/../../../email-templates/new-slackworkspace-joined/content.html")
+  text    = file("${path.module}/../../../email-templates/new-slackworkspace-joined/content.txt")
+}
+
+resource "aws_ssm_parameter" "new_slackworkspace_joined_email_template" {
+  name  = module.common.parameter_store_name_new_slackworkspace_joined_email_template_arn
+  type  = "String"
+  value = aws_ses_template.new_slackworkspace_joined_email_template.arn
+  tags  = merge(local.tags, module.common.tags)
+}

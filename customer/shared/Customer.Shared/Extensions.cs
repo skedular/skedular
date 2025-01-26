@@ -33,9 +33,7 @@ public static class Extensions
             .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>();
 
-    public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services
-            .AddScoped<ICustomerPublisher, CustomerPublisher>();
+    public static IServiceCollection AddPublishers(this IServiceCollection services) => services.AddScoped<ICustomerPublisher, CustomerPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services

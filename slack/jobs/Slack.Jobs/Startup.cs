@@ -4,6 +4,7 @@ using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Outbox;
 using Slack.Shared;
+using Slack.Shared.Configurations;
 using Slack.Shared.Database;
 
 namespace Slack.Jobs;
@@ -13,6 +14,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 {
     protected override void ConfigureCustomServices(IServiceCollection services)
     {
+        var emailConfiguration = Configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
+        ArgumentNullException.ThrowIfNull(emailConfiguration);
+        services.AddSingleton(emailConfiguration);
+
         services
             .AddDatabase(Configuration, true, "SlackPostgresConnection")
             .WithPooledDbContextFactory<SlackDbContext>(Configuration, Migration.SetAssembly, Environment)

@@ -62,11 +62,8 @@ public class NotificationOutboxPublisher(
 
         var data = new NewCustomerFeedbackData
         {
-            Subject =
-                $"You received new feedback from {customerFeedback.Customer.GetCustomerName()} through {channel} channel",
-            FeedbackContent = string.IsNullOrWhiteSpace(customerFeedback.Content)
-                ? string.Empty
-                : customerFeedback.Content
+            Subject = $"You received new feedback from {customerFeedback.Customer.GetCustomerName()} through {channel} channel",
+            FeedbackContent = string.IsNullOrWhiteSpace(customerFeedback.Content) ? string.Empty : customerFeedback.Content
         };
 
         var templateData = JsonSerializer.Serialize(data);
@@ -87,8 +84,7 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId =
-                            emailConfiguration.NewCustomerFeedbackThroughWebSubmittedEmailTemplateName,
+                        TemplateId = emailConfiguration.NewCustomerFeedbackThroughWebSubmittedEmailTemplateName,
                         TemplateData = templateData,
                         Sender = emailConfiguration.NewCustomerFeedbackThroughWebSubmittedEmailSender
                     }
@@ -96,9 +92,7 @@ public class NotificationOutboxPublisher(
             }
         };
 
-        @event.Data.Notification.Email.ToAddresses.AddRange(
-            emailConfiguration
-                .NewCustomerFeedbackThroughWebSubmittedEmailReceivers);
+        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewCustomerFeedbackThroughWebSubmittedEmailReceivers);
 
         await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
     }
@@ -136,8 +130,7 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId =
-                            emailConfiguration.NewCustomerJoinedThroughWebSubmittedEmailTemplateName,
+                        TemplateId = emailConfiguration.NewCustomerJoinedThroughWebSubmittedEmailTemplateName,
                         TemplateData = templateData,
                         Sender = emailConfiguration.NewCustomerJoinedThroughWebSubmittedEmailSender
                     }
@@ -145,8 +138,7 @@ public class NotificationOutboxPublisher(
             }
         };
 
-        @event.Data.Notification.Email.ToAddresses.AddRange(
-            emailConfiguration.NewCustomerJoinedThroughWebSubmittedEmailReceivers);
+        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewCustomerJoinedThroughWebSubmittedEmailReceivers);
 
         await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
     }
