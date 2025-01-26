@@ -1,6 +1,6 @@
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
-import { secondDrawerCollapsedDrawerWidth, secondDrawerExpandedDrawerWidth } from '@repo/shared/libs/theme';
 import { memo, useState } from 'react';
+import { secondDrawerCollapsedDrawerWidth, secondDrawerExpandedDrawerWidth } from './commons';
 import LeftSideNavigationMenuContent from './left-side-navigation-menu-content';
 
 type Props = {

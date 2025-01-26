@@ -7,9 +7,10 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
 import { CollpaseDrawerIcon, HomeIcon, LocationIcon, NotificationsIcon, SettingsIcon, TeamIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { getSelectedListItemBorderRadius, sandstone, secondDrawerCollapsedDrawerWidth, secondDrawerExpandedDrawerWidth, selectedListItemPaddings } from '@repo/shared/libs/theme';
+import { getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import { memo, useContext } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { secondDrawerCollapsedDrawerWidth, secondDrawerExpandedDrawerWidth } from './commons';
 
 type Props = {
   collapsed?: boolean;

@@ -20,21 +20,13 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
-import {
-  coal,
-  defaultPadding,
-  emerald,
-  getSelectedListItemBorderRadius,
-  sandstone,
-  secondDrawerCollapsedDrawerWidth,
-  secondDrawerExpandedDrawerWidth,
-  selectedListItemPaddings,
-} from '@repo/shared/libs/theme';
+import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
 import { graphql, useFragment } from 'react-relay';
+import { secondDrawerCollapsedDrawerWidth, secondDrawerExpandedDrawerWidth } from './commons';
 
 type Props = {
   rootDataRelay: leftSideNavigationMenuContent_query$key;

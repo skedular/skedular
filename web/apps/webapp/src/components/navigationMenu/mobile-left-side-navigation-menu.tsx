@@ -1,10 +1,10 @@
 import { getNotificationsBaseLink, getOrganizationAddLink } from '@/components/links';
 import type { mobileLeftSideNavigationMenu_query$key } from '@/queries/__generated__/mobileLeftSideNavigationMenu_query.graphql';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
-import { secondDrawerExpandedDrawerWidth } from '@repo/shared/libs/theme';
 import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
+import { secondDrawerExpandedDrawerWidth } from './commons';
 import LeftSideNavigationMenuContent from './left-side-navigation-menu-content';
 
 type Props = {
