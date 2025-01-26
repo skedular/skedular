@@ -1,4 +1,4 @@
-import { getOrganizationTeamSetupBaseLink } from '@/components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { NewTeamButton } from '@/components/team/addTeam';
 import type { organizationTeams_addCustomerDefaultTeamMutation } from '@/queries/__generated__/organizationTeams_addCustomerDefaultTeamMutation.graphql';
@@ -177,6 +177,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings],
   ];
 
   const teams = useMemo(() => {
@@ -212,14 +213,23 @@ const Teams = ({ queryReference, organizationId }: Props) => {
 
     switch (id) {
       case MoreActionsMenuOptionType.EditTeam:
-        if (teamDetails) {
-          router.push(getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
+        if (!teamDetails) {
+          return;
         }
 
+        router.push(getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteTeam:
         handleRemoveTeamClicked();
+        break;
+
+      case MoreActionsMenuOptionType.ViewTeamBookings:
+        if (!teamDetails) {
+          return;
+        }
+
+        router.push(getOrganizationBookingsBaseLink(teamDetails.organization?.uniqueId!, { teamId: teamDetails.id }));
         break;
     }
   };

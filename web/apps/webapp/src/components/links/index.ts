@@ -12,7 +12,7 @@ export const getOrganizationBookingsBaseLink = (id: string, options?: { customer
   }
 
   if (options?.teamId) {
-    params += params ? `&locationId=${options.teamId}` : `locationId=${options.teamId}`;
+    params += params ? `&teamId=${options.teamId}` : `teamId=${options.teamId}`;
   }
 
   return params ? `${getOrganizationBaseLink(id)}/bookings?${params}` : `${getOrganizationBaseLink(id)}/bookings`;

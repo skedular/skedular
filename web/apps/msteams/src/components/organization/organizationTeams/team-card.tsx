@@ -18,7 +18,7 @@ import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { coal, sandstone } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { getOrganizationTeamSetupBaseLink } from 'components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } from 'components/links';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useMemo, useState } from 'react';
 import { useFragment, useMutation } from 'react-relay';
@@ -140,6 +140,8 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
     moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam]);
   }
 
+  moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings]);
+
   const editLink = getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -156,6 +158,10 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
 
       case MoreActionsMenuOptionType.DeleteTeam:
         handleRemoveTeamClicked();
+        break;
+
+      case MoreActionsMenuOptionType.ViewTeamBookings:
+        navigate(getOrganizationBookingsBaseLink(teamDetails.organization?.uniqueId!, { teamId: teamDetails.id }));
         break;
     }
   };

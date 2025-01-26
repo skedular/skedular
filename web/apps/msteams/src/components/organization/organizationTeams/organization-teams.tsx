@@ -21,7 +21,7 @@ import { DialogTransition } from '@repo/shared/components/transitions';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
 import { joinErrors } from '@repo/shared/libs/utils';
-import { getOrganizationTeamSetupBaseLink } from 'components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } from 'components/links';
 import { LocationSelector } from 'components/location/locationSelector';
 import { NewTeamButton } from 'components/team/addTeam';
 import { nanoid } from 'nanoid';
@@ -177,6 +177,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteTeam],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings],
   ];
 
   const teams = useMemo(() => {
@@ -212,14 +213,23 @@ const Teams = ({ queryReference, organizationId }: Props) => {
 
     switch (id) {
       case MoreActionsMenuOptionType.EditTeam:
-        if (teamDetails) {
-          navigate(getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
+        if (!teamDetails) {
+          return;
         }
 
+        navigate(getOrganizationTeamSetupBaseLink(teamDetails.organization?.uniqueId!, teamDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteTeam:
         handleRemoveTeamClicked();
+        break;
+
+      case MoreActionsMenuOptionType.ViewTeamBookings:
+        if (!teamDetails) {
+          return;
+        }
+
+        navigate(getOrganizationBookingsBaseLink(teamDetails.organization?.uniqueId!, { teamId: teamDetails.id }));
         break;
     }
   };

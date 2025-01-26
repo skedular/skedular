@@ -1,4 +1,4 @@
-import { getOrganizationTeamsBaseLink } from '@/components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationTeamsBaseLink } from '@/components/links';
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
 import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
@@ -31,7 +31,7 @@ import {
   StackRow,
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
+import { BookingIcon, DeleteIcon, EllipseMenuIcon } from '@repo/shared/components/icons';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { Search } from '@repo/shared/components/search';
@@ -650,6 +650,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     });
   };
 
+  const handleViewBookingsClick = () => {
+    router.push(getOrganizationBookingsBaseLink(organizationId, { teamId }));
+  };
+
   if (!rootData.team) {
     return <></>;
   }
@@ -792,8 +796,18 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                       sectionRefs.current['setup'] = divElement;
                     }}
                   >
-                    <SectionIconTypography label="Team Setup" />
-                    <BodyIconTypography label="Edit your team name and details" />
+                    <GridContainer sx={{ justifyContent: 'space-between' }}>
+                      <Grid>
+                        <SectionIconTypography label="Team Setup" />
+                        <BodyIconTypography label="Edit your team name and details" />
+                      </Grid>
+
+                      <Grid>
+                        <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewBookingsClick}>
+                          View Team Bookings
+                        </Button>
+                      </Grid>
+                    </GridContainer>
                     <Divider />
                   </StackColumn>
 
