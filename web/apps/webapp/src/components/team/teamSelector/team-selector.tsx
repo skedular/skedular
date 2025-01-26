@@ -12,11 +12,12 @@ import { graphql, useFragment } from 'react-relay';
 type Props = {
   rootDataRelay: teamSelector_allTeams_query$key;
   onChange: (id?: string) => void;
+  defaultValue?: string | null;
 };
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
-const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
+const TeamSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
   const rootData = useFragment<teamSelector_allTeams_query$key>(
     graphql`
       fragment teamSelector_allTeams_query on Query {
@@ -35,7 +36,7 @@ const TeamSelector = ({ rootDataRelay, onChange }: Props) => {
     rootDataRelay,
   );
 
-  const [id, setId] = useState<string>(allId);
+  const [id, setId] = useState<string>(defaultValue ?? allId);
   const allItems = useMemo(() => (rootData.teams?.edges ? rootData.teams.edges.map(({ node }) => node) : []), [rootData.teams]);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {

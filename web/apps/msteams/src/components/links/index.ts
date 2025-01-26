@@ -1,6 +1,22 @@
 export const getOrganizationBaseLink = (id: string) => `/organizations/${id}`;
 export const getOrganizationAddLink = () => `/organizations/add`;
-export const getOrganizationBookingsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/bookings`;
+export const getOrganizationBookingsBaseLink = (id: string, options?: { customerId?: string; locationId?: string; teamId?: string }) => {
+  let params = '';
+
+  if (options?.customerId) {
+    params += `customerId=${options.customerId}`;
+  }
+
+  if (options?.locationId) {
+    params += params ? `&locationId=${options.locationId}` : `locationId=${options.locationId}`;
+  }
+
+  if (options?.teamId) {
+    params += params ? `&locationId=${options.teamId}` : `locationId=${options.teamId}`;
+  }
+
+  return params ? `${getOrganizationBaseLink(id)}/bookings?${params}` : `${getOrganizationBaseLink(id)}/bookings`;
+};
 export const getOrganizationUsersBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/users`;
 export const getOrganizationUserProfileBaseLink = (id: string, customerId: string) => `${getOrganizationBaseLink(id)}/users/${customerId}?section=profile`;
 export const getOrganizationUserManageTeamsBaseLink = (id: string, customerId: string) => `${getOrganizationBaseLink(id)}/users/${customerId}?section=manage-teams`;

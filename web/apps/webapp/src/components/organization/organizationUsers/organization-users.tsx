@@ -1,4 +1,4 @@
-import { getOrganizationBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
+import { getOrganizationBaseLink, getOrganizationBookingsBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
 import { TeamSelector } from '@/components/team/teamSelector';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
@@ -206,6 +206,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditOrganizationUser],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewUserBookings],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateOrganizationUser],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateOrganizationUser],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.RemoveOrganizationUser],
@@ -402,6 +403,14 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         }
 
         router.push(getOrganizationUserProfileBaseLink(organizationId, memberDetails.customer.uniqueId));
+        break;
+
+      case MoreActionsMenuOptionType.ViewUserBookings:
+        if (!memberDetails) {
+          return;
+        }
+
+        router.push(getOrganizationBookingsBaseLink(organizationId, { customerId: memberDetails.customer.uniqueId }));
         break;
 
       case MoreActionsMenuOptionType.DeactivateOrganizationUser:

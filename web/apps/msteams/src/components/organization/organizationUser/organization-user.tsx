@@ -16,13 +16,13 @@ import {
   StackRow,
 } from '@repo/shared/components/commons';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { DeleteIcon } from '@repo/shared/components/icons';
+import { BookingIcon, DeleteIcon } from '@repo/shared/components/icons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultButtonStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
 import graphql from 'babel-plugin-relay/macro';
-import { getOrganizationUsersBaseLink } from 'components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationUsersBaseLink } from 'components/links';
 import { TeamCard } from 'components/organization/organizationTeams';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -399,6 +399,10 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
     });
   };
 
+  const handleViewUserBookingsClick = () => {
+    navigate(getOrganizationBookingsBaseLink(organizationId, { customerId }));
+  };
+
   if (!rootData.customer) {
     return <></>;
   }
@@ -431,13 +435,23 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
                     sectionRefs.current['profile'] = divElement;
                   }}
                 >
-                  <StackRow>
-                    <CustomerAvatar name={customer} photo={{ url: customer?.photoUrl }} size="large" />
-                    <StackColumn spacing={-0.5}>
-                      <LeadIconTypography label={getCustomerFullName(customer)} />
-                      <CaptionIconTypography label={customer.email} />
-                    </StackColumn>
-                  </StackRow>
+                  <GridContainer sx={{ justifyContent: 'space-between' }}>
+                    <Grid>
+                      <StackRow>
+                        <CustomerAvatar name={customer} photo={{ url: customer?.photoUrl }} size="large" />
+                        <StackColumn spacing={-0.5}>
+                          <LeadIconTypography label={getCustomerFullName(customer)} />
+                          <CaptionIconTypography label={customer.email} />
+                        </StackColumn>
+                      </StackRow>
+                    </Grid>
+
+                    <Grid>
+                      <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewUserBookingsClick}>
+                        View User Bookings
+                      </Button>
+                    </Grid>
+                  </GridContainer>
                   <Divider />
                 </StackColumn>
 

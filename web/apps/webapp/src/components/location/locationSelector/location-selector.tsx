@@ -12,11 +12,12 @@ import { graphql, useFragment } from 'react-relay';
 type Props = {
   rootDataRelay: locationSelector_allLocations_query$key;
   onChange: (id?: string) => void;
+  defaultValue?: string | null;
 };
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
-const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
+const LocationSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
   const rootData = useFragment<locationSelector_allLocations_query$key>(
     graphql`
       fragment locationSelector_allLocations_query on Query {
@@ -35,7 +36,7 @@ const LocationSelector = ({ rootDataRelay, onChange }: Props) => {
     rootDataRelay,
   );
 
-  const [id, setId] = useState<string>(allId);
+  const [id, setId] = useState<string>(defaultValue ?? allId);
   const allItems = useMemo(() => (rootData.locations?.edges ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {

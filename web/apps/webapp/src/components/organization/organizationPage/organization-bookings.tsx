@@ -12,6 +12,7 @@ import { RelayError } from '@repo/shared/components/relayError';
 import { defaultPadding, maxScreenWidth } from '@repo/shared/libs/theme';
 import { endOfWeek, startOfDay, startOfWeek } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
+import { useSearchParams } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -21,6 +22,9 @@ type Props = {
   queryReference: PreloadedQuery<organizationBookings_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
+  customerId?: string | null;
+  locationId?: string | null;
+  teamId?: string | null;
   defaultStartWeek: Dayjs;
 };
 
@@ -65,14 +69,14 @@ const RootQuery = graphql`
   }
 `;
 
-const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, defaultStartWeek }: Props) => {
+const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, customerId, locationId, teamId, defaultStartWeek }: Props) => {
   const rootData = usePreloadedQuery<organizationBookings_rootQuery>(RootQuery, queryReference);
   const [today] = useState(startOfDay());
   const [startWeek, setStartWeek] = useState(defaultStartWeek);
   const [endWeek, setEndWeek] = useState(endOfWeek(defaultStartWeek).add(-1, 'milliseconds'));
-  const [customerIds, setCustomerIds] = useState<string[]>([]);
-  const [locationIds, setLocationIds] = useState<string[]>([]);
-  const [teamIds, setTeamIds] = useState<string[]>([]);
+  const [customerIds, setCustomerIds] = useState<string[]>(customerId ? [customerId] : []);
+  const [locationIds, setLocationIds] = useState<string[]>(locationId ? [locationId] : []);
+  const [teamIds, setTeamIds] = useState<string[]>(teamId ? [teamId] : []);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
   const handleWeehChanged = (date: Dayjs) => {
@@ -107,9 +111,9 @@ const ModernOrganization = ({ queryReference, onReloadRequired, organizationId, 
   return (
     <StackColumn sx={{ maxWidth: maxScreenWidth }}>
       <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-        <OrganizationUserSelector rootDataOrganizationMembersRelay={rootData} onChange={handlCustomerChanged} />
-        <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
-        <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} />
+        <OrganizationUserSelector rootDataOrganizationMembersRelay={rootData} onChange={handlCustomerChanged} defaultValue={customerId} />
+        <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} defaultValue={locationId} />
+        <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} defaultValue={teamId} />
         <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <PushToRight />
@@ -135,6 +139,9 @@ const MemoModernOrganization = memo(ModernOrganization);
 
 type RelayProps = {
   organizationId: string;
+  customerId?: string | null;
+  locationId?: string | null;
+  teamId?: string | null;
 };
 
 const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
@@ -142,6 +149,10 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
   const [triggerReload, setTriggerReload] = useState(0);
   const [, startTransition] = useTransition();
   const [startWeek] = useState(startOfWeek());
+  const searchParams = useSearchParams();
+  const customerId = searchParams.get('customerId');
+  const locationId = searchParams.get('locationId');
+  const teamId = searchParams.get('teamId');
 
   useEffect(() => {
     const bookingsSearchCriteriaFrom = startWeek.toISOString();
@@ -153,9 +164,9 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
         nullableOrganizationId: organizationId,
         bookingsSearchCriteriaFrom,
         bookingsSearchCriteriaTo,
-        locationIds: [],
-        teamIds: [],
-        customerIds: [],
+        locationIds: locationId ? [locationId] : [],
+        teamIds: teamId ? [teamId] : [],
+        customerIds: customerId ? [customerId] : [],
         locationsSortingValues: [
           {
             direction: 'Ascending',
@@ -173,7 +184,7 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, startWeek, organizationId]);
+  }, [loadQuery, triggerReload, startWeek, organizationId, locationId, teamId, customerId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -187,7 +198,15 @@ const ModernOrganizationWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoModernOrganization queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} defaultStartWeek={startWeek} />
+      <MemoModernOrganization
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
+        customerId={customerId}
+        locationId={locationId}
+        teamId={teamId}
+        defaultStartWeek={startWeek}
+      />
     </ErrorBoundary>
   );
 };

@@ -13,6 +13,7 @@ import { graphql, useFragment } from 'react-relay';
 type Props = {
   rootDataOrganizationMembersRelay: organizationUserSelector_organizationMembers_query$key;
   onChange: (id?: string) => void;
+  defaultValue?: string | null;
 };
 
 type CustomerDetails = {
@@ -26,7 +27,7 @@ type CustomerDetails = {
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
-const OrganizationUserSelector = ({ rootDataOrganizationMembersRelay, onChange }: Props) => {
+const OrganizationUserSelector = ({ rootDataOrganizationMembersRelay, onChange, defaultValue }: Props) => {
   const rootDataOrganizationMembers = useFragment<organizationUserSelector_organizationMembers_query$key>(
     graphql`
       fragment organizationUserSelector_organizationMembers_query on Query {
@@ -52,7 +53,7 @@ const OrganizationUserSelector = ({ rootDataOrganizationMembersRelay, onChange }
     rootDataOrganizationMembersRelay,
   );
 
-  const [id, setId] = useState<string>(allId);
+  const [id, setId] = useState<string>(defaultValue ?? allId);
   const customers = useMemo<CustomerDetails[]>(
     () => (rootDataOrganizationMembers.organizationMembers ? rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node.customer) : []),
     [rootDataOrganizationMembers.organizationMembers],
