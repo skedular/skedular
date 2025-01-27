@@ -13,7 +13,7 @@ import {
   secondDrawerExpandedDrawerWidth,
   secondDrawerExpandedDrawerWidthPx,
 } from '@repo/shared/libs/theme';
-import { getOrganizationTeamLocationBaseLink, getOrganizationTeamMembersBaseLink, getOrganizationTeamSetupBaseLink } from 'components/links';
+import { getOrganizationTeamLocationBaseLink, getOrganizationTeamManageTeamBaseLink, getOrganizationTeamMembersBaseLink, getOrganizationTeamSetupBaseLink } from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -63,6 +63,7 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
   const setupLink = getOrganizationTeamSetupBaseLink(organizationId, teamId);
   const locationLink = getOrganizationTeamLocationBaseLink(organizationId, teamId);
   const memberesLink = getOrganizationTeamMembersBaseLink(organizationId, teamId);
+  const manageTeamLink = getOrganizationTeamManageTeamBaseLink(organizationId, teamId);
 
   return (
     <List
@@ -124,6 +125,25 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
                 startElement={!hideIcons && <MembersIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link href={manageTeamLink}>
+          <ListItemButton selected={fullPath === manageTeamLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageTeamLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === manageTeamLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Manage Team"
+                startElement={!hideIcons && <EditIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === manageTeamLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

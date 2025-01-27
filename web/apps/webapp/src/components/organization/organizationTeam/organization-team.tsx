@@ -3,6 +3,7 @@ import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
 import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
 import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
+import type { organizationTeam_deleteTeamMutation } from '@/queries/__generated__/organizationTeam_deleteTeamMutation.graphql';
 import type { organizationTeam_query$key } from '@/queries/__generated__/organizationTeam_query.graphql';
 import type { organizationTeam_removeTeamMembersMutation } from '@/queries/__generated__/organizationTeam_removeTeamMembersMutation.graphql';
 import type { organizationTeam_teamMembers_query$key, TeamMemberRole } from '@/queries/__generated__/organizationTeam_teamMembers_query.graphql';
@@ -208,6 +209,16 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           }
           status
           role
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteTeam] = useMutation<organizationTeam_deleteTeamMutation>(graphql`
+    mutation organizationTeam_deleteTeamMutation($input: DeleteTeamInput!) {
+      deleteTeam(input: $input) {
+        team {
+          id
         }
       }
     }
@@ -654,6 +665,47 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     router.push(getOrganizationBookingsBaseLink(organizationId, { teamId }));
   };
 
+  const handleRemoveTeamClicked = () => {
+    if (!rootData.team) {
+      return;
+    }
+
+    const teamDetails = rootData.team;
+    const toastId = themedToast(<NotificationContent content={`Removing team '${teamDetails.name}'...`} />, infoNotificationOptions);
+
+    commitDeleteTeam({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: teamDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove the team '${teamDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Team '${teamDetails.name}' removed.`} />,
+        });
+
+        router.push(getOrganizationTeamsBaseLink(organizationId));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove the team '${teamDetails.name}'. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   if (!rootData.team) {
     return <></>;
   }
@@ -931,6 +983,23 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                 sx={defaultGridStyle}
                 localeText={{ noRowsLabel: 'No member found' }}
               />
+            </StackRow>
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['manage-team'] = divElement;
+              }}
+            >
+              <SectionIconTypography label="Manage" />
+              <BodyIconTypography label="Remove your team" />
+              <Divider />
+            </StackColumn>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveTeamClicked} sx={{ textTransform: 'none' }}>
+                Remove Team
+              </Button>
             </StackRow>
           </AppBarWithStackColumn>
         </Box>

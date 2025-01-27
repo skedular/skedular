@@ -1,4 +1,9 @@
-import { getOrganizationTeamLocationBaseLink, getOrganizationTeamMembersBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
+import {
+  getOrganizationTeamLocationBaseLink,
+  getOrganizationTeamManageTeamBaseLink,
+  getOrganizationTeamMembersBaseLink,
+  getOrganizationTeamSetupBaseLink,
+} from '@/components/links';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -63,6 +68,7 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
   const setupLink = getOrganizationTeamSetupBaseLink(organizationId, teamId);
   const locationLink = getOrganizationTeamLocationBaseLink(organizationId, teamId);
   const memberesLink = getOrganizationTeamMembersBaseLink(organizationId, teamId);
+  const manageTeamLink = getOrganizationTeamManageTeamBaseLink(organizationId, teamId);
 
   return (
     <List
@@ -124,6 +130,25 @@ const OrganizationTeamLeftSideNavigationMenuContent = ({ organizationId, teamId,
                 startElement={!hideIcons && <MembersIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === memberesLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={manageTeamLink}>
+          <ListItemButton selected={fullPath === manageTeamLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageTeamLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === manageTeamLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Manage Team"
+                startElement={!hideIcons && <EditIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === manageTeamLink && paletteMode === 'dark'}
                 noWrap
               />
             )}
