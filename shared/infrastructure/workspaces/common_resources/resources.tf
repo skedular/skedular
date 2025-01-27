@@ -183,3 +183,67 @@ resource "cloudflare_record" "webapp_azure_custom_domain" {
   proxied = false
   ttl     = 3600
 }
+
+resource "cloudflare_record" "public_website_mx_forward_1" {
+  count    = local.is_staging ? 0 : 1
+  zone_id  = data.cloudflare_zone.public_website.id
+  name     = "@"
+  content  = "mx1.forwardemail.net"
+  type     = "MX"
+  proxied  = false
+  ttl      = 3600
+  priority = 10
+}
+
+resource "cloudflare_record" "public_website_mx_forward_2" {
+  count    = local.is_staging ? 0 : 1
+  zone_id  = data.cloudflare_zone.public_website.id
+  name     = "@"
+  content  = "mx2.forwardemail.net"
+  type     = "MX"
+  proxied  = false
+  ttl      = 3600
+  priority = 10
+}
+
+resource "cloudflare_record" "public_website_mx_forward_3" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.public_website.id
+  name    = "@"
+  content = "forward-email=morteza.alizadeh@gmail.com"
+  type    = "TXT"
+  proxied = false
+  ttl     = 3600
+}
+
+resource "cloudflare_record" "webapp_mx_forward_1" {
+  count    = local.is_staging ? 0 : 1
+  zone_id  = data.cloudflare_zone.webapp.id
+  name     = "@"
+  content  = "mx1.forwardemail.net"
+  type     = "MX"
+  proxied  = false
+  ttl      = 3600
+  priority = 10
+}
+
+resource "cloudflare_record" "webapp_mx_forward_2" {
+  count    = local.is_staging ? 0 : 1
+  zone_id  = data.cloudflare_zone.webapp.id
+  name     = "@"
+  content  = "mx2.forwardemail.net"
+  type     = "MX"
+  proxied  = false
+  ttl      = 3600
+  priority = 10
+}
+
+resource "cloudflare_record" "webapp_mx_forward_3" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.webapp.id
+  name    = "@"
+  content = "forward-email=morteza.alizadeh@gmail.com"
+  type    = "TXT"
+  proxied = false
+  ttl     = 3600
+}
