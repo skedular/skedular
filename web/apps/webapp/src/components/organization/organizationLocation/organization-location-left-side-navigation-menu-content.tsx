@@ -1,4 +1,4 @@
-import { getOrganizationLocationManageDesksBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
+import { getOrganizationLocationManageDesksBaseLink, getOrganizationLocationManageLocationBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -62,6 +62,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getOrganizationLocationSetupBaseLink(organizationId, locationId);
   const manageDesksLink = getOrganizationLocationManageDesksBaseLink(organizationId, locationId);
+  const manageLocationLink = getOrganizationLocationManageLocationBaseLink(organizationId, locationId);
 
   return (
     <List
@@ -107,6 +108,25 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
                 startElement={!hideIcons && <DeskIcon color="inherit" excludeTooltip />}
                 spacing={3}
                 invertDefaultColor={fullPath === manageDesksLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={manageLocationLink}>
+          <ListItemButton selected={fullPath === manageLocationLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageLocationLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === manageLocationLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Manage Location"
+                startElement={!hideIcons && <EditIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === manageLocationLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

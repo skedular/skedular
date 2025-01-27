@@ -5,6 +5,7 @@ import type { organizationLocation_activateDesksMutation } from '@/queries/__gen
 import type { organizationLocation_addCustomerDefaultDeskMutation } from '@/queries/__generated__/organizationLocation_addCustomerDefaultDeskMutation.graphql';
 import type { organizationLocation_deactivateDesksMutation } from '@/queries/__generated__/organizationLocation_deactivateDesksMutation.graphql';
 import type { organizationLocation_deleteDesksMutation } from '@/queries/__generated__/organizationLocation_deleteDesksMutation.graphql';
+import type { organizationLocation_deleteLocationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationMutation.graphql';
 import type { organizationLocation_desks_query$key } from '@/queries/__generated__/organizationLocation_desks_query.graphql';
 import type { organizationLocation_desks_refetchableFragment } from '@/queries/__generated__/organizationLocation_desks_refetchableFragment.graphql';
 import type { organizationLocation_query$key } from '@/queries/__generated__/organizationLocation_query.graphql';
@@ -246,6 +247,16 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
           preferredDesks {
             uniqueId
           }
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteLocation] = useMutation<organizationLocation_deleteLocationMutation>(graphql`
+    mutation organizationLocation_deleteLocationMutation($input: DeleteLocationInput!) {
+      deleteLocation(input: $input) {
+        location {
+          id
         }
       }
     }
@@ -755,6 +766,47 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     router.push(getOrganizationBookingsBaseLink(organizationId, { locationId }));
   };
 
+  const handleRemoveLocationClicked = () => {
+    if (!rootData.location) {
+      return;
+    }
+
+    const locationDetails = rootData.location;
+    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}'...`} />, infoNotificationOptions);
+
+    commitDeleteLocation({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' removed.`} />,
+        });
+
+        router.push(getOrganizationLocationsBaseLink(organizationId));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}'. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   if (!rootData.location) {
     return <></>;
   }
@@ -1009,6 +1061,23 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                 sx={defaultGridStyle}
                 localeText={{ noRowsLabel: 'No desk found' }}
               />
+            </StackRow>
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['manage-location'] = divElement;
+              }}
+            >
+              <SectionIconTypography label="Manage" />
+              <BodyIconTypography label="Remove your location" />
+              <Divider />
+            </StackColumn>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationClicked} sx={{ textTransform: 'none' }}>
+                Remove Location
+              </Button>
             </StackRow>
           </AppBarWithStackColumn>
         </Box>

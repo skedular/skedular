@@ -3,7 +3,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
-import { EditIcon } from '@repo/shared/components/icons';
+import { DeskIcon, EditIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import {
   getSelectedListItemBorderRadius,
@@ -13,7 +13,7 @@ import {
   secondDrawerExpandedDrawerWidth,
   secondDrawerExpandedDrawerWidthPx,
 } from '@repo/shared/libs/theme';
-import { getOrganizationLocationSetupBaseLink } from 'components/links';
+import { getOrganizationLocationManageDesksBaseLink, getOrganizationLocationManageLocationBaseLink, getOrganizationLocationSetupBaseLink } from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -61,6 +61,8 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getOrganizationLocationSetupBaseLink(organizationId, locationId);
+  const manageDesksLink = getOrganizationLocationManageDesksBaseLink(organizationId, locationId);
+  const manageLocationLink = getOrganizationLocationManageLocationBaseLink(organizationId, locationId);
 
   return (
     <List
@@ -84,6 +86,47 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
                 startElement={!hideIcons && <EditIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link href={manageDesksLink}>
+          <ListItemButton selected={fullPath === manageDesksLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageDesksLink) }}>
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <DeskIcon color="inherit" excludeTooltip />}
+                invertDefaultColor={fullPath === manageDesksLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Manage Desks"
+                startElement={!hideIcons && <DeskIcon color="inherit" excludeTooltip />}
+                spacing={3}
+                invertDefaultColor={fullPath === manageDesksLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link href={manageLocationLink}>
+          <ListItemButton selected={fullPath === manageLocationLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageLocationLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === manageLocationLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Manage Location"
+                startElement={!hideIcons && <EditIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === manageLocationLink && paletteMode === 'dark'}
                 noWrap
               />
             )}
