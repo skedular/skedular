@@ -1,6 +1,6 @@
 locals {
-  azure_app_display_name_dev = "UnityHub-dev"
-  azure_app_description_dev  = "UnityHub-dev"
+  azure_app_display_name_dev = "Skedular-dev"
+  azure_app_description_dev  = "Skedular-dev"
 }
 
 resource "azuread_application" "azure_application_dev" {
@@ -10,7 +10,7 @@ resource "azuread_application" "azure_application_dev" {
   sign_in_audience      = "AzureADMultipleOrgs"
   privacy_statement_url = "https://getskedular.com/privacy-policy"
   terms_of_service_url  = "https://getskedular.com/terms-of-service"
-  logo_image            = filebase64("../../../../assets/logos/logo.png")
+  logo_image            = filebase64("../../../../assets/logos/skedular-icon-primary.png")
 
   web {
     homepage_url = "https://getskedular.com"
@@ -101,11 +101,11 @@ resource "azuread_application_permission_scope" "access_as_user_dev" {
   count                      = local.is_staging ? 1 : 0
   application_id             = azuread_application.azure_application_dev[count.index].id
   scope_id                   = random_uuid.access_as_user_dev_id[count.index].result
-  admin_consent_display_name = "UnityHub application can access app's web APIs"
-  admin_consent_description  = "Allows UnityHub application to call the app's web APIs as the current user."
+  admin_consent_display_name = "Skedular application can access app's web APIs"
+  admin_consent_description  = "Allows Skedular application to call the app's web APIs as the current user."
   type                       = "User"
-  user_consent_display_name  = "UnityHub application can access app's web APIs and make requests on your behalf"
-  user_consent_description   = "Enable UnityHub application to call this app's web APIs with the same rights that you have"
+  user_consent_display_name  = "Skedular application can access app's web APIs and make requests on your behalf"
+  user_consent_description   = "Enable Skedular application to call this app's web APIs with the same rights that you have"
   value                      = "access_as_user"
 }
 
