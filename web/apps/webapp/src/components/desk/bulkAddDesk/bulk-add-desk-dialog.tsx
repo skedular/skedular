@@ -3,7 +3,15 @@ import type { bulkAddDeskDialog_bulkAddDeskMutation } from '@/queries/__generate
 import type { bulkAddDeskDialog_rootQuery } from '@/queries/__generated__/bulkAddDeskDialog_rootQuery.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@repo/shared/components/commons';
+import {
+  ColorPicker,
+  DefaultDialogTitle,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  SmallIconTypography,
+  TwoButtonsDialogActions,
+} from '@repo/shared/components/commons';
 import { Loading } from '@repo/shared/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import type { RootError } from '@repo/shared/components/relayError';
@@ -23,7 +31,6 @@ import { array, number, object, string } from 'yup';
 type Props = {
   queryReference: PreloadedQuery<bulkAddDeskDialog_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
-  organizationId: string;
   locationId: string;
   connectionIds: string[];
   isDialogOpen: boolean;
@@ -56,7 +63,7 @@ const deskSchema = object({
   zoneIds: array().nullable(),
 });
 
-const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const BulkAddDeskDialog = ({ queryReference, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const rootData = usePreloadedQuery<bulkAddDeskDialog_rootQuery>(RootQuery, queryReference);
 
   const [commitAddDesk] = useMutation<bulkAddDeskDialog_bulkAddDeskMutation>(graphql`
@@ -65,11 +72,18 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
         desks @appendNode(connections: $connectionIds, edgeTypeName: "DeskDetails") {
           id
           name
+          deactivated
+          requireBookingApproval
+          color
           customTags {
             uniqueId
+            name
+            color
           }
           zones {
             uniqueId
+            name
+            color
           }
         }
       }
@@ -80,6 +94,11 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
+  const [selectedColor, setSelectedColor] = useState('');
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
 
   const handleAddClick = ({ namePrefix, count, customTagIds, zoneIds }: DeskDetails) => {
     const ids = Array.from(Array(count).keys()).map((_) => nanoid());
@@ -97,6 +116,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
           requireBookingApproval: false,
           customTagIds,
           zoneIds,
+          color: selectedColor,
         },
       },
       onCompleted: (_, errors) => {
@@ -124,7 +144,7 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
       },
       optimisticResponse: {
         bulkAddDesk: {
-          desks: ids.map((id) => ({ id, name: namePrefix, customTags: [], zones: [] })),
+          desks: ids.map((id) => ({ id, name: namePrefix, deactivated: false, requireBookingApproval: false, customTags: [], zones: [], color: selectedColor })),
         },
       },
     });
@@ -156,17 +176,17 @@ const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connect
                 <TextField name="count" required={requiredFields.count} helperText="Add number of the desks to add" />
               </FormFieldLabel>
 
-              {organizationId && (
-                <FormFieldLabel label="Tags" useWiderSpace>
-                  <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} />
-                </FormFieldLabel>
-              )}
+              <FormFieldLabel label="Tags" useWiderSpace>
+                <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} />
+              </FormFieldLabel>
 
-              {organizationId && (
-                <FormFieldLabel label="Zones" useWiderSpace>
-                  <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
-                </FormFieldLabel>
-              )}
+              <FormFieldLabel label="Zones" useWiderSpace>
+                <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Color" useWiderSpace>
+                <ColorPicker onChange={handleColorChange} />
+              </FormFieldLabel>
 
               <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
@@ -197,7 +217,7 @@ const BulkAddDeskDialogWithRelay = ({ onReloadRequired, organizationId, location
   useEffect(() => {
     loadQuery(
       {
-        organizationId: organizationId ?? '',
+        organizationId,
         multipleChoicesCustomTagsSortingValues: [
           {
             direction: 'Ascending',
@@ -236,7 +256,6 @@ const BulkAddDeskDialogWithRelay = ({ onReloadRequired, organizationId, location
       <MemoBulkAddDeskDialog
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationId={organizationId}
         locationId={locationId}
         connectionIds={connectionIds}
         isDialogOpen={isDialogOpen}

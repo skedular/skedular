@@ -62,6 +62,7 @@ public class Mutation(IMapper mapper)
             input.ZoneIds,
             input.Deactivated,
             input.RequireBookingApproval,
+            input.Color,
             cancellationToken);
         return new BulkDeskPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray() };
     }

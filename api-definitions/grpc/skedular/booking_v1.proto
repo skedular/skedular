@@ -193,6 +193,7 @@ message Desk {
     Location location = 3;
     repeated OrganizationCustomTag organizationCustomTags = 4;
     repeated OrganizationZone organizationZones = 5;
+    string color = 6;
 }
 
 message GetOrganizationPermissionsInput {

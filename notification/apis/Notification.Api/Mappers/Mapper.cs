@@ -1,3 +1,4 @@
+using Enterprise.Shared;
 using Enterprise.Shared.Models;
 using Notification.Api.GraphQL;
 using Notification.Shared.Models;
@@ -51,10 +52,8 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             NotificationType = src.Type switch
             {
-                NotificationTypeConstants.InvitationToJoinOrganization =>
-                    NotificationType.InvitationToJoinOrganization,
-                NotificationTypeConstants.InvitationToJoinLocation =>
-                    NotificationType.InvitationToJoinLocation,
+                NotificationTypeConstants.InvitationToJoinOrganization => NotificationType.InvitationToJoinOrganization,
+                NotificationTypeConstants.InvitationToJoinLocation => NotificationType.InvitationToJoinLocation,
                 NotificationTypeConstants.InvitationToJoinTeam => NotificationType.InvitationToJoinTeam,
                 _ => throw new ArgumentOutOfRangeException()
             },
@@ -139,30 +138,19 @@ public class Mapper : IMapper
                 PhotoUrl72 = src.PhotoUrl72,
                 PhotoUrl192 = src.PhotoUrl192,
                 PhotoUrl512 = src.PhotoUrl512,
-                Emails = src.Identities.Select(item => item.Email).Where(item => !string.IsNullOrWhiteSpace(item))
-                    .ToArray()!
+                Emails = src.Identities.Select(item => item.Email).Where(item => !string.IsNullOrWhiteSpace(item)).ToArray()!
             };
 
     private static NotificationOrganizationDetails? MapTo(Organization? src) =>
-        src is null
-            ? null
-            : new NotificationOrganizationDetails
-            {
-                UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name, LogoUrl = src.LogoUrl
-            };
+        src is null ? null : new NotificationOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
 
     private static NotificationLocationDetails? MapTo(Location? src) =>
-        src is null
-            ? null
-            : new NotificationLocationDetails { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
+        src is null ? null : new NotificationLocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static NotificationTeamDetails? MapTo(Team? src) =>
-        src is null
-            ? null
-            : new NotificationTeamDetails { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
+        src is null ? null : new NotificationTeamDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
-    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) =>
-        src.Select(MapTo);
+    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
         new()

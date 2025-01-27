@@ -214,7 +214,7 @@ public class Mapper : IMapper
     public Shared.Models.Team MapTo(AddTeamInput src) =>
         new()
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Id = src.Id.ToSafeString(),
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
@@ -234,7 +234,7 @@ public class Mapper : IMapper
     public Shared.Models.Team MapTo(UpdateTeamInput src) =>
         new()
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Id = src.Id.ToSafeString(),
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
@@ -249,7 +249,7 @@ public class Mapper : IMapper
     public Shared.Models.Team MapTo(UpdateTeamAndTeamMembersInput src) =>
         new()
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Id = src.Id.ToSafeString(),
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,

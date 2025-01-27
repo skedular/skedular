@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e73bafa943c34e135be0297a67fa20f>>
+ * @generated SignedSource<<e8ebc74483d07dace672398bc618ff44>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type UpdateDeskInput = {
   clientMutationId?: string | null | undefined;
+  color?: string | null | undefined;
   customTagIds: ReadonlyArray<string>;
   deactivated: boolean;
   id: string;
@@ -24,6 +25,7 @@ export type editDesk_updateDeskMutation$variables = {
 export type editDesk_updateDeskMutation$data = {
   readonly updateDesk: {
     readonly desk: {
+      readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -44,6 +46,7 @@ export type editDesk_updateDeskMutation$data = {
 export type editDesk_updateDeskMutation$rawResponse = {
   readonly updateDesk: {
     readonly desk: {
+      readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -82,7 +85,14 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "color",
+  "storageKey": null
+},
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -91,15 +101,9 @@ v2 = [
     "storageKey": null
   },
   (v1/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
+  (v2/*: any*/)
 ],
-v3 = [
+v4 = [
   {
     "alias": null,
     "args": [
@@ -144,6 +148,7 @@ v3 = [
             "name": "requireBookingApproval",
             "storageKey": null
           },
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -151,7 +156,7 @@ v3 = [
             "kind": "LinkedField",
             "name": "customTags",
             "plural": true,
-            "selections": (v2/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -161,7 +166,7 @@ v3 = [
             "kind": "LinkedField",
             "name": "zones",
             "plural": true,
-            "selections": (v2/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           }
         ],
@@ -177,7 +182,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "editDesk_updateDeskMutation",
-    "selections": (v3/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -186,19 +191,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "editDesk_updateDeskMutation",
-    "selections": (v3/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "4ceab11f0799e3fa4f7598558441a363",
+    "cacheID": "ca693d607219b8e1e0c0da3a99151982",
     "id": null,
     "metadata": {},
     "name": "editDesk_updateDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation editDesk_updateDeskMutation(\n  $input: UpdateDeskInput!\n) {\n  updateDesk(input: $input) {\n    desk {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation editDesk_updateDeskMutation(\n  $input: UpdateDeskInput!\n) {\n  updateDesk(input: $input) {\n    desk {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "26c4e6bd0126c829f2f06feefeac9880";
+(node as any).hash = "3f495a24874dd1364ac0eb64b74511ed";
 
 export default node;

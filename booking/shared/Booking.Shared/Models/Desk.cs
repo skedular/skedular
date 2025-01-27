@@ -7,6 +7,7 @@ public class Desk : ReplicatedModelBaseWithDeleted
     public string? Name { get; set; }
     public bool Deactivated { get; set; }
     public bool RequireBookingApproval { get; set; }
+    public string? Color { get; set; }
 
     public Location? Location { get; set; }
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];

@@ -53,31 +53,23 @@ public interface IMapper
     Shared.Models.WorkspaceMember MapTo(WorkspaceMember src, Shared.Models.Workspace workspace);
     Shared.Models.Location MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location src);
     Booking MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking src);
-
-    OrganizationBillingPermissions MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationPermissions src);
-
+    OrganizationBillingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationPermissions src);
     OrganizationPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Permissions src);
     LocationPermissions MapTo(Permissions src);
     TeamPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions src);
     OrganizationMember MapTo(Member src);
     Team MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team src);
     UpdateInput MapTo(Booking src);
-
-    OrganizationBookingPermissions MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src);
-
+    OrganizationBookingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src);
     LocationBookingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.LocationPermissions src);
     TeamBookingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions src);
     WorkspaceChannel MapTo(Conversation src, Workspace workspace);
     Shared.Models.WorkspaceChannel? MapTo(WorkspaceChannel? src);
     Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer src);
     Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk src);
-
     Workspace MapToEntity(Shared.Models.Workspace src, Organization organization);
     Shared.Models.Workspace MapTo(Admin_AddWorkspaceInput src);
     global::Api.Shared.Services.Grpc.Skedular.Slack.V1.Workspace MapTo(Shared.Models.Workspace src);
-
     OrganizationCustomTag MapTo(CustomTag src);
     OrganizationZone MapTo(Zone src);
 }
@@ -106,15 +98,12 @@ public class Mapper : IMapper
         return customer;
     }
 
-    public Workspace MapTo(OauthV2AccessResponse src, Organization organization) =>
-        MergeTo(src, new Workspace(), organization);
+    public Workspace MapTo(OauthV2AccessResponse src, Organization organization) => MergeTo(src, new Workspace(), organization);
 
     public Workspace MergeTo(OauthV2AccessResponse src, Workspace dest, Organization organization)
     {
         dest.Id = src.Team!.Id;
-        dest.Name =
-            (string.IsNullOrWhiteSpace(src.Team?.Name) ? string.Empty : src.Team.Name).Truncate(Constants
-                .MaxSlackWorkspaceNameLength);
+        dest.Name = (string.IsNullOrWhiteSpace(src.Team?.Name) ? string.Empty : src.Team.Name).Truncate(Constants.MaxSlackWorkspaceNameLength);
         dest.BotUserId = src.BotUserId;
         dest.BotUserScope = src.Scope.Truncate(Constants.MaxSlackScopeLength);
         dest.BotUserAccessToken = src.AccessToken.Truncate(Constants.MaxTokenLength);
@@ -123,14 +112,12 @@ public class Mapper : IMapper
         dest.AuthedUserScope = src.AuthedUser.Scope.Truncate(Constants.MaxSlackScopeLength);
         dest.AuthedUserAccessToken = src.AuthedUser.AccessToken.Truncate(Constants.MaxTokenLength);
         dest.AuthedRefreshToken =
-            (src.AuthedUser is null ? string.Empty : src.AuthedUser.RefreshToken.ToSafeString()).Truncate(
-                Constants.MaxTokenLength);
+            (src.AuthedUser is null ? string.Empty : src.AuthedUser.RefreshToken.ToSafeString()).Truncate(Constants.MaxTokenLength);
         dest.Organization = organization;
         return dest;
     }
 
-    public WorkspaceMember MapToEntity(User src, Workspace workspace) =>
-        MergeToEntity(src, new WorkspaceMember(), workspace);
+    public WorkspaceMember MapToEntity(User src, Workspace workspace) => MergeToEntity(src, new WorkspaceMember(), workspace);
 
     public Admin_AddInput MapTo(
         WorkspaceMember src,
@@ -159,20 +146,15 @@ public class Mapper : IMapper
             IsDefaultLocationOnboardingDone = false,
             IsPreferredZoneOnboardingDone = false,
             IsPreferredDeskOnboardingDone = false,
-            DefaultOrganization =
-                new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+            DefaultOrganization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 
-        input.Identities.Add(
-            new Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
+        input.Identities.Add(new Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
-        input.DefaultLocations.AddRange(defaultLocations.Select(item =>
-            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
-            {
-                Id = item.Id,
-                Organization =
-                    new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
-            }));
+        input.DefaultLocations.AddRange(defaultLocations.Select(item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
+        {
+            Id = item.Id, Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+        }));
 
         return input;
     }
@@ -217,15 +199,12 @@ public class Mapper : IMapper
             ? null
             : new Shared.Models.Organization { Id = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name.ToSafeString() };
 
-        customer.DefaultLocations =
-            src.DefaultLocations.Select(item => new Shared.Models.Location
-            {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Organization = string.IsNullOrWhiteSpace(item.Organization?.Id)
-                    ? null
-                    : new Shared.Models.Organization { Id = item.Organization.Id }
-            }).ToList();
+        customer.DefaultLocations = src.DefaultLocations.Select(item => new Shared.Models.Location
+        {
+            Id = item.Id,
+            Name = item.Name.ToSafeString(),
+            Organization = string.IsNullOrWhiteSpace(item.Organization?.Id) ? null : new Shared.Models.Organization { Id = item.Organization.Id }
+        }).ToList();
 
         customer.DefaultTeams =
             src.DefaultTeams.Select(item => new Team
@@ -237,32 +216,29 @@ public class Mapper : IMapper
                     : new Shared.Models.Organization { Id = item.Organization.Id }
             }).ToList();
 
-        customer.PreferredDesks =
-            src.PreferredDesks.Select(item => new Desk
-            {
-                Id = item.Id, Name = item.Name.ToSafeString(), Location = new Shared.Models.Location { Id = item.Location.Id }
-            }).ToList();
+        customer.PreferredDesks = src.PreferredDesks.Select(item => new Desk
+        {
+            Id = item.Id, Name = item.Name.ToSafeString(), Location = new Shared.Models.Location { Id = item.Location.Id }
+        }).ToList();
 
-        customer.PreferredOrganizationTags =
-            src.PreferredOrganizationTags.Select(item => new OrganizationTag
+        customer.PreferredOrganizationTags = src.PreferredOrganizationTags.Select(item => new OrganizationTag
+        {
+            Id = item.Id,
+            Name = item.Name.ToSafeString(),
+            Type = item.Type switch
             {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Type = item.Type switch
-                {
-                    OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
-                    OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                Color = item.Color.ToSafeString(),
-                Organization = new Shared.Models.Organization { Id = item.Organization.Id }
-            }).ToList();
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
+                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Color = item.Color.ToSafeString(),
+            Organization = new Shared.Models.Organization { Id = item.Organization.Id }
+        }).ToList();
 
         return customer;
     }
 
-    public Shared.Models.Organization
-        MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src) =>
+    public Shared.Models.Organization MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src) =>
         new()
         {
             Id = src.Id,
@@ -275,8 +251,7 @@ public class Mapper : IMapper
             HasFutureBooking = src.HasFutureBooking
         };
 
-    public OrganizationBillingPermissions MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationPermissions src) =>
+    public OrganizationBillingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationPermissions src) =>
         new() { CanViewBillingInfo = src.CanViewBillingInfo, CanManageBillingInfo = src.CanManageBillingInfo };
 
     public OrganizationPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Permissions src) =>
@@ -323,8 +298,7 @@ public class Mapper : IMapper
             Status = src.Status switch
             {
                 OrganizationMemberStatus.Active => global::Api.Shared.Services.Models.OrganizationMemberStatus.Active,
-                OrganizationMemberStatus.Inactive => global::Api.Shared.Services.Models.OrganizationMemberStatus
-                    .Inactive,
+                OrganizationMemberStatus.Inactive => global::Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapTo(src.Customer)
@@ -338,9 +312,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
-                ? null
-                : new Shared.Models.Organization { Id = src.OrganizationId },
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = src.PrimaryLocation is null
                 ? null
                 : new Shared.Models.Location { Id = src.PrimaryLocation.Id, Name = src.PrimaryLocation.Name },
@@ -533,9 +505,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
-                ? null
-                : new Shared.Models.Organization { Id = src.OrganizationId },
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Desks = MapTo(src.Desks).ToList(),
             Permissions = new LocationPermissions
             {
@@ -569,6 +539,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Deactivated = src.Deactivated,
+            Color = src.Color.ToSafeString(),
             RequireBookingApproval = src.RequireBookingApproval,
             OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList()
@@ -654,8 +625,7 @@ public class Mapper : IMapper
             Role = src.Role switch
             {
                 global::Api.Shared.Services.Grpc.Skedular.Team.V1.Role.Owner => TeamMemberRole.Owner,
-                global::Api.Shared.Services.Grpc.Skedular.Team.V1.Role.Administrator => TeamMemberRole
-                    .Administrator,
+                global::Api.Shared.Services.Grpc.Skedular.Team.V1.Role.Administrator => TeamMemberRole.Administrator,
                 global::Api.Shared.Services.Grpc.Skedular.Team.V1.Role.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
@@ -691,15 +661,13 @@ public class Mapper : IMapper
             Identities = MapTo(src.Identities).ToList()
         };
 
-    private static IEnumerable<Shared.Models.Identity>
-        MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity> src) => src.Select(MapTo);
+    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity> src) =>
+        src.Select(MapTo);
 
-    private static Shared.Models.Identity
-        MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity src) =>
+    private static Shared.Models.Identity MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
-    private static Shared.Models.Organization? MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? src) =>
+    private static Shared.Models.Organization? MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? src) =>
         string.IsNullOrWhiteSpace(src?.Id)
             ? null
             : new Shared.Models.Organization { Id = src.Id, Name = src.Name.ToSafeString() };
@@ -712,14 +680,14 @@ public class Mapper : IMapper
     private static Team? MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? src) =>
         string.IsNullOrWhiteSpace(src?.Id) ? null : new Team { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static IEnumerable<Desk> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk> src) => src.Select(MapTo);
+    private static IEnumerable<Desk> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk> src) => src.Select(MapTo);
 
     private static Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk src) =>
         new()
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
+            Color = src.Color.ToSafeString(),
             OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList(),
             Location = string.IsNullOrWhiteSpace(src.Location?.Id)
@@ -745,14 +713,13 @@ public class Mapper : IMapper
             Identities = MapTo(src.Identities).ToList()
         };
 
-    private static IEnumerable<Shared.Models.Identity> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity> src) => src.Select(MapTo);
+    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity> src) =>
+        src.Select(MapTo);
 
     private static Shared.Models.Identity MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
-    private IEnumerable<Desk> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk> src) =>
-        src.Select(MapTo);
+    private IEnumerable<Desk> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk> src) => src.Select(MapTo);
 
     private IEnumerable<Shared.Models.WorkspaceMember> MapTo(IEnumerable<WorkspaceMember> src,
         Shared.Models.Workspace workspace) => src.Select(item => MapTo(item, workspace));
@@ -802,9 +769,7 @@ public class Mapper : IMapper
         IEnumerable<Shared.Database.Entities.OrganizationMember> src,
         Shared.Models.Organization organization) => src.Select(item => MapTo(item, organization));
 
-    private OrganizationMember MapTo(
-        Shared.Database.Entities.OrganizationMember src,
-        Shared.Models.Organization organization) =>
+    private OrganizationMember MapTo(Shared.Database.Entities.OrganizationMember src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -816,9 +781,7 @@ public class Mapper : IMapper
             Customer = MapTo(src.Customer)!
         };
 
-    private static IEnumerable<Shared.Models.Identity> MapTo(
-        IEnumerable<Shared.Database.Entities.Identity> src,
-        Customer customer) =>
+    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src, Customer customer) =>
         src.Select(item => MapTo(item, customer));
 
     private static Shared.Models.Identity MapTo(Shared.Database.Entities.Identity src, Customer customer) =>
@@ -828,28 +791,24 @@ public class Mapper : IMapper
         IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationCustomTag> src) =>
         src.Select(MapTo);
 
-    private static OrganizationCustomTag MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationCustomTag src) =>
+    private static OrganizationCustomTag MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationCustomTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static IEnumerable<OrganizationZone> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone> src) =>
+    private static IEnumerable<OrganizationZone> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone> src) =>
         src.Select(MapTo);
 
-    private static OrganizationZone MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone src) =>
+    private static OrganizationZone MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static IEnumerable<OrganizationCustomTag> MapTo(
         IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag> src) =>
         src.Select(MapTo);
 
-    private static OrganizationCustomTag MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag src) =>
+    private static OrganizationCustomTag MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static IEnumerable<OrganizationZone> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone> src) => src.Select(MapTo);
+    private static IEnumerable<OrganizationZone> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone> src) =>
+        src.Select(MapTo);
 
     private static OrganizationZone MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };

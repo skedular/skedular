@@ -8,6 +8,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
+import { Desks } from '@repo/shared/components/desk';
 import { EllipseMenuIcon } from '@repo/shared/components/icons';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
@@ -67,7 +68,9 @@ type ZoneDetails = {
 };
 
 type DeskDetails = {
-  name: string;
+  uniqueId: string;
+  name: string | null | undefined;
+  color?: string | null | undefined;
 };
 
 type TeamDetails = {
@@ -141,6 +144,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
               desks {
                 uniqueId
                 name
+                color
                 customTags {
                   uniqueId
                   name
@@ -364,14 +368,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       field: 'desks',
       headerName: 'Desks',
       editable: false,
-      renderCell: (params) => {
-        if (!params.value || params.value.length === 0) {
-          return 'N/A';
-        }
-
-        const desks = params.value?.map((item: DeskDetails) => item.name).join(', ');
-        return <SmallIconTypography label={desks.length === 0 ? 'N/A' : desks} />;
-      },
+      renderCell: (params) => <Desks desks={params.value.map((desk: DeskDetails) => ({ id: desk.uniqueId, name: desk.name, color: desk.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },

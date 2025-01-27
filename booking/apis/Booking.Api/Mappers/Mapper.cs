@@ -137,7 +137,7 @@ public class Mapper : IMapper
     public Shared.Models.Booking MapTo(AddBookingInput src) =>
         new()
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Id = src.Id.ToSafeString(),
             From = src.From,
             To = src.To,
             Notes = src.Notes,
@@ -421,6 +421,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
             Location = location
         };
 
@@ -447,27 +448,23 @@ public class Mapper : IMapper
         return customer;
     }
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity> MapToGrpcResponse(
-        IEnumerable<Identity> src) =>
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity> MapToGrpcResponse(IEnumerable<Identity> src) =>
         src.Select(MapToGrpcResponse);
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity MapToGrpcResponse(Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? MapToGrpcResponse(
-        Shared.Models.Organization? src) =>
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? MapToGrpcResponse(Shared.Models.Organization? src) =>
         src is null
             ? null
             : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location? MapToGrpcResponse(
-        Shared.Models.Location? src) =>
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location? MapToGrpcResponse(Shared.Models.Location? src) =>
         src is null
             ? null
             : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team?
-        MapToGrpcResponse(Shared.Models.Team? src) =>
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? MapToGrpcResponse(Shared.Models.Team? src) =>
         src is null
             ? null
             : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team { Id = src.Id, Name = src.Name.ToSafeString() };
@@ -478,6 +475,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
+            Color = src.Color.ToSafeString(),
             Location = src.Location is null
                 ? null
                 : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Location.Id, Name = src.Location.Name.ToSafeString() }
@@ -519,45 +517,37 @@ public class Mapper : IMapper
         };
 
     private static BookingOrganizationDetails? MapTo(Shared.Models.Organization? src) =>
-        src is null
-            ? null
-            : new BookingOrganizationDetails { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
+        src is null            ? null            : new BookingOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static BookingLocationDetails? MapTo(Shared.Models.Location? src) =>
-        src is null
-            ? null
-            : new BookingLocationDetails { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
+        src is null            ? null            : new BookingLocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static BookingTeamDetails? MapTo(Shared.Models.Team? src) =>
-        src is null
-            ? null
-            : new BookingTeamDetails { UniqueId = src.Id, Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name };
+        src is null            ? null            : new BookingTeamDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static BookingDeskDetails MapTo(Shared.Models.Desk src) =>
         new()
         {
             UniqueId = src.Id,
-            Name = string.IsNullOrWhiteSpace(src.Name) ? string.Empty : src.Name,
+            Name = src.Name.ToSafeString(),
             CustomTags = MapToCustomTags(src.OrganizationTags).ToArray(),
             Zones = MapToZones(src.OrganizationTags).ToArray(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color.ToSafeString(), 
             Location = MapTo(src.Location)
         };
 
-    private static IEnumerable<BookingOrganizationCustomTagDetails>
-        MapToCustomTags(IEnumerable<OrganizationTag> src) =>
+    private static IEnumerable<BookingOrganizationCustomTagDetails> MapToCustomTags(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.Custom).Select(MapToCustomTag);
 
     private static BookingOrganizationCustomTagDetails MapToCustomTag(OrganizationTag src) =>
         new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
 
-    private static IEnumerable<BookingOrganizationZoneDetails>
-        MapToZones(IEnumerable<OrganizationTag> src) =>
+    private static IEnumerable<BookingOrganizationZoneDetails> MapToZones(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.Zone).Select(MapToZone);
 
-    private static BookingOrganizationZoneDetails MapToZone(OrganizationTag src) =>
-        new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
+    private static BookingOrganizationZoneDetails MapToZone(OrganizationTag src) => new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
 
     private static Shared.Models.Organization? MapTo(Organization? src) =>
         src is null
@@ -585,6 +575,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
             OrganizationTags = MapTo(src.OrganizationTags).ToList()
         };
 
@@ -601,8 +592,7 @@ public class Mapper : IMapper
                 Name = src.Name
             };
 
-    private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) =>
-        src.Select(MapTo);
+    private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
         new()

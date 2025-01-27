@@ -46,7 +46,8 @@ public class Mapper : IMapper
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
                 Deactivated = item.Deactivated,
-                RequireBookingApproval = item.RequireBookingApproval
+                RequireBookingApproval = item.RequireBookingApproval,
+                Color = item.Color.ToSafeString()
             };
 
             desk.CustomTagIds.AddRange(item.CustomTags.Select(tag => tag.Id));

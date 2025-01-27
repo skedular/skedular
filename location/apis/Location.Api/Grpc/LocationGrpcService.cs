@@ -312,6 +312,7 @@ public class LocationGrpcService(
             request.ZoneIds,
             request.Deactivated,
             request.RequireBookingApproval,
+            request.Color,
             context.CancellationToken);
 
         bulkAddDesksResponse.Desks.AddRange(desks.Select(mapper.MapToGrpcResponse));

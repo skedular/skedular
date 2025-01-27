@@ -43,6 +43,7 @@ type BookingCustomerDetails {
 }
 
 type BookingDeskDetails {
+  color: String
   customTags: [BookingOrganizationCustomTagDetails!]!
   deactivated: Boolean!
   location: BookingLocationDetails
@@ -217,6 +218,7 @@ type DeskConnection {
 }
 
 type DeskDetails {
+  color: String
   customTags: [Organization_OrganizationTagDetails!]!
   deactivated: Boolean!
   id: ID!
@@ -1014,6 +1016,7 @@ input AddCustomerDefaultTeamInput {
 
 input AddDeskInput {
   clientMutationId: String
+  color: String
   customTagIds: [String!]!
   id: String
   locationId: String!
@@ -1113,6 +1116,7 @@ input BookingWhereInput {
 
 input BulkAddDeskInput {
   clientMutationId: String
+  color: String
   count: Int!
   customTagIds: [String!]!
   deactivated: Boolean!
@@ -1528,6 +1532,7 @@ input UpdateCustomerDetailsInput {
 
 input UpdateDeskInput {
   clientMutationId: String
+  color: String
   customTagIds: [String!]!
   deactivated: Boolean!
   id: String!

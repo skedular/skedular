@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b45c02d15568469e0d26a09b989307a5>>
+ * @generated SignedSource<<40029cfc5a4295547ff926e5babbbfff>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -104,7 +104,14 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = [
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "color",
+  "storageKey": null
+},
+v4 = [
   {
     "alias": null,
     "args": null,
@@ -113,13 +120,7 @@ v3 = [
     "storageKey": null
   },
   (v2/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
+  (v3/*: any*/)
 ];
 return {
   "fragment": {
@@ -207,6 +208,7 @@ return {
                     "name": "requireBookingApproval",
                     "storageKey": null
                   },
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -214,7 +216,7 @@ return {
                     "kind": "LinkedField",
                     "name": "customTags",
                     "plural": true,
-                    "selections": (v3/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -224,7 +226,7 @@ return {
                     "kind": "LinkedField",
                     "name": "zones",
                     "plural": true,
-                    "selections": (v3/*: any*/),
+                    "selections": (v4/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -301,16 +303,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a6c6e2c1af664b3bf1e2764d0f5a73da",
+    "cacheID": "f972f595428490af09147565e05989ff",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_desks_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationLocation_desks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskCustomTagIds: [String!]\n  $deskNameSearchText: String\n  $deskZoneIds: [String!]\n  $locationId: String!\n) {\n  ...organizationLocation_desks_query_1G22uz\n}\n\nfragment organizationLocation_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText, customTagIds: $deskCustomTagIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationLocation_desks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $deskCustomTagIds: [String!]\n  $deskNameSearchText: String\n  $deskZoneIds: [String!]\n  $locationId: String!\n) {\n  ...organizationLocation_desks_query_1G22uz\n}\n\nfragment organizationLocation_desks_query_1G22uz on Query {\n  desks(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $deskNameSearchText, customTagIds: $deskCustomTagIds, zoneIds: $deskZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        deactivated\n        requireBookingApproval\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "208a761a9d45a590270939a13a87dfcf";
+(node as any).hash = "77b76a6378830992e10332670a982b7b";
 
 export default node;

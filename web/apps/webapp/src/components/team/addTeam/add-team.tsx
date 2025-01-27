@@ -232,42 +232,36 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
                   </FormFieldLabel>
                 </StackColumn>
 
-                {organizationId && (
-                  <>
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <SectionIconTypography label="Location Settings" />
-                      <BodyIconTypography label="Assign team to locations" />
-                      <Divider />
-                    </StackColumn>
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Primary Location">
-                        <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
-                      </FormFieldLabel>
-                    </StackColumn>
-                  </>
-                )}
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Location Settings" />
+                  <BodyIconTypography label="Assign team to locations" />
+                  <Divider />
+                </StackColumn>
 
-                {organizationId && (
-                  <>
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <SectionIconTypography label="Team Members" />
-                      <BodyIconTypography label="Manage your team members" />
-                      <Divider />
-                    </StackColumn>
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Organization Users">
-                        <OrganizationMemberSelector
-                          rootDataRelay={rootData}
-                          organizationId={organizationId}
-                          name="organizationMemberIds"
-                          required={requiredTeamDetailsFields.organizationMemberIds}
-                          multiple={true}
-                          useMemberId={true}
-                        />
-                      </FormFieldLabel>
-                    </StackColumn>
-                  </>
-                )}
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Primary Location">
+                    <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
+                  </FormFieldLabel>
+                </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <SectionIconTypography label="Team Members" />
+                  <BodyIconTypography label="Manage your team members" />
+                  <Divider />
+                </StackColumn>
+
+                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <FormFieldLabel label="Organization Users">
+                    <OrganizationMemberSelector
+                      rootDataRelay={rootData}
+                      organizationId={organizationId}
+                      name="organizationMemberIds"
+                      required={requiredTeamDetailsFields.organizationMemberIds}
+                      multiple={true}
+                      useMemberId={true}
+                    />
+                  </FormFieldLabel>
+                </StackColumn>
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
@@ -303,7 +297,7 @@ const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancel,
   useEffect(() => {
     loadQuery(
       {
-        organizationId: organizationId ?? '',
+        organizationId,
         organizationExists: !!organizationId,
         organizationMemberSelectorOrganizationMembersSortingValues: [
           {

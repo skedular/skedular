@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9945bba3c75eee28726d2a193b819c20>>
+ * @generated SignedSource<<4fd7ee46d21c770dfbe15e18264d7b8e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type organizationLocation_desks_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly color: string | null | undefined;
         readonly customTags: ReadonlyArray<{
           readonly color: string | null | undefined;
           readonly name: string | null | undefined;
@@ -51,7 +52,14 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "color",
+  "storageKey": null
+},
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -60,13 +68,7 @@ v2 = [
     "storageKey": null
   },
   (v1/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
+  (v2/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -202,6 +204,7 @@ return {
                   "name": "requireBookingApproval",
                   "storageKey": null
                 },
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -209,7 +212,7 @@ return {
                   "kind": "LinkedField",
                   "name": "customTags",
                   "plural": true,
-                  "selections": (v2/*: any*/),
+                  "selections": (v3/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -219,7 +222,7 @@ return {
                   "kind": "LinkedField",
                   "name": "zones",
                   "plural": true,
-                  "selections": (v2/*: any*/),
+                  "selections": (v3/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -288,6 +291,6 @@ return {
 };
 })();
 
-(node as any).hash = "208a761a9d45a590270939a13a87dfcf";
+(node as any).hash = "77b76a6378830992e10332670a982b7b";
 
 export default node;

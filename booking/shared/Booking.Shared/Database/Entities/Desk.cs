@@ -12,6 +12,7 @@ public class Desk : ReplicatedEntityBaseWithDeleted
     public string? Name { get; set; }
     public bool Deactivated { get; set; }
     public bool RequireBookingApproval { get; set; }
+    public string? Color { get; set; }
 
     public virtual Location? Location { get; set; }
     public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
@@ -29,6 +30,7 @@ public class DeskConfiguration : IEntityTypeConfiguration<Desk>
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxDeskNameLength);
         builder.Property(item => item.Deactivated).HasDefaultValue(false);
         builder.Property(item => item.RequireBookingApproval).HasDefaultValue(false);
+        builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
 
         builder
             .HasOne(item => item.Location)

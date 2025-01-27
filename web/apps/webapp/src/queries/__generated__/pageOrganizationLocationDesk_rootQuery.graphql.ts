@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f64863908afe6def0b23b7b069226687>>
+ * @generated SignedSource<<630a9f519942323e5bbb390603df64fe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -218,6 +218,7 @@ return {
             "name": "requireBookingApproval",
             "storageKey": null
           },
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -278,12 +279,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1b1e4627a222b6e1739ac5f963415570",
+    "cacheID": "ab6f613dac53947b8992c9be21c5283d",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocationDesk_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocationDesk_rootQuery(\n  $organizationId: String!\n  $deskId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  desk(id: $deskId) {\n    name\n    id\n  }\n  ...editDesk_query\n}\n\nfragment editDesk_query on Query {\n  desk(id: $deskId) {\n    id\n    name\n    deactivated\n    requireBookingApproval\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationLocationDesk_rootQuery(\n  $organizationId: String!\n  $deskId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  desk(id: $deskId) {\n    name\n    id\n  }\n  ...editDesk_query\n}\n\nfragment editDesk_query on Query {\n  desk(id: $deskId) {\n    id\n    name\n    deactivated\n    requireBookingApproval\n    color\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();

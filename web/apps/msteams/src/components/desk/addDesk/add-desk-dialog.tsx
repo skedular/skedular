@@ -3,6 +3,7 @@ import DialogContent from '@mui/material/DialogContent';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import {
   BodyIconTypography,
+  ColorPicker,
   DefaultDialogTitle,
   FormFieldLabel,
   FormStackColumn,
@@ -91,12 +92,17 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
         desk @appendNode(connections: $connectionIds, edgeTypeName: "DeskDetails") {
           id
           name
+          deactivated
+          requireBookingApproval
+          color
           customTags {
             uniqueId
+            name
             color
           }
           zones {
             uniqueId
+            name
             color
           }
         }
@@ -109,7 +115,12 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
   const validate = makeValidate(deskSchema);
   const requiredFields = makeRequired(deskSchema);
   const filterLocation = createFilterOptions<LocationDetails>();
+  const [selectedColor, setSelectedColor] = useState('');
   const locations = useMemo<LocationDetails[]>(() => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
 
   const handleAddClick = ({ location: locationId, name, customTagIds, zoneIds }: DeskDetails) => {
     const id = nanoid();
@@ -125,6 +136,7 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
           name,
           customTagIds,
           zoneIds,
+          color: selectedColor,
         },
       },
       onCompleted: (_, errors) => {
@@ -150,14 +162,16 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
           render: <NotificationContent content={`Failed to add desk '${name}'. Error: ${error.message}.`} />,
         });
       },
-
       optimisticResponse: {
         addDesk: {
           desk: {
             id,
             name,
+            deactivated: false,
+            requireBookingApproval: false,
             customTags: [],
             zones: [],
+            color: selectedColor,
           },
         },
       },
@@ -220,6 +234,10 @@ const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionI
                 <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
               </FormFieldLabel>
 
+              <FormFieldLabel label="Color" useWiderSpace>
+                <ColorPicker onChange={handleColorChange} />
+              </FormFieldLabel>
+
               <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
             </FormStackColumn>
           )}
@@ -249,7 +267,7 @@ const AddDeskDialogWithRelay = ({ onReloadRequired, organizationId, locationId, 
   useEffect(() => {
     loadQuery(
       {
-        organizationId: organizationId ?? '',
+        organizationId,
         multipleChoicesCustomTagsSortingValues: [
           {
             direction: 'Ascending',

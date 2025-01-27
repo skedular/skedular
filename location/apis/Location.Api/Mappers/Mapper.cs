@@ -196,6 +196,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
             CustomTags =
                 MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Custom)).ToList(),
             Zones = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Zone)).ToList()
@@ -217,6 +218,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.Deactivated = src.Deactivated;
         dest.RequireBookingApproval = src.RequireBookingApproval;
+        dest.Color = src.Color;
         dest.OrganizationTags = organizationTags;
         dest.Location = location;
         return dest;
@@ -254,6 +256,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
             CustomTags = MapTo(src.CustomTags).ToArray(),
             Zones = MapTo(src.Zones).ToArray()
         };
@@ -315,7 +318,7 @@ public class Mapper : IMapper
     {
         var location = new Shared.Models.Location
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Id = src.Id.ToSafeString(),
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
@@ -333,7 +336,7 @@ public class Mapper : IMapper
     {
         var location = new Shared.Models.Location
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id, Name = src.Name, About = src.About, Timezone = src.Timezone
+            Id = src.Id.ToSafeString(), Name = src.Name, About = src.About, Timezone = src.Timezone
         };
 
         location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
@@ -344,10 +347,11 @@ public class Mapper : IMapper
     public Shared.Models.Desk MapTo(AddDeskInput src) =>
         new()
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Id = src.Id.ToSafeString(),
             Name = src.Name,
             Deactivated = false,
             RequireBookingApproval = false,
+            Color = src.Color,
             CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Location = new Shared.Models.Location { Id = src.LocationId }
@@ -360,6 +364,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
             CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -466,6 +471,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
             Location = location,
             CustomTags = MapTo(
                     src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Custom),
@@ -482,7 +488,11 @@ public class Mapper : IMapper
     {
         var desk = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk
         {
-            Id = src.Id, Name = src.Name.ToSafeString(), Deactivated = src.Deactivated, RequireBookingApproval = src.RequireBookingApproval
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Deactivated = src.Deactivated,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color.ToSafeString()
         };
 
         desk.OrganizationCustomTags.AddRange(MapToGrpcResponseOrganizationCustomTags(src.CustomTags));
@@ -498,6 +508,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color.ToSafeString(),
             Location = new Shared.Models.Location { Id = src.LocationId },
             CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
@@ -510,6 +521,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color.ToSafeString(),
             CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };

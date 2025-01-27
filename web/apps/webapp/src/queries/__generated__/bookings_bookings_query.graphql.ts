@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<10c26b9e13da6a4da026de9b9c0995e9>>
+ * @generated SignedSource<<e944cbcef9ab926287e64aa6b03e6f71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,7 @@ export type bookings_bookings_query$data = {
           readonly uniqueId: string;
         };
         readonly desks: ReadonlyArray<{
+          readonly color: string | null | undefined;
           readonly customTags: ReadonlyArray<{
             readonly color: string | null | undefined;
             readonly name: string | null | undefined;
@@ -86,16 +87,17 @@ v3 = [
   (v1/*: any*/),
   (v2/*: any*/)
 ],
-v4 = [
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "color",
+  "storageKey": null
+},
+v5 = [
   (v1/*: any*/),
   (v2/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
+  (v4/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -359,6 +361,7 @@ return {
                   "selections": [
                     (v1/*: any*/),
                     (v2/*: any*/),
+                    (v4/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -366,7 +369,7 @@ return {
                       "kind": "LinkedField",
                       "name": "customTags",
                       "plural": true,
-                      "selections": (v4/*: any*/),
+                      "selections": (v5/*: any*/),
                       "storageKey": null
                     },
                     {
@@ -376,7 +379,7 @@ return {
                       "kind": "LinkedField",
                       "name": "zones",
                       "plural": true,
-                      "selections": (v4/*: any*/),
+                      "selections": (v5/*: any*/),
                       "storageKey": null
                     }
                   ],
@@ -453,6 +456,6 @@ return {
 };
 })();
 
-(node as any).hash = "164add4a174456af6652cbf3a998984b";
+(node as any).hash = "7b21bfca8178f3354011d68bfb90be8f";
 
 export default node;

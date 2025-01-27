@@ -28,6 +28,7 @@ type BookingDeskDetails {
   uniqueId: ID!
   name: String!
   deactivated: Boolean!
+  color: String
   requireBookingApproval: Boolean!
   location: BookingLocationDetails
   customTags: [BookingOrganizationCustomTagDetails!]!

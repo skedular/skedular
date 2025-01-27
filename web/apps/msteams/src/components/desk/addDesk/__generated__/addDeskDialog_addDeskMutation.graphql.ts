@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<07be3e794cdc486493b649156e6bcdd2>>
+ * @generated SignedSource<<80cda297f55fca74ac009701947f1174>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type AddDeskInput = {
   clientMutationId?: string | null | undefined;
+  color?: string | null | undefined;
   customTagIds: ReadonlyArray<string>;
   id?: string | null | undefined;
   locationId: string;
@@ -24,14 +25,19 @@ export type addDeskDialog_addDeskMutation$variables = {
 export type addDeskDialog_addDeskMutation$data = {
   readonly addDesk: {
     readonly desk: {
+      readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
+      readonly deactivated: boolean;
       readonly id: string;
       readonly name: string;
+      readonly requireBookingApproval: boolean;
       readonly zones: ReadonlyArray<{
         readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
     };
@@ -40,14 +46,19 @@ export type addDeskDialog_addDeskMutation$data = {
 export type addDeskDialog_addDeskMutation$rawResponse = {
   readonly addDesk: {
     readonly desk: {
+      readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
+      readonly deactivated: boolean;
       readonly id: string;
       readonly name: string;
+      readonly requireBookingApproval: boolean;
       readonly zones: ReadonlyArray<{
         readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
     };
@@ -79,7 +90,21 @@ v1 = [
     "variableName": "input"
   }
 ],
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "color",
+  "storageKey": null
+},
+v4 = [
   {
     "alias": null,
     "args": null,
@@ -87,15 +112,10 @@ v2 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
+  (v2/*: any*/),
+  (v3/*: any*/)
 ],
-v3 = {
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "DeskDetails",
@@ -110,13 +130,22 @@ v3 = {
       "name": "id",
       "storageKey": null
     },
+    (v2/*: any*/),
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "name",
+      "name": "deactivated",
       "storageKey": null
     },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "requireBookingApproval",
+      "storageKey": null
+    },
+    (v3/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -124,7 +153,7 @@ v3 = {
       "kind": "LinkedField",
       "name": "customTags",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": (v4/*: any*/),
       "storageKey": null
     },
     {
@@ -134,7 +163,7 @@ v3 = {
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": (v4/*: any*/),
       "storageKey": null
     }
   ],
@@ -155,7 +184,7 @@ return {
         "name": "addDesk",
         "plural": false,
         "selections": [
-          (v3/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
@@ -177,7 +206,7 @@ return {
         "name": "addDesk",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -205,16 +234,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "207ecd05f162e7c790d0b55fc70c88fe",
+    "cacheID": "4c1e71c4964e90bcaf036fd360b2583c",
     "id": null,
     "metadata": {},
     "name": "addDeskDialog_addDeskMutation",
     "operationKind": "mutation",
-    "text": "mutation addDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      customTags {\n        uniqueId\n        color\n      }\n      zones {\n        uniqueId\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addDeskDialog_addDeskMutation(\n  $input: AddDeskInput!\n) {\n  addDesk(input: $input) {\n    desk {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f9fec9bdf52131479583947d908194d6";
+(node as any).hash = "665d6a3ac07538a50a87993a36d746ba";
 
 export default node;

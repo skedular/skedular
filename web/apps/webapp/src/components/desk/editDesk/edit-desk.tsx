@@ -4,7 +4,16 @@ import type { editDesk_updateDeskMutation } from '@/queries/__generated__/editDe
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
+import {
+  AppBarWithStackColumn,
+  BodyIconTypography,
+  ColorPicker,
+  FormFieldLabel,
+  FormStackColumn,
+  SectionIconTypography,
+  StackColumn,
+  StackRow,
+} from '@repo/shared/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@repo/shared/libs/theme';
@@ -12,7 +21,7 @@ import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
-import { memo, useContext } from 'react';
+import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -21,7 +30,6 @@ import { array, object, string } from 'yup';
 type Props = {
   rootDataRelay: editDesk_query$key;
   onReloadRequired?: () => void;
-  organizationId: string;
 };
 
 type DeskDetails = {
@@ -36,7 +44,7 @@ const deskSchema = object({
   zoneIds: array().nullable(),
 });
 
-const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
+const EditDesk = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<editDesk_query$key>(
     graphql`
       fragment editDesk_query on Query {
@@ -45,6 +53,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           name
           deactivated
           requireBookingApproval
+          color
           customTags {
             uniqueId
             name
@@ -71,6 +80,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           name
           deactivated
           requireBookingApproval
+          color
           customTags {
             uniqueId
             name
@@ -91,6 +101,11 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateDeskDetails = makeValidate(deskSchema);
   const requiredDeskDetailsFields = makeRequired(deskSchema);
+  const [selectedColor, setSelectedColor] = useState(rootData.desk?.color);
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
+  };
 
   const handleCloseClick = () => {
     router.back();
@@ -114,6 +129,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
           requireBookingApproval: rootData.desk.requireBookingApproval,
           customTagIds,
           zoneIds,
+          color: selectedColor,
         },
       },
       onCompleted: (_, errors) => {
@@ -146,6 +162,7 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
             requireBookingApproval: rootData.desk.requireBookingApproval,
             customTags: [],
             zones: [],
+            color: selectedColor,
           },
         },
       },
@@ -183,17 +200,17 @@ const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
                     <TextField name="name" required={requiredDeskDetailsFields.name} helperText="Add your desk name" />
                   </FormFieldLabel>
 
-                  {organizationId && (
-                    <FormFieldLabel label="Tags">
-                      <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredDeskDetailsFields.customTagIds} />
-                    </FormFieldLabel>
-                  )}
+                  <FormFieldLabel label="Tags">
+                    <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredDeskDetailsFields.customTagIds} />
+                  </FormFieldLabel>
 
-                  {organizationId && (
-                    <FormFieldLabel label="Zones">
-                      <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredDeskDetailsFields.zoneIds} />
-                    </FormFieldLabel>
-                  )}
+                  <FormFieldLabel label="Zones">
+                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredDeskDetailsFields.zoneIds} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Color">
+                    <ColorPicker onChange={handleColorChange} defaultColor={rootData.desk?.color} />
+                  </FormFieldLabel>
                 </StackColumn>
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>

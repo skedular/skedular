@@ -26,6 +26,7 @@ type DeskDetails {
   name: String!
   deactivated: Boolean!
   requireBookingApproval: Boolean!
+  color: String
   customTags: [Organization_OrganizationTagDetails!]!
   zones: [Organization_OrganizationTagDetails!]!
   id: ID!
@@ -228,6 +229,7 @@ input AddDeskInput {
   locationId: String!
   customTagIds: [String!]!
   zoneIds: [String!]!
+  color: String
 }
 
 input AddLocationInput {
@@ -249,6 +251,7 @@ input BulkAddDeskInput {
   customTagIds: [String!]!
   zoneIds: [String!]!
   deactivated: Boolean!
+  color: String
   requireBookingApproval: Boolean!
 }
 
@@ -346,6 +349,7 @@ input UpdateDeskInput {
   name: String!
   deactivated: Boolean!
   requireBookingApproval: Boolean!
+  color: String
   customTagIds: [String!]!
   zoneIds: [String!]!
 }

@@ -23,6 +23,9 @@
     "./components/datePickers": {
       "default": "./dist/components/datePickers/index.js"
     },
+    "./components/desk": {
+      "default": "./dist/components/desk/index.js"
+    },
     "./components/forms": {
       "default": "./dist/components/forms/index.js"
     },

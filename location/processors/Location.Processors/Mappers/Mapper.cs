@@ -409,6 +409,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
             Location = location
         };
 

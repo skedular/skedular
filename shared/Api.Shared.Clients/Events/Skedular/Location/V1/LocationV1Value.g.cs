@@ -40,18 +40,19 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "Dm9yZ2FuaXphdGlvbklkGAYgASgJEhAKCHRpbWV6b25lGAcgASgJEh0KBWRl",
             "c2tzGAggAygLMg4ubG9jYXRpb24uRGVzayJOCg5Mb2NhdGlvbk1lbWJlchIK",
             "CgJpZBgBIAEoCRIcCgRyb2xlGAIgASgOMg4ubG9jYXRpb24uUm9sZRISCgpj",
-            "dXN0b21lcklkGAMgASgJInwKBERlc2sSCgoCaWQYASABKAkSDAoEbmFtZRgC",
-            "IAEoCRITCgtkZWFjdGl2YXRlZBgDIAEoCBIeChZyZXF1aXJlQm9va2luZ0Fw",
-            "cHJvdmFsGAQgASgIEhQKDGN1c3RvbVRhZ0lkcxgFIAMoCRIPCgd6b25lSWRz",
-            "GAYgAygJIpEBChhJbnZpdGF0aW9uVG9Kb2luTG9jYXRpb24SCgoCaWQYASAB",
-            "KAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz",
-            "dGFtcBISCgpsb2NhdGlvbklkGAMgASgJEhMKC2ludml0ZWRCeUlkGAQgASgJ",
-            "EhEKCWludml0ZWVJZBgFIAEoCSp8CgRUeXBlEhQKEExvY2F0aW9uVXBzZXJ0",
-            "ZWQQABITCg9Mb2NhdGlvbkRlbGV0ZWQQARIkCiBJbnZpdGF0aW9uVG9Kb2lu",
-            "TG9jYXRpb25VcHNlcnRlZBACEiMKH0ludml0YXRpb25Ub0pvaW5Mb2NhdGlv",
-            "bkRlbGV0ZWQQAyowCgRSb2xlEgkKBU93bmVyEAASEQoNQWRtaW5pc3RyYXRv",
-            "chABEgoKBk1lbWJlchACQjeqAjRBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRz",
-            "LlNrZWR1bGFyLkxvY2F0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "dXN0b21lcklkGAMgASgJIosBCgREZXNrEgoKAmlkGAEgASgJEgwKBG5hbWUY",
+            "AiABKAkSEwoLZGVhY3RpdmF0ZWQYAyABKAgSHgoWcmVxdWlyZUJvb2tpbmdB",
+            "cHByb3ZhbBgEIAEoCBIUCgxjdXN0b21UYWdJZHMYBSADKAkSDwoHem9uZUlk",
+            "cxgGIAMoCRINCgVjb2xvchgHIAEoCSKRAQoYSW52aXRhdGlvblRvSm9pbkxv",
+            "Y2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2ds",
+            "ZS5wcm90b2J1Zi5UaW1lc3RhbXASEgoKbG9jYXRpb25JZBgDIAEoCRITCgtp",
+            "bnZpdGVkQnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSABKAkqfAoEVHlwZRIU",
+            "ChBMb2NhdGlvblVwc2VydGVkEAASEwoPTG9jYXRpb25EZWxldGVkEAESJAog",
+            "SW52aXRhdGlvblRvSm9pbkxvY2F0aW9uVXBzZXJ0ZWQQAhIjCh9JbnZpdGF0",
+            "aW9uVG9Kb2luTG9jYXRpb25EZWxldGVkEAMqMAoEUm9sZRIJCgVPd25lchAA",
+            "EhEKDUFkbWluaXN0cmF0b3IQARIKCgZNZW1iZXIQAkI3qgI0QXBpLlNoYXJl",
+            "ZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Mb2NhdGlvbi5WMS5WYWx1ZWIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -60,7 +61,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "Location", "InvitationToJoinLocation" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Desks" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember.Parser, new[]{ "Id", "Role", "CustomerId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "CustomTagIds", "ZoneIds" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "CustomTagIds", "ZoneIds", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null)
           }));
     }
@@ -1780,6 +1781,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       requireBookingApproval_ = other.requireBookingApproval_;
       customTagIds_ = other.customTagIds_.Clone();
       zoneIds_ = other.zoneIds_.Clone();
+      color_ = other.color_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1859,6 +1861,18 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       get { return zoneIds_; }
     }
 
+    /// <summary>Field number for the "color" field.</summary>
+    public const int ColorFieldNumber = 7;
+    private string color_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Color {
+      get { return color_; }
+      set {
+        color_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1880,6 +1894,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (RequireBookingApproval != other.RequireBookingApproval) return false;
       if(!customTagIds_.Equals(other.customTagIds_)) return false;
       if(!zoneIds_.Equals(other.zoneIds_)) return false;
+      if (Color != other.Color) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1893,6 +1908,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (RequireBookingApproval != false) hash ^= RequireBookingApproval.GetHashCode();
       hash ^= customTagIds_.GetHashCode();
       hash ^= zoneIds_.GetHashCode();
+      if (Color.Length != 0) hash ^= Color.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1929,6 +1945,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
       customTagIds_.WriteTo(output, _repeated_customTagIds_codec);
       zoneIds_.WriteTo(output, _repeated_zoneIds_codec);
+      if (Color.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Color);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1957,6 +1977,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
       customTagIds_.WriteTo(ref output, _repeated_customTagIds_codec);
       zoneIds_.WriteTo(ref output, _repeated_zoneIds_codec);
+      if (Color.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Color);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1981,6 +2005,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
       size += customTagIds_.CalculateSize(_repeated_customTagIds_codec);
       size += zoneIds_.CalculateSize(_repeated_zoneIds_codec);
+      if (Color.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Color);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -2007,6 +2034,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
       customTagIds_.Add(other.customTagIds_);
       zoneIds_.Add(other.zoneIds_);
+      if (other.Color.Length != 0) {
+        Color = other.Color;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -2050,6 +2080,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             zoneIds_.AddEntriesFrom(input, _repeated_zoneIds_codec);
             break;
           }
+          case 58: {
+            Color = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -2091,6 +2125,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
           }
           case 50: {
             zoneIds_.AddEntriesFrom(ref input, _repeated_zoneIds_codec);
+            break;
+          }
+          case 58: {
+            Color = input.ReadString();
             break;
           }
         }

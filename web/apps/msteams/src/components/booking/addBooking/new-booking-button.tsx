@@ -154,7 +154,7 @@ const NewBookingButtonWithRelay = ({
 
     loadQuery(
       {
-        organizationId: organizationId ?? '',
+        organizationId,
         locationId: defaultLocationId ?? '',
         locationExists: false,
         dateToGetAvailableDesks: date,

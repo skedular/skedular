@@ -52,6 +52,7 @@ public class BookingDeskDetails
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("deactivated")] public bool Deactivated { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }

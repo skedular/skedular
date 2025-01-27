@@ -16,11 +16,7 @@ namespace Location.Api.Services;
 public interface IDeskService
 {
     Task<Desk> GetByIdAsync(string id, CancellationToken cancellationToken);
-
-    Task<Desk> AddAsync(
-        Desk desk,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken);
+    Task<Desk> AddAsync(Desk desk, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
     Task<ICollection<Desk>> BulkAddAsync(
         string locationId,
@@ -30,6 +26,7 @@ public interface IDeskService
         ICollection<string> zoneIds,
         bool deactivated,
         bool requireBookingApproval,
+        string? color,
         CancellationToken cancellationToken);
 
     Task<Desk> UpdateAsync(Desk desk, CancellationToken cancellationToken);
@@ -88,10 +85,7 @@ public class DeskService(
         return mapper.MapTo(desk);
     }
 
-    public async Task<Desk> AddAsync(
-        Desk desk,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken)
+    public async Task<Desk> AddAsync(Desk desk, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(desk.Location.Id);
 
@@ -103,8 +97,7 @@ public class DeskService(
 
         if (!string.IsNullOrWhiteSpace(desk.Id))
         {
-            var existingDesk =
-                await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
+            var existingDesk = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
             if (existingDesk is not null)
             {
                 return await UpdateInternalAsync(
@@ -119,14 +112,14 @@ public class DeskService(
             desk.Id = randomHelper.Generate();
         }
 
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(desk.Location.Id, cancellationToken);
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(desk.Location.Id, cancellationToken);
         if (existingLocation is null)
         {
             throw new LocationNotFound();
         }
 
-        if (customer is not null && existingLocation.Organization is not null &&
+        if (customer is not null &&
+            existingLocation.Organization is not null &&
             !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -137,13 +130,13 @@ public class DeskService(
             throw new Unauthorized();
         }
 
-        var matchingDeskFound = await repositoryFactory.DeskRepository
-            .Query(new Specification<Shared.Database.Entities.Desk>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    query.Location.Id == desk.Location.Id &&
-                                    EF.Functions.ILike(query.Name, desk.Name)
-            }).AnyAsync(cancellationToken);
+        var matchingDeskFound = await repositoryFactory.DeskRepository.Query(
+                new Specification<Shared.Database.Entities.Desk>
+                {
+                    Criteria = query =>
+                        !query.DeletedAt.HasValue && query.Location.Id == desk.Location.Id && EF.Functions.ILike(query.Name, desk.Name)
+                })
+            .AnyAsync(cancellationToken);
         if (matchingDeskFound)
         {
             throw new DeskWithSameNameExist();
@@ -151,8 +144,8 @@ public class DeskService(
 
         var organizationTags = existingLocation.Organization is null
             ? []
-            : await repositoryFactory.OrganizationTagRepository
-                .Query(new Specification<OrganizationTag>
+            : await repositoryFactory.OrganizationTagRepository.Query(
+                new Specification<OrganizationTag>
                 {
                     Criteria = query => !query.DeletedAt.HasValue &&
                                         desk.CustomTags.Concat(desk.Zones).Select(item => item.Id).Contains(query.Id) &&
@@ -164,9 +157,7 @@ public class DeskService(
             repositoryFactory.LocationRepository.UnitOfWork,
             cancellationToken);
 
-        var mappedDesk =
-            mapper.MapTo(repositoryFactory.DeskRepository.Add(mapper.MapTo(desk, existingLocation, organizationTags)));
-
+        var mappedDesk = mapper.MapTo(repositoryFactory.DeskRepository.Add(mapper.MapTo(desk, existingLocation, organizationTags)));
         await locationOutboxPublisher.PublishLocationAsync(
             [mapper.MapTo(existingLocation)],
             repositoryFactory.DeskRepository.UnitOfWork,
@@ -184,6 +175,7 @@ public class DeskService(
         ICollection<string> zoneIds,
         bool deactivated,
         bool requireBookingApproval,
+        string? color,
         CancellationToken cancellationToken)
     {
         if (count <= 0)
@@ -194,8 +186,7 @@ public class DeskService(
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
         if (existingLocation is null)
         {
             throw new LocationNotFound();
@@ -214,8 +205,8 @@ public class DeskService(
 
         var organizationTags = existingLocation.Organization is null
             ? []
-            : await repositoryFactory.OrganizationTagRepository
-                .Query(new Specification<OrganizationTag>
+            : await repositoryFactory.OrganizationTagRepository.Query(
+                new Specification<OrganizationTag>
                 {
                     Criteria = query => !query.DeletedAt.HasValue &&
                                         customTagIds.Concat(zoneIds).Contains(query.Id) &&
@@ -238,8 +229,7 @@ public class DeskService(
                 finalDeskName = suffixIdx == 0 ? deskName : $"{deskName}_{suffixIdx}";
                 var name = finalDeskName;
 
-                if (!existingLocation.Desks.Any(item =>
-                        item.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                if (!existingLocation.Desks.Any(item => item.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     break;
                 }
@@ -254,6 +244,7 @@ public class DeskService(
 
             deskEntity.Deactivated = deactivated;
             deskEntity.RequireBookingApproval = requireBookingApproval;
+            deskEntity.Color = color;
             desks.Add(mapper.MapTo(repositoryFactory.DeskRepository.Add(deskEntity), mapper.MapTo(existingLocation)));
         }
 
@@ -271,8 +262,7 @@ public class DeskService(
         ArgumentException.ThrowIfNullOrWhiteSpace(desk.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingDesk =
-            await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
+        var existingDesk = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
         if (existingDesk is null)
         {
             throw new DeskNotFound();
@@ -292,8 +282,7 @@ public class DeskService(
             throw new DeskNotFound();
         }
 
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(desk.Location.Id, cancellationToken);
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(desk.Location.Id, cancellationToken);
         if (existingLocation is null)
         {
             throw new LocationNotFound();
@@ -343,14 +332,12 @@ public class DeskService(
 
         if (existingLocations
             .Where(item => item.Organization is not null)
-            .Any(existingLocation =>
-                !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
+            .Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (existingLocations.Any(existingOrganization =>
-                !locationAuthorizationService.CanModify(existingOrganization, customer)))
+        if (existingLocations.Any(existingOrganization => !locationAuthorizationService.CanModify(existingOrganization, customer)))
         {
             throw new Unauthorized();
         }
@@ -362,8 +349,7 @@ public class DeskService(
         repositoryFactory.DeskRepository.RemoveRange(desks);
 
         var deletedDesks = desks
-            .Select(desk =>
-                mapper.MapTo(desk, mapper.MapTo(existingLocations.Single(item => item.Id == desk.Location.Id))))
+            .Select(desk => mapper.MapTo(desk, mapper.MapTo(existingLocations.Single(item => item.Id == desk.Location.Id))))
             .ToList();
 
         var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
@@ -393,19 +379,16 @@ public class DeskService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = desks.Select(item => item.Location.Id).ToList();
-        var existingLocations =
-            await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
+        var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
         if (existingLocations
             .Where(item => item.Organization is not null)
-            .Any(existingLocation =>
-                !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
+            .Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (existingLocations.Any(existingOrganization =>
-                !locationAuthorizationService.CanModify(existingOrganization, customer)))
+        if (existingLocations.Any(existingOrganization => !locationAuthorizationService.CanModify(existingOrganization, customer)))
         {
             throw new Unauthorized();
         }
@@ -421,14 +404,11 @@ public class DeskService(
         }
 
         var updatedDesks = desks
-            .Select(desk =>
-                mapper.MapTo(desk, mapper.MapTo(existingLocations.Single(item => item.Id == desk.Location.Id))))
+            .Select(desk => mapper.MapTo(desk, mapper.MapTo(existingLocations.Single(item => item.Id == desk.Location.Id))))
             .ToList();
 
         var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
-        foreach (var desk in mappedLocations
-                     .SelectMany(mappedLocation =>
-                         mappedLocation.Desks.Where(item => !ids.Contains(item.Id))))
+        foreach (var desk in mappedLocations.SelectMany(mappedLocation => mappedLocation.Desks.Where(item => !ids.Contains(item.Id))))
         {
             desk.Deactivated = false;
         }
@@ -454,19 +434,16 @@ public class DeskService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = desks.Select(item => item.Location.Id).ToList();
-        var existingLocations =
-            await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
+        var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
         if (existingLocations
             .Where(item => item.Organization is not null)
-            .Any(existingLocation =>
-                !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
+            .Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (existingLocations.Any(existingOrganization =>
-                !locationAuthorizationService.CanModify(existingOrganization, customer)))
+        if (existingLocations.Any(existingOrganization => !locationAuthorizationService.CanModify(existingOrganization, customer)))
         {
             throw new Unauthorized();
         }
@@ -487,9 +464,7 @@ public class DeskService(
             .ToList();
 
         var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
-        foreach (var desk in mappedLocations
-                     .SelectMany(mappedLocation =>
-                         mappedLocation.Desks.Where(item => !ids.Contains(item.Id))))
+        foreach (var desk in mappedLocations.SelectMany(mappedLocation => mappedLocation.Desks.Where(item => !ids.Contains(item.Id))))
         {
             desk.Deactivated = true;
         }
@@ -512,8 +487,7 @@ public class DeskService(
         CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var location =
-            await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId, cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId, cancellationToken);
         if (location is null)
         {
             throw new LocationNotFound();
@@ -540,14 +514,14 @@ public class DeskService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(existingDesk.Location.Id, cancellationToken);
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingDesk.Location.Id, cancellationToken);
         if (existingLocation is null)
         {
             throw new LocationNotFound();
         }
 
-        if (customer is not null && existingLocation.Organization is not null &&
+        if (customer is not null &&
+            existingLocation.Organization is not null &&
             !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
@@ -563,8 +537,8 @@ public class DeskService(
         var customTags = desk.CustomTags;
         var zones = desk.Zones;
         var locationId = existingDesk.Location.Id;
-        var matchingDeskFound = await repositoryFactory.DeskRepository
-            .Query(new Specification<Shared.Database.Entities.Desk>
+        var matchingDeskFound = await repositoryFactory.DeskRepository.Query(
+            new Specification<Shared.Database.Entities.Desk>
             {
                 Criteria = query =>
                     !query.DeletedAt.HasValue &&
@@ -579,8 +553,8 @@ public class DeskService(
 
         var organizationTags = existingLocation.Organization is null
             ? []
-            : await repositoryFactory.OrganizationTagRepository
-                .Query(new Specification<OrganizationTag>
+            : await repositoryFactory.OrganizationTagRepository.Query(
+                new Specification<OrganizationTag>
                 {
                     Criteria = query => !query.DeletedAt.HasValue &&
                                         customTags.Concat(zones).Select(item => item.Id).Contains(query.Id) &&
@@ -592,11 +566,9 @@ public class DeskService(
             repositoryFactory.DeskRepository.UnitOfWork,
             cancellationToken);
 
-        desk =
-            mapper.MapTo(
-                repositoryFactory.DeskRepository.Update(
-                    mapper.MergeTo(desk, existingDesk, existingLocation, organizationTags)),
-                mapper.MapTo(existingLocation));
+        desk = mapper.MapTo(
+            repositoryFactory.DeskRepository.Update(mapper.MergeTo(desk, existingDesk, existingLocation, organizationTags)),
+            mapper.MapTo(existingLocation));
 
         await locationOutboxPublisher.PublishLocationAsync(
             [mapper.MapTo(existingLocation)],

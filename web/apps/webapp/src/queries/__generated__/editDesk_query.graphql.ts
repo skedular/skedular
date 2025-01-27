@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6ee1437fa2074e838ae0ed3ce0861b3a>>
+ * @generated SignedSource<<a57d54997e2e36b8080b97babe6c78d5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type editDesk_query$data = {
   readonly desk: {
+    readonly color: string | null | undefined;
     readonly customTags: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly name: string | null | undefined;
@@ -43,7 +44,14 @@ var v0 = {
   "name": "name",
   "storageKey": null
 },
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "color",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -52,13 +60,7 @@ v1 = [
     "storageKey": null
   },
   (v0/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
+  (v1/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -107,6 +109,7 @@ return {
           "name": "requireBookingApproval",
           "storageKey": null
         },
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -114,7 +117,7 @@ return {
           "kind": "LinkedField",
           "name": "customTags",
           "plural": true,
-          "selections": (v1/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -124,7 +127,7 @@ return {
           "kind": "LinkedField",
           "name": "zones",
           "plural": true,
-          "selections": (v1/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         }
       ],
@@ -146,6 +149,6 @@ return {
 };
 })();
 
-(node as any).hash = "c5915399a3b376558f9a682fd66bb735";
+(node as any).hash = "204fe474830b713ca2a45f7a5b8c65df";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4fbe2f3edbfbe3f2b2a9f16189f32958>>
+ * @generated SignedSource<<c3457747c0683b772da36ea71b502473>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type organizationLocation_deactivateDesksMutation$variables = {
 export type organizationLocation_deactivateDesksMutation$data = {
   readonly deactivateDesks: {
     readonly desks: ReadonlyArray<{
+      readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -56,7 +57,14 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "color",
+  "storageKey": null
+},
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -65,15 +73,9 @@ v2 = [
     "storageKey": null
   },
   (v1/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
+  (v2/*: any*/)
 ],
-v3 = [
+v4 = [
   {
     "alias": null,
     "args": [
@@ -118,6 +120,7 @@ v3 = [
             "name": "requireBookingApproval",
             "storageKey": null
           },
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -125,7 +128,7 @@ v3 = [
             "kind": "LinkedField",
             "name": "customTags",
             "plural": true,
-            "selections": (v2/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -135,7 +138,7 @@ v3 = [
             "kind": "LinkedField",
             "name": "zones",
             "plural": true,
-            "selections": (v2/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           }
         ],
@@ -151,7 +154,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocation_deactivateDesksMutation",
-    "selections": (v3/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -160,19 +163,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationLocation_deactivateDesksMutation",
-    "selections": (v3/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "1f74f37cd3e1abc6c826c4927cac0def",
+    "cacheID": "22f62f5f46ce2ba4a9343ea423f3f3ea",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_deactivateDesksMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_deactivateDesksMutation(\n  $input: DeactivateDesksInput!\n) {\n  deactivateDesks(input: $input) {\n    desks {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_deactivateDesksMutation(\n  $input: DeactivateDesksInput!\n) {\n  deactivateDesks(input: $input) {\n    desks {\n      id\n      name\n      deactivated\n      requireBookingApproval\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "51983f5f3785087b3df52d48a8fdaae6";
+(node as any).hash = "28dc878e33eb39359da2992cd452d925";
 
 export default node;

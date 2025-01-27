@@ -12,7 +12,8 @@ import Box from '@mui/system/Box';
 import { CustomerAvatar } from '@repo/shared/components/avatars';
 import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
-import { CalendarIcon, DeskIcon, EllipseMenuIcon, LocationIcon, NotesIcon, TeamIcon } from '@repo/shared/components/icons';
+import { Desks } from '@repo/shared/components/desk';
+import { CalendarIcon, EllipseMenuIcon, LocationIcon, NotesIcon, TeamIcon } from '@repo/shared/components/icons';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
 import { Zones } from '@repo/shared/components/zone';
@@ -82,6 +83,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
         desks {
           uniqueId
           name
+          color
           customTags {
             uniqueId
             name
@@ -186,7 +188,6 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
   };
 
   const date = dayjs(bookingDetails.from);
-  const desks = bookingDetails.desks.map((desk) => desk.name).join(', ');
   const customTags = bookingDetails.desks
     .flatMap(({ customTags }) => customTags)
     .reduce((acc: CustomTagDetails[], customTag) => {
@@ -232,7 +233,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
           <Divider />
           <SmallIconTypography startElement={<TeamIcon />} label={bookingDetails.team ? bookingDetails.team.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
-          <SmallIconTypography startElement={<DeskIcon />} label={desks.length === 0 ? 'N/A' : desks} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <Desks desks={bookingDetails.desks.map((desk) => ({ id: desk.uniqueId, name: desk.name, color: desk.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <CustomTags
             customTags={customTags.map((customTag: CustomTagDetails) => ({ id: customTag.uniqueId, name: customTag.name, color: customTag.color }))}

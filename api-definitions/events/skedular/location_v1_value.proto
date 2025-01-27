@@ -63,6 +63,7 @@ message Desk {
   bool requireBookingApproval = 4;
   repeated string customTagIds = 5;
   repeated string zoneIds = 6;
+  string color = 7;
 }
 
 message InvitationToJoinLocation {

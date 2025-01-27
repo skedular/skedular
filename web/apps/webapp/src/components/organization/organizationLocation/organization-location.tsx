@@ -31,6 +31,7 @@ import {
   StackRow,
 } from '@repo/shared/components/commons';
 import { CustomTags } from '@repo/shared/components/customTag';
+import { Desk } from '@repo/shared/components/desk';
 import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
@@ -67,6 +68,12 @@ type LocationDetails = {
   physicalAddress: string;
 };
 
+type DeskDetails = {
+  id: string;
+  name: string | null | undefined;
+  color: string | null | undefined;
+};
+
 type CustomTagDetails = {
   id: string;
   name: string | null | undefined;
@@ -81,7 +88,7 @@ type ZoneDetails = {
 
 type DeskRowType = {
   id: string;
-  name: string;
+  desk: DeskDetails;
   customTags: CustomTagDetails[];
   zones: ZoneDetails[];
   status: boolean;
@@ -136,6 +143,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
               name
               deactivated
               requireBookingApproval
+              color
               customTags {
                 uniqueId
                 name
@@ -188,6 +196,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
           name
           deactivated
           requireBookingApproval
+          color
           customTags {
             uniqueId
             name
@@ -211,6 +220,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
           name
           deactivated
           requireBookingApproval
+          color
           customTags {
             uniqueId
             name
@@ -813,7 +823,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
 
   const deskRows: DeskRowType[] = desks.map((desk) => ({
     id: desk.id,
-    name: desk.name,
+    desk,
     customTags: desk.customTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
     zones: desk.zones.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
     status: !desk.deactivated,
@@ -822,10 +832,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
 
   const deskColumns: GridColDef<(typeof deskRows)[number]>[] = [
     {
-      field: 'name',
+      field: 'desk',
       headerName: 'Name',
       editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      renderCell: (params) => <Desk desk={params.value} />,
       display: 'flex',
       minWidth: 200,
     },

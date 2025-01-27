@@ -12,6 +12,7 @@ public class Desk : EntityBaseWithDeleted
     public string Name { get; set; } = string.Empty;
     public bool Deactivated { get; set; }
     public bool RequireBookingApproval { get; set; }
+    public string? Color { get; set; }
 
     public virtual Location Location { get; set; }
     public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
@@ -26,6 +27,7 @@ public class DeskConfiguration : IEntityTypeConfiguration<Desk>
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxDeskNameLength);
+        builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
 
         builder
             .HasOne(item => item.Location)

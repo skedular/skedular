@@ -538,11 +538,10 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
+            Color = src.Color.ToSafeString(),
             OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList(),
-            Location = string.IsNullOrWhiteSpace(src.Location?.Id)
-                ? null
-                : new Location { Id = src.Id, Name = src.Name }
+            Location = string.IsNullOrWhiteSpace(src.Location?.Id)? null: new Location { Id = src.Id, Name = src.Name }
         };
 
     private static IEnumerable<Shared.Models.OrganizationCustomTag> MapTo(IEnumerable<OrganizationCustomTag> src) =>

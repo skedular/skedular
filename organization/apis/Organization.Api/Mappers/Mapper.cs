@@ -371,7 +371,7 @@ public class Mapper : IMapper
     public Shared.Models.Organization MapTo(AddOrganizationInput src) =>
         new()
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Id = src.Id.ToSafeString(),
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -384,7 +384,7 @@ public class Mapper : IMapper
     public Shared.Models.Organization MapTo(UpdateOrganizationInput src) =>
         new()
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Id = src.Id.ToSafeString(),
             Name = src.Name,
             About = src.About,
             Website = src.Website,
@@ -551,7 +551,7 @@ public class Mapper : IMapper
     public Tag MapTo(AddCustomTagInput src) =>
         new()
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Id = src.Id.ToSafeString(),
             Name = src.Name,
             Description = src.Description,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
@@ -572,7 +572,7 @@ public class Mapper : IMapper
     public Tag MapTo(GraphQL.AddZoneInput src) =>
         new()
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            Id = src.Id.ToSafeString(),
             Name = src.Name,
             Description = src.Description,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },

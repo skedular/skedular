@@ -46,6 +46,7 @@ public class BulkAddDeskInput
     [GraphQLName("customTagIds")] public string[] CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
     [GraphQLName("deactivated")] public bool Deactivated { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
@@ -98,6 +99,7 @@ public class DeskDetails : Node
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
 
+    [GraphQLName("color")] public string? Color { get; set; }
     [GraphQLName("customTags")] public OrganizationTagDetails[] CustomTags { get; set; } = [];
     [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
@@ -321,6 +323,7 @@ public class AddDeskInput
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("customTagIds")] public string[] CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
+    [GraphQLName("color")] public string? Color { get; set; }
 }
 
 [GraphQLName("UpdateDeskInput")]
@@ -333,6 +336,7 @@ public class UpdateDeskInput
 
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 
     [GraphQLName("customTagIds")] public string[] CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
