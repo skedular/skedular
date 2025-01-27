@@ -8,6 +8,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Random;
 using Slack.Shared.Configurations;
+using Slack.Shared.Models;
 using Event = Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Notification.V1.Value.Type;
 
@@ -16,7 +17,7 @@ namespace Slack.Shared.Publishers;
 public interface INotificationOutboxPublisher
 {
     Task PublishNewSlackWorkspaceJoinedSubmittedAsync(
-        Models.Workspace workspace,
+        Workspace workspace,
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken);
 }
@@ -36,7 +37,7 @@ public class NotificationOutboxPublisher(
     : INotificationOutboxPublisher
 {
     public async Task PublishNewSlackWorkspaceJoinedSubmittedAsync(
-        Models.Workspace workspace,
+        Workspace workspace,
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)
     {

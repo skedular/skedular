@@ -71,7 +71,7 @@ public class CustomerDetailsService(ICustomerHelperService customerHelperService
         {
             throw new Unauthorized();
         }
-        
+
         customer.Timezone = timezone;
         customer.Designation = designation;
         customer.Title = title;

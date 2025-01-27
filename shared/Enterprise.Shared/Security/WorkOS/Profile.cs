@@ -4,10 +4,7 @@ namespace Enterprise.Shared.Security.WorkOS;
 
 public class Profile : global::WorkOS.Profile
 {
-    [JsonProperty("profile_picture_url")]
-    public string? PhotoUrl { get; set; }
+    [JsonProperty("profile_picture_url")] public string? PhotoUrl { get; set; }
 
-    [JsonProperty("email_verified")]
-    public bool EmailVerified { get; set; }
-    
+    [JsonProperty("email_verified")] public bool EmailVerified { get; set; }
 }

@@ -15,7 +15,7 @@ public interface IOrganizationRepository : IRepository<Organization>
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Organization>> GetByCustomerIdAsync(string id,CancellationToken cancellationToken);
+    Task<ICollection<Organization>> GetByCustomerIdAsync(string id, CancellationToken cancellationToken);
     Organization Add(Organization organization);
     Organization Update(Organization organization);
     Organization Remove(Organization organization);

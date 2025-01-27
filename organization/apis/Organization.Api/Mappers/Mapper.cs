@@ -309,7 +309,7 @@ public class Mapper : IMapper
                     var offering = item.GetOffering();
                     return new OrganizationOfferingDetails
                     {
-                        IsEnterprise =item.IsEnterpriseOffering(), 
+                        IsEnterprise = item.IsEnterpriseOffering(),
                         Code = item.ToOfferingCode(),
                         Name = offering.Name,
                         UnitPrice = offering.UnitPrice,
@@ -792,7 +792,7 @@ public class Mapper : IMapper
             UnderPriceLines = offering.UnderPriceLines.ToArray(),
             Free = src.Code.IsFreeOffering(),
             EarlyBird = src.Code.IsEarlyBirdOffering()
-       };
+        };
     }
 
     private static string MapTo(FeatureSetCode item) => Features.FeatureSet[item].Description;

@@ -57,7 +57,7 @@ internal static class OrganizationMemberExtensions
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
         {
-            query = query.Where(item => item.Customer.Id == searchCriteria.CustomerId);    
+            query = query.Where(item => item.Customer.Id == searchCriteria.CustomerId);
         }
 
         return query;
