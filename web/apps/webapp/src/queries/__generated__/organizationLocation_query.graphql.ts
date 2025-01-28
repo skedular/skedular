@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<373008badd45cecb451d7f76c685c57a>>
+ * @generated SignedSource<<a24199c9278cfb4c6704030867f549fa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,6 +25,9 @@ export type organizationLocation_query$data = {
     readonly preferredDesks: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
+    readonly preferredRooms: ReadonlyArray<{
+      readonly uniqueId: string;
+    }>;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "zoneSelector_allZones_query">;
   readonly " $fragmentType": "organizationLocation_query";
@@ -41,7 +44,16 @@ var v0 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "uniqueId",
+    "storageKey": null
+  }
+];
 return {
   "argumentDefinitions": [
     {
@@ -69,15 +81,17 @@ return {
           "kind": "LinkedField",
           "name": "preferredDesks",
           "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "uniqueId",
-              "storageKey": null
-            }
-          ],
+          "selections": (v1/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CustomerRoomDetails",
+          "kind": "LinkedField",
+          "name": "preferredRooms",
+          "plural": true,
+          "selections": (v1/*: any*/),
           "storageKey": null
         }
       ],
@@ -156,6 +170,6 @@ return {
 };
 })();
 
-(node as any).hash = "6da9728969d4039f5e50c27a0a5ccb85";
+(node as any).hash = "f558d274bbf6a4dd7ef5128b3548a073";
 
 export default node;

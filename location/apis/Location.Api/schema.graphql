@@ -70,6 +70,7 @@ type LocationAddressDetails {
 type LocationAnalytics {
   name: String!
   desksOccupancyPercentage: [DesksOccupancyPercentage!]!
+  roomsOccupancyPercentage: [RoomsOccupancyPercentage!]!
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
 }
 
@@ -105,12 +106,14 @@ type LocationDetails {
   organization: LocationOrganizationDetails
   timezone: String
   deskCapacity: Int!
+  roomCapacity: Int!
   hasFutureBooking: Boolean!
   canModify: Boolean!
   canDelete: Boolean!
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
   desks: [DeskDetails!]!
+  rooms: [RoomDetails!]!
   physicalAddress: LocationAddressDetails
   customTags: [Organization_OrganizationTagDetails!]!
   zones: [Organization_OrganizationTagDetails!]!
@@ -171,6 +174,12 @@ type Mutation {
   acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
   rejectInvitationToJoinLocation(input: RejectInvitationToJoinLocationInput!): RejectInvitationToJoinLocationPayload @cost(weight: "10")
   cancelInvitationToJoinLocation(input: CancelInvitationToJoinLocationInput!): CancelInvitationToJoinLocationPayload @cost(weight: "10")
+  addRoom(input: AddRoomInput!): RoomPayload @cost(weight: "10")
+  updateRoom(input: UpdateRoomInput!): RoomPayload @cost(weight: "10")
+  deleteRoom(input: DeleteRoomInput!): RoomPayload @cost(weight: "10")
+  deleteRooms(input: DeleteRoomsInput!): RoomsPayload @cost(weight: "10")
+  activateRooms(input: ActivateRoomsInput!): RoomsPayload @cost(weight: "10")
+  deactivateRooms(input: DeactivateRoomsInput!): RoomsPayload @cost(weight: "10")
 }
 
 type Organization_OrganizationTagDetails {
@@ -199,10 +208,48 @@ type Query {
   desk(id: String!): DeskDetails @cost(weight: "10")
   locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput! orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
+  rooms(after: String first: Int before: String last: Int where: RoomWhereInput! orderBy: [RoomOrderInput!]): RoomConnection @cost(weight: "10")
+  room(id: String!): RoomDetails @cost(weight: "10")
 }
 
 type RejectInvitationToJoinLocationPayload {
   clientMutationId: String
+}
+
+type RoomConnection {
+  pageInfo: PageInfo!
+  edges: [RoomEdge!]!
+  totalCount: Int
+}
+
+type RoomDetails {
+  name: String!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+  color: String
+  customTags: [Organization_OrganizationTagDetails!]!
+  zones: [Organization_OrganizationTagDetails!]!
+  id: ID!
+}
+
+type RoomEdge {
+  node: RoomDetails!
+  cursor: String!
+}
+
+type RoomPayload {
+  clientMutationId: String
+  room: RoomDetails!
+}
+
+type RoomsOccupancyPercentage {
+  date: DateTime!
+  percentage: Float!
+}
+
+type RoomsPayload {
+  clientMutationId: String
+  rooms: [RoomDetails!]!
 }
 
 type Version {
@@ -218,6 +265,11 @@ input AcceptInvitationToJoinLocationInput {
 }
 
 input ActivateDesksInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+input ActivateRoomsInput {
   clientMutationId: String
   ids: [String!]!
 }
@@ -240,6 +292,16 @@ input AddLocationInput {
   organizationId: String
   timezone: String
   physicalAddress: LocationAddressDetailsInput
+}
+
+input AddRoomInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  locationId: String!
+  customTagIds: [String!]!
+  zoneIds: [String!]!
+  color: String
 }
 
 input BulkAddDeskInput {
@@ -271,6 +333,11 @@ input DeactivateDesksInput {
   ids: [String!]!
 }
 
+input DeactivateRoomsInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeleteDeskInput {
   clientMutationId: String
   id: String!
@@ -284,6 +351,16 @@ input DeleteDesksInput {
 input DeleteLocationInput {
   clientMutationId: String
   id: String!
+}
+
+input DeleteRoomInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteRoomsInput {
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeskOrderInput {
@@ -343,6 +420,18 @@ input RejectInvitationToJoinLocationInput {
   id: String!
 }
 
+input RoomOrderInput {
+  direction: OrderDirection!
+  field: RoomOrderField!
+}
+
+input RoomWhereInput {
+  locationId: String!
+  nameContains: String
+  zoneIds: [String!]
+  customTagIds: [String!]
+}
+
 input UpdateDeskInput {
   clientMutationId: String
   id: String!
@@ -362,6 +451,17 @@ input UpdateLocationInput {
   organizationId: String
   timezone: String
   physicalAddress: LocationAddressDetailsInput
+}
+
+input UpdateRoomInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  deactivated: Boolean!
+  requireBookingApproval: Boolean!
+  color: String
+  customTagIds: [String!]!
+  zoneIds: [String!]!
 }
 
 enum DeskOrderField {
@@ -391,6 +491,10 @@ enum LocationOrderField {
 enum OrderDirection {
   Ascending
   Descending
+}
+
+enum RoomOrderField {
+  Name
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

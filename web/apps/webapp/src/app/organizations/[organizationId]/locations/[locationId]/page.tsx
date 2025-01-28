@@ -21,16 +21,20 @@ const RootQuery = graphql`
     $organizationId: String!
     $locationId: String!
     $deskNameSearchText: String
-    $zonesSortingValues: [OrganizationTagOrderInput!]
-    $customTagsSortingValues: [OrganizationTagOrderInput!]
     $deskZoneIds: [String!]
     $deskCustomTagIds: [String!]
+    $zonesSortingValues: [OrganizationTagOrderInput!]
+    $customTagsSortingValues: [OrganizationTagOrderInput!]
+    $roomNameSearchText: String
+    $roomZoneIds: [String!]
+    $roomCustomTagIds: [String!]
   ) {
     location(id: $locationId) {
       name
     }
     ...organizationLocation_query
     ...organizationLocation_desks_query
+    ...organizationLocation_rooms_query
   }
 `;
 
@@ -65,7 +69,14 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, locati
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationLocation rootDataRelay={rootData} rootDataDesksRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} />
+      <OrganizationLocation
+        rootDataRelay={rootData}
+        rootDataDesksRelay={rootData}
+        rootDataRoomsRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
+        locationId={locationId}
+      />
     </RootShell>
   );
 };

@@ -29,6 +29,7 @@ public static class Extensions
             .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<ILocationMemberRepository, LocationMemberRepository>()
             .AddScoped<IDeskRepository, DeskRepository>()
+            .AddScoped<IRoomRepository, RoomRepository>()
             .AddScoped<ITeamRepository, TeamRepository>()
             .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>();
@@ -44,8 +45,7 @@ public static class Extensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var customerConfiguration =
-            configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
+        var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
         ArgumentNullException.ThrowIfNull(customerConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
 

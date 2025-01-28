@@ -36,9 +36,11 @@ message Booking {
   string notes = 7;
   string locationId = 8;
   repeated string deskIds = 9;
-  string teamId = 10;
-  repeated DeskBookingDetail deskBookingDetails = 11;
-  BookingType type = 12;
+  repeated string roomIds = 10;
+  string teamId = 11;
+  repeated DeskBookingDetail deskBookingDetails = 12;
+  repeated RoomBookingDetail roomBookingDetails = 13;
+  BookingType type = 14;
 }
 
 enum BookingStatus {
@@ -66,3 +68,8 @@ message DeskBookingDetail {
   BookingStatus status = 3;
 }
 
+message RoomBookingDetail {
+  string id = 1;
+  string roomId = 2;
+  BookingStatus status = 3;
+}

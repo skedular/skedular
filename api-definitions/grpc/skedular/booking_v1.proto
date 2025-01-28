@@ -19,6 +19,7 @@ service BookingService {
     rpc Update (UpdateInput) returns (Booking);
     rpc Delete (DeleteInput) returns (Booking);
     rpc GetAvailableDesks (GetAvailableDesksInput) returns (AvailableDesks);
+    rpc GetAvailableRooms (GetAvailableRoomsInput) returns (AvailableRooms);
 }
 
 message VersionInput {
@@ -135,7 +136,8 @@ message Booking {
     Location location = 7;
     Team team = 8;
     repeated Desk desks = 9;
-    BookingType type = 10;
+    repeated Room rooms = 10;
+    BookingType type = 11;
 }
 
 message Customer {
@@ -188,6 +190,15 @@ message OrganizationZone {
 }
 
 message Desk {
+    string id = 1;
+    string name = 2;
+    Location location = 3;
+    repeated OrganizationCustomTag organizationCustomTags = 4;
+    repeated OrganizationZone organizationZones = 5;
+    string color = 6;
+}
+
+message Room {
     string id = 1;
     string name = 2;
     Location location = 3;
@@ -252,8 +263,10 @@ message Admin_AddInput {
     string locationId = 7;
     string teamId = 8;
     repeated string deskIds = 9;
-    bool ignoreDeskAvailability = 10;
-    BookingType type = 11;
+    repeated string roomIds = 10;
+    bool ignoreDeskAvailability = 11;
+    bool ignoreRoomAvailability = 12;
+    BookingType type = 13;
 }
 
 message AddInput {
@@ -266,7 +279,8 @@ message AddInput {
     string locationId = 7;
     string teamId = 8;
     repeated string deskIds = 9;
-    BookingType type = 10;
+    repeated string roomIds = 10;
+    BookingType type = 11;
 }
 
 message UpdateInput {
@@ -279,7 +293,8 @@ message UpdateInput {
     string locationId = 7;
     string teamId = 8;
     repeated string deskIds = 9;
-    BookingType type = 10;
+    repeated string roomIds = 10;
+    BookingType type = 11;
 }
 
 message DeleteInput {
@@ -298,4 +313,18 @@ message GetAvailableDesksInput {
 
 message AvailableDesks {
     repeated Desk desks = 1;
+}
+
+message GetAvailableRoomsInput {
+    string organizationId = 1;
+    string locationId = 2;
+    google.protobuf.Timestamp date = 3;
+    repeated string roomIdsToInclude = 4;
+    repeated string CustomTagIds = 5;
+    repeated string ZoneIds = 6;
+    bool combineCustomTagsZones = 7;
+}
+
+message AvailableRooms {
+    repeated Room rooms = 1;
 }

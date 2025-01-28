@@ -39,7 +39,8 @@ public class Mapper : IMapper
                 IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
                 IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone ?? false,
                 IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
-                IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false
+                IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false,
+                IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone ?? false
             },
             DefaultOrganizationId = src.DefaultOrganization is null ? string.Empty : src.DefaultOrganization.Id
         };
@@ -49,25 +50,19 @@ public class Mapper : IMapper
             src.DefaultLocations.Select(item =>
                 new Location { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
         );
-        customer.DefaultDesks.AddRange(
-            src.PreferredDesks.Select(item =>
-                new Desk { Id = item.Id, LocationId = item.Location.Id })
-        );
+        customer.DefaultDesks.AddRange(src.PreferredDesks.Select(item =>new Desk { Id = item.Id, LocationId = item.Location.Id }));
+        customer.DefaultRooms.AddRange(src.PreferredRooms.Select(item =>new Room { Id = item.Id, LocationId = item.Location.Id }));
         customer.DefaultTeams.AddRange(
-            src.DefaultTeams.Select(item =>
-                new Team { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
+            src.DefaultTeams.Select(item =>new Team { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
         );
         customer.DefaultOrganizationTags.AddRange(
-            src.PreferredOrganizationTags.Select(item =>
-                new OrganizationTag { Id = item.Id, OrganizationId = item.Organization.Id })
+            src.PreferredOrganizationTags.Select(item =>new OrganizationTag { Id = item.Id, OrganizationId = item.Organization.Id })
         );
 
         return customer;
     }
 
-    private static IEnumerable<Identity> MapTo(
-        IEnumerable<Models.Identity> src) =>
-        src.Select(MapTo);
+    private static IEnumerable<Identity> MapTo(IEnumerable<Models.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Models.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };

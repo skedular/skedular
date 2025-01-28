@@ -19,10 +19,7 @@ public class TeamSubscriber(
     IRepositoryFactory repositoryFactory,
     ICustomerPublisher customerPublisher) : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event,
         CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
@@ -32,17 +29,14 @@ public class TeamSubscriber(
                     var team = mapper.MapTo(@event);
                     var organization = team.Organization is null
                         ? null
-                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                            team.Organization.Id,
-                            cancellationToken);
+                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
                     var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(
                         team.Id,
                         organization,
                         cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Team event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -54,14 +48,10 @@ public class TeamSubscriber(
             case Type.TeamDeleted:
                 {
                     var team = mapper.MapTo(@event);
-                    var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(
-                        team.Id,
-                        true,
-                        cancellationToken);
+                    var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, true, cancellationToken);
                     if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Team event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -90,16 +80,11 @@ public class TeamSubscriber(
     {
         var organization = team.Organization is null
             ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                team.Organization.Id,
-                true,
-                true,
-                cancellationToken);
+            : await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, true, true, cancellationToken);
 
         existingTeam = existingTeam is null
             ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team, organization))
-            : repositoryFactory.TeamRepository.Update(
-                mapper.MergeToEntity(team, existingTeam, organization));
+            : repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam, organization));
 
         _ = await RebuildTeamMembersAsync(team, existingTeam, cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -107,9 +92,7 @@ public class TeamSubscriber(
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleTeamDeletedEventAsync(
-        Team existingTeam,
-        CancellationToken cancellationToken)
+    private async Task HandleTeamDeletedEventAsync(Team existingTeam, CancellationToken cancellationToken)
     {
         await UpdateCustomerDefaultTeamsAsync(existingTeam, cancellationToken);
         await UpdateTeamMembersDefaultTeamsAsync(existingTeam, existingTeam.TeamMembers, cancellationToken);
@@ -130,8 +113,7 @@ public class TeamSubscriber(
             .Where(teamMember => team.TeamMembers.All(item => item.Id != teamMember.Id))
             .ToList();
         var updatedItems = new List<TeamMember>();
-        foreach (var teamMember in teamMembers
-                     .Where(teamMember => team.TeamMembers.Any(item => item.Id == teamMember.Id)))
+        foreach (var teamMember in teamMembers.Where(teamMember => team.TeamMembers.Any(item => item.Id == teamMember.Id)))
         {
             var customer =
                 await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken);
@@ -140,9 +122,8 @@ public class TeamSubscriber(
             OrganizationMember? organizationMember = null;
             if (teamMember.OrganizationMember is not null)
             {
-                var organization =
-                    await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                        teamMember.OrganizationMember.Organization!.Id,
+                var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                    teamMember.OrganizationMember.Organization.Id,
                         cancellationToken);
 
                 var organizationMemberCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(
@@ -150,8 +131,7 @@ public class TeamSubscriber(
                     cancellationToken);
                 ArgumentNullException.ThrowIfNull(organizationMemberCustomer);
 
-                organizationMember =
-                    await repositoryFactory.OrganizationMemberRepository.UpsertNakedAsync(
+                organizationMember = await repositoryFactory.OrganizationMemberRepository.UpsertNakedAsync(
                         teamMember.OrganizationMember.Id,
                         organization,
                         organizationMemberCustomer,
@@ -169,19 +149,15 @@ public class TeamSubscriber(
         }
 
         var addedItems = new List<TeamMember>();
-        foreach (var teamMember in team.TeamMembers
-                     .Where(teamMember =>
-                         teamMembers.All(item => item.Id != teamMember.Id)))
+        foreach (var teamMember in team.TeamMembers.Where(teamMember => teamMembers.All(item => item.Id != teamMember.Id)))
         {
-            var customer =
-                await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
             OrganizationMember? organizationMember = null;
             if (teamMember.OrganizationMember is not null)
             {
-                var organization =
-                    await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+                var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
                         teamMember.OrganizationMember.Organization!.Id,
                         cancellationToken);
 
@@ -190,16 +166,14 @@ public class TeamSubscriber(
                     cancellationToken);
                 ArgumentNullException.ThrowIfNull(organizationMemberCustomer);
 
-                organizationMember =
-                    await repositoryFactory.OrganizationMemberRepository.UpsertNakedAsync(
+                organizationMember = await repositoryFactory.OrganizationMemberRepository.UpsertNakedAsync(
                         teamMember.OrganizationMember.Id,
                         organization,
                         organizationMemberCustomer,
                         cancellationToken);
             }
 
-            addedItems.Add(repositoryFactory.TeamMemberRepository.Add(
-                mapper.MapToEntity(teamMember, existingTeam, customer, organizationMember)));
+            addedItems.Add(repositoryFactory.TeamMemberRepository.Add(mapper.MapToEntity(teamMember, existingTeam, customer, organizationMember)));
         }
 
         repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
@@ -217,14 +191,12 @@ public class TeamSubscriber(
         var teamMemberIds = teamMembersToRemove.Select(teamMember => teamMember.Id).ToList();
         foreach (var teamMemberId in teamMemberIds)
         {
-            var member = await repositoryFactory.TeamMemberRepository
-                .Query(new Specification<TeamMember> { Criteria = query => query.Id == teamMemberId }
+            var member = await repositoryFactory.TeamMemberRepository.Query(
+                    new Specification<TeamMember> { Criteria = query => query.Id == teamMemberId }
                     .AddInclude(query => query.Customer))
                 .FirstAsync(cancellationToken);
 
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(
-                member.Customer.Id,
-                cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
             var existingTeamIds = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();

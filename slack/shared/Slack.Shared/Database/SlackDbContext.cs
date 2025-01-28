@@ -26,9 +26,7 @@ public class SlackDbContext(
     {
         public SlackDbContext CreateDbContext(string[] args)
         {
-            var configuration =
-                new ConfigurationBuilder().BuildConfig<Program>(
-                    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
+            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
 
             return new SlackDbContext(
                 configuration.CreateDbContextOptionBuilder<SlackDbContext>().Options,

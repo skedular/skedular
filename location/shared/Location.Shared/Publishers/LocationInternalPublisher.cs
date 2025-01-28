@@ -9,9 +9,8 @@ namespace Location.Shared.Publishers;
 
 public interface ILocationInternalPublisher
 {
-    Task PublishRecordLocationDailyDeskCountAsync(
-        IEnumerable<string> locationIds,
-        CancellationToken cancellationToken);
+    Task PublishRecordLocationDailyDeskCountAsync(IEnumerable<string> locationIds, CancellationToken cancellationToken);
+    Task PublishRecordLocationDailyRoomCountAsync(IEnumerable<string> locationIds, CancellationToken cancellationToken);
 }
 
 public class LocationInternalPublisher(
@@ -20,9 +19,7 @@ public class LocationInternalPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : ILocationInternalPublisher
 {
-    public async Task PublishRecordLocationDailyDeskCountAsync(
-        IEnumerable<string> locationIds,
-        CancellationToken cancellationToken) =>
+    public async Task PublishRecordLocationDailyDeskCountAsync(IEnumerable<string> locationIds, CancellationToken cancellationToken) =>
         await Task.WhenAll(locationIds.Select(async locationId =>
         {
             var key = new Key { LocationId = locationId };
@@ -31,7 +28,24 @@ public class LocationInternalPublisher(
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
                     applicationConfiguration.AppSource,
-                    Type.RecordDailyDeskCount,
+                    Type.RecordDailyRoomCount,
+                    context.GetCorrelationId()),
+                LocationId = locationId
+            };
+
+            await publisher.PublishAsync(key, @event, cancellationToken);
+        }));
+
+    public async Task PublishRecordLocationDailyRoomCountAsync(IEnumerable<string> locationIds, CancellationToken cancellationToken) =>
+        await Task.WhenAll(locationIds.Select(async locationId =>
+        {
+            var key = new Key { LocationId = locationId };
+            var @event = new Event
+            {
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    Type.RecordDailyRoomCount,
                     context.GetCorrelationId()),
                 LocationId = locationId
             };

@@ -3,6 +3,7 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Location.Shared.Models;
 using Desk = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk;
+using Room = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room;
 using LocationMember = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember;
 
 namespace Location.Shared.Mappers;
@@ -54,6 +55,23 @@ public class Mapper : IMapper
             desk.ZoneIds.AddRange(item.Zones.Select(tag => tag.Id));
 
             return desk;
+        }));
+
+        location.Rooms.AddRange(src.Rooms.Select(item =>
+        {
+            var room = new Room
+            {
+                Id = item.Id,
+                Name = item.Name.ToSafeString(),
+                Deactivated = item.Deactivated,
+                RequireBookingApproval = item.RequireBookingApproval,
+                Color = item.Color.ToSafeString()
+            };
+
+            room.CustomTagIds.AddRange(item.CustomTags.Select(tag => tag.Id));
+            room.ZoneIds.AddRange(item.Zones.Select(tag => tag.Id));
+
+            return room;
         }));
 
         return location;

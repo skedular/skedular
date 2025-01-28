@@ -19,6 +19,7 @@ service CustomerService {
     rpc DismissDefaultLocationOnboardingSetup (DismissDefaultLocationOnboardingSetupInput) returns (Customer);
     rpc DismissSetupPreferredZones (DismissSetupPreferredZonesInput) returns (Customer);
     rpc DismissSetupPreferredDesks (DismissSetupPreferredDesksInput) returns (Customer);
+    rpc DismissSetupPreferredRooms (DismissSetupPreferredRoomsInput) returns (Customer);
     rpc SubmitFeedback (SubmitFeedbackInput) returns (Feedback);
     rpc SetDefaultOrganization (SetDefaultOrganizationInput) returns (Customer);
     rpc AddDefaultLocation (AddDefaultLocationInput) returns (Customer);
@@ -28,6 +29,8 @@ service CustomerService {
     rpc RemoveDefaultTeam (RemoveDefaultTeamInput) returns (Customer);
     rpc AddPreferredDesk (AddPreferredDeskInput) returns (Customer);
     rpc RemovePreferredDesk (RemovePreferredDeskInput) returns (Customer);
+    rpc AddPreferredRoom (AddPreferredRoomInput) returns (Customer);
+    rpc RemovePreferredRoom (RemovePreferredRoomInput) returns (Customer);
     rpc AddPreferredOrganizationTag (AddPreferredOrganizationTagInput) returns (Customer);
     rpc RemovePreferredOrganizationTag (RemovePreferredOrganizationTagInput) returns (Customer);
 }
@@ -92,12 +95,14 @@ message Admin_AddInput {
     bool isDefaultLocationOnboardingDone = 22;
     bool isPreferredZoneOnboardingDone = 23;
     bool isPreferredDeskOnboardingDone = 24;
-    Organization defaultOrganization = 25;
-    repeated Location defaultLocations = 26;
-    repeated Desk preferredDesks = 27;
-    repeated Team defaultTeams = 28;
-    repeated OrganizationTag preferredOrganizationTags = 29;
-    string phoneNumber = 30;
+    bool isPreferredRoomOnboardingDone = 25;
+    Organization defaultOrganization = 26;
+    repeated Location defaultLocations = 27;
+    repeated Desk preferredDesks = 28;
+    repeated Room preferredRooms = 29;
+    repeated Team defaultTeams = 30;
+    repeated OrganizationTag preferredOrganizationTags = 31;
+    string phoneNumber = 32;
 }
 
 message Customer {
@@ -125,12 +130,14 @@ message Customer {
     bool isDefaultLocationOnboardingDone = 22;
     bool isPreferredZoneOnboardingDone = 23;
     bool isPreferredDeskOnboardingDone = 24;
-    Organization defaultOrganization = 25;
-    repeated Location defaultLocations = 26;
-    repeated Desk preferredDesks = 27;
-    repeated Team defaultTeams = 28;
-    repeated OrganizationTag preferredOrganizationTags = 29;
-    string phoneNumber = 30;
+    bool isPreferredRoomOnboardingDone = 25;
+    Organization defaultOrganization = 26;
+    repeated Location defaultLocations = 27;
+    repeated Desk preferredDesks = 28;
+    repeated Room preferredRooms = 29;
+    repeated Team defaultTeams = 30;
+    repeated OrganizationTag preferredOrganizationTags = 31;
+    string phoneNumber = 32;
 }
 
 message Identity {
@@ -151,6 +158,12 @@ message Location {
 }
 
 message Desk {
+    string id = 1;
+    string name = 2;
+    Location location = 3;
+}
+
+message Room {
     string id = 1;
     string name = 2;
     Location location = 3;
@@ -200,6 +213,9 @@ message DismissSetupPreferredZonesInput {
 message DismissSetupPreferredDesksInput {
 }
 
+message DismissSetupPreferredRoomsInput {
+}
+
 enum FeedbackChannel {
     Web = 0;
     Slack = 1;
@@ -245,6 +261,14 @@ message AddPreferredDeskInput {
 
 message RemovePreferredDeskInput {
     string deskId = 1;
+}
+
+message AddPreferredRoomInput {
+    string roomId = 1;
+}
+
+message RemovePreferredRoomInput {
+    string roomId = 1;
 }
 
 message OrganizationTag {

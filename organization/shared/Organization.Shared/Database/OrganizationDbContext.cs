@@ -37,9 +37,7 @@ public class OrganizationDbContext(
     {
         public OrganizationDbContext CreateDbContext(string[] args)
         {
-            var configuration =
-                new ConfigurationBuilder().BuildConfig<Program>(
-                    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
+            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
 
             return new OrganizationDbContext(
                 configuration.CreateDbContextOptionBuilder<OrganizationDbContext>().Options,

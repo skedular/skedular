@@ -16,6 +16,13 @@ public class AddCustomerDefaultDeskInput
     [GraphQLName("deskId")] public required string DeskId { get; set; }
 }
 
+[GraphQLName("AddCustomerDefaultRoomInput")]
+public class AddCustomerDefaultRoomInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("roomId")] public required string RoomId { get; set; }
+}
+
 [GraphQLName("AddCustomerDefaultLocationInput")]
 public class AddCustomerDefaultLocationInput
 {
@@ -73,6 +80,12 @@ public class CompletePreferredDeskOnboardingInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
+[GraphQLName("CompletePreferredRoomOnboardingInput")]
+public class CompletePreferredRoomOnboardingInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+}
+
 [GraphQLName("CompletePreferredZoneOnboardingInput")]
 public class CompletePreferredZoneOnboardingInput
 {
@@ -90,6 +103,13 @@ public class CustomerConnection : Connection<CustomerEdge>;
 
 [GraphQLName("CustomerDeskDetails")]
 public class CustomerDeskDetails
+{
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("name")] public string? Name { get; set; }
+}
+
+[GraphQLName("CustomerRoomDetails")]
+public class CustomerRoomDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
@@ -138,12 +158,16 @@ public class CustomerDetails : Node
     [GraphQLName("isPreferredDeskOnboardingDone")]
     public bool IsPreferredDeskOnboardingDone { get; set; }
 
+    [GraphQLName("isPreferredRoomOnboardingDone")]
+    public bool IsPreferredRoomOnboardingDone { get; set; }
+
     [GraphQLName("defaultLocations")] public CustomerLocationDetails[] DefaultLocations { get; set; } = [];
     [GraphQLName("defaultTeams")] public CustomerTeamDetails[] DefaultTeams { get; set; } = [];
     [GraphQLName("defaultOrganization")] public CustomerOrganizationDetails? DefaultOrganization { get; set; }
     [GraphQLName("preferredZones")] public CustomerOrganizationTagDetails[] PreferredZones { get; set; } = [];
     [GraphQLName("preferredCustomTags")] public CustomerOrganizationTagDetails[] PreferredCustomTags { get; set; } = [];
     [GraphQLName("preferredDesks")] public CustomerDeskDetails[] PreferredDesks { get; set; } = [];
+    [GraphQLName("preferredRooms")] public CustomerRoomDetails[] PreferredRooms { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -216,6 +240,13 @@ public class RemoveCustomerDefaultDeskInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("deskId")] public required string DeskId { get; set; }
+}
+
+[GraphQLName("RemoveCustomerDefaultRoomInput")]
+public class RemoveCustomerDefaultRoomInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("roomId")] public required string RoomId { get; set; }
 }
 
 [GraphQLName("RemoveCustomerDefaultLocationInput")]

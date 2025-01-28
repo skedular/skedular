@@ -16,23 +16,17 @@ public class CustomerSubscriber(
     ILocationPublisher locationPublisher)
     : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
             case Type.CustomerUpserted:
                 {
                     var customer = mapper.MapTo(@event);
-                    var existingCustomer =
-                        await repositoryFactory.CustomerRepository.UpsertNakedAsync(customer.Id, cancellationToken);
+                    var existingCustomer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customer.Id, cancellationToken);
                     if (existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Customer event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Customer event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -44,12 +38,10 @@ public class CustomerSubscriber(
             case Type.CustomerDeleted:
                 {
                     var customer = mapper.MapTo(@event);
-                    var existingCustomer =
-                        await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken);
+                    var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken);
                     if (existingCustomer is not null && existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Customer event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Customer event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -97,8 +89,7 @@ public class CustomerSubscriber(
             .Where(item => !string.IsNullOrWhiteSpace(item.Email))
             .Select(item => item.Email!)
             .ToList();
-        var joinInvitations =
-            await repositoryFactory.JoinInvitationRepository.GetPendingByEmailAsync(emails, cancellationToken);
+        var joinInvitations = await repositoryFactory.JoinInvitationRepository.GetPendingByEmailAsync(emails, cancellationToken);
         if (joinInvitations.Count == 0)
         {
             return;
@@ -122,8 +113,7 @@ public class CustomerSubscriber(
         Customer customer,
         Shared.Database.Entities.Customer existingCustomer)
     {
-        var itemsToRemove = existingCustomer.Identities
-            .Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
+        var itemsToRemove = existingCustomer.Identities.Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
         var updatedItems = existingCustomer.Identities
             .Where(identity => customer.Identities.Any(item => item.Id == identity.Id))
             .Select(identity => repositoryFactory.IdentityRepository.Update(mapper.MergeToEntity(

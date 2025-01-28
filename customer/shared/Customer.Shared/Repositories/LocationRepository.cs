@@ -42,6 +42,7 @@ public class LocationRepository(CustomerDbContext dbContext, TimeProvider timePr
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Desks)
+            .Include(query => query.Rooms)
             .Include(query => query.Organization)
             .Include(query => query.DefaultedByCustomers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);

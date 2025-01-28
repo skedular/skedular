@@ -18,6 +18,7 @@ public class Booking : EntityBaseWithDeleted
     public virtual Organization? Organization { get; set; }
     public virtual Location? Location { get; set; }
     public virtual ICollection<Desk> Desks { get; set; } = [];
+    public virtual ICollection<Room> Rooms { get; set; } = [];
     public virtual Team? Team { get; set; }
 }
 
@@ -47,6 +48,10 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         builder
             .HasMany(item => item.Desks)
+            .WithMany(item => item.Bookings);
+
+        builder
+            .HasMany(item => item.Rooms)
             .WithMany(item => item.Bookings);
 
         builder

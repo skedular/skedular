@@ -25,7 +25,9 @@ public static class Extensions
             .AddScoped<IBookingRepository, BookingRepository>()
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IDailyDeskCountRecordingRepository, DailyDeskCountRecordingRepository>()
+            .AddScoped<IDailyRoomCountRecordingRepository, DailyRoomCountRecordingRepository>()
             .AddScoped<IDeskRepository, DeskRepository>()
+            .AddScoped<IRoomRepository, RoomRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
             .AddScoped<IJoinInvitationRepository, JoinInvitationRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()
@@ -44,16 +46,12 @@ public static class Extensions
             .AddScoped<ILocationOutboxPublisher, LocationOutboxPublisher>()
             .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
-    public static IServiceCollection AddSkedularGrpcServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var locationConfiguration =
-            configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
+        var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
         ArgumentNullException.ThrowIfNull(locationConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
 
-        return services
-            .AddSingleton(locationConfiguration);
+        return services.AddSingleton(locationConfiguration);
     }
 }

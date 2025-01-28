@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d08ec8e3aa2522d61230cda423300d8f>>
+ * @generated SignedSource<<b4cb70ee2085d66470b3c331f97c2e4b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type AddBookingInput = {
   locationId?: string | null | undefined;
   notes?: string | null | undefined;
   organizationId?: string | null | undefined;
+  roomIds: ReadonlyArray<string>;
   teamId?: string | null | undefined;
   to: any;
   type: BookingType;
@@ -59,6 +60,20 @@ export type bookingCard_addBookingMutation$data = {
         readonly uniqueId: string;
       } | null | undefined;
       readonly notes: string | null | undefined;
+      readonly rooms: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+        readonly name: string;
+        readonly uniqueId: string;
+        readonly zones: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+      }>;
       readonly team: {
         readonly name: string;
         readonly uniqueId: string;
@@ -100,6 +115,20 @@ export type bookingCard_addBookingMutation$rawResponse = {
         readonly uniqueId: string;
       } | null | undefined;
       readonly notes: string | null | undefined;
+      readonly rooms: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+        readonly name: string;
+        readonly uniqueId: string;
+        readonly zones: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+      }>;
       readonly team: {
         readonly name: string;
         readonly uniqueId: string;
@@ -164,7 +193,31 @@ v5 = [
     "storageKey": null
   }
 ],
-v6 = {
+v6 = [
+  (v2/*: any*/),
+  (v3/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "BookingOrganizationCustomTagDetails",
+    "kind": "LinkedField",
+    "name": "customTags",
+    "plural": true,
+    "selections": (v5/*: any*/),
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "BookingOrganizationZoneDetails",
+    "kind": "LinkedField",
+    "name": "zones",
+    "plural": true,
+    "selections": (v5/*: any*/),
+    "storageKey": null
+  }
+],
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingDetails",
@@ -275,30 +328,17 @@ v6 = {
       "kind": "LinkedField",
       "name": "desks",
       "plural": true,
-      "selections": [
-        (v2/*: any*/),
-        (v3/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingOrganizationCustomTagDetails",
-          "kind": "LinkedField",
-          "name": "customTags",
-          "plural": true,
-          "selections": (v5/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingOrganizationZoneDetails",
-          "kind": "LinkedField",
-          "name": "zones",
-          "plural": true,
-          "selections": (v5/*: any*/),
-          "storageKey": null
-        }
-      ],
+      "selections": (v6/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingRoomDetails",
+      "kind": "LinkedField",
+      "name": "rooms",
+      "plural": true,
+      "selections": (v6/*: any*/),
       "storageKey": null
     }
   ],
@@ -319,7 +359,7 @@ return {
         "name": "addBooking",
         "plural": false,
         "selections": [
-          (v6/*: any*/)
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
@@ -341,7 +381,7 @@ return {
         "name": "addBooking",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -369,16 +409,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "75c2b5d73337e01ed169d19c7cb512af",
+    "cacheID": "313b46d808e8ffae67d6839c4bbda058",
     "id": null,
     "metadata": {},
     "name": "bookingCard_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingCard_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n      rooms {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ecfa7d218d940a77b0fed272455c828a";
+(node as any).hash = "3cae285e6bd707c278d92a5c7a52b106";
 
 export default node;

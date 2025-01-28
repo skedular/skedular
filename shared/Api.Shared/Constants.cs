@@ -38,6 +38,7 @@ public static class Constants
 
     public const int MaxLocationNameLength = 200;
     public const int MaxDeskNameLength = 200;
+    public const int MaxRoomNameLength = 200;
 
     public const int MaxTagNameLength = 100;
     public const int MaxTagDescriptionLength = 1000;

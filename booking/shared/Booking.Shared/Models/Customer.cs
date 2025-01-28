@@ -24,6 +24,7 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public Organization? DefaultOrganization { get; set; }
     public ICollection<Location> DefaultLocations { get; set; }
     public ICollection<Desk> PreferredDesks { get; set; }
+    public ICollection<Room> PreferredRooms { get; set; }
     public ICollection<Team> DefaultTeams { get; set; }
     public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
 }

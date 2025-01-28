@@ -5,6 +5,7 @@ using Booking.Shared.Database.Entities;
 using Enterprise.Shared;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Desk = Booking.Shared.Database.Entities.Desk;
+using Room = Booking.Shared.Database.Entities.Room;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Location = Booking.Shared.Models.Location;
 using LocationMember = Booking.Shared.Database.Entities.LocationMember;
@@ -33,16 +34,8 @@ public interface IMapper
         Shared.Database.Entities.Organization? organization);
 
     Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization? organization);
-
-    Shared.Database.Entities.Team MergeToEntity(
-        Team src,
-        Shared.Database.Entities.Team dest,
-        Shared.Database.Entities.Organization? organization);
-
-    OrganizationMember MapToEntity(
-        Shared.Models.OrganizationMember src,
-        Shared.Database.Entities.Organization organization,
-        Customer customer);
+    Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization? organization);
+    OrganizationMember MapToEntity(Shared.Models.OrganizationMember src, Shared.Database.Entities.Organization organization, Customer customer);
 
     OrganizationMember MergeToEntity(
         Shared.Models.OrganizationMember src,
@@ -68,10 +61,9 @@ public interface IMapper
 
     Desk MapToEntity(Shared.Models.Desk src, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
     Desk MergeToEntity(Shared.Models.Desk src, Desk dest, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
-
-    IEnumerable<Identity> MapToEntity(
-        IEnumerable<Shared.Models.Identity> src,
-        Customer? customer);
+    Room MapToEntity(Shared.Models.Room src, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
+    Room MergeToEntity(Shared.Models.Room src, Room dest, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
+    IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Customer? customer);
 
     Customer MapToEntity(
         Shared.Models.Customer src,
@@ -80,6 +72,7 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
         ICollection<Desk> preferredDesks,
+        ICollection<Room> preferredRooms,
         ICollection<OrganizationTag> preferredOrganizationTags);
 
     Customer MergeToEntity(
@@ -90,6 +83,7 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
         ICollection<Desk> preferredDesks,
+        ICollection<Room> preferredRooms,
         ICollection<OrganizationTag> preferredOrganizationTags);
 
     Identity MapToEntity(Shared.Models.Identity src, Customer? customer);
@@ -133,6 +127,8 @@ public class Mapper : IMapper
             }).ToList(),
             PreferredDesks = customer.DefaultDesks.Select(item =>
                 new Shared.Models.Desk { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
+            PreferredRooms = customer.DefaultRooms.Select(item =>
+                new Shared.Models.Room { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
             DefaultTeams = customer.DefaultTeams.Select(item => new Team
             {
                 Id = item.Id, Organization = string.IsNullOrWhiteSpace(item.OrganizationId) ? null : new Organization { Id = item.OrganizationId }
@@ -243,9 +239,23 @@ public class Mapper : IMapper
             ? []
             : locationAfterState.Desks
                 .SelectMany(item => item.CustomTagIds.Concat(item.ZoneIds))
+                .Concat(locationAfterState.Rooms.SelectMany(item => item.CustomTagIds.Concat(item.ZoneIds)))
                 .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
-
+        
         location.Desks = locationAfterState.Desks.Select(item => new Shared.Models.Desk
+        {
+            Id = item.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = item.Name,
+            Deactivated = item.Deactivated,
+            RequireBookingApproval = item.RequireBookingApproval,
+            Color = item.Color,
+            OrganizationTags = organizationTags.Where(tag => item.CustomTagIds.Concat(item.ZoneIds).Contains(tag.Id)).ToList(),
+            Location = location
+        }).ToList();
+
+        location.Rooms = locationAfterState.Rooms.Select(item => new Shared.Models.Room
         {
             Id = item.Id,
             DeletedAt = deletedAt,
@@ -451,6 +461,28 @@ public class Mapper : IMapper
         return dest;
     }
 
+    public Room MapToEntity(
+        Shared.Models.Room src,
+        Shared.Database.Entities.Location location,
+        ICollection<OrganizationTag> organizationTags) =>
+        MergeToEntity(src, new Room(), location, organizationTags);
+
+    public Room MergeToEntity(
+        Shared.Models.Room src,
+        Room dest, Shared.Database.Entities.Location location,
+        ICollection<OrganizationTag> organizationTags)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Deactivated = src.Deactivated;
+        dest.RequireBookingApproval = src.RequireBookingApproval;
+        dest.Color = src.Color;
+        dest.Location = location;
+        dest.OrganizationTags = organizationTags;
+        return dest;
+    }
+
     public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Customer? customer) =>
         src.Select(identity => MapToEntity(identity, customer));
 
@@ -461,6 +493,7 @@ public class Mapper : IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
         ICollection<Desk> preferredDesks,
+        ICollection<Room> preferredRooms,
         ICollection<OrganizationTag> preferredOrganizationTags) =>
         MergeToEntity(src,
             new Customer(),
@@ -469,6 +502,7 @@ public class Mapper : IMapper
             defaultLocations,
             defaultTeams,
             preferredDesks,
+            preferredRooms,
             preferredOrganizationTags);
 
     public Customer MergeToEntity(
@@ -479,6 +513,7 @@ public class Mapper : IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
         ICollection<Desk> preferredDesks,
+        ICollection<Room> preferredRooms,
         ICollection<OrganizationTag> preferredOrganizationTags)
     {
         dest.Id = src.Id;
@@ -497,6 +532,7 @@ public class Mapper : IMapper
         dest.DefaultOrganization = defaultOrganization;
         dest.DefaultLocations = defaultLocations;
         dest.PreferredDesks = preferredDesks;
+        dest.PreferredRooms = preferredRooms;
         dest.DefaultTeams = defaultTeams;
         dest.PreferredOrganizationTags = preferredOrganizationTags;
         return dest;

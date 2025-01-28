@@ -17,6 +17,7 @@ import { Desks } from '@repo/shared/components/desk';
 import { CalendarIcon, EllipseMenuIcon, JoinIcon, LocationIcon, NotesIcon, TeamIcon } from '@repo/shared/components/icons';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
+import { Rooms } from '@repo/shared/components/room';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { coal, sandstone } from '@repo/shared/libs/theme';
@@ -107,6 +108,21 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
             color
           }
         }
+        rooms {
+          uniqueId
+          name
+          color
+          customTags {
+            uniqueId
+            name
+            color
+          }
+          zones {
+            uniqueId
+            name
+            color
+          }
+        }
       }
     `,
     bookingDetailsRelay,
@@ -148,6 +164,20 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
             name
           }
           desks {
+            uniqueId
+            name
+            customTags {
+              uniqueId
+              name
+              color
+            }
+            zones {
+              uniqueId
+              name
+              color
+            }
+          }
+          rooms {
             uniqueId
             name
             customTags {
@@ -265,6 +295,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           locationId: bookingDetails.location?.uniqueId,
           teamId: bookingDetails.team?.uniqueId,
           deskIds: [],
+          roomIds: [],
           type,
         },
       },
@@ -289,6 +320,17 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
 
           const zones = booking.desks.flatMap(({ zones }) => zones);
+          if (zones.length > 0) {
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+
+            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
+          }
+        }
+
+        if (booking.rooms.length > 0) {
+          message += ` at room "${booking.rooms.map(({ name }) => name).join(', ')}"`;
+
+          const zones = booking.rooms.flatMap(({ zones }) => zones);
           if (zones.length > 0) {
             const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
 
@@ -340,6 +382,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
                 }
               : null,
             desks: [],
+            rooms: [],
           },
         },
       },
@@ -349,6 +392,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
   const date = dayjs(bookingDetails.from);
   const customTags = bookingDetails.desks
     .flatMap(({ customTags }) => customTags)
+    .concat(bookingDetails.rooms.flatMap(({ customTags }) => customTags))
     .reduce((acc: CustomTagDetails[], customTag) => {
       if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
         acc.push(customTag);
@@ -358,6 +402,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
     }, []);
   const zones = bookingDetails.desks
     .flatMap(({ zones }) => zones)
+    .concat(bookingDetails.rooms.flatMap(({ zones }) => zones))
     .reduce((acc: ZoneDetails[], zone) => {
       if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
         acc.push(zone);
@@ -410,6 +455,8 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           <SmallIconTypography startElement={<TeamIcon />} label={bookingDetails.team ? bookingDetails.team.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <Desks desks={bookingDetails.desks.map((desk) => ({ id: desk.uniqueId, name: desk.name, color: desk.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <Divider />
+          <Rooms rooms={bookingDetails.rooms.map((room) => ({ id: room.uniqueId, name: room.name, color: room.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <CustomTags
             customTags={customTags.map((customTag: CustomTagDetails) => ({ id: customTag.uniqueId, name: customTag.name, color: customTag.color }))}

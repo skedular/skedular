@@ -24,9 +24,7 @@ public class NotificationDbContext(
     {
         public NotificationDbContext CreateDbContext(string[] args)
         {
-            var configuration =
-                new ConfigurationBuilder().BuildConfig<Program>(
-                    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
+            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
 
             return new NotificationDbContext(
                 configuration.CreateDbContextOptionBuilder<NotificationDbContext>().Options,

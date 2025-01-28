@@ -48,10 +48,11 @@ message Customer {
   repeated Location defaultLocations = 19;
   string defaultOrganizationId = 20;
   repeated Desk defaultDesks = 21;
-  Settings settings = 22;
-  repeated Team defaultTeams = 23;
-  repeated OrganizationTag defaultOrganizationTags = 24;
-  string phoneNumber = 25;
+  repeated Room defaultRooms = 22;
+  Settings settings = 23;
+  repeated Team defaultTeams = 24;
+  repeated OrganizationTag defaultOrganizationTags = 25;
+  string phoneNumber = 26;
 }
 
 message Identity {
@@ -69,6 +70,7 @@ message Settings {
   bool isDefaultLocationOnboardingDone = 6;
   bool isPreferredZoneOnboardingDone = 7;
   bool isPreferredDeskOnboardingDone = 8;
+  bool isPreferredRoomOnboardingDone = 9;
 }
 
 message Location {
@@ -82,6 +84,11 @@ message Team {
 }
 
 message Desk {
+  string id = 1;
+  string locationId = 2;
+}
+
+message Room {
   string id = 1;
   string locationId = 2;
 }

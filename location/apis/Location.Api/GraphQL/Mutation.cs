@@ -123,11 +123,7 @@ public class Mutation(IMapper mapper)
         [Service] ILocationMemberService locationMemberService,
         CancellationToken cancellationToken)
     {
-        var locationMember =
-            await locationMemberService.ChangeRoleAsync(
-                input.Id,
-                input.Role,
-                cancellationToken);
+        var locationMember = await locationMemberService.ChangeRoleAsync(input.Id, input.Role, cancellationToken);
         return new LocationMemberDetailsPayload { ClientMutationId = input.ClientMutationId, Member = mapper.MapTo(locationMember) };
     }
 
@@ -169,5 +165,65 @@ public class Mutation(IMapper mapper)
     {
         await locationInvitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken);
         return new CancelInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
+    }
+
+    [UseResolverScope]
+    public async Task<RoomPayload?> AddRoomAsync(
+        AddRoomInput input,
+        [Service] IRoomService roomService,
+        CancellationToken cancellationToken)
+    {
+        var room = await roomService.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        return new RoomPayload { ClientMutationId = input.ClientMutationId, Room = mapper.MapTo(room) };
+    }
+
+    [UseResolverScope]
+    public async Task<RoomPayload?> UpdateRoomAsync(
+        UpdateRoomInput input,
+        [Service] IRoomService roomService,
+        CancellationToken cancellationToken)
+    {
+        var room = await roomService.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        return new RoomPayload { ClientMutationId = input.ClientMutationId, Room = mapper.MapTo(room) };
+    }
+
+    [UseResolverScope]
+    public async Task<RoomPayload?> DeleteRoomAsync(
+        DeleteRoomInput input,
+        [Service] IRoomService roomService,
+        CancellationToken cancellationToken)
+    {
+        var room = await roomService.DeleteAsync(input.Id, cancellationToken);
+        return new RoomPayload { ClientMutationId = input.ClientMutationId, Room = mapper.MapTo(room) };
+    }
+
+    [UseResolverScope]
+    public async Task<RoomsPayload?> DeleteRoomsAsync(
+        DeleteRoomsInput input,
+        [Service] IRoomService roomService,
+        CancellationToken cancellationToken)
+    {
+        var rooms = await roomService.DeleteAsync(input.Ids, cancellationToken);
+        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo).ToArray() };
+    }
+
+    [UseResolverScope]
+    public async Task<RoomsPayload?> ActivateRoomsAsync(
+        ActivateRoomsInput input,
+        [Service] IRoomService roomService,
+        CancellationToken cancellationToken)
+    {
+        var rooms = await roomService.ActivateAsync(input.Ids, cancellationToken);
+        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo).ToArray() };
+    }
+
+    [UseResolverScope]
+    public async Task<RoomsPayload?> DeactivateRoomsAsync(
+        DeactivateRoomsInput input,
+        [Service] IRoomService roomService,
+        CancellationToken cancellationToken)
+    {
+        var rooms = await roomService.DeactivateAsync(input.Ids, cancellationToken);
+        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo).ToArray() };
     }
 }

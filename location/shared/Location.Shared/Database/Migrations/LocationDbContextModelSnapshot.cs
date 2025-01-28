@@ -43,6 +43,21 @@ namespace Location.Shared.Database.Migrations
                     b.ToTable("BookingDesk");
                 });
 
+            modelBuilder.Entity("BookingRoom", b =>
+                {
+                    b.Property<string>("BookingsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("RoomsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("BookingsId", "RoomsId");
+
+                    b.HasIndex("RoomsId");
+
+                    b.ToTable("BookingRoom");
+                });
+
             modelBuilder.Entity("DeskOrganizationTag", b =>
                 {
                     b.Property<string>("DesksId")
@@ -338,6 +353,50 @@ namespace Location.Shared.Database.Migrations
                     b.ToTable("DailyDeskCountRecording");
                 });
 
+            modelBuilder.Entity("Location.Shared.Database.Entities.DailyRoomCountRecording", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Count");
+
+                    b.HasIndex("Date");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("DailyRoomCountRecording");
+                });
+
             modelBuilder.Entity("Location.Shared.Database.Entities.Desk", b =>
                 {
                     b.Property<string>("Id")
@@ -507,6 +566,9 @@ namespace Location.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("DailyDeskCountLastRecordedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DailyRoomCountLastRecordedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
@@ -750,6 +812,70 @@ namespace Location.Shared.Database.Migrations
                     b.ToTable("OrganizationTag");
                 });
 
+            modelBuilder.Entity("Location.Shared.Database.Entities.Room", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Deactivated")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<bool>("RequireBookingApproval")
+                        .HasColumnType("boolean");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("Room");
+                });
+
+            modelBuilder.Entity("OrganizationTagRoom", b =>
+                {
+                    b.Property<string>("OrganizationTagsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("RoomsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("OrganizationTagsId", "RoomsId");
+
+                    b.HasIndex("RoomsId");
+
+                    b.ToTable("OrganizationTagRoom");
+                });
+
             modelBuilder.Entity("BookingDesk", b =>
                 {
                     b.HasOne("Location.Shared.Database.Entities.Booking", null)
@@ -761,6 +887,21 @@ namespace Location.Shared.Database.Migrations
                     b.HasOne("Location.Shared.Database.Entities.Desk", null)
                         .WithMany()
                         .HasForeignKey("DesksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookingRoom", b =>
+                {
+                    b.HasOne("Location.Shared.Database.Entities.Booking", null)
+                        .WithMany()
+                        .HasForeignKey("BookingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Location.Shared.Database.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -795,6 +936,17 @@ namespace Location.Shared.Database.Migrations
                 {
                     b.HasOne("Location.Shared.Database.Entities.Location", "Location")
                         .WithMany("DailyDeskCountRecordings")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("Location.Shared.Database.Entities.DailyRoomCountRecording", b =>
+                {
+                    b.HasOne("Location.Shared.Database.Entities.Location", "Location")
+                        .WithMany("DailyRoomCountRecordings")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -913,6 +1065,32 @@ namespace Location.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("Location.Shared.Database.Entities.Room", b =>
+                {
+                    b.HasOne("Location.Shared.Database.Entities.Location", "Location")
+                        .WithMany("Rooms")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("OrganizationTagRoom", b =>
+                {
+                    b.HasOne("Location.Shared.Database.Entities.OrganizationTag", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationTagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Location.Shared.Database.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Location.Shared.Database.Entities.Address", b =>
                 {
                     b.Navigation("Location")
@@ -938,11 +1116,15 @@ namespace Location.Shared.Database.Migrations
 
                     b.Navigation("DailyDeskCountRecordings");
 
+                    b.Navigation("DailyRoomCountRecordings");
+
                     b.Navigation("Desks");
 
                     b.Navigation("JoinInvitations");
 
                     b.Navigation("LocationMembers");
+
+                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("Location.Shared.Database.Entities.Organization", b =>

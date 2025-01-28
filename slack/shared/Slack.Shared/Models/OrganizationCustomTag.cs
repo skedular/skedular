@@ -8,4 +8,5 @@ public class OrganizationCustomTag : ReplicatedModelBaseWithDeleted
     public string? Description { get; set; }
     public Organization Organization { get; set; }
     public ICollection<Desk> TaggedDesks { get; set; } = [];
+    public ICollection<Room> TaggedRooms { get; set; } = [];
 }

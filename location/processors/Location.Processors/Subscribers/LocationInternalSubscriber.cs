@@ -28,6 +28,10 @@ public class LocationInternalSubscriber(
             case Type.RecordDailyDeskCount:
                 await HandleRecordDailyDeskCountEventAsync(@event, cancellationToken);
                 break;
+
+            case Type.RecordDailyRoomCount:
+                await HandleRecordDailyRoomCountEventAsync(@event, cancellationToken);
+                break;
         }
 
         return EventSubscriberResults.Success;
@@ -42,12 +46,10 @@ public class LocationInternalSubscriber(
         }
 
         var startOfToday = timeProvider.GetUtcNow().StartOfDay();
-        if (await repositoryFactory.DailyDeskCountRecordingRepository
-                .Query(new Specification<DailyDeskCountRecording>
+        if (await repositoryFactory.DailyDeskCountRecordingRepository.Query(
+                new Specification<DailyDeskCountRecording>
                 {
-                    Criteria = query =>
-                        !query.DeletedAt.HasValue && query.Location.Id == @event.LocationId &&
-                        query.Date == startOfToday
+                    Criteria = query => !query.DeletedAt.HasValue && query.Location.Id == @event.LocationId && query.Date == startOfToday
                 }).AnyAsync(cancellationToken))
         {
             return;
@@ -62,6 +64,36 @@ public class LocationInternalSubscriber(
         _ = repositoryFactory.LocationRepository.Update(location);
 
         await repositoryFactory.DailyDeskCountRecordingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task HandleRecordDailyRoomCountEventAsync(Event @event, CancellationToken cancellationToken)
+    {
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(@event.LocationId, cancellationToken);
+        if (location is null)
+        {
+            return;
+        }
+
+        var startOfToday = timeProvider.GetUtcNow().StartOfDay();
+        if (await repositoryFactory.DailyRoomCountRecordingRepository.Query(
+                new Specification<DailyRoomCountRecording>
+                {
+                    Criteria = query => !query.DeletedAt.HasValue && query.Location.Id == @event.LocationId && query.Date == startOfToday
+                }).AnyAsync(cancellationToken))
+        {
+            return;
+        }
+
+        _ = repositoryFactory.DailyRoomCountRecordingRepository.Add(new DailyRoomCountRecording
+        {
+            Id = randomHelper.Generate(), Count = location.Rooms.Count(item => item.DeletedAt is null), Date = startOfToday, Location = location
+        });
+
+        location.DailyRoomCountLastRecordedAt = timeProvider.GetUtcNow();
+        _ = repositoryFactory.LocationRepository.Update(location);
+
+        await repositoryFactory.DailyRoomCountRecordingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

@@ -15,7 +15,7 @@ public class DailyDeskCountRecording : EntityBaseWithDeleted
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class DailyMemberCountRecordingConfiguration : IEntityTypeConfiguration<DailyDeskCountRecording>
+public class DailyDeskCountRecordingConfiguration : IEntityTypeConfiguration<DailyDeskCountRecording>
 {
     public void Configure(EntityTypeBuilder<DailyDeskCountRecording> builder)
     {

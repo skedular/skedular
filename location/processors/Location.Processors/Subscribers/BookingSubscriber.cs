@@ -16,23 +16,17 @@ public class BookingSubscriber(
     IMapper mapper,
     IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
             case Type.BookingUpserted:
                 {
                     var booking = mapper.MapTo(@event);
-                    var existingBooking =
-                        await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
+                    var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
                     if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Booking event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -44,12 +38,10 @@ public class BookingSubscriber(
             case Type.BookingDeleted:
                 {
                     var booking = mapper.MapTo(@event);
-                    var existingBooking =
-                        await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
+                    var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
                     if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Booking event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -67,10 +59,7 @@ public class BookingSubscriber(
         return EventSubscriberResults.Success;
     }
 
-    private async Task HandleBookingUpsertedEventAsync(
-        Shared.Models.Booking booking,
-        Booking? existingBooking,
-        CancellationToken cancellationToken)
+    private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking? existingBooking, CancellationToken cancellationToken)
     {
         if (existingBooking is not null && string.IsNullOrWhiteSpace(booking.Location.Id))
         {
@@ -91,23 +80,28 @@ public class BookingSubscriber(
         if (booking.Desks.Count != 0)
         {
             var deskIds = booking.Desks.Select(item => item.Id).ToList();
-            desks =
-                await repositoryFactory.DeskRepository.Query(new Specification<Desk>
-                {
-                    Criteria = query => !query.DeletedAt.HasValue && deskIds.Contains(query.Id)
-                }).ToListAsync(cancellationToken);
+            desks = await repositoryFactory.DeskRepository.Query(new Specification<Desk>
+            {
+                Criteria = query => !query.DeletedAt.HasValue && deskIds.Contains(query.Id)
+            }).ToListAsync(cancellationToken);
+        }
+
+        var rooms = new List<Room>();
+        if (booking.Rooms.Count != 0)
+        {
+            var roomIds = booking.Rooms.Select(item => item.Id).ToList();
+            rooms = await repositoryFactory.RoomRepository.Query(new Specification<Room>
+            {
+                Criteria = query => !query.DeletedAt.HasValue && roomIds.Contains(query.Id)
+            }).ToListAsync(cancellationToken);
         }
 
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, cancellationToken);
         ArgumentNullException.ThrowIfNull(location);
 
         _ = existingBooking is null
-            ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, location, desks))
-            : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(
-                booking,
-                existingBooking,
-                location,
-                desks));
+            ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, location, desks, rooms))
+            : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, location, desks, rooms));
 
         await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -115,7 +109,7 @@ public class BookingSubscriber(
     private async Task HandleBookingDeletedEventAsync(Booking existingBooking, CancellationToken cancellationToken)
     {
         existingBooking.Desks = [];
-
+        existingBooking.Rooms = [];
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
         _ = repositoryFactory.BookingRepository.Remove(existingBooking);
         await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

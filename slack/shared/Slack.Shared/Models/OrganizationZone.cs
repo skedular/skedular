@@ -9,4 +9,5 @@ public class OrganizationZone : ReplicatedModelBaseWithDeleted
     public string? Color { get; set; }
     public Organization Organization { get; set; }
     public ICollection<Desk> TaggedDesks { get; set; } = [];
+    public ICollection<Room> TaggedRooms { get; set; } = [];
 }

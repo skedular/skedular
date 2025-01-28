@@ -15,7 +15,9 @@ public class LocationDbContext(
     public DbSet<Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<DailyDeskCountRecording> DailyDeskCountRecording { get; set; }
+    public DbSet<DailyRoomCountRecording> DailyRoomCountRecording { get; set; }
     public DbSet<Desk> Desk { get; set; }
+    public DbSet<Room> Room { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<JoinInvitation> JoinInvitation { get; set; }
     public DbSet<Entities.Location> Location { get; set; }
@@ -29,9 +31,7 @@ public class LocationDbContext(
     {
         public LocationDbContext CreateDbContext(string[] args)
         {
-            var configuration =
-                new ConfigurationBuilder().BuildConfig<Program>(
-                    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
+            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
 
             return new LocationDbContext(
                 configuration.CreateDbContextOptionBuilder<LocationDbContext>().Options,

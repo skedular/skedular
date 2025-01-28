@@ -10,4 +10,5 @@ public class OrganizationTag : ReplicatedModelBaseWithDeleted
     public OrganizationTagType? Type { get; set; }
     public Organization Organization { get; set; }
     public ICollection<Desk> Desks { get; set; } = [];
+    public ICollection<Room> Rooms { get; set; } = [];
 }

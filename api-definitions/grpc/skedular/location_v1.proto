@@ -22,6 +22,12 @@ service LocationService {
     rpc BulkAddDesks (BulkAddDesksInput) returns (BulkAddDesksResponse);
     rpc UpdateDesk (UpdateDeskInput) returns (Desk);
     rpc RemoveDesk (RemoveDeskInput) returns (Desk);
+
+    rpc GetPaginatedRooms (GetPaginatedRoomsInput) returns (RoomConnection);
+    rpc GetRoom (GetRoomInput) returns (Room);
+    rpc AddRoom (AddRoomInput) returns (Room);
+    rpc UpdateRoom (UpdateRoomInput) returns (Room);
+    rpc RemoveRoom (RemoveRoomInput) returns (Room);
 }
 
 message VersionInput {
@@ -106,11 +112,12 @@ message Location {
     string organizationId = 4;
     string timezone = 5;
     repeated Desk desks = 6;
-    bool hasFutureBooking = 7;
-    Permissions permissions = 8;
-    repeated LocationMember members = 9;
-    repeated OrganizationCustomTag customTags = 10;
-    repeated OrganizationZone zones = 11;
+    repeated Room rooms = 7;
+    bool hasFutureBooking = 8;
+    Permissions permissions = 9;
+    repeated LocationMember members = 10;
+    repeated OrganizationCustomTag customTags = 11;
+    repeated OrganizationZone zones = 12;
 }
 
 message Admin_GetInput {
@@ -170,16 +177,6 @@ message OrganizationZone {
     string color = 3;
 }
 
-message Desk {
-    string id = 1;
-    string name = 2;
-    bool deactivated = 3;
-    bool requireBookingApproval = 4;
-    repeated OrganizationCustomTag organizationCustomTags = 5;
-    repeated OrganizationZone organizationZones = 6;
-    string color = 7;
-}
-
 message GetPermissionsInput {
     string id = 1;
 }
@@ -211,6 +208,16 @@ message UpdateInput {
 
 message RemoveInput {
     string id = 1;
+}
+
+message Desk {
+    string id = 1;
+    string name = 2;
+    bool deactivated = 3;
+    bool requireBookingApproval = 4;
+    repeated OrganizationCustomTag organizationCustomTags = 5;
+    repeated OrganizationZone organizationZones = 6;
+    string color = 7;
 }
 
 message DeskConnection {
@@ -291,5 +298,81 @@ message UpdateDeskInput {
 }
 
 message RemoveDeskInput {
+    string id = 1;
+}
+
+
+message Room {
+    string id = 1;
+    string name = 2;
+    bool deactivated = 3;
+    bool requireBookingApproval = 4;
+    repeated OrganizationCustomTag organizationCustomTags = 5;
+    repeated OrganizationZone organizationZones = 6;
+    string color = 7;
+}
+
+message RoomConnection {
+    PageInfo pageInfo = 1;
+    repeated RoomEdge edges = 2;
+    int32 totalCount = 3;
+}
+
+message RoomEdge {
+    Room node = 1;
+    string cursor = 2;
+}
+
+message GetPaginatedRoomsInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    RoomWhereInput where = 5;
+    repeated RoomOrderInput orderBy = 6;
+}
+
+message RoomWhereInput {
+    string locationId = 1;
+    string nameContains = 2;
+    repeated string zoneIds = 3;
+    repeated string customTagIds = 4;
+}
+
+message RoomOrderInput {
+    OrderDirection direction = 1;
+    RoomOrderField field = 2;
+}
+
+enum RoomOrderField {
+    RoomName = 0;
+}
+
+message GetRoomInput {
+    string id = 1;
+}
+
+message AddRoomInput {
+    string id = 1;
+    string locationId = 2;
+    string name = 3;
+    bool deactivated = 4;
+    bool requireBookingApproval = 5;
+    repeated string customTagIds = 6;
+    repeated string zoneIds = 7;
+    string color = 8;
+}
+
+message UpdateRoomInput {
+    string id = 1;
+    string name = 2;
+    bool deactivated = 3;
+    bool requireBookingApproval = 4;
+    repeated string customTagIds = 5;
+    repeated string zoneIds = 6;
+    string color = 7;
+}
+
+message RemoveRoomInput {
     string id = 1;
 }

@@ -103,8 +103,7 @@ public class SlackInternalSubscriber(
 
     private async Task HandleRefreshWorkspaceEventAsync(string workspaceId, CancellationToken cancellationToken)
     {
-        var existingWorkspace =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
+        var existingWorkspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
         if (existingWorkspace is null)
         {
             return;
@@ -120,8 +119,7 @@ public class SlackInternalSubscriber(
 
     private async Task HandleRefreshWorkspaceMembersEventAsync(string workspaceId, CancellationToken cancellationToken)
     {
-        var existingWorkspace =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
+        var existingWorkspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspaceId, cancellationToken);
         if (existingWorkspace is null)
         {
             return;
@@ -132,11 +130,7 @@ public class SlackInternalSubscriber(
 
         do
         {
-            var response = await existingWorkspace.GetApiClient().Users.List(
-                nextCursor,
-                true,
-                100,
-                cancellationToken);
+            var response = await existingWorkspace.GetApiClient().Users.List(nextCursor, true, 100, cancellationToken);
             users.AddRange(response.Members.Where(item => item.IsAcceptableWorkspaceMemberType()));
             nextCursor = response.ResponseMetadata.NextCursor;
         } while (!string.IsNullOrWhiteSpace(nextCursor));
@@ -159,9 +153,7 @@ public class SlackInternalSubscriber(
                 return repositoryFactory.WorkspaceMemberRepository.Update(updatedWorkspaceMember);
             }).ToList();
         var addedItems = users.Where(user => workspaceMembers.All(item => item.Id != user.Id))
-            .Select(user =>
-                repositoryFactory.WorkspaceMemberRepository.Add(
-                    mapper.MapToEntity(user, existingWorkspace)))
+            .Select(user => repositoryFactory.WorkspaceMemberRepository.Add(mapper.MapToEntity(user, existingWorkspace)))
             .ToList();
 
         repositoryFactory.WorkspaceMemberRepository.RemoveRange(itemsToRemove);
@@ -199,9 +191,7 @@ public class SlackInternalSubscriber(
             nextCursor = response.ResponseMetadata.NextCursor;
         } while (!string.IsNullOrWhiteSpace(nextCursor));
 
-        var workspaceChannels = await repositoryFactory.WorkspaceChannelRepository.GetByWorkspaceIdAsync(
-            workspaceId,
-            cancellationToken);
+        var workspaceChannels = await repositoryFactory.WorkspaceChannelRepository.GetByWorkspaceIdAsync(workspaceId, cancellationToken);
         var itemsToRemove = workspaceChannels
             .Where(channel => channels.All(item => item.Id != channel.Id))
             .ToList();
@@ -217,9 +207,7 @@ public class SlackInternalSubscriber(
             .ToList();
         var addedItems = channels
             .Where(channel => workspaceChannels.All(item => item.Id != channel.Id))
-            .Select(channel =>
-                repositoryFactory.WorkspaceChannelRepository.Add(
-                    mapper.MapToEntity(channel, existingWorkspace)))
+            .Select(channel => repositoryFactory.WorkspaceChannelRepository.Add(mapper.MapToEntity(channel, existingWorkspace)))
             .ToList();
 
         repositoryFactory.WorkspaceChannelRepository.RemoveRange(itemsToRemove);
@@ -232,9 +220,7 @@ public class SlackInternalSubscriber(
         await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task SyncCustomersAndOrganizationMembersAsync(
-        Workspace workspace,
-        CancellationToken cancellationToken)
+    private async Task SyncCustomersAndOrganizationMembersAsync(Workspace workspace, CancellationToken cancellationToken)
     {
         var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
         {
@@ -480,8 +466,7 @@ public class SlackInternalSubscriber(
         {
             foreach (var booking in bookings)
             {
-                var customerEntity =
-                    await repositoryFactory.CustomerRepository.GetByIdAsync(booking.Customer.Id, cancellationToken);
+                var customerEntity = await repositoryFactory.CustomerRepository.GetByIdAsync(booking.Customer.Id, cancellationToken);
                 if (customerEntity is null)
                 {
                     continue;
@@ -537,9 +522,7 @@ public class SlackInternalSubscriber(
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleSendWorkspaceTeamDailyUpdateMessageEventAsync(
-        string teamId,
-        CancellationToken cancellationToken)
+    private async Task HandleSendWorkspaceTeamDailyUpdateMessageEventAsync(string teamId, CancellationToken cancellationToken)
     {
         const int TeamBookingsPageSize = 5;
 
@@ -562,9 +545,7 @@ public class SlackInternalSubscriber(
             return;
         }
 
-        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByOrganizationIdAsync(
-            team.OrganizationId,
-            cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByOrganizationIdAsync(team.OrganizationId, cancellationToken);
         if (workspaceEntity is null)
         {
             return;
@@ -610,8 +591,7 @@ public class SlackInternalSubscriber(
         {
             foreach (var booking in bookings)
             {
-                var customerEntity =
-                    await repositoryFactory.CustomerRepository.GetByIdAsync(booking.Customer.Id, cancellationToken);
+                var customerEntity = await repositoryFactory.CustomerRepository.GetByIdAsync(booking.Customer.Id, cancellationToken);
                 if (customerEntity is null)
                 {
                     continue;
@@ -671,8 +651,7 @@ public class SlackInternalSubscriber(
         string workspaceMemberId,
         CancellationToken cancellationToken)
     {
-        var workspaceMemberEntity =
-            await repositoryFactory.WorkspaceMemberRepository.GetByIdAsync(workspaceMemberId, cancellationToken);
+        var workspaceMemberEntity = await repositoryFactory.WorkspaceMemberRepository.GetByIdAsync(workspaceMemberId, cancellationToken);
         if (workspaceMemberEntity is null)
         {
             return;
@@ -688,8 +667,7 @@ public class SlackInternalSubscriber(
         workspaceMemberEntity.LastProfileStatusUpdatedAt = now;
         repositoryFactory.WorkspaceMemberRepository.Update(workspaceMemberEntity);
 
-        var customerEntity =
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(workspaceMemberId, cancellationToken);
+        var customerEntity = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(workspaceMemberId, cancellationToken);
         if (customerEntity is null)
         {
             return;

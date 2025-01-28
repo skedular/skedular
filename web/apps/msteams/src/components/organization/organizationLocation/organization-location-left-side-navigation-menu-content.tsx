@@ -3,7 +3,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import { BodyIconTypography } from '@repo/shared/components/commons';
-import { DeskIcon, EditIcon } from '@repo/shared/components/icons';
+import { DeskIcon, EditIcon, RoomIcon } from '@repo/shared/components/icons';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
 import {
   getSelectedListItemBorderRadius,
@@ -13,7 +13,12 @@ import {
   secondDrawerExpandedDrawerWidth,
   secondDrawerExpandedDrawerWidthPx,
 } from '@repo/shared/libs/theme';
-import { getOrganizationLocationManageDesksBaseLink, getOrganizationLocationManageLocationBaseLink, getOrganizationLocationSetupBaseLink } from 'components/links';
+import {
+  getOrganizationLocationManageDesksBaseLink,
+  getOrganizationLocationManageLocationBaseLink,
+  getOrganizationLocationManageRoomsBaseLink,
+  getOrganizationLocationSetupBaseLink,
+} from 'components/links';
 import { memo, useContext } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -62,6 +67,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getOrganizationLocationSetupBaseLink(organizationId, locationId);
   const manageDesksLink = getOrganizationLocationManageDesksBaseLink(organizationId, locationId);
+  const manageRoomsLink = getOrganizationLocationManageRoomsBaseLink(organizationId, locationId);
   const manageLocationLink = getOrganizationLocationManageLocationBaseLink(organizationId, locationId);
 
   return (
@@ -108,6 +114,25 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
                 startElement={!hideIcons && <DeskIcon color="inherit" excludeTooltip />}
                 spacing={3}
                 invertDefaultColor={fullPath === manageDesksLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link href={manageRoomsLink}>
+          <ListItemButton selected={fullPath === manageRoomsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageRoomsLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <RoomIcon color="inherit" />} invertDefaultColor={fullPath === manageRoomsLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Manage Rooms"
+                startElement={!hideIcons && <RoomIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === manageRoomsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

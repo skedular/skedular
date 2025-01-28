@@ -14,10 +14,7 @@ namespace Location.Shared.Publishers;
 
 public interface ILocationOutboxPublisher
 {
-    Task PublishLocationAsync(
-        IEnumerable<Models.Location> locations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    Task PublishLocationAsync(IEnumerable<Models.Location> locations, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 
     Task PublishInvitesToJoinLocationNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
@@ -32,10 +29,7 @@ public class LocationOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : ILocationOutboxPublisher
 {
-    public async Task PublishLocationAsync(
-        IEnumerable<Models.Location> locations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
+    public async Task PublishLocationAsync(IEnumerable<Models.Location> locations, IUnitOfWork unitOfWork, CancellationToken cancellationToken) =>
         await Task.WhenAll(locations.Select(location =>
             publisher.PublishAsync(
                 new Key { LocationId = location.Id },

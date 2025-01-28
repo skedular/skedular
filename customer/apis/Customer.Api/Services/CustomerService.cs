@@ -10,6 +10,7 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using CustomerOrder = Customer.Shared.Models.CustomerOrder;
 using Desk = Customer.Shared.Database.Entities.Desk;
+using Room = Customer.Shared.Database.Entities.Room;
 using Location = Customer.Shared.Database.Entities.Location;
 using OrganizationTag = Customer.Shared.Database.Entities.OrganizationTag;
 using Team = Customer.Shared.Database.Entities.Team;
@@ -195,6 +196,13 @@ public class CustomerService(
             preferredDesks.Add(await repositoryFactory.DeskRepository.UpsertNakedAsync(desk.Id, location, cancellationToken));
         }
 
+        var preferredRooms = new List<Room>();
+        foreach (var room in customer.PreferredRooms)
+        {
+            var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(room.Location.Id, null, cancellationToken);
+            preferredRooms.Add(await repositoryFactory.RoomRepository.UpsertNakedAsync(room.Id, location, cancellationToken));
+        }
+
         var preferredOrganizationTags = new List<OrganizationTag>();
         foreach (var organizationTag in customer.PreferredOrganizationTags)
         {
@@ -210,6 +218,7 @@ public class CustomerService(
         await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(
@@ -226,6 +235,7 @@ public class CustomerService(
                 defaultLocations,
                 defaultTeams,
                 preferredDesks,
+                preferredRooms,
                 preferredOrganizationTags);
 
             identities.ForEach(identity => identity.Customer = existingCustomer);
@@ -258,9 +268,7 @@ public class CustomerService(
         return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken))!);
     }
 
-    public async Task<Shared.Models.Customer> AddIdentityAsync(
-        Identity identity,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> AddIdentityAsync(Identity identity, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Customer.Id);
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Id);
@@ -294,9 +302,7 @@ public class CustomerService(
         return mapper.MapTo((await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(identity.Id, cancellationToken))!);
     }
 
-    public async Task<Shared.Models.Customer> UpdateIdentityAsync(
-        Identity identity,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> UpdateIdentityAsync(Identity identity, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Customer.Id);
         ArgumentException.ThrowIfNullOrWhiteSpace(identity.Id);
@@ -308,8 +314,7 @@ public class CustomerService(
         }
 
         var matchingIdentityToUpdate = existingCustomer.Identities.First(item => item.Id == identity.Id);
-        var identityChanged = identity.Email != matchingIdentityToUpdate.Email ||
-                              identity.EmailVerified != matchingIdentityToUpdate.EmailVerified;
+        var identityChanged = identity.Email != matchingIdentityToUpdate.Email || identity.EmailVerified != matchingIdentityToUpdate.EmailVerified;
 
         if (identityChanged)
         {

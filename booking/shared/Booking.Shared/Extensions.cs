@@ -16,8 +16,7 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
-        services
-            .AddScoped<IRepositoryFactory, RepositoryFactory>();
+        services.AddScoped<IRepositoryFactory, RepositoryFactory>();
 
     public static IServiceCollection AddRepositories(this IServiceCollection services) =>
         services
@@ -29,24 +28,22 @@ public static class Extensions
             .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<ILocationMemberRepository, LocationMemberRepository>()
             .AddScoped<IDeskRepository, DeskRepository>()
+            .AddScoped<IRoomRepository, RoomRepository>()
             .AddScoped<ITeamRepository, TeamRepository>()
             .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services
-            .AddScoped<IBookingPublisher, BookingPublisher>();
+        services.AddScoped<IBookingPublisher, BookingPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
-        services
-            .AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
+        services.AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
 
     public static IServiceCollection AddSkedularGrpcServices(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var bookingConfiguration =
-            configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
+        var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
         ArgumentNullException.ThrowIfNull(bookingConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingConfiguration.ApiKey);
 

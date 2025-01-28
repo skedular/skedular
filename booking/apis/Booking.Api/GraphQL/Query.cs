@@ -151,6 +151,30 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
+    public async Task<BookingRoomDetails[]?> AvailableRoomsAsync(
+        AvailableRoomsWhereInput where,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IRoomService roomService,
+        CancellationToken cancellationToken)
+    {
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        var rooms = await roomService.GetAvailableRoomsAsync(
+            where.OrganizationId,
+            where.LocationId,
+            where.Date,
+            where.RoomIdsToInclude ?? [],
+            where.CustomTagIds ?? [],
+            where.ZoneIds ?? [],
+            where.CombineCustomTagsZones ?? false,
+            cancellationToken);
+        return mapper.MapTo(rooms).ToArray();
+    }
+
+    [UseResolverScope]
     public async Task<OrganizationBookingPermissions?> OrganizationBookingPermissionsAsync(
         string organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
@@ -279,5 +303,25 @@ public class Query(IMapper mapper)
             cancellationToken);
 
         return new OrganizationAvailableDesks { DesksCount = desksCount, AvailableDesksCount = availableDesksCount };
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationAvailableRooms?> OrganizationRoomsAvailabilityAsync(
+        OrganizationAvailableRoomsWhereInput where,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IRoomService roomService,
+        CancellationToken cancellationToken)
+    {
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        var (roomsCount, availableRoomsCount) = await roomService.GetOrganizationRoomsAvailabilityAsync(
+            where.OrganizationId,
+            where.Date,
+            cancellationToken);
+
+        return new OrganizationAvailableRooms { RoomsCount = roomsCount, AvailableRoomsCount = availableRoomsCount };
     }
 }

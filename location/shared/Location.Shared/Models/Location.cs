@@ -8,15 +8,18 @@ public class Location : ModelBaseWithDeleted
     public string? About { get; set; }
     public string? Timezone { get; set; }
     public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
+    public DateTimeOffset? DailyRoomCountLastRecordedAt { get; set; }
 
     public Address? PhysicalAddress { get; set; }
 
     public Organization? Organization { get; set; }
     public ICollection<Desk> Desks { get; set; } = [];
+    public ICollection<Room> Rooms { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<LocationMember> LocationMembers { get; set; } = [];
     public ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
     public ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
+    public ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
 
     public ICollection<OrganizationTag> CustomTags { get; set; } = [];
     public ICollection<OrganizationTag> Zones { get; set; } = [];

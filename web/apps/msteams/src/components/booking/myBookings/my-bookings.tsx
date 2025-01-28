@@ -12,6 +12,7 @@ import { Desks } from '@repo/shared/components/desk';
 import { EllipseMenuIcon } from '@repo/shared/components/icons';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
+import { Rooms } from '@repo/shared/components/room';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
@@ -73,6 +74,12 @@ type DeskDetails = {
   color?: string | null | undefined;
 };
 
+type RoomDetails = {
+  uniqueId: string;
+  name: string | null | undefined;
+  color?: string | null | undefined;
+};
+
 type TeamDetails = {
   name: string;
 };
@@ -82,6 +89,7 @@ type RowType = {
   location?: LocationDetails | null | undefined;
   team?: TeamDetails | null | undefined;
   desks: ReadonlyArray<DeskDetails>;
+  rooms: ReadonlyArray<RoomDetails>;
   customTags: ReadonlyArray<CustomTagDetails>;
   zones: ReadonlyArray<ZoneDetails>;
   teammates: ReadonlyArray<CustomerDetails>;
@@ -142,6 +150,21 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
                 name
               }
               desks {
+                uniqueId
+                name
+                color
+                customTags {
+                  uniqueId
+                  name
+                  color
+                }
+                zones {
+                  uniqueId
+                  name
+                  color
+                }
+              }
+              rooms {
                 uniqueId
                 name
                 color
@@ -312,6 +335,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
   const rows: RowType[] = myBookings.map((myBooking) => {
     const customTags = myBooking.desks
       .flatMap(({ customTags }) => customTags)
+      .concat(myBooking.rooms.flatMap(({ customTags }) => customTags))
       .reduce((acc: CustomTagDetails[], customTag) => {
         if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
           acc.push(customTag);
@@ -321,6 +345,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       }, []);
     const zones = myBooking.desks
       .flatMap(({ zones }) => zones)
+      .concat(myBooking.rooms.flatMap(({ zones }) => zones))
       .reduce((acc: ZoneDetails[], zone) => {
         if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
           acc.push(zone);
@@ -340,6 +365,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       location: myBooking.location,
       team: myBooking.team,
       desks: myBooking.desks,
+      rooms: myBooking.rooms,
       zones,
       customTags,
       teammates,
@@ -369,6 +395,14 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       headerName: 'Desks',
       editable: false,
       renderCell: (params) => <Desks desks={params.value.map((desk: DeskDetails) => ({ id: desk.uniqueId, name: desk.name, color: desk.color }))} hideIcon />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'rooms',
+      headerName: 'Rooms',
+      editable: false,
+      renderCell: (params) => <Rooms rooms={params.value.map((room: RoomDetails) => ({ id: room.uniqueId, name: room.name, color: room.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },

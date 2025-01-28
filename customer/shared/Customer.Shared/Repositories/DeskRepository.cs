@@ -13,10 +13,7 @@ public interface IDeskRepository : IRepository<Desk>
     Desk Add(Desk desk);
     Desk Update(Desk desk);
     void RemoveRange(ICollection<Desk> desks);
-
-    Task<ICollection<Desk>> GetByLocationIdAsync(
-        string locationId,
-        CancellationToken cancellationToken);
+    Task<ICollection<Desk>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
 }
 
 public class DeskRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
@@ -55,9 +52,7 @@ public class DeskRepository(CustomerDbContext dbContext, TimeProvider timeProvid
             .Include(query => query.Location)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Desk>> GetByLocationIdAsync(
-        string locationId,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<Desk>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
         await DbContext.Desk
             .Where(query => query.Location.Id == locationId)
             .ToListAsync(cancellationToken);

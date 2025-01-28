@@ -9,4 +9,5 @@ public class Booking : ReplicatedEntityBaseWithDeleted
 
     public Location Location { get; set; }
     public ICollection<Desk> Desks { get; set; } = [];
+    public ICollection<Room> Rooms { get; set; } = [];
 }

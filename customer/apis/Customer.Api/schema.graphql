@@ -41,12 +41,14 @@ type CustomerDetails {
   isDefaultLocationOnboardingDone: Boolean!
   isPreferredZoneOnboardingDone: Boolean!
   isPreferredDeskOnboardingDone: Boolean!
+  isPreferredRoomOnboardingDone: Boolean!
   defaultLocations: [CustomerLocationDetails!]!
   defaultTeams: [CustomerTeamDetails!]!
   defaultOrganization: CustomerOrganizationDetails
   preferredZones: [CustomerOrganizationTagDetails!]!
   preferredCustomTags: [CustomerOrganizationTagDetails!]!
   preferredDesks: [CustomerDeskDetails!]!
+  preferredRooms: [CustomerRoomDetails!]!
   id: ID!
 }
 
@@ -84,6 +86,11 @@ type CustomerPayload {
   customer: CustomerDetails!
 }
 
+type CustomerRoomDetails {
+  uniqueId: ID!
+  name: String
+}
+
 type CustomerTeamDetails {
   uniqueId: ID!
   name: String
@@ -97,20 +104,23 @@ type Mutation {
   completeDefaultOrganizationOnboarding(input: CompleteDefaultOrganizationOnboardingInput!): CustomerPayload @cost(weight: "10")
   completeDefaultLocationOnboarding(input: CompleteDefaultLocationOnboardingInput!): CustomerPayload @cost(weight: "10")
   completePreferredZoneOnboarding(input: CompletePreferredZoneOnboardingInput!): CustomerPayload @cost(weight: "10")
-  completePreferredDeskOnboarding(input: CompletePreferredDeskOnboardingInput!): CustomerPayload @cost(weight: "10")
   addCustomerDefaultLocation(input: AddCustomerDefaultLocationInput!): CustomerPayload @cost(weight: "10")
   removeCustomerDefaultLocation(input: RemoveCustomerDefaultLocationInput!): CustomerPayload @cost(weight: "10")
   addCustomerDefaultTeam(input: AddCustomerDefaultTeamInput!): CustomerPayload @cost(weight: "10")
   removeCustomerDefaultTeam(input: RemoveCustomerDefaultTeamInput!): CustomerPayload @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload @cost(weight: "10")
   clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload @cost(weight: "10")
-  addCustomerDefaultDesk(input: AddCustomerDefaultDeskInput!): CustomerPayload @cost(weight: "10")
-  removeCustomerDefaultDesk(input: RemoveCustomerDefaultDeskInput!): CustomerPayload @cost(weight: "10")
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload @cost(weight: "10")
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   addCustomerDefaultOrganizationTag(input: AddCustomerDefaultOrganizationTagInput!): CustomerPayload @cost(weight: "10")
   removeCustomerDefaultOrganizationTag(input: RemoveCustomerDefaultOrganizationTagInput!): CustomerPayload @cost(weight: "10")
+  completePreferredDeskOnboarding(input: CompletePreferredDeskOnboardingInput!): CustomerPayload @cost(weight: "10")
+  addCustomerDefaultDesk(input: AddCustomerDefaultDeskInput!): CustomerPayload @cost(weight: "10")
+  removeCustomerDefaultDesk(input: RemoveCustomerDefaultDeskInput!): CustomerPayload @cost(weight: "10")
+  completePreferredRoomOnboarding(input: CompletePreferredRoomOnboardingInput!): CustomerPayload @cost(weight: "10")
+  addCustomerDefaultRoom(input: AddCustomerDefaultRoomInput!): CustomerPayload @cost(weight: "10")
+  removeCustomerDefaultRoom(input: RemoveCustomerDefaultRoomInput!): CustomerPayload @cost(weight: "10")
 }
 
 type PageInfo {
@@ -154,6 +164,11 @@ input AddCustomerDefaultOrganizationTagInput {
   organizationTagId: String!
 }
 
+input AddCustomerDefaultRoomInput {
+  clientMutationId: String
+  roomId: String!
+}
+
 input AddCustomerDefaultTeamInput {
   clientMutationId: String
   teamId: String!
@@ -180,6 +195,10 @@ input CompleteOrganizationOnboardingInput {
 }
 
 input CompletePreferredDeskOnboardingInput {
+  clientMutationId: String
+}
+
+input CompletePreferredRoomOnboardingInput {
   clientMutationId: String
 }
 
@@ -214,6 +233,11 @@ input RemoveCustomerDefaultLocationInput {
 input RemoveCustomerDefaultOrganizationTagInput {
   clientMutationId: String
   organizationTagId: String!
+}
+
+input RemoveCustomerDefaultRoomInput {
+  clientMutationId: String
+  roomId: String!
 }
 
 input RemoveCustomerDefaultTeamInput {

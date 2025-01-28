@@ -11,5 +11,7 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services.AddHostedService<LocationDailyDeskCountRecorderJob>();
+        services
+            .AddHostedService<LocationDailyDeskCountRecorderJob>()
+            .AddHostedService<LocationDailyRoomCountRecorderJob>();
 }

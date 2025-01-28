@@ -23,6 +23,7 @@ public class AddBookingInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("locationId")] public string? LocationId { get; set; }
     [GraphQLName("deskIds")] public string[] DeskIds { get; set; } = [];
+    [GraphQLName("roomIds")] public string[] RoomIds { get; set; } = [];
     [GraphQLName("teamId")] public string? TeamId { get; set; }
 }
 
@@ -62,6 +63,22 @@ public class BookingDeskDetails
     [GraphQLName("zones")] public BookingOrganizationZoneDetails[] Zones { get; set; } = [];
 }
 
+[GraphQLName("BookingRoomDetails")]
+public class BookingRoomDetails
+{
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("deactivated")] public bool Deactivated { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+
+    [GraphQLName("requireBookingApproval")]
+    public bool RequireBookingApproval { get; set; }
+
+    [GraphQLName("location")] public BookingLocationDetails? Location { get; set; }
+    [GraphQLName("customTags")] public BookingOrganizationCustomTagDetails[] CustomTags { get; set; } = [];
+    [GraphQLName("zones")] public BookingOrganizationZoneDetails[] Zones { get; set; } = [];
+}
+
 [GraphQLName("BookingDetails")]
 public class BookingDetails : Node
 {
@@ -73,6 +90,7 @@ public class BookingDetails : Node
     [GraphQLName("organization")] public BookingOrganizationDetails? Organization { get; set; }
     [GraphQLName("location")] public BookingLocationDetails? Location { get; set; }
     [GraphQLName("desks")] public BookingDeskDetails[] Desks { get; set; } = [];
+    [GraphQLName("rooms")] public BookingRoomDetails[] Rooms { get; set; } = [];
     [GraphQLName("team")] public BookingTeamDetails? Team { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
@@ -223,6 +241,7 @@ public class UpdateBookingInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("locationId")] public string? LocationId { get; set; }
     [GraphQLName("deskIds")] public string[] DeskIds { get; set; } = [];
+    [GraphQLName("roomIds")] public string[] RoomIds { get; set; } = [];
     [GraphQLName("teamId")] public string? TeamId { get; set; }
 }
 
@@ -252,4 +271,32 @@ public class OrganizationAvailableDesks
 {
     [GraphQLName("desksCount")] public int DesksCount { get; set; }
     [GraphQLName("availableDesksCount")] public int AvailableDesksCount { get; set; }
+}
+
+[GraphQLName("AvailableRoomsWhereInput")]
+public class AvailableRoomsWhereInput
+{
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("locationId")] public string? LocationId { get; set; }
+    [GraphQLName("date")] public required DateTimeOffset Date { get; set; }
+    [GraphQLName("roomIdsToInclude")] public required string[]? RoomIdsToInclude { get; set; }
+    [GraphQLName("customTagIds")] public string[]? CustomTagIds { get; set; }
+    [GraphQLName("zoneIds")] public string[]? ZoneIds { get; set; }
+
+    [GraphQLName("combineCustomTagsZones")]
+    public bool? CombineCustomTagsZones { get; set; }
+}
+
+[GraphQLName("OrganizationAvailableRoomsWhereInput")]
+public class OrganizationAvailableRoomsWhereInput
+{
+    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("date")] public required DateTimeOffset Date { get; set; }
+}
+
+[GraphQLName("OrganizationAvailableRooms")]
+public class OrganizationAvailableRooms
+{
+    [GraphQLName("roomsCount")] public int RoomsCount { get; set; }
+    [GraphQLName("availableRoomsCount")] public int AvailableRoomsCount { get; set; }
 }

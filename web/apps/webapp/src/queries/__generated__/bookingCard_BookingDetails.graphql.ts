@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<db08390d50790c92edd0576ea876d0ed>>
+ * @generated SignedSource<<fd381ccb7282badcb968d0239e5e4e6d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,6 +44,21 @@ export type bookingCard_BookingDetails$data = {
   readonly organization: {
     readonly uniqueId: string;
   } | null | undefined;
+  readonly rooms: ReadonlyArray<{
+    readonly color: string | null | undefined;
+    readonly customTags: ReadonlyArray<{
+      readonly color: string | null | undefined;
+      readonly name: string | null | undefined;
+      readonly uniqueId: string;
+    }>;
+    readonly name: string;
+    readonly uniqueId: string;
+    readonly zones: ReadonlyArray<{
+      readonly color: string | null | undefined;
+      readonly name: string | null | undefined;
+      readonly uniqueId: string;
+    }>;
+  }>;
   readonly team: {
     readonly name: string;
     readonly uniqueId: string;
@@ -86,6 +101,31 @@ v4 = [
   (v0/*: any*/),
   (v1/*: any*/),
   (v3/*: any*/)
+],
+v5 = [
+  (v0/*: any*/),
+  (v1/*: any*/),
+  (v3/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "BookingOrganizationCustomTagDetails",
+    "kind": "LinkedField",
+    "name": "customTags",
+    "plural": true,
+    "selections": (v4/*: any*/),
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "BookingOrganizationZoneDetails",
+    "kind": "LinkedField",
+    "name": "zones",
+    "plural": true,
+    "selections": (v4/*: any*/),
+    "storageKey": null
+  }
 ];
 return {
   "argumentDefinitions": [],
@@ -201,31 +241,17 @@ return {
       "kind": "LinkedField",
       "name": "desks",
       "plural": true,
-      "selections": [
-        (v0/*: any*/),
-        (v1/*: any*/),
-        (v3/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingOrganizationCustomTagDetails",
-          "kind": "LinkedField",
-          "name": "customTags",
-          "plural": true,
-          "selections": (v4/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingOrganizationZoneDetails",
-          "kind": "LinkedField",
-          "name": "zones",
-          "plural": true,
-          "selections": (v4/*: any*/),
-          "storageKey": null
-        }
-      ],
+      "selections": (v5/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingRoomDetails",
+      "kind": "LinkedField",
+      "name": "rooms",
+      "plural": true,
+      "selections": (v5/*: any*/),
       "storageKey": null
     }
   ],
@@ -234,6 +260,6 @@ return {
 };
 })();
 
-(node as any).hash = "5459decba1e9c570d8bea3c6883a320a";
+(node as any).hash = "b40831004b3ef4887806fca3727cc6bd";
 
 export default node;

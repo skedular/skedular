@@ -8,16 +8,14 @@ namespace MsTeams.Shared;
 public class Program
 {
     public static async Task Main(string[] args) =>
-        await MigrationHelper.RunMigrationAsync<MsTeamsDbContext>(() => CreateHostBuilder(args),
-            CancellationToken.None);
+        await MigrationHelper.RunMigrationAsync<MsTeamsDbContext>(() => CreateHostBuilder(args), CancellationToken.None);
 
     public static IHostBuilder CreateHostBuilder(string[] args) =>
         // ReSharper disable once MemberCanBePrivate.Global
         Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((host, builder) =>
             {
-                host.Configuration =
-                    builder.BuildConfig<Program>(host.HostingEnvironment.EnvironmentName, args);
+                host.Configuration = builder.BuildConfig<Program>(host.HostingEnvironment.EnvironmentName, args);
             })
             .ConfigureServices((host, services) =>
             {

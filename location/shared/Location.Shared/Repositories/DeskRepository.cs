@@ -29,15 +29,12 @@ public interface IDeskRepository : IRepository<Desk>
 
 internal static class DeskExtensions
 {
-    internal static IIncludableQueryable<Desk, IEnumerable<OrganizationTag>> AddDependentObjects(
-        this IQueryable<Desk> originalQuery) =>
+    internal static IIncludableQueryable<Desk, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Desk> originalQuery) =>
         originalQuery
             .Include(query => query.Location)
             .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
 
-    internal static IQueryable<Desk> AddSearchCriteria(
-        this IQueryable<Desk> query,
-        DeskSearchCriteria searchCriteria)
+    internal static IQueryable<Desk> AddSearchCriteria(this IQueryable<Desk> query, DeskSearchCriteria searchCriteria)
     {
         query = query.Where(item => !item.DeletedAt.HasValue && item.Location.Id == searchCriteria.LocationId);
 
@@ -62,9 +59,7 @@ internal static class DeskExtensions
         return query;
     }
 
-    internal static IQueryable<Desk> AddSortingOrders(
-        this IQueryable<Desk> originalQuery,
-        ICollection<DeskOrder> orderByFields)
+    internal static IQueryable<Desk> AddSortingOrders(this IQueryable<Desk> originalQuery, ICollection<DeskOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {

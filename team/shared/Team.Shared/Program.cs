@@ -15,8 +15,7 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((host, builder) =>
             {
-                host.Configuration =
-                    builder.BuildConfig<Program>(host.HostingEnvironment.EnvironmentName, args);
+                host.Configuration = builder.BuildConfig<Program>(host.HostingEnvironment.EnvironmentName, args);
             })
             .ConfigureServices((host, services) =>
             {

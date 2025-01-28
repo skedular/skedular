@@ -9,6 +9,7 @@ public class Location : ReplicatedModelBaseWithDeleted
     public Organization? Organization { get; set; }
     public ICollection<LocationMember> LocationMembers { get; set; } = [];
     public ICollection<Desk> Desks { get; set; } = [];
+    public ICollection<Room> Rooms { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<Customer> DefaultedByCustomers { get; set; } = [];
 }

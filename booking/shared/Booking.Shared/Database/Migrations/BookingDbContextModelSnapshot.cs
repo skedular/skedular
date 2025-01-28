@@ -533,6 +533,62 @@ namespace Booking.Shared.Database.Migrations
                     b.ToTable("OrganizationTag");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.Room", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Deactivated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LocationId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<bool>("RequireBookingApproval")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("Room");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.Team", b =>
                 {
                     b.Property<string>("Id")
@@ -647,6 +703,21 @@ namespace Booking.Shared.Database.Migrations
                     b.ToTable("BookingDesk");
                 });
 
+            modelBuilder.Entity("BookingRoom", b =>
+                {
+                    b.Property<string>("BookingsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("RoomsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("BookingsId", "RoomsId");
+
+                    b.HasIndex("RoomsId");
+
+                    b.ToTable("BookingRoom");
+                });
+
             modelBuilder.Entity("CustomerDesk", b =>
                 {
                     b.Property<string>("PreferredByCustomersId")
@@ -690,6 +761,21 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("PreferredOrganizationTagsId");
 
                     b.ToTable("CustomerOrganizationTag");
+                });
+
+            modelBuilder.Entity("CustomerRoom", b =>
+                {
+                    b.Property<string>("PreferredByCustomersId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PreferredRoomsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("PreferredByCustomersId", "PreferredRoomsId");
+
+                    b.HasIndex("PreferredRoomsId");
+
+                    b.ToTable("CustomerRoom");
                 });
 
             modelBuilder.Entity("CustomerTeam", b =>
@@ -765,6 +851,21 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("RetryCount");
 
                     b.ToTable("Outbox");
+                });
+
+            modelBuilder.Entity("OrganizationTagRoom", b =>
+                {
+                    b.Property<string>("OrganizationTagsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("TaggedRoomsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("OrganizationTagsId", "TaggedRoomsId");
+
+                    b.HasIndex("TaggedRoomsId");
+
+                    b.ToTable("OrganizationTagRoom");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Booking", b =>
@@ -883,6 +984,15 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.Room", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Location", "Location")
+                        .WithMany("Rooms")
+                        .HasForeignKey("LocationId");
+
+                    b.Navigation("Location");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.Team", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
@@ -922,6 +1032,21 @@ namespace Booking.Shared.Database.Migrations
                     b.HasOne("Booking.Shared.Database.Entities.Desk", null)
                         .WithMany()
                         .HasForeignKey("DesksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookingRoom", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Booking", null)
+                        .WithMany()
+                        .HasForeignKey("BookingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -971,6 +1096,21 @@ namespace Booking.Shared.Database.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CustomerRoom", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("PreferredByCustomersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("PreferredRoomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CustomerTeam", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Team", null)
@@ -1001,6 +1141,21 @@ namespace Booking.Shared.Database.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OrganizationTagRoom", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.OrganizationTag", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationTagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("TaggedRoomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.Customer", b =>
                 {
                     b.Navigation("Bookings");
@@ -1021,6 +1176,8 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("Desks");
 
                     b.Navigation("LocationMembers");
+
+                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Organization", b =>

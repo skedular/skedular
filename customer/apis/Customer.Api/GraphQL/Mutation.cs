@@ -69,16 +69,6 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> CompletePreferredDeskOnboardingAsync(
-        CompletePreferredDeskOnboardingInput input,
-        [Service] ICustomerSettingsService customerSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerSettingsService.CompletePreferredDeskOnboardingAsync(cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
-    }
-
-    [UseResolverScope]
     public async Task<CustomerPayload?> AddCustomerDefaultLocationAsync(
         AddCustomerDefaultLocationInput input,
         [Service] ICustomerLocationSettingsService customerLocationSettingsService,
@@ -138,8 +128,7 @@ public class Mutation(IMapper mapper)
         [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,
         CancellationToken cancellationToken)
     {
-        var customer =
-            await customerOrganizationSettingsService.SetCustomerDefaultOrganizationAsync(
+        var customer = await customerOrganizationSettingsService.SetCustomerDefaultOrganizationAsync(
                 input.OrganizationId,
                 null,
                 false,
@@ -153,37 +142,10 @@ public class Mutation(IMapper mapper)
         [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,
         CancellationToken cancellationToken)
     {
-        var customer = await customerOrganizationSettingsService.ClearCustomerDefaultOrganizationAsync(
-            null,
-            cancellationToken);
+        var customer = await customerOrganizationSettingsService.ClearCustomerDefaultOrganizationAsync(null, cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
-    [UseResolverScope]
-    public async Task<CustomerPayload?> AddCustomerDefaultDeskAsync(
-        AddCustomerDefaultDeskInput input,
-        [Service] ICustomerDeskSettingsService customerDeskSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerDeskSettingsService.AddCustomerDefaultDeskAsync(
-            input.DeskId,
-            null,
-            cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
-    }
-
-    [UseResolverScope]
-    public async Task<CustomerPayload?> RemoveCustomerDefaultDeskAsync(
-        RemoveCustomerDefaultDeskInput input,
-        [Service] ICustomerDeskSettingsService customerDeskSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerDeskSettingsService.RemoveCustomerDefaultDeskAsync(
-            input.DeskId,
-            null,
-            cancellationToken);
-        return mapper.MapTo(customer, input.ClientMutationId);
-    }
 
     [UseResolverScope]
     public async Task<SubmitCustomerFeedbackPayload?> SubmitCustomerFeedbackAsync(
@@ -191,9 +153,7 @@ public class Mutation(IMapper mapper)
         [Service] ICustomerFeedbackService customerFeedbackService,
         CancellationToken cancellationToken)
     {
-        var customerFeedback = await customerFeedbackService.SubmitFeedbackAsync(
-            mapper.MapTo(input),
-            cancellationToken);
+        var customerFeedback = await customerFeedbackService.SubmitFeedbackAsync(mapper.MapTo(input), cancellationToken);
         return mapper.MapTo(customerFeedback, input.ClientMutationId);
     }
 
@@ -255,11 +215,70 @@ public class Mutation(IMapper mapper)
         [Service] ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
         CancellationToken cancellationToken)
     {
-        var customer =
-            await customerOrganizationTagSettingsService.RemoveCustomerDefaultOrganizationTagAsync(
+        var customer = await customerOrganizationTagSettingsService.RemoveCustomerDefaultOrganizationTagAsync(
                 input.OrganizationTagId,
                 null,
                 cancellationToken);
+        return mapper.MapTo(customer, input.ClientMutationId);
+    }
+
+    [UseResolverScope]
+    public async Task<CustomerPayload?> CompletePreferredDeskOnboardingAsync(
+        CompletePreferredDeskOnboardingInput input,
+        [Service] ICustomerSettingsService customerSettingsService,
+        CancellationToken cancellationToken)
+    {
+        var customer = await customerSettingsService.CompletePreferredDeskOnboardingAsync(cancellationToken);
+        return mapper.MapTo(customer, input.ClientMutationId);
+    }
+
+    [UseResolverScope]
+    public async Task<CustomerPayload?> AddCustomerDefaultDeskAsync(
+        AddCustomerDefaultDeskInput input,
+        [Service] ICustomerDeskSettingsService customerDeskSettingsService,
+        CancellationToken cancellationToken)
+    {
+        var customer = await customerDeskSettingsService.AddCustomerDefaultDeskAsync(input.DeskId, null, cancellationToken);
+        return mapper.MapTo(customer, input.ClientMutationId);
+    }
+
+    [UseResolverScope]
+    public async Task<CustomerPayload?> RemoveCustomerDefaultDeskAsync(
+        RemoveCustomerDefaultDeskInput input,
+        [Service] ICustomerDeskSettingsService customerDeskSettingsService,
+        CancellationToken cancellationToken)
+    {
+        var customer = await customerDeskSettingsService.RemoveCustomerDefaultDeskAsync(input.DeskId, null, cancellationToken);
+        return mapper.MapTo(customer, input.ClientMutationId);
+    }
+
+    [UseResolverScope]
+    public async Task<CustomerPayload?> CompletePreferredRoomOnboardingAsync(
+        CompletePreferredRoomOnboardingInput input,
+        [Service] ICustomerSettingsService customerSettingsService,
+        CancellationToken cancellationToken)
+    {
+        var customer = await customerSettingsService.CompletePreferredRoomOnboardingAsync(cancellationToken);
+        return mapper.MapTo(customer, input.ClientMutationId);
+    }
+
+    [UseResolverScope]
+    public async Task<CustomerPayload?> AddCustomerDefaultRoomAsync(
+        AddCustomerDefaultRoomInput input,
+        [Service] ICustomerRoomSettingsService customerRoomSettingsService,
+        CancellationToken cancellationToken)
+    {
+        var customer = await customerRoomSettingsService.AddCustomerDefaultRoomAsync(input.RoomId, null, cancellationToken);
+        return mapper.MapTo(customer, input.ClientMutationId);
+    }
+
+    [UseResolverScope]
+    public async Task<CustomerPayload?> RemoveCustomerDefaultRoomAsync(
+        RemoveCustomerDefaultRoomInput input,
+        [Service] ICustomerRoomSettingsService customerRoomSettingsService,
+        CancellationToken cancellationToken)
+    {
+        var customer = await customerRoomSettingsService.RemoveCustomerDefaultRoomAsync(input.RoomId, null, cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 }

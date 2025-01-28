@@ -19,10 +19,7 @@ public interface IDeskService
         bool combineCustomTagsZones,
         CancellationToken cancellationToken);
 
-    Task<(int, int)> GetOrganizationDesksAvailabilityAsync(
-        string organizationId,
-        DateTimeOffset date,
-        CancellationToken cancellationToken);
+    Task<(int, int)> GetOrganizationDesksAvailabilityAsync(string organizationId, DateTimeOffset date, CancellationToken cancellationToken);
 }
 
 public class DeskService(
@@ -44,19 +41,13 @@ public class DeskService(
     {
         if (string.IsNullOrWhiteSpace(organizationId) && string.IsNullOrWhiteSpace(locationId))
         {
-            throw new ArgumentException(
-                $"Both {nameof(organizationId)} and {nameof(locationId)} cannot be null or empty.");
+            throw new ArgumentException($"Both {nameof(organizationId)} and {nameof(locationId)} cannot be null or empty.");
         }
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            var organization =
-                await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                    organizationId,
-                    false,
-                    false,
-                    cancellationToken);
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
             if (organization is null)
             {
                 throw new OrganizationNotFound();
@@ -70,9 +61,9 @@ public class DeskService(
 
         if (!string.IsNullOrWhiteSpace(locationId))
         {
-            var location =
-                await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAsync(
+            var location = await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAndRoomsAsync(
                     locationId,
+                    false,
                     false,
                     false,
                     cancellationToken);
@@ -113,12 +104,7 @@ public class DeskService(
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                organizationId,
-                false,
-                false,
-                cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -131,6 +117,7 @@ public class DeskService(
 
         var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(
             organizationId,
+            false,
             false,
             false,
             cancellationToken);

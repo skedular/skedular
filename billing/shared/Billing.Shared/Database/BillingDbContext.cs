@@ -22,9 +22,7 @@ public class BillingDbContext(
     {
         public BillingDbContext CreateDbContext(string[] args)
         {
-            var configuration =
-                new ConfigurationBuilder().BuildConfig<Program>(
-                    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
+            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
 
             return new BillingDbContext(configuration.CreateDbContextOptionBuilder<BillingDbContext>().Options,
                 new CustomDbContextOptions { IsPooled = false });

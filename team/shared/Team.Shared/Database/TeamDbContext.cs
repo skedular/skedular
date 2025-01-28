@@ -26,9 +26,7 @@ public class TeamDbContext(
     {
         public TeamDbContext CreateDbContext(string[] args)
         {
-            var configuration =
-                new ConfigurationBuilder().BuildConfig<Program>(
-                    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
+            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
 
             return new TeamDbContext(
                 configuration.CreateDbContextOptionBuilder<TeamDbContext>().Options,

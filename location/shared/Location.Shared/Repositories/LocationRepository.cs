@@ -46,6 +46,7 @@ internal static class LocationExtensions
             .ThenInclude(query => query.Customer)
             .Include(query => query.PhysicalAddress)
             .Include(query => query.Desks.Where(desk => !desk.DeletedAt.HasValue))
+            .Include(query => query.Rooms.Where(room => !room.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
             .Include(query => query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer);
@@ -93,8 +94,11 @@ internal static class LocationExtensions
         {
             searchCriteria.ZoneIds.ForEach(id =>
                 query = query.Where(item =>
-                    item.Desks.Any(desk =>
-                        !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
+                    item.Desks.Any(desk => !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
+            
+            searchCriteria.ZoneIds.ForEach(id =>
+                query = query.Where(item =>
+                    item.Rooms.Any(room => !room.DeletedAt.HasValue && room.OrganizationTags.Select(tag => tag.Id).Contains(id))));
         }
 
         if (searchCriteria.CustomTagIds.Length != 0)
@@ -103,6 +107,11 @@ internal static class LocationExtensions
                 query = query.Where(item =>
                     item.Desks.Any(desk =>
                         !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
+            
+            searchCriteria.CustomTagIds.ForEach(id =>
+                query = query.Where(item =>
+                    item.Rooms.Any(room =>
+                        !room.DeletedAt.HasValue && room.OrganizationTags.Select(tag => tag.Id).Contains(id))));
         }
 
         return query;

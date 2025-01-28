@@ -31,33 +31,38 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5i",
             "b29raW5nLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
             "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSIpCgREYXRhEiEKB2Jv",
-            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmci4gIKB0Jvb2tpbmcSCgoC",
+            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmciqwMKB0Jvb2tpbmcSCgoC",
             "aWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm",
             "LlRpbWVzdGFtcBISCgpjdXN0b21lcklkGAMgASgJEhYKDm9yZ2FuaXphdGlv",
             "bklkGAQgASgJEigKBGZyb20YBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGlt",
             "ZXN0YW1wEiYKAnRvGAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFt",
             "cBINCgVub3RlcxgHIAEoCRISCgpsb2NhdGlvbklkGAggASgJEg8KB2Rlc2tJ",
-            "ZHMYCSADKAkSDgoGdGVhbUlkGAogASgJEjYKEmRlc2tCb29raW5nRGV0YWls",
-            "cxgLIAMoCzIaLmJvb2tpbmcuRGVza0Jvb2tpbmdEZXRhaWwSIgoEdHlwZRgM",
-            "IAEoDjIULmJvb2tpbmcuQm9va2luZ1R5cGUiVwoRRGVza0Jvb2tpbmdEZXRh",
-            "aWwSCgoCaWQYASABKAkSDgoGZGVza0lkGAIgASgJEiYKBnN0YXR1cxgDIAEo",
-            "DjIWLmJvb2tpbmcuQm9va2luZ1N0YXR1cyovCgRUeXBlEhMKD0Jvb2tpbmdV",
-            "cHNlcnRlZBAAEhIKDkJvb2tpbmdEZWxldGVkEAEqQAoNQm9va2luZ1N0YXR1",
-            "cxITCg9Bd2FpdEFjY2VwdGFuY2UQABIMCghBY2NlcHRlZBABEgwKCERlY2xp",
-            "bmVkEAIqtwEKC0Jvb2tpbmdUeXBlEhMKD1dvcmtpbmdGcm9tSG9tZRAAEhUK",
-            "EVdvcmtpbmdGcm9tT2ZmaWNlEAESDQoJU2lja0xlYXZlEAISDwoLQW5udWFs",
-            "TGVhdmUQAxISCg5XZWxsQmVpbmdMZWF2ZRAEEhEKDUNsaWVudE9mZmljZXMQ",
-            "BRIMCghWYWNhdGlvbhAGEhQKEFRyYXZlbGluZ0ZvcldvcmsQBxIRCg1Ob25X",
-            "b3JraW5nRGF5EAhCNqoCM0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tl",
-            "ZHVsYXIuQm9va2luZy5WMS5WYWx1ZWIGcHJvdG8z"));
+            "ZHMYCSADKAkSDwoHcm9vbUlkcxgKIAMoCRIOCgZ0ZWFtSWQYCyABKAkSNgoS",
+            "ZGVza0Jvb2tpbmdEZXRhaWxzGAwgAygLMhouYm9va2luZy5EZXNrQm9va2lu",
+            "Z0RldGFpbBI2ChJyb29tQm9va2luZ0RldGFpbHMYDSADKAsyGi5ib29raW5n",
+            "LlJvb21Cb29raW5nRGV0YWlsEiIKBHR5cGUYDiABKA4yFC5ib29raW5nLkJv",
+            "b2tpbmdUeXBlIlcKEURlc2tCb29raW5nRGV0YWlsEgoKAmlkGAEgASgJEg4K",
+            "BmRlc2tJZBgCIAEoCRImCgZzdGF0dXMYAyABKA4yFi5ib29raW5nLkJvb2tp",
+            "bmdTdGF0dXMiVwoRUm9vbUJvb2tpbmdEZXRhaWwSCgoCaWQYASABKAkSDgoG",
+            "cm9vbUlkGAIgASgJEiYKBnN0YXR1cxgDIAEoDjIWLmJvb2tpbmcuQm9va2lu",
+            "Z1N0YXR1cyovCgRUeXBlEhMKD0Jvb2tpbmdVcHNlcnRlZBAAEhIKDkJvb2tp",
+            "bmdEZWxldGVkEAEqQAoNQm9va2luZ1N0YXR1cxITCg9Bd2FpdEFjY2VwdGFu",
+            "Y2UQABIMCghBY2NlcHRlZBABEgwKCERlY2xpbmVkEAIqtwEKC0Jvb2tpbmdU",
+            "eXBlEhMKD1dvcmtpbmdGcm9tSG9tZRAAEhUKEVdvcmtpbmdGcm9tT2ZmaWNl",
+            "EAESDQoJU2lja0xlYXZlEAISDwoLQW5udWFsTGVhdmUQAxISCg5XZWxsQmVp",
+            "bmdMZWF2ZRAEEhEKDUNsaWVudE9mZmljZXMQBRIMCghWYWNhdGlvbhAGEhQK",
+            "EFRyYXZlbGluZ0ZvcldvcmsQBxIRCg1Ob25Xb3JraW5nRGF5EAhCNqoCM0Fw",
+            "aS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuQm9va2luZy5WMS5W",
+            "YWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data.Parser, new[]{ "Booking" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "CustomerId", "OrganizationId", "From", "To", "Notes", "LocationId", "DeskIds", "TeamId", "DeskBookingDetails", "Type" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail.Parser, new[]{ "Id", "DeskId", "Status" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "CustomerId", "OrganizationId", "From", "To", "Notes", "LocationId", "DeskIds", "RoomIds", "TeamId", "DeskBookingDetails", "RoomBookingDetails", "Type" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail.Parser, new[]{ "Id", "DeskId", "Status" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.RoomBookingDetail), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.RoomBookingDetail.Parser, new[]{ "Id", "RoomId", "Status" }, null, null, null, null)
           }));
     }
     #endregion
@@ -986,8 +991,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       notes_ = other.notes_;
       locationId_ = other.locationId_;
       deskIds_ = other.deskIds_.Clone();
+      roomIds_ = other.roomIds_.Clone();
       teamId_ = other.teamId_;
       deskBookingDetails_ = other.deskBookingDetails_.Clone();
+      roomBookingDetails_ = other.roomBookingDetails_.Clone();
       type_ = other.type_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1105,8 +1112,19 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       get { return deskIds_; }
     }
 
+    /// <summary>Field number for the "roomIds" field.</summary>
+    public const int RoomIdsFieldNumber = 10;
+    private static readonly pb::FieldCodec<string> _repeated_roomIds_codec
+        = pb::FieldCodec.ForString(82);
+    private readonly pbc::RepeatedField<string> roomIds_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<string> RoomIds {
+      get { return roomIds_; }
+    }
+
     /// <summary>Field number for the "teamId" field.</summary>
-    public const int TeamIdFieldNumber = 10;
+    public const int TeamIdFieldNumber = 11;
     private string teamId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1118,9 +1136,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     }
 
     /// <summary>Field number for the "deskBookingDetails" field.</summary>
-    public const int DeskBookingDetailsFieldNumber = 11;
+    public const int DeskBookingDetailsFieldNumber = 12;
     private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail> _repeated_deskBookingDetails_codec
-        = pb::FieldCodec.ForMessage(90, global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail.Parser);
+        = pb::FieldCodec.ForMessage(98, global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail.Parser);
     private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail> deskBookingDetails_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.DeskBookingDetail>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1128,8 +1146,19 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       get { return deskBookingDetails_; }
     }
 
+    /// <summary>Field number for the "roomBookingDetails" field.</summary>
+    public const int RoomBookingDetailsFieldNumber = 13;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.RoomBookingDetail> _repeated_roomBookingDetails_codec
+        = pb::FieldCodec.ForMessage(106, global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.RoomBookingDetail.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.RoomBookingDetail> roomBookingDetails_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.RoomBookingDetail>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.RoomBookingDetail> RoomBookingDetails {
+      get { return roomBookingDetails_; }
+    }
+
     /// <summary>Field number for the "type" field.</summary>
-    public const int TypeFieldNumber = 12;
+    public const int TypeFieldNumber = 14;
     private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType type_ = global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromHome;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1164,8 +1193,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (Notes != other.Notes) return false;
       if (LocationId != other.LocationId) return false;
       if(!deskIds_.Equals(other.deskIds_)) return false;
+      if(!roomIds_.Equals(other.roomIds_)) return false;
       if (TeamId != other.TeamId) return false;
       if(!deskBookingDetails_.Equals(other.deskBookingDetails_)) return false;
+      if(!roomBookingDetails_.Equals(other.roomBookingDetails_)) return false;
       if (Type != other.Type) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1183,8 +1214,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (Notes.Length != 0) hash ^= Notes.GetHashCode();
       if (LocationId.Length != 0) hash ^= LocationId.GetHashCode();
       hash ^= deskIds_.GetHashCode();
+      hash ^= roomIds_.GetHashCode();
       if (TeamId.Length != 0) hash ^= TeamId.GetHashCode();
       hash ^= deskBookingDetails_.GetHashCode();
+      hash ^= roomBookingDetails_.GetHashCode();
       if (Type != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromHome) hash ^= Type.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1237,13 +1270,15 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteString(LocationId);
       }
       deskIds_.WriteTo(output, _repeated_deskIds_codec);
+      roomIds_.WriteTo(output, _repeated_roomIds_codec);
       if (TeamId.Length != 0) {
-        output.WriteRawTag(82);
+        output.WriteRawTag(90);
         output.WriteString(TeamId);
       }
       deskBookingDetails_.WriteTo(output, _repeated_deskBookingDetails_codec);
+      roomBookingDetails_.WriteTo(output, _repeated_roomBookingDetails_codec);
       if (Type != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromHome) {
-        output.WriteRawTag(96);
+        output.WriteRawTag(112);
         output.WriteEnum((int) Type);
       }
       if (_unknownFields != null) {
@@ -1289,13 +1324,15 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteString(LocationId);
       }
       deskIds_.WriteTo(ref output, _repeated_deskIds_codec);
+      roomIds_.WriteTo(ref output, _repeated_roomIds_codec);
       if (TeamId.Length != 0) {
-        output.WriteRawTag(82);
+        output.WriteRawTag(90);
         output.WriteString(TeamId);
       }
       deskBookingDetails_.WriteTo(ref output, _repeated_deskBookingDetails_codec);
+      roomBookingDetails_.WriteTo(ref output, _repeated_roomBookingDetails_codec);
       if (Type != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromHome) {
-        output.WriteRawTag(96);
+        output.WriteRawTag(112);
         output.WriteEnum((int) Type);
       }
       if (_unknownFields != null) {
@@ -1333,10 +1370,12 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(LocationId);
       }
       size += deskIds_.CalculateSize(_repeated_deskIds_codec);
+      size += roomIds_.CalculateSize(_repeated_roomIds_codec);
       if (TeamId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(TeamId);
       }
       size += deskBookingDetails_.CalculateSize(_repeated_deskBookingDetails_codec);
+      size += roomBookingDetails_.CalculateSize(_repeated_roomBookingDetails_codec);
       if (Type != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromHome) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
@@ -1386,10 +1425,12 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         LocationId = other.LocationId;
       }
       deskIds_.Add(other.deskIds_);
+      roomIds_.Add(other.roomIds_);
       if (other.TeamId.Length != 0) {
         TeamId = other.TeamId;
       }
       deskBookingDetails_.Add(other.deskBookingDetails_);
+      roomBookingDetails_.Add(other.roomBookingDetails_);
       if (other.Type != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType.WorkingFromHome) {
         Type = other.Type;
       }
@@ -1458,14 +1499,22 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             break;
           }
           case 82: {
-            TeamId = input.ReadString();
+            roomIds_.AddEntriesFrom(input, _repeated_roomIds_codec);
             break;
           }
           case 90: {
+            TeamId = input.ReadString();
+            break;
+          }
+          case 98: {
             deskBookingDetails_.AddEntriesFrom(input, _repeated_deskBookingDetails_codec);
             break;
           }
-          case 96: {
+          case 106: {
+            roomBookingDetails_.AddEntriesFrom(input, _repeated_roomBookingDetails_codec);
+            break;
+          }
+          case 112: {
             Type = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType) input.ReadEnum();
             break;
           }
@@ -1534,14 +1583,22 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             break;
           }
           case 82: {
-            TeamId = input.ReadString();
+            roomIds_.AddEntriesFrom(ref input, _repeated_roomIds_codec);
             break;
           }
           case 90: {
+            TeamId = input.ReadString();
+            break;
+          }
+          case 98: {
             deskBookingDetails_.AddEntriesFrom(ref input, _repeated_deskBookingDetails_codec);
             break;
           }
-          case 96: {
+          case 106: {
+            roomBookingDetails_.AddEntriesFrom(ref input, _repeated_roomBookingDetails_codec);
+            break;
+          }
+          case 112: {
             Type = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingType) input.ReadEnum();
             break;
           }
@@ -1811,6 +1868,278 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
           }
           case 18: {
             DeskId = input.ReadString();
+            break;
+          }
+          case 24: {
+            Status = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class RoomBookingDetail : pb::IMessage<RoomBookingDetail>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<RoomBookingDetail> _parser = new pb::MessageParser<RoomBookingDetail>(() => new RoomBookingDetail());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<RoomBookingDetail> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingV1ValueReflection.Descriptor.MessageTypes[5]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public RoomBookingDetail() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public RoomBookingDetail(RoomBookingDetail other) : this() {
+      id_ = other.id_;
+      roomId_ = other.roomId_;
+      status_ = other.status_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public RoomBookingDetail Clone() {
+      return new RoomBookingDetail(this);
+    }
+
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private string id_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Id {
+      get { return id_; }
+      set {
+        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "roomId" field.</summary>
+    public const int RoomIdFieldNumber = 2;
+    private string roomId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string RoomId {
+      get { return roomId_; }
+      set {
+        roomId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 3;
+    private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus status_ = global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.AwaitAcceptance;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as RoomBookingDetail);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(RoomBookingDetail other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Id != other.Id) return false;
+      if (RoomId != other.RoomId) return false;
+      if (Status != other.Status) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
+      if (RoomId.Length != 0) hash ^= RoomId.GetHashCode();
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.AwaitAcceptance) hash ^= Status.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (RoomId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(RoomId);
+      }
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.AwaitAcceptance) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) Status);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (RoomId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(RoomId);
+      }
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.AwaitAcceptance) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) Status);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
+      }
+      if (RoomId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(RoomId);
+      }
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.AwaitAcceptance) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(RoomBookingDetail other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Id.Length != 0) {
+        Id = other.Id;
+      }
+      if (other.RoomId.Length != 0) {
+        RoomId = other.RoomId;
+      }
+      if (other.Status != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus.AwaitAcceptance) {
+        Status = other.Status;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            RoomId = input.ReadString();
+            break;
+          }
+          case 24: {
+            Status = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingStatus) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            RoomId = input.ReadString();
             break;
           }
           case 24: {

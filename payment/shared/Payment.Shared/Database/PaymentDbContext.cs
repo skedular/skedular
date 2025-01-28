@@ -24,9 +24,7 @@ public class PaymentDbContext(
     {
         public PaymentDbContext CreateDbContext(string[] args)
         {
-            var configuration =
-                new ConfigurationBuilder().BuildConfig<Program>(
-                    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
+            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
 
             return new PaymentDbContext(
                 configuration.CreateDbContextOptionBuilder<PaymentDbContext>().Options,

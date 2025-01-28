@@ -14,6 +14,7 @@ public class BookingDbContext(
     public DbSet<Entities.Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Desk> Desk { get; set; }
+    public DbSet<Room> Room { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Location> Location { get; set; }
     public DbSet<LocationMember> LocationMember { get; set; }
@@ -28,9 +29,7 @@ public class BookingDbContext(
     {
         public BookingDbContext CreateDbContext(string[] args)
         {
-            var configuration =
-                new ConfigurationBuilder().BuildConfig<Program>(
-                    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
+            var configuration = new ConfigurationBuilder().BuildConfig<Program>(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), args);
 
             return new BookingDbContext(
                 configuration.CreateDbContextOptionBuilder<BookingDbContext>().Options,

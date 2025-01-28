@@ -48,6 +48,7 @@ export { default as ArrowRightIcon } from '@mui/icons-material/KeyboardArrowRigh
 export { default as ArrowUpIcon } from '@mui/icons-material/KeyboardArrowUp';
 export { default as ListViewIcon } from '@mui/icons-material/List';
 export { default as LogoutIcon } from '@mui/icons-material/Logout';
+export { default as RoomIcon } from '@mui/icons-material/MeetingRoom';
 export { default as MenuIcon } from '@mui/icons-material/Menu';
 export { default as HamburgerMenuIcon } from '@mui/icons-material/MenuRounded';
 export { default as MoreItemsIcon } from '@mui/icons-material/MoreHoriz';

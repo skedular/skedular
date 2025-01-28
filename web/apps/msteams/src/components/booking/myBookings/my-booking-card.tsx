@@ -95,6 +95,21 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
             color
           }
         }
+        rooms {
+          uniqueId
+          name
+          color
+          customTags {
+            uniqueId
+            name
+            color
+          }
+          zones {
+            uniqueId
+            name
+            color
+          }
+        }
       }
     `,
     bookingDetailsRelay,
@@ -189,6 +204,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
   const date = dayjs(bookingDetails.from);
   const customTags = bookingDetails.desks
     .flatMap(({ customTags }) => customTags)
+    .concat(bookingDetails.rooms.flatMap(({ customTags }) => customTags))
     .reduce((acc: CustomTagDetails[], customTag) => {
       if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
         acc.push(customTag);
@@ -198,6 +214,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
     }, []);
   const zones = bookingDetails.desks
     .flatMap(({ zones }) => zones)
+    .concat(bookingDetails.rooms.flatMap(({ zones }) => zones))
     .reduce((acc: ZoneDetails[], zone) => {
       if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
         acc.push(zone);
@@ -233,6 +250,8 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
           <SmallIconTypography startElement={<TeamIcon />} label={bookingDetails.team ? bookingDetails.team.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <Desks desks={bookingDetails.desks.map((desk) => ({ id: desk.uniqueId, name: desk.name, color: desk.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <Divider />
+          <Desks desks={bookingDetails.desks.map((room) => ({ id: room.uniqueId, name: room.name, color: room.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <CustomTags
             customTags={customTags.map((customTag: CustomTagDetails) => ({ id: customTag.uniqueId, name: customTag.name, color: customTag.color }))}

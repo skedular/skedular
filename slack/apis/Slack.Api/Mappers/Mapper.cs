@@ -12,6 +12,7 @@ using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddIn
 using Booking = Slack.Shared.Models.Booking;
 using Customer = Slack.Shared.Models.Customer;
 using Desk = Slack.Shared.Models.Desk;
+using Room = Slack.Shared.Models.Room;
 using Identity = Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity;
 using Location = Slack.Shared.Database.Entities.Location;
 using LocationPermissions = Slack.Shared.Models.LocationPermissions;
@@ -39,13 +40,7 @@ public interface IMapper
     Workspace MapTo(OauthV2AccessResponse src, Organization organization);
     Workspace MergeTo(OauthV2AccessResponse src, Workspace dest, Organization organization);
     WorkspaceMember MapToEntity(User src, Workspace workspace);
-
-    Admin_AddInput MapTo(
-        WorkspaceMember src,
-        string customerId,
-        Organization defaultOrganization,
-        ICollection<Location> defaultLocations);
-
+    Admin_AddInput MapTo(WorkspaceMember src, string customerId, Organization defaultOrganization, ICollection<Location> defaultLocations);
     Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId);
     Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer src);
     Shared.Models.Organization MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src);
@@ -67,6 +62,7 @@ public interface IMapper
     Shared.Models.WorkspaceChannel? MapTo(WorkspaceChannel? src);
     Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer src);
     Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk src);
+    Room MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Room src);
     Workspace MapToEntity(Shared.Models.Workspace src, Organization organization);
     Shared.Models.Workspace MapTo(Admin_AddWorkspaceInput src);
     global::Api.Shared.Services.Grpc.Skedular.Slack.V1.Workspace MapTo(Shared.Models.Workspace src);
@@ -119,11 +115,7 @@ public class Mapper : IMapper
 
     public WorkspaceMember MapToEntity(User src, Workspace workspace) => MergeToEntity(src, new WorkspaceMember(), workspace);
 
-    public Admin_AddInput MapTo(
-        WorkspaceMember src,
-        string customerId,
-        Organization defaultOrganization,
-        ICollection<Location> defaultLocations)
+    public Admin_AddInput MapTo(WorkspaceMember src, string customerId, Organization defaultOrganization, ICollection<Location> defaultLocations)
     {
         var input = new Admin_AddInput
         {
@@ -146,6 +138,7 @@ public class Mapper : IMapper
             IsDefaultLocationOnboardingDone = false,
             IsPreferredZoneOnboardingDone = false,
             IsPreferredDeskOnboardingDone = false,
+            IsPreferredRoomOnboardingDone = false,
             DefaultOrganization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 
@@ -187,7 +180,8 @@ public class Mapper : IMapper
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
             IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
-            IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone
+            IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
+            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone
         };
 
         customer.Identities = src.Identities.Select(item => new Shared.Models.Identity
@@ -217,6 +211,11 @@ public class Mapper : IMapper
             }).ToList();
 
         customer.PreferredDesks = src.PreferredDesks.Select(item => new Desk
+        {
+            Id = item.Id, Name = item.Name.ToSafeString(), Location = new Shared.Models.Location { Id = item.Location.Id }
+        }).ToList();
+
+        customer.PreferredRooms = src.PreferredRooms.Select(item => new Room
         {
             Id = item.Id, Name = item.Name.ToSafeString(), Location = new Shared.Models.Location { Id = item.Location.Id }
         }).ToList();
@@ -347,6 +346,7 @@ public class Mapper : IMapper
         };
 
         updateInput.DeskIds.AddRange(src.Desks.Select(item => item.Id));
+        updateInput.RoomIds.AddRange(src.Rooms.Select(item => item.Id));
 
         return updateInput;
     }
@@ -507,6 +507,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone.ToSafeString(),
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Desks = MapTo(src.Desks).ToList(),
+            Rooms = MapTo(src.Rooms).ToList(),
             Permissions = new LocationPermissions
             {
                 CanView = src.Permissions.CanView,
@@ -530,10 +531,23 @@ public class Mapper : IMapper
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
             Desks = MapTo(src.Desks).ToList(),
+            Rooms = MapTo(src.Rooms).ToList(),
             Team = MapTo(src.Team)
         };
 
     public Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Deactivated = src.Deactivated,
+            Color = src.Color.ToSafeString(),
+            RequireBookingApproval = src.RequireBookingApproval,
+            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
+            OrganizationZones = MapTo(src.OrganizationZones).ToList()
+        };
+
+    public Room MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Room src) =>
         new()
         {
             Id = src.Id,
@@ -695,6 +709,21 @@ public class Mapper : IMapper
                 : new Shared.Models.Location { Id = src.Id, Name = src.Name }
         };
 
+    private static IEnumerable<Room> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Room> src) => src.Select(MapTo);
+
+    private static Room MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Room src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
+            OrganizationZones = MapTo(src.OrganizationZones).ToList(),
+            Location = string.IsNullOrWhiteSpace(src.Location?.Id)
+                ? null
+                : new Shared.Models.Location { Id = src.Id, Name = src.Name }
+        };
+
     private static Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer src) =>
         new()
         {
@@ -720,6 +749,8 @@ public class Mapper : IMapper
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
     private IEnumerable<Desk> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk> src) => src.Select(MapTo);
+
+    private IEnumerable<Room> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Room> src) => src.Select(MapTo);
 
     private IEnumerable<Shared.Models.WorkspaceMember> MapTo(IEnumerable<WorkspaceMember> src,
         Shared.Models.Workspace workspace) => src.Select(item => MapTo(item, workspace));

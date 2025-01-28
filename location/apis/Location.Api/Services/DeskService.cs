@@ -64,8 +64,7 @@ public class DeskService(
             throw new DeskNotFound();
         }
 
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(desk.Location.Id, cancellationToken);
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(desk.Location.Id, cancellationToken);
         if (existingLocation is null)
         {
             throw new LocationNotFound();
@@ -100,11 +99,7 @@ public class DeskService(
             var existingDesk = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
             if (existingDesk is not null)
             {
-                return await UpdateInternalAsync(
-                    desk,
-                    existingDesk,
-                    customer,
-                    cancellationToken);
+                return await UpdateInternalAsync(desk, existingDesk, customer, cancellationToken);
             }
         }
         else
@@ -327,8 +322,7 @@ public class DeskService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = desks.Select(item => item.Location.Id).ToList();
-        var existingLocations =
-            await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
+        var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
         if (existingLocations
             .Where(item => item.Organization is not null)
@@ -459,8 +453,7 @@ public class DeskService(
         }
 
         var updatedDesks = desks
-            .Select(desk =>
-                mapper.MapTo(desk, mapper.MapTo(existingLocations.Single(item => item.Id == desk.Location.Id))))
+            .Select(desk => mapper.MapTo(desk, mapper.MapTo(existingLocations.Single(item => item.Id == desk.Location.Id))))
             .ToList();
 
         var mappedLocations = existingLocations.Select(mapper.MapTo).ToList();
@@ -540,11 +533,10 @@ public class DeskService(
         var matchingDeskFound = await repositoryFactory.DeskRepository.Query(
             new Specification<Shared.Database.Entities.Desk>
             {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue &&
-                    query.Location.Id == locationId &&
-                    EF.Functions.ILike(query.Name, deskName) &&
-                    query.Id != deskId
+                Criteria = query => !query.DeletedAt.HasValue &&
+                                    query.Location.Id == locationId &&
+                                    EF.Functions.ILike(query.Name, deskName) &&
+                                    query.Id != deskId
             }).AnyAsync(cancellationToken);
         if (matchingDeskFound)
         {

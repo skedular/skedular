@@ -22,8 +22,7 @@ public class CustomerPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : ICustomerPublisher
 {
-    public async Task PublishCustomerAsync(IEnumerable<Models.Customer> customers,
-        CancellationToken cancellationToken) =>
+    public async Task PublishCustomerAsync(IEnumerable<Models.Customer> customers, CancellationToken cancellationToken) =>
         await Task.WhenAll(customers.Select(
             customer => publisher.PublishAsync(
                 new Key { CustomerId = customer.Id },

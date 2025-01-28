@@ -50,6 +50,9 @@
     "./components/relayError": {
       "default": "./dist/components/relayError/index.js"
     },
+    "./components/room": {
+      "default": "./dist/components/room/index.js"
+    },
     "./components/search": {
       "default": "./dist/components/search/index.js"
     },

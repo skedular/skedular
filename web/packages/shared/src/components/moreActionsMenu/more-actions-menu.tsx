@@ -45,6 +45,10 @@ export enum MoreActionsMenuOptionType {
   ViewUserBookings,
   ViewLocationBookings,
   ViewTeamBookings,
+  EditRoom,
+  DeleteRoom,
+  ActivateRoom,
+  DeactivateRoom,
 }
 
 export type MoreActionsMenuItemType = {
@@ -215,6 +219,24 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.ViewTeamBookings,
     label: 'View Bookings',
     icon: <BookingIcon />,
+  },
+  [MoreActionsMenuOptionType.EditRoom]: {
+    id: MoreActionsMenuOptionType.EditRoom,
+    label: 'Edit Room',
+    icon: <EditIcon />,
+  },
+  [MoreActionsMenuOptionType.DeleteRoom]: {
+    id: MoreActionsMenuOptionType.DeleteRoom,
+    label: 'Remove Room',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.ActivateRoom]: {
+    id: MoreActionsMenuOptionType.ActivateRoom,
+    label: 'Activate Room',
+  },
+  [MoreActionsMenuOptionType.DeactivateRoom]: {
+    id: MoreActionsMenuOptionType.DeactivateRoom,
+    label: 'Dectivate Room',
   },
 };
 

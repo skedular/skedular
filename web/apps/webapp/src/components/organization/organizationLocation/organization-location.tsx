@@ -1,15 +1,23 @@
 import { AddDeskButton } from '@/components/desk/addDesk';
 import { BulkAddDeskButton } from '@/components/desk/bulkAddDesk';
-import { getOrganizationBookingsBaseLink, getOrganizationLocationDeskBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
+import { getOrganizationBookingsBaseLink, getOrganizationLocationDeskBaseLink, getOrganizationLocationRoomBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
+import AddRoomButton from '@/components/room/addRoom/add-room-button';
 import type { organizationLocation_activateDesksMutation } from '@/queries/__generated__/organizationLocation_activateDesksMutation.graphql';
+import type { organizationLocation_activateRoomsMutation } from '@/queries/__generated__/organizationLocation_activateRoomsMutation.graphql';
 import type { organizationLocation_addCustomerDefaultDeskMutation } from '@/queries/__generated__/organizationLocation_addCustomerDefaultDeskMutation.graphql';
+import type { organizationLocation_addCustomerDefaultRoomMutation } from '@/queries/__generated__/organizationLocation_addCustomerDefaultRoomMutation.graphql';
 import type { organizationLocation_deactivateDesksMutation } from '@/queries/__generated__/organizationLocation_deactivateDesksMutation.graphql';
+import type { organizationLocation_deactivateRoomsMutation } from '@/queries/__generated__/organizationLocation_deactivateRoomsMutation.graphql';
 import type { organizationLocation_deleteDesksMutation } from '@/queries/__generated__/organizationLocation_deleteDesksMutation.graphql';
 import type { organizationLocation_deleteLocationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationMutation.graphql';
+import type { organizationLocation_deleteRoomsMutation } from '@/queries/__generated__/organizationLocation_deleteRoomsMutation.graphql';
 import type { organizationLocation_desks_query$key } from '@/queries/__generated__/organizationLocation_desks_query.graphql';
 import type { organizationLocation_desks_refetchableFragment } from '@/queries/__generated__/organizationLocation_desks_refetchableFragment.graphql';
 import type { organizationLocation_query$key } from '@/queries/__generated__/organizationLocation_query.graphql';
 import type { organizationLocation_removeCustomerDefaultDeskMutation } from '@/queries/__generated__/organizationLocation_removeCustomerDefaultDeskMutation.graphql';
+import type { organizationLocation_removeCustomerDefaultRoomMutation } from '@/queries/__generated__/organizationLocation_removeCustomerDefaultRoomMutation.graphql';
+import type { organizationLocation_rooms_query$key } from '@/queries/__generated__/organizationLocation_rooms_query.graphql';
+import type { organizationLocation_rooms_refetchableFragment } from '@/queries/__generated__/organizationLocation_rooms_refetchableFragment.graphql';
 import type { organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -36,6 +44,7 @@ import { SingleChoinceTimezone } from '@repo/shared/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
+import { Room } from '@repo/shared/components/room';
 import { Search } from '@repo/shared/components/search';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext } from '@repo/shared/libs/providers';
@@ -56,6 +65,7 @@ import OrganizationLocationLeftSideNavigationMenuContent from './organization-lo
 type Props = {
   rootDataRelay: organizationLocation_query$key;
   rootDataDesksRelay: organizationLocation_desks_query$key;
+  rootDataRoomsRelay: organizationLocation_rooms_query$key;
   onReloadRequired: () => void;
   organizationId: string;
   locationId: string;
@@ -74,12 +84,18 @@ type DeskDetails = {
   color: string | null | undefined;
 };
 
-type CustomTagDetails = {
+type RoomDetails = {
   id: string;
   name: string | null | undefined;
   color: string | null | undefined;
 };
 
+type CustomTagDetails = {
+  id: string;
+  name: string | null | undefined;
+  color: string | null | undefined;
+};
+Room;
 type ZoneDetails = {
   id: string;
   name: string | null | undefined;
@@ -95,6 +111,15 @@ type DeskRowType = {
   preferred: boolean;
 };
 
+type RoomRowType = {
+  id: string;
+  room: RoomDetails;
+  customTags: CustomTagDetails[];
+  zones: ZoneDetails[];
+  status: boolean;
+  preferred: boolean;
+};
+
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   about: string().nullable(),
@@ -102,13 +127,16 @@ const locationSchema = object({
   physicalAddress: string().nullable(),
 });
 
-const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequired, organizationId, locationId }: Props) => {
+const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRoomsRelay, onReloadRequired, organizationId, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
       fragment organizationLocation_query on Query {
         me {
           id
           preferredDesks {
+            uniqueId
+          }
+          preferredRooms {
             uniqueId
           }
         }
@@ -160,6 +188,40 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       }
     `,
     rootDataDesksRelay,
+  );
+
+  const [rootDataRooms, refetchRooms] = useRefetchableFragment<organizationLocation_rooms_refetchableFragment, organizationLocation_rooms_query$key>(
+    graphql`
+      fragment organizationLocation_rooms_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
+      @refetchable(queryName: "organizationLocation_rooms_refetchableFragment") {
+        rooms(first: $count, after: $cursor, where: { locationId: $locationId, nameContains: $roomNameSearchText, customTagIds: $roomCustomTagIds, zoneIds: $roomZoneIds })
+          @connection(key: "organizationLocation_rooms") {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              name
+              deactivated
+              requireBookingApproval
+              color
+              customTags {
+                uniqueId
+                name
+                color
+              }
+              zones {
+                uniqueId
+                name
+                color
+              }
+            }
+          }
+        }
+      }
+    `,
+    rootDataRoomsRelay,
   );
 
   const [commitUpdateLocation] = useMutation<organizationLocation_updateLocationMutation>(graphql`
@@ -262,6 +324,90 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     }
   `);
 
+  const [commitDeleteRooms] = useMutation<organizationLocation_deleteRoomsMutation>(graphql`
+    mutation organizationLocation_deleteRoomsMutation($connectionIds: [ID!]!, $input: DeleteRoomsInput!) {
+      deleteRooms(input: $input) {
+        rooms {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitActivateRooms] = useMutation<organizationLocation_activateRoomsMutation>(graphql`
+    mutation organizationLocation_activateRoomsMutation($input: ActivateRoomsInput!) {
+      activateRooms(input: $input) {
+        rooms {
+          id
+          name
+          deactivated
+          requireBookingApproval
+          color
+          customTags {
+            uniqueId
+            name
+            color
+          }
+          zones {
+            uniqueId
+            name
+            color
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitDeactivateRooms] = useMutation<organizationLocation_deactivateRoomsMutation>(graphql`
+    mutation organizationLocation_deactivateRoomsMutation($input: DeactivateRoomsInput!) {
+      deactivateRooms(input: $input) {
+        rooms {
+          id
+          name
+          deactivated
+          requireBookingApproval
+          color
+          customTags {
+            uniqueId
+            name
+            color
+          }
+          zones {
+            uniqueId
+            name
+            color
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitAddCustomerDefaultRoom] = useMutation<organizationLocation_addCustomerDefaultRoomMutation>(graphql`
+    mutation organizationLocation_addCustomerDefaultRoomMutation($input: AddCustomerDefaultRoomInput!) {
+      addCustomerDefaultRoom(input: $input) {
+        customer {
+          id
+          preferredRooms {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveCustomerDefaultRoom] = useMutation<organizationLocation_removeCustomerDefaultRoomMutation>(graphql`
+    mutation organizationLocation_removeCustomerDefaultRoomMutation($input: RemoveCustomerDefaultRoomInput!) {
+      removeCustomerDefaultRoom(input: $input) {
+        customer {
+          id
+          preferredRooms {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
   const [commitDeleteLocation] = useMutation<organizationLocation_deleteLocationMutation>(graphql`
     mutation organizationLocation_deleteLocationMutation($input: DeleteLocationInput!) {
       deleteLocation(input: $input) {
@@ -290,11 +436,27 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
   const deskMoreActionsMenuOpen = Boolean(deskMoreActionsAnchorEl);
   const [preferredDesks, setPreferredDesks] = useState(rootData.me?.preferredDesks.map(({ uniqueId }) => uniqueId) ?? []);
 
+  const [roomNameSearchText, setRoomNameSearchText] = useState<string>('');
+  const [roomCustomTagIds, setRoomCustomTagIds] = useState<string[]>([]);
+  const [roomZoneIds, setRoomZoneIds] = useState<string[]>([]);
+  const [selectedRoomId, setSelectedRoomId] = useState<null | string>(null);
+  const [seledctedRooms, setSeledctedRooms] = useState<GridRowSelectionModel>([]);
+  const [roomMoreActionsAnchorEl, setRoomMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const roomMoreActionsMenuOpen = Boolean(roomMoreActionsAnchorEl);
+  const [preferredRooms, setPreferredRooms] = useState(rootData.me?.preferredRooms.map(({ uniqueId }) => uniqueId) ?? []);
+
   const deskMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditDesk],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateDesk],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateDesk],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteDesk],
+  ];
+
+  const roomMoreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditRoom],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateRoom],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateRoom],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteRoom],
   ];
 
   const desksConnectionIds = useMemo(() => (rootDataDesks.desks ? [rootDataDesks.desks.__id] : []), [rootDataDesks.desks]);
@@ -306,6 +468,16 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     return rootDataDesks.desks.edges.map(({ node }) => node);
   }, [rootDataDesks.desks]);
   const deskDetails = useMemo(() => desks.find((item) => item.id === selectedDeskId), [selectedDeskId, desks]);
+
+  const roomsConnectionIds = useMemo(() => (rootDataRooms.rooms ? [rootDataRooms.rooms.__id] : []), [rootDataRooms.rooms]);
+  const rooms = useMemo(() => {
+    if (!rootDataRooms.rooms) {
+      return [];
+    }
+
+    return rootDataRooms.rooms.edges.map(({ node }) => node);
+  }, [rootDataRooms.rooms]);
+  const roomDetails = useMemo(() => rooms.find((item) => item.id === selectedRoomId), [selectedRoomId, rooms]);
 
   useEffect(() => {
     if (!section || section === 'setup') {
@@ -341,6 +513,24 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       });
     },
     [refetchDesks],
+  );
+
+  const handleRefetchRooms = useCallback(
+    (roomNameSearchText: string, roomCustomTagIds: string[], roomZoneIds: string[]) => {
+      startTransition(() => {
+        refetchRooms(
+          {
+            roomNameSearchText,
+            roomCustomTagIds,
+            roomZoneIds,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchRooms],
   );
 
   const handleLocationDetailUpdateClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
@@ -411,14 +601,14 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     handleRefetchDesks(str, deskZoneIds, deskCustomTagIds);
   };
 
-  const handleCustomTagChanged = (id?: string) => {
+  const handleDeskCustomTagChanged = (id?: string) => {
     const newIds = id ? [id] : [];
     setDeskCustomTagIds(newIds);
 
     handleRefetchDesks(deskNameSearchText, newIds, deskZoneIds);
   };
 
-  const handleZoneTypeChanged = (id?: string) => {
+  const handleDeskZoneTypeChanged = (id?: string) => {
     const newIds = id ? [id] : [];
     setDeskZoneIds(newIds);
 
@@ -772,7 +962,374 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     });
   };
 
-  const handleViewBookingsClick = () => {
+  const handleRoomNameSearchTextChange = (str: string) => {
+    setRoomNameSearchText(str);
+
+    handleRefetchRooms(str, roomZoneIds, roomCustomTagIds);
+  };
+
+  const handleRoomCustomTagChanged = (id?: string) => {
+    const newIds = id ? [id] : [];
+    setRoomCustomTagIds(newIds);
+
+    handleRefetchRooms(roomNameSearchText, newIds, roomZoneIds);
+  };
+
+  const handleRoomZoneTypeChanged = (id?: string) => {
+    const newIds = id ? [id] : [];
+    setRoomZoneIds(newIds);
+
+    handleRefetchRooms(roomNameSearchText, roomCustomTagIds, newIds);
+  };
+
+  const handleSelectedRoomsChanged = (newRowSelectionModel: GridRowSelectionModel) => {
+    setSeledctedRooms(newRowSelectionModel);
+  };
+
+  const handleRoomMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setRoomMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditRoom:
+        if (roomDetails) {
+          router.push(getOrganizationLocationRoomBaseLink(organizationId, locationId, roomDetails.id));
+          return;
+        }
+
+        break;
+
+      case MoreActionsMenuOptionType.DeactivateRoom:
+        handleDeactivateRoomClick();
+        break;
+
+      case MoreActionsMenuOptionType.ActivateRoom:
+        handleActivateRoomClick();
+        break;
+
+      case MoreActionsMenuOptionType.DeleteRoom:
+        handleRemoveRoomClick();
+        break;
+    }
+  };
+
+  const handleDeactivateRoomsClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Deactivating rooms...'} />, infoNotificationOptions);
+
+    commitDeactivateRooms({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedRooms.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate rooms. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Rooms deactivated.'} />,
+        });
+        setSeledctedRooms([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate rooms. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateRoomsClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Activating rooms...'} />, infoNotificationOptions);
+
+    commitActivateRooms({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedRooms.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate rooms. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Rooms activated.'} />,
+        });
+        setSeledctedRooms([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate rooms. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveRoomsClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Removing rooms...'} />, infoNotificationOptions);
+
+    commitDeleteRooms({
+      variables: {
+        connectionIds: roomsConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedRooms.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove rooms. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Rooms removed.'} />,
+        });
+        setSeledctedRooms([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove rooms. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleDeactivateRoomClick = () => {
+    if (!roomDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Deactivating room...'} />, infoNotificationOptions);
+
+    commitDeactivateRooms({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [roomDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate room. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Room deactivated.'} />,
+        });
+        setSeledctedRooms([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate room. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateRoomClick = () => {
+    if (!roomDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Activating room...'} />, infoNotificationOptions);
+
+    commitActivateRooms({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [roomDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate room. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Room activated.'} />,
+        });
+        setSeledctedRooms([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate room. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveRoomClick = () => {
+    if (!roomDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Removing room...'} />, infoNotificationOptions);
+
+    commitDeleteRooms({
+      variables: {
+        connectionIds: roomsConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: [roomDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove room. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Room removed.'} />,
+        });
+        setSeledctedRooms([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove room. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleSetAsPreferredRoomClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const roomDetails = rooms.find((item) => item.id === id);
+    if (!roomDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Setting room '${roomDetails.name}' as your preferred room...`} />, infoNotificationOptions);
+
+    commitAddCustomerDefaultRoom({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          roomId: roomDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to set room '${roomDetails.name}' as your preferred room. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Room '${roomDetails.name}' has been set as the preferred room.`} />,
+        });
+
+        setPreferredRooms(preferredRooms.concat([roomDetails.id]));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set room '${roomDetails.name}' as your preferred room. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredRoomClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const roomDetails = rooms.find((item) => item.id === id);
+    if (!roomDetails) {
+      return;
+    }
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Removing room '${roomDetails.name}' as your preferred room...`} />, infoNotificationOptions);
+
+    commitRemoveCustomerDefaultRoom({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          roomId: roomDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove the room '${roomDetails.name}' as your preferred room. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Room '${roomDetails.name}' has been removed as your preferred room.`} />,
+        });
+
+        setPreferredRooms(preferredRooms.filter((item) => item !== roomDetails.id));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove the room '${roomDetails.name}' as your preferred room. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleViewDeskBookingsClick = () => {
     router.push(getOrganizationBookingsBaseLink(organizationId, { locationId }));
   };
 
@@ -921,6 +1478,106 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
     },
   ];
 
+  const roomRows: RoomRowType[] = rooms.map((room) => ({
+    id: room.id,
+    room,
+    customTags: room.customTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
+    zones: room.zones.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
+    status: !room.deactivated,
+    preferred: preferredRooms.includes(room.id),
+  }));
+
+  const roomColumns: GridColDef<(typeof roomRows)[number]>[] = [
+    {
+      field: 'room',
+      headerName: 'Name',
+      editable: false,
+      renderCell: (params) => <Room room={params.value} />,
+      display: 'flex',
+      minWidth: 200,
+    },
+    {
+      field: 'customTags',
+      headerName: 'Tags',
+      editable: false,
+      renderCell: (params) => <CustomTags customTags={params.value} hideIcon />,
+      display: 'flex',
+      minWidth: 250,
+    },
+    {
+      field: 'zones',
+      headerName: 'Zones',
+      editable: false,
+      renderCell: (params) => <Zones zones={params.value} hideIcon />,
+      display: 'flex',
+      minWidth: 250,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      editable: false,
+      renderCell: (params) => (
+        <StackRow>
+          {params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="Active" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
+            </StackRow>
+          )}
+          {!params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="Inactive" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
+            </StackRow>
+          )}
+        </StackRow>
+      ),
+      display: 'flex',
+    },
+    {
+      field: 'preferred',
+      headerName: 'Preferred?',
+      editable: false,
+      renderCell: (params) => {
+        const id = params.id as string;
+        if (params.value) {
+          return (
+            <IconButton onClick={() => handleRemoveAsPreferredRoomClicked(id)}>
+              <PreferredIcon />
+            </IconButton>
+          );
+        }
+
+        return (
+          <IconButton onClick={() => handleSetAsPreferredRoomClicked(id)}>
+            <NotPreferredIcon />
+          </IconButton>
+        );
+      },
+      display: 'flex',
+    },
+    {
+      field: 'moreActions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setSelectedRoomId(params.id as string);
+              setRoomMoreActionsAnchorEl(event.currentTarget);
+            }}
+          >
+            <EllipseMenuIcon />
+          </IconButton>
+        </Box>
+      ),
+      flex: 1,
+    },
+  ];
+
   const location = rootData.location;
 
   return (
@@ -953,7 +1610,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
                       </Grid>
 
                       <Grid>
-                        <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewBookingsClick}>
+                        <Button variant="contained" sx={defaultButtonStyle} startIcon={<BookingIcon />} onClick={handleViewDeskBookingsClick}>
                           View Location Bookings
                         </Button>
                       </Grid>
@@ -1011,8 +1668,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
             </StackColumn>
 
             <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
-              <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
+              <ZoneSelector rootDataRelay={rootData} onChange={handleDeskZoneTypeChanged} />
+              <CustomTagSelector rootDataRelay={rootData} onChange={handleDeskCustomTagChanged} />
               <PushToRight />
               <Search size="small" placeholder="Search for desks" defaultValue={deskNameSearchText} onChange={handleDeskNameSearchTextChange} />
             </GridContainer>
@@ -1076,6 +1733,88 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
               ref={(divElement) => {
+                sectionRefs.current['manage-rooms'] = divElement;
+              }}
+            >
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label=" Manage Rooms" />
+                  <BodyIconTypography label="Manage your location rooms details" />
+                </Grid>
+
+                <Grid>
+                  <AddRoomButton onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} connectionIds={roomsConnectionIds} />
+                </Grid>
+              </GridContainer>
+              <Divider />
+            </StackColumn>
+
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+              <ZoneSelector rootDataRelay={rootData} onChange={handleRoomZoneTypeChanged} />
+              <CustomTagSelector rootDataRelay={rootData} onChange={handleRoomCustomTagChanged} />
+              <PushToRight />
+              <Search size="small" placeholder="Search for rooms" defaultValue={roomNameSearchText} onChange={handleRoomNameSearchTextChange} />
+            </GridContainer>
+
+            {seledctedRooms.length > 0 && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                <Box
+                  sx={{
+                    backgroundColor: 'white',
+                    padding: defaultGridActionPadding,
+                    border: 1,
+                    borderColor: (theme) => theme.palette.divider,
+                    borderRadius: 2,
+                    flexGrow: 1,
+                  }}
+                >
+                  <StackRow sx={{ alignItems: 'center' }}>
+                    <SmallIconTypography label={`${seledctedRooms.length} records selected`} />
+                    <PushToRight />
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateRoomsClick} sx={defaultButtonStyle}>
+                      Deactivate Room
+                    </Button>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateRoomsClick} sx={defaultButtonStyle}>
+                      Activate Room
+                    </Button>
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveRoomsClick} sx={{ textTransform: 'none' }}>
+                      Remove Room
+                    </Button>
+                  </StackRow>
+                </Box>
+              </StackRow>
+            )}
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedRooms}
+                onRowSelectionModelChange={handleSelectedRoomsChanged}
+                rows={roomRows}
+                columns={roomColumns}
+                hideFooterPagination={roomRows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: roomRows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No room found' }}
+              />
+            </StackRow>
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
                 sectionRefs.current['manage-location'] = divElement;
               }}
             >
@@ -1094,6 +1833,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, onReloadRequi
       </Box>
 
       <MoreActionsMenu anchorEl={deskMoreActionsAnchorEl} open={deskMoreActionsMenuOpen} onMenuItemClick={handleDeskMoreActionsMenuItemClick} options={deskMoreActionsOption} />
+      <MoreActionsMenu anchorEl={roomMoreActionsAnchorEl} open={roomMoreActionsMenuOpen} onMenuItemClick={handleRoomMoreActionsMenuItemClick} options={roomMoreActionsOption} />
     </>
   );
 };

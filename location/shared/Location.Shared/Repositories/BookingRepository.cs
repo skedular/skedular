@@ -20,6 +20,7 @@ public class BookingRepository(LocationDbContext dbContext, TimeProvider timePro
         await DbContext.Booking
             .Include(query => query.Location)
             .Include(query => query.Desks)
+            .Include(query => query.Rooms)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Booking Add(Booking booking)

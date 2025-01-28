@@ -13,10 +13,7 @@ namespace Booking.Shared.Publishers;
 
 public interface IBookingOutboxPublisher
 {
-    Task PublishBookingAsync(
-        IEnumerable<Models.Booking> bookings,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    Task PublishBookingAsync(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 }
 
 public class BookingOutboxPublisher(
@@ -26,10 +23,7 @@ public class BookingOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IBookingOutboxPublisher
 {
-    public async Task PublishBookingAsync(
-        IEnumerable<Models.Booking> bookings,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
+    public async Task PublishBookingAsync(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork, CancellationToken cancellationToken) =>
         await Task.WhenAll(bookings.Select(booking =>
             publisher.PublishAsync(
                 new Key { BookingId = booking.Id },

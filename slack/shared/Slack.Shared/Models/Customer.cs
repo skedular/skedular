@@ -26,11 +26,13 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public bool? IsDefaultLocationOnboardingDone { get; set; }
     public bool? IsPreferredZoneOnboardingDone { get; set; }
     public bool? IsPreferredDeskOnboardingDone { get; set; }
+    public bool? IsPreferredRoomOnboardingDone { get; set; }
 
     public ICollection<Identity> Identities { get; set; } = [];
     public Organization? DefaultOrganization { get; set; }
     public ICollection<Location> DefaultLocations { get; set; } = [];
     public ICollection<Desk> PreferredDesks { get; set; } = [];
+    public ICollection<Room> PreferredRooms { get; set; } = [];
     public ICollection<Team> DefaultTeams { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];

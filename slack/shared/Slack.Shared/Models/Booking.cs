@@ -12,5 +12,6 @@ public class Booking : ModelBaseWithDeleted
     public Organization? Organization { get; set; }
     public Location? Location { get; set; }
     public ICollection<Desk> Desks { get; set; }
+    public ICollection<Room> Rooms { get; set; }
     public Team? Team { get; set; }
 }

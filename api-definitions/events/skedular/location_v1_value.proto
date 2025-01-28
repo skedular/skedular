@@ -42,6 +42,7 @@ message Location {
   string organizationId = 6;
   string timezone = 7;
   repeated Desk desks = 8;
+  repeated Room rooms = 9;
 }
 
 enum Role {
@@ -57,6 +58,16 @@ message LocationMember {
 }
 
 message Desk {
+  string id = 1;
+  string name = 2;
+  bool deactivated = 3;
+  bool requireBookingApproval = 4;
+  repeated string customTagIds = 5;
+  repeated string zoneIds = 6;
+  string color = 7;
+}
+
+message Room {
   string id = 1;
   string name = 2;
   bool deactivated = 3;

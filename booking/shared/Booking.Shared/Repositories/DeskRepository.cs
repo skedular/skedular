@@ -25,9 +25,7 @@ public interface IDeskRepository : IRepository<Desk>
         bool combineCustomTagsZones,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Desk>> GetByLocationIdAsync(
-        string locationId,
-        CancellationToken cancellationToken);
+    Task<ICollection<Desk>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
 }
 
 public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -156,9 +154,7 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
         }).ToList();
     }
 
-    public async Task<ICollection<Desk>> GetByLocationIdAsync(
-        string locationId,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<Desk>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
         await DbContext.Desk
             .Where(query => query.Location != null && query.Location.Id == locationId)
             .Include(query => query.OrganizationTags)

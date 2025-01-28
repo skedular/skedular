@@ -7,6 +7,7 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Models;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
 using Desk = Customer.Shared.Models.Desk;
+using Room = Customer.Shared.Models.Room;
 using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
 using Organization = Customer.Shared.Models.Organization;
@@ -32,6 +33,7 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations,
         ICollection<Shared.Database.Entities.Team> defaultTeams,
         ICollection<Shared.Database.Entities.Desk> preferredDesks,
+        ICollection<Shared.Database.Entities.Room> preferredRooms,
         ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags);
 
     IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src);
@@ -85,11 +87,13 @@ public class Mapper(IContext context) : IMapper
             IsDefaultLocationOnboardingDone = false,
             IsPreferredZoneOnboardingDone = false,
             IsPreferredDeskOnboardingDone = false,
+            IsPreferredRoomOnboardingDone = false,
             DefaultOrganization = null,
             DefaultLocations = [],
             DefaultTeams = [],
             PreferredOrganizationTags = [],
-            PreferredDesks = []
+            PreferredDesks = [],
+            PreferredRooms = []
         };
 
     public Identity MapToIdentity() =>
@@ -129,6 +133,7 @@ public class Mapper(IContext context) : IMapper
             IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone ?? false,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false,
+            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone ?? false,
             DefaultOrganization = src.DefaultOrganization is null
                 ? null
                 : new CustomerOrganizationDetails
@@ -150,19 +155,15 @@ public class Mapper(IContext context) : IMapper
             PreferredZones =
                 src.PreferredOrganizationTags
                     .Where(item => item.Type == OrganizationTagType.Zone)
-                    .Select(item =>
-                        new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color })
+                    .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color })
                     .ToArray(),
             PreferredCustomTags =
                 src.PreferredOrganizationTags
                     .Where(item => item.Type == OrganizationTagType.Custom)
-                    .Select(item =>
-                        new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color })
+                    .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color })
                     .ToArray(),
-            PreferredDesks =
-                src.PreferredDesks
-                    .Select(item => new CustomerDeskDetails { UniqueId = item.Id, Name = item.Name })
-                    .ToArray(),
+            PreferredDesks = src.PreferredDesks.Select(item => new CustomerDeskDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
+            PreferredRooms = src.PreferredRooms.Select(item => new CustomerRoomDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
             DefaultTeams = src.DefaultTeams.Select(item => new CustomerTeamDetails
             {
                 UniqueId = item.Id,
@@ -218,10 +219,12 @@ public class Mapper(IContext context) : IMapper
             IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
+            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
             Identities = MapTo(src.Identities).ToList(),
             DefaultOrganization = MapTo(src.DefaultOrganization),
             DefaultLocations = MapTo(src.DefaultLocations).ToList(),
             PreferredDesks = MapTo(src.PreferredDesks).ToList(),
+            PreferredRooms = MapTo(src.PreferredRooms).ToList(),
             DefaultTeams = MapTo(src.DefaultTeams).ToList(),
             PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
         };
@@ -280,9 +283,8 @@ public class Mapper(IContext context) : IMapper
             Timezone = src.Timezone,
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
-            Identities =
-                src.Identities.Select(item =>
-                        new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+            Identities = src.Identities
+                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                     .ToList(),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
@@ -291,33 +293,31 @@ public class Mapper(IContext context) : IMapper
             IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
+            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
             DefaultOrganization =
-                string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id)
-                    ? null
-                    : new Organization { Id = src.DefaultOrganization.Id },
+                string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id) ? null : new Organization { Id = src.DefaultOrganization.Id },
             DefaultLocations = src.DefaultLocations.Select(item =>
                     new Location
                     {
                         Id = item.Id,
-                        Organization = string.IsNullOrWhiteSpace(item.Organization?.Id)
-                            ? null
-                            : new Organization { Id = item.Organization.Id }
+                        Organization = string.IsNullOrWhiteSpace(item.Organization?.Id) ? null : new Organization { Id = item.Organization.Id }
                     })
                 .ToList(),
             DefaultTeams = src.DefaultTeams.Select(item =>
                     new Team
                     {
                         Id = item.Id,
-                        Organization = string.IsNullOrWhiteSpace(item.Organization?.Id)
-                            ? null
-                            : new Organization { Id = item.Organization.Id }
+                        Organization = string.IsNullOrWhiteSpace(item.Organization?.Id) ? null : new Organization { Id = item.Organization.Id }
                     })
                 .ToList(),
-            PreferredDesks = src.PreferredDesks.Select(item =>
-                    new Desk { Id = item.Id, Location = new Location { Id = item.Location.Id } })
+            PreferredDesks = src.PreferredDesks
+                .Select(item => new Desk { Id = item.Id, Location = new Location { Id = item.Location.Id } })
                 .ToList(),
-            PreferredOrganizationTags = src.PreferredOrganizationTags.Select(item =>
-                    new OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
+            PreferredRooms = src.PreferredRooms
+                .Select(item => new Room { Id = item.Id, Location = new Location { Id = item.Location.Id } })
+                .ToList(),
+            PreferredOrganizationTags = src.PreferredOrganizationTags
+                .Select(item => new OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
                 .ToList()
         };
 
@@ -349,6 +349,7 @@ public class Mapper(IContext context) : IMapper
             IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone ?? false,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false,
+            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone ?? false,
             DefaultOrganization =
                 string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id)
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
@@ -358,13 +359,13 @@ public class Mapper(IContext context) : IMapper
                     }
         };
 
-        customer.Identities.AddRange(src.Identities.Select(item =>
-            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity
+        customer.Identities.AddRange(src.Identities.Select(
+            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity
             {
                 Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
             }));
-        customer.DefaultLocations.AddRange(src.DefaultLocations.Select(item =>
-            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
+        customer.DefaultLocations.AddRange(src.DefaultLocations.Select(
+            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
@@ -372,8 +373,8 @@ public class Mapper(IContext context) : IMapper
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
                     : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
-        customer.DefaultTeams.AddRange(src.DefaultTeams.Select(item =>
-            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Team
+        customer.DefaultTeams.AddRange(src.DefaultTeams.Select(
+            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Team
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
@@ -381,15 +382,22 @@ public class Mapper(IContext context) : IMapper
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
                     : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
-        customer.PreferredDesks.AddRange(src.PreferredDesks.Select(item =>
-            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Desk
+        customer.PreferredDesks.AddRange(src.PreferredDesks.Select(
+            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Desk
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
                 Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id }
             }));
-        customer.PreferredOrganizationTags.AddRange(src.PreferredOrganizationTags.Select(item =>
-            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.OrganizationTag
+        customer.PreferredRooms.AddRange(src.PreferredRooms.Select(
+            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Room
+            {
+                Id = item.Id,
+                Name = item.Name.ToSafeString(),
+                Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id }
+            }));
+        customer.PreferredOrganizationTags.AddRange(src.PreferredOrganizationTags.Select(
+            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.OrganizationTag
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
@@ -405,8 +413,7 @@ public class Mapper(IContext context) : IMapper
         return customer;
     }
 
-    public Identity MapTo(Shared.Models.Identity src, Shared.Database.Entities.Customer customer) =>
-        MergeTo(src, new Identity(), customer);
+    public Identity MapTo(Shared.Models.Identity src, Shared.Database.Entities.Customer customer) => MergeTo(src, new Identity(), customer);
 
     public Identity MergeTo(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer customer)
     {
@@ -435,11 +442,9 @@ public class Mapper(IContext context) : IMapper
             Customer = new Shared.Models.Customer { Id = src.CustomerId }
         };
 
-    public Edge<Shared.Models.Customer> MapTo(Edge<Shared.Database.Entities.Customer> src) =>
-        new(src.Cursor, MapTo(src.Node));
+    public Edge<Shared.Models.Customer> MapTo(Edge<Shared.Database.Entities.Customer> src) => new(src.Cursor, MapTo(src.Node));
 
-    public CustomerEdge MapTo(Edge<Shared.Models.Customer> src) =>
-        new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+    public CustomerEdge MapTo(Edge<Shared.Models.Customer> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
     public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src) => src.Select(MapToEntity);
 
@@ -450,6 +455,7 @@ public class Mapper(IContext context) : IMapper
             ICollection<Shared.Database.Entities.Location> defaultLocations,
             ICollection<Shared.Database.Entities.Team> defaultTeams,
             ICollection<Shared.Database.Entities.Desk> preferredDesks,
+            ICollection<Shared.Database.Entities.Room> preferredRooms,
             ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags) =>
         new()
         {
@@ -473,21 +479,21 @@ public class Mapper(IContext context) : IMapper
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone,
-            IsDefaultOrganizationOnboardingDone =
-                src.IsDefaultOrganizationOnboardingDone,
+            IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
             IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
+            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
             Identities = identities,
             DefaultOrganization = defaultOrganization,
             DefaultLocations = defaultLocations,
             DefaultTeams = defaultTeams,
             PreferredDesks = preferredDesks,
+            PreferredRooms = preferredRooms,
             PreferredOrganizationTags = preferredOrganizationTags
         };
 
-    private static Identity MapToEntity(Shared.Models.Identity src) =>
-        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
+    private static Identity MapToEntity(Shared.Models.Identity src) => new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
 
     private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
@@ -533,7 +539,8 @@ public class Mapper(IContext context) : IMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
                 Organization = MapTo(src.Organization),
-                Desks = MapTo(src.Desks).ToList()
+                Desks = MapTo(src.Desks).ToList(),
+                Rooms = MapTo(src.Rooms).ToList()
             };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag?>? src) =>
@@ -577,6 +584,23 @@ public class Mapper(IContext context) : IMapper
                 Location = new Location { Id = src.Location.Id }
             };
 
+    private static IEnumerable<Room> MapTo(IEnumerable<Shared.Database.Entities.Room?>? src) =>
+        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
+
+    private static Room? MapTo(Shared.Database.Entities.Room? src) =>
+        src is null
+            ? null
+            : new Room
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name,
+                Location = new Location { Id = src.Location.Id }
+            };
+
     private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
 
@@ -594,8 +618,7 @@ public class Mapper(IContext context) : IMapper
                 Organization = MapTo(src.Organization)
             };
 
-    private static IEnumerable<CustomerIdentity> MapTo(IEnumerable<Shared.Models.Identity> src) =>
-        src.Select(MapTo)!;
+    private static IEnumerable<CustomerIdentity> MapTo(IEnumerable<Shared.Models.Identity> src) => src.Select(MapTo)!;
 
     private static CustomerIdentity MapTo(Shared.Models.Identity src) =>
         new() { Id = src.Id, Email = src.Email, Verified = src.EmailVerified ?? false };

@@ -17,6 +17,7 @@ import { Desks } from '@repo/shared/components/desk';
 import { EllipseMenuIcon, JoinIcon } from '@repo/shared/components/icons';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
+import { Rooms } from '@repo/shared/components/room';
 import { Zones } from '@repo/shared/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@repo/shared/libs/theme';
@@ -73,6 +74,12 @@ type DeskDetails = {
   color?: string | null | undefined;
 };
 
+type RoomDetails = {
+  uniqueId: string;
+  name: string | null | undefined;
+  color?: string | null | undefined;
+};
+
 type TeamDetails = {
   name: string;
 };
@@ -84,6 +91,7 @@ type RowType = {
   location?: LocationDetails | null | undefined;
   team?: TeamDetails | null | undefined;
   desks: ReadonlyArray<DeskDetails>;
+  rooms: ReadonlyArray<RoomDetails>;
   customTags: ReadonlyArray<CustomTagDetails>;
   zones: ReadonlyArray<ZoneDetails>;
   canJoinBooking: Boolean;
@@ -168,6 +176,21 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
                   color
                 }
               }
+              rooms {
+                uniqueId
+                name
+                color
+                customTags {
+                  uniqueId
+                  name
+                  color
+                }
+                zones {
+                  uniqueId
+                  name
+                  color
+                }
+              }
               ...bookingCard_BookingDetails
             }
           }
@@ -213,6 +236,20 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             name
           }
           desks {
+            uniqueId
+            name
+            customTags {
+              uniqueId
+              name
+              color
+            }
+            zones {
+              uniqueId
+              name
+              color
+            }
+          }
+          rooms {
             uniqueId
             name
             customTags {
@@ -376,6 +413,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           locationId: bookingDetails.location?.uniqueId,
           teamId: bookingDetails.team?.uniqueId,
           deskIds: [],
+          roomIds: [],
           type,
         },
       },
@@ -400,6 +438,17 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
 
           const zones = booking.desks.flatMap(({ zones }) => zones);
+          if (zones.length > 0) {
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+
+            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
+          }
+        }
+
+        if (booking.rooms.length > 0) {
+          message += ` at room "${booking.rooms.map(({ name }) => name).join(', ')}"`;
+
+          const zones = booking.rooms.flatMap(({ zones }) => zones);
           if (zones.length > 0) {
             const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
 
@@ -451,6 +500,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
                 }
               : null,
             desks: [],
+            rooms: [],
           },
         },
       },
@@ -460,6 +510,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
   const rows: RowType[] = bookings.map((booking) => {
     const customTags = booking.desks
       .flatMap(({ customTags }) => customTags)
+      .concat(booking.rooms.flatMap(({ customTags }) => customTags))
       .reduce((acc: CustomTagDetails[], customTag) => {
         if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
           acc.push(customTag);
@@ -469,6 +520,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       }, []);
     const zones = booking.desks
       .flatMap(({ zones }) => zones)
+      .concat(booking.rooms.flatMap(({ zones }) => zones))
       .reduce((acc: ZoneDetails[], zone) => {
         if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
           acc.push(zone);
@@ -496,6 +548,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       location: booking.location,
       team: booking.team,
       desks: booking.desks,
+      rooms: booking.rooms,
       customTags,
       zones,
       date: toShortDateWithAdditionalDayInfo(dayjs(booking.from)),
@@ -541,6 +594,14 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       headerName: 'Desks',
       editable: false,
       renderCell: (params) => <Desks desks={params.value.map((desk: DeskDetails) => ({ id: desk.uniqueId, name: desk.name, color: desk.color }))} hideIcon />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'rooms',
+      headerName: 'Rooms',
+      editable: false,
+      renderCell: (params) => <Rooms rooms={params.value.map((room: RoomDetails) => ({ id: room.uniqueId, name: room.name, color: room.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
     },

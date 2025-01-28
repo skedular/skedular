@@ -12,6 +12,7 @@ public class Location : ReplicatedEntityBaseWithDeleted
     public string? Name { get; set; }
 
     public virtual ICollection<Desk> Desks { get; set; } = [];
+    public virtual ICollection<Room> Rooms { get; set; } = [];
     public virtual Organization? Organization { get; set; }
     public virtual ICollection<Customer> DefaultedByCustomers { get; set; } = [];
     public virtual ICollection<LocationMember> LocationMembers { get; set; } = [];
