@@ -10,7 +10,7 @@ namespace Slack.Api.Services;
 
 public interface IWorkspaceService
 {
-    Task<Uri> InstallAsync(string code, string state, CancellationToken cancellationToken);
+    Task<Uri> InstallAsync(string code, string? state, CancellationToken cancellationToken);
     Task<Workspace> AddAsync(Workspace workspace, CancellationToken cancellationToken);
 }
 
@@ -24,7 +24,7 @@ public class WorkspaceService(
     INotificationOutboxPublisher notificationOutboxPublisher)
     : IWorkspaceService
 {
-    public async Task<Uri> InstallAsync(string code, string state, CancellationToken cancellationToken)
+    public async Task<Uri> InstallAsync(string code, string? state, CancellationToken cancellationToken)
     {
         var response = await new SlackServiceBuilder().GetApiClient().OAuthV2.Access(
             slackConfiguration.ClientId,

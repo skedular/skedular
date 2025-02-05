@@ -10,10 +10,6 @@ public class SlackController(IWorkspaceService workspaceService) : SlackControll
     public override async Task<IActionResult> Callback(
         string code,
         string? state,
-        CancellationToken cancellationToken = default)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(state);
-
-        return Redirect((await workspaceService.InstallAsync(code, state, cancellationToken)).ToString());
-    }
+        CancellationToken cancellationToken = default) =>
+        Redirect((await workspaceService.InstallAsync(code, state, cancellationToken)).ToString());
 }

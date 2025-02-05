@@ -11,7 +11,7 @@
         <PackageReference Include="Ardalis.GuardClauses" Version="5.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.402.27"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.402.31"/>
         <PackageReference Include="Confluent.Kafka" Version="2.8.0"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.8.0"/>
         <PackageReference Include="CountryData" Version="6.9.0"/>
@@ -30,10 +30,10 @@
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.6.2"/>
         <PackageReference Include="Nanoid" Version="3.1.0"/>
         <PackageReference Include="NSwag.AspNetCore" Version="14.2.0"/>
-        <PackageReference Include="Polly" Version="8.5.1"/>
+        <PackageReference Include="Polly" Version="8.5.2"/>
         <PackageReference Include="Scrutor" Version="6.0.1"/>
         <PackageReference Include="StackExchange.Redis" Version="2.8.24"/>
-        <PackageReference Include="Stripe.net" Version="47.2.0"/>
+        <PackageReference Include="Stripe.net" Version="47.3.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0"/>
         <PackageReference Include="WorkOS.net" Version="2.6.0"/>
 
@@ -49,12 +49,12 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="HotChocolate" Version="14.3.0"/>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="14.3.0"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="14.3.0"/>
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="14.3.0"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="14.3.0"/>
-        <PackageReference Include="HotChocolate.Diagnostics" Version="14.3.0"/>
+        <PackageReference Include="HotChocolate" Version="15.0.1"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="15.0.1"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="15.0.1"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="15.0.1"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.0.1"/>
+        <PackageReference Include="HotChocolate.Diagnostics" Version="15.0.1"/>
 
         <PackageReference Include="OpenTelemetry.Api" Version="1.11.1"/>
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.11.1"/>

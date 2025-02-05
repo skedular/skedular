@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.Fusion" Version="14.3.0"/>
+        <PackageReference Include="HotChocolate.Fusion" Version="15.0.1"/>
         <PackageReference Include="HotChocolate.Stitching" Version="13.9.14"/>
         <PackageReference Include="Yarp.ReverseProxy" Version="2.2.0"/>
     </ItemGroup>
