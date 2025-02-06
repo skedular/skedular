@@ -11,26 +11,27 @@ import { SsoService } from './services/SsoService';
 import { TenantService } from './services/TenantService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularOrganizationClient {
-  public readonly azure: AzureService;
-  public readonly organization: OrganizationService;
-  public readonly sso: SsoService;
-  public readonly tenant: TenantService;
-  public readonly request: BaseHttpRequest;
-  constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
-    this.request = new HttpRequest({
-      BASE: config?.BASE ?? '',
-      VERSION: config?.VERSION ?? '1.0.0',
-      WITH_CREDENTIALS: config?.WITH_CREDENTIALS ?? false,
-      CREDENTIALS: config?.CREDENTIALS ?? 'include',
-      TOKEN: config?.TOKEN,
-      USERNAME: config?.USERNAME,
-      PASSWORD: config?.PASSWORD,
-      HEADERS: config?.HEADERS,
-      ENCODE_PATH: config?.ENCODE_PATH,
-    });
-    this.azure = new AzureService(this.request);
-    this.organization = new OrganizationService(this.request);
-    this.sso = new SsoService(this.request);
-    this.tenant = new TenantService(this.request);
-  }
+    public readonly azure: AzureService;
+    public readonly organization: OrganizationService;
+    public readonly sso: SsoService;
+    public readonly tenant: TenantService;
+    public readonly request: BaseHttpRequest;
+    constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
+        this.request = new HttpRequest({
+            BASE: config?.BASE ?? '',
+            VERSION: config?.VERSION ?? '1.0.0',
+            WITH_CREDENTIALS: config?.WITH_CREDENTIALS ?? false,
+            CREDENTIALS: config?.CREDENTIALS ?? 'include',
+            TOKEN: config?.TOKEN,
+            USERNAME: config?.USERNAME,
+            PASSWORD: config?.PASSWORD,
+            HEADERS: config?.HEADERS,
+            ENCODE_PATH: config?.ENCODE_PATH,
+        });
+        this.azure = new AzureService(this.request);
+        this.organization = new OrganizationService(this.request);
+        this.sso = new SsoService(this.request);
+        this.tenant = new TenantService(this.request);
+    }
 }
+

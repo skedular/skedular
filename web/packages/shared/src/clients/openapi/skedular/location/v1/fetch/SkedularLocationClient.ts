@@ -8,20 +8,21 @@ import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { LocationService } from './services/LocationService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularLocationClient {
-  public readonly location: LocationService;
-  public readonly request: BaseHttpRequest;
-  constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
-    this.request = new HttpRequest({
-      BASE: config?.BASE ?? '',
-      VERSION: config?.VERSION ?? '1.0.0',
-      WITH_CREDENTIALS: config?.WITH_CREDENTIALS ?? false,
-      CREDENTIALS: config?.CREDENTIALS ?? 'include',
-      TOKEN: config?.TOKEN,
-      USERNAME: config?.USERNAME,
-      PASSWORD: config?.PASSWORD,
-      HEADERS: config?.HEADERS,
-      ENCODE_PATH: config?.ENCODE_PATH,
-    });
-    this.location = new LocationService(this.request);
-  }
+    public readonly location: LocationService;
+    public readonly request: BaseHttpRequest;
+    constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
+        this.request = new HttpRequest({
+            BASE: config?.BASE ?? '',
+            VERSION: config?.VERSION ?? '1.0.0',
+            WITH_CREDENTIALS: config?.WITH_CREDENTIALS ?? false,
+            CREDENTIALS: config?.CREDENTIALS ?? 'include',
+            TOKEN: config?.TOKEN,
+            USERNAME: config?.USERNAME,
+            PASSWORD: config?.PASSWORD,
+            HEADERS: config?.HEADERS,
+            ENCODE_PATH: config?.ENCODE_PATH,
+        });
+        this.location = new LocationService(this.request);
+    }
 }
+
