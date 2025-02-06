@@ -1,0 +1,37 @@
+networks:
+  skedular_crm_network:
+
+volumes:
+  mariadb:
+  prod_suitecrm:
+
+services:
+  mariadb:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${SKEDULAR_MARIADB_PASSWORD}
+    ports:
+      - 3306:3306
+    volumes:
+      - mariadb:/var/lib/mysql
+    networks:
+      - skedular_crm_network
+
+  suitecrm:
+    image: bitnami/suitecrm:8
+    restart: unless-stopped
+    ports:
+      - 50000:8080
+    environment:
+      - SUITECRM_DATABASE_HOST=mariadb
+      - SUITECRM_DATABASE_PORT_NUMBER=3306
+      - SUITECRM_DATABASE_USER=root
+      - SUITECRM_DATABASE_NAME=prod_suitecrm
+      - SUITECRM_DATABASE_PASSWORD=${SKEDULAR_MARIADB_PASSWORD}
+    volumes:
+      - prod_suitecrm:/bitnami/suitecrm
+    depends_on:
+      - mariadb
+    networks:
+      - skedular_crm_network

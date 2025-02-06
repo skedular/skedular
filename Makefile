@@ -66,26 +66,26 @@ services-start:
 services-stop:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01 prod-infra-provision prod-processors-01 prod-apis-01 prod-jobs-01 prod-apis-01
 
-.PHONY: publicwebsite-restart
-publicwebsite-restart:
-	docker compose -p unityhubio_publicwebsite -f docker-compose-publicwebsite.yml --env-file .env pull
-	docker compose -p unityhubio_publicwebsite -f docker-compose-publicwebsite.yml --env-file .env build
-	docker compose -p unityhubio_publicwebsite -f docker-compose-publicwebsite.yml --env-file .env down
-	docker compose -p unityhubio_publicwebsite -f docker-compose-publicwebsite.yml --env-file .env up --build -d
+.PHONY: crm-restart
+crm-restart:
+	docker compose -p skedular_crm -f docker-compose-crm.yml --env-file .env pull
+	docker compose -p skedular_crm -f docker-compose-crm.yml --env-file .env build
+	docker compose -p skedular_crm -f docker-compose-crm.yml --env-file .env down
+	docker compose -p skedular_crm -f docker-compose-crm.yml --env-file .env up --build -d
 
-.PHONY: publicwebsite-start
-publicwebsite-start:
-	docker compose -p unityhubio_publicwebsite -f docker-compose-publicwebsite.yml --env-file .env pull
-	docker compose -p unityhubio_publicwebsite -f docker-compose-publicwebsite.yml --env-file .env build
-	docker compose -p unityhubio_publicwebsite -f docker-compose-publicwebsite.yml --env-file .env up --build -d
+.PHONY: crm-start
+crm-start:
+	docker compose -p skedular_crm -f docker-compose-crm.yml --env-file .env pull
+	docker compose -p skedular_crm -f docker-compose-crm.yml --env-file .env build
+	docker compose -p skedular_crm -f docker-compose-crm.yml --env-file .env up --build -d
 
-.PHONY: publicwebsite-stop
-publicwebsite-stop:
-	docker compose -p unityhubio_publicwebsite -f docker-compose-publicwebsite.yml --env-file .env down
+.PHONY: crm-stop
+crm-stop:
+	docker compose -p skedular_crm -f docker-compose-crm.yml --env-file .env down
 
-.PHONY: publicwebsite-terminate
-publicwebsite-terminate:
-	docker compose -p unityhubio_publicwebsite -f docker-compose-publicwebsite.yml --env-file .env down -v
+.PHONY: crm-terminate
+crm-terminate:
+	docker compose -p skedular_crm -f docker-compose-crm.yml --env-file .env down -v
 
 .PHONY: help
 .DEFAULT_GOAL := help
