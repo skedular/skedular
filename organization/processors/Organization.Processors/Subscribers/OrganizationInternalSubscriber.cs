@@ -65,21 +65,18 @@ public class OrganizationInternalSubscriber(
 
     private async Task HandleRenewOrganizationOfferingEventAsync(Event @event, CancellationToken cancellationToken)
     {
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(@event.OrganizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(@event.OrganizationId, cancellationToken);
         if (organization is null)
         {
             return;
         }
 
         var now = timeProvider.GetUtcNow();
-        var expiredOfferingsRequireAutoRenew = await repositoryFactory.OrganizationOfferingRepository
-            .Query(new Specification<OrganizationOffering>
-            {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && query.Organization.Id == @event.OrganizationId && query.End <= now &&
-                    query.AutoRenew
-            }.ApplyOrderByDescending(query => query.End))
+        var expiredOfferingsRequireAutoRenew = await repositoryFactory.OrganizationOfferingRepository.Query(new Specification<OrganizationOffering>
+        {
+            Criteria = query =>
+                !query.DeletedAt.HasValue && query.Organization.Id == @event.OrganizationId && query.End <= now && query.AutoRenew
+        }.ApplyOrderByDescending(query => query.End))
             .ToListAsync(cancellationToken);
 
         if (expiredOfferingsRequireAutoRenew.Count == 0)
@@ -110,8 +107,7 @@ public class OrganizationInternalSubscriber(
         var mappedOrganization = mapper.MapTo(organization);
         mappedOrganization.OrganizationOfferings =
         [
-            mappedOrganization.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue)
-                .OrderByDescending(item => item.End).First()
+            mappedOrganization.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue).OrderByDescending(item => item.End).First()
         ];
 
         await organizationOutboxPublisher.PublishOrganizationAsync(
@@ -125,21 +121,17 @@ public class OrganizationInternalSubscriber(
 
     private async Task HandleRecordDailyMemberCountEventAsync(Event @event, CancellationToken cancellationToken)
     {
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(@event.OrganizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(@event.OrganizationId, cancellationToken);
         if (organization is null)
         {
             return;
         }
 
         var startOfToday = timeProvider.GetUtcNow().StartOfDay();
-        if (await repositoryFactory.DailyMemberCountRecordingRepository
-                .Query(new Specification<DailyMemberCountRecording>
-                {
-                    Criteria = query =>
-                        !query.DeletedAt.HasValue && query.Organization.Id == @event.OrganizationId &&
-                        query.Date == startOfToday
-                }).AnyAsync(cancellationToken))
+        if (await repositoryFactory.DailyMemberCountRecordingRepository.Query(new Specification<DailyMemberCountRecording>
+        {
+            Criteria = query => !query.DeletedAt.HasValue && query.Organization.Id == @event.OrganizationId && query.Date == startOfToday
+        }).AnyAsync(cancellationToken))
         {
             return;
         }
@@ -159,9 +151,7 @@ public class OrganizationInternalSubscriber(
         await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleRefreshAzureTenantMembersAsync(
-        string tenantId,
-        CancellationToken cancellationToken)
+    private async Task HandleRefreshAzureTenantMembersAsync(string tenantId, CancellationToken cancellationToken)
     {
         var existingTenant = await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
         if (existingTenant is null)
@@ -205,13 +195,13 @@ public class OrganizationInternalSubscriber(
         await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task SyncCustomersAndOrganizationMembersAsync(
-        AzureTenant azureTenant,
-        CancellationToken cancellationToken)
+    private async Task SyncCustomersAndOrganizationMembersAsync(AzureTenant azureTenant, CancellationToken cancellationToken)
     {
         var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
         {
-            First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
+            First = -1,
+            Last = -1,
+            Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
         };
         getPaginatedLocationsInput.OrderBy.AddRange([
             new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
@@ -225,30 +215,26 @@ public class OrganizationInternalSubscriber(
 
         foreach (var tenantMember in azureTenant.AzureTenantMembers)
         {
-            var anyCustomerExistByVerifiableTokenResponse =
-                await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
-                    new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = tenantMember.Id },
-                    customerConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: cancellationToken);
+            var anyCustomerExistByVerifiableTokenResponse = await customerServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
+                new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = tenantMember.Id },
+                customerConfiguration.ApiKey.CreateMetadata(),
+                cancellationToken: cancellationToken);
             if (anyCustomerExistByVerifiableTokenResponse.Exist)
             {
-                customerIdsTenantMembersPair.Add(
-                    (anyCustomerExistByVerifiableTokenResponse.Customer.Id, tenantMember));
+                customerIdsTenantMembersPair.Add((anyCustomerExistByVerifiableTokenResponse.Customer.Id, tenantMember));
 
                 await customerServiceClient.Admin_UpdateIdentityAsync(
-                    mapper.MapToUpdateIdentityInput(
-                        tenantMember,
-                        anyCustomerExistByVerifiableTokenResponse.Customer.Id),
+                    mapper.MapToUpdateIdentityInput(tenantMember, anyCustomerExistByVerifiableTokenResponse.Customer.Id),
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
 
-                if (string.IsNullOrWhiteSpace(
-                        anyCustomerExistByVerifiableTokenResponse.Customer.DefaultOrganization?.Id))
+                if (string.IsNullOrWhiteSpace(anyCustomerExistByVerifiableTokenResponse.Customer.DefaultOrganization?.Id))
                 {
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
+                            OrganizationId = azureTenant.Organization.Id,
+                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -269,28 +255,26 @@ public class OrganizationInternalSubscriber(
                 continue;
             }
 
-            var anyCustomerExistByEmailTokenResponse =
-                await customerServiceClient.Admin_AnyCustomerExistByEmailAsync(
-                    new Admin_AnyCustomerExistByEmailInput { Email = tenantMember.Email },
-                    customerConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: cancellationToken);
+            var anyCustomerExistByEmailTokenResponse = await customerServiceClient.Admin_AnyCustomerExistByEmailAsync(
+                new Admin_AnyCustomerExistByEmailInput { Email = tenantMember.Email },
+                customerConfiguration.ApiKey.CreateMetadata(),
+                cancellationToken: cancellationToken);
             if (anyCustomerExistByEmailTokenResponse.Exist)
             {
-                customerIdsTenantMembersPair.Add(
-                    (anyCustomerExistByEmailTokenResponse.Customer.Id, tenantMember));
+                customerIdsTenantMembersPair.Add((anyCustomerExistByEmailTokenResponse.Customer.Id, tenantMember));
 
                 await customerServiceClient.Admin_AddIdentityAsync(
                     mapper.MapTo(tenantMember, anyCustomerExistByEmailTokenResponse.Customer.Id),
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
 
-                if (string.IsNullOrWhiteSpace(
-                        anyCustomerExistByEmailTokenResponse.Customer.DefaultOrganization?.Id))
+                if (string.IsNullOrWhiteSpace(anyCustomerExistByEmailTokenResponse.Customer.DefaultOrganization?.Id))
                 {
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            OrganizationId = azureTenant.Organization.Id,
+                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -301,7 +285,8 @@ public class OrganizationInternalSubscriber(
                     await customerServiceClient.Admin_AddDefaultLocationAsync(
                         new Admin_AddDefaultLocationInput
                         {
-                            LocationId = getLocationsResponse.Edges.First().Node.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            LocationId = getLocationsResponse.Edges.First().Node.Id,
+                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -317,9 +302,7 @@ public class OrganizationInternalSubscriber(
                     tenantMember,
                     customerId,
                     new Shared.Database.Entities.Organization { Id = azureTenant.Organization.Id },
-                    getLocationsResponse.TotalCount == 1
-                        ? [new Location { Id = getLocationsResponse.Edges.First().Node.Id }]
-                        : []),
+                    getLocationsResponse.TotalCount == 1 ? [new Location { Id = getLocationsResponse.Edges.First().Node.Id }] : []),
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
         }
@@ -327,8 +310,7 @@ public class OrganizationInternalSubscriber(
         var members = customerIdsTenantMembersPair.Select(customerIdsTenantMemberPair =>
         {
             var customerId = customerIdsTenantMemberPair.Item1;
-            var organizationMember =
-                azureTenant.Organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customerId);
+            var organizationMember = azureTenant.Organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customerId);
 
             if (organizationMember is null)
             {

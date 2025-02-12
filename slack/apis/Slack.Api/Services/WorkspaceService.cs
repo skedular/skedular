@@ -43,9 +43,8 @@ public class WorkspaceService(
         }
         else
         {
-            await using var transaction = await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.OrganizationRepository.UnitOfWork,
-                cancellationToken);
+            await using var transaction =
+                await transactionBuilder.BeginTransactionAsync(repositoryFactory.OrganizationRepository.UnitOfWork, cancellationToken);
 
             var workspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(response.Team.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(workspace);
@@ -76,9 +75,8 @@ public class WorkspaceService(
 
     public async Task<Workspace> AddAsync(Workspace workspace, CancellationToken cancellationToken)
     {
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.WorkspaceRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction =
+            await transactionBuilder.BeginTransactionAsync(repositoryFactory.WorkspaceRepository.UnitOfWork, cancellationToken);
 
         var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(workspace.Organization.Id, cancellationToken);
         var existingWorkspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspace.Id, cancellationToken) ??

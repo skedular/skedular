@@ -1,7 +1,7 @@
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { NewIcon } from '@/components/icons';
 import { getOrganizationTeamAddLink } from '@/components/links';
 import Button from '@mui/material/Button';
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
-import { NewIcon } from '@repo/shared/components/icons';
 import { memo } from 'react';
 
 type Props = {

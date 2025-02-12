@@ -1,11 +1,11 @@
+import { LocationAvatar } from '@/components/avatars';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { LocationIcon } from '@/components/icons';
+import { DefaultSelect } from '@/components/styled';
 import type { locationSelector_allLocations_query$key } from '@/queries/__generated__/locationSelector_allLocations_query.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { LocationAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
-import { LocationIcon } from '@repo/shared/components/icons';
-import { DefaultSelect } from '@repo/shared/components/styled';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 

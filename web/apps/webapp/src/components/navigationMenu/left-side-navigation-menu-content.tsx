@@ -1,3 +1,5 @@
+import { BodyIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
+import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@/components/icons';
 import {
   getOrganizationAdminSetupBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
@@ -9,6 +11,8 @@ import {
   getOrganizationUsersBaseLink,
 } from '@/components/links';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
+import { PaletteModeContext } from '@/libs/providers';
+import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@/libs/theme';
 import type { leftSideNavigationMenuContent_query$key } from '@/queries/__generated__/leftSideNavigationMenuContent_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -17,10 +21,6 @@ import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import { BodyIconTypography, SmallIconTypography, StackColumn } from '@repo/shared/components/commons';
-import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@repo/shared/components/icons';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@repo/shared/libs/theme';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useParams, usePathname } from 'next/navigation';

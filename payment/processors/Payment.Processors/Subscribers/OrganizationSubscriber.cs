@@ -113,8 +113,7 @@ public class OrganizationSubscriber(
             existingOrganization = repositoryFactory.OrganizationRepository.Update(existingOrganization);
         }
 
-        existingOrganization =
-            await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
+        existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         _ = await RebuildOrganizationOffering(organization, existingOrganization, cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

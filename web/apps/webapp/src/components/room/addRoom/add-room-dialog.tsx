@@ -1,9 +1,3 @@
-import { MultipleChoicesCustomTags, MultipleChoicesZones } from '@/components/organization';
-import type { addRoomDialog_addRoomMutation } from '@/queries/__generated__/addRoomDialog_addRoomMutation.graphql';
-import type { addRoomDialog_rootQuery } from '@/queries/__generated__/addRoomDialog_rootQuery.graphql';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import { createFilterOptions } from '@mui/material/useAutocomplete';
 import {
   BodyIconTypography,
   ColorPicker,
@@ -13,14 +7,20 @@ import {
   LeadIconTypography,
   SmallIconTypography,
   TwoButtonsDialogActions,
-} from '@repo/shared/components/commons';
-import { Loading } from '@repo/shared/components/loading';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
-import { DialogTransition } from '@repo/shared/components/transitions';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { joinErrors } from '@repo/shared/libs/utils';
+} from '@/components/commons';
+import { Loading } from '@/components/loading';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { MultipleChoicesCustomTags, MultipleChoicesZones } from '@/components/organization';
+import type { RootError } from '@/components/relayError';
+import { RelayError } from '@/components/relayError';
+import { DialogTransition } from '@/components/transitions';
+import { PaletteModeContext } from '@/libs/providers';
+import { joinErrors } from '@/libs/utils';
+import type { addRoomDialog_addRoomMutation } from '@/queries/__generated__/addRoomDialog_addRoomMutation.graphql';
+import type { addRoomDialog_rootQuery } from '@/queries/__generated__/addRoomDialog_rootQuery.graphql';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';

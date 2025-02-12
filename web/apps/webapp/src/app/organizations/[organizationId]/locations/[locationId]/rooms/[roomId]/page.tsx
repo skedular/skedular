@@ -1,15 +1,15 @@
 'use client';
 
+import { BodyIconTypography, StackColumn } from '@/components/commons';
+import { Loading } from '@/components/loading';
+import type { RootError } from '@/components/relayError';
+import { RelayError } from '@/components/relayError';
 import { EditRoom } from '@/components/room/editRoom';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationLocationRoom_rootQuery } from '@/queries/__generated__/pageOrganizationLocationRoom_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { BodyIconTypography, StackColumn } from '@repo/shared/components/commons';
-import { Loading } from '@repo/shared/components/loading';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';

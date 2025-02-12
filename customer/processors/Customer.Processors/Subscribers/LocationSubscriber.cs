@@ -27,9 +27,7 @@ public class LocationSubscriber(
                     var location = mapper.MapTo(@event);
                     var organization = location.Organization is null
                         ? null
-                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                            location.Organization.Id,
-                            cancellationToken);
+                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
                     var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(
                         location.Id,
                         organization,
@@ -212,7 +210,7 @@ public class LocationSubscriber(
         {
             var member = await repositoryFactory.LocationMemberRepository.Query(
                     new Specification<LocationMember> { Criteria = query => query.Id == locationMemberId }
-                    .AddInclude(query => query.Customer))
+                        .AddInclude(query => query.Customer))
                 .FirstAsync(cancellationToken);
 
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
@@ -237,7 +235,7 @@ public class LocationSubscriber(
                 newDeskIds.Count != existingDeskIds.Count ||
                 newDeskIds.Except(existingDeskIds).Any() ||
                 newRoomIds.Count != existingRoomIds.Count ||
-                newRoomIds.Except(existingRoomIds).Any() )
+                newRoomIds.Except(existingRoomIds).Any())
             {
                 await customerPublisher.PublishCustomerAsync([mapper.MapTo(customer)!], cancellationToken);
             }

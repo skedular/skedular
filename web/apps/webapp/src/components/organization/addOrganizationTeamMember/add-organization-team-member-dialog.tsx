@@ -1,22 +1,14 @@
+import { CustomerAvatar } from '@/components/avatars';
+import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@/components/commons';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { DialogTransition } from '@/components/transitions';
+import { PaletteModeContext } from '@/libs/providers';
+import { getCustomerFullName, joinErrors, keyboardDebounceTimeout } from '@/libs/utils';
 import type { addOrganizationTeamMemberDialog_addTeamMemberMutation } from '@/queries/__generated__/addOrganizationTeamMemberDialog_addTeamMemberMutation.graphql';
 import type { addOrganizationTeamMemberDialog_organizationMembers_query$key } from '@/queries/__generated__/addOrganizationTeamMemberDialog_organizationMembers_query.graphql';
 import type { addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment } from '@/queries/__generated__/addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { CustomerAvatar } from '@repo/shared/components/avatars';
-import {
-  BodyIconTypography,
-  DefaultDialogTitle,
-  FormFieldLabel,
-  FormStackColumn,
-  LeadIconTypography,
-  SmallIconTypography,
-  TwoButtonsDialogActions,
-} from '@repo/shared/components/commons';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
-import { DialogTransition } from '@repo/shared/components/transitions';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { getCustomerFullName, joinErrors, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import { Autocomplete, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useMemo, useState, useTransition } from 'react';

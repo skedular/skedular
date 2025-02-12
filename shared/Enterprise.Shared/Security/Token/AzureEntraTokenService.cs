@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using EmailValidation;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Microsoft.Extensions.Caching.Memory;
@@ -78,10 +79,19 @@ public class AzureEntraTokenService(
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
-            if (value is not null)
+            if (value is not null && EmailValidator.Validate(value))
             {
                 context.SetEmail(value);
                 context.SetEmailVerified(true);
+            }
+            else
+            {
+                value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "preferred_username")?.Value;
+                if (value is not null && EmailValidator.Validate(value))
+                {
+                    context.SetEmail(value);
+                    context.SetEmailVerified(true);
+                }
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "aud")?.Value;

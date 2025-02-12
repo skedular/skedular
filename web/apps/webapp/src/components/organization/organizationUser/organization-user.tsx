@@ -1,14 +1,4 @@
-import { getOrganizationBookingsBaseLink, getOrganizationUsersBaseLink } from '@/components/links';
-import { TeamCard } from '@/components/organization/organizationTeams';
-import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
-import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
-import type { organizationUser_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUser_removeOrganizationUsersMutation.graphql';
-import type { organizationUser_updateCustomerDetailsMutation } from '@/queries/__generated__/organizationUser_updateCustomerDetailsMutation.graphql';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid2';
-import { CustomerAvatar } from '@repo/shared/components/avatars';
+import { CustomerAvatar } from '@/components/avatars';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -20,13 +10,23 @@ import {
   SectionIconTypography,
   StackColumn,
   StackRow,
-} from '@repo/shared/components/commons';
-import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { BookingIcon, DeleteIcon } from '@repo/shared/components/icons';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultButtonStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
-import { getCustomerFullName, joinErrors } from '@repo/shared/libs/utils';
+} from '@/components/commons';
+import { SingleChoinceTimezone } from '@/components/forms';
+import { BookingIcon, DeleteIcon } from '@/components/icons';
+import { getOrganizationBookingsBaseLink, getOrganizationUsersBaseLink } from '@/components/links';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { TeamCard } from '@/components/organization/organizationTeams';
+import { PaletteModeContext } from '@/libs/providers';
+import { defaultButtonStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
+import { getCustomerFullName, joinErrors } from '@/libs/utils';
+import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
+import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
+import type { organizationUser_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUser_removeOrganizationUsersMutation.graphql';
+import type { organizationUser_updateCustomerDetailsMutation } from '@/queries/__generated__/organizationUser_updateCustomerDetailsMutation.graphql';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid2';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';

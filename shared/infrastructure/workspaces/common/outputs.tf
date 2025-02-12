@@ -6,7 +6,6 @@ locals {
   public_website_domain      = local.is_production ? local.public_website_domain_root : "${var.environment}.${local.public_website_domain_root}"
   webapp_domain              = local.is_production ? "${local.webapp_domain_root}" : "${var.environment}.${local.webapp_domain_root}"
   api_domain                 = local.is_production ? "api.${local.webapp_domain_root}" : "api${var.environment}.${local.webapp_domain_root}"
-  msteams_webapp_domain      = local.is_production ? "msteams.${local.webapp_domain_root}" : "msteams.${var.environment}.${local.webapp_domain_root}"
   eventcatalog_webapp_domain = local.is_production ? "eventcatalog.${local.webapp_domain_root}" : "eventcatalog.${var.environment}.${local.webapp_domain_root}"
 }
 
@@ -58,10 +57,6 @@ output "webapp_domain_name" {
   value = local.webapp_domain
 }
 
-output "msteams_webapp_domain_name" {
-  value = local.msteams_webapp_domain
-}
-
 output "eventcatalog_webapp_domain_name" {
   value = local.eventcatalog_webapp_domain
 }
@@ -100,14 +95,6 @@ output "parameter_store_name_aws_github_actions_unityhubio_unityhubioassume_role
 
 output "logrocket_webapp_app_id" {
   value = "skedular/skedular-web-app-${var.environment}"
-}
-
-output "logrocket_msteams_webapp_app_id" {
-  value = "skedular/skedular-msteams-web-app-${var.environment}"
-}
-
-output "microanalytics_publicwebsite_app_id" {
-  value = local.is_production ? "ZwSg9rf6GA" : "ZwSg9rf6GA"
 }
 
 output "microanalytics_webapp_app_id" {

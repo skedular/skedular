@@ -1,3 +1,5 @@
+import { BodyIconTypography } from '@/components/commons';
+import { BillingAndPaymentIcon, CustomTagIcon, EditIcon, SSOIcon, SubscriptionsIcon, ZoneIcon } from '@/components/icons';
 import {
   getOrganizationAdminBillingAndPaymentBaseLink,
   getOrganizationAdminCustomTagsBaseLink,
@@ -7,13 +9,7 @@ import {
   getOrganizationAdminSubscriptionsBaseLink,
   getOrganizationAdminZonesBaseLink,
 } from '@/components/links';
-import Link from '@mui/material/Link';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import { BodyIconTypography } from '@repo/shared/components/commons';
-import { BillingAndPaymentIcon, CustomTagIcon, EditIcon, SSOIcon, SubscriptionsIcon, ZoneIcon } from '@repo/shared/components/icons';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
+import { PaletteModeContext } from '@/libs/providers';
 import {
   getSelectedListItemBorderRadius,
   sandstone,
@@ -21,7 +17,11 @@ import {
   secondDrawerCollapsedDrawerWidthPx,
   secondDrawerExpandedDrawerWidth,
   secondDrawerExpandedDrawerWidthPx,
-} from '@repo/shared/libs/theme';
+} from '@/libs/theme';
+import Link from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import NextLink from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext } from 'react';

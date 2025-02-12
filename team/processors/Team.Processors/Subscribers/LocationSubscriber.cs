@@ -25,50 +25,33 @@ public class LocationSubscriber(
             case Type.LocationUpserted:
                 {
                     var location = mapper.MapTo(@event);
-                    if (string.IsNullOrWhiteSpace(@event.Data.Location.OrganizationId))
+                    if (location.Organization is null)
                     {
                         break;
                     }
 
                     var existingOrganization =
-                        location.Organization is null
-                            ? null
-                            : await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                                location.Organization.Id,
-                                true,
-                                cancellationToken);
-                    ArgumentNullException.ThrowIfNull(existingOrganization);
-
+                        await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
                     var existingLocation =
-                        await repositoryFactory.LocationRepository.UpsertNakedAsync(
-                            location.Id,
-                            existingOrganization,
-                            cancellationToken);
+                        await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, existingOrganization, cancellationToken);
                     if (existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Location event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Location event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleLocationUpsertedEventAsync(
-                        location,
-                        existingLocation,
-                        existingOrganization,
-                        cancellationToken);
+                    await HandleLocationUpsertedEventAsync(location, existingLocation, existingOrganization, cancellationToken);
                 }
                 break;
 
             case Type.LocationDeleted:
                 {
                     var location = mapper.MapTo(@event);
-                    var existingLocation =
-                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
+                    var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Location event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Location event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }

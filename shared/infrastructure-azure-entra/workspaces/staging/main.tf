@@ -7,7 +7,9 @@ module "shared_common" {
 module "common_resources" {
   source = "../common_resources"
   providers = {
-    aws = aws
+    aws     = aws
+    random  = random
+    azuread = azuread
   }
 
   environment = local.environment

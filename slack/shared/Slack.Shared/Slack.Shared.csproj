@@ -24,13 +24,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SlackNet" Version="0.15.4"/>
-        <PackageReference Include="SlackNet.AspNetCore" Version="0.15.4"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
+        <PackageReference Include="SlackNet" Version="0.15.5"/>
+        <PackageReference Include="SlackNet.AspNetCore" Version="0.15.5"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.12.19">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

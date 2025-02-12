@@ -1,0 +1,55 @@
+import { StackRow } from '@/components/commons';
+import { SearchRoundedIcon } from '@/components/icons';
+import { keyboardDebounceTimeout } from '@/libs/utils';
+import Divider from '@mui/material/Divider';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import type { SxProps, Theme } from '@mui/system';
+import debounce from 'lodash.debounce';
+import { memo } from 'react';
+
+type Props = {
+  size?: 'small' | 'medium';
+  placeholder?: string;
+  defaultValue?: unknown;
+  sx?: SxProps<Theme>;
+  onChange?: (searchTerm: string) => void;
+};
+
+const Search = ({ size, placeholder, defaultValue, sx, onChange }: Props) => {
+  const handleChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!onChange) {
+      return;
+    }
+
+    onChange(event.target.value);
+  };
+
+  const debounceChanged = debounce(handleChanged, keyboardDebounceTimeout);
+
+  return (
+    <OutlinedInput
+      size={size}
+      placeholder={placeholder}
+      startAdornment={
+        <StackRow sx={{ paddingRight: 1 }}>
+          <SearchRoundedIcon />
+          <Divider orientation="vertical" flexItem />
+        </StackRow>
+      }
+      onChange={debounceChanged}
+      defaultValue={defaultValue}
+      sx={{
+        ...sx,
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderRadius: 4,
+        },
+        width: {
+          xs: '100%',
+          sm: 'min(100%, 250px)',
+        },
+      }}
+    />
+  );
+};
+
+export default memo(Search);

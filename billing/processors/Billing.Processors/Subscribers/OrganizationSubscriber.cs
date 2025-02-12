@@ -89,8 +89,7 @@ public class OrganizationSubscriber(
             : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization,
                 existingOrganization));
 
-        existingOrganization =
-            await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
+        existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         _ = await RebuildOrganizationOffering(organization, existingOrganization, cancellationToken);
         await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);

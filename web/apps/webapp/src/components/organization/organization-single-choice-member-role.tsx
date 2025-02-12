@@ -1,7 +1,7 @@
+import { BodyIconTypography } from '@/components/commons';
+import { convertStringToLowercaseExceptFirstLetter } from '@/libs/utils';
 import type { organizationSingleChoiceMemberRole_query$key } from '@/queries/__generated__/organizationSingleChoiceMemberRole_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { BodyIconTypography } from '@repo/shared/components/commons';
-import { convertStringToLowercaseExceptFirstLetter } from '@repo/shared/libs/utils';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';

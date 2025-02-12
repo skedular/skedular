@@ -1,11 +1,11 @@
+import { TeamAvatar } from '@/components/avatars';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { TeamIcon } from '@/components/icons';
+import { DefaultSelect } from '@/components/styled';
 import type { teamSelector_allTeams_query$key } from '@/queries/__generated__/teamSelector_allTeams_query.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { TeamAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
-import { TeamIcon } from '@repo/shared/components/icons';
-import { DefaultSelect } from '@repo/shared/components/styled';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 

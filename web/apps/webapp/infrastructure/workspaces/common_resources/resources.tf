@@ -135,6 +135,11 @@ resource "vercel_project" "default" {
       target = ["development", "preview", "production"]
     },
     {
+      key    = "NEXT_PUBLIC_APPLICATION_REGISTRATION_ID"
+      value  = data.aws_ssm_parameter.parameter_store_name_azure_application_id.value
+      target = ["development", "preview", "production"]
+    },
+    {
       key    = "COGNITO_DOMAIN"
       value  = "https://${module.shared_common.cognito_user_pool_domain}.auth.${module.shared_common.aws_region}.amazoncognito.com"
       target = ["development", "preview", "production"]

@@ -11,32 +11,17 @@ namespace Organization.Shared.Repositories;
 
 public interface IOrganizationRepository : IRepository<Database.Entities.Organization>
 {
-    Task<Database.Entities.Organization?> GetByIdAsync(
-        string id,
-        CancellationToken cancellationToken);
-
-    Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
-        ICollection<string> ids,
-        CancellationToken cancellationToken);
-
-    Task<Database.Entities.Organization?> GetByIdAsync(
-        string id,
-        bool includeAllOfferings,
-        CancellationToken cancellationToken);
+    Task<Database.Entities.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<Database.Entities.Organization?> GetByIdAsync(string id, bool includeAllOfferings, CancellationToken cancellationToken);
 
     Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
         ICollection<string> ids,
         bool includeAllOfferings,
         CancellationToken cancellationToken);
 
-    Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(
-        string customerId,
-        CancellationToken cancellationToken);
-
-    Task<Database.Entities.Organization?> GetByAzureTenantIdAsync(
-        string azureTenantId,
-        CancellationToken cancellationToken);
-
+    Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
+    Task<Database.Entities.Organization?> GetByAzureTenantIdAsync(string azureTenantId, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken);
     Database.Entities.Organization Add(Database.Entities.Organization organization);
     Database.Entities.Organization Update(Database.Entities.Organization organization);

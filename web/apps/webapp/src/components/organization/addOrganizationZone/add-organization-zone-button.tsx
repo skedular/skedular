@@ -1,6 +1,6 @@
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { NewIcon } from '@/components/icons';
 import Button from '@mui/material/Button';
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
-import { NewIcon } from '@repo/shared/components/icons';
 import { memo, useState } from 'react';
 import AddOrganizationZoneDialog from './add-organization-zone-dialog';
 

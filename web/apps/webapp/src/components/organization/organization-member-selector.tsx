@@ -1,8 +1,8 @@
+import { CustomerAvatar } from '@/components/avatars';
+import { BodyIconTypography } from '@/components/commons';
+import { getCustomerFullName, keyboardDebounceTimeout } from '@/libs/utils';
 import type { organizationMemberSelector_query$key } from '@/queries/__generated__/organizationMemberSelector_query.graphql';
 import type { organizationMemberSelector_refetchableFragment } from '@/queries/__generated__/organizationMemberSelector_refetchableFragment.graphql';
-import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography } from '@repo/shared/components/commons';
-import { getCustomerFullName, keyboardDebounceTimeout } from '@repo/shared/libs/utils';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
 import { graphql, usePaginationFragment } from 'react-relay';

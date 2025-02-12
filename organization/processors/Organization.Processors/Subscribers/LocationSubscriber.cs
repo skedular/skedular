@@ -30,20 +30,14 @@ public class LocationSubscriber(
                     }
 
                     var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                            location.Organization.Id,
-                            cancellationToken);
+                        await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, cancellationToken);
                     ArgumentNullException.ThrowIfNull(existingOrganization);
 
                     var existingLocation =
-                        await repositoryFactory.LocationRepository.UpsertNakedAsync(
-                            location.Id,
-                            existingOrganization,
-                            cancellationToken);
+                        await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, existingOrganization, cancellationToken);
                     if (existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Location event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Location event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -59,12 +53,10 @@ public class LocationSubscriber(
             case Type.LocationDeleted:
                 {
                     var location = mapper.MapTo(@event);
-                    var existingLocation =
-                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
+                    var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Location event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Location event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }

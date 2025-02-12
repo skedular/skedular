@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using EmailValidation;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Flurl.Http;
@@ -102,15 +103,15 @@ public class CognitoTokenService : ICognitoTokenService
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
-            if (value is not null)
+            if (value is not null && EmailValidator.Validate(value))
             {
                 _context.SetEmail(value);
-            }
 
-            value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email_verified")?.Value;
-            if (value is not null)
-            {
-                _context.SetEmailVerified(bool.Parse(value));
+                value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email_verified")?.Value;
+                if (value is not null)
+                {
+                    _context.SetEmailVerified(bool.Parse(value));
+                }
             }
         }
         catch

@@ -82,7 +82,7 @@ resource "azuread_application_redirect_uris" "azure_application_spa_redirect_uri
   type           = "SPA"
 
   redirect_uris = [
-    "https://localhost:15002/auth-end.html?clientId=${azuread_application.azure_application_dev[count.index].client_id}",
+    "https://localhost:15000/auth-end.html?clientId=${azuread_application.azure_application_dev[count.index].client_id}",
     "http://localhost:10200/organization/api/v1/onboard-azure-tenant"
   ]
 }
@@ -90,7 +90,7 @@ resource "azuread_application_redirect_uris" "azure_application_spa_redirect_uri
 resource "azuread_application_identifier_uri" "azure_application_identifier_uris_dev" {
   count          = local.is_staging ? 1 : 0
   application_id = azuread_application.azure_application_dev[count.index].id
-  identifier_uri = "api://localhost:15002/${azuread_application.azure_application_dev[count.index].client_id}"
+  identifier_uri = "api://localhost:15000/${azuread_application.azure_application_dev[count.index].client_id}"
 }
 
 resource "random_uuid" "access_as_user_dev_id" {

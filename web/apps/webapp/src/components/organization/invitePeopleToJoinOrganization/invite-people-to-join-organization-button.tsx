@@ -1,8 +1,8 @@
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
+import { InvitePeopleIcon } from '@/components/icons';
 import Button from '@mui/material/Button';
 import type { CSSProperties } from '@mui/material/styles/createTypography';
 import type { SxProps, Theme } from '@mui/system';
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@repo/shared/components/commons';
-import { InvitePeopleIcon } from '@repo/shared/components/icons';
 import { memo, useState } from 'react';
 import InvitePeopleToJoinOrganizationDialog from './invite-people-to-join-organization-dialog';
 

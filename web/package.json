@@ -3,45 +3,46 @@
   "description": "Skedular Web",
   "private": true,
   "engines": {
-    "node": "^20"
+    "node": "^22"
   },
-  "packageManager": "pnpm@10.2.1",
+  "packageManager": "pnpm@9.15.5",
   "workspace": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
     "dev": "turbo run dev",
+    "dev:teams": "turbo run dev:teams",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",
     "lint-fix": "turbo run lint-fix",
     "format": "turbo run format",
     "relay": "turbo run relay",
-    "publicwebsite#build": "turbo run publicwebsite#build",
-    "publicwebsite#start": "turbo run publicwebsite#start",
-    "publicwebsite#lint": "turbo run publicwebsite#lint",
-    "publicwebsite#lint-fix": "turbo run publicwebsite#lint-fix",
-    "publicwebsite#format": "turbo run publicwebsite#format",
     "webapp#build": "turbo run webapp#build",
     "webapp#start": "turbo run webapp#start",
     "webapp#lint": "turbo run webapp#lint",
     "webapp#lint-fix": "turbo run webapp#lint-fix",
     "webapp#format": "turbo run webapp#format",
-    "webapp#relay": "turbo run webapp#relay",
-    "msteams#build": "turbo run msteams#build",
-    "msteams#start": "turbo run msteams#start",
-    "msteams#lint": "turbo run msteams#lint",
-    "msteams#lint-fix": "turbo run msteams#lint-fix",
-    "msteams#format": "turbo run msteams#format",
-    "msteams#relay": "turbo run msteams#relay"
+    "webapp#relay": "turbo run webapp#relay"
   },
   "devDependencies": {
     "@types/relay-runtime": "^18.2.5",
-    "eslint": "9.20.0",
-    "eslint-plugin-turbo": "^2.4.0",
+    "eslint": "9.20.1",
+    "eslint-plugin-turbo": "^2.4.2",
     "global": "^4.4.0",
-    "next": "15.1.6",
-    "turbo": "^2.4.0"
+    "next": "15.1.7",
+    "turbo": "^2.4.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@vercel/speed-insights",
+      "botbuilder-dialogs",
+      "globalize",
+      "sharp"
+    ],
+    "patchedDependencies": {
+      "globalize@1.7.0": "patches/globalize@1.7.0.patch"
+    }
   }
 }

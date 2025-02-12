@@ -1,8 +1,8 @@
 Authentication:
-https://app.skedular.app/api/auth/callback/azure-ad
-https://msteams.skedular.app/auth-end.html?clientId=b01f91d9-c9dd-4ca3-b470-685da411ddc2
+https://skedular.app/api/auth/callback/azure-ad
+https://skedular.app/auth-end.html?clientId=d9f96787-6611-40da-8a87-31632229d3dc
 https://api.skedular.app/organization/api/v1/onboard-azure-tenant
 
 Expose an API:
-api://msteams.skedular.app/67709351-7927-48d3-b17a-d129dcda5e25
-api://msteams.skedular.app/67709351-7927-48d3-b17a-d129dcda5e25/access_as_user
+api://skedular.app/d9f96787-6611-40da-8a87-31632229d3dc
+api://skedular.app/d9f96787-6611-40da-8a87-31632229d3dc/access_as_user

@@ -1,8 +1,8 @@
 Authentication:
 http://localhost:15000/api/auth/callback/azure-ad
-https://localhost:15002/auth-end.html?clientId=f35c9f37-8d22-4a1c-8993-f270e58b64e6
+https://localhost:15000/auth-end.html?clientId=99e9c7b5-4e91-4abd-9aa3-12d57c100b58
 http://localhost:10200/organization/api/v1/onboard-azure-tenant
 
 Expose an API:
-api://localhost:15002/a7437e15-7d9d-4b2a-abab-df490c49f4ec
-api://localhost:15002/a7437e15-7d9d-4b2a-abab-df490c49f4ec/access_as_user
+api://localhost:15002/99e9c7b5-4e91-4abd-9aa3-12d57c100b58
+api://localhost:15002/99e9c7b5-4e91-4abd-9aa3-12d57c100b58/access_as_user

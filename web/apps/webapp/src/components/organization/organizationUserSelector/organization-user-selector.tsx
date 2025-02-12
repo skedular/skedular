@@ -1,12 +1,12 @@
+import { CustomerAvatar } from '@/components/avatars';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
+import { UserIcon } from '@/components/icons';
+import { DefaultSelect } from '@/components/styled';
+import { getCustomerFullName } from '@/libs/utils';
 import type { organizationUserSelector_organizationMembers_query$key } from '@/queries/__generated__/organizationUserSelector_organizationMembers_query.graphql';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@repo/shared/components/commons';
-import { UserIcon } from '@repo/shared/components/icons';
-import { DefaultSelect } from '@repo/shared/components/styled';
-import { getCustomerFullName } from '@repo/shared/libs/utils';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 

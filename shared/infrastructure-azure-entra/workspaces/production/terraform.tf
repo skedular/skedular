@@ -5,23 +5,13 @@ terraform {
       version = "~> 5.0"
     }
 
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 6.0"
-    }
-
     random = {
       source  = "hashicorp/random"
       version = "~> 3.0"
     }
 
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "4.48.0"
-    }
-
-    stripe = {
-      source  = "lukasaron/stripe"
+    azuread = {
+      source  = "hashicorp/azuread"
       version = "~> 3.0"
     }
   }

@@ -1,23 +1,24 @@
 import { AppBar } from '@/components/appBar';
 import { getSignInUrlAction } from '@/components/authActions';
+import { SmallHeadingIconTypography } from '@/components/commons';
+import { LogoutIcon } from '@/components/icons';
+import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Notifications } from '@/components/notification/notifications';
 import { Observability } from '@/components/observability';
 import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
+import type { RootError } from '@/components/relayError';
+import { RelayError } from '@/components/relayError';
+import { InMsTeamsContext } from '@/libs/providers';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import { SmallHeadingIconTypography } from '@repo/shared/components/commons';
-import { LogoutIcon } from '@repo/shared/components/icons';
-import { Loading } from '@repo/shared/components/loading';
-import type { RootError } from '@repo/shared/components/relayError';
-import { RelayError } from '@repo/shared/components/relayError';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { nanoid } from 'nanoid';
 import { useParams, useRouter } from 'next/navigation';
-import type { PropsWithChildren } from 'react';
-import { memo, useCallback, useEffect, useState, useTransition } from 'react';
+import type { JSX, PropsWithChildren } from 'react';
+import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -49,6 +50,12 @@ const RootQuery = graphql`
     slackCustomerRecordSynced
     teamCustomerRecordSynced
     pendingInvitationsCount
+
+    isAzureTenantInstalled
+    azureTenantOrganization {
+      id
+    }
+
     ...appBar_query
     ...leftSideNavigationMenu_query
     ...observability_query
@@ -68,6 +75,8 @@ const RootShell = ({
   breadcrumbs,
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
+  const inMsTeams = useContext(InMsTeamsContext);
+  const router = useRouter();
 
   const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
@@ -110,6 +119,16 @@ const RootShell = ({
     };
   }, [rootData.me, reloadCount, onReloadRequired, areCustomerRecordsSync]);
 
+  useEffect(() => {
+    if (!inMsTeams) {
+      return;
+    }
+
+    if (!rootData.isAzureTenantInstalled || !rootData.azureTenantOrganization) {
+      router.push('/install-msteams');
+    }
+  }, [inMsTeams, rootData.isAzureTenantInstalled, rootData.azureTenantOrganization, router]);
+
   const handleSignOutClick = async () => {
     await signOut();
   };
@@ -143,9 +162,10 @@ const RootShell = ({
             showBreadcrumps={showBreadcrumps}
             breadcrumbs={breadcrumbs}
           />
-          {!rootData.myOrganizations ||
-            (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding onReloadRequired={onReloadRequired} />)}
-          {!rootData.myOrganizations || (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />)}
+          {!inMsTeams &&
+            (!rootData.myOrganizations ||
+              (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding onReloadRequired={onReloadRequired} />))}
+          {inMsTeams && (!rootData.myOrganizations || (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />))}
           {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <>{children}</>}
         </Box>
       </Box>
@@ -171,6 +191,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   const [signInUrl, setSignInUrl] = useState('');
   const router = useRouter();
   const { organizationId } = useParams();
+  const inMsTeams = useContext(InMsTeamsContext);
 
   let finalOrganizationId = '';
   if (typeof organizationId === 'string') {
@@ -182,21 +203,27 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   }
 
   useEffect(() => {
+    if (inMsTeams) {
+      return;
+    }
+
     async function loadSignInUrl() {
       setSignInUrl(await getSignInUrlAction());
     }
 
     loadSignInUrl();
-  }, []);
+  }, [inMsTeams]);
 
   useEffect(() => {
-    if (loading || !signInUrl) {
-      return;
-    }
+    if (!inMsTeams) {
+      if (loading || !signInUrl) {
+        return;
+      }
 
-    if (!user && signInUrl) {
-      router.push(signInUrl);
-      return;
+      if (!user && signInUrl) {
+        router.push(signInUrl);
+        return;
+      }
     }
 
     loadQuery(
@@ -208,7 +235,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationId, loading, user, router, signInUrl]);
+  }, [loadQuery, triggerReloadId, finalOrganizationId, loading, user, router, signInUrl, inMsTeams]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -217,7 +244,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   };
 
   if (!queryReference) {
-    return <Loading />;
+    return <></>;
   }
 
   return (

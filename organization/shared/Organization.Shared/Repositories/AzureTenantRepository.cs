@@ -8,7 +8,6 @@ namespace Organization.Shared.Repositories;
 
 public interface IAzureTenantRepository : IRepository<AzureTenant>
 {
-    Task<AzureTenant> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<AzureTenant?> GetByIdAsync(string id, CancellationToken cancellationToken);
     AzureTenant Add(AzureTenant azureTenant);
     AzureTenant Update(AzureTenant azureTenant);
@@ -28,13 +27,6 @@ internal static class AzureTenantExtensions
 public class AzureTenantRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<OrganizationDbContext, AzureTenant>(dbContext, timeProvider), IAzureTenantRepository
 {
-    public override async Task<AzureTenant> UpsertNakedAsync(string id, CancellationToken cancellationToken)
-    {
-        await base.UpsertNakedAsync(id, cancellationToken);
-
-        return (await GetByIdAsync(id, cancellationToken))!;
-    }
-
     public async Task<AzureTenant?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.AzureTenant
             .AddDependentObjects()

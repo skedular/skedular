@@ -28,19 +28,11 @@ aweb.skedular.app {
 	reverse_proxy localhost:7000
 }
 
-amsteams.skedular.app {
-	reverse_proxy localhost:7000
-}
-
 dapp.skedular.app {
 	reverse_proxy localhost:7000
 }
 
 dweb.skedular.app {
-	reverse_proxy localhost:7000
-}
-
-dmsteams.skedular.app {
 	reverse_proxy localhost:7000
 }
 
@@ -52,19 +44,11 @@ mweb.skedular.app {
 	reverse_proxy localhost:7000
 }
 
-mmsteams.skedular.app {
-	reverse_proxy localhost:7000
-}
-
 yapp.skedular.app {
 	reverse_proxy localhost:7000
 }
 
 yweb.skedular.app {
-	reverse_proxy localhost:7000
-}
-
-ymsteams.skedular.app {
 	reverse_proxy localhost:7000
 }
 
@@ -163,4 +147,3 @@ billingapi.skedular.app {
 msteamsapi.skedular.app {
 	reverse_proxy localhost:10900
 }
-

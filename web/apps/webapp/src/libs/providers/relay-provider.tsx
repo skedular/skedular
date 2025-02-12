@@ -1,14 +1,19 @@
-import { getEnvironment } from '@repo/shared/clients/graphql/skedular';
+import { getEnvironment } from '@/clients/graphql/skedular';
 import type { PropsWithChildren } from 'react';
 import { useMemo } from 'react';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
 
-interface SessionExtended {
-  accessToken?: string;
-}
+type Props = {
+  token?: string | null | undefined;
+};
 
-const RelayProvider = ({ children }: PropsWithChildren) => {
-  const environment = useMemo(() => getEnvironment('/api/graphql', null), []);
+const RelayProvider = ({ children, token }: PropsWithChildren<Props>) => {
+  const isRunningInTeams = () => typeof window !== 'undefined' && window.name === 'embedded-page-container';
+  const environment = useMemo(() => (isRunningInTeams() && !token ? null : getEnvironment('/api/graphql', token)), [token]);
+
+  if (!environment) {
+    return <></>;
+  }
 
   return (
     <RelayEnvironmentProvider environment={environment}>

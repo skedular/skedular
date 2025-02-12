@@ -56,10 +56,10 @@ internal static class LocationExtensions
             .Include(query => query.LocationMembers.Where(locationMember => includeDeletedLocationMembers || !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query => 
+            .Include(query =>
                 query.Desks.Where(desk => includeDeletedDesks || (!desk.DeletedAt.HasValue && (includeDeactivatedDesk || !desk.Deactivated))))
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => 
+            .Include(query =>
                 query.Rooms.Where(room => includeDeletedRooms || (!room.DeletedAt.HasValue && (includeDeactivatedRoom || !room.Deactivated))))
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Organization)
@@ -71,10 +71,7 @@ internal static class LocationExtensions
 public class LocationRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, Location>(dbContext, timeProvider), ILocationRepository
 {
-    public async Task<Location> UpsertNakedAsync(
-        string id,
-        Organization? organization,
-        CancellationToken cancellationToken)
+    public async Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 
@@ -98,10 +95,10 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         bool includeDeletedRooms,
         CancellationToken cancellationToken) =>
         await DbContext.Location
-            .AddDependentObjects(includeDeletedLocationMembers, includeDeletedDesks, false,includeDeletedRooms, false)
+            .AddDependentObjects(includeDeletedLocationMembers, includeDeletedDesks, false, includeDeletedRooms, false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-   public Location Add(Location location)
+    public Location Add(Location location)
     {
         var now = TimeProvider.GetUtcNow();
         location.CreatedAt = now;
@@ -145,7 +142,7 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         bool includeDeletedRooms,
         CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => !query.DeletedAt.HasValue &&query.Organization != null && query.Organization.Id == organizationId)
+            .Where(query => !query.DeletedAt.HasValue && query.Organization != null && query.Organization.Id == organizationId)
             .AddDependentObjects(includeDeletedLocationMembers, includeDeletedDesks, false, includeDeletedRooms, false)
             .ToListAsync(cancellationToken);
 }

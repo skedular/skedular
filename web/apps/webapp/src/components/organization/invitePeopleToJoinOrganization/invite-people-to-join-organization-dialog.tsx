@@ -1,11 +1,11 @@
+import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@/components/commons';
+import { NotificationContent, errorNotificationOptions, infoNotificationOptions, successNotificationOptions } from '@/components/notification';
+import { DialogTransition } from '@/components/transitions';
+import { PaletteModeContext } from '@/libs/providers';
+import { joinErrors } from '@/libs/utils';
 import type { invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography, SmallIconTypography, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import { NotificationContent, errorNotificationOptions, infoNotificationOptions, successNotificationOptions } from '@repo/shared/components/notification';
-import { DialogTransition } from '@repo/shared/components/transitions';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { joinErrors } from '@repo/shared/libs/utils';
 import { TextField, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useContext } from 'react';

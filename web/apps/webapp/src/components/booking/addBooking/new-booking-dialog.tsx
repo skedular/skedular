@@ -1,3 +1,11 @@
+import { CustomerAvatar } from '@/components/avatars';
+import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
+import { CustomTags } from '@/components/customTag';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { DialogTransition } from '@/components/transitions';
+import { Zones } from '@/components/zone';
+import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
+import { endOfDay, getCustomerFullName, joinErrors, keyboardDebounceTimeout, startOfDay, toShortDate } from '@/libs/utils';
 import type { newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
 import type { newBookingDialog_availableLocationDesks_query$key } from '@/queries/__generated__/newBookingDialog_availableLocationDesks_query.graphql';
 import type { newBookingDialog_availableLocationDesks_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableLocationDesks_refetchableFragment.graphql';
@@ -11,14 +19,6 @@ import type { newBookingDialog_query$key } from '@/queries/__generated__/newBook
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { CustomerAvatar } from '@repo/shared/components/avatars';
-import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, StackRow, TwoButtonsDialogActions } from '@repo/shared/components/commons';
-import { CustomTags } from '@repo/shared/components/customTag';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
-import { DialogTransition } from '@repo/shared/components/transitions';
-import { Zones } from '@repo/shared/components/zone';
-import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@repo/shared/libs/providers';
-import { endOfDay, getCustomerFullName, joinErrors, keyboardDebounceTimeout, startOfDay, toShortDate } from '@repo/shared/libs/utils';
 import { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';

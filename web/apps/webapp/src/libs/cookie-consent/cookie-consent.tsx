@@ -1,8 +1,8 @@
+import { SmallIconTypography, StackRow } from '@/components/commons';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid2';
 import Snackbar from '@mui/material/Snackbar';
-import { SmallIconTypography, StackRow } from '@repo/shared/components/commons';
 import { hasCookie, setCookie } from 'cookies-next';
 import { memo, useEffect, useState } from 'react';
 import { optOutCookieName } from './constants';

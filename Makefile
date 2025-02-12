@@ -16,7 +16,7 @@ dep: ## Install dependencies
 generate: ## Generate code
 	@./api-definitions/generate.sh
 	@./scripts/generate-graphql.sh
-	@./web/packages/shared/scripts/generate.sh
+	@./web/apps/webapp/scripts/generate.sh
 
 .PHONY: lint
 lint: ## run golanci-lint locally

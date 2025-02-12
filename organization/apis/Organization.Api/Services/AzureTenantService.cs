@@ -55,9 +55,12 @@ public class AzureTenantService(
 
     public async Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken)
     {
-        Guard.Against.NullOrEmpty(context.GetAzureTenantId());
-
         var tenantId = context.GetAzureTenantId();
+        if (tenantId == Guid.Empty)
+        {
+            return false;
+        }
+
         var key = $"tenant-exists-{tenantId}";
         if (memoryCache.TryGetValue<bool>(key, out var entry))
         {

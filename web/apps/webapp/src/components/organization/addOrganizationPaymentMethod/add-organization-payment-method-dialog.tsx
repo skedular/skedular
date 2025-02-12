@@ -1,13 +1,13 @@
+import { DefaultDialogTitle } from '@/components/commons';
+import { errorNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationPaymentMethodSetupForm } from '@/components/organization';
+import { DialogTransition } from '@/components/transitions';
+import { PaletteModeContext } from '@/libs/providers';
+import { joinErrors } from '@/libs/utils';
 import type { addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation } from '@/queries/__generated__/addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation.graphql';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import { DefaultDialogTitle } from '@repo/shared/components/commons';
-import { errorNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
-import { DialogTransition } from '@repo/shared/components/transitions';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { joinErrors } from '@repo/shared/libs/utils';
 import { Elements } from '@stripe/react-stripe-js';
 import type { Stripe } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';

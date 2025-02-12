@@ -1,6 +1,6 @@
+import { BodyIconTypography } from '@/components/commons';
 import type { singleChoiceLocation_locations_query$key } from '@/queries/__generated__/singleChoiceLocation_locations_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { BodyIconTypography } from '@repo/shared/components/commons';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';

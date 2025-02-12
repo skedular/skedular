@@ -1,15 +1,15 @@
+import { AppBarWithStackColumn, GridContainer, SectionIconTypography, StackColumn } from '@/components/commons';
 import { getOrganizationBaseLink } from '@/components/links';
 import { LocationBookingInsightRoot } from '@/components/location/locationBookingInsight';
 import { LocationDeskOccupancyInsightRoot } from '@/components/location/locationDeskOccupancyInsight';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { OrganizationBookingInsightRoot } from '@/components/organization/organizationBookingInsight';
 import { OrganizationMemberAttendancyInsightRoot } from '@/components/organization/organizationMemberAttendancyInsight';
+import { defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import type { organizationAnalytics_query$key } from '@/queries/__generated__/organizationAnalytics_query.graphql';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
-import { AppBarWithStackColumn, GridContainer, SectionIconTypography, StackColumn } from '@repo/shared/components/commons';
-import { defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';

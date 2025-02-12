@@ -1,6 +1,5 @@
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
-using Ardalis.GuardClauses;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
@@ -245,11 +244,14 @@ public class OrganizationService(
 
     public async Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken)
     {
-        Guard.Against.NullOrEmpty(context.GetAzureTenantId());
-        var azureTenantId = context.GetAzureTenantId().ToString();
+        var tenantId = context.GetAzureTenantId();
+        if (tenantId == Guid.Empty)
+        {
+            return null;
+        }
 
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByAzureTenantIdAsync(azureTenantId, cancellationToken);
+        var azureTenantId = tenantId.ToString();
+        var organization = await repositoryFactory.OrganizationRepository.GetByAzureTenantIdAsync(azureTenantId, cancellationToken);
         if (organization is null)
         {
             return null;

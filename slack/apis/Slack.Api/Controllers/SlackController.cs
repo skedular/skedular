@@ -7,9 +7,6 @@ namespace Slack.Api.Controllers;
 [ApiController]
 public class SlackController(IWorkspaceService workspaceService) : SlackControllerBase
 {
-    public override async Task<IActionResult> Callback(
-        string code,
-        string? state,
-        CancellationToken cancellationToken = default) =>
+    public override async Task<IActionResult> Callback(string code, string? state, CancellationToken cancellationToken = default) =>
         Redirect((await workspaceService.InstallAsync(code, state, cancellationToken)).ToString());
 }

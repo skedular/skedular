@@ -28,6 +28,10 @@
       "cache": false,
       "persistent": true
     },
+    "dev:teams": {
+      "cache": false,
+      "persistent": true
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
@@ -47,22 +51,6 @@
     "relay": {
       "dependsOn": ["^relay"]
     },
-    "publicwebsite#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
-    },
-    "publicwebsite#start": {
-      "dependsOn": ["^start"]
-    },
-    "publicwebsite#lint": {
-      "dependsOn": ["^lint"]
-    },
-    "publicwebsite#lint-fix": {
-      "dependsOn": ["^lint-fix"]
-    },
-    "publicwebsite#format": {
-      "dependsOn": ["^format"]
-    },
     "webapp#build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
@@ -80,44 +68,6 @@
       "dependsOn": ["^format"]
     },
     "webapp#relay": {
-      "dependsOn": ["^relay"]
-    },
-    "msteams#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
-    },
-    "msteams#start": {
-      "dependsOn": ["^start"]
-    },
-    "msteams#lint": {
-      "dependsOn": ["^lint"]
-    },
-    "msteams#lint-fix": {
-      "dependsOn": ["^lint-fix"]
-    },
-    "msteams#format": {
-      "dependsOn": ["^format"]
-    },
-    "msteams#relay": {
-      "dependsOn": ["^relay"]
-    },
-    "msteams2#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
-    },
-    "msteams2#start": {
-      "dependsOn": ["^start"]
-    },
-    "msteams2#lint": {
-      "dependsOn": ["^lint"]
-    },
-    "msteams2#lint-fix": {
-      "dependsOn": ["^lint-fix"]
-    },
-    "msteams2#format": {
-      "dependsOn": ["^format"]
-    },
-    "msteams2#relay": {
       "dependsOn": ["^relay"]
     }
   },

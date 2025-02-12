@@ -8,7 +8,7 @@ namespace MsTeams.Shared.Repositories;
 
 public interface IAzureTenantRepository : IRepository<AzureTenant>
 {
-    Task<AzureTenant> UpsertNakedAsync(string id, CancellationToken cancellationToken);
+    Task<AzureTenant> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<AzureTenant?> GetByIdAsync(string id, CancellationToken cancellationToken);
     AzureTenant Add(AzureTenant azureTenant);
     AzureTenant Update(AzureTenant azureTenant);
@@ -27,9 +27,9 @@ internal static class AzureTenantExtensions
 public class AzureTenantRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<MsTeamsDbContext, AzureTenant>(dbContext, timeProvider), IAzureTenantRepository
 {
-    public override async Task<AzureTenant> UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public async Task<AzureTenant> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken)
     {
-        await base.UpsertNakedAsync(id, cancellationToken);
+        await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 
         return (await GetByIdAsync(id, cancellationToken))!;
     }

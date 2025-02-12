@@ -1,0 +1,43 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.16",
+  "version": "1.0.0",
+  "id": "2d02f9d4-7ad1-48d7-9a65-368287dcda70",
+  "packageName": "com.microsoft.teams.extension",
+  "developer": {
+    "name": "Skedular Ltd",
+    "websiteUrl": "https://getskedular.com",
+    "privacyUrl": "https://getskedular.com/privacy-policy",
+    "termsOfUseUrl": "https://getskedular.com/terms-of-service"
+  },
+  "icons": {
+    "color": "color-logo.png",
+    "outline": "outline-logo.png"
+  },
+  "name": {
+    "short": "Skedular-development",
+    "full": "Skedular-development"
+  },
+  "description": {
+    "short": "Skedular-development",
+    "full": "Skedular-development"
+  },
+  "accentColor": "#FFFFFF",
+  "bots": [],
+  "composeExtensions": [],
+  "staticTabs": [
+    {
+      "entityId": "index",
+      "name": "Skedular Home",
+      "contentUrl": "https://localhost:15000",
+      "websiteUrl": "https://localhost:15000",
+      "scopes": ["personal", "team", "groupChat"]
+    }
+  ],
+  "permissions": ["identity"],
+  "validDomains": ["localhost:15000"],
+  "webApplicationInfo": {
+    "id": "99e9c7b5-4e91-4abd-9aa3-12d57c100b58",
+    "resource": "api://localhost:15000/99e9c7b5-4e91-4abd-9aa3-12d57c100b58"
+  }
+}

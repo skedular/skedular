@@ -1,7 +1,31 @@
+import {
+  AppBarWithStackColumn,
+  BodyIconTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  GridContainer,
+  PushToRight,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@/components/commons';
+import { CustomTags } from '@/components/customTag';
+import { Desk } from '@/components/desk';
 import { AddDeskButton } from '@/components/desk/addDesk';
 import { BulkAddDeskButton } from '@/components/desk/bulkAddDesk';
+import { SingleChoinceTimezone } from '@/components/forms';
+import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationDeskBaseLink, getOrganizationLocationRoomBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
+import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { Room } from '@/components/room';
 import AddRoomButton from '@/components/room/addRoom/add-room-button';
+import { Search } from '@/components/search';
+import { Zones } from '@/components/zone';
+import { PaletteModeContext } from '@/libs/providers';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
+import { joinErrors } from '@/libs/utils';
 import type { organizationLocation_activateDesksMutation } from '@/queries/__generated__/organizationLocation_activateDesksMutation.graphql';
 import type { organizationLocation_activateRoomsMutation } from '@/queries/__generated__/organizationLocation_activateRoomsMutation.graphql';
 import type { organizationLocation_addCustomerDefaultDeskMutation } from '@/queries/__generated__/organizationLocation_addCustomerDefaultDeskMutation.graphql';
@@ -26,30 +50,6 @@ import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import {
-  AppBarWithStackColumn,
-  BodyIconTypography,
-  FormFieldLabel,
-  FormStackColumn,
-  GridContainer,
-  PushToRight,
-  SectionIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-} from '@repo/shared/components/commons';
-import { CustomTags } from '@repo/shared/components/customTag';
-import { Desk } from '@repo/shared/components/desk';
-import { SingleChoinceTimezone } from '@repo/shared/components/forms';
-import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@repo/shared/components/icons';
-import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@repo/shared/components/moreActionsMenu';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@repo/shared/components/notification';
-import { Room } from '@repo/shared/components/room';
-import { Search } from '@repo/shared/components/search';
-import { Zones } from '@repo/shared/components/zone';
-import { PaletteModeContext } from '@repo/shared/libs/providers';
-import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@repo/shared/libs/theme';
-import { joinErrors } from '@repo/shared/libs/utils';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';

@@ -9,6 +9,7 @@ module "common_resources" {
   providers = {
     aws        = aws
     google     = google
+    random     = random
     cloudflare = cloudflare
     stripe     = stripe
   }

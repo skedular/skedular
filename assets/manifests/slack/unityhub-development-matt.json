@@ -16,12 +16,7 @@
     }
   },
   "oauth_config": {
-    "redirect_urls": [
-      "https://dapp.skedular.app/api/slack/v1/callback",
-      "https://dapp.skedular.app/api/auth/callback/slack",
-      "https://dweb.skedular.app/api/slack/v1/callback",
-      "https://dweb.skedular.app/api/auth/callback/slack"
-    ],
+    "redirect_urls": ["https://dapp.skedular.app/api/slack/v1/callback", "https://dapp.skedular.app/api/auth/callback/slack"],
     "scopes": {
       "user": ["users.profile:write", "users.profile:read"],
       "bot": [
@@ -39,13 +34,13 @@
   },
   "settings": {
     "event_subscriptions": {
-      "request_url": "https://dweb.skedular.app/api/slack/v1/event",
+      "request_url": "https://dapp.skedular.app/api/slack/v1/event",
       "bot_events": ["app_home_opened", "app_mention"]
     },
     "interactivity": {
       "is_enabled": true,
-      "request_url": "https://dweb.skedular.app/api/slack/v1/action",
-      "message_menu_options_url": "https://dweb.skedular.app/api/slack/v1/options"
+      "request_url": "https://dapp.skedular.app/api/slack/v1/action",
+      "message_menu_options_url": "https://dapp.skedular.app/api/slack/v1/options"
     },
     "org_deploy_enabled": false,
     "socket_mode_enabled": false,
