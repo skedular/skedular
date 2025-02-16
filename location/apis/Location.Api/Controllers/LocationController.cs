@@ -7,8 +7,7 @@ namespace Location.Api.Controllers;
 [ApiController]
 public class LocationController(IWorkaroundService workaroundService) : LocationControllerBase
 {
-    public override async Task<IActionResult>
-        Republish(string locationId, CancellationToken cancellationToken = default)
+    public override async Task<IActionResult> Republish(string locationId, CancellationToken cancellationToken = default)
     {
         await workaroundService.RepublishLocationAsync(locationId, cancellationToken);
 

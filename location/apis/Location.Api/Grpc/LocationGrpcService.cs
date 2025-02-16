@@ -50,8 +50,7 @@ public class LocationGrpcService(
         return mapper.MapToGrpcResponse(await locationService.AddAsync(mapper.MapTo(request), true, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Get(
-        GetInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Get(GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
@@ -114,9 +113,8 @@ public class LocationGrpcService(
         return connection;
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Admin_Get(
-        Admin_GetInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location>
+        Admin_Get(Admin_GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 

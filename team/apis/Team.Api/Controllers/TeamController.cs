@@ -7,8 +7,7 @@ namespace Team.Api.Controllers;
 [ApiController]
 public class TeamController(IWorkaroundService workaroundService) : TeamControllerBase
 {
-    public override async Task<IActionResult>
-        Republish(string teamId, CancellationToken cancellationToken = default)
+    public override async Task<IActionResult> Republish(string teamId, CancellationToken cancellationToken = default)
     {
         await workaroundService.RepublishTeamAsync(teamId, cancellationToken);
 

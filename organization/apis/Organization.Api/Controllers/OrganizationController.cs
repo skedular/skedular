@@ -10,8 +10,7 @@ public class OrganizationController(
     IAzureTenantService azureTenantService,
     IOrganizationSsoService organizationSsoService) : OrganizationControllerBase
 {
-    public override async Task<IActionResult>
-        Republish(string organizationId, CancellationToken cancellationToken = default)
+    public override async Task<IActionResult> Republish(string organizationId, CancellationToken cancellationToken = default)
     {
         await workaroundService.RepublishOrganizationAsync(organizationId, cancellationToken);
 
@@ -25,8 +24,7 @@ public class OrganizationController(
         return Ok();
     }
 
-    public override async Task<IActionResult>
-        AzureTenantAdminConsentUrl(CancellationToken cancellationToken = default) =>
+    public override async Task<IActionResult> AzureTenantAdminConsentUrl(CancellationToken cancellationToken = default) =>
         Redirect(await azureTenantService.GenerateAdminConsentUrlAsync(cancellationToken));
 
     public override async Task<IActionResult> OnboardAzureTenant(
@@ -41,8 +39,7 @@ public class OrganizationController(
     {
         if (!string.IsNullOrWhiteSpace(error))
         {
-            throw new InvalidOperationException(
-                $"Azure tenant onboarding went wrong with error {error} and message {error_description}.");
+            throw new InvalidOperationException($"Azure tenant onboarding went wrong with error {error} and message {error_description}.");
         }
 
         var redirectUri = await azureTenantService.InstallAsync(tenant, state, cancellationToken);

@@ -11,6 +11,7 @@ using Organization.Api.Mappers;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using OrganizationConfiguration = Organization.Shared.Configurations.OrganizationConfiguration;
 
 namespace Organization.Api.Services;
 
@@ -19,11 +20,10 @@ public interface IAzureTenantService
     Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken);
     Task<string> GenerateAdminConsentUrlAsync(CancellationToken cancellationToken);
     Task<Uri> InstallAsync(string tenantId, string state, CancellationToken cancellationToken);
-    Task<Shared.Models.Organization?> GetAttachedOrganizationAsync(CancellationToken cancellationToken);
 }
 
 public class AzureTenantService(
-    ApplicationConfiguration applicationConfiguration,
+    OrganizationConfiguration organizationConfiguration,
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IContext context,
@@ -35,8 +35,7 @@ public class AzureTenantService(
     IOrganizationInternalOutboxPublisher organizationInternalOutboxPublisher,
     IMapper mapper) : IAzureTenantService
 {
-    private static readonly string[] s_userProfilePermissions =
-        ["User.ReadBasic.All", "ProfilePhoto.Read.All", "email", "offline_access", "openid"];
+    private static readonly string[] s_userProfilePermissions = ["User.ReadBasic.All", "ProfilePhoto.Read.All", "email", "offline_access", "openid"];
 
     private static readonly string[] s_teamPermissions =
     [
@@ -79,7 +78,8 @@ public class AzureTenantService(
 
                 return await repositoryFactory.AzureTenantRepository.Query(
                         new Specification<AzureTenant> { Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString() })
-                    .AsNoTracking().AnyAsync(cancellationToken);
+                    .AsNoTracking()
+                    .AnyAsync(cancellationToken);
             });
     }
 
@@ -89,20 +89,19 @@ public class AzureTenantService(
         Guard.Against.NullOrEmpty(context.GetAzureTenantId());
         ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
 
-        var currentUri = string.IsNullOrWhiteSpace(applicationConfiguration.ApiBaseDomain)
+        var currentUri = string.IsNullOrWhiteSpace(organizationConfiguration.ApiBaseDomain)
             ? UriHelper.BuildAbsolute(
                 httpContextAccessor.HttpContext.Request.Scheme,
                 httpContextAccessor.HttpContext.Request.Host,
                 httpContextAccessor.HttpContext.Request.PathBase)
-            : applicationConfiguration.ApiBaseDomain;
+            : organizationConfiguration.ApiBaseDomain;
 
         var installStateUserIdLookup = repositoryFactory.AzureInstallStateUserIdLookupRepository.Add(
             new AzureInstallStateUserIdLookup { Id = randomHelper.Generate(), InstalledByUserId = context.GetVerifiableToken() });
 
         var tenantId = context.GetAzureTenantId();
         var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
-        var redirectUri = Uri.EscapeDataString(new Uri(new Uri(currentUri), "organization/api/v1/onboard-azure-tenant")
-            .OriginalString);
+        var redirectUri = Uri.EscapeDataString(new Uri(new Uri(currentUri), "organization/api/v1/onboard-azure-tenant").OriginalString);
         var scope = Uri.EscapeDataString(Strings.Join(s_allPermissions)!);
         var authorizationRequest =
             $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={installStateUserIdLookup.Id}";
@@ -114,20 +113,15 @@ public class AzureTenantService(
 
     public async Task<Uri> InstallAsync(string tenantId, string state, CancellationToken cancellationToken)
     {
-        var installStateUserIdLookup =
-            await repositoryFactory.AzureInstallStateUserIdLookupRepository.GetByIdAsync(state, cancellationToken);
+        var installStateUserIdLookup = await repositoryFactory.AzureInstallStateUserIdLookupRepository.GetByIdAsync(state, cancellationToken);
         ArgumentNullException.ThrowIfNull(installStateUserIdLookup);
 
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByAzureTenantIdAsync(tenantId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByAzureTenantIdAsync(tenantId, cancellationToken);
 
         if (organization is null)
         {
-            await azureTenantOnboardingService.OnboardAsync(
-                tenantId,
-                installStateUserIdLookup,
-                cancellationToken);
+            await azureTenantOnboardingService.OnboardAsync(tenantId, installStateUserIdLookup, cancellationToken);
         }
         else
         {
@@ -137,8 +131,7 @@ public class AzureTenantService(
 
             repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(installStateUserIdLookup);
 
-            var tenant =
-                await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
+            var tenant = await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
             ArgumentNullException.ThrowIfNull(tenant);
             tenant = repositoryFactory.AzureTenantRepository.Update(tenant);
             await organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync(
@@ -150,16 +143,5 @@ public class AzureTenantService(
         }
 
         return new Uri("https://teams.microsoft.com/v2/");
-    }
-
-    public async Task<Shared.Models.Organization?> GetAttachedOrganizationAsync(CancellationToken cancellationToken)
-    {
-        Guard.Against.NullOrEmpty(context.GetAzureTenantId());
-
-        var tenantId = context.GetAzureTenantId();
-        var tenant = await repositoryFactory.AzureTenantRepository.Query(
-                new Specification<AzureTenant> { Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString() }).AsNoTracking()
-            .FirstOrDefaultAsync(cancellationToken);
-        return tenant is null ? null : mapper.MapTo(tenant.Organization);
     }
 }

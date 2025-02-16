@@ -5,4 +5,5 @@ public class OrganizationConfiguration
     public const string Key = "Organization";
 
     public string ApiKey { get; set; } = string.Empty;
+    public string ApiBaseDomain { get; set; } = string.Empty;
 }

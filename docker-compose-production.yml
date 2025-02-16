@@ -179,6 +179,7 @@ services:
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
+      Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
     healthcheck:
       test:
         [
@@ -265,6 +266,7 @@ services:
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
+      Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
     healthcheck:
       test:
         [
@@ -351,6 +353,7 @@ services:
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
+      Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
     healthcheck:
       test:
         [
@@ -461,6 +464,7 @@ services:
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
+      Organization__ApiBaseDomain: https://organizationapi.skedular.app
     healthcheck:
       test:
         [
@@ -547,6 +551,7 @@ services:
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
+      Organization__ApiBaseDomain: https://organizationapi.skedular.app
     healthcheck:
       test:
         [
@@ -633,6 +638,7 @@ services:
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
       OpenTelemetry__EntityFrameworkEnabled: false
+      Organization__ApiBaseDomain: https://organizationapi.skedular.app
     healthcheck:
       test:
         [

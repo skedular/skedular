@@ -39,8 +39,7 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var paymentMethods =
-            await organizationService.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken);
+        var paymentMethods = await organizationService.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken);
         return mapper.MapTo(paymentMethods).ToArray();
     }
 }
