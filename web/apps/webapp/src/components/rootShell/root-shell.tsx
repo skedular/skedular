@@ -131,6 +131,7 @@ const RootShell = ({
 
   const handleSignOutClick = async () => {
     await signOut();
+    router.push('/');
   };
 
   if (reloadCount === maxRetryAttemptsToReload) {
