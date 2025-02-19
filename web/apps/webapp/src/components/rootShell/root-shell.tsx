@@ -245,7 +245,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   };
 
   if (!queryReference) {
-    return <></>;
+    return <Loading />;
   }
 
   return (
