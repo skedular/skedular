@@ -815,7 +815,7 @@ type Query {
   msTeamsVersion: Version!
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   myNotifications(after: String before: String first: Int last: Int orderBy: [NotificationOrderInput!] where: MyNotificationWhereInput!): NotificationConnection @cost(weight: "10")
-  myOrganizations: [OrganizationDetails!] @cost(weight: "10")
+  myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   myTeams(organizationId: String): [TeamDetails!] @cost(weight: "10")
   notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
   notificationVersion: Version!

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3259ee7c544e4c8459b9aa69ad6646cd>>
+ * @generated SignedSource<<662b7fc32a4c297183c68926ba46bf61>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,7 +25,7 @@ export type appBar_query$data = {
     readonly id: string;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
-  }> | null | undefined;
+  }>;
   readonly pendingInvitationsCount: number;
   readonly " $fragmentSpreads": FragmentRefs<"mobileLeftSideNavigationMenu_query" | "newFeedbackDialog_query">;
   readonly " $fragmentType": "appBar_query";

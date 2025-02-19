@@ -154,7 +154,7 @@ const RootShell = ({
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
-        {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />}
+        {rootData.myOrganizations.length !== 0 && <LeftSideNavigationMenu rootDataRelay={rootData} collapsed={collapsed} />}
         <Box sx={{ flexGrow: 1 }}>
           <AppBar
             rootDataRelay={rootData}
@@ -163,11 +163,9 @@ const RootShell = ({
             showBreadcrumps={showBreadcrumps}
             breadcrumbs={breadcrumbs}
           />
-          {!inMsTeams &&
-            (!rootData.myOrganizations ||
-              (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding onReloadRequired={onReloadRequired} />))}
-          {inMsTeams && (!rootData.myOrganizations || (rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />))}
-          {rootData.myOrganizations && rootData.myOrganizations.length !== 0 && <>{children}</>}
+          {!inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding onReloadRequired={onReloadRequired} />}
+          {inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />}
+          {rootData.myOrganizations.length > 0 && <>{children}</>}
         </Box>
       </Box>
     </>

@@ -104,14 +104,14 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationDetails[]?> MyOrganizationsAsync(
+    public async Task<OrganizationDetails[]> MyOrganizationsAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
         {
-            return null;
+            return [];
         }
 
         return mapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken)).ToArray();

@@ -89,21 +89,31 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   }
 
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(() => {
-    if (finalOrganizationId && rootData.myOrganizations && rootData.myOrganizations.some((item) => item.id === finalOrganizationId)) {
+    if (finalOrganizationId && rootData.myOrganizations.some((item) => item.id === finalOrganizationId)) {
       return finalOrganizationId;
     }
 
-    if (selectedOrganization && rootData.myOrganizations && rootData.myOrganizations.some((item) => item.id === selectedOrganization)) {
+    if (selectedOrganization && rootData.myOrganizations.some((item) => item.id === selectedOrganization)) {
       return selectedOrganization;
     }
 
-    return rootData.myOrganizations && rootData.myOrganizations.length > 0 ? rootData.myOrganizations[0]?.id : undefined;
+    return rootData.myOrganizations.length > 0 ? rootData.myOrganizations[0]?.id : undefined;
   });
 
   useInterval(() => setCurrentTime(localNow()), 1000);
 
   useEffect(() => {
-    if (pathName === getOrganizationAddLink() || pathName === getNotificationsBaseLink() || finalOrganizationId || !selectedOrganizationId) {
+    if (pathName === getOrganizationAddLink() || pathName === getNotificationsBaseLink()) {
+      return;
+    }
+
+    if (!selectedOrganizationId) {
+      router.push('/');
+
+      return;
+    }
+
+    if (selectedOrganizationId === finalOrganizationId) {
       return;
     }
 
