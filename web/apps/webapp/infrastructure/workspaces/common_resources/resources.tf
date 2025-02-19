@@ -30,11 +30,7 @@ resource "aws_cognito_user_pool_client" "default" {
 
   callback_urls = [
     "http://localhost:15000/api/auth/callback/cognito",
-    "https://${module.shared_common.webapp_domain_name}/api/auth/callback/cognito",
-    "https://aweb.unityhub.io/api/auth/callback/cognito",
-    "https://dweb.unityhub.io/api/auth/callback/cognito",
-    "https://mweb.unityhub.io/api/auth/callback/cognito",
-    "https://yweb.unityhub.io/api/auth/callback/cognito",
+    "https://${module.shared_common.webapp_domain_name}/api/auth/callback/cognito"
   ]
 
   explicit_auth_flows = [

@@ -1,5 +1,5 @@
 locals {
-  dns_records_dev = ["aweb", "aapp", "dweb", "dapp", "mweb", "mapp", "yweb", "yapp", "contabo", "kowl", "dozzle", "crm"]
+  dns_records_dev = ["kapp", "dapp", "mapp", "contabo", "kowl", "dozzle", "crm"]
 }
 
 resource "cloudflare_record" "cloudflare_dns_records_dev" {

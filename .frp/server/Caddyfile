@@ -20,11 +20,7 @@ crm.skedular.app {
 	reverse_proxy localhost:50000
 }
 
-aapp.skedular.app {
-	reverse_proxy localhost:7000
-}
-
-aweb.skedular.app {
+kapp.skedular.app {
 	reverse_proxy localhost:7000
 }
 
@@ -32,23 +28,7 @@ dapp.skedular.app {
 	reverse_proxy localhost:7000
 }
 
-dweb.skedular.app {
-	reverse_proxy localhost:7000
-}
-
 mapp.skedular.app {
-	reverse_proxy localhost:7000
-}
-
-mweb.skedular.app {
-	reverse_proxy localhost:7000
-}
-
-yapp.skedular.app {
-	reverse_proxy localhost:7000
-}
-
-yweb.skedular.app {
 	reverse_proxy localhost:7000
 }
 
