@@ -34,6 +34,8 @@ public class LocationDailyUpdateJob(
                     }).ToListAsync(cancellationToken);
                 foreach (var locationId in locations.Where(item => now.IsMatchingHour(item.Timezone, 7)).Select(item => item.Id))
                 {
+                    logger.LogInformation("Sending location daily update for location: {locationId}", locationId);
+
                     await locationDailyUpdaterService.SendDailyUpdateAsync(locationId, cancellationToken);
                 }
 
