@@ -562,6 +562,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
         });
 
         UpdateGlobalReloadId();
+        router.back();
       },
       onError: (error) => {
         toast.update(toastId, {
