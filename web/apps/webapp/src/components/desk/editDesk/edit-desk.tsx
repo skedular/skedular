@@ -137,6 +137,8 @@ const EditDesk = ({ rootDataRelay }: Props) => {
           ...successNotificationOptions,
           render: <NotificationContent content={`Desk ${name} updated.`} />,
         });
+
+        router.back();
       },
       onError: (error) => {
         toast.update(toastId, {

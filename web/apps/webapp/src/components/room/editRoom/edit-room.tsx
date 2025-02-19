@@ -137,6 +137,8 @@ const EditRoom = ({ rootDataRelay }: Props) => {
           ...successNotificationOptions,
           render: <NotificationContent content={`Room ${name} updated.`} />,
         });
+
+        router.back();
       },
       onError: (error) => {
         toast.update(toastId, {
