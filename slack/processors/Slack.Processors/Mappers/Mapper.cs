@@ -3,17 +3,12 @@ using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using Slack.Shared.Models;
 using SlackNet;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
-using Booking = Slack.Shared.Models.Booking;
 using Location = Slack.Shared.Models.Location;
 using Team = Slack.Shared.Models.Team;
 using Organization = Slack.Shared.Models.Organization;
 using Customer = Slack.Shared.Models.Customer;
-using Desk = Slack.Shared.Models.Desk;
-using Room = Slack.Shared.Models.Room;
-using OrganizationCustomTag = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Slack.Shared.Models.Identity;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
@@ -26,22 +21,15 @@ namespace Slack.Processors.Mappers;
 
 public interface IMapper
 {
-    Customer? MapTo(Shared.Database.Entities.Customer? src);
     Customer MapTo(Event src);
-
-    Shared.Database.Entities.Customer MapToEntity(
-        Customer src,
-        ICollection<Shared.Database.Entities.Identity> identities);
+    Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Shared.Database.Entities.Identity> identities);
 
     Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
         Shared.Database.Entities.Customer dest,
         ICollection<Shared.Database.Entities.Identity> identities);
 
-    IEnumerable<Shared.Database.Entities.Identity> MapToEntity(
-        IEnumerable<Identity> src,
-        Shared.Database.Entities.Customer? customer);
-
+    IEnumerable<Shared.Database.Entities.Identity> MapToEntity(IEnumerable<Identity> src, Shared.Database.Entities.Customer? customer);
     Shared.Database.Entities.Identity MapToEntity(Identity src, Shared.Database.Entities.Customer? customer);
 
     Shared.Database.Entities.Identity MergeToEntity(
@@ -83,8 +71,6 @@ public interface IMapper
 
     Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId);
     Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId);
-    Booking MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking src);
-    Shared.Models.Workspace MapTo(Workspace src);
     Workspace MergeToEntity(SlackNet.Team src, Workspace dest);
 }
 
@@ -165,8 +151,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Shared.Database.Entities.Location MapToEntity(Location src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Location());
+    public Shared.Database.Entities.Location MapToEntity(Location src) => MergeToEntity(src, new Shared.Database.Entities.Location());
 
     public Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest)
     {
@@ -181,7 +166,6 @@ public class Mapper : IMapper
         var organizationAfterState = src.Data.Organization;
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
-
         var organization = new Organization { Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
@@ -210,11 +194,9 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Shared.Database.Entities.Organization MapToEntity(Organization src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Organization());
+    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
 
-    public Shared.Database.Entities.Organization MergeToEntity(Organization src,
-        Shared.Database.Entities.Organization dest)
+    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -233,8 +215,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Shared.Database.Entities.Team MapToEntity(Team src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Team());
+    public Shared.Database.Entities.Team MapToEntity(Team src) => MergeToEntity(src, new Shared.Database.Entities.Team());
 
     public Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest)
     {
@@ -276,8 +257,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public WorkspaceChannel MapToEntity(Conversation src, Workspace workspace) =>
-        MergeToEntity(src, new WorkspaceChannel(), workspace);
+    public WorkspaceChannel MapToEntity(Conversation src, Workspace workspace) => MergeToEntity(src, new WorkspaceChannel(), workspace);
 
     public WorkspaceChannel MergeToEntity(Conversation src, WorkspaceChannel dest, Workspace workspace)
     {
@@ -294,8 +274,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public WorkspaceMember MapToEntity(User src, Workspace workspace) =>
-        MergeToEntity(src, new WorkspaceMember(), workspace);
+    public WorkspaceMember MapToEntity(User src, Workspace workspace) => MergeToEntity(src, new WorkspaceMember(), workspace);
 
     public WorkspaceMember MergeToEntity(User src, WorkspaceMember dest, Workspace workspace)
     {
@@ -349,19 +328,15 @@ public class Mapper : IMapper
             IsPreferredZoneOnboardingDone = false,
             IsPreferredDeskOnboardingDone = false,
             IsPreferredRoomOnboardingDone = false,
-            DefaultOrganization =
-                new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 
-        input.Identities.Add(
-            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
+        input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
         input.DefaultLocations.AddRange(defaultLocations.Select(item =>
             new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
-                Id = item.Id,
-                Organization =
-                    new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+                Id = item.Id, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
             }));
 
         return input;
@@ -373,53 +348,6 @@ public class Mapper : IMapper
     public Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
 
-    public Booking MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking src) =>
-        new()
-        {
-            Id = src.Id,
-            From = src.From.ToDateTimeOffset(),
-            To = src.To.ToDateTimeOffset(),
-            Notes = src.Notes.ToSafeString(),
-            Customer = MapTo(src.Customer),
-            Organization = MapTo(src.Organization),
-            Location = MapTo(src.Location),
-            Desks = MapTo(src.Desks).ToList(),
-            Rooms = MapTo(src.Rooms).ToList(),
-            Team = MapTo(src.Team)
-        };
-
-    public Shared.Models.Workspace MapTo(Workspace src)
-    {
-        var workspace = new Shared.Models.Workspace
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            DeletedAt = src.DeletedAt,
-            Name = src.Name,
-            Domain = src.Domain,
-            EmailDomain = src.EmailDomain,
-            EnterpriseId = src.EnterpriseId,
-            EnterpriseName = src.EnterpriseName,
-            BotUserId = src.BotUserId,
-            BotUserScope = src.BotUserScope,
-            BotUserAccessToken = src.BotUserAccessToken,
-            BotRefreshToken = src.BotRefreshToken,
-            AuthedUserId = src.AuthedUserId,
-            AuthedUserScope = src.AuthedUserScope,
-            AuthedUserAccessToken = src.AuthedUserAccessToken,
-            AuthedRefreshToken = src.AuthedRefreshToken,
-            LastRefreshedAt = src.LastRefreshedAt,
-            ChannelsLastRefreshedAt = src.ChannelsLastRefreshedAt,
-            MembersLastRefreshedAt = src.MembersLastRefreshedAt,
-            Organization = MapTo(src.Organization)
-        };
-
-        workspace.WorkspaceMembers = MapTo(src.WorkspaceMembers, workspace).ToList();
-
-        return workspace;
-    }
-
     public Workspace MergeToEntity(SlackNet.Team src, Workspace dest)
     {
         dest.Name = src.Name;
@@ -429,167 +357,4 @@ public class Mapper : IMapper
         dest.EnterpriseName = src.EnterpriseName;
         return dest;
     }
-
-    public Customer? MapTo(Shared.Database.Entities.Customer? src)
-    {
-        if (src is null)
-        {
-            return null;
-        }
-
-        var customer = new Customer
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            DeletedAt = src.DeletedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Timezone = src.Timezone
-        };
-
-        customer.Identities = MapTo(src.Identities, customer).ToList();
-
-        return customer;
-    }
-
-    private IEnumerable<Shared.Models.WorkspaceMember> MapTo(IEnumerable<WorkspaceMember> src, Shared.Models.Workspace workspace) =>
-        src.Select(item => MapTo(item, workspace));
-
-    private Organization MapTo(Shared.Database.Entities.Organization src)
-    {
-        var organization = new Organization
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            DeletedAt = src.DeletedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt
-        };
-
-        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
-
-        return organization;
-    }
-
-    private IEnumerable<Shared.Models.OrganizationMember> MapTo(IEnumerable<OrganizationMember> src, Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private Shared.Models.OrganizationMember MapTo(OrganizationMember src, Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            DeletedAt = src.DeletedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Organization = organization,
-            Customer = MapTo(src.Customer)!
-        };
-
-    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src, Customer customer) =>
-        src.Select(item => MapTo(item, customer));
-
-    private static Identity MapTo(Shared.Database.Entities.Identity src, Customer customer) =>
-        new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Customer = customer };
-
-    private static Customer MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            GivenName = src.GivenName.ToSafeString(),
-            MiddleName = src.MiddleName.ToSafeString(),
-            FamilyName = src.FamilyName.ToSafeString(),
-            PhotoUrl = src.PhotoUrl.ToSafeString(),
-            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
-            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
-            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
-            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
-            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
-            PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
-            Identities = MapTo(src.Identities).ToList()
-        };
-
-    private static IEnumerable<Identity> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity> src) => src.Select(MapTo);
-
-    private static Identity MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity src) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
-
-    private static Organization? MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? src) =>
-        string.IsNullOrWhiteSpace(src?.Id)
-            ? null
-            : new Organization { Id = src.Id, Name = src.Name.ToSafeString() };
-
-    private static Location? MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Location? src) =>
-        string.IsNullOrWhiteSpace(src?.Id)
-            ? null
-            : new Location { Id = src.Id, Name = src.Name.ToSafeString() };
-
-    private static IEnumerable<Desk> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk> src) => src.Select(MapTo);
-
-    private static Desk MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Color = src.Color.ToSafeString(),
-            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
-            OrganizationZones = MapTo(src.OrganizationZones).ToList(),
-            Location = string.IsNullOrWhiteSpace(src.Location?.Id)? null: new Location { Id = src.Id, Name = src.Name }
-        };
-
-    private static IEnumerable<Room> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Room> src) => src.Select(MapTo);
-
-    private static Room MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Room src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Color = src.Color.ToSafeString(),
-            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
-            OrganizationZones = MapTo(src.OrganizationZones).ToList(),
-            Location = string.IsNullOrWhiteSpace(src.Location?.Id) ? null : new Location { Id = src.Id, Name = src.Name }
-        };
-
-    private static IEnumerable<Shared.Models.OrganizationCustomTag> MapTo(IEnumerable<OrganizationCustomTag> src) => src.Select(MapTo);
-    private static Shared.Models.OrganizationCustomTag MapTo(OrganizationCustomTag src) => new() { Id = src.Id, Name = src.Name.ToSafeString() };
-
-    private static IEnumerable<OrganizationZone> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone> src) => 
-        src.Select(MapTo);
-
-    private static OrganizationZone MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
-
-    private static Team? MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? src) =>
-        string.IsNullOrWhiteSpace(src?.Id) ? null : new Team { Id = src.Id, Name = src.Name.ToSafeString() };
-
-    private static Shared.Models.WorkspaceMember MapTo(WorkspaceMember src, Shared.Models.Workspace workspace) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            DeletedAt = src.DeletedAt,
-            Email = src.Email,
-            Designation = src.Designation,
-            Name = src.Name,
-            GivenName = src.GivenName,
-            FamilyName = src.FamilyName,
-            Timezone = src.Timezone,
-            IsAdmin = src.IsAdmin,
-            IsOwner = src.IsOwner,
-            IsPrimaryOwner = src.IsPrimaryOwner,
-            Locale = src.Locale,
-            PhotoUrl = src.PhotoUrl,
-            PhotoUrl24 = src.PhotoUrl24,
-            PhotoUrl32 = src.PhotoUrl32,
-            PhotoUrl48 = src.PhotoUrl48,
-            PhotoUrl72 = src.PhotoUrl72,
-            PhotoUrl192 = src.PhotoUrl192,
-            PhotoUrl512 = src.PhotoUrl512,
-            LastProfileStatusUpdatedAt = src.LastProfileStatusUpdatedAt,
-            AutomaticallyUpdateProfileStatus = src.AutomaticallyUpdateProfileStatus,
-            Workspace = workspace
-        };
 }

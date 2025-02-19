@@ -10,7 +10,6 @@ public class ApplicationConfiguration
     public string Domain { get; set; } = string.Empty;
     public string DomainSource { get; set; } = string.Empty;
     public string AppSource { get; set; } = string.Empty;
-    public string PublicWebSiteBaseDomain { get; set; } = string.Empty;
     public string WebAppBaseDomain { get; set; } = string.Empty;
     public string ApiBaseDomain { get; set; } = string.Empty;
     public bool EnableSchemaRegistry { get; set; }

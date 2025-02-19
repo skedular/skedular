@@ -2,8 +2,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore;
 using Slack.Shared.Database.Entities;
-using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services;
 
 namespace Slack.Jobs.Jobs;
 
@@ -19,8 +19,8 @@ public class TeamDailyUpdateJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
+                var teamDailyUpdaterService = scope.ServiceProvider.GetRequiredService<ITeamDailyUpdaterService>();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var slackInternalPublisher = scope.ServiceProvider.GetRequiredService<ISlackInternalPublisher>();
                 var now = timeProvider.GetUtcNow();
                 var teams = await repositoryFactory.TeamRepository.Query(
                     new Specification<Team>
@@ -32,15 +32,9 @@ public class TeamDailyUpdateJob(
                             (!query.SlackChannelDailyUpdateLastSentAt.HasValue ||
                              (now - query.SlackChannelDailyUpdateLastSentAt.Value).TotalHours >= 23)
                     }).ToListAsync(cancellationToken);
-                var teamIds = teams
-                    .Where(item => now.IsMatchingHour(item.Timezone, 7))
-                    .Select(item => item.Id)
-                    .ToList();
-                if (teamIds.Count != 0)
+                foreach (var teamId in teams.Where(item => now.IsMatchingHour(item.Timezone, 7)).Select(item => item.Id))
                 {
-                    await slackInternalPublisher.PublishSendWorkspaceTeamDailyUpdateMessageAsync(
-                        teamIds,
-                        cancellationToken);
+                    await teamDailyUpdaterService.SendDailyUpdateAsync(teamId, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);

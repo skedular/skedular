@@ -32,8 +32,7 @@ public class BookingComponents : IBookingComponents
 
             if (item.OrganizationCustomTags.Count != 0)
             {
-                deskLabel +=
-                    $" {Icons.CustomTags} {string.Join(",", item.OrganizationCustomTags.Select(tag => tag.Name))}";
+                deskLabel += $" {Icons.CustomTags} {string.Join(",", item.OrganizationCustomTags.Select(tag => tag.Name))}";
             }
 
             return (Block)new SectionBlock { Text = deskLabel.ToMarkdown() };

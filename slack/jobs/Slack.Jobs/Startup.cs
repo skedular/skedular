@@ -38,6 +38,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddPublishers()
             .AddOutboxPublishers()
             .AddJobs()
+            .AddSlack(Configuration, _ => { })
             .AddSkedularGrpcServices(Configuration);
     }
 

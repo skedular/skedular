@@ -25,6 +25,8 @@ public static class Extensions
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
         services
+            .AddScoped<ILocationDailyUpdaterService, LocationDailyUpdaterService>()
+            .AddScoped<ITeamDailyUpdaterService, TeamDailyUpdaterService>()
             .AddScoped<IWorkspaceMemberService, WorkspaceMemberService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
