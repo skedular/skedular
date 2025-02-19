@@ -20,7 +20,6 @@ declare global {
       GOOGLE_CLIENT_SECRET: string;
       AZURE_AD_CLIENT_ID: string;
       AZURE_AD_CLIENT_SECRET: string;
-      SLACK_CLIENT_ID: string;
       SLACK_CLIENT_SECRET: string;
       GATEWAY_ENDPOINT: string;
       CUSTOMER_ENDPOINT: string;
