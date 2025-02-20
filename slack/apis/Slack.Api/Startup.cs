@@ -73,17 +73,16 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                         .RegisterBlockOptionProvider<CountryOptionProvider>(OptionLoaderKeys.CountryKey)
                         .RegisterBlockOptionProvider<TimezoneOptionProvider>(OptionLoaderKeys.TimezoneKey)
                         .RegisterBlockOptionProvider<OrganizationMemberOptionProvider>(OptionLoaderKeys.OrganizationMemberKey)
-                        .RegisterBlockOptionProvider<OrganizationMemberAndCustomerPairOptionProvider>(OptionLoaderKeys
-                            .OrganizationMemberAndCustomerPairKey)
+                        .RegisterBlockOptionProvider<OrganizationMemberAndCustomerPairOptionProvider>(
+                            OptionLoaderKeys.OrganizationMemberAndCustomerPairKey)
                         .RegisterBlockOptionProvider<OrganizationLocationOptionProvider>(OptionLoaderKeys.OrganizationLocationKey)
                         .RegisterBlockOptionProvider<OrganizationTeamOptionProvider>(OptionLoaderKeys.OrganizationTeamKey);
 
                     options
-                        .RegisterBlockActionHandler<ButtonAction, DismissSetupDefaultLocationButtonHandler>(LocationActionTypes
-                            .DismissSetupDefaultLocation)
+                        .RegisterBlockActionHandler<ButtonAction, DismissSetupDefaultLocationButtonHandler>(
+                            LocationActionTypes.DismissSetupDefaultLocation)
                         .RegisterBlockActionHandler<ButtonAction, DismissSetupPreferredDesksButtonHandler>(DeskActionTypes.DismissSetupPreferredDesks)
-                        .RegisterBlockActionHandler<ButtonAction,
-                            DismissSetupPreferredZonesButtonHandler>(ZoneActionTypes.DismissSetupPreferredZones);
+                        .RegisterBlockActionHandler<ButtonAction,DismissSetupPreferredZonesButtonHandler>(ZoneActionTypes.DismissSetupPreferredZones);
 
                     options
                         .RegisterBlockActionHandler<ButtonAction, InstantAddBookingButtonHandler>(BookingActionTypes.InstantAddBooking)

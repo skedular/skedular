@@ -1,4 +1,5 @@
 using Slack.Shared;
+using Slack.Shared.Models;
 using SlackNet;
 using SlackNet.WebApi;
 
@@ -38,4 +39,11 @@ public static class SlackClientExtensions
             await slackApiClient.Views.PublishAsync(userId, viewDefinition, null, cancellationToken);
         }
     }
+
+    public static DayOfWeek ToDayOfWeek(this WorkspaceMember workspaceMember) =>
+        workspaceMember.Locale switch
+        {
+            "en-US" => DayOfWeek.Sunday,
+            _ => DayOfWeek.Monday
+        };
 }

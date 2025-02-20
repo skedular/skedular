@@ -224,8 +224,7 @@ public class HomePage(
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
                 workspaceEntity,
                 request.User.Id,
                 cancellationToken);
@@ -585,7 +584,7 @@ public class HomePage(
         commonPageContext.PageContext.HomePage.Pagination.CurrentBefore = before;
         commonPageContext.PageContext.HomePage.Pagination.CurrentLast = last;
 
-        var from = commonPageContext.PageContext.HomePage.SelectedDate.StartOfWeek();
+        var from = commonPageContext.PageContext.HomePage.SelectedDate.StartOfWeek(workspaceMember.ToDayOfWeek());
         var until = from.AddDays(6);
         var response = await Task.WhenAll(
             GetPaginatedBookingsAsync(
@@ -723,13 +722,7 @@ public class HomePage(
             ]
         };
 
-        return
-        [
-            new ActionsBlock
-            {
-                Elements = backButton.Concat(addBookingButton).Concat(feedbackButton).Concat([actionMenus]).ToList()
-            }
-        ];
+        return [new ActionsBlock { Elements = backButton.Concat(addBookingButton).Concat(feedbackButton).Concat([actionMenus]).ToList() }];
     }
 
     private async Task<ICollection<Block>> GetBookingCalendarSettingBlocksAsync(
@@ -747,17 +740,14 @@ public class HomePage(
         var header = new SectionBlock { Text = "*Select a day to see the bookings for the week*".ToMarkdown() };
         var datePicker = new ActionsBlock
         {
-            Elements =
-            [
-                new DatePicker { ActionId = BookingDatePicker, InitialDate = pageContext.HomePage.SelectedDate.ToDateTime() }
-            ]
+            Elements = [new DatePicker { ActionId = BookingDatePicker, InitialDate = pageContext.HomePage.SelectedDate.ToDateTime() }]
         };
 
         const int DayCount = 7;
-        var startOfWeek = pageContext.HomePage.SelectedDate.StartOfWeek();
+        var startOfWeek = pageContext.HomePage.SelectedDate.StartOfWeek(workspaceMember.ToDayOfWeek());
         var bookingButtons = new ActionsBlock
         {
-            Elements = Enumerable.Range(0, DayCount).Select(idx =>
+            Elements = Enumerable.Range(0, DayCount).Select(IActionElement (idx) =>
             {
                 var from = startOfWeek.AddDays(idx).ToDate();
                 var matchingBookings = myBookings.Where(item =>
@@ -774,15 +764,7 @@ public class HomePage(
                     var to = from.EndOfDay();
                     actionId = $"{BookingActionTypes.InstantAddBooking}{idx}";
                     buttonText = $"{to.ToShortDateWithoutYear()} {Icons.New}".ToPlainTextWithIcon(Icons.Calendar);
-                    value = new InstantAddBookingContext(
-                            pageContext,
-                            from,
-                            to,
-                            InitiationSource.App,
-                            customer.Id,
-                            null,
-                            null)
-                        .Serialize();
+                    value = new InstantAddBookingContext(pageContext, from, to, InitiationSource.App, customer.Id, null, null).Serialize();
                 }
                 else
                 {
@@ -791,7 +773,7 @@ public class HomePage(
                     value = new CancelBookingContext(pageContext, matchingBookings.First().Id).Serialize();
                 }
 
-                return (IActionElement)new Button { ActionId = actionId, Text = buttonText, Value = value };
+                return new Button { ActionId = actionId, Text = buttonText, Value = value };
             }).ToList()
         };
 
@@ -804,16 +786,11 @@ public class HomePage(
         ];
     }
 
-    private static List<Block> GetBookingsSearchCriteriaAndPaginationBlocks(
-        BookingConnection bookingConnection,
-        PageContext pageContext)
+    private static List<Block> GetBookingsSearchCriteriaAndPaginationBlocks(BookingConnection bookingConnection, PageContext pageContext)
     {
         if (bookingConnection.Edges.Count == 0)
         {
-            return
-            [
-                new SectionBlock { Text = "No booking found".ToMarkdown() }
-            ];
+            return [new SectionBlock { Text = "No booking found".ToMarkdown() }];
         }
 
         var totalBookingsCount = new SectionBlock { Text = $"Total bookings: {bookingConnection.TotalCount}".ToMarkdown() };
