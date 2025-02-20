@@ -59,8 +59,7 @@ public class CustomTagComponents(ICustomerService customerService, IOrganization
         var blocks = new List<Block>();
         foreach (var customTag in customTags)
         {
-            blocks.AddRange(
-                GetCustomTagCard(customTag, customer, permissions.CanModify, permissions.CanDelete, pageContext));
+            blocks.AddRange(GetCustomTagCard(customTag, customer, permissions.CanModify, permissions.CanDelete, pageContext));
             blocks.Add(new DividerBlock());
         }
 

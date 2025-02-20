@@ -30,19 +30,16 @@ public class EditLocationButtonHandler(
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
         var cancellationToken = CancellationToken.None;
-
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                viewSubmission.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            viewSubmission.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -55,8 +52,7 @@ public class EditLocationButtonHandler(
         }
 
         var values = viewSubmission.View.State.Values;
-        var updateInput =
-            new UpdateInput { Id = context.LocationId, OrganizationId = workspace.Organization.Id };
+        var updateInput = new UpdateInput { Id = context.LocationId, OrganizationId = workspace.Organization.Id };
 
         if (values.TryGetValue(LocationActionTypes.Name, out var nameBlock))
         {
@@ -135,9 +131,9 @@ public class EditLocationButtonHandler(
             {
                 if (slackUpdateChannel is ChannelSelectValue value)
                 {
-                    var locationEntity = await repositoryFactory.LocationRepository
-                        .Query(new Specification<Shared.Database.Entities.Location> { Criteria = query => query.Id == context.LocationId }
-                            .AddInclude(query => query.DailyUpdateChannel))
+                    var locationEntity = await repositoryFactory.LocationRepository.Query(
+                            new Specification<Shared.Database.Entities.Location> { Criteria = query => query.Id == context.LocationId }
+                                .AddInclude(query => query.DailyUpdateChannel))
                         .FirstOrDefaultAsync(cancellationToken);
                     if (locationEntity is not null)
                     {

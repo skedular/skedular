@@ -59,8 +59,7 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationServi
         var blocks = new List<Block>();
         foreach (var zone in zones)
         {
-            blocks.AddRange(
-                GetZoneCard(zone, customer, permissions.CanModify, permissions.CanDelete, pageContext));
+            blocks.AddRange(GetZoneCard(zone, customer, permissions.CanModify, permissions.CanDelete, pageContext));
             blocks.Add(new DividerBlock());
         }
 

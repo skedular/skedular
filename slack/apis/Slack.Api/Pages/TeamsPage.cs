@@ -70,18 +70,16 @@ public class TeamsPage(
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -145,18 +143,16 @@ public class TeamsPage(
     public async Task HandleAsync(StaticSelectAction action, BlockActionRequest request,
         CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -164,16 +160,14 @@ public class TeamsPage(
         if (action.SelectedOption.Value.StartsWith(BookingActionTypes.Bookings))
         {
             var teamId = action.SelectedOption.Value[BookingActionTypes.Bookings.Length..];
-            var bookingPermissions =
-                await bookingService.GetTeamPermissionsAsync(teamId, workspaceMember, cancellationToken);
+            var bookingPermissions = await bookingService.GetTeamPermissionsAsync(teamId, workspaceMember, cancellationToken);
             if (!bookingPermissions.CanViewBookings)
             {
                 throw new Unauthorized();
             }
 
             var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
-            context.PageContext.BookingsPage =
-                context.PageContext.BookingsPage = bookingsPageContextService.GetDefaultBookingsPageContext();
+            context.PageContext.BookingsPage = context.PageContext.BookingsPage = bookingsPageContextService.GetDefaultBookingsPageContext();
             context.PageContext.PushCurrentPageToVisitedPages();
 
             await bookingsPage.RenderWithContextAsync(
@@ -382,14 +376,13 @@ public class TeamsPage(
             cancellationToken);
         var teams = teamConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var teamIds = teams.Select(item => item.Id).ToList();
-        var teamsWithChannel = await repositoryFactory.TeamRepository
-            .Query(new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id) }
-                .AddInclude(query => query.DailyUpdateChannel))
+        var teamsWithChannel = await repositoryFactory.TeamRepository.Query(
+                new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id) }
+                    .AddInclude(query => query.DailyUpdateChannel))
             .ToListAsync(cancellationToken);
         teams = teams.Select(item =>
         {
-            var matchedTeam =
-                teamsWithChannel.FirstOrDefault(replicatedTeam => replicatedTeam.Id == item.Id);
+            var matchedTeam = teamsWithChannel.FirstOrDefault(replicatedTeam => replicatedTeam.Id == item.Id);
             if (matchedTeam is not null)
             {
                 item.DailyUpdateChannel = mapper.MapTo(matchedTeam.DailyUpdateChannel);
@@ -400,11 +393,7 @@ public class TeamsPage(
 
         var asyncBlocks = await Task.WhenAll(
             GetToolbarAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
-            teamComponents.GetTeamCardsAsync(
-                workspaceMember,
-                teams,
-                commonPageContext.PageContext,
-                cancellationToken));
+            teamComponents.GetTeamCardsAsync(workspaceMember, teams, commonPageContext.PageContext, cancellationToken));
 
         ICollection<Block>[] blocks =
         [
@@ -420,10 +409,7 @@ public class TeamsPage(
             new HomeViewDefinition
             {
                 CallbackId = TeamsCallback,
-                Blocks = blocks
-                    .SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()]))
-                    .SkipLast(1)
-                    .ToList(),
+                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()])).SkipLast(1).ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
             hash,
@@ -452,19 +438,14 @@ public class TeamsPage(
         CancellationToken cancellationToken)
     {
         var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
-        var addTeamButton =
-            await teamComponents.GetAddTeamButtonAsync(workspace, workspaceMember, pageContext, cancellationToken);
+        var addTeamButton = await teamComponents.GetAddTeamButtonAsync(workspace, workspaceMember, pageContext, cancellationToken);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
 
         return
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>()
-                    .Concat(homeAndBackButtons)
-                    .Concat(addTeamButton)
-                    .Concat(feedbackButton)
-                    .ToList()
+                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addTeamButton).Concat(feedbackButton).ToList()
             }
         ];
     }
@@ -499,9 +480,7 @@ public class TeamsPage(
             cancellationToken: cancellationToken);
     }
 
-    private static List<Block> GetTeamsSearchCriteriaAndPaginationBlocks(
-        TeamConnection teamConnection,
-        PageContext pageContext)
+    private static List<Block> GetTeamsSearchCriteriaAndPaginationBlocks(TeamConnection teamConnection, PageContext pageContext)
     {
         if (teamConnection.Edges.Count == 0)
         {
@@ -605,10 +584,9 @@ public class TeamsPage(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.TimezoneKey,
-                InitialOption =
-                    string.IsNullOrWhiteSpace(team.Timezone)
-                        ? null
-                        : new Option { Text = team.Timezone.ToOptionText(), Value = team.Timezone },
+                InitialOption = string.IsNullOrWhiteSpace(team.Timezone)
+                    ? null
+                    : new Option { Text = team.Timezone.ToOptionText(), Value = team.Timezone },
                 MinQueryLength = 3
             },
             Optional = true
@@ -630,9 +608,9 @@ public class TeamsPage(
             Optional = true
         };
 
-        var teamEntity = await repositoryFactory.TeamRepository
-            .Query(new Specification<Team> { Criteria = query => query.Id == team.Id }
-                .AddInclude(query => query.DailyUpdateChannel))
+        var teamEntity = await repositoryFactory.TeamRepository.Query(
+                new Specification<Team> { Criteria = query => query.Id == team.Id }
+                    .AddInclude(query => query.DailyUpdateChannel))
             .FirstOrDefaultAsync(cancellationToken);
 
         var updateChannel = new InputBlock

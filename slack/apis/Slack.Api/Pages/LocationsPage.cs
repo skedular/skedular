@@ -467,10 +467,7 @@ public class LocationsPage(
             new HomeViewDefinition
             {
                 CallbackId = LocationsCallback,
-                Blocks = blocks
-                    .SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()]))
-                    .SkipLast(1)
-                    .ToList(),
+                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()])).SkipLast(1).ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
             hash,

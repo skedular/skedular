@@ -87,8 +87,7 @@ public class DeskComponents(ICustomerService customerService, ILocationService l
         var blocks = new List<Block>();
         foreach (var desk in desks)
         {
-            blocks.AddRange(GetDeskCard(desk, customer, bookings, permissions.CanModify, permissions.CanDelete,
-                pageContext));
+            blocks.AddRange(GetDeskCard(desk, customer, bookings, permissions.CanModify, permissions.CanDelete, pageContext));
             blocks.Add(new DividerBlock());
         }
 

@@ -65,18 +65,16 @@ public class ZonesPage(
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -139,23 +137,18 @@ public class ZonesPage(
         }
     }
 
-    public async Task HandleAsync(
-        StaticSelectAction action,
-        BlockActionRequest request,
-        CancellationToken cancellationToken)
+    public async Task HandleAsync(StaticSelectAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -163,8 +156,7 @@ public class ZonesPage(
         if (action.SelectedOption.Value.StartsWith(BookingActionTypes.Bookings))
         {
             var locationId = action.SelectedOption.Value[BookingActionTypes.Bookings.Length..];
-            var bookingPermissions =
-                await bookingService.GetLocationPermissionsAsync(locationId, workspaceMember, cancellationToken);
+            var bookingPermissions = await bookingService.GetLocationPermissionsAsync(locationId, workspaceMember, cancellationToken);
             if (!bookingPermissions.CanViewBookings)
             {
                 throw new Unauthorized();
@@ -188,10 +180,7 @@ public class ZonesPage(
             ArgumentNullException.ThrowIfNull(context.PageContext.ZonesPage);
 
             var zoneId = action.SelectedOption.Value[ZoneActionTypes.EditZone.Length..];
-            var permissions = await organizationService.GetPermissionsAsync(
-                workspace,
-                workspaceMember,
-                cancellationToken);
+            var permissions = await organizationService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
             if (!permissions.CanModify)
             {
                 throw new Unauthorized();
@@ -200,12 +189,7 @@ public class ZonesPage(
             context.PageContext.PushCurrentPageToVisitedPages();
             context.ZoneId = zoneId;
 
-            await OpenEditZoneDialogAsync(
-                workspace,
-                workspaceMember,
-                request.TriggerId,
-                context,
-                cancellationToken);
+            await OpenEditZoneDialogAsync(workspace, workspaceMember, request.TriggerId, context, cancellationToken);
         }
         else if (action.SelectedOption.Value.StartsWith(ZoneActionTypes.RemoveZone))
         {
@@ -225,12 +209,7 @@ public class ZonesPage(
             context.PageContext.PushCurrentPageToVisitedPages();
             context.ZoneId = zoneId;
 
-            await OpenRemoveZoneDialogAsync(
-                workspace,
-                workspaceMember,
-                request.TriggerId,
-                context,
-                cancellationToken);
+            await OpenRemoveZoneDialogAsync(workspace, workspaceMember, request.TriggerId, context, cancellationToken);
         }
     }
 
@@ -415,10 +394,7 @@ public class ZonesPage(
             new HomeViewDefinition
             {
                 CallbackId = ZonesCallback,
-                Blocks = blocks
-                    .SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()]))
-                    .SkipLast(1)
-                    .ToList(),
+                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()])).SkipLast(1).ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
             hash,
@@ -447,20 +423,14 @@ public class ZonesPage(
         CancellationToken cancellationToken)
     {
         var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
-        var addZoneButton =
-            await zoneComponents.GetAddZoneButtonAsync(workspace, workspaceMember, pageContext,
-                cancellationToken);
+        var addZoneButton = await zoneComponents.GetAddZoneButtonAsync(workspace, workspaceMember, pageContext, cancellationToken);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
 
         return
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>()
-                    .Concat(homeAndBackButtons)
-                    .Concat(addZoneButton)
-                    .Concat(feedbackButton)
-                    .ToList()
+                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addZoneButton).Concat(feedbackButton).ToList()
             }
         ];
     }
@@ -485,9 +455,7 @@ public class ZonesPage(
             Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
-        getPaginatedZonesInput.OrderBy.AddRange([
-            new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.ZoneName }
-        ]);
+        getPaginatedZonesInput.OrderBy.AddRange([new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.ZoneName }]);
 
         return await organizationServiceClient.GetPaginatedZonesAsync(
             getPaginatedZonesInput,
@@ -504,8 +472,7 @@ public class ZonesPage(
             return [new SectionBlock { Text = "No zone found".ToMarkdown() }];
         }
 
-        var totalZonesCount =
-            new SectionBlock { Text = $"Total zones: {zoneConnection.TotalCount}".ToMarkdown() };
+        var totalZonesCount = new SectionBlock { Text = $"Total zones: {zoneConnection.TotalCount}".ToMarkdown() };
         if (zoneConnection.TotalCount <= ZonesPageSize)
         {
             return [totalZonesCount];
@@ -606,10 +573,7 @@ public class ZonesPage(
                 Title = "Edit Zone",
                 Close = "Cancel",
                 Submit = "Save",
-                Blocks =
-                [
-                    name, description
-                ],
+                Blocks = [name, description],
                 PrivateMetadata = context.Serialize()
             },
             cancellationToken);
@@ -626,7 +590,6 @@ public class ZonesPage(
             new GetZoneInput { Id = context.ZoneId },
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
-
         var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the zone {zone.Name.ToSafeString()}?" };
 
         var slackApiClient = workspace.GetApiClient();
@@ -638,8 +601,7 @@ public class ZonesPage(
                 Title = "Remove Zone",
                 Close = "No",
                 Submit = "Yes",
-                Blocks =
-                    [confirmationMessage],
+                Blocks = [confirmationMessage],
                 PrivateMetadata = context.Serialize()
             },
             cancellationToken);

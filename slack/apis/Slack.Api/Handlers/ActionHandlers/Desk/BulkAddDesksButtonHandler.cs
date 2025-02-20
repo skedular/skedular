@@ -43,25 +43,21 @@ public class BulkAddDesksButtonHandler(
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
         ArgumentNullException.ThrowIfNull(customer);
-
-        var context = AddDeskContext.Deserialize(action.Value);
 
         var prefix = new InputBlock
         {
@@ -90,15 +86,14 @@ public class BulkAddDesksButtonHandler(
         {
             BlockId = DeskActionTypes.RequireBookingApproval,
             Label = "Booking Approval Status".ToPlainText(),
-            Element =
-                new CheckboxGroup
+            Element = new CheckboxGroup
+            {
+                ActionId = DeskActionTypes.RequireBookingApproval,
+                Options = new List<Option>
                 {
-                    ActionId = DeskActionTypes.RequireBookingApproval,
-                    Options = new List<Option>
-                    {
-                        new() { Text = "Require Booking Approval".ToPlainText(), Value = DeskActionTypes.RequireBookingApproval }
-                    }
-                },
+                    new() { Text = "Require Booking Approval".ToPlainText(), Value = DeskActionTypes.RequireBookingApproval }
+                }
+            },
             Optional = true
         };
 
@@ -118,8 +113,7 @@ public class BulkAddDesksButtonHandler(
                     {
                         Text = item.Name.ToOptionText(),
                         Value = item.Id,
-                        Description =
-                            string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
+                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList()
                 },
                 Optional = true
@@ -140,8 +134,7 @@ public class BulkAddDesksButtonHandler(
                     {
                         Text = item.Name.ToOptionText(),
                         Value = item.Id,
-                        Description =
-                            string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
+                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList()
                 },
                 Optional = true
@@ -179,18 +172,16 @@ public class BulkAddDesksButtonHandler(
     {
         var cancellationToken = CancellationToken.None;
 
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                viewSubmission.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            viewSubmission.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -401,9 +392,7 @@ public class BulkAddDesksButtonHandler(
             Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
-        getPaginatedZonesInput.OrderBy.AddRange([
-            new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.ZoneName }
-        ]);
+        getPaginatedZonesInput.OrderBy.AddRange([new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.ZoneName }]);
 
         return await organizationServiceClient.GetPaginatedZonesAsync(
             getPaginatedZonesInput,

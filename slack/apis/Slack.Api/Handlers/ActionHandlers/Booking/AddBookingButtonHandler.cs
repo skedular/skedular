@@ -45,18 +45,16 @@ public class AddBookingButtonHandler(
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -69,9 +67,7 @@ public class AddBookingButtonHandler(
             Label = "Date".ToPlainText(),
             Element = new DatePicker
             {
-                ActionId = DateKey,
-                InitialDate =
-                    (context.From ?? timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc)).ToDateTime()
+                ActionId = DateKey, InitialDate = (context.From ?? timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc)).ToDateTime()
             },
             Optional = false
         };
@@ -124,18 +120,16 @@ public class AddBookingButtonHandler(
     {
         var cancellationToken = CancellationToken.None;
 
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, customerId) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                viewSubmission.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, customerId) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            viewSubmission.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -198,9 +192,7 @@ public class AddBookingButtonHandler(
             {
                 if (location is ExternalSelectValue value)
                 {
-                    addInput.LocationId = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
-                        ? string.Empty
-                        : value.SelectedOption.Value;
+                    addInput.LocationId = string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
                 }
                 else
                 {
@@ -223,9 +215,7 @@ public class AddBookingButtonHandler(
             {
                 if (team is ExternalSelectValue value)
                 {
-                    addInput.TeamId = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
-                        ? string.Empty
-                        : value.SelectedOption.Value;
+                    addInput.TeamId = string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
                 }
                 else
                 {
@@ -288,8 +278,7 @@ public class AddBookingButtonHandler(
         Customer customer,
         CancellationToken cancellationToken)
     {
-        var permissions =
-            await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
         if (!permissions.CanAddBookingOnBehalf)
         {
             return [];
@@ -357,10 +346,9 @@ public class AddBookingButtonHandler(
                     Element = new ExternalSelectMenu
                     {
                         ActionId = OptionLoaderKeys.OrganizationLocationKey,
-                        InitialOption =
-                            defaultLocation is null
-                                ? null
-                                : new Option { Text = defaultLocation.Name.ToOptionText(), Value = defaultLocation.Id },
+                        InitialOption = defaultLocation is null
+                            ? null
+                            : new Option { Text = defaultLocation.Name.ToOptionText(), Value = defaultLocation.Id },
                         MinQueryLength = 0
                     },
                     Optional = false
@@ -381,8 +369,7 @@ public class AddBookingButtonHandler(
                 Element = new ExternalSelectMenu
                 {
                     ActionId = OptionLoaderKeys.OrganizationLocationKey,
-                    InitialOption =
-                        new Option { Text = locationToAddToBooking.Name.ToOptionText(), Value = locationToAddToBooking.Id },
+                    InitialOption = new Option { Text = locationToAddToBooking.Name.ToOptionText(), Value = locationToAddToBooking.Id },
                     MinQueryLength = 0
                 },
                 Optional = true
@@ -399,8 +386,8 @@ public class AddBookingButtonHandler(
     {
         if (context.TeamId is null)
         {
-            var defaultTeam = customer.DefaultTeams.FirstOrDefault(item =>
-                item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
+            var defaultTeam =
+                customer.DefaultTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
 
             return
             [
@@ -411,10 +398,9 @@ public class AddBookingButtonHandler(
                     Element = new ExternalSelectMenu
                     {
                         ActionId = OptionLoaderKeys.OrganizationTeamKey,
-                        InitialOption =
-                            defaultTeam is null
-                                ? null
-                                : new Option { Text = defaultTeam.Name.ToOptionText(), Value = defaultTeam.Id },
+                        InitialOption = defaultTeam is null
+                            ? null
+                            : new Option { Text = defaultTeam.Name.ToOptionText(), Value = defaultTeam.Id },
                         MinQueryLength = 0
                     },
                     Optional = true
@@ -422,8 +408,7 @@ public class AddBookingButtonHandler(
             ];
         }
 
-        var teamToAddToBooking =
-            await teamService.GetTeamAsync(context.TeamId, workspaceMember, cancellationToken);
+        var teamToAddToBooking = await teamService.GetTeamAsync(context.TeamId, workspaceMember, cancellationToken);
         ArgumentNullException.ThrowIfNull(teamToAddToBooking);
 
         return
@@ -435,8 +420,7 @@ public class AddBookingButtonHandler(
                 Element = new ExternalSelectMenu
                 {
                     ActionId = OptionLoaderKeys.OrganizationTeamKey,
-                    InitialOption =
-                        new Option { Text = teamToAddToBooking.Name.ToOptionText(), Value = teamToAddToBooking.Id },
+                    InitialOption = new Option { Text = teamToAddToBooking.Name.ToOptionText(), Value = teamToAddToBooking.Id },
                     MinQueryLength = 0
                 },
                 Optional = false

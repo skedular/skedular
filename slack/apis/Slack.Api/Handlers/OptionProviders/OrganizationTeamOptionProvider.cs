@@ -21,8 +21,7 @@ public class OrganizationTeamOptionProvider(
     public async Task<BlockOptionsResponse> GetOptions(BlockOptionsRequest request)
     {
         var cancellationToken = CancellationToken.None;
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();

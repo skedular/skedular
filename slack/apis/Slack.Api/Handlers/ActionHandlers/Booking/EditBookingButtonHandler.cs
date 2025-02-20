@@ -47,18 +47,16 @@ public class EditBookingButtonHandler(
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, customerId) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, customerId) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -70,8 +68,7 @@ public class EditBookingButtonHandler(
 
         if (booking.Customer.Id != customerId)
         {
-            var permissions =
-                await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
+            var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
             if (!permissions.CanUpdateBookingOnBehalf)
             {
                 throw new Unauthorized();
@@ -87,8 +84,7 @@ public class EditBookingButtonHandler(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationMemberKey,
-                InitialOption =
-                    new Option { Text = booking.Customer.GetCustomerName().ToOptionText(), Value = booking.Customer.Id },
+                InitialOption = new Option { Text = booking.Customer.GetCustomerName().ToOptionText(), Value = booking.Customer.Id },
                 MinQueryLength = 0
             },
             Optional = false
@@ -101,10 +97,9 @@ public class EditBookingButtonHandler(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationTeamKey,
-                InitialOption =
-                    booking.Team is null
-                        ? null
-                        : new Option { Text = booking.Team.Name.ToOptionText(), Value = booking.Team.Id },
+                InitialOption = booking.Team is null
+                    ? null
+                    : new Option { Text = booking.Team.Name.ToOptionText(), Value = booking.Team.Id },
                 MinQueryLength = 0
             },
             Optional = true
@@ -161,27 +156,25 @@ public class EditBookingButtonHandler(
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
         var cancellationToken = CancellationToken.None;
-
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                viewSubmission.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            viewSubmission.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditBookingContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var booking = mapper.MapTo(await bookingServiceClient.GetAsync(
-            new GetInput { Id = context.BookingId },
-            bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken));
+        var booking = mapper.MapTo(
+            await bookingServiceClient.GetAsync(
+                new GetInput { Id = context.BookingId },
+                bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+                cancellationToken: cancellationToken));
 
         var values = viewSubmission.View.State.Values;
         if (values.TryGetValue(OptionLoaderKeys.OrganizationMemberKey, out var organizationMemberBlock))
@@ -362,10 +355,7 @@ public class EditBookingButtonHandler(
                 .Where(desk => desk.Location is not null && desk.Location.Id == item.Id)
                 .Select(desk =>
                 {
-                    var zones = desk.OrganizationZones
-                        .Where(locationTag => !string.IsNullOrWhiteSpace(locationTag.Name))
-                        .ToList();
-
+                    var zones = desk.OrganizationZones.Where(locationTag => !string.IsNullOrWhiteSpace(locationTag.Name)).ToList();
                     var optionText = zones.Count == 0
                         ? desk.Name.ToOptionTextWithIcon(Icons.Desk)
                         : $"{desk.Name.ToTextWithIcon(Icons.Desk)} {string.Join(",", zones.Select(zone => zone.Name)).ToTextWithIcon(Icons.Zones)}"

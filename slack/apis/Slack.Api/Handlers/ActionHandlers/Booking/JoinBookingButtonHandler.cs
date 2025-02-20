@@ -29,18 +29,16 @@ public class JoinBookingButtonHandler(
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, customerId) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, customerId) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -58,10 +56,8 @@ public class JoinBookingButtonHandler(
             To = booking.To.ToTimestamp(),
             Type = BookingType.WorkingFromOffice,
             CustomerId = customerId,
-            OrganizationId =
-                string.IsNullOrWhiteSpace(booking.Organization?.Id) ? string.Empty : booking.Organization.Id,
-            LocationId =
-                string.IsNullOrWhiteSpace(booking.Location?.Id) ? string.Empty : booking.Location.Id.ToSafeString(),
+            OrganizationId = string.IsNullOrWhiteSpace(booking.Organization?.Id) ? string.Empty : booking.Organization.Id,
+            LocationId = string.IsNullOrWhiteSpace(booking.Location?.Id) ? string.Empty : booking.Location.Id.ToSafeString(),
             TeamId = string.IsNullOrWhiteSpace(booking.Team?.Id) ? string.Empty : booking.Team.Id.ToSafeString()
         };
 

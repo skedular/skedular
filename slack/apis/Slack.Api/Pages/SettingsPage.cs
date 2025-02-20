@@ -60,18 +60,13 @@ public class SettingsPage(
         BlockActionRequest request,
         CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        _ =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        _ = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(workspaceEntity, request.User.Id, cancellationToken);
 
         switch (action.ActionId)
         {
@@ -89,23 +84,18 @@ public class SettingsPage(
         }
     }
 
-    public async Task HandleAsync(
-        CheckboxGroupAction action,
-        BlockActionRequest request,
-        CancellationToken cancellationToken)
+    public async Task HandleAsync(CheckboxGroupAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         switch (action.ActionId)
         {
@@ -121,23 +111,18 @@ public class SettingsPage(
         }
     }
 
-    public async Task HandleAsync(
-        StaticSelectAction action,
-        BlockActionRequest request,
-        CancellationToken cancellationToken)
+    public async Task HandleAsync(StaticSelectAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -145,8 +130,7 @@ public class SettingsPage(
         {
             case BillingActionTypes.Billing:
                 {
-                    var permissions =
-                        await billingService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
+                    var permissions = await billingService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
                     var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
                     context.PageContext.PushCurrentPageToVisitedPages();
                     if (permissions.CanManageBillingInfo)
@@ -234,10 +218,7 @@ public class SettingsPage(
             new HomeViewDefinition
             {
                 CallbackId = SettingsCallback,
-                Blocks = blocks
-                    .SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()]))
-                    .SkipLast(1)
-                    .ToList(),
+                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()])).SkipLast(1).ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
             hash,
@@ -271,23 +252,13 @@ public class SettingsPage(
             {
                 ActionId = ActionsMenu,
                 Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
-                Options =
-                [
-                    new Option { Value = BillingActionTypes.Billing, Text = "Billing".ToPlainTextWithIcon(Icons.Billing) }
-                ]
+                Options = [new Option { Value = BillingActionTypes.Billing, Text = "Billing".ToPlainTextWithIcon(Icons.Billing) }]
             });
         }
 
         return
         [
-            new ActionsBlock
-            {
-                Elements = new List<IActionElement>()
-                    .Concat(homeAndBackButtons)
-                    .Concat(feedbackButton)
-                    .Concat(actionMenus)
-                    .ToList()
-            }
+            new ActionsBlock { Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(feedbackButton).Concat(actionMenus).ToList() }
         ];
     }
 
@@ -307,8 +278,7 @@ public class SettingsPage(
                     ActionId = AutomaticallyUpdateProfileStatus,
                     Options = new List<Option> { automaticallyUpdateProfileStatusOption },
                     InitialOptions =
-                        workspaceMember.AutomaticallyUpdateProfileStatus is null ||
-                        !workspaceMember.AutomaticallyUpdateProfileStatus.Value
+                        workspaceMember.AutomaticallyUpdateProfileStatus is null || !workspaceMember.AutomaticallyUpdateProfileStatus.Value
                             ? []
                             : [automaticallyUpdateProfileStatusOption]
                 }
@@ -358,11 +328,8 @@ public class SettingsPage(
             cancellationToken: cancellationToken);
 
         var email = new SectionBlock { Text = $"Email: {billingInfo.Email.ToSafeString()}".ToPlainText() };
-
         var addressLine1 = new SectionBlock { Text = $"Address Line 1: {billingInfo.AddressLine1.ToSafeString()}".ToPlainText() };
-
         var addressLine2 = new SectionBlock { Text = $"Address Line 2: {billingInfo.AddressLine2.ToSafeString()}".ToPlainText() };
-
         var suburb = new SectionBlock { Text = $"Suburb: {billingInfo.Suburb.ToSafeString()}".ToPlainText() };
         var city = new SectionBlock { Text = $"City: {billingInfo.City.ToSafeString()}".ToPlainText() };
         var province = new SectionBlock { Text = $"Province: {billingInfo.Province.ToSafeString()}".ToPlainText() };
@@ -378,10 +345,7 @@ public class SettingsPage(
                 Title = "View Billing",
                 Close = "Cancel",
                 Submit = "Close",
-                Blocks =
-                [
-                    email, new DividerBlock(), addressLine1, addressLine2, suburb, city, province, zipcode, country
-                ],
+                Blocks = [email, new DividerBlock(), addressLine1, addressLine2, suburb, city, province, zipcode, country],
                 PrivateMetadata = commonPageContext.Serialize()
             },
             cancellationToken);
@@ -406,8 +370,7 @@ public class SettingsPage(
             Element = new EmailTextInput
             {
                 ActionId = BillingActionTypes.Email,
-                InitialValue =
-                    string.IsNullOrWhiteSpace(billingInfo.Email) ? null : billingInfo.Email.ToSafeString()
+                InitialValue = string.IsNullOrWhiteSpace(billingInfo.Email) ? null : billingInfo.Email.ToSafeString()
             },
             Optional = false
         };
@@ -467,10 +430,9 @@ public class SettingsPage(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.CountryKey,
-                InitialOption =
-                    string.IsNullOrWhiteSpace(billingInfo.Country)
-                        ? null
-                        : new Option { Text = billingInfo.Country.ToOptionText(), Value = billingInfo.Country },
+                InitialOption = string.IsNullOrWhiteSpace(billingInfo.Country)
+                    ? null
+                    : new Option { Text = billingInfo.Country.ToOptionText(), Value = billingInfo.Country },
                 MinQueryLength = 3
             },
             Optional = true

@@ -105,9 +105,9 @@ public class HomePage(
                     }
 
                     var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                            workspaceEntity,
-                            appHomeOpenedEvent.User,
-                            cancellationToken);
+                        workspaceEntity,
+                        appHomeOpenedEvent.User,
+                        cancellationToken);
 
                     var workspace = mapper.MapTo(workspaceEntity);
                     await RenderAsync(
@@ -135,9 +135,9 @@ public class HomePage(
         }
 
         var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -200,9 +200,9 @@ public class HomePage(
         }
 
         var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -225,9 +225,9 @@ public class HomePage(
         }
 
         var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -347,9 +347,9 @@ public class HomePage(
         }
 
         var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -614,9 +614,9 @@ public class HomePage(
                 workspaceMember,
                 bookings, myBookings,
                 permissions.CanUpdateBookingOnBehalf,
-            permissions.CanDeleteBookingOnBehalf,
-            commonPageContext.PageContext,
-            cancellationToken));
+                permissions.CanDeleteBookingOnBehalf,
+                commonPageContext.PageContext,
+                cancellationToken));
 
         asyncBlocks =
         [
@@ -636,10 +636,7 @@ public class HomePage(
             new HomeViewDefinition
             {
                 CallbackId = HomeCallback,
-                Blocks = asyncBlocks
-                    .SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()]))
-                    .SkipLast(1)
-                    .ToList(),
+                Blocks = asyncBlocks.SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()])).SkipLast(1).ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
             hash,

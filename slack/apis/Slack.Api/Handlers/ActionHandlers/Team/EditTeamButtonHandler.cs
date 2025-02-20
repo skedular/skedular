@@ -34,19 +34,16 @@ public class EditTeamButtonHandler(
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
         var cancellationToken = CancellationToken.None;
-
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                viewSubmission.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            viewSubmission.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -60,8 +57,7 @@ public class EditTeamButtonHandler(
 
         var team = await teamService.GetTeamAsync(context.TeamId, workspaceMember, cancellationToken);
         var values = viewSubmission.View.State.Values;
-        var updateInput =
-            new UpdateInput { Id = context.TeamId, OrganizationId = workspace.Organization.Id };
+        var updateInput = new UpdateInput { Id = context.TeamId, OrganizationId = workspace.Organization.Id };
 
         if (values.TryGetValue(TeamActionTypes.Name, out var nameBlock))
         {
@@ -116,9 +112,7 @@ public class EditTeamButtonHandler(
             {
                 if (timezone is ExternalSelectValue value)
                 {
-                    updateInput.Timezone = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
-                        ? string.Empty
-                        : value.SelectedOption.Value;
+                    updateInput.Timezone = string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
                 }
                 else
                 {
@@ -141,9 +135,8 @@ public class EditTeamButtonHandler(
             {
                 if (primaryLocation is ExternalSelectValue value)
                 {
-                    updateInput.PrimaryLocationId = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
-                        ? string.Empty
-                        : value.SelectedOption.Value;
+                    updateInput.PrimaryLocationId =
+                        string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
                 }
                 else
                 {
@@ -225,9 +218,9 @@ public class EditTeamButtonHandler(
             {
                 if (slackUpdateChannel is ChannelSelectValue value)
                 {
-                    var teamEntity = await repositoryFactory.TeamRepository
-                        .Query(new Specification<Shared.Database.Entities.Team> { Criteria = query => query.Id == context.TeamId }
-                            .AddInclude(query => query.DailyUpdateChannel))
+                    var teamEntity = await repositoryFactory.TeamRepository.Query(
+                            new Specification<Shared.Database.Entities.Team> { Criteria = query => query.Id == context.TeamId }
+                                .AddInclude(query => query.DailyUpdateChannel))
                         .FirstOrDefaultAsync(cancellationToken);
                     if (teamEntity is not null)
                     {

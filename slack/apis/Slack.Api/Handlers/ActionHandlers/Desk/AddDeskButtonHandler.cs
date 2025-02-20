@@ -40,25 +40,21 @@ public class AddDeskButtonHandler(
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                request.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            request.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
         ArgumentNullException.ThrowIfNull(customer);
-
-        var context = AddDeskContext.Deserialize(action.Value);
 
         var name = new InputBlock
         {
@@ -113,8 +109,7 @@ public class AddDeskButtonHandler(
                     {
                         Text = item.Name.ToOptionText(),
                         Value = item.Id,
-                        Description =
-                            string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
+                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList()
                 },
                 Optional = true
@@ -135,8 +130,7 @@ public class AddDeskButtonHandler(
                     {
                         Text = item.Name.ToOptionText(),
                         Value = item.Id,
-                        Description =
-                            string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
+                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList()
                 },
                 Optional = true
@@ -173,19 +167,16 @@ public class AddDeskButtonHandler(
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
         var cancellationToken = CancellationToken.None;
-
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                viewSubmission.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            viewSubmission.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
@@ -220,8 +211,7 @@ public class AddDeskButtonHandler(
             {
                 if (deactivated is CheckboxGroupValue value)
                 {
-                    addDeskInput.Deactivated =
-                        value.SelectedOptions.Any(item => item.Value == DeskActionTypes.Deactivated);
+                    addDeskInput.Deactivated = value.SelectedOptions.Any(item => item.Value == DeskActionTypes.Deactivated);
                 }
                 else
                 {
@@ -240,13 +230,11 @@ public class AddDeskButtonHandler(
 
         if (values.TryGetValue(DeskActionTypes.RequireBookingApproval, out var requireBookingApprovalBlock))
         {
-            if (requireBookingApprovalBlock.TryGetValue(DeskActionTypes.RequireBookingApproval,
-                    out var requireBookingApproval))
+            if (requireBookingApprovalBlock.TryGetValue(DeskActionTypes.RequireBookingApproval, out var requireBookingApproval))
             {
                 if (requireBookingApproval is CheckboxGroupValue value)
                 {
-                    addDeskInput.RequireBookingApproval =
-                        value.SelectedOptions.Any(item => item.Value == DeskActionTypes.RequireBookingApproval);
+                    addDeskInput.RequireBookingApproval = value.SelectedOptions.Any(item => item.Value == DeskActionTypes.RequireBookingApproval);
                 }
                 else
                 {
@@ -363,9 +351,7 @@ public class AddDeskButtonHandler(
             Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
         };
 
-        getPaginatedZonesInput.OrderBy.AddRange([
-            new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.ZoneName }
-        ]);
+        getPaginatedZonesInput.OrderBy.AddRange([new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.ZoneName }]);
 
         return await organizationServiceClient.GetPaginatedZonesAsync(
             getPaginatedZonesInput,

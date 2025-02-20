@@ -27,25 +27,21 @@ public class EditDeskButtonHandler(
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
         var cancellationToken = CancellationToken.None;
-
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
-                workspaceEntity,
-                viewSubmission.User.Id,
-                cancellationToken);
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+            workspaceEntity,
+            viewSubmission.User.Id,
+            cancellationToken);
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditDeskContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var permissions =
-            await locationService.GetPermissionsAsync(context.LocationId, workspaceMember, cancellationToken);
+        var permissions = await locationService.GetPermissionsAsync(context.LocationId, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
             throw new Unauthorized();
@@ -84,8 +80,7 @@ public class EditDeskButtonHandler(
             {
                 if (deactivated is CheckboxGroupValue value)
                 {
-                    updateDeskInput.Deactivated =
-                        value.SelectedOptions.Any(item => item.Value == DeskActionTypes.Deactivated);
+                    updateDeskInput.Deactivated = value.SelectedOptions.Any(item => item.Value == DeskActionTypes.Deactivated);
                 }
                 else
                 {
@@ -104,14 +99,11 @@ public class EditDeskButtonHandler(
 
         if (values.TryGetValue(DeskActionTypes.RequireBookingApproval, out var requireBookingApprovalBlock))
         {
-            if (requireBookingApprovalBlock.TryGetValue(
-                    DeskActionTypes.RequireBookingApproval,
-                    out var requireBookingApproval))
+            if (requireBookingApprovalBlock.TryGetValue(DeskActionTypes.RequireBookingApproval, out var requireBookingApproval))
             {
                 if (requireBookingApproval is CheckboxGroupValue value)
                 {
-                    updateDeskInput.RequireBookingApproval =
-                        value.SelectedOptions.Any(item => item.Value == DeskActionTypes.RequireBookingApproval);
+                    updateDeskInput.RequireBookingApproval = value.SelectedOptions.Any(item => item.Value == DeskActionTypes.RequireBookingApproval);
                 }
                 else
                 {
