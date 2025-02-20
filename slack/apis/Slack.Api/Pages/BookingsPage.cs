@@ -383,7 +383,7 @@ public class BookingsPage(
         ICollection<Block>[] blocks =
         [
             GetTitle(),
-            GetToolbar(commonPageContext.PageContext),
+            GetToolbar(commonPageContext.PageContext, workspaceMember.Timezone),
             GetBookingsSearchCriteriaAndPaginationBlocks(
                 bookingConnection,
                 from,
@@ -428,9 +428,9 @@ public class BookingsPage(
         new SectionBlock { Text = "*Bookings*".ToMarkdown() }
     ];
 
-    private ICollection<Block> GetToolbar(PageContext pageContext)
+    private ICollection<Block> GetToolbar(PageContext pageContext, string timezone)
     {
-        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
+        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, timezone);
         var addBookingButton = bookingComponents.GetAddBookingButton(null, null, pageContext);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
 

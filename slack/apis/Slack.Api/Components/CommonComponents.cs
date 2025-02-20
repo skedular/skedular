@@ -7,17 +7,15 @@ namespace Slack.Api.Components;
 
 public interface ICommonComponents
 {
-    ICollection<IActionElement> GetHomeAndBackButtons(PageContext pageContext);
+    ICollection<IActionElement> GetHomeAndBackButtons(PageContext pageContext, string timezone);
     ICollection<IActionElement> GetFeedbackButton(PageContext pageContext);
     ICollection<IActionElement> GetBackButton(PageContext pageContext);
 }
 
 public class CommonComponents(IHomePageContextService homePageContextService) : ICommonComponents
 {
-    public ICollection<IActionElement> GetHomeAndBackButtons(PageContext pageContext) =>
-        GetHomeButtons(pageContext)
-            .Concat(GetBackButton(pageContext))
-            .ToList();
+    public ICollection<IActionElement> GetHomeAndBackButtons(PageContext pageContext, string timezone) =>
+        GetHomeButtons(pageContext, timezone).Concat(GetBackButton(pageContext)).ToList();
 
     public ICollection<IActionElement> GetFeedbackButton(PageContext pageContext)
     {
@@ -46,10 +44,10 @@ public class CommonComponents(IHomePageContextService homePageContextService) : 
         ];
     }
 
-    private ICollection<IActionElement> GetHomeButtons(PageContext pageContext)
+    private ICollection<IActionElement> GetHomeButtons(PageContext pageContext, string timezone)
     {
         pageContext = pageContext.PushCurrentPageToVisitedPagesAndClone();
-        pageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext();
+        pageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext(timezone);
         var context = new CommonPageContext(pageContext).Serialize();
 
         return [new Button { ActionId = HomeActionTypes.Home, Text = Icons.Home, Value = context }];

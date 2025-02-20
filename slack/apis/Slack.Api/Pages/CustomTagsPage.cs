@@ -443,7 +443,7 @@ public class CustomTagsPage(
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
+        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, workspaceMember.Timezone);
         var addCustomTagButton =
             await customTagComponents.GetAddCustomTagButtonAsync(workspace, workspaceMember, pageContext,
                 cancellationToken);

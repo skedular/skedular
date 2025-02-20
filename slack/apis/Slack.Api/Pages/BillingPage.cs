@@ -38,7 +38,7 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
         ICollection<Block>[] blocks =
         [
             GetTitle(),
-            GetToolbar(commonPageContext.PageContext)
+            GetToolbar(commonPageContext.PageContext, workspaceMember.Timezone)
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -61,9 +61,9 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
         new SectionBlock { Text = "*Billing*".ToMarkdown() }
     ];
 
-    private ICollection<Block> GetToolbar(PageContext pageContext)
+    private ICollection<Block> GetToolbar(PageContext pageContext, string timezone)
     {
-        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
+        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, timezone);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
 
         return

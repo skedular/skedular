@@ -495,7 +495,7 @@ public class LocationsPage(
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
+        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, workspaceMember.Timezone);
         var addLocationButton =
             await locationComponents.GetAddLocationButtonAsync(workspace, workspaceMember, pageContext,
                 cancellationToken);

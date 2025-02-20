@@ -359,7 +359,7 @@ public class HomePage(
             case IncludeMyBookingsOnly:
                 var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
                 var selectedOption = action.SelectedOptions.FirstOrDefault();
-                context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext();
+                context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext(workspaceMember.Timezone);
                 context.PageContext.HomePage.IncludeMyBookingsOnly = selectedOption is not null &&
                                                                      selectedOption.Value ==
                                                                      IncludeMyBookingsOnly;
@@ -469,7 +469,7 @@ public class HomePage(
         await RenderWithContextAsync(
             workspace,
             workspaceMember,
-            new CommonPageContext(new PageContext { HomePage = homePageContextService.GetDefaultHomePageContext() }),
+            new CommonPageContext(new PageContext { HomePage = homePageContextService.GetDefaultHomePageContext(workspaceMember.Timezone) }),
             hash,
             cancellationToken);
 
@@ -865,14 +865,10 @@ public class HomePage(
     {
         var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
 
-        context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext();
-        context.PageContext.HomePage.SelectedDate = action.SelectedDate?.ToDateTimeOffset() ?? timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc);
+        context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext(workspaceMember.Timezone);
+        context.PageContext.HomePage.SelectedDate = action.SelectedDate?.ToDateTimeOffset() ??
+                                                    timeProvider.GetUtcNow().StartOfDay(workspaceMember.Timezone.ToTimezoneInfo());
 
-        await RenderWithContextAsync(
-            workspace,
-            workspaceMember,
-            context,
-            request.View.Hash,
-            cancellationToken);
+        await RenderWithContextAsync(workspace, workspaceMember, context, request.View.Hash, cancellationToken);
     }
 }

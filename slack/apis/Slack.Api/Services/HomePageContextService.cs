@@ -5,11 +5,11 @@ namespace Slack.Api.Services;
 
 public interface IHomePageContextService
 {
-    HomePage GetDefaultHomePageContext();
+    HomePage GetDefaultHomePageContext(string timezone);
 }
 
 public class HomePageContextService(TimeProvider timeProvider) : IHomePageContextService
 {
-    public HomePage GetDefaultHomePageContext() =>
-        new(new PaginationContext(), timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc), true);
+    public HomePage GetDefaultHomePageContext(string timezone) =>
+        new(new PaginationContext(), timeProvider.GetUtcNow().StartOfDay(timezone.ToTimezoneInfo()), true);
 }

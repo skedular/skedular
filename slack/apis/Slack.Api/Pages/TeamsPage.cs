@@ -426,10 +426,7 @@ public class TeamsPage(
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(TeamActionTypes.SetAsDefaultTeam)
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(TeamActionTypes.ClearDefaultTeam);
 
-    private static ICollection<Block> GetTitle() =>
-    [
-        new SectionBlock { Text = "*Teams*".ToMarkdown() }
-    ];
+    private static ICollection<Block> GetTitle() => [new SectionBlock { Text = "*Teams*".ToMarkdown() }];
 
     private async Task<ICollection<Block>> GetToolbarAsync(
         Workspace workspace,
@@ -437,7 +434,7 @@ public class TeamsPage(
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
+        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, workspaceMember.Timezone);
         var addTeamButton = await teamComponents.GetAddTeamButtonAsync(workspace, workspaceMember, pageContext, cancellationToken);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
 

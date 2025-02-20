@@ -422,7 +422,7 @@ public class ZonesPage(
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
+        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, workspaceMember.Timezone);
         var addZoneButton = await zoneComponents.GetAddZoneButtonAsync(workspace, workspaceMember, pageContext, cancellationToken);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
 

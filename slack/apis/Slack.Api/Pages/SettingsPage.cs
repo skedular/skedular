@@ -242,7 +242,7 @@ public class SettingsPage(
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext);
+        var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, workspaceMember.Timezone);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
         var actionMenus = new List<StaticSelectMenu>();
         var permissions = await billingService.GetPermissionsAsync(workspace, workspaceMember, cancellationToken);
