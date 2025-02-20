@@ -33,6 +33,7 @@ public interface IBookingService
         bool ignoreDeskAvailability,
         bool ignoreRoomAvailability,
         CancellationToken cancellationToken);
+
     Task<Shared.Models.Booking> DeleteAsync(string bookingId, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> GetByIdAsync(string bookingId, CancellationToken cancellationToken);
 
@@ -171,7 +172,8 @@ public class BookingService(
 
         if (existingBooking.Location is not null)
         {
-            var location = await repositoryFactory.LocationRepository.GetByIdAsync(existingBooking.Location.Id, false, false, false, cancellationToken);
+            var location = await repositoryFactory.LocationRepository.GetByIdAsync(existingBooking.Location.Id, false, false, false,
+                cancellationToken);
             if (location is null)
             {
                 throw new LocationNotFound();
@@ -565,7 +567,7 @@ public class BookingService(
 
         return (rooms, location);
     }
- 
+
     private async Task<Organization?> GetOrganizationAndValidatePermissionsAsync(
         Shared.Models.Booking booking,
         Shared.Models.Customer? customer,
@@ -891,7 +893,7 @@ public class BookingService(
                 .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
             if (location is not null)
             {
-                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id,false,false,false,cancellationToken);
+                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, cancellationToken);
             }
 
             team = customer.DefaultTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);

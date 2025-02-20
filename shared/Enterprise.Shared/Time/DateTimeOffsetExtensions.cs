@@ -23,23 +23,19 @@ public static class DateTimeOffsetExtensions
         return new DateTimeOffset(converted.Year, converted.Month, converted.Day, 0, 0, 0, converted.Offset);
     }
 
-    public static DateTimeOffset StartOfWeek(
-        this DateTimeOffset dateTimeOffset,
-        DayOfWeek startOfWeek = DayOfWeek.Monday)
+    public static DateTimeOffset StartOfWeek(this DateTimeOffset dateTimeOffset, DayOfWeek startOfWeek = DayOfWeek.Monday)
     {
         var diff = (7 + (dateTimeOffset.DayOfWeek - startOfWeek)) % 7;
         return new DateTimeOffset(dateTimeOffset.AddDays(-1 * diff).Date, dateTimeOffset.Offset);
     }
 
-    public static string ToShortDateWithoutYear(this DateTimeOffset value) => value.ToString("dddd, dd'th' MMMM");
+    public static string ToShortDateWithoutYear(this DateTimeOffset value) => value.ToString("dd MMMM");
 
     public static TimeZoneInfo ToTimezoneInfo(this string? timezone)
     {
         try
         {
-            return string.IsNullOrWhiteSpace(timezone)
-                ? TimeZoneInfo.Utc
-                : TimeZoneInfo.FindSystemTimeZoneById(timezone);
+            return string.IsNullOrWhiteSpace(timezone) ? TimeZoneInfo.Utc : TimeZoneInfo.FindSystemTimeZoneById(timezone);
         }
         catch (TimeZoneNotFoundException)
         {
@@ -47,15 +43,9 @@ public static class DateTimeOffsetExtensions
         }
     }
 
-    public static bool IsMatchingHour(
-        this DateTimeOffset value,
-        string? timezone,
-        int hour) =>
+    public static bool IsMatchingHour(this DateTimeOffset value, string? timezone, int hour) =>
         value.IsMatchingHour(timezone.ToTimezoneInfo(), hour);
 
-    public static bool IsMatchingHour(
-        this DateTimeOffset value,
-        TimeZoneInfo timezoneInfo,
-        int hour) =>
+    public static bool IsMatchingHour(this DateTimeOffset value, TimeZoneInfo timezoneInfo, int hour) =>
         TimeZoneInfo.ConvertTime(value, timezoneInfo).Hour == hour;
 }

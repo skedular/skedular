@@ -52,10 +52,10 @@ public class LocationAuthorizationService(
         }
 
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                location.Organization.Id,
-                false,
-                false,
-                cancellationToken);
+            location.Organization.Id,
+            false,
+            false,
+            cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();

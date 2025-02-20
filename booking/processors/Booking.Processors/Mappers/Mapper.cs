@@ -241,7 +241,7 @@ public class Mapper : IMapper
                 .SelectMany(item => item.CustomTagIds.Concat(item.ZoneIds))
                 .Concat(locationAfterState.Rooms.SelectMany(item => item.CustomTagIds.Concat(item.ZoneIds)))
                 .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
-        
+
         location.Desks = locationAfterState.Desks.Select(item => new Shared.Models.Desk
         {
             Id = item.Id,

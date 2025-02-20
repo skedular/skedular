@@ -12,7 +12,6 @@ namespace Slack.Api.Components;
 public interface IBookingComponents
 {
     Block GetOnlyShowMyBookingCheckbox(string actionId, bool initialValue);
-
     ICollection<IActionElement> GetAddBookingButton(string? locationId, string? teamId, PageContext pageContext);
 
     Task<ICollection<Block>> GetBookingCardsAsync(
@@ -153,10 +152,7 @@ public class BookingComponents(
             {
                 ActionId = BookingActionTypes.EditBooking,
                 Text = "Edit".ToPlainTextWithIcon(Icons.Edit),
-                Value = new EditBookingContext(
-                        pageContext.PushCurrentPageToVisitedPagesAndClone(),
-                        booking.Id)
-                    .Serialize()
+                Value = new EditBookingContext(pageContext.PushCurrentPageToVisitedPagesAndClone(), booking.Id).Serialize()
             });
 
             buttons.Add(new Button
@@ -174,10 +170,7 @@ public class BookingComponents(
                 {
                     ActionId = BookingActionTypes.EditBooking,
                     Text = "Edit".ToPlainTextWithIcon(Icons.Edit),
-                    Value = new EditBookingContext(
-                            pageContext.PushCurrentPageToVisitedPagesAndClone(),
-                            booking.Id)
-                        .Serialize()
+                    Value = new EditBookingContext(pageContext.PushCurrentPageToVisitedPagesAndClone(), booking.Id).Serialize()
                 });
             }
 

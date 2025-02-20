@@ -89,18 +89,14 @@ public class HomePage(
                     if (appHomeOpenedEvent.View is null)
                     {
                         ArgumentException.ThrowIfNullOrWhiteSpace(appHomeOpenedEvent.User);
-                        workspaceEntity =
-                            await repositoryFactory.WorkspaceRepository.GetByWorkspaceMemberIdAsync(
-                                appHomeOpenedEvent.User,
-                                cancellationToken);
+                        workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByWorkspaceMemberIdAsync(
+                            appHomeOpenedEvent.User,
+                            cancellationToken);
                     }
                     else
                     {
                         ArgumentException.ThrowIfNullOrWhiteSpace(appHomeOpenedEvent.View.TeamId);
-                        workspaceEntity =
-                            await repositoryFactory.WorkspaceRepository.GetByIdAsync(
-                                appHomeOpenedEvent.View.TeamId,
-                                cancellationToken);
+                        workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(appHomeOpenedEvent.View.TeamId, cancellationToken);
                     }
 
                     if (workspaceEntity is null)
@@ -108,8 +104,7 @@ public class HomePage(
                         throw new SlackWorkspaceNotFound();
                     }
 
-                    var (workspaceMemberEntity, _) =
-                        await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+                    var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
                             workspaceEntity,
                             appHomeOpenedEvent.User,
                             cancellationToken);
@@ -133,15 +128,13 @@ public class HomePage(
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
                 workspaceEntity,
                 request.User.Id,
                 cancellationToken);
@@ -198,20 +191,15 @@ public class HomePage(
         }
     }
 
-    public async Task HandleAsync(
-        DatePickerAction action,
-        BlockActionRequest request,
-        CancellationToken cancellationToken)
+    public async Task HandleAsync(DatePickerAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
                 workspaceEntity,
                 request.User.Id,
                 cancellationToken);
@@ -228,13 +216,9 @@ public class HomePage(
         }
     }
 
-    public async Task HandleAsync(
-        StaticSelectAction action,
-        BlockActionRequest request,
-        CancellationToken cancellationToken)
+    public async Task HandleAsync(StaticSelectAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
@@ -253,9 +237,7 @@ public class HomePage(
         {
             case BookingActionTypes.Bookings:
                 {
-                    var permissions =
-                        await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember,
-                            cancellationToken);
+                    var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
                     if (!permissions.CanViewBookings)
                     {
                         throw new Unauthorized();
@@ -357,20 +339,15 @@ public class HomePage(
         }
     }
 
-    public async Task HandleAsync(
-        CheckboxGroupAction action,
-        BlockActionRequest request,
-        CancellationToken cancellationToken)
+    public async Task HandleAsync(CheckboxGroupAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
                 workspaceEntity,
                 request.User.Id,
                 cancellationToken);
@@ -493,9 +470,7 @@ public class HomePage(
         await RenderWithContextAsync(
             workspace,
             workspaceMember,
-            new CommonPageContext(
-                new PageContext { HomePage = homePageContextService.GetDefaultHomePageContext() }
-            ),
+            new CommonPageContext(new PageContext { HomePage = homePageContextService.GetDefaultHomePageContext() }),
             hash,
             cancellationToken);
 
@@ -628,30 +603,18 @@ public class HomePage(
         var bookingConnection = response.First();
         var bookings = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var myBookings = response.Last().Edges.Select(item => mapper.MapTo(item.Node)).ToList();
-        var permissions =
-            await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
 
-        var asyncBlocks = await Task.WhenAll(settingsComponents.GetDefaultLocationOnboardingDoneAsync(
-            workspaceMember,
-            commonPageContext.PageContext,
-            cancellationToken), settingsComponents.GetPreferredZoneOnboardingDoneAsync(
-            workspace,
-            workspaceMember,
-            commonPageContext.PageContext,
-            cancellationToken), settingsComponents.GetPreferredDeskOnboardingDoneAsync(
-            workspace,
-            workspaceMember,
-            commonPageContext.PageContext,
-            cancellationToken), GetBookingCalendarSettingBlocksAsync(
-            workspaceMember,
-            myBookings,
-            commonPageContext.PageContext,
-            cancellationToken), bookingComponents.GetBookingCardsAsync(
-            workspace,
-            workspaceMember,
-            bookings,
-            myBookings,
-            permissions.CanUpdateBookingOnBehalf,
+        var asyncBlocks = await Task.WhenAll(
+            settingsComponents.GetDefaultLocationOnboardingDoneAsync(workspaceMember, commonPageContext.PageContext, cancellationToken),
+            settingsComponents.GetPreferredZoneOnboardingDoneAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
+            settingsComponents.GetPreferredDeskOnboardingDoneAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
+            GetBookingCalendarSettingBlocksAsync(workspaceMember, myBookings, commonPageContext.PageContext, cancellationToken),
+            bookingComponents.GetBookingCardsAsync(
+                workspace,
+                workspaceMember,
+                bookings, myBookings,
+                permissions.CanUpdateBookingOnBehalf,
             permissions.CanDeleteBookingOnBehalf,
             commonPageContext.PageContext,
             cancellationToken));
@@ -705,9 +668,7 @@ public class HomePage(
             Where = new BookingWhereInput { FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = includeMyBookingsOnly }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
-        getPaginatedBookingsInput.OrderBy.AddRange([
-            new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
-        ]);
+        getPaginatedBookingsInput.OrderBy.AddRange([new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }]);
 
         return await bookingServiceClient.GetPaginatedBookingsAsync(
             getPaginatedBookingsInput,
@@ -729,9 +690,7 @@ public class HomePage(
             Where = new BookingWhereInput { FromGTE = from.ToTimestamp(), FromLTE = until.ToTimestamp(), IncludeMineOnly = true }
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
-        getPaginatedBookingsInput.OrderBy.AddRange([
-            new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
-        ]);
+        getPaginatedBookingsInput.OrderBy.AddRange([new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }]);
 
         return await bookingServiceClient.GetPaginatedBookingsAsync(
             getPaginatedBookingsInput,
@@ -768,11 +727,7 @@ public class HomePage(
         [
             new ActionsBlock
             {
-                Elements = backButton
-                    .Concat(addBookingButton)
-                    .Concat(feedbackButton)
-                    .Concat([actionMenus])
-                    .ToList()
+                Elements = backButton.Concat(addBookingButton).Concat(feedbackButton).Concat([actionMenus]).ToList()
             }
         ];
     }
@@ -808,8 +763,7 @@ public class HomePage(
                 var matchingBookings = myBookings.Where(item =>
                 {
                     var bookingFrom = item.From;
-                    return from.Year == bookingFrom.Year && from.Month == bookingFrom.Month &&
-                           from.Day == bookingFrom.Day;
+                    return from.Year == bookingFrom.Year && from.Month == bookingFrom.Month && from.Day == bookingFrom.Day;
                 }).ToList();
 
                 string actionId;
@@ -845,9 +799,7 @@ public class HomePage(
         [
             header,
             datePicker,
-            bookingComponents.GetOnlyShowMyBookingCheckbox(
-                IncludeMyBookingsOnly,
-                pageContext.HomePage.IncludeMyBookingsOnly),
+            bookingComponents.GetOnlyShowMyBookingCheckbox(IncludeMyBookingsOnly, pageContext.HomePage.IncludeMyBookingsOnly),
             bookingButtons
         ];
     }
@@ -940,8 +892,7 @@ public class HomePage(
         var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
 
         context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext();
-        context.PageContext.HomePage.SelectedDate = action.SelectedDate?.ToDateTimeOffset() ??
-                                                    timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc);
+        context.PageContext.HomePage.SelectedDate = action.SelectedDate?.ToDateTimeOffset() ?? timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc);
 
         await RenderWithContextAsync(
             workspace,

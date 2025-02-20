@@ -65,15 +65,13 @@ public class BookingsPage(
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
                 workspaceEntity,
                 request.User.Id,
                 cancellationToken);
@@ -133,8 +131,7 @@ public class BookingsPage(
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
                 workspaceEntity,
                 request.User.Id,
                 cancellationToken);
@@ -148,9 +145,7 @@ public class BookingsPage(
                 var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
                 var selectedOption = action.SelectedOptions.FirstOrDefault();
                 context.PageContext.BookingsPage ??= bookingsPageContextService.GetDefaultBookingsPageContext();
-                context.PageContext.BookingsPage.IncludeMyBookingsOnly = selectedOption is not null &&
-                                                                         selectedOption.Value ==
-                                                                         IncludeMyBookingsOnly;
+                context.PageContext.BookingsPage.IncludeMyBookingsOnly = selectedOption is not null && selectedOption.Value == IncludeMyBookingsOnly;
                 await RenderWithContextAsync(
                     workspace,
                     workspaceMember,
@@ -167,15 +162,13 @@ public class BookingsPage(
         BlockActionRequest request,
         CancellationToken cancellationToken)
     {
-        var workspaceEntity =
-            await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
+        var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
             throw new SlackWorkspaceNotFound();
         }
 
-        var (workspaceMemberEntity, _) =
-            await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
+        var (workspaceMemberEntity, _) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
                 workspaceEntity,
                 request.User.Id,
                 cancellationToken);
@@ -368,10 +361,8 @@ public class BookingsPage(
         commonPageContext.PageContext.BookingsPage.Pagination.CurrentLast = last;
 
         var bookingsDateRange = commonPageContext.PageContext.BookingsPage.BookingsDateRange;
-        var from = bookingsDateRange.From?.StartOfDay(TimeZoneInfo.Utc) ??
-                   timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc);
-        var until = bookingsDateRange.To?.EndOfDay() ??
-                    from.AddMonths(1).StartOfDay(TimeZoneInfo.Utc);
+        var from = bookingsDateRange.From?.StartOfDay(TimeZoneInfo.Utc) ?? timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc);
+        var until = bookingsDateRange.To?.EndOfDay() ?? from.AddMonths(1).StartOfDay(TimeZoneInfo.Utc);
         var response = await Task.WhenAll(GetPaginatedBookingsAsync(
                 workspace,
                 workspaceMember,
@@ -387,8 +378,7 @@ public class BookingsPage(
         var bookingConnection = response.First();
         var bookings = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var myBookings = response.Last().Edges.Select(item => mapper.MapTo(item.Node)).ToList();
-        var permissions =
-            await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
+        var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
 
         ICollection<Block>[] blocks =
         [
@@ -490,8 +480,7 @@ public class BookingsPage(
 
         if (commonPageContext.PageContext.BookingsPage.LocationIds.Count != 0)
         {
-            getPaginatedBookingsInput.Where.LocationIds.AddRange(commonPageContext.PageContext.BookingsPage
-                .LocationIds);
+            getPaginatedBookingsInput.Where.LocationIds.AddRange(commonPageContext.PageContext.BookingsPage.LocationIds);
         }
 
         if (commonPageContext.PageContext.BookingsPage.TeamIds.Count != 0)
@@ -499,9 +488,7 @@ public class BookingsPage(
             getPaginatedBookingsInput.Where.TeamIds.AddRange(commonPageContext.PageContext.BookingsPage.TeamIds);
         }
 
-        getPaginatedBookingsInput.OrderBy.AddRange([
-            new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
-        ]);
+        getPaginatedBookingsInput.OrderBy.AddRange([new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }]);
 
         return await bookingServiceClient.GetPaginatedBookingsAsync(
             getPaginatedBookingsInput,
@@ -527,8 +514,7 @@ public class BookingsPage(
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
         if (commonPageContext.PageContext.BookingsPage.LocationIds.Count != 0)
         {
-            getPaginatedBookingsInput.Where.LocationIds.AddRange(commonPageContext.PageContext.BookingsPage
-                .LocationIds);
+            getPaginatedBookingsInput.Where.LocationIds.AddRange(commonPageContext.PageContext.BookingsPage.LocationIds);
         }
 
         if (commonPageContext.PageContext.BookingsPage.TeamIds.Count != 0)
@@ -536,9 +522,7 @@ public class BookingsPage(
             getPaginatedBookingsInput.Where.TeamIds.AddRange(commonPageContext.PageContext.BookingsPage.TeamIds);
         }
 
-        getPaginatedBookingsInput.OrderBy.AddRange([
-            new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
-        ]);
+        getPaginatedBookingsInput.OrderBy.AddRange([new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }]);
 
         return await bookingServiceClient.GetPaginatedBookingsAsync(
             getPaginatedBookingsInput,
@@ -555,24 +539,18 @@ public class BookingsPage(
         ArgumentNullException.ThrowIfNull(pageContext.BookingsPage);
 
         var fromDatePicker = new DatePicker { ActionId = BookingsFromDatePickerKey, InitialDate = from.ToDateTime() };
-        var untilDatePicker =
-            new DatePicker { ActionId = BookingsUntilDatePickerKey, InitialDate = until.ToDateTime() };
+        var untilDatePicker = new DatePicker { ActionId = BookingsUntilDatePickerKey, InitialDate = until.ToDateTime() };
 
         List<Block> dateRangeActionBlock =
         [
             new ActionsBlock { Elements = [fromDatePicker, untilDatePicker] },
-            bookingComponents.GetOnlyShowMyBookingCheckbox(
-                IncludeMyBookingsOnly,
-                pageContext.BookingsPage.IncludeMyBookingsOnly),
+            bookingComponents.GetOnlyShowMyBookingCheckbox(IncludeMyBookingsOnly, pageContext.BookingsPage.IncludeMyBookingsOnly),
             new DividerBlock()
         ];
 
         if (bookingConnection.Edges.Count == 0)
         {
-            return
-                dateRangeActionBlock
-                    .Concat([new SectionBlock { Text = "No booking found".ToMarkdown() }])
-                    .ToList();
+            return dateRangeActionBlock.Concat([new SectionBlock { Text = "No booking found".ToMarkdown() }]).ToList();
         }
 
         var totalBookingsCount = new SectionBlock { Text = $"Total bookings: {bookingConnection.TotalCount}".ToMarkdown() };
@@ -633,10 +611,7 @@ public class BookingsPage(
 
         var paginationActionBlock = new ActionsBlock { Elements = paginationButtons };
 
-        return
-            dateRangeActionBlock
-                .Concat([totalBookingsCount, paginationActionBlock])
-                .ToList();
+        return dateRangeActionBlock.Concat([totalBookingsCount, paginationActionBlock]).ToList();
     }
 
     private async Task HandleBookingsFromDatePickerKeyAsync(

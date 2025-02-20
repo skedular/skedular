@@ -65,11 +65,11 @@ public class RoomService(
         if (!string.IsNullOrWhiteSpace(locationId))
         {
             var location = await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAndRoomsAsync(
-                    locationId,
-                    false,
-                    false,
-                    false,
-                    cancellationToken);
+                locationId,
+                false,
+                false,
+                false,
+                cancellationToken);
             if (location is null)
             {
                 throw new LocationNotFound();

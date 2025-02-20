@@ -275,11 +275,11 @@ public class Mapper : IMapper
             },
             Customer = new Customer { Id = src.CustomerId },
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
-                    ? null
-                    : new Shared.Models.Organization { Id = src.OrganizationId },
+                ? null
+                : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId)
-                    ? null
-                    : new Shared.Models.Location { Id = src.LocationId },
+                ? null
+                : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
             Desks = src.DeskIds.Select(item => new Shared.Models.Desk { Id = item }).ToList(),
             Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList()
@@ -374,6 +374,7 @@ public class Mapper : IMapper
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
+
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
         new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
 
@@ -515,13 +516,13 @@ public class Mapper : IMapper
         };
 
     private static BookingOrganizationDetails? MapTo(Shared.Models.Organization? src) =>
-        src is null            ? null            : new BookingOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+        src is null ? null : new BookingOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static BookingLocationDetails? MapTo(Shared.Models.Location? src) =>
-        src is null            ? null            : new BookingLocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+        src is null ? null : new BookingLocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static BookingTeamDetails? MapTo(Shared.Models.Team? src) =>
-        src is null            ? null            : new BookingTeamDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+        src is null ? null : new BookingTeamDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static BookingDeskDetails MapTo(Shared.Models.Desk src) =>
         new()
@@ -532,7 +533,7 @@ public class Mapper : IMapper
             Zones = MapToZones(src.OrganizationTags).ToArray(),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString(), 
+            Color = src.Color.ToSafeString(),
             Location = MapTo(src.Location)
         };
 

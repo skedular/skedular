@@ -124,7 +124,7 @@ public class TeamSubscriber(
             {
                 var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
                     teamMember.OrganizationMember.Organization.Id,
-                        cancellationToken);
+                    cancellationToken);
 
                 var organizationMemberCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(
                     teamMember.OrganizationMember.Customer.Id,
@@ -132,10 +132,10 @@ public class TeamSubscriber(
                 ArgumentNullException.ThrowIfNull(organizationMemberCustomer);
 
                 organizationMember = await repositoryFactory.OrganizationMemberRepository.UpsertNakedAsync(
-                        teamMember.OrganizationMember.Id,
-                        organization,
-                        organizationMemberCustomer,
-                        cancellationToken);
+                    teamMember.OrganizationMember.Id,
+                    organization,
+                    organizationMemberCustomer,
+                    cancellationToken);
             }
 
             var updatedTeamMember = mapper.MergeToEntity(
@@ -158,8 +158,8 @@ public class TeamSubscriber(
             if (teamMember.OrganizationMember is not null)
             {
                 var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                        teamMember.OrganizationMember.Organization!.Id,
-                        cancellationToken);
+                    teamMember.OrganizationMember.Organization!.Id,
+                    cancellationToken);
 
                 var organizationMemberCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(
                     teamMember.OrganizationMember.Customer.Id,
@@ -167,10 +167,10 @@ public class TeamSubscriber(
                 ArgumentNullException.ThrowIfNull(organizationMemberCustomer);
 
                 organizationMember = await repositoryFactory.OrganizationMemberRepository.UpsertNakedAsync(
-                        teamMember.OrganizationMember.Id,
-                        organization,
-                        organizationMemberCustomer,
-                        cancellationToken);
+                    teamMember.OrganizationMember.Id,
+                    organization,
+                    organizationMemberCustomer,
+                    cancellationToken);
             }
 
             addedItems.Add(repositoryFactory.TeamMemberRepository.Add(mapper.MapToEntity(teamMember, existingTeam, customer, organizationMember)));
@@ -193,7 +193,7 @@ public class TeamSubscriber(
         {
             var member = await repositoryFactory.TeamMemberRepository.Query(
                     new Specification<TeamMember> { Criteria = query => query.Id == teamMemberId }
-                    .AddInclude(query => query.Customer))
+                        .AddInclude(query => query.Customer))
                 .FirstAsync(cancellationToken);
 
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);

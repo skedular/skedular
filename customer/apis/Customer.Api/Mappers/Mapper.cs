@@ -285,7 +285,7 @@ public class Mapper(IContext context) : IMapper
             PhoneNumber = src.PhoneNumber,
             Identities = src.Identities
                 .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
-                    .ToList(),
+                .ToList(),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone,

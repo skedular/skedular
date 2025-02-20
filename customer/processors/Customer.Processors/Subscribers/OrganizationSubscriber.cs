@@ -27,8 +27,8 @@ public class OrganizationSubscriber(
                 {
                     var organization = mapper.MapTo(@event);
                     var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                            organization.Id,
-                            cancellationToken);
+                        organization.Id,
+                        cancellationToken);
                     if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
@@ -44,10 +44,10 @@ public class OrganizationSubscriber(
                 {
                     var organization = mapper.MapTo(@event);
                     var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                            organization.Id,
-                            true,
-                            true,
-                            cancellationToken);
+                        organization.Id,
+                        true,
+                        true,
+                        cancellationToken);
                     if (existingOrganization is not null &&
                         existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
@@ -169,7 +169,7 @@ public class OrganizationSubscriber(
         {
             var member = await repositoryFactory.OrganizationMemberRepository.Query(
                     new Specification<OrganizationMember> { Criteria = query => query.Id == organizationMemberId }
-                    .AddInclude(query => query.Customer))
+                        .AddInclude(query => query.Customer))
                 .FirstAsync(cancellationToken);
 
             var customer =

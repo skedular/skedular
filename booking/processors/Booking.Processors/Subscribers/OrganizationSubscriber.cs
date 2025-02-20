@@ -38,10 +38,10 @@ public class OrganizationSubscriber(
                 {
                     var organization = mapper.MapTo(@event);
                     var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                            organization.Id,
-                            true,
-                            true,
-                            cancellationToken);
+                        organization.Id,
+                        true,
+                        true,
+                        cancellationToken);
                     if (existingOrganization is not null &&
                         existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {

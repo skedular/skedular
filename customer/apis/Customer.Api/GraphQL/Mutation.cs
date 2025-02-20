@@ -129,10 +129,10 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerOrganizationSettingsService.SetCustomerDefaultOrganizationAsync(
-                input.OrganizationId,
-                null,
-                false,
-                cancellationToken);
+            input.OrganizationId,
+            null,
+            false,
+            cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
@@ -216,9 +216,9 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var customer = await customerOrganizationTagSettingsService.RemoveCustomerDefaultOrganizationTagAsync(
-                input.OrganizationTagId,
-                null,
-                cancellationToken);
+            input.OrganizationTagId,
+            null,
+            cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 

@@ -73,10 +73,10 @@ public class OrganizationInternalSubscriber(
 
         var now = timeProvider.GetUtcNow();
         var expiredOfferingsRequireAutoRenew = await repositoryFactory.OrganizationOfferingRepository.Query(new Specification<OrganizationOffering>
-        {
-            Criteria = query =>
-                !query.DeletedAt.HasValue && query.Organization.Id == @event.OrganizationId && query.End <= now && query.AutoRenew
-        }.ApplyOrderByDescending(query => query.End))
+            {
+                Criteria = query =>
+                    !query.DeletedAt.HasValue && query.Organization.Id == @event.OrganizationId && query.End <= now && query.AutoRenew
+            }.ApplyOrderByDescending(query => query.End))
             .ToListAsync(cancellationToken);
 
         if (expiredOfferingsRequireAutoRenew.Count == 0)
@@ -129,9 +129,9 @@ public class OrganizationInternalSubscriber(
 
         var startOfToday = timeProvider.GetUtcNow().StartOfDay();
         if (await repositoryFactory.DailyMemberCountRecordingRepository.Query(new Specification<DailyMemberCountRecording>
-        {
-            Criteria = query => !query.DeletedAt.HasValue && query.Organization.Id == @event.OrganizationId && query.Date == startOfToday
-        }).AnyAsync(cancellationToken))
+            {
+                Criteria = query => !query.DeletedAt.HasValue && query.Organization.Id == @event.OrganizationId && query.Date == startOfToday
+            }).AnyAsync(cancellationToken))
         {
             return;
         }
@@ -199,9 +199,7 @@ public class OrganizationInternalSubscriber(
     {
         var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
         {
-            First = -1,
-            Last = -1,
-            Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
+            First = -1, Last = -1, Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
         };
         getPaginatedLocationsInput.OrderBy.AddRange([
             new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
@@ -233,8 +231,7 @@ public class OrganizationInternalSubscriber(
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = azureTenant.Organization.Id,
-                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
+                            OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -273,8 +270,7 @@ public class OrganizationInternalSubscriber(
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = azureTenant.Organization.Id,
-                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -285,8 +281,7 @@ public class OrganizationInternalSubscriber(
                     await customerServiceClient.Admin_AddDefaultLocationAsync(
                         new Admin_AddDefaultLocationInput
                         {
-                            LocationId = getLocationsResponse.Edges.First().Node.Id,
-                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            LocationId = getLocationsResponse.Edges.First().Node.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
