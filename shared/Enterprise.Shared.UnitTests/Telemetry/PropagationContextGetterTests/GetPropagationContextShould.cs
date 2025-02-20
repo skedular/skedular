@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using AutoFixture.Xunit2;
+using AutoFixture.Xunit3;
 using Enterprise.Shared.Telemetry;
 using FakeItEasy;
 using FluentAssertions;
@@ -21,9 +21,7 @@ public class GetPropagationContextShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_Null_On_Null_Activity(
-        [Frozen] IActivityGetter activityGetter,
-        PropagationContextGetter getter)
+    public void Return_Null_On_Null_Activity([Frozen] IActivityGetter activityGetter, PropagationContextGetter getter)
     {
         A.CallTo(() => activityGetter.GetCurrent()).Returns(null);
         getter.GetPropagationContext().Should().BeNull();
@@ -31,9 +29,7 @@ public class GetPropagationContextShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_Current_ActivityContext(
-        [Frozen] IActivityGetter activityGetter,
-        PropagationContextGetter getter)
+    public void Return_Current_ActivityContext([Frozen] IActivityGetter activityGetter, PropagationContextGetter getter)
     {
         var activity = new Activity("test");
         A.CallTo(() => activityGetter.GetCurrent()).Returns(activity);
@@ -44,9 +40,7 @@ public class GetPropagationContextShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Sets_Baggage(
-        [Frozen] IActivityGetter activityGetter,
-        PropagationContextGetter getter)
+    public void Sets_Baggage([Frozen] IActivityGetter activityGetter, PropagationContextGetter getter)
     {
         var activity = new Activity("test");
         activity.AddBaggage("test", "entry");

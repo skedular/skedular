@@ -5,17 +5,18 @@
         <LangVersion>13</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoFixture" Version="4.18.1"/>
-        <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="4.18.1"/>
-        <PackageReference Include="AutoFixture.Xunit2" Version="4.18.1"/>
+        <PackageReference Include="AutoFixture" Version="5.0.0-preview0012"/>
+        <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="5.0.0-preview0012"/>
+        <PackageReference Include="AutoFixture.Xunit3" Version="5.0.0-preview0012"/>
         <PackageReference Include="FakeItEasy" Version="8.3.0"/>
         <PackageReference Include="FluentAssertions" Version="8.0.1"/>
         <PackageReference Include="GraphQL.Client" Version="6.1.0"/>
         <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.1.0"/>
-        <PackageReference Include="xunit" Version="2.9.3"/>
+        <PackageReference Include="xunit.v3" Version="1.1.0"/>
 
         <PackageReference Include="coverlet.collector" Version="6.0.4">
             <PrivateAssets>all</PrivateAssets>

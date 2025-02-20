@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net;
-using AutoFixture.Xunit2;
+using AutoFixture.Xunit3;
 using Enterprise.Shared.Infrastructure.ActionResults;
 using Enterprise.Shared.Infrastructure.Filters;
 using FakeItEasy;

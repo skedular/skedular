@@ -1,4 +1,4 @@
-﻿using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit3;
 using Enterprise.Shared.Telemetry;
 using FakeItEasy;
 using OpenTelemetry.Context.Propagation;

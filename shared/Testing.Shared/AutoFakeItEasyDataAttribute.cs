@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoFakeItEasy;
-using AutoFixture.Xunit2;
+using AutoFixture.Xunit3;
 
 namespace Testing.Shared;
 
@@ -17,9 +17,7 @@ public static class AutoFakeItEasyCustomizers
         => GlobalCustomizerTypes.Add(typeof(T));
 }
 
-public class AutoFakeItEasyDataAttribute(
-    Type[]? fixtureCustomizers = null,
-    bool skipGlobalCustomizers = false) : AutoDataAttribute(() =>
+public class AutoFakeItEasyDataAttribute(Type[]? fixtureCustomizers = null, bool skipGlobalCustomizers = false) : AutoDataAttribute(() =>
 {
     var fixture = new Fixture()
         .Customize(new AutoFakeItEasyCustomization());
@@ -52,8 +50,7 @@ public class AutoFakeItEasyDataAttribute(
     return fixture;
 })
 {
-    //Adds support for DateOnly .net 6 type.
-
+    // Adds support for DateOnly .net 6 type.
     private static void ApplyGlobalCustomizers(IFixture fixture)
     {
         foreach (var fixtureCustomizerType in AutoFakeItEasyCustomizers.GlobalCustomizerTypes)
