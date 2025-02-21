@@ -1,4 +1,5 @@
 using Enterprise.Shared.Database;
+using Flurl;
 using Slack.Api.Mappers;
 using Slack.Shared.Configurations;
 using Slack.Shared.Models;
@@ -10,7 +11,7 @@ namespace Slack.Api.Services;
 
 public interface IWorkspaceService
 {
-    Task<Uri> InstallAsync(string code, string? state, CancellationToken cancellationToken);
+    Task<string> InstallAsync(string code, string? state, CancellationToken cancellationToken);
     Task<Workspace> AddAsync(Workspace workspace, CancellationToken cancellationToken);
 }
 
@@ -24,7 +25,7 @@ public class WorkspaceService(
     INotificationOutboxPublisher notificationOutboxPublisher)
     : IWorkspaceService
 {
-    public async Task<Uri> InstallAsync(string code, string? state, CancellationToken cancellationToken)
+    public async Task<string> InstallAsync(string code, string? state, CancellationToken cancellationToken)
     {
         var response = await new SlackServiceBuilder().GetApiClient().OAuthV2.Access(
             slackConfiguration.ClientId,
@@ -70,7 +71,7 @@ public class WorkspaceService(
             await transaction.CommitAsync(cancellationToken);
         }
 
-        return slackConfiguration.SuccessInstallUrl!;
+        return slackConfiguration.SuccessInstallUrl!.ToString().SetQueryParam("app", slackConfiguration.AppId);
     }
 
     public async Task<Workspace> AddAsync(Workspace workspace, CancellationToken cancellationToken)

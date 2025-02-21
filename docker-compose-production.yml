@@ -163,7 +163,7 @@ services:
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${STAGING_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapistaging.skedular.app/slack/api/v1/callback
-      Slack__SuccessInstallUrl: https://staging.getskedular.com/slack-success-install
+      Slack__SuccessInstallUrl: https://staging.skedular.app/slack-success-install
       AzureEntra__ClientId: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
@@ -247,7 +247,7 @@ services:
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${STAGING_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapistaging.skedular.app/slack/api/v1/callback
-      Slack__SuccessInstallUrl: https://staging.getskedular.com/slack-success-install
+      Slack__SuccessInstallUrl: https://staging.skedular.app/slack-success-install
       AzureEntra__ClientId: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       AWS_REGION: us-east-1
@@ -334,7 +334,7 @@ services:
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${STAGING_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapistaging.skedular.app/slack/api/v1/callback
-      Slack__SuccessInstallUrl: https://staging.getskedular.com/slack-success-install
+      Slack__SuccessInstallUrl: https://staging.skedular.app/slack-success-install
       AzureEntra__ClientId: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${STAGING_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       AWS_REGION: us-east-1
@@ -448,7 +448,7 @@ services:
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${PRODUCTION_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapi.skedular.app/slack/api/v1/callback
-      Slack__SuccessInstallUrl: https://getskedular.com/slack-success-install
+      Slack__SuccessInstallUrl: https://skedular.app/slack-success-install
       AzureEntra__ClientId: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       Email__NewCustomerFeedbackThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
@@ -532,7 +532,7 @@ services:
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${PRODUCTION_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapi.skedular.app/slack/api/v1/callback
-      Slack__SuccessInstallUrl: https://getskedular.com/slack-success-install
+      Slack__SuccessInstallUrl: https://skedular.app/slack-success-install
       AzureEntra__ClientId: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       AWS_REGION: us-east-1
@@ -619,7 +619,7 @@ services:
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
       Slack__SigningSecret: ${PRODUCTION_SKEDULAR_SLACK_SIGNING_SECRET}
       Slack__RedirectUrl: https://slackapi.skedular.app/slack/api/v1/callback
-      Slack__SuccessInstallUrl: https://getskedular.com/slack-success-install
+      Slack__SuccessInstallUrl: https://skedular.app/slack-success-install
       AzureEntra__ClientId: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_ID}
       AzureEntra__ClientSecret: ${PRODUCTION_SKEDULAR_AZURE_ENTRA_CLIENT_SECRET}
       AWS_REGION: us-east-1

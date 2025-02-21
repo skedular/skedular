@@ -44,9 +44,7 @@ public class PaymentService(
     IPaymentOutboxPublisher paymentOutboxPublisher,
     IMapper mapper) : IPaymentService
 {
-    public async Task<string> AddOrganizationPaymentMethodIntentAsync(
-        string organizationId,
-        CancellationToken cancellationToken)
+    public async Task<string> AddOrganizationPaymentMethodIntentAsync(string organizationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization =
@@ -111,11 +109,8 @@ public class PaymentService(
             organizationStripePaymentMethod.Status = OrganizationStripePaymentMethodStatus.Failed;
             repositoryFactory.OrganizationStripePaymentMethodRepository.Update(organizationStripePaymentMethod);
 
-            await PublishOrganizationPaymentMethodStateAsync(
-                organizationStripePaymentMethod.Organization.Id,
-                cancellationToken);
-            await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork
-                .SaveChangesAsync(cancellationToken);
+            await PublishOrganizationPaymentMethodStateAsync(organizationStripePaymentMethod.Organization.Id, cancellationToken);
+            await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 
             return redirectUrl;
@@ -124,14 +119,11 @@ public class PaymentService(
         redirectUrl = redirectUrl.SetQueryParam("add-payment-method-status", "added");
         organizationStripePaymentMethod.Status = OrganizationStripePaymentMethodStatus.Confirmed;
 
-        var setupIntent =
-            await stripeSetupIntentRetrievableService.GetAsync(setupIntentId, cancellationToken: cancellationToken);
+        var setupIntent = await stripeSetupIntentRetrievableService.GetAsync(setupIntentId, cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(setupIntent);
         ArgumentNullException.ThrowIfNull(setupIntent.PaymentMethodId);
 
-        var paymentMethod = await stripePaymentMethodRetrievableService.GetAsync(
-            setupIntent.PaymentMethodId,
-            cancellationToken: cancellationToken);
+        var paymentMethod = await stripePaymentMethodRetrievableService.GetAsync(setupIntent.PaymentMethodId, cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(paymentMethod);
         ArgumentNullException.ThrowIfNull(paymentMethod.Card);
 
@@ -151,10 +143,8 @@ public class PaymentService(
         repositoryFactory.OrganizationStripePaymentMethodRepository.RemoveRange(paymentMethodsToRemove);
 
         repositoryFactory.OrganizationStripePaymentMethodRepository.Update(organizationStripePaymentMethod);
-        await PublishOrganizationPaymentMethodStateAsync(organizationStripePaymentMethod.Organization.Id,
-            cancellationToken);
-        await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork
-            .SaveChangesAsync(cancellationToken);
+        await PublishOrganizationPaymentMethodStateAsync(organizationStripePaymentMethod.Organization.Id, cancellationToken);
+        await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         return redirectUrl;
@@ -163,13 +153,12 @@ public class PaymentService(
     public async Task RemoveOrganizationPaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organizationStripePaymentMethod = await repositoryFactory.OrganizationStripePaymentMethodRepository
-            .Query(new Specification<OrganizationStripePaymentMethod> { Criteria = query => query.Id == paymentMethodId }.AddInclude(query =>
-                query.Organization)).FirstAsync(cancellationToken);
+        var organizationStripePaymentMethod = await repositoryFactory.OrganizationStripePaymentMethodRepository.Query(
+            new Specification<OrganizationStripePaymentMethod> { Criteria = query => query.Id == paymentMethodId }
+                .AddInclude(query =>
+                    query.Organization)).FirstAsync(cancellationToken);
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                organizationStripePaymentMethod.Organization.Id,
-                cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationStripePaymentMethod.Organization.Id, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -185,26 +174,20 @@ public class PaymentService(
             cancellationToken);
 
         _ = repositoryFactory.OrganizationStripePaymentMethodRepository.Remove(organizationStripePaymentMethod);
-        _ = await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork
-            .SaveChangesAsync(cancellationToken);
-        await PublishOrganizationPaymentMethodStateAsync(
-            organizationStripePaymentMethod.Organization.Id,
-            cancellationToken);
+        _ = await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await PublishOrganizationPaymentMethodStateAsync(organizationStripePaymentMethod.Organization.Id, cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
-    private async Task PublishOrganizationPaymentMethodStateAsync(
-        string organizationId,
-        CancellationToken cancellationToken)
+    private async Task PublishOrganizationPaymentMethodStateAsync(string organizationId, CancellationToken cancellationToken)
     {
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             organizationId,
             cancellationToken);
         ArgumentNullException.ThrowIfNull(organization);
 
-        var hasAttachedPaymentMethod =
-            organization.OrganizationStripePaymentMethods.Any(item =>
-                !item.DeletedAt.HasValue && item.Status == OrganizationStripePaymentMethodStatus.Confirmed);
+        var hasAttachedPaymentMethod = organization.OrganizationStripePaymentMethods.Any(item =>
+            !item.DeletedAt.HasValue && item.Status == OrganizationStripePaymentMethodStatus.Confirmed);
 
         await paymentOutboxPublisher.PublishOrganizationPaymentMethodStateAsync(
             organizationId,
