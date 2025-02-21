@@ -746,7 +746,7 @@ public class HomePage(
         {
             Elements = Enumerable.Range(0, DayCount).Select(IActionElement (idx) =>
             {
-                var from = startOfWeek.AddDays(idx).ToDate();
+                var from = startOfWeek.AddDays(idx).ToDate(TimeSpan.Zero);
                 var matchingBookings = myBookings.Where(item =>
                 {
                     var bookingFrom = item.From;

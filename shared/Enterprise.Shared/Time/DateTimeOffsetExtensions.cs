@@ -15,7 +15,10 @@ public static class DateTimeOffsetExtensions
     public static DateTimeOffset Tomorrow(this DateTimeOffset value) => value.AddDays(1);
 
     public static DateTimeOffset ToDate(this DateTimeOffset dateTimeOffset) =>
-        new(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, 0, 0, 0, dateTimeOffset.Offset);
+        dateTimeOffset.ToDate(dateTimeOffset.Offset);
+
+    public static DateTimeOffset ToDate(this DateTimeOffset dateTimeOffset, TimeSpan offset) =>
+        new(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, 0, 0, 0, offset);
 
     public static DateTimeOffset StartOfDay(this DateTimeOffset dateTimeOffset, TimeZoneInfo timeZoneInfo)
     {
