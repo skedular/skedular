@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useSearchParams } from 'next/navigation';
-import { memo, useContext } from 'react';
+import { memo, Suspense, useContext } from 'react';
 
 const SlackSuccessInstall = () => {
   const paletteMode = useContext(PaletteModeContext);
@@ -36,4 +36,10 @@ const SlackSuccessInstall = () => {
   );
 };
 
-export default memo(SlackSuccessInstall);
+const SlackSuccessInstallWithSuspense = () => (
+  <Suspense>
+    <SlackSuccessInstall />
+  </Suspense>
+);
+
+export default memo(SlackSuccessInstallWithSuspense);
