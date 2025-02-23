@@ -80,7 +80,7 @@ public class CachedCustomerService(
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
 
-                var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken);
+                var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, true, cancellationToken);
                 if (customer is null)
                 {
                     throw new CustomerNotFound();
@@ -103,9 +103,7 @@ public class CachedCustomerService(
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
 
                 var customer =
-                    await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                        verifiableToken,
-                        cancellationToken);
+                    await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken);
                 if (customer is null)
                 {
                     throw new CustomerNotFound();

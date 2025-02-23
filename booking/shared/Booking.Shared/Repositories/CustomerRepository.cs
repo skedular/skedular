@@ -9,11 +9,11 @@ namespace Booking.Shared.Repositories;
 
 public interface ICustomerRepository : IRepository<Customer>
 {
-    Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken);
-    Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
-    Task<ICollection<Customer>> GetAllAsync(CancellationToken cancellationToken);
+    Task<Customer> UpsertNakedAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
+    Task<Customer?> GetByIdAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
+    Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
+    Task<Customer?> GetByEmailAsync(string email, bool includeActiveItemsOnly, CancellationToken cancellationToken);
+    Task<ICollection<Customer>> GetAllAsync(bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Customer Add(Customer customer);
     Customer Update(Customer customer);
     Customer Remove(Customer customer);
@@ -22,81 +22,75 @@ public interface ICustomerRepository : IRepository<Customer>
 internal static class CustomerExtensions
 {
     internal static IIncludableQueryable<Customer, Organization?> AddDependentObjects(
-        this IQueryable<Customer> originalQuery) =>
+        this IQueryable<Customer> originalQuery,
+        bool includeActiveItemsOnly) =>
         originalQuery
             .Include(query => query.Identities)
             .Include(query => query.DefaultOrganization)
-            .Include(query => query.DefaultLocations)
+            .Include(query => query.DefaultLocations.Where(location => !includeActiveItemsOnly || !location.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization)
-            .Include(query => query.PreferredOrganizationTags)
+            .Include(query => query.PreferredOrganizationTags.Where(tag => !includeActiveItemsOnly || !tag.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization)
-            .Include(query => query.PreferredDesks)
-            .Include(query => query.PreferredRooms)
+            .Include(query => query.PreferredDesks.Where(desk => !includeActiveItemsOnly || (!desk.DeletedAt.HasValue && !desk.Deactivated)))
+            .Include(query => query.PreferredRooms.Where(room => !includeActiveItemsOnly || (!room.DeletedAt.HasValue && !room.Deactivated)))
             .ThenInclude(query => query.Location)
             .ThenInclude(query => query.Organization)
-            .Include(query => query.DefaultTeams)
+            .Include(query => query.DefaultTeams.Where(team => !includeActiveItemsOnly || !team.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization);
 }
 
 public class CustomerRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, Customer>(dbContext, timeProvider), ICustomerRepository
 {
-    private static readonly Func<BookingDbContext, string, CancellationToken, Task<Customer?>>
-        s_getByIdQueryAsync =
-            EF.CompileAsyncQuery<BookingDbContext, string, CancellationToken, Customer?>((
-                    dbContext,
-                    id,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .FirstOrDefault(query => query.Id == id));
-
-    private static readonly Func<BookingDbContext, string, CancellationToken, Task<Customer?>>
-        s_getByVerifiableTokenQueryAsync =
-            EF.CompileAsyncQuery<BookingDbContext, string, CancellationToken, Customer?>((
-                    dbContext,
-                    verifiableToken,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .FirstOrDefault(query =>
-                        !query.DeletedAt.HasValue &&
-                        query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
-
-    private static readonly Func<BookingDbContext, string, CancellationToken, Task<Customer?>>
+    private static readonly Func<BookingDbContext, string, bool, CancellationToken, Task<Customer?>>
         s_getByEmailQueryAsync =
-            EF.CompileAsyncQuery<BookingDbContext, string, CancellationToken, Customer?>((
+            EF.CompileAsyncQuery<BookingDbContext, string, bool, CancellationToken, Customer?>((
                     dbContext,
                     email,
+                    includeActiveItemsOnly,
                     cancellationToken) =>
                 dbContext.Customer
-                    .AddDependentObjects()
+                    .AddDependentObjects(includeActiveItemsOnly)
                     .FirstOrDefault(query =>
                         !query.DeletedAt.HasValue &&
                         query.Identities.Any(identity =>
                             identity.Email != null &&
                             EF.Functions.ILike(identity.Email, email))));
 
-    public override async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    public async Task<Customer> UpsertNakedAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken)
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdAsync(id, includeActiveItemsOnly, cancellationToken))!;
     }
 
-    public async Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await s_getByIdQueryAsync(DbContext, id, cancellationToken);
+    public async Task<Customer?> GetByIdAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
+        await DbContext.Customer.AddDependentObjects(includeActiveItemsOnly).FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<Customer?>
-        GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
-        await s_getByVerifiableTokenQueryAsync(DbContext, verifiableToken, cancellationToken);
-
-    public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>
-        await s_getByEmailQueryAsync(DbContext, email, cancellationToken);
-
-    public async Task<ICollection<Customer>> GetAllAsync(CancellationToken cancellationToken) =>
+    public async Task<Customer?> GetByVerifiableTokenAsync(
+        string verifiableToken,
+        bool includeActiveItemsOnly,
+        CancellationToken cancellationToken) =>
         await DbContext.Customer
-            .AddDependentObjects()
+            .AddDependentObjects(includeActiveItemsOnly)
+            .FirstOrDefaultAsync(query =>
+                    !query.DeletedAt.HasValue &&
+                    query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+                cancellationToken);
+
+    public async Task<Customer?> GetByEmailAsync(string email, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
+        await dbContext.Customer
+            .AddDependentObjects(includeActiveItemsOnly)
+            .FirstOrDefaultAsync(query =>
+                    !query.DeletedAt.HasValue &&
+                    query.Identities.Any(identity =>
+                        identity.Email != null &&
+                        EF.Functions.ILike(identity.Email, email)),
+                cancellationToken);
+
+    public async Task<ICollection<Customer>> GetAllAsync(bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AddDependentObjects(includeActiveItemsOnly)
             .Where(query => !query.DeletedAt.HasValue)
             .OrderBy(query => query.Id)
             .ToListAsync(cancellationToken);

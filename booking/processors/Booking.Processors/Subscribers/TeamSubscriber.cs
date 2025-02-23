@@ -102,7 +102,7 @@ public class TeamSubscriber(
         var updatedItems = new List<TeamMember>();
         foreach (var teamMember in teamMembers.Where(teamMember => team.TeamMembers.Any(item => item.Id == teamMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id, cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id, false, cancellationToken);
             var updatedTeamMember = mapper.MergeToEntity(
                 team.TeamMembers.First(item => item.Id == teamMember.Id),
                 teamMember,
@@ -115,7 +115,7 @@ public class TeamSubscriber(
         var addedItems = new List<TeamMember>();
         foreach (var teamMember in team.TeamMembers.Where(teamMember => teamMembers.All(item => item.Id != teamMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id, cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(teamMember.Customer.Id, false, cancellationToken);
             addedItems.Add(repositoryFactory.TeamMemberRepository.Add(mapper.MapToEntity(teamMember, existingTeam, customer)));
         }
 

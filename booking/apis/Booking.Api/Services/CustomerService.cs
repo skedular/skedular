@@ -10,9 +10,7 @@ public interface ICustomerService
 {
     Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
     Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
-
-    Task<(Customer, Shared.Database.Entities.Customer)>
-        GetCustomerAsync(string id, CancellationToken cancellationToken);
+    Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(string id, CancellationToken cancellationToken);
 }
 
 public class CustomerService(
@@ -20,15 +18,11 @@ public class CustomerService(
     IMapper mapper,
     IContext context) : ICustomerService
 {
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
-        CancellationToken cancellationToken)
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
-        var customer =
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                context.GetVerifiableToken(),
-                cancellationToken);
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), true, cancellationToken);
         if (customer is null)
         {
             throw new CustomerNotFound();
@@ -37,28 +31,22 @@ public class CustomerService(
         return (mapper.MapTo(customer)!, customer);
     }
 
-    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
-        CancellationToken cancellationToken)
+    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(context.GetVerifiableToken()))
         {
             return (null, null);
         }
 
-        var customer =
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                context.GetVerifiableToken(),
-                cancellationToken);
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), true, cancellationToken);
         return customer is null ? (null, null) : (mapper.MapTo(customer)!, customer);
     }
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
-        string id,
-        CancellationToken cancellationToken)
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken);
+        var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(id, true, cancellationToken);
         if (customer is null)
         {
             throw new CustomerNotFound();

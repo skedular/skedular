@@ -12,11 +12,7 @@ namespace Customer.Shared.Repositories;
 public interface ICustomerRepository : IRepository<Database.Entities.Customer>
 {
     Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
-
-    Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(
-        string verifiableToken,
-        CancellationToken cancellationToken);
-
+    Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<Database.Entities.Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Customer>> GetAllAsync(CancellationToken cancellationToken);
     Database.Entities.Customer Add(Database.Entities.Customer customer);
@@ -69,8 +65,7 @@ internal static class CustomerExtensions
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.LocationId))
         {
-            query = query.Where(item =>
-                item.DefaultLocations.Select(location => location.Id).Contains(searchCriteria.LocationId));
+            query = query.Where(item => item.DefaultLocations.Select(location => location.Id).Contains(searchCriteria.LocationId));
         }
 
         return query;
@@ -160,8 +155,9 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                     dbContext,
                     id,
                     cancellationToken) =>
-                dbContext.Customer.AddDependentObjects()
-                    .FirstOrDefault<Database.Entities.Customer>(query => query.Id == id));
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query => query.Id == id));
 
     private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
         s_getByVerifiableTokenQueryAsync =
@@ -169,8 +165,9 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                     dbContext,
                     verifiableToken,
                     cancellationToken) =>
-                dbContext.Customer.AddDependentObjects()
-                    .FirstOrDefault<Database.Entities.Customer>(query =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query =>
                         !query.DeletedAt.HasValue &&
                         query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
 
@@ -180,8 +177,9 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                     dbContext,
                     email,
                     cancellationToken) =>
-                dbContext.Customer.AddDependentObjects()
-                    .FirstOrDefault<Database.Entities.Customer>(query =>
+                dbContext.Customer
+                    .AddDependentObjects()
+                    .FirstOrDefault(query =>
                         !query.DeletedAt.HasValue &&
                         query.Identities.Any(identity =>
                             identity.Email != null &&
@@ -190,9 +188,7 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
     public async Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await s_getByIdQueryAsync(DbContext, id, cancellationToken);
 
-    public async Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(
-        string verifiableToken,
-        CancellationToken cancellationToken) =>
+    public async Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await s_getByVerifiableTokenQueryAsync(DbContext, verifiableToken, cancellationToken);
 
     public async Task<Database.Entities.Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>

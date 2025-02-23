@@ -161,8 +161,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(w6nk3o4akdn25s32ikw7eetqpi)
       nanoid:
-        specifier: ^5.1.0
-        version: 5.1.0
+        specifier: ^5.1.2
+        version: 5.1.2
       next:
         specifier: 15.1.7
         version: 15.1.7(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.0.0-beta-30d8a17-20250209)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -176,8 +176,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0
       react-confetti:
-        specifier: ^6.2.2
-        version: 6.2.2(react@19.0.0)
+        specifier: ^6.2.3
+        version: 6.2.3(react@19.0.0)
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
@@ -243,8 +243,8 @@ importers:
         specifier: ^16.10.0
         version: 16.10.0
       prettier:
-        specifier: ^3.5.1
-        version: 3.5.1
+        specifier: ^3.5.2
+        version: 3.5.2
       relay-compiler:
         specifier: ^18.2.0
         version: 18.2.0
@@ -2959,8 +2959,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@5.1.0:
-    resolution: {integrity: sha512-zDAl/llz8Ue/EblwSYwdxGBYfj46IM1dhjVi8dyp9LQffoIGxJEAHj2oeZ4uNcgycSRcQ83CnfcZqEJzVDLcDw==}
+  nanoid@5.1.2:
+    resolution: {integrity: sha512-b+CiXQCNMUGe0Ri64S9SXFcP9hogjAJ2Rd6GdVxhPLRm7mhGaM7VgOvCAJ1ZshfHbqVDI3uqTI5C8/GaKuLI7g==}
     engines: {node: ^18 || >=20}
     hasBin: true
 
@@ -3152,8 +3152,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier@3.5.1:
-    resolution: {integrity: sha512-hPpFQvHwL3Qv5AdRvBFMhnKo4tYxp0ReXiPn2bxkiohEX6mBeBwEpBSQTkD458RaaDKQMYSp4hX4UtfUTA5wDw==}
+  prettier@3.5.2:
+    resolution: {integrity: sha512-lc6npv5PH7hVqozBR7lkBNOGXV9vMwROAPlumdBkX0wTbbzPu/U1hk5yL8p2pt4Xoc+2mkT8t/sow2YrV/M5qg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -3205,8 +3205,8 @@ packages:
   quick-format-unescaped@4.0.4:
     resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
 
-  react-confetti@6.2.2:
-    resolution: {integrity: sha512-K+kTyOPgX+ZujMZ+Rmb7pZdHBvg+DzinG/w4Eh52WOB8/pfO38efnnrtEZNJmjTvLxc16RBYO+tPM68Fg8viBA==}
+  react-confetti@6.2.3:
+    resolution: {integrity: sha512-Jt6Fy3jE7FrpKxeDQ3oh36Bz6LoYt4o+vU578ghuF//NxADlcauDYvWr24S8hHKnQ90Uv01XXOngnKVBdZ73zQ==}
     engines: {node: '>=16'}
     peerDependencies:
       react: ^16.3.0 || ^17.0.1 || ^18.0.0 || ^19.0.0
@@ -6895,7 +6895,7 @@ snapshots:
 
   nanoid@3.3.8: {}
 
-  nanoid@5.1.0: {}
+  nanoid@5.1.2: {}
 
   natural-compare@1.4.0: {}
 
@@ -7103,7 +7103,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier@3.5.1: {}
+  prettier@3.5.2: {}
 
   process-nextick-args@2.0.1: {}
 
@@ -7150,7 +7150,7 @@ snapshots:
 
   quick-format-unescaped@4.0.4: {}
 
-  react-confetti@6.2.2(react@19.0.0):
+  react-confetti@6.2.3(react@19.0.0):
     dependencies:
       react: 19.0.0
       tween-functions: 1.2.0

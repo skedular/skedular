@@ -979,7 +979,8 @@ public class BookingService(
 
         if (location is not null)
         {
-            desks = desks.Where(item => item.Location is { DeletedAt: null } && item.Location.Id == location.Id)
+            desks = desks
+                .Where(item => item.Location is { DeletedAt: null } && item.Location.Id == location.Id)
                 .ToList();
 
             if (desks.Count == 0)

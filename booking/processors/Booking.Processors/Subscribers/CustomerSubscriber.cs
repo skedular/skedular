@@ -26,7 +26,7 @@ public class CustomerSubscriber(
             case Type.CustomerUpserted:
                 {
                     var customer = mapper.MapTo(@event);
-                    var existingCustomer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customer.Id, cancellationToken);
+                    var existingCustomer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customer.Id, false, cancellationToken);
                     if (existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Customer event. Event timestamp is older that what is already processed.");
@@ -41,7 +41,7 @@ public class CustomerSubscriber(
             case Type.CustomerDeleted:
                 {
                     var customer = mapper.MapTo(@event);
-                    var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken);
+                    var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, false, cancellationToken);
                     if (existingCustomer is not null && existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Customer event. Event timestamp is older that what is already processed.");

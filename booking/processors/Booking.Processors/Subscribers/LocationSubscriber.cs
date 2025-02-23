@@ -180,9 +180,7 @@ public class LocationSubscriber(
             {
                 var filteredOrganizationTags = organizationTags
                     .Where(tag =>
-                        location.Rooms
-                            .First(item => item.Id == room.Id).OrganizationTags
-                            .Any(organizationTag => organizationTag.Id == tag.Id))
+                        location.Rooms.First(item => item.Id == room.Id).OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
                 var updatedRoom = mapper.MergeToEntity(
@@ -224,7 +222,7 @@ public class LocationSubscriber(
         var updatedItems = new List<LocationMember>();
         foreach (var locationMember in locationMembers.Where(locationMember => location.LocationMembers.Any(item => item.Id == locationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id, cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id, false, cancellationToken);
             await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             var updatedLocationMember = mapper.MergeToEntity(
@@ -239,7 +237,7 @@ public class LocationSubscriber(
         var addedItems = new List<LocationMember>();
         foreach (var locationMember in location.LocationMembers.Where(locationMember => locationMembers.All(item => item.Id != locationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id, cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id, false, cancellationToken);
             await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
             addedItems.Add(repositoryFactory.LocationMemberRepository.Add(mapper.MapToEntity(locationMember, existingLocation, customer)));
         }
