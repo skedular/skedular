@@ -31,6 +31,7 @@ type Props = {
   onAdded: (teamId: string) => void;
   onCancel: () => void;
   addLabel?: string;
+  showDismiss: boolean;
 };
 
 const RootQuery = graphql`
@@ -68,7 +69,7 @@ const teamSchema = object({
   primaryLocationId: string().nullable(),
 });
 
-const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel, addLabel }: Props) => {
+const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel, addLabel, showDismiss }: Props) => {
   const rootData = usePreloadedQuery<addTeam_rootQuery>(RootQuery, queryReference);
   const [commitAddTeam] = useMutation<addTeam_addTeamMutation>(graphql`
     mutation addTeam_addTeamMutation($input: AddTeamInput!) @raw_response_type {
@@ -265,8 +266,13 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationId, onAdded, on
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
+                    {showDismiss && (
+                      <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>
+                        <BodyIconTypography label="Dismiss" invertDefaultColor={paletteMode === 'dark'} />
+                      </Button>
+                    )}
                     <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                      {addLabel ?? 'Add'}
+                      <BodyIconTypography label={addLabel ?? 'Add'} invertDefaultColor={paletteMode === 'dark'} />
                     </Button>
                   </StackRow>
                 </StackColumn>
@@ -287,9 +293,10 @@ type RelayProps = {
   onAdded: (teamId: string) => void;
   onCancel: () => void;
   addLabel?: string;
+  showDismiss: boolean;
 };
 
-const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancel, addLabel }: RelayProps) => {
+const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancel, addLabel, showDismiss }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addTeam_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
@@ -333,6 +340,7 @@ const AddTeamWithRelay = ({ organizationId, onReloadRequired, onAdded, onCancel,
         onAdded={onAdded}
         onCancel={onCancel}
         addLabel={addLabel}
+        showDismiss={showDismiss}
       />
     </ErrorBoundary>
   );

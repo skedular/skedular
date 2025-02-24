@@ -23,6 +23,7 @@ type Props = {
   onAdded: (locationId: string) => void;
   onCancel: () => void;
   addLabel?: string;
+  showDismiss: boolean;
 };
 
 type LocationDetails = {
@@ -39,7 +40,7 @@ const locationSchema = object({
   physicalAddress: string().nullable(),
 });
 
-const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addLabel }: Props) => {
+const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addLabel, showDismiss }: Props) => {
   const [commitAddLocation] = useMutation<addLocation_addLocationMutation>(graphql`
     mutation addLocation_addLocationMutation($input: AddLocationInput!) @raw_response_type {
       addLocation(input: $input) {
@@ -203,8 +204,13 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addL
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
+                    {showDismiss && (
+                      <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>
+                        <BodyIconTypography label="Dismiss" invertDefaultColor={paletteMode === 'dark'} />
+                      </Button>
+                    )}
                     <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                      {addLabel ?? 'Add'}
+                      <BodyIconTypography label={addLabel ?? 'Add'} invertDefaultColor={paletteMode === 'dark'} />
                     </Button>
                   </StackRow>
                 </StackColumn>

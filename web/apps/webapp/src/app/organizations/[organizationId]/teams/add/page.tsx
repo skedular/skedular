@@ -34,7 +34,7 @@ const AddTeamPage = () => {
 
   return (
     <RootShell>
-      <AddTeam organizationId={finalOrganizationId} onAdded={handleAdded} onCancel={handleCancelled} onReloadRequired={handleReloadRequired} />
+      <AddTeam organizationId={finalOrganizationId} showDismiss={false} onAdded={handleAdded} onCancel={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );
 };

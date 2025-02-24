@@ -207,7 +207,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <StackRow>
                     <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                      {addLabel ?? 'Add'}
+                      <BodyIconTypography label={addLabel ?? 'Add'} invertDefaultColor={paletteMode === 'dark'} />
                     </Button>
                   </StackRow>
                 </StackColumn>
