@@ -33,6 +33,7 @@ import { array, object, string } from 'yup';
 type Props = {
   queryReference: PreloadedQuery<addDeskDialog_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
+  organizationId: string;
   locationId?: string;
   connectionIds: string[];
   isDialogOpen: boolean;
@@ -81,7 +82,7 @@ const deskSchema = object({
   zoneIds: array().nullable(),
 });
 
-const AddDeskDialog = ({ queryReference, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddDeskDialog = ({ queryReference, organizationId, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const rootData = usePreloadedQuery<addDeskDialog_rootQuery>(RootQuery, queryReference);
 
   const [commitAddDesk] = useMutation<addDeskDialog_addDeskMutation>(graphql`
@@ -225,11 +226,11 @@ const AddDeskDialog = ({ queryReference, locationId, connectionIds, isDialogOpen
               </FormFieldLabel>
 
               <FormFieldLabel label="Tags" useWiderSpace>
-                <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} />
+                <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} organizationId={organizationId} />
               </FormFieldLabel>
 
               <FormFieldLabel label="Zones" useWiderSpace>
-                <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
+                <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationId={organizationId} />
               </FormFieldLabel>
 
               <FormFieldLabel label="Color" useWiderSpace>
@@ -310,6 +311,7 @@ const AddDeskDialogWithRelay = ({ onReloadRequired, organizationId, locationId, 
       <MemoAddDeskDialog
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
         locationId={locationId}
         connectionIds={connectionIds}
         isDialogOpen={isDialogOpen}

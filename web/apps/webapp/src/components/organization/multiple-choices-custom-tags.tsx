@@ -1,4 +1,5 @@
 import { BodyIconTypography } from '@/components/commons';
+import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import type { multipleChoicesCustomTags_query$key } from '@/queries/__generated__/multipleChoicesCustomTags_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
@@ -9,6 +10,7 @@ type Props = {
   rootDataRelay: multipleChoicesCustomTags_query$key;
   name: string;
   required?: boolean;
+  organizationId: string;
 };
 
 type CustomTagDetails = {
@@ -17,11 +19,12 @@ type CustomTagDetails = {
   color: string | null | undefined;
 };
 
-const MultipleChoicesCustomTags = ({ rootDataRelay, name, required }: Props) => {
+const MultipleChoicesCustomTags = ({ rootDataRelay, name, required, organizationId }: Props) => {
   const rootData = useFragment<multipleChoicesCustomTags_query$key>(
     graphql`
-      fragment multipleChoicesCustomTags_query on Query {
-        customTags(where: { organizationId: $organizationId }, orderBy: $multipleChoicesCustomTagsSortingValues) {
+      fragment multipleChoicesCustomTags_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
+        customTags(first: $count, after: $cursor, where: { organizationId: $organizationId }, orderBy: $multipleChoicesCustomTagsSortingValues)
+          @connection(key: "multipleChoicesCustomTags_customTags") {
           __id
           totalCount
           edges {
@@ -37,19 +40,13 @@ const MultipleChoicesCustomTags = ({ rootDataRelay, name, required }: Props) => 
     rootDataRelay,
   );
 
-  const customTags = useMemo<CustomTagDetails[]>(() => {
-    if (!rootData.customTags) {
-      return [];
-    }
-
-    return rootData.customTags.edges.map(({ node }) => node);
-  }, [rootData.customTags]);
-
-  if (!rootData.customTags) {
-    return <></>;
-  }
-
+  const connectionIds = useMemo(() => (rootData.customTags ? [rootData.customTags.__id] : []), [rootData.customTags]);
+  const customTags = useMemo<CustomTagDetails[]>(() => (rootData.customTags ? rootData.customTags.edges.map(({ node }) => node) : []), [rootData.customTags]);
   const filter = createFilterOptions<CustomTagDetails>();
+
+  if (customTags.length === 0) {
+    return <AddOrganizationCustomTagButton organizationId={organizationId} connectionIds={connectionIds} size="medium" />;
+  }
 
   return (
     <Autocomplete

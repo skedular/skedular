@@ -65,7 +65,7 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, deskId
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <EditDesk rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
+      <EditDesk rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
     </RootShell>
   );
 };

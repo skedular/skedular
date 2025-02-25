@@ -1,4 +1,5 @@
 import { BodyIconTypography } from '@/components/commons';
+import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
 import type { multipleChoicesZones_query$key } from '@/queries/__generated__/multipleChoicesZones_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
@@ -9,6 +10,7 @@ type Props = {
   rootDataRelay: multipleChoicesZones_query$key;
   name: string;
   required?: boolean;
+  organizationId: string;
 };
 
 type ZoneDetails = {
@@ -17,11 +19,12 @@ type ZoneDetails = {
   color: string | null | undefined;
 };
 
-const MultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
+const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationId }: Props) => {
   const rootData = useFragment<multipleChoicesZones_query$key>(
     graphql`
-      fragment multipleChoicesZones_query on Query {
-        zones(where: { organizationId: $organizationId }, orderBy: $multipleChoicesZonesSortingValues) {
+      fragment multipleChoicesZones_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
+        zones(first: $count, after: $cursor, where: { organizationId: $organizationId }, orderBy: $multipleChoicesZonesSortingValues)
+          @connection(key: "multipleChoicesZones_zones") {
           __id
           totalCount
           edges {
@@ -37,19 +40,13 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required }: Props) => {
     rootDataRelay,
   );
 
-  const zones = useMemo<ZoneDetails[]>(() => {
-    if (!rootData.zones) {
-      return [];
-    }
-
-    return rootData.zones.edges.map(({ node }) => node);
-  }, [rootData.zones]);
-
-  if (!rootData.zones) {
-    return <></>;
-  }
-
+  const connectionIds = useMemo(() => (rootData.zones ? [rootData.zones.__id] : []), [rootData.zones]);
+  const zones = useMemo<ZoneDetails[]>(() => (rootData.zones ? rootData.zones.edges.map(({ node }) => node) : []), [rootData.zones]);
   const filter = createFilterOptions<ZoneDetails>();
+
+  if (zones.length === 0) {
+    return <AddOrganizationZoneButton organizationId={organizationId} connectionIds={connectionIds} size="medium" />;
+  }
 
   return (
     <Autocomplete

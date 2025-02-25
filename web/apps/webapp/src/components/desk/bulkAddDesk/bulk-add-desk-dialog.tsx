@@ -23,6 +23,7 @@ import { array, number, object, string } from 'yup';
 type Props = {
   queryReference: PreloadedQuery<bulkAddDeskDialog_rootQuery, Record<string, unknown>>;
   onReloadRequired?: () => void;
+  organizationId: string;
   locationId: string;
   connectionIds: string[];
   isDialogOpen: boolean;
@@ -55,7 +56,7 @@ const deskSchema = object({
   zoneIds: array().nullable(),
 });
 
-const BulkAddDeskDialog = ({ queryReference, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const BulkAddDeskDialog = ({ queryReference, organizationId, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const rootData = usePreloadedQuery<bulkAddDeskDialog_rootQuery>(RootQuery, queryReference);
 
   const [commitAddDesk] = useMutation<bulkAddDeskDialog_bulkAddDeskMutation>(graphql`
@@ -169,11 +170,11 @@ const BulkAddDeskDialog = ({ queryReference, locationId, connectionIds, isDialog
               </FormFieldLabel>
 
               <FormFieldLabel label="Tags" useWiderSpace>
-                <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} />
+                <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} organizationId={organizationId} />
               </FormFieldLabel>
 
               <FormFieldLabel label="Zones" useWiderSpace>
-                <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} />
+                <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationId={organizationId} />
               </FormFieldLabel>
 
               <FormFieldLabel label="Color" useWiderSpace>
@@ -248,6 +249,7 @@ const BulkAddDeskDialogWithRelay = ({ onReloadRequired, organizationId, location
       <MemoBulkAddDeskDialog
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
         locationId={locationId}
         connectionIds={connectionIds}
         isDialogOpen={isDialogOpen}

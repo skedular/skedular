@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<17b59b93107d18c36809445fe9cd69cc>>
+ * @generated SignedSource<<4bb8267fe8f2939f75dbe03b8e5ee70e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -106,6 +106,14 @@ v9 = {
 },
 v10 = [
   {
+    "kind": "Variable",
+    "name": "orderBy",
+    "variableName": "multipleChoicesCustomTagsSortingValues"
+  },
+  (v9/*: any*/)
+],
+v11 = [
+  {
     "alias": null,
     "args": null,
     "kind": "ScalarField",
@@ -130,8 +138,47 @@ v10 = [
         "selections": [
           (v6/*: any*/),
           (v5/*: any*/),
-          (v7/*: any*/)
+          (v7/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          }
         ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "cursor",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "PageInfo",
+    "kind": "LinkedField",
+    "name": "pageInfo",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "endCursor",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "hasNextPage",
         "storageKey": null
       }
     ],
@@ -149,6 +196,18 @@ v10 = [
       }
     ]
   }
+],
+v12 = [
+  "where",
+  "orderBy"
+],
+v13 = [
+  {
+    "kind": "Variable",
+    "name": "orderBy",
+    "variableName": "multipleChoicesZonesSortingValues"
+  },
+  (v9/*: any*/)
 ];
 return {
   "fragment": {
@@ -244,47 +303,51 @@ return {
       },
       {
         "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "orderBy",
-            "variableName": "multipleChoicesCustomTagsSortingValues"
-          },
-          (v9/*: any*/)
-        ],
+        "args": (v10/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "customTags",
         "plural": false,
-        "selections": (v10/*: any*/),
+        "selections": (v11/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "orderBy",
-            "variableName": "multipleChoicesZonesSortingValues"
-          },
-          (v9/*: any*/)
-        ],
+        "args": (v10/*: any*/),
+        "filters": (v12/*: any*/),
+        "handle": "connection",
+        "key": "multipleChoicesCustomTags_customTags",
+        "kind": "LinkedHandle",
+        "name": "customTags"
+      },
+      {
+        "alias": null,
+        "args": (v13/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "zones",
         "plural": false,
-        "selections": (v10/*: any*/),
+        "selections": (v11/*: any*/),
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v13/*: any*/),
+        "filters": (v12/*: any*/),
+        "handle": "connection",
+        "key": "multipleChoicesZones_zones",
+        "kind": "LinkedHandle",
+        "name": "zones"
       }
     ]
   },
   "params": {
-    "cacheID": "992f0c57ad01d5631567058358b436a2",
+    "cacheID": "ad43a1d46397c3e50aa8229929cf2f61",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocationRoom_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocationRoom_rootQuery(\n  $organizationId: String!\n  $roomId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  room(id: $roomId) {\n    name\n    id\n  }\n  ...editRoom_query\n}\n\nfragment editRoom_query on Query {\n  room(id: $roomId) {\n    id\n    name\n    deactivated\n    requireBookingApproval\n    color\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationLocationRoom_rootQuery(\n  $organizationId: String!\n  $roomId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  room(id: $roomId) {\n    name\n    id\n  }\n  ...editRoom_query\n}\n\nfragment editRoom_query on Query {\n  room(id: $roomId) {\n    id\n    name\n    deactivated\n    requireBookingApproval\n    color\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

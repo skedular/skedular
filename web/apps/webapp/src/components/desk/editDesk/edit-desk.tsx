@@ -21,6 +21,7 @@ import { array, object, string } from 'yup';
 type Props = {
   rootDataRelay: editDesk_query$key;
   onReloadRequired?: () => void;
+  organizationId: string;
 };
 
 type DeskDetails = {
@@ -35,7 +36,7 @@ const deskSchema = object({
   zoneIds: array().nullable(),
 });
 
-const EditDesk = ({ rootDataRelay }: Props) => {
+const EditDesk = ({ rootDataRelay, organizationId }: Props) => {
   const rootData = useFragment<editDesk_query$key>(
     graphql`
       fragment editDesk_query on Query {
@@ -194,11 +195,11 @@ const EditDesk = ({ rootDataRelay }: Props) => {
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Tags">
-                    <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredDeskDetailsFields.customTagIds} />
+                    <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredDeskDetailsFields.customTagIds} organizationId={organizationId} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Zones">
-                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredDeskDetailsFields.zoneIds} />
+                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredDeskDetailsFields.zoneIds} organizationId={organizationId} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Color">

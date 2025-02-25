@@ -21,6 +21,7 @@ import { array, object, string } from 'yup';
 type Props = {
   rootDataRelay: editRoom_query$key;
   onReloadRequired?: () => void;
+  organizationId: string;
 };
 
 type RoomDetails = {
@@ -35,7 +36,7 @@ const roomSchema = object({
   zoneIds: array().nullable(),
 });
 
-const EditRoom = ({ rootDataRelay }: Props) => {
+const EditRoom = ({ rootDataRelay, organizationId }: Props) => {
   const rootData = useFragment<editRoom_query$key>(
     graphql`
       fragment editRoom_query on Query {
@@ -194,11 +195,11 @@ const EditRoom = ({ rootDataRelay }: Props) => {
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Tags">
-                    <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredRoomDetailsFields.customTagIds} />
+                    <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredRoomDetailsFields.customTagIds} organizationId={organizationId} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Zones">
-                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredRoomDetailsFields.zoneIds} />
+                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredRoomDetailsFields.zoneIds} organizationId={organizationId} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Color">

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<108361705158fc5dc5af0fb1b9f0b4a6>>
+ * @generated SignedSource<<f8cb19115f485583ffb55cd686aa61f2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,6 +32,16 @@ export type multipleChoicesZones_query$key = {
 const node: ReaderFragment = {
   "argumentDefinitions": [
     {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "count"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "cursor"
+    },
+    {
       "kind": "RootArgument",
       "name": "multipleChoicesZonesSortingValues"
     },
@@ -41,11 +51,22 @@ const node: ReaderFragment = {
     }
   ],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
+        "path": [
+          "zones"
+        ]
+      }
+    ]
+  },
   "name": "multipleChoicesZones_query",
   "selections": [
     {
-      "alias": null,
+      "alias": "zones",
       "args": [
         {
           "kind": "Variable",
@@ -66,7 +87,7 @@ const node: ReaderFragment = {
       ],
       "concreteType": "OrganizationTagConnection",
       "kind": "LinkedField",
-      "name": "zones",
+      "name": "__multipleChoicesZones_zones_connection",
       "plural": false,
       "selections": [
         {
@@ -112,8 +133,47 @@ const node: ReaderFragment = {
                   "kind": "ScalarField",
                   "name": "color",
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
               "storageKey": null
             }
           ],
@@ -139,6 +199,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "283f8fc8d375ed3ab516b1aea5c1e919";
+(node as any).hash = "8324a641843981787f9f516f2373676d";
 
 export default node;
