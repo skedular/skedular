@@ -8,11 +8,7 @@ namespace Notification.Processors.Subscribers;
 
 public class NotificationSubscriber(IEmailService emailService) : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -33,6 +29,7 @@ public class NotificationSubscriber(IEmailService emailService) : IEventSubscrib
                         email.BccAddresses.ToList(),
                         cancellationToken);
                 }
+
                 break;
         }
 

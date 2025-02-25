@@ -1,5 +1,7 @@
+using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Enterprise.Shared;
 using Slack.Shared.Models;
+using SlackNet;
 using Booking = Slack.Shared.Models.Booking;
 using Location = Slack.Shared.Models.Location;
 using Team = Slack.Shared.Models.Team;
@@ -12,6 +14,8 @@ using Identity = Slack.Shared.Models.Identity;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
+using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
+using WorkspaceChannel = Slack.Shared.Database.Entities.WorkspaceChannel;
 
 namespace Slack.Shared.Mappers;
 
@@ -20,6 +24,19 @@ public interface IMapper
     Customer? MapTo(Database.Entities.Customer? src);
     Booking MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking src);
     Models.Workspace MapTo(Workspace src);
+    WorkspaceMember MapToEntity(User src, Workspace workspace);
+    WorkspaceMember MergeToEntity(User src, WorkspaceMember dest, Workspace workspace);
+    WorkspaceChannel MapToEntity(Conversation src, Workspace workspace);
+    WorkspaceChannel MergeToEntity(Conversation src, WorkspaceChannel dest, Workspace workspace);
+    Workspace MergeToEntity(SlackNet.Team src, Workspace dest);
+    Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId);
+    Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId);
+
+    Admin_AddInput MapTo(
+        WorkspaceMember src,
+        string customerId,
+        Database.Entities.Organization defaultOrganization,
+        ICollection<Database.Entities.Location> defaultLocations);
 }
 
 public class Mapper : IMapper
@@ -92,6 +109,107 @@ public class Mapper : IMapper
             Rooms = MapTo(src.Rooms).ToList(),
             Team = MapTo(src.Team)
         };
+
+    public WorkspaceMember MapToEntity(User src, Workspace workspace) => MergeToEntity(src, new WorkspaceMember(), workspace);
+
+    public WorkspaceMember MergeToEntity(User src, WorkspaceMember dest, Workspace workspace)
+    {
+        dest.Id = src.Id;
+        dest.Email = src.Profile.Email.ToSafeString();
+        dest.Designation = src.Profile.Title.ToSafeString().Truncate(Api.Shared.Constants.MaxDesignationLength);
+        dest.Name = src.Profile.RealName.ToSafeString().Truncate(Api.Shared.Constants.MaxPersonNameLength);
+        dest.GivenName = src.Profile.FirstName.ToSafeString().Truncate(Api.Shared.Constants.MaxGivenNameLength);
+        dest.FamilyName = src.Profile.LastName.ToSafeString().Truncate(Api.Shared.Constants.MaxFamilyNameLength);
+        dest.Timezone = src.Tz.ToSafeString().Truncate(Api.Shared.Constants.MaxTimezoneLength);
+        dest.IsAdmin = src.IsAdmin;
+        dest.IsOwner = src.IsOwner;
+        dest.IsPrimaryOwner = src.IsPrimaryOwner;
+        dest.Locale = src.Locale.ToSafeString().Truncate(Api.Shared.Constants.MaxLocaleLength);
+        dest.PhotoUrl = src.Profile.ImageOriginal.Truncate(Api.Shared.Constants.MaxUrlLength);
+        dest.PhotoUrl24 = src.Profile.Image24.Truncate(Api.Shared.Constants.MaxUrlLength);
+        dest.PhotoUrl32 = src.Profile.Image32.Truncate(Api.Shared.Constants.MaxUrlLength);
+        dest.PhotoUrl48 = src.Profile.Image48.Truncate(Api.Shared.Constants.MaxUrlLength);
+        dest.PhotoUrl72 = src.Profile.Image72.Truncate(Api.Shared.Constants.MaxUrlLength);
+        dest.PhotoUrl192 = src.Profile.Image192.Truncate(Api.Shared.Constants.MaxUrlLength);
+        dest.PhotoUrl512 = src.Profile.Image512.Truncate(Api.Shared.Constants.MaxUrlLength);
+        dest.Workspace = workspace;
+        return dest;
+    }
+
+    public WorkspaceChannel MapToEntity(Conversation src, Workspace workspace) => MergeToEntity(src, new WorkspaceChannel(), workspace);
+
+    public WorkspaceChannel MergeToEntity(Conversation src, WorkspaceChannel dest, Workspace workspace)
+    {
+        dest.Id = src.Id;
+        dest.Name = src.Name.Truncate(Api.Shared.Constants.MaxUrlLength);
+        dest.Topic = src.Topic.Value;
+        dest.Purpose = src.Purpose.Value;
+        dest.IsPrivate = src.IsPrivate;
+        dest.IsGeneral = src.IsGeneral;
+        dest.IsGroup = src.IsGroup;
+        dest.IsShared = src.IsShared;
+        dest.IsMember = src.IsMember;
+        dest.Workspace = workspace;
+        return dest;
+    }
+
+    public Workspace MergeToEntity(SlackNet.Team src, Workspace dest)
+    {
+        dest.Name = src.Name;
+        dest.Domain = src.Domain;
+        dest.EmailDomain = src.EmailDomain;
+        dest.EnterpriseId = src.EnterpriseId;
+        dest.EnterpriseName = src.EnterpriseName;
+        return dest;
+    }
+
+    public Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId) =>
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+
+    public Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId) =>
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+
+    public Admin_AddInput MapTo(
+        WorkspaceMember src,
+        string customerId,
+        Database.Entities.Organization defaultOrganization,
+        ICollection<Database.Entities.Location> defaultLocations)
+    {
+        var input = new Admin_AddInput
+        {
+            Id = customerId,
+            Designation = src.Designation.ToSafeString(),
+            Name = src.Name.ToSafeString(),
+            GivenName = src.GivenName.ToSafeString(),
+            FamilyName = src.FamilyName.ToSafeString(),
+            Timezone = src.Timezone.ToSafeString(),
+            PhotoUrl = src.PhotoUrl.ToSafeString(),
+            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
+            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
+            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
+            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
+            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
+            PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
+            IsOrganizationOnboardingDone = true,
+            IsLocationOnboardingDone = true,
+            IsDefaultOrganizationOnboardingDone = true,
+            IsDefaultLocationOnboardingDone = true,
+            IsPreferredZoneOnboardingDone = false,
+            IsPreferredDeskOnboardingDone = false,
+            IsPreferredRoomOnboardingDone = false,
+            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+        };
+
+        input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
+
+        input.DefaultLocations.AddRange(defaultLocations.Select(item =>
+            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
+            {
+                Id = item.Id, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+            }));
+
+        return input;
+    }
 
     private Organization MapTo(Database.Entities.Organization src)
     {

@@ -13,11 +13,7 @@ public class TeamSubscriber(
     IMapper mapper,
     IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -36,8 +32,7 @@ public class TeamSubscriber(
                             cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Team event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -52,8 +47,7 @@ public class TeamSubscriber(
                     var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
                     if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Team event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -70,15 +64,13 @@ public class TeamSubscriber(
             case Type.InvitationToJoinTeamUpserted:
                 {
                     var notification = mapper.MapInvitationToJoinTeamToNotification(@event);
-                    var existingNotification =
-                        await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
-                            notification.SourceId,
-                            cancellationToken);
+                    var existingNotification = await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
+                        notification.SourceId,
+                        cancellationToken);
                     if (existingNotification is not null &&
                         existingNotification.EventRaisedAt > notification.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Notification event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Notification event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -90,10 +82,9 @@ public class TeamSubscriber(
             case Type.InvitationToJoinTeamDeleted:
                 {
                     var notification = mapper.MapInvitationToJoinTeamToNotification(@event);
-                    var existingNotification =
-                        await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
-                            notification.SourceId,
-                            cancellationToken);
+                    var existingNotification = await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
+                        notification.SourceId,
+                        cancellationToken);
                     if (existingNotification is not null &&
                         existingNotification.EventRaisedAt > notification.EventRaisedAt)
                     {
@@ -129,9 +120,7 @@ public class TeamSubscriber(
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleTeamDeletedEventAsync(
-        Team existingTeam,
-        CancellationToken cancellationToken)
+    private async Task HandleTeamDeletedEventAsync(Team existingTeam, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.TeamRepository.Remove(existingTeam);
         await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -158,8 +147,7 @@ public class TeamSubscriber(
                 cancellationToken);
 
         _ = existingNotification is null
-            ? repositoryFactory.NotificationRepository.Add(
-                mapper.MapToEntity(notification, invitedBy, invitee, null, null, team))
+            ? repositoryFactory.NotificationRepository.Add(mapper.MapToEntity(notification, invitedBy, invitee, null, null, team))
             : repositoryFactory.NotificationRepository.Update(
                 mapper.MergeToEntity(notification, existingNotification, invitedBy, invitee, null, null, team));
 
@@ -168,7 +156,8 @@ public class TeamSubscriber(
         await repositoryFactory.NotificationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleNotificationDeletedEventAsync(Shared.Database.Entities.Notification existingNotification,
+    private async Task HandleNotificationDeletedEventAsync(
+        Shared.Database.Entities.Notification existingNotification,
         CancellationToken cancellationToken)
     {
         _ = repositoryFactory.NotificationRepository.Remove(existingNotification);

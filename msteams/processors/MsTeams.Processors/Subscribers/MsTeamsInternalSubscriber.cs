@@ -15,11 +15,7 @@ public class MsTeamsInternalSubscriber(
     IGraphService graphService)
     : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -63,12 +59,9 @@ public class MsTeamsInternalSubscriber(
 
         foreach (var existingAzureTenantTeam in addedTeams.Concat(updatedTeams))
         {
-            var azureTenantTeamChannels =
-                await graphService.GetAzureTenantTeamChannelsAsync(tenantId, existingAzureTenantTeam.Id,
-                    cancellationToken);
+            var azureTenantTeamChannels = await graphService.GetAzureTenantTeamChannelsAsync(tenantId, existingAzureTenantTeam.Id, cancellationToken);
             var channelsToRemove = existingAzureTenantTeam.AzureTenantTeamChannels
-                .Where(azureTenantTeamChannel =>
-                    azureTenantTeamChannels.All(item => item.Id != azureTenantTeamChannel.Id))
+                .Where(azureTenantTeamChannel => azureTenantTeamChannels.All(item => item.Id != azureTenantTeamChannel.Id))
                 .ToList();
             var updatedChannels = existingAzureTenantTeam.AzureTenantTeamChannels
                 .Where(azureTenantTeamChannel =>
@@ -82,8 +75,7 @@ public class MsTeamsInternalSubscriber(
             var addedChannels = azureTenantTeamChannels
                 .Where(azureTenantTeamChannel =>
                     existingAzureTenantTeam.AzureTenantTeamChannels.All(item => item.Id != azureTenantTeamChannel.Id))
-                .Select(item =>
-                    repositoryFactory.AzureTenantTeamChannelRepository.Add(mapper.MapTo(item, existingAzureTenantTeam)))
+                .Select(item => repositoryFactory.AzureTenantTeamChannelRepository.Add(mapper.MapTo(item, existingAzureTenantTeam)))
                 .ToList();
 
             repositoryFactory.AzureTenantTeamChannelRepository.RemoveRange(channelsToRemove);

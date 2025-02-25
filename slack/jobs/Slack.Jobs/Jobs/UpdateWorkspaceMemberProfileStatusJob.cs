@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Slack.Shared.Models;
 using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 
 namespace Slack.Jobs.Jobs;
@@ -20,8 +21,8 @@ public class UpdateWorkspaceMemberProfileStatusJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
+                var workspaceMemberService = scope.ServiceProvider.GetRequiredService<IWorkspaceMemberService>();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var slackInternalPublisher = scope.ServiceProvider.GetRequiredService<ISlackInternalPublisher>();
                 var now = timeProvider.GetUtcNow();
                 var workspaceMembers = await repositoryFactory.WorkspaceMemberRepository.Query(
                         new Specification<WorkspaceMember>
@@ -36,12 +37,11 @@ public class UpdateWorkspaceMemberProfileStatusJob(
                                 EF.Functions.ILike(query.Workspace.AuthedUserScope, "%users.profile:write%")
                         }.AddInclude(query => query.Workspace))
                     .ToListAsync(cancellationToken);
+
                 var workspaceMemberIds = new List<string>();
                 foreach (var workspaceMember in workspaceMembers)
                 {
-                    var customerEntity = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                        workspaceMember.Id,
-                        cancellationToken);
+                    var customerEntity = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(workspaceMember.Id, cancellationToken);
                     if (customerEntity is null)
                     {
                         continue;
@@ -55,11 +55,11 @@ public class UpdateWorkspaceMemberProfileStatusJob(
                     workspaceMemberIds.Add(workspaceMember.Id);
                 }
 
-                if (workspaceMemberIds.Count != 0)
+                foreach (var workspaceMemberId in workspaceMemberIds)
                 {
-                    await slackInternalPublisher.PublishUpdateWorkspaceMemberProfileStatusAsync(
-                        workspaceMemberIds,
-                        cancellationToken);
+                    logger.LogInformation("Update Slack Workspace Members Profile Status: {workspaceMemberId}", workspaceMemberId);
+
+                    await workspaceMemberService.UpdateWorkspaceMemberProfileStatusAsync(workspaceMemberId, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);

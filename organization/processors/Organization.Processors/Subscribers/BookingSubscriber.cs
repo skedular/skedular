@@ -20,11 +20,7 @@ public class BookingSubscriber(
     IRandomHelper randomHelper,
     IOrganizationPublisher organizationPublisher) : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -35,8 +31,7 @@ public class BookingSubscriber(
                         await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
                     if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Booking event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -53,8 +48,7 @@ public class BookingSubscriber(
                         await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
                     if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Booking event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -89,8 +83,7 @@ public class BookingSubscriber(
             return;
         }
 
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)
         {
             // Organization not found, ignoring it
@@ -104,8 +97,7 @@ public class BookingSubscriber(
             return;
         }
 
-        var organizationMember =
-            organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId);
+        var organizationMember = organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId);
         if (organizationMember is null)
         {
             // Customer not found, ignoring it
@@ -116,8 +108,7 @@ public class BookingSubscriber(
             new Specification<OrganizationOfferingActiveMember>
             {
                 Criteria = query =>
-                    query.OrganizationOffering.Id == organizationOffering.Id &&
-                    query.OrganizationMember.Id == organizationMember.Id
+                    query.OrganizationOffering.Id == organizationOffering.Id && query.OrganizationMember.Id == organizationMember.Id
             }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
 
         _ = organizationOfferingActiveMember is null

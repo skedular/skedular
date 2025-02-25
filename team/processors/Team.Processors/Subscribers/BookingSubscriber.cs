@@ -13,19 +13,14 @@ public class BookingSubscriber(
     IMapper mapper,
     IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
             case Type.BookingUpserted:
                 {
                     var booking = mapper.MapTo(@event);
-                    var existingBooking =
-                        await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
+                    var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
                     if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
                     {
                         logger.LogInformation(
@@ -41,8 +36,7 @@ public class BookingSubscriber(
             case Type.BookingDeleted:
                 {
                     var booking = mapper.MapTo(@event);
-                    var existingBooking =
-                        await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
+                    var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
                     if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
                     {
                         logger.LogInformation(

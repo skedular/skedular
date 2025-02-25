@@ -19,11 +19,7 @@ public class OrganizationSubscriber(
     IUpdatable<Customer, CustomerUpdateOptions> stripeCustomerUpdateService)
     : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -31,16 +27,11 @@ public class OrganizationSubscriber(
                 {
                     var organization = mapper.MapTo(@event);
                     var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                            organization.Id,
-                            true,
-                            true,
-                            cancellationToken);
+                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, true, true, cancellationToken);
                     if (existingOrganization is not null &&
                         existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Organization event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -61,8 +52,7 @@ public class OrganizationSubscriber(
                     if (existingOrganization is not null &&
                         existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Organization event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }

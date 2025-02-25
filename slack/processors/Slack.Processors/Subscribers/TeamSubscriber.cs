@@ -13,23 +13,17 @@ public class TeamSubscriber(
     IMapper mapper,
     IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
             case Type.TeamUpserted:
                 {
                     var team = mapper.MapTo(@event);
-                    var existingTeam =
-                        await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, cancellationToken);
+                    var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Team event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -41,12 +35,10 @@ public class TeamSubscriber(
             case Type.TeamDeleted:
                 {
                     var team = mapper.MapTo(@event);
-                    var existingTeam =
-                        await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
+                    var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
                     if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Team event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -68,10 +60,7 @@ public class TeamSubscriber(
         return EventSubscriberResults.Success;
     }
 
-    private async Task HandleTeamUpsertedEventAsync(
-        Shared.Models.Team team,
-        Team? existingTeam,
-        CancellationToken cancellationToken)
+    private async Task HandleTeamUpsertedEventAsync(Shared.Models.Team team, Team? existingTeam, CancellationToken cancellationToken)
     {
         _ = existingTeam is null
             ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team))

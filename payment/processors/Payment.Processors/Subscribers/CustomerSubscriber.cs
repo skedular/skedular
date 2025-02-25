@@ -14,19 +14,14 @@ public class CustomerSubscriber(
     IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
             case Type.CustomerUpserted:
                 {
                     var customer = mapper.MapTo(@event);
-                    var existingCustomer =
-                        await repositoryFactory.CustomerRepository.UpsertNakedAsync(customer.Id, cancellationToken);
+                    var existingCustomer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customer.Id, cancellationToken);
                     if (existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
                         logger.LogInformation(
@@ -42,8 +37,7 @@ public class CustomerSubscriber(
             case Type.CustomerDeleted:
                 {
                     var customer = mapper.MapTo(@event);
-                    var existingCustomer =
-                        await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken);
+                    var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken);
                     if (existingCustomer is not null && existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
                         logger.LogInformation(

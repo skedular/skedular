@@ -1,8 +1,8 @@
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Slack.Shared.Database.Entities;
-using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services;
 
 namespace Slack.Jobs.Jobs;
 
@@ -18,8 +18,8 @@ public class RefreshWorkspaceJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
+                var workspaceService = scope.ServiceProvider.GetRequiredService<IWorkspaceService>();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var slackInternalPublisher = scope.ServiceProvider.GetRequiredService<ISlackInternalPublisher>();
                 var now = timeProvider.GetUtcNow();
                 var workspaceIds = await repositoryFactory.WorkspaceRepository.Query(
                         new Specification<Workspace>
@@ -30,9 +30,12 @@ public class RefreshWorkspaceJob(
                         })
                     .Select(item => item.Id)
                     .ToListAsync(cancellationToken);
-                if (workspaceIds.Count != 0)
+
+                foreach (var workspaceId in workspaceIds)
                 {
-                    await slackInternalPublisher.PublishRefreshWorkspaceAsync(workspaceIds, cancellationToken);
+                    logger.LogInformation("Refresh Slack Workspace: {workspaceId}", workspaceId);
+
+                    await workspaceService.RefreshWorkspaceAsync(workspaceId, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromHours(1), cancellationToken);

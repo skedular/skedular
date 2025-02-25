@@ -13,11 +13,7 @@ public class TeamSubscriber(
     IMapper mapper,
     IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -29,10 +25,9 @@ public class TeamSubscriber(
                         break;
                     }
 
-                    var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                            team.Organization.Id,
-                            cancellationToken);
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+                        team.Organization.Id,
+                        cancellationToken);
                     ArgumentNullException.ThrowIfNull(existingOrganization);
 
                     var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(
@@ -41,8 +36,7 @@ public class TeamSubscriber(
                         cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Team event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -57,8 +51,7 @@ public class TeamSubscriber(
                     var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
                     if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Team event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }

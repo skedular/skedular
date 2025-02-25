@@ -1,8 +1,8 @@
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Slack.Shared.Database.Entities;
-using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services;
 
 namespace Slack.Jobs.Jobs;
 
@@ -18,21 +18,23 @@ public class RefreshWorkspaceChannelsJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
+                var workspaceChannelService = scope.ServiceProvider.GetRequiredService<IWorkspaceChannelService>();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var slackInternalPublisher = scope.ServiceProvider.GetRequiredService<ISlackInternalPublisher>();
                 var now = timeProvider.GetUtcNow();
                 var workspaceIds = await repositoryFactory.WorkspaceRepository.Query(
                         new Specification<Workspace>
                         {
                             Criteria = query =>
-                                !query.ChannelsLastRefreshedAt.HasValue ||
-                                (now - query.ChannelsLastRefreshedAt.Value).TotalHours >= 24
+                                !query.ChannelsLastRefreshedAt.HasValue || (now - query.ChannelsLastRefreshedAt.Value).TotalHours >= 24
                         })
                     .Select(item => item.Id)
                     .ToListAsync(cancellationToken);
-                if (workspaceIds.Count != 0)
+
+                foreach (var workspaceId in workspaceIds)
                 {
-                    await slackInternalPublisher.PublishRefreshWorkspaceChannelsAsync(workspaceIds, cancellationToken);
+                    logger.LogInformation("Refresh Slack Workspace Channels: {workspaceId}", workspaceId);
+
+                    await workspaceChannelService.RefreshWorkspaceChannelsAsync(workspaceId, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromHours(1), cancellationToken);

@@ -19,18 +19,12 @@ public class BillingInternalSubscriber(
     IBillingOutboxPublisher billingOutboxPublisher)
     : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
             case Type.GenerateOrganizationOfferingInvoice:
-                await HandleGenerateOrganizationOfferingInvoiceEventAsync(
-                    @event.OrganizationOfferingId,
-                    cancellationToken);
+                await HandleGenerateOrganizationOfferingInvoiceEventAsync(@event.OrganizationOfferingId, cancellationToken);
                 break;
         }
 
@@ -55,8 +49,7 @@ public class BillingInternalSubscriber(
             return;
         }
 
-        organizationOffering.TotalCost =
-            organizationOffering.TotalNumberOfActiveCustomers * organizationOffering.UnitPrice;
+        organizationOffering.TotalCost = organizationOffering.TotalNumberOfActiveCustomers * organizationOffering.UnitPrice;
         organizationOffering.InvoiceDate = now;
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(

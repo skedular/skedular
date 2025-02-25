@@ -21,11 +21,7 @@ public class BillingSubscriber(
     ICreatable<PaymentIntent, PaymentIntentCreateOptions> stripePaymentIntentCreateService)
     : IEventSubscriber<Key, Event>
 {
-    public async Task<EventSubscriberResult> HandleAsync(
-        EventContext eventContext,
-        Key key,
-        Event @event,
-        CancellationToken cancellationToken)
+    public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
@@ -45,9 +41,7 @@ public class BillingSubscriber(
         return EventSubscriberResults.Success;
     }
 
-    private async Task HandleBillingOrganizationOfferingUpsertedEventAsync(
-        Event @event,
-        CancellationToken cancellationToken)
+    private async Task HandleBillingOrganizationOfferingUpsertedEventAsync(Event @event, CancellationToken cancellationToken)
     {
         var organizationOfferingBilling = @event.Data.OrganizationOfferingBilling;
         if (organizationOfferingBilling.TotalCost == 0)
@@ -60,9 +54,7 @@ public class BillingSubscriber(
                 .OrganizationOfferingStripePaymentIntentRepository.Query(
                     new Specification<OrganizationOfferingStripePaymentIntent>
                     {
-                        Criteria = query =>
-                            query.OrganizationOffering.Id ==
-                            organizationOfferingBilling.OfferingId
+                        Criteria = query => query.OrganizationOffering.Id == organizationOfferingBilling.OfferingId
                     }).AnyAsync(cancellationToken))
         {
             return;
@@ -70,15 +62,12 @@ public class BillingSubscriber(
 
         var organizationOffering = await repositoryFactory
             .OrganizationOfferingRepository.Query(
-                new Specification<OrganizationOffering>
-                {
-                    Criteria = query =>
-                        query.Id ==
-                        organizationOfferingBilling.OfferingId
-                }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
+                new Specification<OrganizationOffering> { Criteria = query => query.Id == organizationOfferingBilling.OfferingId }.ApplyOrderBy(
+                    query => query.Id)).FirstOrDefaultAsync(cancellationToken);
         if (organizationOffering is null)
         {
-            logger.LogError("no organization offering exist with given organization offering Id: {OfferingId}",
+            logger.LogError(
+                "no organization offering exist with given organization offering Id: {OfferingId}",
                 organizationOfferingBilling.OfferingId);
 
             return;
@@ -86,16 +75,11 @@ public class BillingSubscriber(
 
         var organization = await repositoryFactory
             .OrganizationRepository.Query(
-                new Specification<Organization>
-                {
-                    Criteria = query =>
-                        query.Id ==
-                        organizationOfferingBilling.OrganizationId
-                }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
+                new Specification<Organization> { Criteria = query => query.Id == organizationOfferingBilling.OrganizationId }.ApplyOrderBy(query =>
+                    query.Id)).FirstOrDefaultAsync(cancellationToken);
         if (organization is null)
         {
-            logger.LogError("no organization exist with given organization Id: {OrganizationId}",
-                organizationOfferingBilling.OrganizationId);
+            logger.LogError("no organization exist with given organization Id: {OrganizationId}", organizationOfferingBilling.OrganizationId);
 
             return;
         }
@@ -105,8 +89,7 @@ public class BillingSubscriber(
                 new Specification<OrganizationStripePaymentMethod>
                 {
                     Criteria = query =>
-                        query.Organization.Id ==
-                        organizationOfferingBilling.OrganizationId &&
+                        query.Organization.Id == organizationOfferingBilling.OrganizationId &&
                         query.Status == OrganizationStripePaymentMethodStatus.Confirmed
                 }).ToListAsync(cancellationToken);
         if (organizationStripePaymentMethods.Count == 0)
@@ -143,7 +126,6 @@ public class BillingSubscriber(
                 Organization = organizationOffering.Organization
             });
 
-        await repositoryFactory.OrganizationOfferingStripePaymentIntentRepository.UnitOfWork.SaveChangesAsync(
-            cancellationToken);
+        await repositoryFactory.OrganizationOfferingStripePaymentIntentRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

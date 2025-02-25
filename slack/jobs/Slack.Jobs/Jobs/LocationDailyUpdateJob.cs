@@ -32,6 +32,7 @@ public class LocationDailyUpdateJob(
                             (!query.SlackChannelDailyUpdateLastSentAt.HasValue ||
                              (now - query.SlackChannelDailyUpdateLastSentAt.Value).TotalHours >= 23)
                     }).ToListAsync(cancellationToken);
+
                 foreach (var locationId in locations.Where(item => now.IsMatchingHour(item.Timezone, 7)).Select(item => item.Id))
                 {
                     logger.LogInformation("Sending location daily update for location: {locationId}", locationId);
