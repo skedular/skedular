@@ -30,25 +30,11 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
         builder.Property(item => item.SourceId).HasMaxLength(Constants.MaxUniqueIdLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxNotificationTypeLength);
 
-        builder
-            .HasOne(item => item.InvitedBy)
-            .WithMany(item => item.InvitedByNotifications);
-
-        builder
-            .HasOne(item => item.Invitee)
-            .WithMany(item => item.InviteeNotifications);
-
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.Notifications);
-
-        builder
-            .HasOne(item => item.Location)
-            .WithMany(item => item.Notifications);
-
-        builder
-            .HasOne(item => item.Team)
-            .WithMany(item => item.Notifications);
+        builder.HasOne(item => item.InvitedBy).WithMany(item => item.InvitedByNotifications);
+        builder.HasOne(item => item.Invitee).WithMany(item => item.InviteeNotifications);
+        builder.HasOne(item => item.Organization).WithMany(item => item.Notifications);
+        builder.HasOne(item => item.Location).WithMany(item => item.Notifications);
+        builder.HasOne(item => item.Team).WithMany(item => item.Notifications);
 
         builder.HasIndex(item => item.SourceId);
         builder.HasIndex(item => item.Type);

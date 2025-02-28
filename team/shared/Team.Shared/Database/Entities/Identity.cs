@@ -23,9 +23,7 @@ public class IdentityConfiguration : IEntityTypeConfiguration<Identity>
 
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
 
-        builder
-            .HasOne(item => item.Customer)
-            .WithMany(item => item.Identities);
+        builder.HasOne(item => item.Customer).WithMany(item => item.Identities);
 
         builder.HasIndex(item => item.Email);
         builder.HasIndex(item => item.EmailVerified);

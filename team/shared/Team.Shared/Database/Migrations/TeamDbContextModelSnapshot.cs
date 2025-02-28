@@ -19,7 +19,7 @@ namespace Team.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -308,6 +308,8 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("InviteeId");
 
+                    b.HasIndex("Role");
+
                     b.HasIndex("Status");
 
                     b.HasIndex("TeamId");
@@ -349,6 +351,8 @@ namespace Team.Shared.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("OrganizationId");
 
@@ -500,11 +504,17 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("About");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("OrganizationId");
 
                     b.HasIndex("PrimaryLocationId");
+
+                    b.HasIndex("Timezone");
 
                     b.ToTable("Team");
                 });

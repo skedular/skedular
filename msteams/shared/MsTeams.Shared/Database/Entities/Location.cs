@@ -20,5 +20,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
+
+        builder.HasIndex(item => item.Timezone);
     }
 }

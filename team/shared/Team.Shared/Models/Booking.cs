@@ -1,8 +1,8 @@
-using Enterprise.Shared.Database;
+using Enterprise.Shared.Models;
 
 namespace Team.Shared.Models;
 
-public class Booking : ReplicatedEntityBaseWithDeleted
+public class Booking : ReplicatedModelBaseWithDeleted
 {
     public DateTimeOffset From { get; set; }
     public DateTimeOffset To { get; set; }

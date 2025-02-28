@@ -1,8 +1,8 @@
-using Enterprise.Shared.Database;
+using Enterprise.Shared.Models;
 
 namespace Location.Shared.Models;
 
-public class Desk : EntityBaseWithDeleted
+public class Desk : ModelBaseWithDeleted
 {
     public string Name { get; set; }
     public bool Deactivated { get; set; }

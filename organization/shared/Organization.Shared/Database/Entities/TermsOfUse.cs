@@ -40,5 +40,7 @@ public class TermsOfUseConfiguration : IEntityTypeConfiguration<TermsOfUse>
             item.CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1));
             return item;
         }));
+
+        builder.HasIndex(item => item.Active);
     }
 }

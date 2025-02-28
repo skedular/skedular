@@ -52,9 +52,7 @@ public class WorkspaceMemberConfiguration : IEntityTypeConfiguration<WorkspaceMe
         builder.Property(item => item.PhotoUrl192).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
         builder.Property(item => item.PhotoUrl512).HasMaxLength(Api.Shared.Constants.MaxUrlLength);
 
-        builder
-            .HasOne(item => item.Workspace)
-            .WithMany(item => item.WorkspaceMembers);
+        builder.HasOne(item => item.Workspace).WithMany(item => item.WorkspaceMembers);
 
         builder.HasIndex(item => item.LastProfileStatusUpdatedAt);
         builder.HasIndex(item => item.AutomaticallyUpdateProfileStatus);

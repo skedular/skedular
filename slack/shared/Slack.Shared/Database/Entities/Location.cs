@@ -23,10 +23,9 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
 
         builder.Property(item => item.Timezone).HasMaxLength(Api.Shared.Constants.MaxTimezoneLength);
 
-        builder
-            .HasOne(item => item.DailyUpdateChannel)
-            .WithMany(item => item.LocationDailyUpdateChannels);
+        builder.HasOne(item => item.DailyUpdateChannel).WithMany(item => item.LocationDailyUpdateChannels);
 
         builder.HasIndex(item => item.SlackChannelDailyUpdateLastSentAt);
+        builder.HasIndex(item => item.Timezone);
     }
 }

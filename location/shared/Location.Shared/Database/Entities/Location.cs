@@ -20,6 +20,7 @@ public class Location : EntityBaseWithDeleted
     public virtual Address? PhysicalAddress { get; set; }
 
     public virtual Organization? Organization { get; set; }
+    public virtual ICollection<Resource> Resources { get; set; } = [];
     public virtual ICollection<Desk> Desks { get; set; } = [];
     public virtual ICollection<Room> Rooms { get; set; } = [];
     public virtual ICollection<Booking> Bookings { get; set; } = [];
@@ -40,13 +41,13 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
 
-        builder
-            .HasOne(item => item.PhysicalAddress)
-            .WithOne(item => item.Location)
-            .HasForeignKey<Location>(item => item.PhysicalAddressId);
+        builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Location).HasForeignKey<Location>(item => item.PhysicalAddressId);
+        builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.Locations);
+        builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.About);
+        builder.HasIndex(item => item.Timezone);
+        builder.HasIndex(item => item.DailyDeskCountLastRecordedAt);
+        builder.HasIndex(item => item.DailyRoomCountLastRecordedAt);
     }
 }

@@ -18,7 +18,7 @@ namespace Slack.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -192,6 +192,8 @@ namespace Slack.Shared.Database.Migrations
 
                     b.HasIndex("SlackChannelDailyUpdateLastSentAt");
 
+                    b.HasIndex("Timezone");
+
                     b.ToTable("Location");
                 });
 
@@ -336,6 +338,8 @@ namespace Slack.Shared.Database.Migrations
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("SlackChannelDailyUpdateLastSentAt");
+
+                    b.HasIndex("Timezone");
 
                     b.ToTable("Team");
                 });

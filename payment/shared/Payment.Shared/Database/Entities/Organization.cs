@@ -28,5 +28,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.StripeCustomerId).HasMaxLength(Constants.StripeCustomerIdLength);
 
         builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.StripeCustomerId);
     }
 }

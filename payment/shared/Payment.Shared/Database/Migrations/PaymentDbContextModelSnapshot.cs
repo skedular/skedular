@@ -18,7 +18,7 @@ namespace Payment.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -173,6 +173,8 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasIndex("Name");
 
+                    b.HasIndex("StripeCustomerId");
+
                     b.ToTable("Organization");
                 });
 
@@ -274,9 +276,15 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code");
+
                     b.HasIndex("DeletedAt");
 
+                    b.HasIndex("End");
+
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("Start");
 
                     b.ToTable("OrganizationOffering");
                 });

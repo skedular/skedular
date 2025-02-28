@@ -24,13 +24,10 @@ public class CustomerFeedbackConfiguration : IEntityTypeConfiguration<CustomerFe
         builder.ConfigureEntityBase();
 
         builder.Property(item => item.Content).HasMaxLength(Constants.MaxFeedbackLength);
-        builder
-            .Property(item => item.Channel)
-            .HasMaxLength(Constants.MaxFeedbackChannelLength)
-            .HasDefaultValue(FeedbackChannelTypeConstants.Web);
+        builder.Property(item => item.Channel).HasMaxLength(Constants.MaxFeedbackChannelLength).HasDefaultValue(FeedbackChannelTypeConstants.Web);
 
-        builder
-            .HasOne(item => item.Customer)
-            .WithMany(item => item.CustomerFeedbacks);
+        builder.HasOne(item => item.Customer).WithMany(item => item.CustomerFeedbacks);
+
+        builder.HasIndex(item => item.Channel);
     }
 }

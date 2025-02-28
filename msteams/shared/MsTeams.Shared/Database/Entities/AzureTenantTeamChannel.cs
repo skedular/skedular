@@ -28,10 +28,9 @@ public class AzureTenantTeamChannelConfiguration : IEntityTypeConfiguration<Azur
         builder.Property(item => item.WebUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
 
-        builder
-            .HasOne(item => item.AzureTenantTeam)
-            .WithMany(item => item.AzureTenantTeamChannels);
+        builder.HasOne(item => item.AzureTenantTeam).WithMany(item => item.AzureTenantTeamChannels);
 
         builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.Email);
     }
 }

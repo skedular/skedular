@@ -24,8 +24,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationNameLength);
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.Locations);
+        builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
+
+        builder.HasIndex(item => item.Name);
     }
 }

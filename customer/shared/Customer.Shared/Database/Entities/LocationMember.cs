@@ -29,15 +29,8 @@ public class LocationMemberConfiguration : IEntityTypeConfiguration<LocationMemb
 
         builder.Property(item => item.Role).HasMaxLength(Constants.MaxRoleLength);
 
-        builder
-            .HasOne(item => item.Location)
-            .WithMany(item => item.LocationMembers)
-            .HasForeignKey(item => item.LocationId);
-
-        builder
-            .HasOne(item => item.Customer)
-            .WithMany(item => item.LocationMembers)
-            .HasForeignKey(item => item.CustomerId);
+        builder.HasOne(item => item.Location).WithMany(item => item.LocationMembers).HasForeignKey(item => item.LocationId);
+        builder.HasOne(item => item.Customer).WithMany(item => item.LocationMembers).HasForeignKey(item => item.CustomerId);
 
         builder.HasIndex(item => item.Role);
         builder.HasIndex(item => new { item.CustomerId, item.LocationId }).IsUnique();

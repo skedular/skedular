@@ -27,8 +27,10 @@ public class TenantConfiguration : IEntityTypeConfiguration<AzureTenant>
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxTenantNameLength);
         builder.Property(item => item.InstalledByUserId).HasMaxLength(Constants.MaxVerifiableTokenLength);
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.AzureTenants);
+        builder.HasOne(item => item.Organization).WithMany(item => item.AzureTenants);
+
+        builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.MembersLastRefreshedAt);
+        builder.HasIndex(item => item.InstalledByUserId);
     }
 }

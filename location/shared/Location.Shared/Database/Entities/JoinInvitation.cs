@@ -29,19 +29,12 @@ public class JoinInvitationConfiguration : IEntityTypeConfiguration<JoinInvitati
         builder.Property(item => item.Status).HasMaxLength(Constants.MaxInvitationStatusLength);
         builder.Property(item => item.Role).HasMaxLength(Constants.MaxRoleLength);
 
-        builder
-            .HasOne(item => item.Location)
-            .WithMany(item => item.JoinInvitations);
-
-        builder
-            .HasOne(item => item.CreatedBy)
-            .WithMany(item => item.JoinInvitationsCreatedBy);
-
-        builder
-            .HasOne(item => item.Invitee)
-            .WithMany(item => item.JoinInvitationsInvitee);
+        builder.HasOne(item => item.Location).WithMany(item => item.JoinInvitations);
+        builder.HasOne(item => item.CreatedBy).WithMany(item => item.JoinInvitationsCreatedBy);
+        builder.HasOne(item => item.Invitee).WithMany(item => item.JoinInvitationsInvitee);
 
         builder.HasIndex(item => item.Email);
         builder.HasIndex(item => item.Status);
+        builder.HasIndex(item => item.Role);
     }
 }

@@ -21,9 +21,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder
-            .HasOne(item => item.Team)
-            .WithMany(item => item.Bookings);
+        builder.HasOne(item => item.Team).WithMany(item => item.Bookings);
 
         builder.HasIndex(item => item.From);
         builder.HasIndex(item => item.To);

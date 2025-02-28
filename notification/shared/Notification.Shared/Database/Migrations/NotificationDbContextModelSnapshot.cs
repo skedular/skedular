@@ -18,7 +18,7 @@ namespace Notification.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -233,6 +233,8 @@ namespace Notification.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("OrganizationId");
 
                     b.ToTable("Location");
@@ -385,6 +387,8 @@ namespace Notification.Shared.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("OrganizationId");
 

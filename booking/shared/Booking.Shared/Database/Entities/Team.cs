@@ -26,8 +26,8 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxTeamNameLength);
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.Teams);
+        builder.HasOne(item => item.Organization).WithMany(item => item.Teams);
+        
+        builder.HasIndex(item => item.Name);
     }
 }

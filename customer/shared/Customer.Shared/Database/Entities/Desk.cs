@@ -24,9 +24,7 @@ public class DeskConfiguration : IEntityTypeConfiguration<Desk>
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxDeskNameLength);
 
-        builder
-            .HasOne(item => item.Location)
-            .WithMany(item => item.Desks);
+        builder.HasOne(item => item.Location).WithMany(item => item.Desks);
 
         builder.HasIndex(item => item.Name);
     }

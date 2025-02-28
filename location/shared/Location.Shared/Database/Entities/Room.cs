@@ -29,12 +29,11 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxRoomNameLength);
         builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
 
-        builder
-            .HasOne(item => item.Location)
-            .WithMany(item => item.Rooms);
+        builder.HasOne(item => item.Location).WithMany(item => item.Rooms);
+        builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Rooms);
 
-        builder
-            .HasMany(item => item.OrganizationTags)
-            .WithMany(item => item.Rooms);
+        builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.Deactivated);
+        builder.HasIndex(item => item.RequireBookingApproval);
     }
 }

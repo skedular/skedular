@@ -37,15 +37,8 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
             .HasMaxLength(Constants.MaxOrganizationMemberStatusLength)
             .HasDefaultValue(OrganizationMemberStatusConstants.Active);
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.OrganizationMembers)
-            .HasForeignKey(item => item.OrganizationId);
-
-        builder
-            .HasOne(item => item.Customer)
-            .WithMany(item => item.OrganizationMembers)
-            .HasForeignKey(item => item.CustomerId);
+        builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationMembers).HasForeignKey(item => item.OrganizationId);
+        builder.HasOne(item => item.Customer).WithMany(item => item.OrganizationMembers).HasForeignKey(item => item.CustomerId);
 
         builder.HasIndex(item => item.Role);
         builder.HasIndex(item => item.Status);

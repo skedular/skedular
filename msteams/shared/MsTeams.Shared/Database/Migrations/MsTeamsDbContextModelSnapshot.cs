@@ -18,7 +18,7 @@ namespace MsTeams.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -209,6 +209,8 @@ namespace MsTeams.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
+                    b.HasIndex("Email");
+
                     b.HasIndex("Name");
 
                     b.ToTable("AzureTenantTeamChannel");
@@ -245,6 +247,8 @@ namespace MsTeams.Shared.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Timezone");
 
                     b.ToTable("Customer");
                 });
@@ -323,6 +327,8 @@ namespace MsTeams.Shared.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Timezone");
 
                     b.ToTable("Location");
                 });
@@ -448,6 +454,8 @@ namespace MsTeams.Shared.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Timezone");
 
                     b.ToTable("Team");
                 });

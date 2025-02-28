@@ -31,6 +31,7 @@ public class OrganizationDbContext(
     public DbSet<Team> Team { get; set; }
     public DbSet<TermsOfUse> TermsOfUse { get; set; }
     public DbSet<Tag> Tag { get; set; }
+    public DbSet<ResourceType> ResourceType { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class OrganizationDbContextDesignFactory : IDesignTimeDbContextFactory<OrganizationDbContext>

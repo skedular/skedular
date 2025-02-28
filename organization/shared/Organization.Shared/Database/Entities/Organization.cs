@@ -29,6 +29,7 @@ public class Organization : EntityBaseWithDeleted
     public virtual ICollection<AzureTenant> AzureTenants { get; set; } = [];
     public virtual ICollection<OrganizationSsoSetting> OrganizationSsoSettings { get; set; } = [];
     public virtual ICollection<Tag> Tags { get; set; } = [];
+    public virtual ICollection<ResourceType> ResourceTypes { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -43,17 +44,14 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.Website).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
 
-        builder
-            .HasOne(item => item.TermsOfUse)
-            .WithMany(item => item.Organizations);
-
-        builder
-            .HasMany(item => item.IndustrySubCategories)
-            .WithMany(item => item.Organizations);
+        builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
+        builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.About);
         builder.HasIndex(item => item.Website);
+        builder.HasIndex(item => item.HasAttachedPaymentMethod);
+        builder.HasIndex(item => item.PaymentMethodEventRaisedAt);
         builder.HasIndex(item => item.DailyMemberCountLastRecordedAt);
     }
 }

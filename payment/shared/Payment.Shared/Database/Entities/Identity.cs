@@ -19,8 +19,6 @@ public class IdentityConfiguration : IEntityTypeConfiguration<Identity>
     {
         builder.ConfigureReplicatedEntityBase(Constants.MaxVerifiableTokenLength);
 
-        builder
-            .HasOne(item => item.Customer)
-            .WithMany(item => item.Identities);
+        builder.HasOne(item => item.Customer).WithMany(item => item.Identities);
     }
 }

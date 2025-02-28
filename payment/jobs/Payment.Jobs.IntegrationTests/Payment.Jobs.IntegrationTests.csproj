@@ -14,8 +14,8 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>
-        <PackageReference Include="xunit.v3" Version="1.1.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+        <PackageReference Include="xunit.v3" Version="2.0.0" />
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,8 +23,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Testing.Shared.IntegrationTests\Testing.Shared.IntegrationTests.csproj"/>
-        <ProjectReference Include="..\Payment.Jobs\Payment.Jobs.csproj"/>
+        <ProjectReference Include="..\..\..\shared\Testing.Shared.IntegrationTests\Testing.Shared.IntegrationTests.csproj" />
+        <ProjectReference Include="..\Payment.Jobs\Payment.Jobs.csproj" />
     </ItemGroup>
 
 </Project>

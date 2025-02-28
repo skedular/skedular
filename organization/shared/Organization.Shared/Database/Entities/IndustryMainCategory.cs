@@ -55,5 +55,7 @@ public class IndustryMainCategoryConfiguration : IEntityTypeConfiguration<Indust
             item.CreatedAt = new DateTimeOffset(new DateTime(2024, 5, 1));
             return item;
         }));
+
+        builder.HasIndex(item => item.Name);
     }
 }

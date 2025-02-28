@@ -21,9 +21,7 @@ public class DailyRoomCountRecordingConfiguration : IEntityTypeConfiguration<Dai
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder
-            .HasOne(item => item.Location)
-            .WithMany(item => item.DailyRoomCountRecordings);
+        builder.HasOne(item => item.Location).WithMany(item => item.DailyRoomCountRecordings);
 
         builder.HasIndex(item => item.Date);
         builder.HasIndex(item => item.Count);

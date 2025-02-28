@@ -31,7 +31,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "U291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIcCgR0eXBlGAQgASgO",
             "Mg4uY3VzdG9tZXIuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3Rv",
             "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIiwKBERhdGES",
-            "JAoIY3VzdG9tZXIYASABKAsyEi5jdXN0b21lci5DdXN0b21lciK+BQoIQ3Vz",
+            "JAoIY3VzdG9tZXIYASABKAsyEi5jdXN0b21lci5DdXN0b21lciKEBgoIQ3Vz",
             "dG9tZXISCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xl",
             "LnByb3RvYnVmLlRpbWVzdGFtcBImCgppZGVudGl0aWVzGAMgAygLMhIuY3Vz",
             "dG9tZXIuSWRlbnRpdHkSEwoLZGVzaWduYXRpb24YBCABKAkSDQoFdGl0bGUY",
@@ -42,39 +42,44 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "cGhvdG9VcmwxOTIYDyABKAkSEwoLcGhvdG9Vcmw1MTIYECABKAkSEAoIdGlt",
             "ZXpvbmUYESABKAkSDgoGbG9jYWxlGBIgASgJEiwKEGRlZmF1bHRMb2NhdGlv",
             "bnMYEyADKAsyEi5jdXN0b21lci5Mb2NhdGlvbhIdChVkZWZhdWx0T3JnYW5p",
-            "emF0aW9uSWQYFCABKAkSJAoMZGVmYXVsdERlc2tzGBUgAygLMg4uY3VzdG9t",
-            "ZXIuRGVzaxIkCgxkZWZhdWx0Um9vbXMYFiADKAsyDi5jdXN0b21lci5Sb29t",
-            "EiQKCHNldHRpbmdzGBcgASgLMhIuY3VzdG9tZXIuU2V0dGluZ3MSJAoMZGVm",
-            "YXVsdFRlYW1zGBggAygLMg4uY3VzdG9tZXIuVGVhbRI6ChdkZWZhdWx0T3Jn",
-            "YW5pemF0aW9uVGFncxgZIAMoCzIZLmN1c3RvbWVyLk9yZ2FuaXphdGlvblRh",
-            "ZxITCgtwaG9uZU51bWJlchgaIAEoCSI8CghJZGVudGl0eRIKCgJpZBgBIAEo",
-            "CRINCgVlbWFpbBgCIAEoCRIVCg1lbWFpbFZlcmlmaWVkGAMgASgIIscCCghT",
-            "ZXR0aW5ncxIKCgJpZBgBIAEoCRIkChxpc09yZ2FuaXphdGlvbk9uYm9hcmRp",
-            "bmdEb25lGAIgASgIEiAKGGlzTG9jYXRpb25PbmJvYXJkaW5nRG9uZRgDIAEo",
-            "CBIcChRpc1RlYW1PbmJvYXJkaW5nRG9uZRgEIAEoCBIrCiNpc0RlZmF1bHRP",
-            "cmdhbml6YXRpb25PbmJvYXJkaW5nRG9uZRgFIAEoCBInCh9pc0RlZmF1bHRM",
-            "b2NhdGlvbk9uYm9hcmRpbmdEb25lGAYgASgIEiUKHWlzUHJlZmVycmVkWm9u",
-            "ZU9uYm9hcmRpbmdEb25lGAcgASgIEiUKHWlzUHJlZmVycmVkRGVza09uYm9h",
-            "cmRpbmdEb25lGAggASgIEiUKHWlzUHJlZmVycmVkUm9vbU9uYm9hcmRpbmdE",
-            "b25lGAkgASgIIi4KCExvY2F0aW9uEgoKAmlkGAEgASgJEhYKDm9yZ2FuaXph",
-            "dGlvbklkGAIgASgJIioKBFRlYW0SCgoCaWQYASABKAkSFgoOb3JnYW5pemF0",
-            "aW9uSWQYAiABKAkiJgoERGVzaxIKCgJpZBgBIAEoCRISCgpsb2NhdGlvbklk",
-            "GAIgASgJIiYKBFJvb20SCgoCaWQYASABKAkSEgoKbG9jYXRpb25JZBgCIAEo",
-            "CSI1Cg9Pcmdhbml6YXRpb25UYWcSCgoCaWQYASABKAkSFgoOb3JnYW5pemF0",
-            "aW9uSWQYAiABKAkqMQoEVHlwZRIUChBDdXN0b21lclVwc2VydGVkEAASEwoP",
-            "Q3VzdG9tZXJEZWxldGVkEAFCN6oCNEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVu",
-            "dHMuU2tlZHVsYXIuQ3VzdG9tZXIuVjEuVmFsdWViBnByb3RvMw=="));
+            "emF0aW9uSWQYFCABKAkSPgoacHJlZmVycmVkTG9jYXRpb25SZXNvdXJjZXMY",
+            "FSADKAsyGi5jdXN0b21lci5Mb2NhdGlvblJlc291cmNlEiYKDnByZWZlcnJl",
+            "ZERlc2tzGBYgAygLMg4uY3VzdG9tZXIuRGVzaxImCg5wcmVmZXJyZWRSb29t",
+            "cxgXIAMoCzIOLmN1c3RvbWVyLlJvb20SJAoIc2V0dGluZ3MYGCABKAsyEi5j",
+            "dXN0b21lci5TZXR0aW5ncxIkCgxkZWZhdWx0VGVhbXMYGSADKAsyDi5jdXN0",
+            "b21lci5UZWFtEjwKGXByZWZlcnJlZE9yZ2FuaXphdGlvblRhZ3MYGiADKAsy",
+            "GS5jdXN0b21lci5Pcmdhbml6YXRpb25UYWcSEwoLcGhvbmVOdW1iZXIYGyAB",
+            "KAkiPAoISWRlbnRpdHkSCgoCaWQYASABKAkSDQoFZW1haWwYAiABKAkSFQoN",
+            "ZW1haWxWZXJpZmllZBgDIAEoCCLHAgoIU2V0dGluZ3MSCgoCaWQYASABKAkS",
+            "JAocaXNPcmdhbml6YXRpb25PbmJvYXJkaW5nRG9uZRgCIAEoCBIgChhpc0xv",
+            "Y2F0aW9uT25ib2FyZGluZ0RvbmUYAyABKAgSHAoUaXNUZWFtT25ib2FyZGlu",
+            "Z0RvbmUYBCABKAgSKwojaXNEZWZhdWx0T3JnYW5pemF0aW9uT25ib2FyZGlu",
+            "Z0RvbmUYBSABKAgSJwofaXNEZWZhdWx0TG9jYXRpb25PbmJvYXJkaW5nRG9u",
+            "ZRgGIAEoCBIlCh1pc1ByZWZlcnJlZFpvbmVPbmJvYXJkaW5nRG9uZRgHIAEo",
+            "CBIlCh1pc1ByZWZlcnJlZERlc2tPbmJvYXJkaW5nRG9uZRgIIAEoCBIlCh1p",
+            "c1ByZWZlcnJlZFJvb21PbmJvYXJkaW5nRG9uZRgJIAEoCCIuCghMb2NhdGlv",
+            "bhIKCgJpZBgBIAEoCRIWCg5vcmdhbml6YXRpb25JZBgCIAEoCSIqCgRUZWFt",
+            "EgoKAmlkGAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIgASgJIkoKEExvY2F0",
+            "aW9uUmVzb3VyY2USCgoCaWQYASABKAkSFgoOb3JnYW5pemF0aW9uSWQYAiAB",
+            "KAkSEgoKbG9jYXRpb25JZBgDIAEoCSImCgREZXNrEgoKAmlkGAEgASgJEhIK",
+            "CmxvY2F0aW9uSWQYAiABKAkiJgoEUm9vbRIKCgJpZBgBIAEoCRISCgpsb2Nh",
+            "dGlvbklkGAIgASgJIjUKD09yZ2FuaXphdGlvblRhZxIKCgJpZBgBIAEoCRIW",
+            "Cg5vcmdhbml6YXRpb25JZBgCIAEoCSoxCgRUeXBlEhQKEEN1c3RvbWVyVXBz",
+            "ZXJ0ZWQQABITCg9DdXN0b21lckRlbGV0ZWQQAUI3qgI0QXBpLlNoYXJlZC5D",
+            "bGllbnRzLkV2ZW50cy5Ta2VkdWxhci5DdXN0b21lci5WMS5WYWx1ZWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Data.Parser, new[]{ "Customer" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer.Parser, new[]{ "Id", "DeletedAt", "Identities", "Designation", "Title", "Name", "GivenName", "MiddleName", "FamilyName", "PhotoUrl", "PhotoUrl24", "PhotoUrl32", "PhotoUrl48", "PhotoUrl72", "PhotoUrl192", "PhotoUrl512", "Timezone", "Locale", "DefaultLocations", "DefaultOrganizationId", "DefaultDesks", "DefaultRooms", "Settings", "DefaultTeams", "DefaultOrganizationTags", "PhoneNumber" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer.Parser, new[]{ "Id", "DeletedAt", "Identities", "Designation", "Title", "Name", "GivenName", "MiddleName", "FamilyName", "PhotoUrl", "PhotoUrl24", "PhotoUrl32", "PhotoUrl48", "PhotoUrl72", "PhotoUrl192", "PhotoUrl512", "Timezone", "Locale", "DefaultLocations", "DefaultOrganizationId", "PreferredLocationResources", "PreferredDesks", "PreferredRooms", "Settings", "DefaultTeams", "PreferredOrganizationTags", "PhoneNumber" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity.Parser, new[]{ "Id", "Email", "EmailVerified" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings.Parser, new[]{ "Id", "IsOrganizationOnboardingDone", "IsLocationOnboardingDone", "IsTeamOnboardingDone", "IsDefaultOrganizationOnboardingDone", "IsDefaultLocationOnboardingDone", "IsPreferredZoneOnboardingDone", "IsPreferredDeskOnboardingDone", "IsPreferredRoomOnboardingDone" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource.Parser, new[]{ "Id", "OrganizationId", "LocationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk.Parser, new[]{ "Id", "LocationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room.Parser, new[]{ "Id", "LocationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null)
@@ -999,11 +1004,12 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       locale_ = other.locale_;
       defaultLocations_ = other.defaultLocations_.Clone();
       defaultOrganizationId_ = other.defaultOrganizationId_;
-      defaultDesks_ = other.defaultDesks_.Clone();
-      defaultRooms_ = other.defaultRooms_.Clone();
+      preferredLocationResources_ = other.preferredLocationResources_.Clone();
+      preferredDesks_ = other.preferredDesks_.Clone();
+      preferredRooms_ = other.preferredRooms_.Clone();
       settings_ = other.settings_ != null ? other.settings_.Clone() : null;
       defaultTeams_ = other.defaultTeams_.Clone();
-      defaultOrganizationTags_ = other.defaultOrganizationTags_.Clone();
+      preferredOrganizationTags_ = other.preferredOrganizationTags_.Clone();
       phoneNumber_ = other.phoneNumber_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1252,30 +1258,41 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "defaultDesks" field.</summary>
-    public const int DefaultDesksFieldNumber = 21;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk> _repeated_defaultDesks_codec
-        = pb::FieldCodec.ForMessage(170, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk> defaultDesks_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk>();
+    /// <summary>Field number for the "preferredLocationResources" field.</summary>
+    public const int PreferredLocationResourcesFieldNumber = 21;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource> _repeated_preferredLocationResources_codec
+        = pb::FieldCodec.ForMessage(170, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource> preferredLocationResources_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk> DefaultDesks {
-      get { return defaultDesks_; }
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource> PreferredLocationResources {
+      get { return preferredLocationResources_; }
     }
 
-    /// <summary>Field number for the "defaultRooms" field.</summary>
-    public const int DefaultRoomsFieldNumber = 22;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room> _repeated_defaultRooms_codec
-        = pb::FieldCodec.ForMessage(178, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room> defaultRooms_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room>();
+    /// <summary>Field number for the "preferredDesks" field.</summary>
+    public const int PreferredDesksFieldNumber = 22;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk> _repeated_preferredDesks_codec
+        = pb::FieldCodec.ForMessage(178, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk> preferredDesks_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room> DefaultRooms {
-      get { return defaultRooms_; }
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk> PreferredDesks {
+      get { return preferredDesks_; }
+    }
+
+    /// <summary>Field number for the "preferredRooms" field.</summary>
+    public const int PreferredRoomsFieldNumber = 23;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room> _repeated_preferredRooms_codec
+        = pb::FieldCodec.ForMessage(186, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room> preferredRooms_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room> PreferredRooms {
+      get { return preferredRooms_; }
     }
 
     /// <summary>Field number for the "settings" field.</summary>
-    public const int SettingsFieldNumber = 23;
+    public const int SettingsFieldNumber = 24;
     private global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings settings_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1287,9 +1304,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     }
 
     /// <summary>Field number for the "defaultTeams" field.</summary>
-    public const int DefaultTeamsFieldNumber = 24;
+    public const int DefaultTeamsFieldNumber = 25;
     private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team> _repeated_defaultTeams_codec
-        = pb::FieldCodec.ForMessage(194, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team.Parser);
+        = pb::FieldCodec.ForMessage(202, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team.Parser);
     private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team> defaultTeams_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1297,19 +1314,19 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       get { return defaultTeams_; }
     }
 
-    /// <summary>Field number for the "defaultOrganizationTags" field.</summary>
-    public const int DefaultOrganizationTagsFieldNumber = 25;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag> _repeated_defaultOrganizationTags_codec
-        = pb::FieldCodec.ForMessage(202, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag> defaultOrganizationTags_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag>();
+    /// <summary>Field number for the "preferredOrganizationTags" field.</summary>
+    public const int PreferredOrganizationTagsFieldNumber = 26;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag> _repeated_preferredOrganizationTags_codec
+        = pb::FieldCodec.ForMessage(210, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag> preferredOrganizationTags_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag> DefaultOrganizationTags {
-      get { return defaultOrganizationTags_; }
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag> PreferredOrganizationTags {
+      get { return preferredOrganizationTags_; }
     }
 
     /// <summary>Field number for the "phoneNumber" field.</summary>
-    public const int PhoneNumberFieldNumber = 26;
+    public const int PhoneNumberFieldNumber = 27;
     private string phoneNumber_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1355,11 +1372,12 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (Locale != other.Locale) return false;
       if(!defaultLocations_.Equals(other.defaultLocations_)) return false;
       if (DefaultOrganizationId != other.DefaultOrganizationId) return false;
-      if(!defaultDesks_.Equals(other.defaultDesks_)) return false;
-      if(!defaultRooms_.Equals(other.defaultRooms_)) return false;
+      if(!preferredLocationResources_.Equals(other.preferredLocationResources_)) return false;
+      if(!preferredDesks_.Equals(other.preferredDesks_)) return false;
+      if(!preferredRooms_.Equals(other.preferredRooms_)) return false;
       if (!object.Equals(Settings, other.Settings)) return false;
       if(!defaultTeams_.Equals(other.defaultTeams_)) return false;
-      if(!defaultOrganizationTags_.Equals(other.defaultOrganizationTags_)) return false;
+      if(!preferredOrganizationTags_.Equals(other.preferredOrganizationTags_)) return false;
       if (PhoneNumber != other.PhoneNumber) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1388,11 +1406,12 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (Locale.Length != 0) hash ^= Locale.GetHashCode();
       hash ^= defaultLocations_.GetHashCode();
       if (DefaultOrganizationId.Length != 0) hash ^= DefaultOrganizationId.GetHashCode();
-      hash ^= defaultDesks_.GetHashCode();
-      hash ^= defaultRooms_.GetHashCode();
+      hash ^= preferredLocationResources_.GetHashCode();
+      hash ^= preferredDesks_.GetHashCode();
+      hash ^= preferredRooms_.GetHashCode();
       if (settings_ != null) hash ^= Settings.GetHashCode();
       hash ^= defaultTeams_.GetHashCode();
-      hash ^= defaultOrganizationTags_.GetHashCode();
+      hash ^= preferredOrganizationTags_.GetHashCode();
       if (PhoneNumber.Length != 0) hash ^= PhoneNumber.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1486,16 +1505,17 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(162, 1);
         output.WriteString(DefaultOrganizationId);
       }
-      defaultDesks_.WriteTo(output, _repeated_defaultDesks_codec);
-      defaultRooms_.WriteTo(output, _repeated_defaultRooms_codec);
+      preferredLocationResources_.WriteTo(output, _repeated_preferredLocationResources_codec);
+      preferredDesks_.WriteTo(output, _repeated_preferredDesks_codec);
+      preferredRooms_.WriteTo(output, _repeated_preferredRooms_codec);
       if (settings_ != null) {
-        output.WriteRawTag(186, 1);
+        output.WriteRawTag(194, 1);
         output.WriteMessage(Settings);
       }
       defaultTeams_.WriteTo(output, _repeated_defaultTeams_codec);
-      defaultOrganizationTags_.WriteTo(output, _repeated_defaultOrganizationTags_codec);
+      preferredOrganizationTags_.WriteTo(output, _repeated_preferredOrganizationTags_codec);
       if (PhoneNumber.Length != 0) {
-        output.WriteRawTag(210, 1);
+        output.WriteRawTag(218, 1);
         output.WriteString(PhoneNumber);
       }
       if (_unknownFields != null) {
@@ -1582,16 +1602,17 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(162, 1);
         output.WriteString(DefaultOrganizationId);
       }
-      defaultDesks_.WriteTo(ref output, _repeated_defaultDesks_codec);
-      defaultRooms_.WriteTo(ref output, _repeated_defaultRooms_codec);
+      preferredLocationResources_.WriteTo(ref output, _repeated_preferredLocationResources_codec);
+      preferredDesks_.WriteTo(ref output, _repeated_preferredDesks_codec);
+      preferredRooms_.WriteTo(ref output, _repeated_preferredRooms_codec);
       if (settings_ != null) {
-        output.WriteRawTag(186, 1);
+        output.WriteRawTag(194, 1);
         output.WriteMessage(Settings);
       }
       defaultTeams_.WriteTo(ref output, _repeated_defaultTeams_codec);
-      defaultOrganizationTags_.WriteTo(ref output, _repeated_defaultOrganizationTags_codec);
+      preferredOrganizationTags_.WriteTo(ref output, _repeated_preferredOrganizationTags_codec);
       if (PhoneNumber.Length != 0) {
-        output.WriteRawTag(210, 1);
+        output.WriteRawTag(218, 1);
         output.WriteString(PhoneNumber);
       }
       if (_unknownFields != null) {
@@ -1660,13 +1681,14 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (DefaultOrganizationId.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(DefaultOrganizationId);
       }
-      size += defaultDesks_.CalculateSize(_repeated_defaultDesks_codec);
-      size += defaultRooms_.CalculateSize(_repeated_defaultRooms_codec);
+      size += preferredLocationResources_.CalculateSize(_repeated_preferredLocationResources_codec);
+      size += preferredDesks_.CalculateSize(_repeated_preferredDesks_codec);
+      size += preferredRooms_.CalculateSize(_repeated_preferredRooms_codec);
       if (settings_ != null) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(Settings);
       }
       size += defaultTeams_.CalculateSize(_repeated_defaultTeams_codec);
-      size += defaultOrganizationTags_.CalculateSize(_repeated_defaultOrganizationTags_codec);
+      size += preferredOrganizationTags_.CalculateSize(_repeated_preferredOrganizationTags_codec);
       if (PhoneNumber.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(PhoneNumber);
       }
@@ -1741,8 +1763,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (other.DefaultOrganizationId.Length != 0) {
         DefaultOrganizationId = other.DefaultOrganizationId;
       }
-      defaultDesks_.Add(other.defaultDesks_);
-      defaultRooms_.Add(other.defaultRooms_);
+      preferredLocationResources_.Add(other.preferredLocationResources_);
+      preferredDesks_.Add(other.preferredDesks_);
+      preferredRooms_.Add(other.preferredRooms_);
       if (other.settings_ != null) {
         if (settings_ == null) {
           Settings = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings();
@@ -1750,7 +1773,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         Settings.MergeFrom(other.Settings);
       }
       defaultTeams_.Add(other.defaultTeams_);
-      defaultOrganizationTags_.Add(other.defaultOrganizationTags_);
+      preferredOrganizationTags_.Add(other.preferredOrganizationTags_);
       if (other.PhoneNumber.Length != 0) {
         PhoneNumber = other.PhoneNumber;
       }
@@ -1857,29 +1880,33 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 170: {
-            defaultDesks_.AddEntriesFrom(input, _repeated_defaultDesks_codec);
+            preferredLocationResources_.AddEntriesFrom(input, _repeated_preferredLocationResources_codec);
             break;
           }
           case 178: {
-            defaultRooms_.AddEntriesFrom(input, _repeated_defaultRooms_codec);
+            preferredDesks_.AddEntriesFrom(input, _repeated_preferredDesks_codec);
             break;
           }
           case 186: {
+            preferredRooms_.AddEntriesFrom(input, _repeated_preferredRooms_codec);
+            break;
+          }
+          case 194: {
             if (settings_ == null) {
               Settings = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings();
             }
             input.ReadMessage(Settings);
             break;
           }
-          case 194: {
+          case 202: {
             defaultTeams_.AddEntriesFrom(input, _repeated_defaultTeams_codec);
             break;
           }
-          case 202: {
-            defaultOrganizationTags_.AddEntriesFrom(input, _repeated_defaultOrganizationTags_codec);
+          case 210: {
+            preferredOrganizationTags_.AddEntriesFrom(input, _repeated_preferredOrganizationTags_codec);
             break;
           }
-          case 210: {
+          case 218: {
             PhoneNumber = input.ReadString();
             break;
           }
@@ -1986,29 +2013,33 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 170: {
-            defaultDesks_.AddEntriesFrom(ref input, _repeated_defaultDesks_codec);
+            preferredLocationResources_.AddEntriesFrom(ref input, _repeated_preferredLocationResources_codec);
             break;
           }
           case 178: {
-            defaultRooms_.AddEntriesFrom(ref input, _repeated_defaultRooms_codec);
+            preferredDesks_.AddEntriesFrom(ref input, _repeated_preferredDesks_codec);
             break;
           }
           case 186: {
+            preferredRooms_.AddEntriesFrom(ref input, _repeated_preferredRooms_codec);
+            break;
+          }
+          case 194: {
             if (settings_ == null) {
               Settings = new global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings();
             }
             input.ReadMessage(Settings);
             break;
           }
-          case 194: {
+          case 202: {
             defaultTeams_.AddEntriesFrom(ref input, _repeated_defaultTeams_codec);
             break;
           }
-          case 202: {
-            defaultOrganizationTags_.AddEntriesFrom(ref input, _repeated_defaultOrganizationTags_codec);
+          case 210: {
+            preferredOrganizationTags_.AddEntriesFrom(ref input, _repeated_preferredOrganizationTags_codec);
             break;
           }
-          case 210: {
+          case 218: {
             PhoneNumber = input.ReadString();
             break;
           }
@@ -3256,6 +3287,278 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class LocationResource : pb::IMessage<LocationResource>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<LocationResource> _parser = new pb::MessageParser<LocationResource>(() => new LocationResource());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<LocationResource> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerV1ValueReflection.Descriptor.MessageTypes[8]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public LocationResource() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public LocationResource(LocationResource other) : this() {
+      id_ = other.id_;
+      organizationId_ = other.organizationId_;
+      locationId_ = other.locationId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public LocationResource Clone() {
+      return new LocationResource(this);
+    }
+
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private string id_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Id {
+      get { return id_; }
+      set {
+        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "organizationId" field.</summary>
+    public const int OrganizationIdFieldNumber = 2;
+    private string organizationId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string OrganizationId {
+      get { return organizationId_; }
+      set {
+        organizationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "locationId" field.</summary>
+    public const int LocationIdFieldNumber = 3;
+    private string locationId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string LocationId {
+      get { return locationId_; }
+      set {
+        locationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as LocationResource);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(LocationResource other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Id != other.Id) return false;
+      if (OrganizationId != other.OrganizationId) return false;
+      if (LocationId != other.LocationId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
+      if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
+      if (LocationId.Length != 0) hash ^= LocationId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (OrganizationId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(OrganizationId);
+      }
+      if (LocationId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(LocationId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (OrganizationId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(OrganizationId);
+      }
+      if (LocationId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(LocationId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
+      }
+      if (OrganizationId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
+      }
+      if (LocationId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(LocationId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(LocationResource other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Id.Length != 0) {
+        Id = other.Id;
+      }
+      if (other.OrganizationId.Length != 0) {
+        OrganizationId = other.OrganizationId;
+      }
+      if (other.LocationId.Length != 0) {
+        LocationId = other.LocationId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            OrganizationId = input.ReadString();
+            break;
+          }
+          case 26: {
+            LocationId = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            OrganizationId = input.ReadString();
+            break;
+          }
+          case 26: {
+            LocationId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Desk : pb::IMessage<Desk>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -3270,7 +3573,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerV1ValueReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerV1ValueReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3505,7 +3808,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerV1ValueReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerV1ValueReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3740,7 +4043,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerV1ValueReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerV1ValueReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

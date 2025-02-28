@@ -21,9 +21,7 @@ public class DailyMemberCountRecordingConfiguration : IEntityTypeConfiguration<D
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.DailyMemberCountRecordings);
+        builder.HasOne(item => item.Organization).WithMany(item => item.DailyMemberCountRecordings);
 
         builder.HasIndex(item => item.Date);
         builder.HasIndex(item => item.Count);

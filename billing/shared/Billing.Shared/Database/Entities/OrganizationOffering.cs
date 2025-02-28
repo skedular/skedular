@@ -27,9 +27,7 @@ public class OrganizationOfferingConfiguration : IEntityTypeConfiguration<Organi
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.OrganizationOfferings);
+        builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationOfferings);
 
         builder.HasIndex(item => item.Code);
         builder.HasIndex(item => item.Start);

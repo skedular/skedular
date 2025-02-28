@@ -46,6 +46,7 @@ message Organization {
   Offering Offering = 8;
   repeated string azureTenantIds = 9;
   repeated Tag tags = 10;
+  repeated ResourceType resourceTypes = 11;
 }
 
 enum Role {
@@ -91,6 +92,14 @@ message Tag {
   string id = 1;
   string name = 2;
   string description = 3;
-  string tagType = 4;
+  string type = 4;
+  string color = 5;
+}
+
+message ResourceType {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string type = 4;
   string color = 5;
 }

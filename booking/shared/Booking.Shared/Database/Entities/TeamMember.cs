@@ -30,20 +30,10 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Role).HasMaxLength(Constants.MaxRoleLength);
-        builder
-            .Property(item => item.Status)
-            .HasMaxLength(Constants.MaxTeamMemberStatusLength)
-            .HasDefaultValue(TeamMemberStatusConstants.Active);
+        builder.Property(item => item.Status).HasMaxLength(Constants.MaxTeamMemberStatusLength).HasDefaultValue(TeamMemberStatusConstants.Active);
 
-        builder
-            .HasOne(item => item.Team)
-            .WithMany(item => item.TeamMembers)
-            .HasForeignKey(item => item.TeamId);
-
-        builder
-            .HasOne(item => item.Customer)
-            .WithMany(item => item.TeamMembers)
-            .HasForeignKey(item => item.CustomerId);
+        builder.HasOne(item => item.Team).WithMany(item => item.TeamMembers).HasForeignKey(item => item.TeamId);
+        builder.HasOne(item => item.Customer).WithMany(item => item.TeamMembers).HasForeignKey(item => item.CustomerId);
 
         builder.HasIndex(item => item.Role);
         builder.HasIndex(item => item.Status);

@@ -18,8 +18,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.Locations);
+        builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
     }
 }

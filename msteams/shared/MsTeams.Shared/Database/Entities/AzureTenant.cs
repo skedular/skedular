@@ -20,9 +20,7 @@ public class TenantConfiguration : IEntityTypeConfiguration<AzureTenant>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.AzureTenants);
+        builder.HasOne(item => item.Organization).WithMany(item => item.AzureTenants);
 
         builder.HasIndex(item => item.TeamsAndChannelsLastRefreshedAt);
     }

@@ -22,9 +22,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder
-            .HasOne(item => item.DailyUpdateChannel)
-            .WithMany(item => item.OrganizationDailyUpdateChannels);
+        builder.HasOne(item => item.DailyUpdateChannel).WithMany(item => item.OrganizationDailyUpdateChannels);
 
         builder.HasIndex(item => item.SlackChannelDailyUpdateLastSentAt);
     }

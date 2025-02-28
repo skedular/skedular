@@ -26,28 +26,15 @@ public class JoinInvitationConfiguration : IEntityTypeConfiguration<JoinInvitati
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
+        builder.Property(item => item.Status).HasMaxLength(Constants.MaxInvitationStatusLength);
+        builder.Property(item => item.Role).HasMaxLength(Constants.MaxRoleLength);
 
-        builder
-            .Property(item => item.Status)
-            .HasMaxLength(Constants.MaxInvitationStatusLength);
-
-        builder
-            .Property(item => item.Role)
-            .HasMaxLength(Constants.MaxRoleLength);
-
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.JoinInvitations);
-
-        builder
-            .HasOne(item => item.CreatedBy)
-            .WithMany(item => item.JoinInvitationsCreatedBy);
-
-        builder
-            .HasOne(item => item.Invitee)
-            .WithMany(item => item.JoinInvitationsInvitee);
+        builder.HasOne(item => item.Organization).WithMany(item => item.JoinInvitations);
+        builder.HasOne(item => item.CreatedBy).WithMany(item => item.JoinInvitationsCreatedBy);
+        builder.HasOne(item => item.Invitee).WithMany(item => item.JoinInvitationsInvitee);
 
         builder.HasIndex(item => item.Email);
         builder.HasIndex(item => item.Status);
+        builder.HasIndex(item => item.Role);
     }
 }

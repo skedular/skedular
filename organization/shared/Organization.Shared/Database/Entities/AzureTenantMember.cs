@@ -53,8 +53,6 @@ public class TenantMemberConfiguration : IEntityTypeConfiguration<AzureTenantMem
         builder.Property(item => item.PhotoUrl504).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.PhotoUrl648).HasMaxLength(Constants.MaxUrlLength);
 
-        builder
-            .HasOne(item => item.AzureTenant)
-            .WithMany(item => item.AzureTenantMembers);
+        builder.HasOne(item => item.AzureTenant).WithMany(item => item.AzureTenantMembers);
     }
 }

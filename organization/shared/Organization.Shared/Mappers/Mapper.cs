@@ -48,7 +48,7 @@ public class Mapper : IMapper
             Id = item.Id,
             Name = item.Name.ToSafeString(),
             Description = item.Description.ToSafeString(),
-            TagType = item.Type switch
+            Type = item.Type switch
             {
                 OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                 OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,

@@ -125,15 +125,15 @@ public class Mapper : IMapper
             {
                 Id = item.Id, Organization = string.IsNullOrWhiteSpace(item.OrganizationId) ? null : new Organization { Id = item.OrganizationId }
             }).ToList(),
-            PreferredDesks = customer.DefaultDesks.Select(item =>
+            PreferredDesks = customer.PreferredDesks.Select(item =>
                 new Shared.Models.Desk { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
-            PreferredRooms = customer.DefaultRooms.Select(item =>
+            PreferredRooms = customer.PreferredRooms.Select(item =>
                 new Shared.Models.Room { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
             DefaultTeams = customer.DefaultTeams.Select(item => new Team
             {
                 Id = item.Id, Organization = string.IsNullOrWhiteSpace(item.OrganizationId) ? null : new Organization { Id = item.OrganizationId }
             }).ToList(),
-            PreferredOrganizationTags = customer.DefaultOrganizationTags.Select(item =>
+            PreferredOrganizationTags = customer.PreferredOrganizationTags.Select(item =>
                 new Shared.Models.OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.OrganizationId } }).ToList()
         };
     }
@@ -190,7 +190,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
-            Type = item.TagType switch
+            Type = item.Type switch
             {
                 OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,

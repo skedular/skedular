@@ -15,6 +15,5 @@ public class Organization : ReplicatedEntityBaseWithDeleted
 
 public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 {
-    public void Configure(EntityTypeBuilder<Organization> builder) =>
-        builder.ConfigureReplicatedEntityBaseWithDeleted();
+    public void Configure(EntityTypeBuilder<Organization> builder) => builder.ConfigureReplicatedEntityBaseWithDeleted();
 }

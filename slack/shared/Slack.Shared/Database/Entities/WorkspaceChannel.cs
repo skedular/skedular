@@ -33,9 +33,7 @@ public class WorkspaceChannelConfiguration : IEntityTypeConfiguration<WorkspaceC
         builder.Property(item => item.Topic).HasMaxLength(Api.Shared.Constants.MaxSlackChannelTopicLength);
         builder.Property(item => item.Purpose).HasMaxLength(Api.Shared.Constants.MaxSlackChannelPurposeLength);
 
-        builder
-            .HasOne(item => item.Workspace)
-            .WithMany(item => item.Channels);
+        builder.HasOne(item => item.Workspace).WithMany(item => item.Channels);
 
         builder.HasIndex(item => item.Name);
     }

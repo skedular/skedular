@@ -31,12 +31,11 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.Teams);
-
-        builder
-            .HasOne(item => item.PrimaryLocation)
-            .WithMany(item => item.PrimaryLocationForTeams);
+        builder.HasOne(item => item.Organization).WithMany(item => item.Teams);
+        builder.HasOne(item => item.PrimaryLocation).WithMany(item => item.PrimaryLocationForTeams);
+        
+        builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.About);
+        builder.HasIndex(item => item.Timezone);
     }
 }

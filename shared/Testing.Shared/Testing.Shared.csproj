@@ -9,14 +9,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoFixture" Version="5.0.0-preview0012"/>
-        <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="5.0.0-preview0012"/>
-        <PackageReference Include="AutoFixture.Xunit3" Version="5.0.0-preview0012"/>
-        <PackageReference Include="FakeItEasy" Version="8.3.0"/>
-        <PackageReference Include="FluentAssertions" Version="8.1.1"/>
-        <PackageReference Include="GraphQL.Client" Version="6.1.0"/>
-        <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.1.0"/>
-        <PackageReference Include="xunit.v3" Version="1.1.0"/>
+        <PackageReference Include="AutoFixture" Version="5.0.0-preview0012" />
+        <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="5.0.0-preview0012" />
+        <PackageReference Include="AutoFixture.Xunit3" Version="5.0.0-preview0012" />
+        <PackageReference Include="FakeItEasy" Version="8.3.0" />
+        <PackageReference Include="FluentAssertions" Version="8.1.1" />
+        <PackageReference Include="GraphQL.Client" Version="6.1.0" />
+        <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.1.0" />
+        <PackageReference Include="xunit.v3" Version="2.0.0" />
 
         <PackageReference Include="coverlet.collector" Version="6.0.4">
             <PrivateAssets>all</PrivateAssets>
@@ -34,11 +34,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit"/>
+        <Using Include="Xunit" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj"/>
+        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj" />
     </ItemGroup>
 
 </Project>

@@ -19,12 +19,7 @@ public class OrganizationOfferingActiveMemberConfiguration : IEntityTypeConfigur
     {
         builder.ConfigureEntityBase();
 
-        builder
-            .HasOne(item => item.OrganizationMember)
-            .WithMany(item => item.OrganizationOfferingActiveMembers);
-
-        builder
-            .HasOne(item => item.OrganizationOffering)
-            .WithMany(item => item.OrganizationOfferingActiveMembers);
+        builder.HasOne(item => item.OrganizationMember).WithMany(item => item.OrganizationOfferingActiveMembers);
+        builder.HasOne(item => item.OrganizationOffering).WithMany(item => item.OrganizationOfferingActiveMembers);
     }
 }

@@ -28,6 +28,7 @@ public class Customer : ReplicatedEntityBaseWithDeleted
     public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual Organization? DefaultOrganization { get; set; }
     public virtual ICollection<Location> DefaultLocations { get; set; }
+    public virtual ICollection<LocationResource> PreferredLocationResources { get; set; }
     public virtual ICollection<Desk> PreferredDesks { get; set; }
     public virtual ICollection<Room> PreferredRooms { get; set; }
     public virtual ICollection<Team> DefaultTeams { get; set; }
@@ -53,29 +54,13 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.PhotoUrl192).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.PhotoUrl512).HasMaxLength(Constants.MaxUrlLength);
 
-        builder
-            .HasOne(item => item.DefaultOrganization)
-            .WithMany(item => item.DefaultedByCustomers);
-
-        builder
-            .HasMany(item => item.DefaultLocations)
-            .WithMany(item => item.DefaultedByCustomers);
-
-        builder
-            .HasMany(item => item.PreferredDesks)
-            .WithMany(item => item.PreferredByCustomers);
-
-        builder
-            .HasMany(item => item.PreferredRooms)
-            .WithMany(item => item.PreferredByCustomers);
-
-        builder
-            .HasMany(item => item.DefaultTeams)
-            .WithMany(item => item.DefaultedByCustomers);
-
-        builder
-            .HasMany(item => item.PreferredOrganizationTags)
-            .WithMany(item => item.PreferredByCustomers);
+        builder.HasOne(item => item.DefaultOrganization).WithMany(item => item.DefaultedByCustomers);
+        builder.HasMany(item => item.DefaultLocations).WithMany(item => item.DefaultedByCustomers);
+        builder.HasMany(item => item.PreferredLocationResources).WithMany(item => item.PreferredByCustomers);
+        builder.HasMany(item => item.PreferredDesks).WithMany(item => item.PreferredByCustomers);
+        builder.HasMany(item => item.PreferredRooms).WithMany(item => item.PreferredByCustomers);
+        builder.HasMany(item => item.DefaultTeams).WithMany(item => item.DefaultedByCustomers);
+        builder.HasMany(item => item.PreferredOrganizationTags).WithMany(item => item.PreferredByCustomers);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.GivenName);

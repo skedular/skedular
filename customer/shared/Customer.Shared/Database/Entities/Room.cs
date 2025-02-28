@@ -24,9 +24,7 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxRoomNameLength);
 
-        builder
-            .HasOne(item => item.Location)
-            .WithMany(item => item.Rooms);
+        builder.HasOne(item => item.Location).WithMany(item => item.Rooms);
 
         builder.HasIndex(item => item.Name);
     }

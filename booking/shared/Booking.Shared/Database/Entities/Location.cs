@@ -13,6 +13,7 @@ public class Location : ReplicatedEntityBaseWithDeleted
 
     public virtual Organization? Organization { get; set; }
     public virtual ICollection<LocationMember> LocationMembers { get; set; } = [];
+    public virtual ICollection<LocationResource> LocationResources { get; set; } = [];
     public virtual ICollection<Desk> Desks { get; set; } = [];
     public virtual ICollection<Room> Rooms { get; set; } = [];
     public virtual ICollection<Booking> Bookings { get; set; } = [];
@@ -28,8 +29,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationNameLength);
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.Locations);
+        builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
+
+        builder.HasIndex(item => item.Name);
     }
 }

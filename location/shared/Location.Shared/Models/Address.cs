@@ -1,8 +1,8 @@
-using Enterprise.Shared.Database;
+using Enterprise.Shared.Models;
 
 namespace Location.Shared.Models;
 
-public class Address : EntityBase
+public class Address : ModelBase
 {
     public string? FormattedAddress { get; set; }
     public string? AddressLine1 { get; set; }

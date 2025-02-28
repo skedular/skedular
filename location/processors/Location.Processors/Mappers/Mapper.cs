@@ -117,7 +117,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
-            Type = item.TagType switch
+            Type = item.Type switch
             {
                 OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,

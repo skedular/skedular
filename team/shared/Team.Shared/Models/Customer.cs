@@ -1,8 +1,8 @@
-using Enterprise.Shared.Database;
+using Enterprise.Shared.Models;
 
 namespace Team.Shared.Models;
 
-public class Customer : ReplicatedEntityBaseWithDeleted
+public class Customer : ReplicatedModelBaseWithDeleted
 {
     public string? Name { get; set; }
     public string? GivenName { get; set; }

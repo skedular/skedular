@@ -28,12 +28,7 @@ public class
 
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
 
-        builder
-            .HasOne(item => item.OrganizationStripePaymentMethod)
-            .WithMany(item => item.OrganizationOfferingStripePaymentIntents);
-
-        builder
-            .HasOne(item => item.OrganizationOffering)
-            .WithMany(item => item.OrganizationOfferingStripePaymentIntents);
+        builder.HasOne(item => item.OrganizationStripePaymentMethod).WithMany(item => item.OrganizationOfferingStripePaymentIntents);
+        builder.HasOne(item => item.OrganizationOffering).WithMany(item => item.OrganizationOfferingStripePaymentIntents);
     }
 }

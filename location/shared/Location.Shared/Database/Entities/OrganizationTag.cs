@@ -14,6 +14,7 @@ public class OrganizationTag : ReplicatedEntityBaseWithDeleted
     public string? Color { get; set; }
 
     public virtual Organization Organization { get; set; }
+    public virtual ICollection<Resource> Resources { get; set; } = [];
     public virtual ICollection<Desk> Desks { get; set; } = [];
     public virtual ICollection<Room> Rooms { get; set; } = [];
 }
@@ -29,10 +30,9 @@ public class OrganizationTagConfiguration : IEntityTypeConfiguration<Organizatio
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxTagTypeLength);
         builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
 
-        builder
-            .HasOne(item => item.Organization)
-            .WithMany(item => item.Tags);
+        builder.HasOne(item => item.Organization).WithMany(item => item.Tags);
 
         builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.Type);
     }
 }

@@ -126,7 +126,7 @@ public class Mapper : IMapper
             Id = item.Id,
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
-            Type = item.TagType switch
+            Type = item.Type switch
             {
                 OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,

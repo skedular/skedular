@@ -29,12 +29,11 @@ public class DeskConfiguration : IEntityTypeConfiguration<Desk>
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxDeskNameLength);
         builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
 
-        builder
-            .HasOne(item => item.Location)
-            .WithMany(item => item.Desks);
+        builder.HasOne(item => item.Location).WithMany(item => item.Desks);
+        builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Desks);
 
-        builder
-            .HasMany(item => item.OrganizationTags)
-            .WithMany(item => item.Desks);
+        builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.Deactivated);
+        builder.HasIndex(item => item.RequireBookingApproval);
     }
 }

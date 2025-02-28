@@ -23,10 +23,9 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
 
         builder.Property(item => item.Timezone).HasMaxLength(Api.Shared.Constants.MaxTimezoneLength);
 
-        builder
-            .HasOne(item => item.DailyUpdateChannel)
-            .WithMany(item => item.TeamDailyUpdateChannels);
+        builder.HasOne(item => item.DailyUpdateChannel).WithMany(item => item.TeamDailyUpdateChannels);
 
         builder.HasIndex(item => item.SlackChannelDailyUpdateLastSentAt);
+        builder.HasIndex(item => item.Timezone);
     }
 }
