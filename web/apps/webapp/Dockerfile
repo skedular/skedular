@@ -5,8 +5,7 @@ ARG BUILD_IMAGE=node:22-alpine
 FROM $BUILD_IMAGE AS build
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm install -g pnpm@latest
-# RUN corepack enable
+RUN corepack enable
 
 RUN mkdir -p /src/web
 COPY web /src/web
