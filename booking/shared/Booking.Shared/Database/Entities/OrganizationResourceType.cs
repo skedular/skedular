@@ -10,8 +10,8 @@ namespace Booking.Shared.Database.Entities;
 public class OrganizationResourceType : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
-    public string? Type { get; set; }
     public string? Color { get; set; }
+    public string? SystemType { get; set; }
 
     public virtual Organization Organization { get; set; }
     public virtual ICollection<LocationResource> LocationResources { get; set; } = [];
@@ -24,13 +24,13 @@ public class OrganizationResourceTypeConfiguration : IEntityTypeConfiguration<Or
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Name).HasMaxLength(Constants.MaxTagNameLength);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxTagTypeLength);
+        builder.Property(item => item.Name).HasMaxLength(Constants.MaxResourceTypeNameLength);
         builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
+        builder.Property(item => item.SystemType).HasMaxLength(Constants.MaxResourceTypeSystemTypeLength);
 
-        builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationResourceTypes);
+        builder.HasOne(item => item.Organization).WithMany(item => item.ResourceTypes);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.Type);
+        builder.HasIndex(item => item.SystemType);
     }
 }

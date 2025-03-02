@@ -56,16 +56,17 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "dG9idWYuVGltZXN0YW1wEhYKDm9yZ2FuaXphdGlvbklkGAMgASgJEhMKC2lu",
             "dml0ZWRCeUlkGAQgASgJEhEKCWludml0ZWVJZBgFIAEoCSJRCgNUYWcSCgoC",
             "aWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIM",
-            "CgR0eXBlGAQgASgJEg0KBWNvbG9yGAUgASgJIloKDFJlc291cmNlVHlwZRIK",
+            "CgR0eXBlGAQgASgJEg0KBWNvbG9yGAUgASgJImAKDFJlc291cmNlVHlwZRIK",
             "CgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJ",
-            "EgwKBHR5cGUYBCABKAkSDQoFY29sb3IYBSABKAkqrQEKBFR5cGUSGAoUT3Jn",
-            "YW5pemF0aW9uVXBzZXJ0ZWQQABIXChNPcmdhbml6YXRpb25EZWxldGVkEAES",
-            "KAokSW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvblVwc2VydGVkEAISJwoj",
-            "SW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbkRlbGV0ZWQQAxIfChtPcmdh",
-            "bml6YXRpb25PZmZlcmluZ1VwZGF0ZWQQBCowCgRSb2xlEgkKBU93bmVyEAAS",
-            "EQoNQWRtaW5pc3RyYXRvchABEgoKBk1lbWJlchACKiIKBlN0YXR1cxIKCgZB",
-            "Y3RpdmUQABIMCghJbmFjdGl2ZRABQjuqAjhBcGkuU2hhcmVkLkNsaWVudHMu",
-            "RXZlbnRzLlNrZWR1bGFyLk9yZ2FuaXphdGlvbi5WMS5WYWx1ZWIGcHJvdG8z"));
+            "Eg0KBWNvbG9yGAQgASgJEhIKCnN5c3RlbVR5cGUYBSABKAkqrQEKBFR5cGUS",
+            "GAoUT3JnYW5pemF0aW9uVXBzZXJ0ZWQQABIXChNPcmdhbml6YXRpb25EZWxl",
+            "dGVkEAESKAokSW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvblVwc2VydGVk",
+            "EAISJwojSW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbkRlbGV0ZWQQAxIf",
+            "ChtPcmdhbml6YXRpb25PZmZlcmluZ1VwZGF0ZWQQBCowCgRSb2xlEgkKBU93",
+            "bmVyEAASEQoNQWRtaW5pc3RyYXRvchABEgoKBk1lbWJlchACKiIKBlN0YXR1",
+            "cxIKCgZBY3RpdmUQABIMCghJbmFjdGl2ZRABQjuqAjhBcGkuU2hhcmVkLkNs",
+            "aWVudHMuRXZlbnRzLlNrZWR1bGFyLk9yZ2FuaXphdGlvbi5WMS5WYWx1ZWIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -78,7 +79,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "InvitedById", "InviteeId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "Type", "Color" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ResourceType), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ResourceType.Parser, new[]{ "Id", "Name", "Description", "Type", "Color" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ResourceType), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ResourceType.Parser, new[]{ "Id", "Name", "Description", "Color", "SystemType" }, null, null, null, null)
           }));
     }
     #endregion
@@ -3351,8 +3352,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       id_ = other.id_;
       name_ = other.name_;
       description_ = other.description_;
-      type_ = other.type_;
       color_ = other.color_;
+      systemType_ = other.systemType_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3398,20 +3399,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "type" field.</summary>
-    public const int TypeFieldNumber = 4;
-    private string type_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Type {
-      get { return type_; }
-      set {
-        type_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "color" field.</summary>
-    public const int ColorFieldNumber = 5;
+    public const int ColorFieldNumber = 4;
     private string color_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3419,6 +3408,18 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       get { return color_; }
       set {
         color_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "systemType" field.</summary>
+    public const int SystemTypeFieldNumber = 5;
+    private string systemType_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string SystemType {
+      get { return systemType_; }
+      set {
+        systemType_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -3440,8 +3441,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (Id != other.Id) return false;
       if (Name != other.Name) return false;
       if (Description != other.Description) return false;
-      if (Type != other.Type) return false;
       if (Color != other.Color) return false;
+      if (SystemType != other.SystemType) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3452,8 +3453,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Description.Length != 0) hash ^= Description.GetHashCode();
-      if (Type.Length != 0) hash ^= Type.GetHashCode();
       if (Color.Length != 0) hash ^= Color.GetHashCode();
+      if (SystemType.Length != 0) hash ^= SystemType.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3484,13 +3485,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(Description);
       }
-      if (Type.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(Type);
-      }
       if (Color.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(34);
         output.WriteString(Color);
+      }
+      if (SystemType.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(SystemType);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -3514,13 +3515,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(Description);
       }
-      if (Type.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(Type);
-      }
       if (Color.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(34);
         output.WriteString(Color);
+      }
+      if (SystemType.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(SystemType);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -3541,11 +3542,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (Description.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Description);
       }
-      if (Type.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
-      }
       if (Color.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Color);
+      }
+      if (SystemType.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SystemType);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3568,11 +3569,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (other.Description.Length != 0) {
         Description = other.Description;
       }
-      if (other.Type.Length != 0) {
-        Type = other.Type;
-      }
       if (other.Color.Length != 0) {
         Color = other.Color;
+      }
+      if (other.SystemType.Length != 0) {
+        SystemType = other.SystemType;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -3606,11 +3607,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 34: {
-            Type = input.ReadString();
+            Color = input.ReadString();
             break;
           }
           case 42: {
-            Color = input.ReadString();
+            SystemType = input.ReadString();
             break;
           }
         }
@@ -3645,11 +3646,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 34: {
-            Type = input.ReadString();
+            Color = input.ReadString();
             break;
           }
           case 42: {
-            Color = input.ReadString();
+            SystemType = input.ReadString();
             break;
           }
         }

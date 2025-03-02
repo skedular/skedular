@@ -18,10 +18,7 @@ public interface IOrganizationTagRepository : IRepository<OrganizationTag>
 public class OrganizationTagRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, OrganizationTag>(dbContext, timeProvider), IOrganizationTagRepository
 {
-    public async Task<OrganizationTag> UpsertNakedAsync(
-        string id,
-        Organization organization,
-        CancellationToken cancellationToken)
+    public async Task<OrganizationTag> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 

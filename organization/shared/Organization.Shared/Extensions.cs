@@ -39,7 +39,8 @@ public static class Extensions
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
             .AddScoped<ITeamRepository, TeamRepository>()
             .AddScoped<ITermsOfUseRepository, TermsOfUseRepository>()
-            .AddScoped<ITagRepository, TagRepository>();
+            .AddScoped<ITagRepository, TagRepository>()
+            .AddScoped<IResourceTypeRepository, ResourceTypeRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
@@ -52,9 +53,7 @@ public static class Extensions
             .AddScoped<IOrganizationInternalOutboxPublisher, OrganizationInternalOutboxPublisher>()
             .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
 
-    public static IServiceCollection AddSkedularGrpcServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var organizationConfiguration =
             configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();

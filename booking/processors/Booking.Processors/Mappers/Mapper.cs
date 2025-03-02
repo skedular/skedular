@@ -88,8 +88,13 @@ public interface IMapper
 
     Identity MapToEntity(Shared.Models.Identity src, Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer);
-    OrganizationTag MergeToEntity(Shared.Models.OrganizationTag src, OrganizationTag dest, Shared.Database.Entities.Organization organization);
     OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization);
+    OrganizationTag MergeToEntity(Shared.Models.OrganizationTag src, OrganizationTag dest, Shared.Database.Entities.Organization organization);
+    OrganizationResourceType MapToEntity(Shared.Models.OrganizationResourceType src, Shared.Database.Entities.Organization organization);
+    OrganizationResourceType MergeToEntity(
+        Shared.Models.OrganizationResourceType src,
+        OrganizationResourceType dest,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -197,6 +202,22 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             Color = item.Color,
+            Organization = organization
+        }).ToList();
+
+        organization.ResourceTypes = organizationAfterState.ResourceTypes.Select(item => new Shared.Models.OrganizationResourceType
+        {
+            Id = item.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = item.Name,
+            Color = item.Color,
+            SystemType = string.IsNullOrWhiteSpace(item.SystemType) ? null : item.SystemType switch
+            {
+                OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
+                OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Organization = organization
         }).ToList();
 
@@ -569,6 +590,27 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new OrganizationTag(), organization);
+    public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) => throw new NotImplementedException();
+
+    public OrganizationResourceType MapToEntity(Shared.Models.OrganizationResourceType src, Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new OrganizationResourceType(), organization);
+
+    public OrganizationResourceType MergeToEntity(
+        Shared.Models.OrganizationResourceType src,
+        OrganizationResourceType dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Color = src.Color;
+        dest.SystemType = src.SystemType is null ? null : src.SystemType switch
+        {
+            OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
+            OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        dest.Organization = organization;
+        return dest;
+    }
 }

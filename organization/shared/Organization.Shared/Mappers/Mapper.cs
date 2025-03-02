@@ -7,6 +7,7 @@ using Organization.Shared.Models;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
+using ResourceType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ResourceType;
 
 namespace Organization.Shared.Mappers;
 
@@ -20,7 +21,8 @@ public class Mapper : IMapper
 {
     public Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src)
     {
-        var organizationOffering = src.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue)
+        var organizationOffering = src.OrganizationOfferings
+            .Where(item => !item.DeletedAt.HasValue)
             .OrderByDescending(item => item.End).First();
         var organization = new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization
         {
@@ -55,6 +57,22 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             Color = item.Color.ToSafeString()
+        }));
+
+        organization.ResourceTypes.AddRange(src.ResourceTypes.Select(item => new ResourceType
+        {
+            Id = item.Id,
+            Name = item.Name.ToSafeString(),
+            Description = item.Description.ToSafeString(),
+            Color = item.Color.ToSafeString(),
+            SystemType = item.SystemType is null
+                ? string.Empty
+                : item.SystemType switch
+                {
+                    OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
+                    OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
         }));
 
         organization.Offering.ActiveCustomerIds.AddRange(

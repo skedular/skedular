@@ -36,12 +36,9 @@ public static class Extensions
         services
             .AddScoped<IBillingOutboxPublisher, BillingOutboxPublisher>();
 
-    public static IServiceCollection AddSkedularGrpcServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var billingConfiguration =
-            configuration.GetSection(BillingConfiguration.Key).Get<BillingConfiguration>();
+        var billingConfiguration = configuration.GetSection(BillingConfiguration.Key).Get<BillingConfiguration>();
         ArgumentNullException.ThrowIfNull(billingConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(billingConfiguration.ApiKey);
 

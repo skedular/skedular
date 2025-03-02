@@ -24,6 +24,7 @@ public class Organization : ModelBaseWithDeleted
     public ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
     public ICollection<AzureTenant> AzureTenants { get; set; } = [];
     public ICollection<Tag> Tags { get; set; } = [];
+    public ICollection<ResourceType> ResourceTypes { get; set; } = [];
 
     public bool HasFutureBooking { get; set; }
     public bool HasLocation { get; set; }

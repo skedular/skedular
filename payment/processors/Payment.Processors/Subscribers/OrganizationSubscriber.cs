@@ -111,9 +111,7 @@ public class OrganizationSubscriber(
         await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleOrganizationDeletedEventAsync(
-        Organization existingOrganization,
-        CancellationToken cancellationToken)
+    private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
     {
         repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);

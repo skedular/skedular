@@ -28,10 +28,8 @@ public interface ITagRepository : IRepository<Tag>
 
 internal static class TagExtensions
 {
-    internal static IIncludableQueryable<Tag, Database.Entities.Organization> AddDependentObjects(
-        this IQueryable<Tag> originalQuery) =>
-        originalQuery
-            .Include(query => query.Organization);
+    internal static IIncludableQueryable<Tag, Database.Entities.Organization> AddDependentObjects(this IQueryable<Tag> originalQuery) =>
+        originalQuery.Include(query => query.Organization);
 
     internal static IQueryable<Tag> AddSearchCriteria(
         this IQueryable<Tag> query,
@@ -70,7 +68,7 @@ internal static class TagExtensions
             OrganizationTagOrderField.Description => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Description)
                 : originalQuery.OrderByDescending(x => x.Description),
-            OrganizationTagOrderField.TagType => orderByField.Direction == OrderDirection.Ascending
+            OrganizationTagOrderField.Type => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Type)
                 : originalQuery.OrderByDescending(x => x.Type),
             _ => throw new ArgumentOutOfRangeException()

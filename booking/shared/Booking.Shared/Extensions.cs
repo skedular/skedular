@@ -31,7 +31,8 @@ public static class Extensions
             .AddScoped<IRoomRepository, RoomRepository>()
             .AddScoped<ITeamRepository, TeamRepository>()
             .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
-            .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>();
+            .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>()
+            .AddScoped<IOrganizationResourceTypeRepository, OrganizationResourceTypeRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services.AddScoped<IBookingPublisher, BookingPublisher>();
@@ -39,9 +40,7 @@ public static class Extensions
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services.AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
 
-    public static IServiceCollection AddSkedularGrpcServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
         ArgumentNullException.ThrowIfNull(bookingConfiguration);

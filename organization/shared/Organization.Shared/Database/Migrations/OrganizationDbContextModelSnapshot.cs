@@ -2283,15 +2283,14 @@ namespace Organization.Shared.Database.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
+                    b.Property<string>("SystemType")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -2311,7 +2310,7 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.HasIndex("Type");
+                    b.HasIndex("SystemType");
 
                     b.ToTable("ResourceType");
                 });

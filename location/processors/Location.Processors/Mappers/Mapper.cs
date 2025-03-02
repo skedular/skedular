@@ -12,6 +12,7 @@ using LocationMember = Location.Shared.Database.Entities.LocationMember;
 using Offering = Location.Shared.Models.Offering;
 using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
+using OrganizationResourceType = Location.Shared.Database.Entities.OrganizationResourceType;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Processors.Mappers;
@@ -55,8 +56,14 @@ public interface IMapper
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
 
-    OrganizationTag MergeToEntity(Shared.Models.OrganizationTag src, OrganizationTag dest, Shared.Database.Entities.Organization organization);
     OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization);
+    OrganizationTag MergeToEntity(Shared.Models.OrganizationTag src, OrganizationTag dest, Shared.Database.Entities.Organization organization);
+    OrganizationResourceType MapToEntity(Shared.Models.OrganizationResourceType src, Shared.Database.Entities.Organization organization);
+
+    OrganizationResourceType MergeToEntity(
+        Shared.Models.OrganizationResourceType src,
+        OrganizationResourceType dest,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -83,8 +90,9 @@ public class Mapper : IMapper
             PhotoUrl72 = customer.PhotoUrl72,
             PhotoUrl192 = customer.PhotoUrl192,
             PhotoUrl512 = customer.PhotoUrl512,
-            Identities = customer.Identities.Select(item =>
-                new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified }).ToList()
+            Identities = customer.Identities
+                .Select(item =>new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+                .ToList()
         };
     }
 
@@ -124,6 +132,24 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             Color = item.Color,
+            Organization = organization
+        }).ToList();
+
+        organization.ResourceTypes = organizationAfterState.ResourceTypes.Select(item => new Shared.Models.OrganizationResourceType
+        {
+            Id = item.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = item.Name,
+            Color = item.Color,
+            SystemType = string.IsNullOrWhiteSpace(item.SystemType)
+                ? null
+                : item.SystemType switch
+                {
+                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
+                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
             Organization = organization
         }).ToList();
 
@@ -285,6 +311,9 @@ public class Mapper : IMapper
         return dest;
     }
 
+    public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new OrganizationTag(), organization);
+
     public OrganizationTag MergeToEntity(Shared.Models.OrganizationTag src, OrganizationTag dest, Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
@@ -301,8 +330,27 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new OrganizationTag(), organization);
+    public OrganizationResourceType MapToEntity(Shared.Models.OrganizationResourceType src, Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new OrganizationResourceType(), organization);
+
+    public OrganizationResourceType MergeToEntity(
+        Shared.Models.OrganizationResourceType src,
+        OrganizationResourceType dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.SystemType = src.SystemType switch
+        {
+            OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
+            OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        dest.Color = src.Color;
+        dest.Organization = organization;
+        return dest;
+    }
 
     private static Shared.Models.Location MapTo(Shared.Database.Entities.Location src)
     {

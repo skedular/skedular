@@ -33,12 +33,9 @@ public static class Extensions
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services;
 
-    public static IServiceCollection AddSkedularGrpcServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var notificationConfiguration =
-            configuration.GetSection(NotificationConfiguration.Key).Get<NotificationConfiguration>();
+        var notificationConfiguration = configuration.GetSection(NotificationConfiguration.Key).Get<NotificationConfiguration>();
         ArgumentNullException.ThrowIfNull(notificationConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(notificationConfiguration.ApiKey);
 

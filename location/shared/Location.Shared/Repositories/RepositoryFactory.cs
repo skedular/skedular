@@ -20,6 +20,7 @@ public interface IRepositoryFactory
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     IOrganizationRepository OrganizationRepository { get; }
     IOrganizationTagRepository OrganizationTagRepository { get; }
+    IOrganizationResourceTypeRepository OrganizationResourceTypeRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -45,6 +46,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
+        OrganizationResourceTypeRepository = new OrganizationResourceTypeRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -67,6 +69,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }
     public IOrganizationTagRepository OrganizationTagRepository { get; }
+    public IOrganizationResourceTypeRepository OrganizationResourceTypeRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 

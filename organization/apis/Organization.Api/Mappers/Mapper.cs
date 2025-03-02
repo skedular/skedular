@@ -62,14 +62,9 @@ public interface IMapper
 
     Shared.Models.Organization MapTo(AddOrganizationInput src);
     Shared.Models.Organization MapTo(UpdateOrganizationInput src);
-
-    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse
-        MapToGrpcResponse(Shared.Models.TermsOfUse src);
-
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src);
     Shared.Models.Organization MapTo(Admin_AddInput src);
-
-    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(
-        Shared.Models.Organization src);
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(Shared.Models.Organization src);
 
     Shared.Database.Entities.OrganizationMember MapToEntity(
         OrganizationMember src,
@@ -91,18 +86,11 @@ public interface IMapper
 
     OrganizationMemberEdge MapTo(Edge<OrganizationMember> src);
     MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src);
-
     Tag MapTo(Shared.Database.Entities.Tag src);
     Shared.Database.Entities.Tag MapTo(Tag src, Shared.Database.Entities.Organization organization);
+    Shared.Database.Entities.Tag MergeTo(Tag src, Shared.Database.Entities.Tag dest, Shared.Database.Entities.Organization organization);
 
-    Shared.Database.Entities.Tag MergeTo(
-        Tag src,
-        Shared.Database.Entities.Tag dest,
-        Shared.Database.Entities.Organization organization);
-
-    IEnumerable<Edge<Tag>> MapTo(IEnumerable<Edge<Shared.Database.Entities.Tag>> src,
-        Shared.Models.Organization organization);
-
+    IEnumerable<Edge<Tag>> MapTo(IEnumerable<Edge<Shared.Database.Entities.Tag>> src, Shared.Models.Organization organization);
     Tag MapTo(AddCustomTagInput src);
     Tag MapTo(UpdateCustomTagInput src);
     Tag MapTo(GraphQL.AddZoneInput src);
@@ -153,12 +141,12 @@ public class Mapper : IMapper
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
+        organization.ResourceTypes = MapTo(src.ResourceTypes, organization).ToList();
 
         return organization;
     }
 
-    public OrganizationMember
-        MapTo(Shared.Database.Entities.OrganizationMember src, Shared.Models.Organization organization) =>
+    public OrganizationMember MapTo(Shared.Database.Entities.OrganizationMember src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -281,14 +269,12 @@ public class Mapper : IMapper
                 Terms = src.Terms
             };
 
-    public IEnumerable<IndustryMainCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustryMainCategory> src) =>
-        src.Select(MapTo);
+    public IEnumerable<IndustryMainCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustryMainCategory> src) => src.Select(MapTo);
 
     public OrganizationTermsOfUse? MapTo(Shared.Models.TermsOfUse? src) =>
         src is null ? null : new OrganizationTermsOfUse { Id = src.Id, Terms = src.Terms };
 
-    public IEnumerable<OrganizationIndustryMainCategoryReferenceDetails> MapTo(IEnumerable<IndustryMainCategory> src) =>
-        src.Select(MapTo);
+    public IEnumerable<OrganizationIndustryMainCategoryReferenceDetails> MapTo(IEnumerable<IndustryMainCategory> src) => src.Select(MapTo);
 
     public IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src) => src.Select(MapTo)!;
 
@@ -360,11 +346,11 @@ public class Mapper : IMapper
         IEnumerable<OrganizationDailyBookingsTotal> organizationDailyBookingsTotals) =>
         new()
         {
-            MemberAttendancePercentage = organizationMemberAttendancePercentages.Select(item =>
-                    new GraphQL.OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = item.Percentage })
+            MemberAttendancePercentage = organizationMemberAttendancePercentages
+                .Select(item => new GraphQL.OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = item.Percentage })
                 .ToArray(),
-            DailyBookingsTotals = organizationDailyBookingsTotals.Select(item =>
-                    new GraphQL.OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Total })
+            DailyBookingsTotals = organizationDailyBookingsTotals
+                .Select(item => new GraphQL.OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Total })
                 .ToArray()
         };
 
@@ -376,8 +362,7 @@ public class Mapper : IMapper
             About = src.About,
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
-            IndustrySubCategories =
-                src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
+            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
             TermsOfUse = new Shared.Models.TermsOfUse { Id = src.TermsOfUseId }
         };
 
@@ -388,8 +373,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Website = src.Website,
-            IndustrySubCategories =
-                src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
+            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse
@@ -404,17 +388,12 @@ public class Mapper : IMapper
             About = src.About,
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
-            TermsOfUse =
-                string.IsNullOrWhiteSpace(src.TermsOfUseId)
-                    ? null
-                    : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
+            TermsOfUse = string.IsNullOrWhiteSpace(src.TermsOfUseId) ? null : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
             LogoUrl = src.LogoUrl,
-            IndustrySubCategories =
-                src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
+            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(
-        Shared.Models.Organization src)
+    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(Shared.Models.Organization src)
     {
         var organizationOffering = src.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue)
             .OrderByDescending(item => item.End).First();
@@ -486,22 +465,18 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationMember MapTo(Admin_AddMemberInput src) =>
-        MapTo(src.Member, new Shared.Models.Organization { Id = src.Id });
+    public OrganizationMember MapTo(Admin_AddMemberInput src) => MapTo(src.Member, new Shared.Models.Organization { Id = src.Id });
 
-    public OrganizationEdge MapTo(Edge<Shared.Models.Organization> src) =>
-        new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
+    public OrganizationEdge MapTo(Edge<Shared.Models.Organization> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
 
     public IEnumerable<Edge<OrganizationMember>> MapTo(
         IEnumerable<Edge<Shared.Database.Entities.OrganizationMember>> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    public OrganizationMemberEdge MapTo(Edge<OrganizationMember> src) =>
-        new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+    public OrganizationMemberEdge MapTo(Edge<OrganizationMember> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
-    public MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+    public MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     public Tag MapTo(Shared.Database.Entities.Tag src) =>
         new()
@@ -543,9 +518,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<Edge<Tag>> MapTo(
-        IEnumerable<Edge<Shared.Database.Entities.Tag>> src,
-        Shared.Models.Organization organization) =>
+    public IEnumerable<Edge<Tag>> MapTo(IEnumerable<Edge<Shared.Database.Entities.Tag>> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
     public Tag MapTo(AddCustomTagInput src) =>
@@ -614,8 +587,7 @@ public class Mapper : IMapper
             ? new CustomTag()
             : new CustomTag { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color };
 
-    public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponseCustomTag(src.Node) };
+    public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseCustomTag(src.Node) };
 
     public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddCustomTagInput src) =>
         new()
@@ -643,8 +615,7 @@ public class Mapper : IMapper
             ? new Zone()
             : new Zone { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color };
 
-    public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponseZone(src.Node) };
+    public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseZone(src.Node) };
 
     public Tag MapTo(AddZoneInput src) =>
         new()
@@ -662,7 +633,8 @@ public class Mapper : IMapper
 
     public IEnumerable<string> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
 
-    private IEnumerable<OrganizationMember> MapTo(IEnumerable<Shared.Database.Entities.OrganizationMember> src,
+    private IEnumerable<OrganizationMember> MapTo(
+        IEnumerable<Shared.Database.Entities.OrganizationMember> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
@@ -691,8 +663,7 @@ public class Mapper : IMapper
 
     private IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer MapToGrpcResponse(
-        Customer src)
+    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer MapToGrpcResponse(Customer src)
     {
         var customer = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Customer
         {
@@ -716,12 +687,10 @@ public class Mapper : IMapper
         return customer;
     }
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity> MapToGrpcResponse(
-        IEnumerable<Identity> src) =>
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity> MapToGrpcResponse(IEnumerable<Identity> src) =>
         src.Select(MapToGrpcResponse);
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity MapToGrpcResponse(
-        Identity src) =>
+    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Identity MapToGrpcResponse(Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
 
     private static OrganizationMember MapTo(Member src, Shared.Models.Organization organization) =>
@@ -737,10 +706,8 @@ public class Mapper : IMapper
             },
             Status = src.Status switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active =>
-                    OrganizationMemberStatus.Active,
-                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive =>
-                    OrganizationMemberStatus.Inactive,
+                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active => OrganizationMemberStatus.Active,
+                global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive => OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
@@ -799,11 +766,12 @@ public class Mapper : IMapper
 
     private static OrganizationIndustryMainCategoryReferenceDetails MapTo(IndustryMainCategory src)
     {
-        var organizationIndustryMainCategoryReferenceDetails =
-            new OrganizationIndustryMainCategoryReferenceDetails { Id = src.Id, Name = src.Name };
+        var organizationIndustryMainCategoryReferenceDetails = new OrganizationIndustryMainCategoryReferenceDetails { Id = src.Id, Name = src.Name };
 
-        organizationIndustryMainCategoryReferenceDetails.SubCategories = MapTo(src.IndustrySubCategories,
-            organizationIndustryMainCategoryReferenceDetails).ToArray();
+        organizationIndustryMainCategoryReferenceDetails.SubCategories = MapTo(
+                src.IndustrySubCategories,
+                organizationIndustryMainCategoryReferenceDetails)
+            .ToArray();
 
         return organizationIndustryMainCategoryReferenceDetails;
     }
@@ -813,7 +781,8 @@ public class Mapper : IMapper
         OrganizationIndustryMainCategoryReferenceDetails? organizationIndustryMainCategoryReferenceDetails) =>
         src.Select(item => MapTo(item, organizationIndustryMainCategoryReferenceDetails));
 
-    private static OrganizationIndustrySubCategoryReferenceDetails MapTo(IndustrySubCategory src,
+    private static OrganizationIndustrySubCategoryReferenceDetails MapTo(
+        IndustrySubCategory src,
         OrganizationIndustryMainCategoryReferenceDetails? organizationIndustryMainCategoryReferenceDetails) =>
         new()
         {
@@ -824,9 +793,7 @@ public class Mapper : IMapper
                 : organizationIndustryMainCategoryReferenceDetails.Name
         };
 
-    private IndustrySubCategory? MapTo(
-        Shared.Database.Entities.IndustrySubCategory? src,
-        IndustryMainCategory? industryMainCategory)
+    private IndustrySubCategory? MapTo(Shared.Database.Entities.IndustrySubCategory? src, IndustryMainCategory? industryMainCategory)
     {
         if (src is null)
         {
@@ -846,7 +813,8 @@ public class Mapper : IMapper
         return industrySubCategory;
     }
 
-    private IEnumerable<IndustrySubCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustrySubCategory> src,
+    private IEnumerable<IndustrySubCategory> MapTo(
+        IEnumerable<Shared.Database.Entities.IndustrySubCategory> src,
         IndustryMainCategory? industryMainCategory) =>
         src.Select(item => MapTo(item, industryMainCategory))!;
 
@@ -866,8 +834,7 @@ public class Mapper : IMapper
         return industryMainCategory;
     }
 
-    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) =>
-        src.Select(MapTo);
+    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
         new()
@@ -901,12 +868,10 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src,
-        Shared.Models.Organization organization) =>
+    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static Booking MapTo(Shared.Database.Entities.Booking src,
-        Shared.Models.Organization organization) =>
+    private static Booking MapTo(Shared.Database.Entities.Booking src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -924,9 +889,7 @@ public class Mapper : IMapper
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static DailyMemberCountRecording MapTo(
-        Shared.Database.Entities.DailyMemberCountRecording src,
-        Shared.Models.Organization organization) =>
+    private static DailyMemberCountRecording MapTo(Shared.Database.Entities.DailyMemberCountRecording src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -938,12 +901,10 @@ public class Mapper : IMapper
             Count = src.Count
         };
 
-    private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location> src,
-        Shared.Models.Organization organization) =>
+    private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static Location MapTo(Shared.Database.Entities.Location src,
-        Shared.Models.Organization organization) =>
+    private static Location MapTo(Shared.Database.Entities.Location src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -954,8 +915,7 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team> src,
-        Shared.Models.Organization organization) =>
+    private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
     private static Team MapTo(Shared.Database.Entities.Team src, Shared.Models.Organization organization) =>
@@ -969,14 +929,10 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private IEnumerable<JoinInvitation> MapTo(
-        IEnumerable<Shared.Database.Entities.JoinInvitation> src,
-        Shared.Models.Organization organization) =>
+    private IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private JoinInvitation MapTo(
-        Shared.Database.Entities.JoinInvitation src,
-        Shared.Models.Organization organization) =>
+    private JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -997,19 +953,13 @@ public class Mapper : IMapper
             Invitee = MapTo(src.Invitee)
         };
 
-    private Edge<OrganizationMember> MapTo(
-        Edge<Shared.Database.Entities.OrganizationMember> src,
-        Shared.Models.Organization organization) =>
+    private Edge<OrganizationMember> MapTo(Edge<Shared.Database.Entities.OrganizationMember> src, Shared.Models.Organization organization) =>
         new(src.Cursor, MapTo(src.Node, organization));
 
-    private static IEnumerable<AzureTenant> MapTo(
-        IEnumerable<Shared.Database.Entities.AzureTenant> src,
-        Shared.Models.Organization organization) =>
+    private static IEnumerable<AzureTenant> MapTo(IEnumerable<Shared.Database.Entities.AzureTenant> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static AzureTenant MapTo(
-        Shared.Database.Entities.AzureTenant src,
-        Shared.Models.Organization organization)
+    private static AzureTenant MapTo(Shared.Database.Entities.AzureTenant src, Shared.Models.Organization organization)
     {
         var azureTenant = new AzureTenant
         {
@@ -1027,14 +977,10 @@ public class Mapper : IMapper
         return azureTenant;
     }
 
-    private static IEnumerable<AzureTenantMember> MapTo(
-        IEnumerable<Shared.Database.Entities.AzureTenantMember> src,
-        AzureTenant azureTenant) =>
+    private static IEnumerable<AzureTenantMember> MapTo(IEnumerable<Shared.Database.Entities.AzureTenantMember> src, AzureTenant azureTenant) =>
         src.Select(item => MapTo(item, azureTenant));
 
-    private static AzureTenantMember MapTo(
-        Shared.Database.Entities.AzureTenantMember src,
-        AzureTenant azureTenant) =>
+    private static AzureTenantMember MapTo(Shared.Database.Entities.AzureTenantMember src, AzureTenant azureTenant) =>
         new()
         {
             Id = src.Id,
@@ -1067,6 +1013,11 @@ public class Mapper : IMapper
         return new Edge<Tag>(src.Cursor, tag);
     }
 
+    private IEnumerable<OrganizationMemberDetails> MapTo(IEnumerable<OrganizationMember> src) => src.Select(MapTo);
+
+    private static IEnumerable<Tag> MapTo(IEnumerable<Shared.Database.Entities.Tag> src, Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
     private static Tag MapTo(Shared.Database.Entities.Tag src, Shared.Models.Organization organization) =>
         new()
         {
@@ -1086,10 +1037,27 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private IEnumerable<OrganizationMemberDetails> MapTo(IEnumerable<OrganizationMember> src) =>
-        src.Select(MapTo);
-
-    private static IEnumerable<Tag> MapTo(IEnumerable<Shared.Database.Entities.Tag> src,
-        Shared.Models.Organization organization) =>
+    private static IEnumerable<ResourceType> MapTo(IEnumerable<Shared.Database.Entities.ResourceType> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
+
+    private static ResourceType MapTo(Shared.Database.Entities.ResourceType src, Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Description = src.Description,
+            Color = src.Color,
+            SystemType = string.IsNullOrWhiteSpace(src.SystemType)
+                ? null
+                : src.SystemType switch
+                {
+                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
+                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
+            Organization = organization
+        };
 }

@@ -78,9 +78,7 @@ public static class Extensions
             });
     }
 
-    public static IServiceCollection AddSkedularGrpcServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
         var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfiguration>();
         ArgumentNullException.ThrowIfNull(slackConfiguration);
@@ -120,50 +118,42 @@ public static class Extensions
             Console.Error.WriteLine("slackConfiguration.SuccessInstallUrl is null");
         }
 
-        var billingConfiguration =
-            configuration.GetSection(BillingConfiguration.Key).Get<BillingConfiguration>();
+        var billingConfiguration = configuration.GetSection(BillingConfiguration.Key).Get<BillingConfiguration>();
         ArgumentNullException.ThrowIfNull(billingConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(billingConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(billingConfiguration.GrpcUrl);
 
-        var bookingConfiguration =
-            configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
+        var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
         ArgumentNullException.ThrowIfNull(bookingConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(bookingConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(bookingConfiguration.GrpcUrl);
 
-        var customerConfiguration =
-            configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
+        var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
         ArgumentNullException.ThrowIfNull(customerConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
 
-        var locationConfiguration =
-            configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
+        var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
         ArgumentNullException.ThrowIfNull(locationConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
 
-        var notificationConfiguration =
-            configuration.GetSection(NotificationConfiguration.Key).Get<NotificationConfiguration>();
+        var notificationConfiguration = configuration.GetSection(NotificationConfiguration.Key).Get<NotificationConfiguration>();
         ArgumentNullException.ThrowIfNull(notificationConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(notificationConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(notificationConfiguration.GrpcUrl);
 
-        var organizationConfiguration =
-            configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
+        var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
         ArgumentNullException.ThrowIfNull(organizationConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(organizationConfiguration.GrpcUrl);
 
-        var paymentConfiguration =
-            configuration.GetSection(PaymentConfiguration.Key).Get<PaymentConfiguration>();
+        var paymentConfiguration = configuration.GetSection(PaymentConfiguration.Key).Get<PaymentConfiguration>();
         ArgumentNullException.ThrowIfNull(paymentConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(paymentConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(paymentConfiguration.GrpcUrl);
 
-        var teamConfiguration =
-            configuration.GetSection(TeamConfiguration.Key).Get<TeamConfiguration>();
+        var teamConfiguration = configuration.GetSection(TeamConfiguration.Key).Get<TeamConfiguration>();
         ArgumentNullException.ThrowIfNull(teamConfiguration);
         ArgumentException.ThrowIfNullOrWhiteSpace(teamConfiguration.ApiKey);
         ArgumentNullException.ThrowIfNull(teamConfiguration.GrpcUrl);

@@ -24,5 +24,5 @@ public enum OrganizationTagOrderField
 {
     Name,
     Description,
-    TagType
+    Type
 }

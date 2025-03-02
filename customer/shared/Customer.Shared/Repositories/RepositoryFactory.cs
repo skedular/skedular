@@ -12,11 +12,12 @@ public interface IRepositoryFactory
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     ILocationRepository LocationRepository { get; }
     ILocationMemberRepository LocationMemberRepository { get; }
-    IOrganizationTagRepository OrganizationTagRepository { get; }
     IDeskRepository DeskRepository { get; }
     IRoomRepository RoomRepository { get; }
     ITeamRepository TeamRepository { get; }
     ITeamMemberRepository TeamMemberRepository { get; }
+    IOrganizationTagRepository OrganizationTagRepository { get; }
+    IOrganizationResourceTypeRepository OrganizationResourceTypeRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -40,6 +41,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         TeamRepository = new TeamRepository(_dbContext, timeProvider);
         TeamMemberRepository = new TeamMemberRepository(_dbContext, timeProvider);
         OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
+        OrganizationResourceTypeRepository = new OrganizationResourceTypeRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -55,11 +57,12 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public ILocationRepository LocationRepository { get; }
     public ILocationMemberRepository LocationMemberRepository { get; }
-    public IOrganizationTagRepository OrganizationTagRepository { get; }
     public IDeskRepository DeskRepository { get; }
     public IRoomRepository RoomRepository { get; }
     public ITeamRepository TeamRepository { get; }
     public ITeamMemberRepository TeamMemberRepository { get; }
+    public IOrganizationTagRepository OrganizationTagRepository { get; }
+    public IOrganizationResourceTypeRepository OrganizationResourceTypeRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 

@@ -23,19 +23,14 @@ public interface IMapper
     Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
 
-    Shared.Database.Entities.Customer MapToEntity(
-        Customer src,
-        ICollection<Shared.Database.Entities.Identity> identities);
+    Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Shared.Database.Entities.Identity> identities);
 
     Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
         Shared.Database.Entities.Customer dest,
         ICollection<Shared.Database.Entities.Identity> identities);
 
-    IEnumerable<Shared.Database.Entities.Identity> MapToEntity(
-        IEnumerable<Identity> src,
-        Shared.Database.Entities.Customer? customer);
-
+    IEnumerable<Shared.Database.Entities.Identity> MapToEntity(IEnumerable<Identity> src, Shared.Database.Entities.Customer? customer);
     Shared.Database.Entities.Identity MapToEntity(Identity src, Shared.Database.Entities.Customer? customer);
 
     Shared.Database.Entities.Identity MergeToEntity(
@@ -81,15 +76,8 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Location> defaultLocations);
 
     Shared.Models.AzureTenantMember MapTo(User src);
-
-    AzureTenantMember MapTo(
-        Shared.Models.AzureTenantMember src,
-        AzureTenant azureTenant);
-
-    AzureTenantMember MergeToEntity(
-        Shared.Models.AzureTenantMember src,
-        AzureTenantMember dest,
-        AzureTenant azureTenant);
+    AzureTenantMember MapTo(Shared.Models.AzureTenantMember src, AzureTenant azureTenant);
+    AzureTenantMember MergeToEntity(Shared.Models.AzureTenantMember src, AzureTenantMember dest, AzureTenant azureTenant);
 }
 
 public class Mapper : IMapper
@@ -117,8 +105,8 @@ public class Mapper : IMapper
             PhotoUrl192 = customer.PhotoUrl192,
             PhotoUrl512 = customer.PhotoUrl512,
             PhoneNumber = customer.PhoneNumber,
-            Identities = customer.Identities.Select(item =>
-                    new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+            Identities = customer.Identities
+                .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }
@@ -171,11 +159,12 @@ public class Mapper : IMapper
         };
     }
 
-    public Shared.Database.Entities.Customer MapToEntity(Customer src,
-        ICollection<Shared.Database.Entities.Identity> identities) =>
+    public Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Shared.Database.Entities.Identity> identities) =>
         MergeToEntity(src, new Shared.Database.Entities.Customer(), identities);
 
-    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest,
+    public Shared.Database.Entities.Customer MergeToEntity(
+        Customer src,
+        Shared.Database.Entities.Customer dest,
         ICollection<Shared.Database.Entities.Identity> identities)
     {
         dest.Id = src.Id;
@@ -195,8 +184,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<Shared.Database.Entities.Identity>
-        MapToEntity(IEnumerable<Identity> src, Shared.Database.Entities.Customer? customer) =>
+    public IEnumerable<Shared.Database.Entities.Identity> MapToEntity(IEnumerable<Identity> src, Shared.Database.Entities.Customer? customer) =>
         src.Select(identity => MapToEntity(identity, customer));
 
     public Shared.Database.Entities.Identity MapToEntity(Identity src, Shared.Database.Entities.Customer? customer) =>
@@ -224,8 +212,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.Customer customer) =>
         MergeToEntity(src, new OrganizationMember(), organization, customer);
 
-    public Shared.Database.Entities.Location MapToEntity(Location src,
-        Shared.Database.Entities.Organization organization) =>
+    public Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new Shared.Database.Entities.Location(), organization);
 
     public Shared.Database.Entities.Location MergeToEntity(
@@ -253,8 +240,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Booking
-        MapToEntity(Booking src, Shared.Database.Entities.Organization organization) =>
+    public Shared.Database.Entities.Booking MapToEntity(Booking src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new Shared.Database.Entities.Booking(), organization);
 
     public Shared.Database.Entities.Booking MergeToEntity(
@@ -298,6 +284,7 @@ public class Mapper : IMapper
         organization.Teams = MapTo(src.Teams, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
+        organization.ResourceTypes = MapTo(src.ResourceTypes, organization).ToList();
 
         return organization;
     }
@@ -328,19 +315,15 @@ public class Mapper : IMapper
             IsDefaultLocationOnboardingDone = true,
             IsPreferredZoneOnboardingDone = false,
             IsPreferredDeskOnboardingDone = false,
-            DefaultOrganization =
-                new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+            DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 
-        input.Identities.Add(
-            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
+        input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
         input.DefaultLocations.AddRange(defaultLocations.Select(item =>
             new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
-                Id = item.Id,
-                Organization =
-                    new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
+                Id = item.Id, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
             }));
 
         return input;
@@ -361,10 +344,7 @@ public class Mapper : IMapper
     public AzureTenantMember MapTo(Shared.Models.AzureTenantMember src, AzureTenant azureTenant) =>
         MergeToEntity(src, new AzureTenantMember(), azureTenant);
 
-    public AzureTenantMember MergeToEntity(
-        Shared.Models.AzureTenantMember src,
-        AzureTenantMember dest,
-        AzureTenant azureTenant)
+    public AzureTenantMember MergeToEntity(Shared.Models.AzureTenantMember src, AzureTenantMember dest, AzureTenant azureTenant)
     {
         dest.Id = src.Id;
         dest.Email = src.Email;
@@ -520,9 +500,7 @@ public class Mapper : IMapper
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static Shared.Models.OrganizationOffering MapTo(
-        OrganizationOffering src,
-        Shared.Models.Organization organization)
+    private static Shared.Models.OrganizationOffering MapTo(OrganizationOffering src, Shared.Models.Organization organization)
     {
         var organizationOffering = new Shared.Models.OrganizationOffering
         {
@@ -546,7 +524,8 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 OrganizationMember = MapTo(item.OrganizationMember, organization),
                 OrganizationOffering = organizationOffering
-            }).ToList();
+            })
+            .ToList();
 
         return organizationOffering;
     }
@@ -554,8 +533,7 @@ public class Mapper : IMapper
     private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static Booking MapTo(Shared.Database.Entities.Booking src,
-        Shared.Models.Organization organization) =>
+    private static Booking MapTo(Shared.Database.Entities.Booking src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -573,9 +551,7 @@ public class Mapper : IMapper
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static DailyMemberCountRecording MapTo(
-        Shared.Database.Entities.DailyMemberCountRecording src,
-        Shared.Models.Organization organization) =>
+    private static DailyMemberCountRecording MapTo(Shared.Database.Entities.DailyMemberCountRecording src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -587,8 +563,7 @@ public class Mapper : IMapper
             Count = src.Count
         };
 
-    private static IEnumerable<IndustrySubCategory>
-        MapTo(IEnumerable<Shared.Database.Entities.IndustrySubCategory> src) => src.Select(MapTo)!;
+    private static IEnumerable<IndustrySubCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustrySubCategory> src) => src.Select(MapTo)!;
 
     private static IndustrySubCategory? MapTo(Shared.Database.Entities.IndustrySubCategory? src) =>
         src is null
@@ -613,13 +588,10 @@ public class Mapper : IMapper
             Name = src.Name
         };
 
-    private static IEnumerable<Location> MapTo(
-        IEnumerable<Shared.Database.Entities.Location> src,
-        Shared.Models.Organization organization) =>
+    private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static Location MapTo(Shared.Database.Entities.Location src,
-        Shared.Models.Organization organization) =>
+    private static Location MapTo(Shared.Database.Entities.Location src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -630,8 +602,7 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team> src,
-        Shared.Models.Organization organization) =>
+    private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
     private static Team MapTo(Shared.Database.Entities.Team src, Shared.Models.Organization organization) =>
@@ -650,9 +621,7 @@ public class Mapper : IMapper
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static JoinInvitation MapTo(
-        Shared.Database.Entities.JoinInvitation src,
-        Shared.Models.Organization organization) =>
+    private static JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -692,6 +661,30 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             Color = src.Color,
+            Organization = organization
+        };
+
+    private static IEnumerable<ResourceType> MapTo(IEnumerable<Shared.Database.Entities.ResourceType> src, Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static ResourceType MapTo(Shared.Database.Entities.ResourceType src, Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Description = src.Description,
+            Color = src.Color,
+            SystemType = string.IsNullOrWhiteSpace(src.SystemType)
+                ? null
+                : src.SystemType switch
+                {
+                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
+                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
             Organization = organization
         };
 }

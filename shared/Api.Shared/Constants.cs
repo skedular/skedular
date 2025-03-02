@@ -41,9 +41,9 @@ public static class Constants
     public const int MaxDeskNameLength = 200;
     public const int MaxRoomNameLength = 200;
 
-    public const int MaxResourceTypeNameLength = 100;
+    public const int MaxResourceTypeNameLength = 300;
     public const int MaxResourceTypeDescriptionLength = 1000;
-    public const int MaxResourceTypeLength = 50;
+    public const int MaxResourceTypeSystemTypeLength = 50;
     public const int MaxTagNameLength = 100;
     public const int MaxTagDescriptionLength = 1000;
     public const int MaxTagTypeLength = 50;
