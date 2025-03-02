@@ -164,7 +164,7 @@ const RootShell = ({
             breadcrumbs={breadcrumbs}
           />
           {!inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding />}
-          {inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />}
+          {rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />}
           {rootData.myOrganizations.length > 0 && <>{children}</>}
         </Box>
       </Box>
