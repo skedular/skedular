@@ -7,6 +7,7 @@ using Google.Protobuf.WellKnownTypes;
 using Organization.Api.GraphQL;
 using Organization.Shared.Models;
 using AddCustomTagInput = Organization.Api.GraphQL.AddCustomTagInput;
+using AddResourceTypeInput = Organization.Api.GraphQL.AddResourceTypeInput;
 using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
@@ -28,6 +29,8 @@ using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 using UpdateCustomTagInput = Organization.Api.GraphQL.UpdateCustomTagInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
+using ResourceType = Organization.Shared.Models.ResourceType;
+using UpdateResourceTypeInput = Organization.Api.GraphQL.UpdateResourceTypeInput;
 
 namespace Organization.Api.Mappers;
 
@@ -106,6 +109,7 @@ public interface IMapper
     ZoneEdge MapToGrpcResponseZone(Edge<Tag> src);
     Tag MapTo(AddZoneInput src);
     Tag MapTo(UpdateZoneInput src);
+
     IEnumerable<string> MapTo(Offering offering);
 
     ResourceType MapTo(Shared.Database.Entities.ResourceType src);
@@ -121,6 +125,10 @@ public interface IMapper
     OrganizationResourceTypeEdge MapTo(Edge<ResourceType> src);
     ResourceType MapTo(AddResourceTypeInput src);
     ResourceType MapTo(UpdateResourceTypeInput src);
+    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType MapToGrpcResponseResourceType(ResourceType? src);
+    ResourceTypeEdge MapToGrpcResponseResourceType(Edge<ResourceType> src);
+    ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddResourceTypeInput src);
+    ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateResourceTypeInput src);
 }
 
 public class Mapper : IMapper
@@ -622,6 +630,30 @@ public class Mapper : IMapper
     public ResourceType MapTo(UpdateResourceTypeInput src) =>
         new() { Id = src.Id, Name = src.Name, Description = src.Description, Color = src.Color };
 
+    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType MapToGrpcResponseResourceType(ResourceType? src) =>
+        src is null
+            ? new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType()
+            : new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType
+            {
+                Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color
+            };
+
+    public ResourceTypeEdge MapToGrpcResponseResourceType(Edge<ResourceType> src) =>
+        new() { Cursor = src.Cursor, Node = MapToGrpcResponseResourceType(src.Node) };
+
+    public ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddResourceTypeInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+        };
+
+    public ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateResourceTypeInput src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
+
     public CustomTag MapToGrpcResponseCustomTag(Tag? src) =>
         src is null
             ? new CustomTag()
@@ -719,6 +751,10 @@ public class Mapper : IMapper
         IEnumerable<Edge<Shared.Database.Entities.ResourceType>> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
+
+    public ResourceType MapToGrpcResponseZone(ResourceType? src) => throw new NotImplementedException();
+
+    public ResourceTypeEdge MapToGrpcResponseZone(Edge<ResourceType> src) => throw new NotImplementedException();
 
     private IEnumerable<OrganizationMember> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationMember> src,

@@ -16,6 +16,7 @@ using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.Or
 using TermsOfUse = Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse;
 using Version = Api.Shared.Services.Grpc.Skedular.Organization.V1.Version;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Organization.V1.Permissions;
+using ResourceType = Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType;
 
 namespace Organization.Api.Grpc;
 
@@ -27,6 +28,7 @@ public class OrganizationGrpcService(
     IOrganizationMemberService organizationMemberService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITagService tagService,
+    IResourceTypeService resourceTypeService,
     IMapper mapper) : OrganizationService.OrganizationServiceBase
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
@@ -75,7 +77,8 @@ public class OrganizationGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Admin_AddMember(
-        Admin_AddMemberInput request, ServerCallContext context)
+        Admin_AddMemberInput request,
+        ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
@@ -274,5 +277,72 @@ public class OrganizationGrpcService(
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponseZone(await tagService.DeleteAsync(request.Id, context.CancellationToken));
+    }
+
+    public override async Task<ResourceTypeConnection> GetPaginatedResourceTypes(GetPaginatedResourceTypesInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        var (paginatedInfo, edges, totalCount) = await resourceTypeService.GetPaginatedResourceTypesAsync(
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new ResourceTypeSearchCriteria(request.Where.OrganizationId, request.Where.NameContains),
+            request.OrderBy.Select(item =>
+            {
+                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
+                    ? OrderDirection.Ascending
+                    : OrderDirection.Descending;
+                var field = item.Field switch
+                {
+                    ResourceTypeOrderField.ResourceTypeName => OrganizationResourceTypeOrderField.Name,
+                    ResourceTypeOrderField.ResourceTypeDescription => OrganizationResourceTypeOrderField.Description,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                return new ResourceTypeOrder(direction, field);
+            }).ToList(),
+            context.CancellationToken);
+
+        var connection = new ResourceTypeConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor.ToSafeString(),
+                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+            },
+            TotalCount = totalCount
+        };
+
+        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseResourceType));
+        return connection;
+    }
+
+    public override async Task<ResourceType> GetResourceType(GetResourceTypeInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseResourceType(await resourceTypeService.GetByIdAsync(request.Id, context.CancellationToken));
+    }
+
+    public override async Task<ResourceType> AddResourceType(AddResourceTypeInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseResourceType(await resourceTypeService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+    }
+
+    public override async Task<ResourceType> UpdateResourceType(UpdateResourceTypeInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseResourceType(await resourceTypeService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+    }
+
+    public override async Task<ResourceType> RemoveResourceType(RemoveResourceTypeInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseResourceType(await resourceTypeService.DeleteAsync(request.Id, context.CancellationToken));
     }
 }

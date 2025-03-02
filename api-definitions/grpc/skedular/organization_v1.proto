@@ -26,6 +26,12 @@ service OrganizationService {
     rpc AddZone (AddZoneInput) returns (Zone);
     rpc UpdateZone (UpdateZoneInput) returns (Zone);
     rpc RemoveZone (RemoveZoneInput) returns (Zone);
+
+    rpc GetPaginatedResourceTypes (GetPaginatedResourceTypesInput) returns (ResourceTypeConnection);
+    rpc GetResourceType (GetResourceTypeInput) returns (ResourceType);
+    rpc AddResourceType (AddResourceTypeInput) returns (ResourceType);
+    rpc UpdateResourceType (UpdateResourceTypeInput) returns (ResourceType);
+    rpc RemoveResourceType (RemoveResourceTypeInput) returns (ResourceType);
 }
 
 message VersionInput {
@@ -346,3 +352,70 @@ message UpdateZoneInput {
 message RemoveZoneInput {
     string id = 1;
 }
+
+message ResourceType {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string color = 4;
+    string systemType = 5;
+}
+
+message ResourceTypeConnection {
+    PageInfo pageInfo = 1;
+    repeated ResourceTypeEdge edges = 2;
+    int32 totalCount = 3;
+}
+
+message ResourceTypeEdge {
+    ResourceType node = 1;
+    string cursor = 2;
+}
+
+message GetPaginatedResourceTypesInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    ResourceTypeWhereInput where = 5;
+    repeated ResourceTypeOrderInput orderBy = 6;
+}
+
+message ResourceTypeWhereInput {
+    string organizationId = 1;
+    string nameContains = 2;
+}
+
+message ResourceTypeOrderInput {
+    OrderDirection direction = 1;
+    ResourceTypeOrderField field = 2;
+}
+
+enum ResourceTypeOrderField {
+    ResourceTypeName = 0;
+    ResourceTypeDescription = 1;
+}
+
+message GetResourceTypeInput {
+    string id = 1;
+}
+
+message AddResourceTypeInput {
+    string id = 1;
+    string organizationId = 2;
+    string name = 3;
+    string description = 4;
+    string color = 5;
+}
+
+message UpdateResourceTypeInput {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string color = 4;
+}
+
+message RemoveResourceTypeInput {
+    string id = 1;
+}
+
