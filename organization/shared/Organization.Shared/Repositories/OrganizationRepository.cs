@@ -42,10 +42,8 @@ internal static class OrganizationExtensions
     {
         var updatedQuery = originalQuery
             .Include(query => query.AzureTenants.Where(azureTenant => !azureTenant.DeletedAt.HasValue))
-            .ThenInclude(query =>
-                query.AzureTenantMembers.Where(azureTenantMember => !azureTenantMember.DeletedAt.HasValue))
-            .Include(query =>
-                query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.AzureTenantMembers.Where(azureTenantMember => !azureTenantMember.DeletedAt.HasValue))
+            .Include(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.TermsOfUse)
@@ -180,8 +178,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         await DbContext.Organization
             .AddDependentObjects(false)
             .FirstOrDefaultAsync(
-                query => !query.DeletedAt.HasValue &&
-                         query.AzureTenants.Any(azureTenant => azureTenant.Id == azureTenantId),
+                query => !query.DeletedAt.HasValue && query.AzureTenants.Any(azureTenant => azureTenant.Id == azureTenantId),
                 cancellationToken);
 
     public async Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken) =>
@@ -197,12 +194,11 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         return DbContext.Organization.Update(organization).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Organization>>, int)>
-        GetPaginatedOrganizationsAsync(
-            PaginationInputParam paginationInputParam,
-            OrganizationSearchCriteria searchCriteria,
-            ICollection<OrganizationOrder> orderByFields,
-            CancellationToken cancellationToken) =>
+    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Organization>>, int)> GetPaginatedOrganizationsAsync(
+        PaginationInputParam paginationInputParam,
+        OrganizationSearchCriteria searchCriteria,
+        ICollection<OrganizationOrder> orderByFields,
+        CancellationToken cancellationToken) =>
         (await DbContext.Organization
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)

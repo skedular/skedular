@@ -297,12 +297,12 @@ public class Mapper : IMapper
         organization.Locations = MapTo(src.Locations, organization).ToList();
         organization.Teams = MapTo(src.Teams, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
+        organization.Tags = MapTo(src.Tags, organization).ToList();
 
         return organization;
     }
 
-    public IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src) =>
-        src.Select(MapTo);
+    public IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src) => src.Select(MapTo);
 
     public Admin_AddIdentityInput MapTo(AzureTenantMember src, string customerId) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
@@ -434,12 +434,12 @@ public class Mapper : IMapper
             Invitee = MapTo(src.Invitee)
         };
 
-    private static IEnumerable<Shared.Models.OrganizationMember> MapTo(IEnumerable<OrganizationMember> src,
+    private static IEnumerable<Shared.Models.OrganizationMember> MapTo(
+        IEnumerable<OrganizationMember> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static Shared.Models.OrganizationMember
-        MapTo(OrganizationMember src, Shared.Models.Organization organization) =>
+    private static Shared.Models.OrganizationMember MapTo(OrganizationMember src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,
@@ -489,8 +489,7 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList()
             };
 
-    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) =>
-        src.Select(MapTo);
+    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
         new()
@@ -552,8 +551,7 @@ public class Mapper : IMapper
         return organizationOffering;
     }
 
-    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src,
-        Shared.Models.Organization organization) =>
+    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
     private static Booking MapTo(Shared.Database.Entities.Booking src,
@@ -673,5 +671,27 @@ public class Mapper : IMapper
             Organization = organization,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
+        };
+
+    private static IEnumerable<Tag> MapTo(IEnumerable<Shared.Database.Entities.Tag> src, Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
+
+    private static Tag MapTo(Shared.Database.Entities.Tag src, Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Description = src.Description,
+            Type = src.Type switch
+            {
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
+                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Color = src.Color,
+            Organization = organization
         };
 }
