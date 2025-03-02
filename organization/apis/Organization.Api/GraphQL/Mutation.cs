@@ -186,10 +186,7 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?> AddZoneAsync(
-        AddZoneInput input,
-        [Service] ITagService tagService,
-        CancellationToken cancellationToken)
+    public async Task<OrganizationTagPayload?> AddZoneAsync(AddZoneInput input, [Service] ITagService tagService, CancellationToken cancellationToken)
     {
         var tag = await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken);
         return new OrganizationTagPayload { ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(tag)! };
@@ -223,5 +220,57 @@ public class Mutation(IMapper mapper)
     {
         var tags = await tagService.DeleteAsync(input.Ids, cancellationToken);
         return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray()! };
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationResourceTypePayload?> AddResourceTypeAsync(
+        AddResourceTypeInput input,
+        [Service] IResourceTypeService resourceTypeService,
+        CancellationToken cancellationToken)
+    {
+        var resourceType = await resourceTypeService.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        return new OrganizationResourceTypePayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationResourceType = mapper.MapTo(resourceType)!
+        };
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationResourceTypePayload?> UpdateResourceTypeAsync(
+        UpdateResourceTypeInput input,
+        [Service] IResourceTypeService resourceTypeService,
+        CancellationToken cancellationToken)
+    {
+        var resourceType = await resourceTypeService.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        return new OrganizationResourceTypePayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationResourceType = mapper.MapTo(resourceType)!
+        };
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationResourceTypePayload?> DeleteResourceTypeAsync(
+        DeleteResourceTypeInput input,
+        [Service] IResourceTypeService resourceTypeService,
+        CancellationToken cancellationToken)
+    {
+        var resourceType = await resourceTypeService.DeleteAsync(input.Id, cancellationToken);
+        return new OrganizationResourceTypePayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationResourceType = mapper.MapTo(resourceType)!
+        };
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationResourceTypesPayload?> DeleteResourceTypesAsync(
+        DeleteResourceTypesInput input,
+        [Service] IResourceTypeService resourceTypeService,
+        CancellationToken cancellationToken)
+    {
+        var resourceTypes = await resourceTypeService.DeleteAsync(input.Ids, cancellationToken);
+        return new OrganizationResourceTypesPayload
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationResourceTypes = resourceTypes.Select(mapper.MapTo).ToArray()!
+        };
     }
 }

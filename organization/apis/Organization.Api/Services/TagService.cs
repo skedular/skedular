@@ -16,12 +16,7 @@ namespace Organization.Api.Services;
 public interface ITagService
 {
     Task<Tag?> GetByIdAsync(string tagId, CancellationToken cancellationToken);
-
-    Task<Tag> AddAsync(
-        Tag tag,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken);
-
+    Task<Tag> AddAsync(Tag tag, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Tag> UpdateAsync(Tag tag, CancellationToken cancellationToken);
     Task<Tag> DeleteAsync(string tagId, CancellationToken cancellationToken);
     Task<ICollection<Tag>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
@@ -54,8 +49,7 @@ public class TagService(
             throw new OrganizationTagNotFound();
         }
 
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken);
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken);
         if (existingOrganization is null)
         {
             throw new OrganizationNotFound();
@@ -69,10 +63,7 @@ public class TagService(
         return mapper.MapTo(tag);
     }
 
-    public async Task<Tag> AddAsync(
-        Tag tag,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken)
+    public async Task<Tag> AddAsync(Tag tag, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tag.Organization.Id);
 
@@ -95,8 +86,7 @@ public class TagService(
             tag.Id = randomHelper.Generate();
         }
 
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken);
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken);
         if (existingOrganization is null)
         {
             throw new OrganizationNotFound();
@@ -178,8 +168,7 @@ public class TagService(
             throw new OrganizationTagNotFound();
         }
 
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken);
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(tag.Organization.Id, cancellationToken);
         if (existingOrganization is null)
         {
             throw new OrganizationNotFound();
@@ -218,11 +207,9 @@ public class TagService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var tags = await repositoryFactory.TagRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = tags.Select(item => item.Organization.Id).ToList();
-        var existingOrganizations =
-            await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
 
-        if (existingOrganizations.Any(existingOrganization =>
-                !organizationAuthorizationService.CanModify(existingOrganization, customer)))
+        if (existingOrganizations.Any(existingOrganization => !organizationAuthorizationService.CanModify(existingOrganization, customer)))
         {
             throw new Unauthorized();
         }
@@ -257,9 +244,7 @@ public class TagService(
             CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId,
-                cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -270,12 +255,11 @@ public class TagService(
             throw new Unauthorized();
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await repositoryFactory.TagRepository.GetPaginatedTagsAsync(
-                paginationInputParam,
-                searchCriteria,
-                orderByFields,
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.TagRepository.GetPaginatedTagsAsync(
+            paginationInputParam,
+            searchCriteria,
+            orderByFields,
+            cancellationToken);
 
         return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(organization)).ToList(), totalCount);
     }
@@ -286,8 +270,7 @@ public class TagService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTag.Organization.Id, cancellationToken);
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTag.Organization.Id, cancellationToken);
         if (existingOrganization is null)
         {
             throw new OrganizationNotFound();
@@ -335,9 +318,7 @@ public class TagService(
             repositoryFactory.TagRepository.UnitOfWork,
             cancellationToken);
 
-        tag =
-            mapper.MapTo(
-                repositoryFactory.TagRepository.Update(mapper.MergeTo(tag, existingTag, existingOrganization)));
+        tag = mapper.MapTo(repositoryFactory.TagRepository.Update(mapper.MergeTo(tag, existingTag, existingOrganization)));
 
         await organizationOutboxPublisher.PublishOrganizationAsync(
             [mapper.MapTo(existingOrganization)],

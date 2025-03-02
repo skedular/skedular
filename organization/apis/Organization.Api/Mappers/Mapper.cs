@@ -89,7 +89,6 @@ public interface IMapper
     Tag MapTo(Shared.Database.Entities.Tag src);
     Shared.Database.Entities.Tag MapTo(Tag src, Shared.Database.Entities.Organization organization);
     Shared.Database.Entities.Tag MergeTo(Tag src, Shared.Database.Entities.Tag dest, Shared.Database.Entities.Organization organization);
-
     IEnumerable<Edge<Tag>> MapTo(IEnumerable<Edge<Shared.Database.Entities.Tag>> src, Shared.Models.Organization organization);
     Tag MapTo(AddCustomTagInput src);
     Tag MapTo(UpdateCustomTagInput src);
@@ -108,6 +107,20 @@ public interface IMapper
     Tag MapTo(AddZoneInput src);
     Tag MapTo(UpdateZoneInput src);
     IEnumerable<string> MapTo(Offering offering);
+
+    ResourceType MapTo(Shared.Database.Entities.ResourceType src);
+    Shared.Database.Entities.ResourceType MapTo(ResourceType src, Shared.Database.Entities.Organization organization);
+
+    Shared.Database.Entities.ResourceType MergeTo(
+        ResourceType src,
+        Shared.Database.Entities.ResourceType dest,
+        Shared.Database.Entities.Organization organization);
+
+    IEnumerable<Edge<ResourceType>> MapTo(IEnumerable<Edge<Shared.Database.Entities.ResourceType>> src, Shared.Models.Organization organization);
+    OrganizationResourceTypeDetails? MapTo(ResourceType? src);
+    OrganizationResourceTypeEdge MapTo(Edge<ResourceType> src);
+    ResourceType MapTo(AddResourceTypeInput src);
+    ResourceType MapTo(UpdateResourceTypeInput src);
 }
 
 public class Mapper : IMapper
@@ -582,6 +595,33 @@ public class Mapper : IMapper
 
     public OrganizationTagEdge MapTo(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
 
+    public OrganizationResourceTypeDetails? MapTo(ResourceType? src) =>
+        src is null
+            ? null
+            : new OrganizationResourceTypeDetails
+            {
+                Id = src.Id,
+                Name = src.Name,
+                Description = src.Description,
+                Color = src.Color,
+                SystemType = src.SystemType
+            };
+
+    public OrganizationResourceTypeEdge MapTo(Edge<ResourceType> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
+
+    public ResourceType MapTo(AddResourceTypeInput src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            Name = src.Name,
+            Description = src.Description,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Color = src.Color
+        };
+
+    public ResourceType MapTo(UpdateResourceTypeInput src) =>
+        new() { Id = src.Id, Name = src.Name, Description = src.Description, Color = src.Color };
+
     public CustomTag MapToGrpcResponseCustomTag(Tag? src) =>
         src is null
             ? new CustomTag()
@@ -632,6 +672,53 @@ public class Mapper : IMapper
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Type = OrganizationTagType.Zone };
 
     public IEnumerable<string> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
+
+    public ResourceType MapTo(Shared.Database.Entities.ResourceType src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Description = src.Description,
+            Color = src.Color,
+            SystemType = src.SystemType is null
+                ? null
+                : src.SystemType switch
+                {
+                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
+                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+        };
+
+    public Shared.Database.Entities.ResourceType MapTo(ResourceType src, Shared.Database.Entities.Organization organization) =>
+        MergeTo(src, new Shared.Database.Entities.ResourceType(), organization);
+
+    public Shared.Database.Entities.ResourceType MergeTo(
+        ResourceType src,
+        Shared.Database.Entities.ResourceType dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.Name = src.Name;
+        dest.Description = src.Description;
+        dest.Color = src.Color;
+        dest.SystemType = src.SystemType switch
+        {
+            OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
+            OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        dest.Organization = organization;
+        return dest;
+    }
+
+    public IEnumerable<Edge<ResourceType>> MapTo(
+        IEnumerable<Edge<Shared.Database.Entities.ResourceType>> src,
+        Shared.Models.Organization organization) =>
+        src.Select(item => MapTo(item, organization));
 
     private IEnumerable<OrganizationMember> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationMember> src,
@@ -1060,4 +1147,11 @@ public class Mapper : IMapper
                 },
             Organization = organization
         };
+
+    private Edge<ResourceType> MapTo(Edge<Shared.Database.Entities.ResourceType> src, Shared.Models.Organization organization)
+    {
+        var tag = MapTo(src.Node);
+        tag.Organization = organization;
+        return new Edge<ResourceType>(src.Cursor, tag);
+    }
 }

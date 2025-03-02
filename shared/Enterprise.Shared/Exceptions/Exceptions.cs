@@ -72,3 +72,7 @@ public class TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup()
 
 public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
     : Exception("Team Primary location organization does not match team organization");
+
+public class OrganizationResourceTypeNotFound() : Exception("Organization resource type not found");
+
+public class ResourceTypeWithSameNameExist() : Exception("Resource type with same name exist");

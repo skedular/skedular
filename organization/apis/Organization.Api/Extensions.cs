@@ -24,6 +24,7 @@ public static class Extensions
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<IOrganizationInvitationService, OrganizationInvitationService>()
             .AddScoped<ITagService, TagService>()
+            .AddScoped<IResourceTypeService, ResourceTypeService>()
             .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<IOrganizationSsoService, OrganizationSsoService>();
 

@@ -258,7 +258,7 @@ public class Query(IMapper mapper)
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public OrganizationOfferingDetails? OrganizationOffering(string code, CancellationToken cancellationToken)
+    public OrganizationOfferingDetails OrganizationOffering(string code)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(code);
 
@@ -277,6 +277,35 @@ public class Query(IMapper mapper)
             EarlyBird = matchedOffering.IsEarlyBirdOffering()
         };
     }
+
+    [UseResolverScope]
+    public async Task<OrganizationResourceTypeConnection?> ResourceTypesAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        OrganizationResourceTypeWhereInput where,
+        OrganizationResourceTypeOrderInput[]? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IResourceTypeService resourceTypeService,
+        CancellationToken cancellationToken) =>
+        await OrganizationResourceTypesAsync(
+            after,
+            first,
+            before,
+            last,
+            new ResourceTypeSearchCriteria(where.OrganizationId, where.NameContains),
+            orderBy,
+            cachedCustomerService,
+            resourceTypeService,
+            cancellationToken);
+
+    [UseResolverScope]
+    public async Task<OrganizationResourceTypeDetails?> ResourceTypeAsync(
+        string id,
+        [Service] IResourceTypeService resourceTypeService,
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await resourceTypeService.GetByIdAsync(id, cancellationToken));
 
     private async Task<OrganizationTagConnection?> OrganizationTagsAsync(
         string? after,
@@ -307,6 +336,48 @@ public class Query(IMapper mapper)
             cancellationToken);
 
         return new OrganizationTagConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor,
+                EndCursor = paginatedInfo.EndCursor
+            },
+            Edges = edges.Select(mapper.MapTo).ToArray(),
+            TotalCount = totalCount
+        };
+    }
+
+    private async Task<OrganizationResourceTypeConnection?> OrganizationResourceTypesAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        ResourceTypeSearchCriteria resourceTypeSearchCriteria,
+        OrganizationResourceTypeOrderInput[]? orderBy,
+        ICachedCustomerService cachedCustomerService,
+        IResourceTypeService resourceTypeService,
+        CancellationToken cancellationToken)
+    {
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        var (paginatedInfo, edges, totalCount) = await resourceTypeService.GetPaginatedResourceTypesAsync(
+            new PaginationInputParam(after, first, before, last),
+            resourceTypeSearchCriteria,
+            orderBy is null
+                ? []
+                : orderBy.Select(item =>
+                {
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
+                    return new ResourceTypeOrder(direction, item.Field);
+                }).ToList(),
+            cancellationToken);
+
+        return new OrganizationResourceTypeConnection
         {
             PageInfo = new PageInfo
             {

@@ -48,8 +48,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         IndustrySubCategoryRepository = new IndustrySubCategoryRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
-        OrganizationOfferingActiveMemberRepository =
-            new OrganizationOfferingActiveMemberRepository(_dbContext, timeProvider);
+        OrganizationOfferingActiveMemberRepository = new OrganizationOfferingActiveMemberRepository(_dbContext, timeProvider);
         OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);

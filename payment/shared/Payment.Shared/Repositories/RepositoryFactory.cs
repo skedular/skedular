@@ -28,10 +28,8 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
-        OrganizationOfferingStripePaymentIntentRepository =
-            new OrganizationOfferingStripePaymentIntentRepository(_dbContext, timeProvider);
-        OrganizationStripePaymentMethodRepository =
-            new OrganizationStripePaymentMethodRepository(_dbContext, timeProvider);
+        OrganizationOfferingStripePaymentIntentRepository = new OrganizationOfferingStripePaymentIntentRepository(_dbContext, timeProvider);
+        OrganizationStripePaymentMethodRepository = new OrganizationStripePaymentMethodRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()

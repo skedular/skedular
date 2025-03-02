@@ -484,3 +484,86 @@ public class OrganizationActiveOfferingDetails : Node
     [GraphQLName("earlyBird")] public bool EarlyBird { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
+
+[GraphQLName("AddResourceTypeInput")]
+public class AddResourceTypeInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string? Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+}
+
+[GraphQLName("UpdateResourceTypeInput")]
+public class UpdateResourceTypeInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+}
+
+[GraphQLName("DeleteResourceTypeInput")]
+public class DeleteResourceTypeInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("DeleteResourceTypesInput")]
+public class DeleteResourceTypesInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; } = [];
+}
+
+[GraphQLName("OrganizationResourceTypeConnection")]
+public class OrganizationResourceTypeConnection : Connection<OrganizationResourceTypeEdge>;
+
+[GraphQLName("OrganizationResourceTypeDetails")]
+public class OrganizationResourceTypeDetails : Node
+{
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+    [GraphQLName("systemType")] public OrganizationResourceTypeSystemType? SystemType { get; set; }
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
+}
+
+[GraphQLName("OrganizationResourceTypeEdge")]
+public class OrganizationResourceTypeEdge : Edge<OrganizationResourceTypeDetails>;
+
+[GraphQLName("OrganizationResourceTypeOrderInput")]
+public class OrganizationResourceTypeOrderInput
+{
+    [GraphQLName("direction")] public OrderDirection Direction { get; set; }
+    [GraphQLName("field")] public OrganizationResourceTypeOrderField Field { get; set; }
+}
+
+[GraphQLName("OrganizationResourceTypePayload")]
+public class OrganizationResourceTypePayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("organizationResourceType")]
+    public OrganizationResourceTypeDetails OrganizationResourceType { get; set; }
+}
+
+[GraphQLName("OrganizationResourceTypeWhereInput")]
+public class OrganizationResourceTypeWhereInput
+{
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("nameContains")] public string? NameContains { get; set; }
+}
+
+[GraphQLName("OrganizationResourceTypesPayload")]
+public class OrganizationResourceTypesPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+
+    [GraphQLName("organizationResourceTypes")]
+    public OrganizationResourceTypeDetails[] OrganizationResourceTypes { get; set; } = [];
+}
