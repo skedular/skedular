@@ -87,11 +87,7 @@ public class TagService(
             var existingTag = await repositoryFactory.TagRepository.GetByIdAsync(tag.Id, cancellationToken);
             if (existingTag is not null)
             {
-                return await UpdateInternalAsync(
-                    tag,
-                    existingTag,
-                    customer,
-                    cancellationToken);
+                return await UpdateInternalAsync(tag, existingTag, customer, cancellationToken);
             }
         }
         else

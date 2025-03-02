@@ -89,11 +89,7 @@ public class LocationService(
                     throw new CustomerNotFound();
                 }
 
-                return await UpdateInternalAsync(
-                    location,
-                    existingLocation,
-                    customer,
-                    cancellationToken);
+                return await UpdateInternalAsync(location, existingLocation, customer, cancellationToken);
             }
         }
         else
@@ -266,6 +262,7 @@ public class LocationService(
         {
             var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
                 organizationId,
+                false,
                 false,
                 false,
                 cancellationToken);

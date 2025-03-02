@@ -260,7 +260,9 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService
         {
             var fromSeconds = TimeSpan.FromSeconds(_retryDelaySeconds.Value - secondsDifference);
 
+            _consumer.Pause([consumeResult.TopicPartition]);
             await Task.Delay(fromSeconds, cancellationToken);
+            _consumer.Resume([consumeResult.TopicPartition]);
         }
         else
         {

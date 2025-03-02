@@ -8,6 +8,6 @@ public enum OrganizationResourceTypeSystemType
 
 public static class OrganizationResourceTypeSystemTypeConstants
 {
-    public const string Desk = "Desk";
-    public const string Room = "Room";
+    public const string Desk = "DESK";
+    public const string Room = "ROOM";
 }

@@ -75,7 +75,7 @@ public class LocationSubscriber(
     {
         var organization = location.Organization is null
             ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, true, true, cancellationToken);
+            : await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, true, true, true, cancellationToken);
 
         existingLocation = existingLocation is null
             ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, organization))

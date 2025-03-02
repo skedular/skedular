@@ -72,6 +72,7 @@ public class TeamSubscriber(
                 team.Organization.Id,
                 true,
                 true,
+                true,
                 cancellationToken);
 
         existingTeam = existingTeam is null

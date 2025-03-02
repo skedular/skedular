@@ -41,6 +41,7 @@ public class OrganizationSubscriber(
                         organization.Id,
                         true,
                         true,
+                        true,
                         cancellationToken);
                     if (existingOrganization is not null &&
                         existingOrganization.EventRaisedAt > organization.EventRaisedAt)

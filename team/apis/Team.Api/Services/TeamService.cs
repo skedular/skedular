@@ -231,14 +231,7 @@ public class TeamService(
             }
         }
 
-        return await UpdateInternalAsync(
-            team,
-            existingTeam,
-            customer,
-            organization,
-            primaryLocation,
-            updateTeamMembers,
-            cancellationToken);
+        return await UpdateInternalAsync(team, existingTeam, customer, organization, primaryLocation, updateTeamMembers, cancellationToken);
     }
 
     public async Task<Shared.Models.Team> DeleteAsync(

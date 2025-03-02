@@ -82,6 +82,7 @@ public class LocationSubscriber(
                 location.Organization.Id,
                 true,
                 true,
+                true,
                 cancellationToken);
 
         existingLocation = existingLocation is null

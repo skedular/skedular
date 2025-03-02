@@ -148,6 +148,7 @@ public class BookingService(
                 existingBooking.Organization.Id,
                 false,
                 false,
+                false,
                 cancellationToken);
             if (organization is null)
             {
@@ -579,7 +580,8 @@ public class BookingService(
             return null;
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.Organization.Id, false, false, cancellationToken);
+        var organization =
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.Organization.Id, false, false, false, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -757,7 +759,7 @@ public class BookingService(
         Shared.Models.Customer customer,
         CancellationToken cancellationToken)
     {
-        var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, false, false, cancellationToken);
+        var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, false, false, false, cancellationToken);
 
         return organizations.ToDictionary(
             item => item.Id,
@@ -783,7 +785,8 @@ public class BookingService(
     {
         if (booking.Organization is not null)
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.Organization.Id, false, false, cancellationToken);
+            var organization =
+                await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.Organization.Id, false, false, false, cancellationToken);
             if (organization is null)
             {
                 throw new OrganizationNotFound();

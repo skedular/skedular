@@ -22,9 +22,7 @@ public class OrganizationSubscriber(
             case Type.OrganizationUpserted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                        organization.Id,
-                        cancellationToken);
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
                     if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
@@ -43,9 +41,9 @@ public class OrganizationSubscriber(
                         organization.Id,
                         true,
                         true,
+                        true,
                         cancellationToken);
-                    if (existingOrganization is not null &&
-                        existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                    if (existingOrganization is not null && existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
 
@@ -71,13 +69,13 @@ public class OrganizationSubscriber(
     }
 
     private async Task HandleOrganizationUpsertedEventAsync(
-        Shared.Models.Organization organization, 
+        Shared.Models.Organization organization,
         Organization? existingOrganization,
         CancellationToken cancellationToken)
     {
         existingOrganization = existingOrganization is null
             ? repositoryFactory.OrganizationRepository.Add(mapper.MapToEntity(organization))
-            : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization,existingOrganization));
+            : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
 
         existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
         existingOrganization = RebuildOrganizationResourceTypes(organization, existingOrganization);
@@ -163,7 +161,7 @@ public class OrganizationSubscriber(
 
         return existingOrganization;
     }
-    
+
     private Organization RebuildOrganizationResourceTypes(Shared.Models.Organization organization, Organization existingOrganization)
     {
         var itemsToRemove = existingOrganization.ResourceTypes.Where(tag => organization.ResourceTypes.All(item => item.Id != tag.Id)).ToList();
@@ -182,7 +180,7 @@ public class OrganizationSubscriber(
             .ToList();
         var addedItems = organization.ResourceTypes
             .Where(organizationResourceType => existingOrganization.ResourceTypes.All(item => item.Id != organizationResourceType.Id))
-            .Select(organizationResourceType => 
+            .Select(organizationResourceType =>
                 repositoryFactory.OrganizationResourceTypeRepository.Add(mapper.MapToEntity(organizationResourceType, existingOrganization)))
             .ToList();
 

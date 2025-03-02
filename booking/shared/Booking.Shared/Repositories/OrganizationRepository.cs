@@ -13,12 +13,14 @@ public interface IOrganizationRepository : IRepository<Organization>
         string customerId,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
+        bool includeDeletedOrganizationResourceTypes,
         CancellationToken cancellationToken);
 
     Task<Organization?> GetByIdAsync(
         string id,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
+        bool includeDeletedOrganizationResourceTypes,
         CancellationToken cancellationToken);
 
     Organization Add(Organization organization);
@@ -33,13 +35,14 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdAsync(id, true, true, cancellationToken))!;
+        return (await GetByIdAsync(id, true, true, true, cancellationToken))!;
     }
 
     public async Task<ICollection<Organization>> GetByCustomerIdAsync(
         string customerId,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
+        bool includeDeletedOrganizationResourceTypes,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query =>
@@ -50,8 +53,8 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
                 organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query => query.Tags.Where(
-                organizationTag => includeDeletedOrganizationTags || !organizationTag.DeletedAt.HasValue))
+            .Include(query => query.Tags.Where(organizationTag => includeDeletedOrganizationTags || !organizationTag.DeletedAt.HasValue))
+            .Include(query => query.ResourceTypes.Where(resourceType => includeDeletedOrganizationResourceTypes || !resourceType.DeletedAt.HasValue))
             .Include(query => query.Locations)
             .Include(query => query.Teams)
             .Include(query => query.DefaultedByCustomers)
@@ -61,14 +64,15 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
         string id,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
+        bool includeDeletedOrganizationResourceTypes,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Include(query => query.OrganizationMembers.Where(
                 organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query => query.Tags.Where(
-                organizationTag => includeDeletedOrganizationTags || !organizationTag.DeletedAt.HasValue))
+            .Include(query => query.Tags.Where(organizationTag => includeDeletedOrganizationTags || !organizationTag.DeletedAt.HasValue))
+            .Include(query => query.ResourceTypes.Where(resourceType => includeDeletedOrganizationResourceTypes || !resourceType.DeletedAt.HasValue))
             .Include(query => query.Locations)
             .Include(query => query.Teams)
             .Include(query => query.DefaultedByCustomers)

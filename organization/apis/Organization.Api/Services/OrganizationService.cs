@@ -19,6 +19,7 @@ using IndustrySubCategory = Organization.Shared.Database.Entities.IndustrySubCat
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
+using ResourceType = Organization.Shared.Database.Entities.ResourceType;
 
 namespace Organization.Api.Services;
 
@@ -30,10 +31,7 @@ public interface IOrganizationService
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Organization> UpdateAsync(
-        Shared.Models.Organization organization,
-        CancellationToken cancellationToken);
-
+    Task<Shared.Models.Organization> UpdateAsync(Shared.Models.Organization organization, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> DeleteAsync(string organizationId, CancellationToken cancellationToken);
     Task<Shared.Models.Organization?> GetByIdAsync(string organizationId, CancellationToken cancellationToken);
     Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken);
@@ -81,8 +79,7 @@ public class OrganizationService(
 
         if (!string.IsNullOrWhiteSpace(organization.Id))
         {
-            var existingOrganization =
-                await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
+            var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
             if (existingOrganization is not null)
             {
                 if (!ignoreAuthorizationCheck && customer is null)
@@ -90,11 +87,7 @@ public class OrganizationService(
                     throw new CustomerNotFound();
                 }
 
-                return await UpdateInternalAsync(
-                    organization,
-                    existingOrganization,
-                    customer,
-                    cancellationToken);
+                return await UpdateInternalAsync(organization, existingOrganization, customer, cancellationToken);
             }
         }
         else
@@ -137,9 +130,7 @@ public class OrganizationService(
         }
 
         var now = timeProvider.GetUtcNow();
-        var finalOfferingCode = string.IsNullOrWhiteSpace(offeringCode)
-            ? OfferingCode.FreeTierV1
-            : offeringCode.ToOfferingCode();
+        var finalOfferingCode = string.IsNullOrWhiteSpace(offeringCode) ? OfferingCode.FreeTierV1 : offeringCode.ToOfferingCode();
         var organizationOffering = new OrganizationOffering
         {
             Id = randomHelper.Generate(),
@@ -152,9 +143,30 @@ public class OrganizationService(
             UnitPrice = finalOfferingCode.GetOffering().UnitPrice
         };
 
+        var systemTypeResourceTypes = new List<ResourceType>
+        {
+            new()
+            {
+                Id = randomHelper.Generate(),
+                CreatedAt = now,
+                Organization = organizationEntity,
+                Name = "Desk",
+                SystemType = OrganizationResourceTypeSystemTypeConstants.Desk
+            },
+            new()
+            {
+                Id = randomHelper.Generate(),
+                CreatedAt = now,
+                Organization = organizationEntity,
+                Name = "Room",
+                SystemType = OrganizationResourceTypeSystemTypeConstants.Room
+            }
+        };
+
         organizationEntity.HasAttachedPaymentMethod = false;
         organizationEntity.OrganizationMembers = organizationMembers;
         organizationEntity.OrganizationOfferings = [organizationOffering];
+        organizationEntity.ResourceTypes = systemTypeResourceTypes;
         organizationEntity = repositoryFactory.OrganizationRepository.Add(organizationEntity);
 
         repositoryFactory.OrganizationMemberRepository.AddRange(organizationMembers);
@@ -171,15 +183,12 @@ public class OrganizationService(
         return organization;
     }
 
-    public async Task<Shared.Models.Organization> UpdateAsync(
-        Shared.Models.Organization organization,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> UpdateAsync(Shared.Models.Organization organization, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organization.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
         if (existingOrganization is null)
         {
             throw new OrganizationNotFound();
@@ -188,15 +197,12 @@ public class OrganizationService(
         return await UpdateInternalAsync(organization, existingOrganization, customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Organization> DeleteAsync(
-        string organizationId,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> DeleteAsync(string organizationId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -222,17 +228,14 @@ public class OrganizationService(
         return deletedOrganization;
     }
 
-    public async Task<Shared.Models.Organization?> GetByIdAsync(
-        string organizationId,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization?> GetByIdAsync(string organizationId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(organizationId))
         {
             return null;
         }
 
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)
         {
             return null;
@@ -261,13 +264,10 @@ public class OrganizationService(
         return await EnrichOrganizationAsync(customer, organization, cancellationToken);
     }
 
-    public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(
-        CancellationToken cancellationToken)
+    public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(
-            customer.Id,
-            cancellationToken);
+        var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
 
         var result = new List<Shared.Models.Organization>();
         foreach (var organization in organizations)
@@ -278,31 +278,27 @@ public class OrganizationService(
         return result;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int)>
-        GetPaginatedOrganizationsAsync(
-            PaginationInputParam paginationInputParam,
-            OrganizationSearchCriteria searchCriteria,
-            ICollection<OrganizationOrder> orderByFields,
-            CancellationToken cancellationToken)
+    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
+        PaginationInputParam paginationInputParam,
+        OrganizationSearchCriteria searchCriteria,
+        ICollection<OrganizationOrder> orderByFields,
+        CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         // Ensure we do not return other customer organization by forcing CustomerId as search criteria
         searchCriteria.CustomerId = customer.Id;
 
-        var (paginatedInfo, edges, totalCount) =
-            await repositoryFactory.OrganizationRepository.GetPaginatedOrganizationsAsync(
-                paginationInputParam,
-                searchCriteria,
-                orderByFields,
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.OrganizationRepository.GetPaginatedOrganizationsAsync(
+            paginationInputParam,
+            searchCriteria,
+            orderByFields,
+            cancellationToken);
 
         var mappedOrganizations = new List<Edge<Shared.Models.Organization>>();
         foreach (var edge in edges)
         {
             mappedOrganizations.Add(
-                new Edge<Shared.Models.Organization>(
-                    edge.Cursor,
-                    await EnrichOrganizationAsync(customer, edge.Node, cancellationToken)));
+                new Edge<Shared.Models.Organization>(edge.Cursor, await EnrichOrganizationAsync(customer, edge.Node, cancellationToken)));
         }
 
         return (paginatedInfo, mappedOrganizations, totalCount);
@@ -337,10 +333,8 @@ public class OrganizationService(
                     .AddInclude(query => query.IndustryMainCategory))
                 .ToListAsync(cancellationToken);
 
-        organization =
-            mapper.MapTo(
-                repositoryFactory.OrganizationRepository.Update(
-                    mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)));
+        organization = mapper.MapTo(
+            repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)));
 
         await organizationOutboxPublisher.PublishOrganizationAsync(
             [organization],
@@ -374,8 +368,7 @@ public class OrganizationService(
         mappedOrganization.HasFutureBooking = await repositoryFactory.BookingRepository
             .Query(new Specification<Booking>
             {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && query.Organization.Id == organization.Id && query.From >= now
+                Criteria = query => !query.DeletedAt.HasValue && query.Organization.Id == organization.Id && query.From >= now
             })
             .AnyAsync(cancellationToken);
 
@@ -389,17 +382,15 @@ public class OrganizationService(
                 return await repositoryFactory.OrganizationMemberRepository
                     .Query(new Specification<OrganizationMember>
                     {
-                        Criteria = query =>
-                            !query.DeletedAt.HasValue && query.Organization.Id == organization.Id &&
-                            query.CustomerId == customer.Id
+                        Criteria = query => !query.DeletedAt.HasValue && query.Organization.Id == organization.Id &&
+                                            query.CustomerId == customer.Id
                     })
                     .FirstOrDefaultAsync(cancellationToken);
             });
 
         if (organizationMember is not null)
         {
-            mappedOrganization.IsMyOnboardingDone =
-                organizationMember.IsOrganizationOnboardingDone ?? false;
+            mappedOrganization.IsMyOnboardingDone = organizationMember.IsOrganizationOnboardingDone ?? false;
         }
 
         return mappedOrganization;
