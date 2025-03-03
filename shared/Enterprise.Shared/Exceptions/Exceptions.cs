@@ -76,3 +76,5 @@ public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
 public class OrganizationResourceTypeNotFound() : Exception("Organization resource type not found");
 
 public class ResourceTypeWithSameNameExist() : Exception("Resource type with same name exist");
+
+public class BuiltinOrganizationResourceTypeCannotBeRemoved() : Exception("Built-in organization resource type cannot be removed");

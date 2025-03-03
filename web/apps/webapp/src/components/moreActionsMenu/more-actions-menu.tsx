@@ -50,6 +50,8 @@ export enum MoreActionsMenuOptionType {
   DeleteRoom,
   ActivateRoom,
   DeactivateRoom,
+  EditResourceType,
+  DeleteResourceType,
 }
 
 export type MoreActionsMenuItemType = {
@@ -238,6 +240,16 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.DeactivateRoom]: {
     id: MoreActionsMenuOptionType.DeactivateRoom,
     label: 'Dectivate Room',
+  },
+  [MoreActionsMenuOptionType.EditResourceType]: {
+    id: MoreActionsMenuOptionType.EditResourceType,
+    label: 'Edit Resource Type',
+    icon: <EditIcon />,
+  },
+  [MoreActionsMenuOptionType.DeleteResourceType]: {
+    id: MoreActionsMenuOptionType.DeleteResourceType,
+    label: 'Remove Resource Type',
+    icon: <DeleteIcon color="warning" />,
   },
 };
 

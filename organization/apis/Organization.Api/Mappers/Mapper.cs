@@ -737,12 +737,6 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.Description = src.Description;
         dest.Color = src.Color;
-        dest.SystemType = src.SystemType switch
-        {
-            OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
-            OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
-            _ => throw new ArgumentOutOfRangeException()
-        };
         dest.Organization = organization;
         return dest;
     }
@@ -751,10 +745,6 @@ public class Mapper : IMapper
         IEnumerable<Edge<Shared.Database.Entities.ResourceType>> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
-
-    public ResourceType MapToGrpcResponseZone(ResourceType? src) => throw new NotImplementedException();
-
-    public ResourceTypeEdge MapToGrpcResponseZone(Edge<ResourceType> src) => throw new NotImplementedException();
 
     private IEnumerable<OrganizationMember> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationMember> src,

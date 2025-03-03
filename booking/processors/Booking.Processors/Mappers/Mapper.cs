@@ -590,7 +590,8 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) => throw new NotImplementedException();
+    public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new OrganizationTag(), organization);
 
     public OrganizationResourceType MapToEntity(Shared.Models.OrganizationResourceType src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new OrganizationResourceType(), organization);

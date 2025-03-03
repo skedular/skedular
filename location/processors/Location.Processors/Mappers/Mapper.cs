@@ -91,7 +91,7 @@ public class Mapper : IMapper
             PhotoUrl192 = customer.PhotoUrl192,
             PhotoUrl512 = customer.PhotoUrl512,
             Identities = customer.Identities
-                .Select(item =>new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }
@@ -341,12 +341,14 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
-        dest.SystemType = src.SystemType switch
-        {
-            OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
-            OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        dest.SystemType = src.SystemType is null
+            ? null
+            : src.SystemType switch
+            {
+                OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
+                OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         dest.Color = src.Color;
         dest.Organization = organization;
         return dest;

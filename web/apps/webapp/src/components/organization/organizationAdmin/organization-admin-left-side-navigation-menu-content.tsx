@@ -4,6 +4,7 @@ import {
   getOrganizationAdminBillingAndPaymentBaseLink,
   getOrganizationAdminCustomTagsBaseLink,
   getOrganizationAdminManageOrganizationBaseLink,
+  getOrganizationAdminResourceTypesBaseLink,
   getOrganizationAdminSetupBaseLink,
   getOrganizationAdminSSOBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
@@ -70,6 +71,7 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   const setupLink = getOrganizationAdminSetupBaseLink(organizationId);
   const billingAndPaymentLink = getOrganizationAdminBillingAndPaymentBaseLink(organizationId);
   const ssoLink = getOrganizationAdminSSOBaseLink(organizationId);
+  const resourceTypesLink = getOrganizationAdminResourceTypesBaseLink(organizationId);
   const zonesLink = getOrganizationAdminZonesBaseLink(organizationId);
   const customTagsLink = getOrganizationAdminCustomTagsBaseLink(organizationId);
   const subscriptionsLink = getOrganizationAdminSubscriptionsBaseLink(organizationId);
@@ -139,6 +141,15 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
                 noWrap
               />
             )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={resourceTypesLink}>
+          <ListItemButton selected={fullPath === resourceTypesLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === resourceTypesLink) }}>
+            {collapsed && <BodyIconTypography invertDefaultColor={fullPath === resourceTypesLink && paletteMode === 'dark'} />}
+            {!collapsed && <BodyIconTypography label="Resource Type Setup" spacing={3} invertDefaultColor={fullPath === resourceTypesLink && paletteMode === 'dark'} noWrap />}
           </ListItemButton>
         </Link>
       </ListItem>

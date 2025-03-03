@@ -149,6 +149,11 @@ public class ResourceTypeService(
             throw new OrganizationResourceTypeNotFound();
         }
 
+        if (!string.IsNullOrWhiteSpace(resourceType.SystemType))
+        {
+            throw new BuiltinOrganizationResourceTypeCannotBeRemoved();    
+        }
+
         var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(resourceType.Organization.Id, cancellationToken);
         if (existingOrganization is null)
         {
@@ -187,6 +192,11 @@ public class ResourceTypeService(
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var resourceTypes = await repositoryFactory.ResourceTypeRepository.GetByIdsAsync(ids, cancellationToken);
+        if (resourceTypes.Any(item => !string.IsNullOrWhiteSpace(item.SystemType)))
+        {
+            throw new BuiltinOrganizationResourceTypeCannotBeRemoved();    
+        }
+
         var organizationIds = resourceTypes.Select(item => item.Organization.Id).ToList();
         var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
 
