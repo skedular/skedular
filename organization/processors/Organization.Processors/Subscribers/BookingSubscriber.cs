@@ -124,8 +124,7 @@ public class BookingSubscriber(
             await organizationPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], cancellationToken);
         }
 
-        await repositoryFactory.OrganizationOfferingActiveMemberRepository.UnitOfWork.SaveChangesAsync(
-            cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleBookingUpsertedEventAsync(
@@ -137,7 +136,7 @@ public class BookingSubscriber(
         {
             // If booking already exist and is now detached from organization, delete it
             _ = repositoryFactory.BookingRepository.Remove(existingBooking);
-            await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             return;
         }
@@ -157,12 +156,12 @@ public class BookingSubscriber(
             : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking,
                 organization));
 
-        await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleBookingDeletedEventAsync(Booking existingBooking, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.BookingRepository.Remove(existingBooking);
-        await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

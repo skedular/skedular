@@ -87,9 +87,7 @@ public class TeamSubscriber(
             : repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam, organization));
 
         _ = await RebuildTeamMembersAsync(team, existingTeam, cancellationToken);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.TeamMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleTeamDeletedEventAsync(Team existingTeam, CancellationToken cancellationToken)
@@ -97,8 +95,7 @@ public class TeamSubscriber(
         await UpdateCustomerDefaultTeamsAsync(existingTeam, cancellationToken);
         await UpdateTeamMembersDefaultTeamsAsync(existingTeam, existingTeam.TeamMembers, cancellationToken);
         _ = repositoryFactory.TeamRepository.Remove(existingTeam);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<Team> RebuildTeamMembersAsync(

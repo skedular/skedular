@@ -34,7 +34,7 @@ public class WorkspaceChannelService(IRepositoryFactory repositoryFactory, IMapp
             false,
             cancellationToken);
         channel = repositoryFactory.WorkspaceChannelRepository.Add(mapper.MapTo(workspaceChannel, workspace));
-        await repositoryFactory.WorkspaceChannelRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return channel;
     }

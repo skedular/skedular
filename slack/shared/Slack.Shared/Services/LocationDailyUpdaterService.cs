@@ -154,6 +154,6 @@ public class LocationDailyUpdaterService(
 
         locationEntity.SlackChannelDailyUpdateLastSentAt = now;
         repositoryFactory.LocationRepository.Update(locationEntity);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

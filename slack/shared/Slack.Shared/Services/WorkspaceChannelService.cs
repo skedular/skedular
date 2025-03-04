@@ -59,7 +59,6 @@ public class WorkspaceChannelService(
         existingWorkspace.ChannelsLastRefreshedAt = timeProvider.GetUtcNow();
         repositoryFactory.WorkspaceRepository.Update(existingWorkspace);
 
-        await repositoryFactory.WorkspaceChannelRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

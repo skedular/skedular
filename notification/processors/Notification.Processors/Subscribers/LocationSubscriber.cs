@@ -106,14 +106,13 @@ public class LocationSubscriber(
             ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location))
             : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation));
 
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleLocationDeletedEventAsync(Location existingLocation, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.LocationRepository.Remove(existingLocation);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleNotificationUpsertedEventAsync(
@@ -138,9 +137,7 @@ public class LocationSubscriber(
             : repositoryFactory.NotificationRepository.Update(
                 mapper.MergeToEntity(notification, existingNotification, invitedBy, invitee, null, location, null));
 
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.NotificationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleNotificationDeletedEventAsync(
@@ -148,6 +145,6 @@ public class LocationSubscriber(
         CancellationToken cancellationToken)
     {
         _ = repositoryFactory.NotificationRepository.Remove(existingNotification);
-        await repositoryFactory.NotificationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

@@ -65,7 +65,7 @@ public class BookingSubscriber(
         {
             // If booking already exist and is now detached from location, delete it
             _ = repositoryFactory.BookingRepository.Remove(existingBooking);
-            await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             return;
         }
@@ -103,7 +103,7 @@ public class BookingSubscriber(
             ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, location, desks, rooms))
             : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, location, desks, rooms));
 
-        await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleBookingDeletedEventAsync(Booking existingBooking, CancellationToken cancellationToken)
@@ -112,6 +112,6 @@ public class BookingSubscriber(
         existingBooking.Rooms = [];
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
         _ = repositoryFactory.BookingRepository.Remove(existingBooking);
-        await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

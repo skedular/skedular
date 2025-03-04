@@ -80,9 +80,7 @@ public class OrganizationInternalSubscriber(
             return;
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var expiredOfferingRequireAutoRenew = expiredOfferingsRequireAutoRenew.First();
         var offering = expiredOfferingRequireAutoRenew.Code.GetOffering();
@@ -106,12 +104,9 @@ public class OrganizationInternalSubscriber(
             mappedOrganization.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue).OrderByDescending(item => item.End).First()
         ];
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
-            [mappedOrganization],
-            repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
-            cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationAsync([mappedOrganization], repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -143,8 +138,7 @@ public class OrganizationInternalSubscriber(
         organization.DailyMemberCountLastRecordedAt = timeProvider.GetUtcNow();
         _ = repositoryFactory.OrganizationRepository.Update(organization);
 
-        await repositoryFactory.DailyMemberCountRecordingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleRefreshAzureTenantMembersAsync(string tenantId, CancellationToken cancellationToken)
@@ -187,8 +181,7 @@ public class OrganizationInternalSubscriber(
         existingTenant.MembersLastRefreshedAt = timeProvider.GetUtcNow();
         repositoryFactory.AzureTenantRepository.Update(existingTenant);
 
-        await repositoryFactory.AzureTenantMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task SyncCustomersAndOrganizationMembersAsync(AzureTenant azureTenant, CancellationToken cancellationToken)

@@ -77,17 +77,14 @@ public class OrganizationSubscriber(
             : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
 
         _ = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
     {
         repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(
@@ -119,12 +116,9 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in organization.OrganizationMembers
                      .Where(organizationMember => organizationMembers.All(item => item.Id != organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                organizationMember.Customer.Id,
-                cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
             addedItems.Add(
-                repositoryFactory.OrganizationMemberRepository.Add(
-                    mapper.MapToEntity(organizationMember, existingOrganization, customer)));
+                repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(organizationMember, existingOrganization, customer)));
         }
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);

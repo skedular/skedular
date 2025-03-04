@@ -15,11 +15,7 @@ namespace Location.Api.Services;
 
 public interface ILocationInvitationService
 {
-    Task InviteMembersByEmailsAsync(
-        string locationId,
-        ICollection<string> emails,
-        CancellationToken cancellationToken);
-
+    Task InviteMembersByEmailsAsync(string locationId, ICollection<string> emails, CancellationToken cancellationToken);
     Task AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
@@ -35,10 +31,7 @@ public class LocationInvitationService(
     INotificationOutboxPublisher notificationOutboxPublisher,
     ILocationOutboxPublisher locationOutboxPublisher) : ILocationInvitationService
 {
-    public async Task InviteMembersByEmailsAsync(
-        string locationId,
-        ICollection<string> emails,
-        CancellationToken cancellationToken)
+    public async Task InviteMembersByEmailsAsync(string locationId, ICollection<string> emails, CancellationToken cancellationToken)
     {
         if (emails.Count == 0)
         {
@@ -48,8 +41,7 @@ public class LocationInvitationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var location =
-            await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
         if (location is null)
         {
             throw new LocationNotFound();
@@ -67,9 +59,9 @@ public class LocationInvitationService(
                     .Select(identity => identity.Email))
             .ToList();
 
-        emails = emails.Where(item =>
-                !existingMemberEmails.Any(existingMemberEmail =>
-                    string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase)))
+        emails = emails
+            .Where(item => !existingMemberEmails
+                .Any(existingMemberEmail => string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase)))
             .ToList();
         if (emails.Count == 0)
         {
@@ -85,14 +77,11 @@ public class LocationInvitationService(
                     query.Status == InvitationStatusConstants.Pending
             }).ToListAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         foreach (var email in emails)
         {
-            var matchingCustomerByEmail =
-                await repositoryFactory.CustomerRepository.GetByEmailAsync(email, cancellationToken);
+            var matchingCustomerByEmail = await repositoryFactory.CustomerRepository.GetByEmailAsync(email, cancellationToken);
             var existingJoinInvitation = pendingInvitations.FirstOrDefault(item =>
                 (item.Email is not null &&
                  string.Equals(item.Email, email, StringComparison.InvariantCultureIgnoreCase)) || (
@@ -118,26 +107,26 @@ public class LocationInvitationService(
                     mapper.MapTo(location),
                     customer,
                     email,
-                    repositoryFactory.JoinInvitationRepository.UnitOfWork,
+                    repositoryFactory.UnitOfWork,
                     cancellationToken);
             }
             else
             {
                 await locationOutboxPublisher.PublishInvitesToJoinLocationNotificationAsync(
                     [mapper.MapTo(existingJoinInvitation)],
-                    repositoryFactory.JoinInvitationRepository.UnitOfWork,
+                    repositoryFactory.UnitOfWork,
                     cancellationToken);
 
                 await notificationOutboxPublisher.PublishInviteToJoinLocationExistingCustomerAsync(
                     mapper.MapTo(location),
                     customer,
                     mapper.MapTo(matchingCustomerByEmail)!,
-                    repositoryFactory.JoinInvitationRepository.UnitOfWork,
+                    repositoryFactory.UnitOfWork,
                     cancellationToken);
             }
         }
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -162,9 +151,7 @@ public class LocationInvitationService(
             throw new LocationNotFound();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         if (location.LocationMembers.All(item => item.Customer.Id != customer.Id))
         {
@@ -173,10 +160,7 @@ public class LocationInvitationService(
                 Id = randomHelper.Generate(), Role = joinInvitation.Role, Location = location, Customer = customerEntity
             });
 
-            await locationOutboxPublisher.PublishLocationAsync(
-                [mapper.MapTo(location)],
-                repositoryFactory.LocationRepository.UnitOfWork,
-                cancellationToken);
+            await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(location)], repositoryFactory.UnitOfWork, cancellationToken);
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;
@@ -184,12 +168,10 @@ public class LocationInvitationService(
 
         await locationOutboxPublisher.PublishInvitesToJoinLocationNotificationAsync(
             [mapper.MapTo(joinInvitation)],
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -206,19 +188,17 @@ public class LocationInvitationService(
 
         EnsureCustomerAuthorizedToChangeJoinInvitationStatus(joinInvitation, customer);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         joinInvitation.Status = InvitationStatusConstants.Rejected;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await locationOutboxPublisher.PublishInvitesToJoinLocationNotificationAsync(
             [mapper.MapTo(joinInvitation)],
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -233,9 +213,7 @@ public class LocationInvitationService(
             throw new LocationJoinInvitationNotFound();
         }
 
-        var location =
-            await repositoryFactory.LocationRepository.GetByIdAsync(joinInvitation.Location.Id,
-                cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(joinInvitation.Location.Id, cancellationToken);
         if (location is null)
         {
             throw new LocationNotFound();
@@ -246,25 +224,21 @@ public class LocationInvitationService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         joinInvitation.Status = InvitationStatusConstants.Cancelled;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await locationOutboxPublisher.PublishInvitesToJoinLocationNotificationAsync(
             [mapper.MapTo(joinInvitation)],
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
-    private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(
-        JoinInvitation joinInvitation,
-        Customer customer)
+    private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(JoinInvitation joinInvitation, Customer customer)
     {
         if (joinInvitation.Invitee is null && joinInvitation.Email is null)
         {
@@ -278,8 +252,7 @@ public class LocationInvitationService(
 
         if (joinInvitation.Email is not null && !customer.Identities
                 .Where(item => !string.IsNullOrWhiteSpace(item.Email))
-                .Select(item => item.Email).Any(item =>
-                    string.Equals(item, joinInvitation.Email, StringComparison.InvariantCultureIgnoreCase)))
+                .Select(item => item.Email).Any(item => string.Equals(item, joinInvitation.Email, StringComparison.InvariantCultureIgnoreCase)))
         {
             throw new Unauthorized();
         }

@@ -85,9 +85,7 @@ public class TeamInvitationService(
                     query.Status == InvitationStatusConstants.Pending
             }).ToListAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         foreach (var email in emails)
         {
@@ -118,26 +116,26 @@ public class TeamInvitationService(
                     mapper.MapTo(team),
                     customer,
                     email,
-                    repositoryFactory.JoinInvitationRepository.UnitOfWork,
+                    repositoryFactory.UnitOfWork,
                     cancellationToken);
             }
             else
             {
                 await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(
                     [mapper.MapTo(existingJoinInvitation)],
-                    repositoryFactory.JoinInvitationRepository.UnitOfWork,
+                    repositoryFactory.UnitOfWork,
                     cancellationToken);
 
                 await notificationOutboxPublisher.PublishInviteToJoinTeamExistingCustomerAsync(
                     mapper.MapTo(team),
                     customer,
                     mapper.MapTo(matchingCustomerByEmail)!,
-                    repositoryFactory.JoinInvitationRepository.UnitOfWork,
+                    repositoryFactory.UnitOfWork,
                     cancellationToken);
             }
         }
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -162,9 +160,7 @@ public class TeamInvitationService(
             throw new TeamNotFound();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         if (team.TeamMembers.All(item => item.Customer.Id != customer.Id))
         {
@@ -177,10 +173,7 @@ public class TeamInvitationService(
                 Customer = customerEntity
             });
 
-            await teamOutboxPublisher.PublishTeamAsync(
-                [mapper.MapTo(team)],
-                repositoryFactory.TeamRepository.UnitOfWork,
-                cancellationToken);
+            await teamOutboxPublisher.PublishTeamAsync([mapper.MapTo(team)], repositoryFactory.UnitOfWork, cancellationToken);
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;
@@ -188,12 +181,10 @@ public class TeamInvitationService(
 
         await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(
             [mapper.MapTo(joinInvitation)],
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.TeamMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -210,19 +201,17 @@ public class TeamInvitationService(
 
         EnsureCustomerAuthorizedToChangeJoinInvitationStatus(joinInvitation, customer);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         joinInvitation.Status = InvitationStatusConstants.Rejected;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(
             [mapper.MapTo(joinInvitation)],
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -237,9 +226,7 @@ public class TeamInvitationService(
             throw new TeamJoinInvitationNotFound();
         }
 
-        var team =
-            await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id,
-                cancellationToken);
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id, cancellationToken);
         if (team is null)
         {
             throw new TeamNotFound();
@@ -250,19 +237,17 @@ public class TeamInvitationService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         joinInvitation.Status = InvitationStatusConstants.Cancelled;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(
             [mapper.MapTo(joinInvitation)],
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -282,8 +267,7 @@ public class TeamInvitationService(
 
         if (joinInvitation.Email is not null && !customer.Identities
                 .Where(item => !string.IsNullOrWhiteSpace(item.Email))
-                .Select(item => item.Email).Any(item =>
-                    string.Equals(item, joinInvitation.Email, StringComparison.InvariantCultureIgnoreCase)))
+                .Select(item => item.Email).Any(item => string.Equals(item, joinInvitation.Email, StringComparison.InvariantCultureIgnoreCase)))
         {
             throw new Unauthorized();
         }

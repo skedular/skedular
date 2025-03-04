@@ -73,8 +73,7 @@ public class PaymentService(
                 Organization = organization
             });
 
-        _ = await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork
-            .SaveChangesAsync(cancellationToken);
+        _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return setupIntent.ClientSecret;
     }
@@ -97,9 +96,7 @@ public class PaymentService(
             organizationStripePaymentMethod.Organization.Id,
             "admin");
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         redirectUrl = redirectUrl.SetQueryParam("section", "billing-payment-setup");
 
@@ -110,7 +107,7 @@ public class PaymentService(
             repositoryFactory.OrganizationStripePaymentMethodRepository.Update(organizationStripePaymentMethod);
 
             await PublishOrganizationPaymentMethodStateAsync(organizationStripePaymentMethod.Organization.Id, cancellationToken);
-            await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 
             return redirectUrl;
@@ -144,7 +141,7 @@ public class PaymentService(
 
         repositoryFactory.OrganizationStripePaymentMethodRepository.Update(organizationStripePaymentMethod);
         await PublishOrganizationPaymentMethodStateAsync(organizationStripePaymentMethod.Organization.Id, cancellationToken);
-        await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         return redirectUrl;
@@ -169,12 +166,10 @@ public class PaymentService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         _ = repositoryFactory.OrganizationStripePaymentMethodRepository.Remove(organizationStripePaymentMethod);
-        _ = await repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        _ = await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await PublishOrganizationPaymentMethodStateAsync(organizationStripePaymentMethod.Organization.Id, cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
@@ -192,7 +187,7 @@ public class PaymentService(
         await paymentOutboxPublisher.PublishOrganizationPaymentMethodStateAsync(
             organizationId,
             hasAttachedPaymentMethod,
-            repositoryFactory.OrganizationStripePaymentMethodRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
     }
 }

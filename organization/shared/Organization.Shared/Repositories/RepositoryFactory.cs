@@ -1,3 +1,4 @@
+using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Organization.Shared.Database;
 using TimeProvider = System.TimeProvider;
@@ -6,6 +7,7 @@ namespace Organization.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    IUnitOfWork UnitOfWork { get; }
     IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
     IAzureTenantRepository AzureTenantRepository { get; }
     IAzureTenantMemberRepository AzureTenantMemberRepository { get; }
@@ -65,6 +67,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    public IUnitOfWork UnitOfWork => _dbContext;
     public IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
     public IAzureTenantRepository AzureTenantRepository { get; }
     public IAzureTenantMemberRepository AzureTenantMemberRepository { get; }

@@ -39,9 +39,7 @@ public class AzureTenantOnboardingService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.AzureTenantRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var location = new Location { Id = randomHelper.Generate() };
         var now = timeProvider.GetUtcNow();
@@ -82,18 +80,10 @@ public class AzureTenantOnboardingService(
 
         repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(azureInstallStateUserIdLookup);
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
-            [mapper.MapTo(organization)],
-            repositoryFactory.AzureTenantRepository.UnitOfWork,
-            cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], repositoryFactory.UnitOfWork, cancellationToken);
+        await organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync([tenant.Id], repositoryFactory.UnitOfWork, cancellationToken);
 
-        await organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync(
-            [tenant.Id],
-            repositoryFactory.AzureTenantRepository.UnitOfWork,
-            cancellationToken);
-
-        await repositoryFactory.AzureInstallStateUserIdLookupRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 }

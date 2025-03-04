@@ -148,16 +148,11 @@ public class RoomService(
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.LocationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var mappedRoom = mapper.MapTo(repositoryFactory.RoomRepository.Add(mapper.MapTo(room, existingLocation, organizationTags)));
-        await locationOutboxPublisher.PublishLocationAsync(
-            [mapper.MapTo(existingLocation)],
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return mappedRoom;
     }
@@ -209,9 +204,7 @@ public class RoomService(
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.LocationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var rooms = new List<Room>();
         for (var idx = 1; idx <= count; idx++)
@@ -243,11 +236,8 @@ public class RoomService(
             rooms.Add(mapper.MapTo(repositoryFactory.RoomRepository.Add(roomEntity), mapper.MapTo(existingLocation)));
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            [mapper.MapTo(existingLocation)],
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return rooms;
     }
@@ -294,20 +284,15 @@ public class RoomService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var deletedRoom = mapper.MapTo(repositoryFactory.RoomRepository.Remove(room), mapper.MapTo(existingLocation));
 
         var mappedLocation = mapper.MapTo(existingLocation);
         mappedLocation.Rooms = mappedLocation.Rooms.Where(item => item.Id != id).ToList();
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            [mappedLocation],
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([mappedLocation], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedRoom;
     }
@@ -336,9 +321,7 @@ public class RoomService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.RoomRepository.RemoveRange(rooms);
 
@@ -352,12 +335,9 @@ public class RoomService(
             mappedLocation.Rooms = mappedLocation.Rooms.Where(item => !ids.Contains(item.Id)).ToList();
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            mappedLocations,
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         return deletedRooms;
@@ -387,9 +367,7 @@ public class RoomService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         foreach (var room in rooms)
         {
@@ -407,12 +385,9 @@ public class RoomService(
             room.Deactivated = false;
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            mappedLocations,
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         return updatedRooms;
@@ -442,9 +417,7 @@ public class RoomService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         foreach (var room in rooms)
         {
@@ -462,12 +435,9 @@ public class RoomService(
             room.Deactivated = true;
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            mappedLocations,
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         return updatedRooms;
@@ -554,19 +524,14 @@ public class RoomService(
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         room = mapper.MapTo(
             repositoryFactory.RoomRepository.Update(mapper.MergeTo(room, existingRoom, existingLocation, organizationTags)),
             mapper.MapTo(existingLocation));
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            [mapper.MapTo(existingLocation)],
-            repositoryFactory.RoomRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return room;
     }

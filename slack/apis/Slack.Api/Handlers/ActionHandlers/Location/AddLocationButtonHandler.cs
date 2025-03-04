@@ -216,7 +216,7 @@ public class AddLocationButtonHandler(
                             workspaceEntity,
                             value.SelectedChannel,
                             cancellationToken);
-                    await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                    await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                 }
                 else
                 {

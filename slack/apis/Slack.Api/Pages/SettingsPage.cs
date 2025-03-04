@@ -79,7 +79,7 @@ public class SettingsPage(
                         cancellationToken);
 
                 repositoryFactory.OrganizationRepository.Update(workspaceEntity.Organization);
-                await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                 break;
         }
     }
@@ -106,7 +106,7 @@ public class SettingsPage(
                                                                          AutomaticallyUpdateProfileStatus;
 
                 repositoryFactory.WorkspaceMemberRepository.Update(workspaceMemberEntity);
-                await repositoryFactory.WorkspaceMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                 break;
         }
     }
@@ -135,21 +135,11 @@ public class SettingsPage(
                     context.PageContext.PushCurrentPageToVisitedPages();
                     if (permissions.CanManageBillingInfo)
                     {
-                        await OpenEditBillingInfoDialogAsync(
-                            workspace,
-                            workspaceMember,
-                            request.TriggerId,
-                            context,
-                            cancellationToken);
+                        await OpenEditBillingInfoDialogAsync(workspace, workspaceMember, request.TriggerId, context, cancellationToken);
                     }
                     else
                     {
-                        await OpenViewBillingInfoDialogAsync(
-                            workspace,
-                            workspaceMember,
-                            request.TriggerId,
-                            context,
-                            cancellationToken);
+                        await OpenViewBillingInfoDialogAsync(workspace, workspaceMember, request.TriggerId, context, cancellationToken);
                     }
                 }
 

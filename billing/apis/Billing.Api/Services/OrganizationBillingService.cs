@@ -78,9 +78,7 @@ public class OrganizationBillingService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingOrganization.BillingContactEmail = email;
         existingOrganization.BillingContactAddressLine1 = addressLine1;
@@ -93,11 +91,8 @@ public class OrganizationBillingService(
 
         var organization = mapper.MapTo(repositoryFactory.OrganizationRepository.Update(existingOrganization));
 
-        await billingOutboxPublisher.PublishOrganizationsBillingInfoAsync(
-            [organization],
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await billingOutboxPublisher.PublishOrganizationsBillingInfoAsync([organization], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         return organization;

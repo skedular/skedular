@@ -156,9 +156,7 @@ public class TeamService(
             organization,
             cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.TeamRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         teamEntity.TeamMembers = rebuiltTeamMembers;
         teamEntity = repositoryFactory.TeamRepository.Add(teamEntity);
@@ -166,12 +164,8 @@ public class TeamService(
         repositoryFactory.TeamMemberRepository.AddRange(rebuiltTeamMembers);
         team = mapper.MapTo(teamEntity);
 
-        await teamOutboxPublisher.PublishTeamAsync(
-            [team],
-            repositoryFactory.TeamRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.TeamMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await teamOutboxPublisher.PublishTeamAsync([team], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return team;
     }
@@ -258,17 +252,12 @@ public class TeamService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.TeamRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var deletedTeam = mapper.MapTo(repositoryFactory.TeamRepository.Remove(existingTeam));
 
-        await teamOutboxPublisher.PublishTeamAsync(
-            [deletedTeam],
-            repositoryFactory.TeamRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await teamOutboxPublisher.PublishTeamAsync([deletedTeam], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedTeam;
     }
@@ -429,9 +418,7 @@ public class TeamService(
                 cancellationToken)
             : null;
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.TeamRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         if (updateTeamMembers)
         {
@@ -453,15 +440,10 @@ public class TeamService(
             existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
         }
 
-        team = mapper.MapTo(
-            repositoryFactory.TeamRepository.Update(
-                mapper.MergeTo(team, existingTeam, organization, primaryLocation)));
+        team = mapper.MapTo(repositoryFactory.TeamRepository.Update(mapper.MergeTo(team, existingTeam, organization, primaryLocation)));
 
-        await teamOutboxPublisher.PublishTeamAsync(
-            [team],
-            repositoryFactory.TeamRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await teamOutboxPublisher.PublishTeamAsync([team], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return team;
     }

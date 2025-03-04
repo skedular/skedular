@@ -94,8 +94,7 @@ public class WorkspaceMemberService(
         existingWorkspace.MembersLastRefreshedAt = timeProvider.GetUtcNow();
         repositoryFactory.WorkspaceRepository.Update(existingWorkspace);
 
-        await repositoryFactory.WorkspaceMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await SyncCustomersAndOrganizationMembersAsync(existingWorkspace, cancellationToken);
     }
@@ -129,7 +128,7 @@ public class WorkspaceMemberService(
         var userProfile = await slackApiClient.UserProfile.Get(true, workspaceMemberEntity.Id, cancellationToken);
         if (!string.IsNullOrWhiteSpace(userProfile.StatusText) && !string.IsNullOrWhiteSpace(userProfile.StatusEmoji))
         {
-            await repositoryFactory.WorkspaceMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             return;
         }
 
@@ -171,7 +170,7 @@ public class WorkspaceMemberService(
             await slackApiClient.UserProfile.Set(userProfile, workspaceMemberEntity.Id, cancellationToken);
         }
 
-        await repositoryFactory.WorkspaceMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     public string GetMentionedCustomerNameInSlackFormat(Workspace workspace, ICollection<string> identities, Models.Customer customer)

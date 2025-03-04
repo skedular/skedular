@@ -127,18 +127,16 @@ public class TagService(
             throw new OrganizationTagWithSameNameExist();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var tagEntity = mapper.MapTo(tag, existingOrganization);
         _ = repositoryFactory.TagRepository.Add(tagEntity);
 
         await organizationOutboxPublisher.PublishOrganizationAsync(
             [mapper.MapTo(existingOrganization)],
-            repositoryFactory.TagRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.TagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return tag;
     }
@@ -179,9 +177,7 @@ public class TagService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.TagRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var deletedTag = mapper.MapTo(repositoryFactory.TagRepository.Remove(tag));
 
@@ -190,9 +186,9 @@ public class TagService(
 
         await organizationOutboxPublisher.PublishOrganizationAsync(
             [mappedOrganization],
-            repositoryFactory.TagRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.TagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedTag;
     }
@@ -215,7 +211,7 @@ public class TagService(
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.TagRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
         repositoryFactory.TagRepository.RemoveRange(tags);
@@ -227,11 +223,8 @@ public class TagService(
             mappedOrganization.Tags = mappedOrganization.Tags.Where(item => !ids.Contains(item.Id)).ToList();
         }
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
-            mappedOrganizations,
-            repositoryFactory.TagRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.TagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationAsync(mappedOrganizations, repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedTags;
     }
@@ -314,17 +307,15 @@ public class TagService(
             throw new OrganizationTagWithSameNameExist();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.TagRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         tag = mapper.MapTo(repositoryFactory.TagRepository.Update(mapper.MergeTo(tag, existingTag, existingOrganization)));
 
         await organizationOutboxPublisher.PublishOrganizationAsync(
             [mapper.MapTo(existingOrganization)],
-            repositoryFactory.TagRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.TagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return tag;
     }

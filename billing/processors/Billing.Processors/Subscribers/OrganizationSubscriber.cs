@@ -83,18 +83,14 @@ public class OrganizationSubscriber(
 
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         _ = await RebuildOrganizationOffering(organization, existingOrganization, cancellationToken);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization,CancellationToken cancellationToken)
+    private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
     {
         repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(

@@ -1,10 +1,12 @@
 ﻿using Customer.Shared.Database;
+using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Customer.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    IUnitOfWork UnitOfWork { get; }
     ICustomerFeedbackRepository CustomerFeedbackRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
@@ -50,6 +52,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    public IUnitOfWork UnitOfWork => _dbContext;
     public ICustomerFeedbackRepository CustomerFeedbackRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }

@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Enterprise.Shared.Database;
+using Microsoft.EntityFrameworkCore;
 using MsTeams.Shared.Database;
 
 namespace MsTeams.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    IUnitOfWork UnitOfWork { get; }
     IAzureTenantRepository AzureTenantRepository { get; }
     IAzureTenantTeamChannelRepository AzureTenantTeamChannelRepository { get; }
     IAzureTenantTeamRepository AzureTenantTeamRepository { get; }
@@ -42,6 +44,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    public IUnitOfWork UnitOfWork => _dbContext;
     public IAzureTenantRepository AzureTenantRepository { get; }
     public IAzureTenantTeamChannelRepository AzureTenantTeamChannelRepository { get; }
     public IAzureTenantTeamRepository AzureTenantTeamRepository { get; }

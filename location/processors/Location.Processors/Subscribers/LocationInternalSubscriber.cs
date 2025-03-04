@@ -59,8 +59,7 @@ public class LocationInternalSubscriber(
         location.DailyDeskCountLastRecordedAt = timeProvider.GetUtcNow();
         _ = repositoryFactory.LocationRepository.Update(location);
 
-        await repositoryFactory.DailyDeskCountRecordingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleRecordDailyRoomCountEventAsync(Event @event, CancellationToken cancellationToken)
@@ -89,7 +88,6 @@ public class LocationInternalSubscriber(
         location.DailyRoomCountLastRecordedAt = timeProvider.GetUtcNow();
         _ = repositoryFactory.LocationRepository.Update(location);
 
-        await repositoryFactory.DailyRoomCountRecordingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

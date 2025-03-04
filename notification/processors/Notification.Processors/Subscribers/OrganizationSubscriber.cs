@@ -112,13 +112,13 @@ public class OrganizationSubscriber(
             ? repositoryFactory.OrganizationRepository.Add(mapper.MapToEntity(organization))
             : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
 
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleNotificationUpsertedEventAsync(
@@ -144,9 +144,7 @@ public class OrganizationSubscriber(
             : repositoryFactory.NotificationRepository.Update(
                 mapper.MergeToEntity(notification, existingNotification, invitedBy, invitee, organization, null, null));
 
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.NotificationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleNotificationDeletedEventAsync(
@@ -154,6 +152,6 @@ public class OrganizationSubscriber(
         CancellationToken cancellationToken)
     {
         _ = repositoryFactory.NotificationRepository.Remove(existingNotification);
-        await repositoryFactory.NotificationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

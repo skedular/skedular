@@ -73,21 +73,17 @@ public class MsTeamsInternalSubscriber(
                         existingAzureTenantTeam)))
                 .ToList();
             var addedChannels = azureTenantTeamChannels
-                .Where(azureTenantTeamChannel =>
-                    existingAzureTenantTeam.AzureTenantTeamChannels.All(item => item.Id != azureTenantTeamChannel.Id))
+                .Where(azureTenantTeamChannel => existingAzureTenantTeam.AzureTenantTeamChannels.All(item => item.Id != azureTenantTeamChannel.Id))
                 .Select(item => repositoryFactory.AzureTenantTeamChannelRepository.Add(mapper.MapTo(item, existingAzureTenantTeam)))
                 .ToList();
 
             repositoryFactory.AzureTenantTeamChannelRepository.RemoveRange(channelsToRemove);
-            existingAzureTenantTeam.AzureTenantTeamChannels =
-                addedChannels.Concat(updatedChannels).Concat(channelsToRemove).ToList();
+            existingAzureTenantTeam.AzureTenantTeamChannels = addedChannels.Concat(updatedChannels).Concat(channelsToRemove).ToList();
         }
 
         existingTenant.TeamsAndChannelsLastRefreshedAt = timeProvider.GetUtcNow();
         repositoryFactory.AzureTenantRepository.Update(existingTenant);
 
-        await repositoryFactory.AzureTenantTeamChannelRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.AzureTenantTeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

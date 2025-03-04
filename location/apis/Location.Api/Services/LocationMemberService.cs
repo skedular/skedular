@@ -19,10 +19,7 @@ public interface ILocationMemberService
         ICollection<LocationMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
-    Task<LocationMember> ChangeRoleAsync(
-        string id,
-        LocationMemberRole memberRole,
-        CancellationToken cancellationToken);
+    Task<LocationMember> ChangeRoleAsync(string id, LocationMemberRole memberRole, CancellationToken cancellationToken);
 }
 
 public class LocationMemberService(
@@ -42,9 +39,7 @@ public class LocationMemberService(
             CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var location =
-            await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId,
-                cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(searchCriteria.LocationId, cancellationToken);
         if (location is null)
         {
             throw new LocationNotFound();
@@ -65,14 +60,10 @@ public class LocationMemberService(
         return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(location)).ToList(), totalCount);
     }
 
-    public async Task<LocationMember> ChangeRoleAsync(
-        string id,
-        LocationMemberRole memberRole,
-        CancellationToken cancellationToken)
+    public async Task<LocationMember> ChangeRoleAsync(string id, LocationMemberRole memberRole, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var locationMember =
-            await repositoryFactory.LocationMemberRepository.GetByIdAsync(id, cancellationToken);
+        var locationMember = await repositoryFactory.LocationMemberRepository.GetByIdAsync(id, cancellationToken);
         if (locationMember is null)
         {
             throw new LocationMemberNotFound();
@@ -117,19 +108,17 @@ public class LocationMemberService(
             return mapper.MapTo(locationMember, mapper.MapTo(location));
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.LocationMemberRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         locationMember.Role = mappedRole;
         repositoryFactory.LocationMemberRepository.Update(locationMember);
 
         await locationOutboxPublisher.PublishLocationAsync(
             [mapper.MapTo(location)],
-            repositoryFactory.LocationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return mapper.MapTo(locationMember, mapper.MapTo(location));
     }

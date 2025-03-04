@@ -108,18 +108,16 @@ public class ResourceTypeService(
             throw new ResourceTypeWithSameNameExist();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var resourceTypeEntity = mapper.MapTo(resourceType, existingOrganization);
         _ = repositoryFactory.ResourceTypeRepository.Add(resourceTypeEntity);
 
         await organizationOutboxPublisher.PublishOrganizationAsync(
             [mapper.MapTo(existingOrganization)],
-            repositoryFactory.ResourceTypeRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.ResourceTypeRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return resourceType;
     }
@@ -151,7 +149,7 @@ public class ResourceTypeService(
 
         if (!string.IsNullOrWhiteSpace(resourceType.SystemType))
         {
-            throw new BuiltinOrganizationResourceTypeCannotBeRemoved();    
+            throw new BuiltinOrganizationResourceTypeCannotBeRemoved();
         }
 
         var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(resourceType.Organization.Id, cancellationToken);
@@ -165,20 +163,15 @@ public class ResourceTypeService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.ResourceTypeRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var deletedResourceType = mapper.MapTo(repositoryFactory.ResourceTypeRepository.Remove(resourceType));
 
         var mappedOrganization = mapper.MapTo(existingOrganization);
         mappedOrganization.ResourceTypes = mappedOrganization.ResourceTypes.Where(item => item.Id != resourceTypeId).ToList();
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
-            [mappedOrganization],
-            repositoryFactory.ResourceTypeRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.ResourceTypeRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationAsync([mappedOrganization], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedResourceType;
     }
@@ -194,7 +187,7 @@ public class ResourceTypeService(
         var resourceTypes = await repositoryFactory.ResourceTypeRepository.GetByIdsAsync(ids, cancellationToken);
         if (resourceTypes.Any(item => !string.IsNullOrWhiteSpace(item.SystemType)))
         {
-            throw new BuiltinOrganizationResourceTypeCannotBeRemoved();    
+            throw new BuiltinOrganizationResourceTypeCannotBeRemoved();
         }
 
         var organizationIds = resourceTypes.Select(item => item.Organization.Id).ToList();
@@ -205,9 +198,7 @@ public class ResourceTypeService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.ResourceTypeRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.ResourceTypeRepository.RemoveRange(resourceTypes);
         var deletedResourceTypes = resourceTypes.Select(mapper.MapTo).ToList();
@@ -218,11 +209,8 @@ public class ResourceTypeService(
             mappedOrganization.ResourceTypes = mappedOrganization.ResourceTypes.Where(item => !ids.Contains(item.Id)).ToList();
         }
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
-            mappedOrganizations,
-            repositoryFactory.ResourceTypeRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.ResourceTypeRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationAsync(mappedOrganizations, repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedResourceTypes;
     }
@@ -290,7 +278,7 @@ public class ResourceTypeService(
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.ResourceTypeRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
         resourceType = mapper.MapTo(
@@ -298,9 +286,9 @@ public class ResourceTypeService(
 
         await organizationOutboxPublisher.PublishOrganizationAsync(
             [mapper.MapTo(existingOrganization)],
-            repositoryFactory.ResourceTypeRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.ResourceTypeRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return resourceType;
     }

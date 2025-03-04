@@ -26,6 +26,6 @@ public class WorkspaceService(
         existingWorkspace = mapper.MergeToEntity(team, existingWorkspace);
         existingWorkspace.LastRefreshedAt = timeProvider.GetUtcNow();
 
-        await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

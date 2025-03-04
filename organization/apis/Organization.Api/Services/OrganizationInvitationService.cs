@@ -85,9 +85,7 @@ public class OrganizationInvitationService(
                     query.Status == InvitationStatusConstants.Pending
             }).ToListAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         foreach (var email in emails)
         {
@@ -118,26 +116,26 @@ public class OrganizationInvitationService(
                     mapper.MapTo(organization),
                     customer,
                     email,
-                    repositoryFactory.JoinInvitationRepository.UnitOfWork,
+                    repositoryFactory.UnitOfWork,
                     cancellationToken);
             }
             else
             {
                 await organizationOutboxPublisher.PublishInvitesToJoinOrganizationNotificationAsync(
                     [mapper.MapTo(existingJoinInvitation)],
-                    repositoryFactory.JoinInvitationRepository.UnitOfWork,
+                    repositoryFactory.UnitOfWork,
                     cancellationToken);
 
                 await notificationOutboxPublisher.PublishInviteToJoinOrganizationExistingCustomerAsync(
                     mapper.MapTo(organization),
                     customer,
                     mapper.MapTo(matchingCustomerByEmail)!,
-                    repositoryFactory.JoinInvitationRepository.UnitOfWork,
+                    repositoryFactory.UnitOfWork,
                     cancellationToken);
             }
         }
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -162,9 +160,7 @@ public class OrganizationInvitationService(
             throw new OrganizationNotFound();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         if (organization.OrganizationMembers.All(item => item.Customer.Id != customer.Id))
         {
@@ -177,10 +173,7 @@ public class OrganizationInvitationService(
                 Customer = customerEntity
             });
 
-            await organizationOutboxPublisher.PublishOrganizationAsync(
-                [mapper.MapTo(organization)],
-                repositoryFactory.OrganizationRepository.UnitOfWork,
-                cancellationToken);
+            await organizationOutboxPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], repositoryFactory.UnitOfWork, cancellationToken);
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;
@@ -188,12 +181,10 @@ public class OrganizationInvitationService(
 
         await organizationOutboxPublisher.PublishInvitesToJoinOrganizationNotificationAsync(
             [mapper.MapTo(joinInvitation)],
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -210,19 +201,17 @@ public class OrganizationInvitationService(
 
         EnsureCustomerAuthorizedToChangeJoinInvitationStatus(joinInvitation, customer);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         joinInvitation.Status = InvitationStatusConstants.Rejected;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await organizationOutboxPublisher.PublishInvitesToJoinOrganizationNotificationAsync(
             [mapper.MapTo(joinInvitation)],
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 
@@ -250,19 +239,17 @@ public class OrganizationInvitationService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         joinInvitation.Status = InvitationStatusConstants.Cancelled;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
         await organizationOutboxPublisher.PublishInvitesToJoinOrganizationNotificationAsync(
             [mapper.MapTo(joinInvitation)],
-            repositoryFactory.JoinInvitationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.JoinInvitationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 

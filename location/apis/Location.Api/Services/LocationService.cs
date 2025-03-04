@@ -97,9 +97,7 @@ public class LocationService(
             location.Id = randomHelper.Generate();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.LocationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var locationEntity = mapper.MapTo(location, organization);
         var physicalAddress = location.PhysicalAddress is null ? null : mapper.MapTo(location.PhysicalAddress, locationEntity);
@@ -127,11 +125,9 @@ public class LocationService(
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
         location = mapper.MapTo(locationEntity);
 
-        await locationOutboxPublisher.PublishLocationAsync([location], repositoryFactory.LocationRepository.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([location], repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.AddressRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return location;
     }
@@ -178,14 +174,12 @@ public class LocationService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.LocationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var deletedLocation = mapper.MapTo(repositoryFactory.LocationRepository.Remove(existingLocation));
 
-        await locationOutboxPublisher.PublishLocationAsync([deletedLocation], repositoryFactory.LocationRepository.UnitOfWork, cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([deletedLocation], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedLocation;
     }
@@ -295,9 +289,7 @@ public class LocationService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.LocationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         Address? physicalAddress = null;
 
@@ -321,10 +313,9 @@ public class LocationService(
 
         await locationOutboxPublisher.PublishLocationAsync(
             [location],
-            repositoryFactory.LocationRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.AddressRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return location;
     }

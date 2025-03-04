@@ -1,3 +1,4 @@
+using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Team.Shared.Database;
 using TimeProvider = System.TimeProvider;
@@ -6,6 +7,7 @@ namespace Team.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    IUnitOfWork UnitOfWork { get; }
     IBookingRepository BookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
@@ -43,6 +45,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    public IUnitOfWork UnitOfWork => _dbContext;
     public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }

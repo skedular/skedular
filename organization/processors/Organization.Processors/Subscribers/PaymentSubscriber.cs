@@ -65,7 +65,7 @@ public class PaymentSubscriber(
 
             if (organization.HasAttachedPaymentMethod)
             {
-                await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                 return;
             }
 
@@ -84,8 +84,7 @@ public class PaymentSubscriber(
             {
                 if (organizationOffering.Code.IsFreeOffering())
                 {
-                    await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-                    await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                    await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
                     return;
                 }
@@ -124,8 +123,7 @@ public class PaymentSubscriber(
                 repositoryFactory.OrganizationOfferingRepository.Undelete(existingFreeOffering);
             }
 
-            await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-            await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
         finally
         {

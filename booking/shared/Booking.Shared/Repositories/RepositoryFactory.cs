@@ -1,10 +1,12 @@
 ﻿using Booking.Shared.Database;
+using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    IUnitOfWork UnitOfWork { get; }
     IBookingRepository BookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
@@ -50,6 +52,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    public IUnitOfWork UnitOfWork => _dbContext;
     public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }

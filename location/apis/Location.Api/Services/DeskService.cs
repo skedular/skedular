@@ -148,16 +148,14 @@ public class DeskService(
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.LocationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var mappedDesk = mapper.MapTo(repositoryFactory.DeskRepository.Add(mapper.MapTo(desk, existingLocation, organizationTags)));
         await locationOutboxPublisher.PublishLocationAsync(
             [mapper.MapTo(existingLocation)],
-            repositoryFactory.DeskRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return mappedDesk;
     }
@@ -209,9 +207,7 @@ public class DeskService(
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.LocationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var desks = new List<Desk>();
         for (var idx = 1; idx <= count; idx++)
@@ -245,9 +241,9 @@ public class DeskService(
 
         await locationOutboxPublisher.PublishLocationAsync(
             [mapper.MapTo(existingLocation)],
-            repositoryFactory.DeskRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return desks;
     }
@@ -294,9 +290,7 @@ public class DeskService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.DeskRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var deletedDesk = mapper.MapTo(repositoryFactory.DeskRepository.Remove(desk), mapper.MapTo(existingLocation));
 
@@ -305,9 +299,9 @@ public class DeskService(
 
         await locationOutboxPublisher.PublishLocationAsync(
             [mappedLocation],
-            repositoryFactory.DeskRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedDesk;
     }
@@ -336,9 +330,7 @@ public class DeskService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.DeskRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.DeskRepository.RemoveRange(desks);
 
@@ -352,12 +344,9 @@ public class DeskService(
             mappedLocation.Desks = mappedLocation.Desks.Where(item => !ids.Contains(item.Id)).ToList();
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            mappedLocations,
-            repositoryFactory.DeskRepository.UnitOfWork,
-            cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         return deletedDesks;
@@ -387,9 +376,7 @@ public class DeskService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.DeskRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         foreach (var desk in desks)
         {
@@ -407,12 +394,9 @@ public class DeskService(
             desk.Deactivated = false;
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            mappedLocations,
-            repositoryFactory.DeskRepository.UnitOfWork,
-            cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         return updatedDesks;
@@ -442,9 +426,7 @@ public class DeskService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.DeskRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         foreach (var desk in desks)
         {
@@ -462,12 +444,10 @@ public class DeskService(
             desk.Deactivated = true;
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            mappedLocations,
-            repositoryFactory.DeskRepository.UnitOfWork,
+        await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork,
             cancellationToken);
 
-        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         return updatedDesks;
@@ -554,19 +534,14 @@ public class DeskService(
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.DeskRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         desk = mapper.MapTo(
             repositoryFactory.DeskRepository.Update(mapper.MergeTo(desk, existingDesk, existingLocation, organizationTags)),
             mapper.MapTo(existingLocation));
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            [mapper.MapTo(existingLocation)],
-            repositoryFactory.DeskRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return desk;
     }

@@ -92,11 +92,7 @@ public class LocationSubscriber(
         existingLocation = await RebuildDesks(location, existingLocation, cancellationToken);
         existingLocation = await RebuildRooms(location, existingLocation, cancellationToken);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleLocationDeletedEventAsync(Location existingLocation, CancellationToken cancellationToken)
@@ -104,8 +100,7 @@ public class LocationSubscriber(
         await UpdateCustomerDefaultLocationsAsync(existingLocation, cancellationToken);
         await UpdateLocationMembersDefaultLocationsAsync(existingLocation, existingLocation.LocationMembers, cancellationToken);
         _ = repositoryFactory.LocationRepository.Remove(existingLocation);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<Location> RebuildDesks(Shared.Models.Location location, Location existingLocation, CancellationToken cancellationToken)

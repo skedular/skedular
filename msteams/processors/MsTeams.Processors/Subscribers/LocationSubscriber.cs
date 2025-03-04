@@ -70,12 +70,12 @@ public class LocationSubscriber(
             ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location))
             : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation));
 
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleLocationDeletedEventAsync(Location existingLocation, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.LocationRepository.Remove(existingLocation);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

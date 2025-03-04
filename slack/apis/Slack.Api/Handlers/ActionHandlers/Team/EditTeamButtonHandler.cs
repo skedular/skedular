@@ -230,7 +230,7 @@ public class EditTeamButtonHandler(
                                 workspaceEntity,
                                 value.SelectedChannel,
                                 cancellationToken);
-                        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                     }
                 }
                 else

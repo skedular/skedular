@@ -66,12 +66,12 @@ public class TeamSubscriber(
             ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team))
             : repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam));
 
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleTeamDeletedEventAsync(Team existingTeam, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.TeamRepository.Remove(existingTeam);
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

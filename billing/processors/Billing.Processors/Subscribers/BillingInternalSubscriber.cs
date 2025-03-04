@@ -52,16 +52,14 @@ public class BillingInternalSubscriber(
         organizationOffering.TotalCost = organizationOffering.TotalNumberOfActiveCustomers * organizationOffering.UnitPrice;
         organizationOffering.InvoiceDate = now;
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.OrganizationOfferingRepository.Update(organizationOffering);
         await billingOutboxPublisher.PublishBillingOrganizationsOfferingsAsync(
             [mapper.MapTo(organizationOffering)],
-            repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 }

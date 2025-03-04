@@ -82,8 +82,7 @@ public class CustomerSubscriber(
             );
         }
 
-        await repositoryFactory.IdentityRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         var emails = existingCustomer.Identities
             .Where(item => !string.IsNullOrWhiteSpace(item.Email))
@@ -101,7 +100,7 @@ public class CustomerSubscriber(
     private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.CustomerRepository.Remove(existingCustomer);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private Shared.Database.Entities.Customer RebuildIdentities(Customer customer, Shared.Database.Entities.Customer existingCustomer)

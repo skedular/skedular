@@ -114,19 +114,14 @@ public class BookingService(
 
         var bookingEntity = mapper.MapTo(booking, customerEntity!, organization, location, team, desks, rooms);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.BookingRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
 
-        await bookingOutboxPublisher.PublishBookingAsync(
-            [booking],
-            repositoryFactory.TeamRepository.UnitOfWork,
-            cancellationToken);
+        await bookingOutboxPublisher.PublishBookingAsync([booking], repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return booking;
     }
@@ -223,17 +218,12 @@ public class BookingService(
         existingBooking.Desks = [];
         existingBooking.Rooms = [];
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.BookingRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
         _ = repositoryFactory.BookingRepository.Update(existingBooking);
         var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
 
-        await bookingOutboxPublisher.PublishBookingAsync(
-            [deletedBooking],
-            repositoryFactory.BookingRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await bookingOutboxPublisher.PublishBookingAsync([deletedBooking], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedBooking;
     }
@@ -853,19 +843,14 @@ public class BookingService(
 
         var bookingEntity = mapper.MergeTo(booking, existingBooking, customerEntity!, organization, location, team, desks, rooms);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.BookingRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
 
-        await bookingOutboxPublisher.PublishBookingAsync(
-            [booking],
-            repositoryFactory.TeamRepository.UnitOfWork,
-            cancellationToken);
+        await bookingOutboxPublisher.PublishBookingAsync([booking], repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.BookingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return booking;
     }

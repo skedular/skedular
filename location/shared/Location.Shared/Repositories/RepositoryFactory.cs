@@ -1,3 +1,4 @@
+using Enterprise.Shared.Database;
 using Location.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using TimeProvider = System.TimeProvider;
@@ -6,6 +7,7 @@ namespace Location.Shared.Repositories;
 
 public interface IRepositoryFactory
 {
+    IUnitOfWork UnitOfWork { get; }
     IAddressRepository AddressRepository { get; }
     IBookingRepository BookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
@@ -57,6 +59,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    public IUnitOfWork UnitOfWork => _dbContext;
     public IAddressRepository AddressRepository { get; }
     public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }

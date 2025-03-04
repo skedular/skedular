@@ -64,13 +64,10 @@ public class OrganizationOfferingService(
             new Specification<OrganizationOffering>
             {
                 Criteria = query =>
-                    query.Organization.Id == organizationId && query.Code == offeringCode && query.Start <= now &&
-                    query.End >= now
+                    query.Organization.Id == organizationId && query.Code == offeringCode && query.Start <= now && query.End >= now
             }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationOfferingRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         if (activeOffering is not null && activeOffering.Code != offeringCode)
         {
@@ -95,15 +92,10 @@ public class OrganizationOfferingService(
             repositoryFactory.OrganizationOfferingRepository.Undelete(matchingOffering);
         }
 
-        organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        await organizationOutboxPublisher.PublishOrganizationAsync(
-            [mapper.MapTo(organization!)],
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
+        organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationAsync([mapper.MapTo(organization!)], repositoryFactory.UnitOfWork, cancellationToken);
 
-        await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 

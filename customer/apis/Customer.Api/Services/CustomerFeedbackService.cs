@@ -9,9 +9,7 @@ namespace Customer.Api.Services;
 
 public interface ICustomerFeedbackService
 {
-    Task<CustomerFeedback> SubmitFeedbackAsync(
-        CustomerFeedback feedback,
-        CancellationToken cancellationToken);
+    Task<CustomerFeedback> SubmitFeedbackAsync(CustomerFeedback feedback, CancellationToken cancellationToken);
 }
 
 public class CustomerFeedbackService(
@@ -22,9 +20,7 @@ public class CustomerFeedbackService(
     IRandomHelper randomHelper,
     INotificationOutboxPublisher notificationOutboxPublisher) : ICustomerFeedbackService
 {
-    public async Task<CustomerFeedback> SubmitFeedbackAsync(
-        CustomerFeedback feedback,
-        CancellationToken cancellationToken)
+    public async Task<CustomerFeedback> SubmitFeedbackAsync(CustomerFeedback feedback, CancellationToken cancellationToken)
     {
         var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
         if (string.IsNullOrWhiteSpace(feedback.Id))
@@ -32,18 +28,13 @@ public class CustomerFeedbackService(
             feedback.Id = randomHelper.Generate();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.CustomerRepository.UnitOfWork,
-            cancellationToken);
-
-        var customerFeedback =
-            mapper.MapTo(
-                repositoryFactory.CustomerFeedbackRepository.Add(mapper.MapTo(feedback, customer)));
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+        var customerFeedback = mapper.MapTo(repositoryFactory.CustomerFeedbackRepository.Add(mapper.MapTo(feedback, customer)));
         await notificationOutboxPublisher.PublishNewCustomerFeedbackSubmittedAsync(
             customerFeedback,
-            repositoryFactory.CustomerRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.CustomerFeedbackRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         return customerFeedback;

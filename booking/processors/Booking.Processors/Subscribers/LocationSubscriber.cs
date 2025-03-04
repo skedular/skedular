@@ -84,17 +84,13 @@ public class LocationSubscriber(
         existingLocation = await RebuildDesksAsync(location, existingLocation, organization, cancellationToken);
         existingLocation = await RebuildRoomsAsync(location, existingLocation, organization, cancellationToken);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleLocationDeletedEventAsync(Location existingLocation, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.LocationRepository.Remove(existingLocation);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<Location> RebuildDesksAsync(
@@ -123,9 +119,7 @@ public class LocationSubscriber(
             {
                 var filteredOrganizationTags = organizationTags
                     .Where(tag =>
-                        location.Desks
-                            .First(item => item.Id == desk.Id).OrganizationTags
-                            .Any(organizationTag => organizationTag.Id == tag.Id))
+                        location.Desks.First(item => item.Id == desk.Id).OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
                 var updatedDesk = mapper.MergeToEntity(
@@ -223,7 +217,7 @@ public class LocationSubscriber(
         foreach (var locationMember in locationMembers.Where(locationMember => location.LocationMembers.Any(item => item.Id == locationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id, false, cancellationToken);
-            await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             var updatedLocationMember = mapper.MergeToEntity(
                 location.LocationMembers.First(item => item.Id == locationMember.Id),
@@ -238,7 +232,7 @@ public class LocationSubscriber(
         foreach (var locationMember in location.LocationMembers.Where(locationMember => locationMembers.All(item => item.Id != locationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id, false, cancellationToken);
-            await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             addedItems.Add(repositoryFactory.LocationMemberRepository.Add(mapper.MapToEntity(locationMember, existingLocation, customer)));
         }
 

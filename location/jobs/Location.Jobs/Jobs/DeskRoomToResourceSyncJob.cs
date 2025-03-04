@@ -82,7 +82,7 @@ public class DeskRoomToResourceSyncJob(
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }
 
-                            await repositoryFactory.ResourceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                         }
                     }
 
@@ -137,7 +137,7 @@ public class DeskRoomToResourceSyncJob(
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }
 
-                            await repositoryFactory.ResourceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                         }
                     }
                 }

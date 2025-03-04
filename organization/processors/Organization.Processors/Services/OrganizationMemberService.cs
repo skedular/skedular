@@ -32,8 +32,7 @@ public class OrganizationMemberService(
             _ = repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(member, organization, customer));
         }
 
-        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await organizationPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], cancellationToken);
     }
 }

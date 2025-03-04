@@ -86,10 +86,7 @@ public class OrganizationSubscriber(
         existingOrganization.AzureTenants = azureTenants;
 
         _ = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
-        await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await msTeamsInternalPublisher.PublishRefreshAzureTenantTeamsAndChannelsAsync(
             azureTenants.Select(item => item.Id),
@@ -100,8 +97,7 @@ public class OrganizationSubscriber(
     {
         repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(

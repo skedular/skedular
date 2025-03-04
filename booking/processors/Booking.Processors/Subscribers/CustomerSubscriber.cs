@@ -72,7 +72,7 @@ public class CustomerSubscriber(
             : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
                 customer.DefaultOrganization.Id,
                 cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         var defaultLocations = new List<Location>();
         foreach (var item in customer.DefaultLocations)
@@ -88,8 +88,7 @@ public class CustomerSubscriber(
                     organization,
                     cancellationToken));
 
-            await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-            await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         var defaultTeams = new List<Team>();
@@ -100,8 +99,7 @@ public class CustomerSubscriber(
                 : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization!.Id, cancellationToken);
             defaultTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(item.Id, organization, cancellationToken));
 
-            await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-            await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         var preferredDesks = new List<Desk>();
@@ -112,8 +110,7 @@ public class CustomerSubscriber(
                 var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Location.Id, null, cancellationToken);
                 preferredDesks.Add(await repositoryFactory.DeskRepository.UpsertNakedAsync(item.Id, location, cancellationToken));
 
-                await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-                await repositoryFactory.DeskRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
         }
 
@@ -125,8 +122,7 @@ public class CustomerSubscriber(
                 var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Location.Id, null, cancellationToken);
                 preferredRooms.Add(await repositoryFactory.RoomRepository.UpsertNakedAsync(item.Id, location, cancellationToken));
 
-                await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-                await repositoryFactory.RoomRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             }
         }
 
@@ -137,8 +133,7 @@ public class CustomerSubscriber(
             preferredOrganizationTags.Add(
                 await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(item.Id, organization, cancellationToken));
 
-            await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-            await repositoryFactory.OrganizationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         if (existingCustomer is null)
@@ -176,14 +171,13 @@ public class CustomerSubscriber(
             );
         }
 
-        await repositoryFactory.IdentityRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.CustomerRepository.Remove(existingCustomer);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private Shared.Database.Entities.Customer RebuildIdentities(Customer customer, Shared.Database.Entities.Customer existingCustomer)

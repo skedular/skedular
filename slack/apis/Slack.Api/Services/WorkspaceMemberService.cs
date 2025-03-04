@@ -79,7 +79,7 @@ public class WorkspaceMemberService(
 
         workspaceMember = repositoryFactory.WorkspaceMemberRepository.Add(mapper.MapToEntity(user, workspace));
 
-        await repositoryFactory.WorkspaceMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return workspaceMember;
     }

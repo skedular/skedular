@@ -143,7 +143,7 @@ public class EditLocationButtonHandler(
                                 workspaceEntity,
                                 value.SelectedChannel,
                                 cancellationToken);
-                        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                     }
                 }
                 else

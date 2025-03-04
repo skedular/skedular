@@ -83,7 +83,7 @@ public class TeamSubscriber(
         {
             // If team already exist and is now detached from organization, delete it
             _ = repositoryFactory.TeamRepository.Remove(existingTeam);
-            await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             return;
         }
@@ -99,12 +99,12 @@ public class TeamSubscriber(
             : repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam,
                 existingOrganization));
 
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleTeamDeletedEventAsync(Team existingTeam, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.TeamRepository.Remove(existingTeam);
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

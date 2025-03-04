@@ -37,35 +37,23 @@ public class WorkspaceOnboardingService(
     {
         ArgumentNullException.ThrowIfNull(oauthV2AccessResponse.Team);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
-
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
         var exitingWorkspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(oauthV2AccessResponse.Team!.Id, cancellationToken);
         var workspace = exitingWorkspace is null
             ? repositoryFactory.WorkspaceRepository.Add(mapper.MapTo(oauthV2AccessResponse, organization))
-            : repositoryFactory.WorkspaceRepository.Update(mapper.MergeTo(oauthV2AccessResponse, exitingWorkspace,
-                organization));
+            : repositoryFactory.WorkspaceRepository.Update(mapper.MergeTo(oauthV2AccessResponse, exitingWorkspace, organization));
 
         await CreateOrganizationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
         await CreateLocationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
 
-        await slackInternalOutboxPublisher.PublishRefreshWorkspaceMembersAsync(
-            [workspace.Id],
-            repositoryFactory.WorkspaceRepository.UnitOfWork,
-            cancellationToken);
-        await slackInternalOutboxPublisher.PublishRefreshWorkspaceChannelsAsync(
-            [workspace.Id],
-            repositoryFactory.WorkspaceRepository.UnitOfWork,
-            cancellationToken);
+        await slackInternalOutboxPublisher.PublishRefreshWorkspaceMembersAsync([workspace.Id], repositoryFactory.UnitOfWork, cancellationToken);
+        await slackInternalOutboxPublisher.PublishRefreshWorkspaceChannelsAsync([workspace.Id], repositoryFactory.UnitOfWork, cancellationToken);
         await notificationOutboxPublisher.PublishNewSlackWorkspaceJoinedSubmittedAsync(
             mapper.MapTo(workspace),
-            repositoryFactory.WorkspaceRepository.UnitOfWork,
+            repositoryFactory.UnitOfWork,
             cancellationToken);
-        await repositoryFactory.WorkspaceRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.LocationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
 

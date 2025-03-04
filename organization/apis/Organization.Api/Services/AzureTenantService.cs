@@ -106,7 +106,7 @@ public class AzureTenantService(
         var authorizationRequest =
             $"https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={clientId}&redirect_uri={redirectUri}&scope={scope}&state={installStateUserIdLookup.Id}";
 
-        await repositoryFactory.AzureInstallStateUserIdLookupRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return authorizationRequest;
     }
@@ -125,9 +125,7 @@ public class AzureTenantService(
         }
         else
         {
-            await using var transaction = await transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.AzureTenantRepository.UnitOfWork,
-                cancellationToken);
+            await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
             repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(installStateUserIdLookup);
 
@@ -136,9 +134,9 @@ public class AzureTenantService(
             tenant = repositoryFactory.AzureTenantRepository.Update(tenant);
             await organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync(
                 [tenant.Id],
-                repositoryFactory.AzureTenantRepository.UnitOfWork,
+                repositoryFactory.UnitOfWork,
                 cancellationToken);
-            await repositoryFactory.AzureTenantRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }
 

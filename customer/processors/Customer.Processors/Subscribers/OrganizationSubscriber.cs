@@ -87,10 +87,7 @@ public class OrganizationSubscriber(
         existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
         existingOrganization = RebuildOrganizationResourceTypes(organization, existingOrganization);
         _ = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationTagRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
@@ -99,8 +96,7 @@ public class OrganizationSubscriber(
         await UpdateCustomerDefaultOrganizationAsync(existingOrganization, cancellationToken);
         repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
-        await repositoryFactory.CustomerRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(
@@ -118,9 +114,7 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in organizationMembers.Where(organizationMember =>
                      organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(
-                organizationMember.Customer.Id,
-                cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(organizationMember.Customer.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
             var updatedOrganizationMember = mapper.MergeToEntity(
@@ -134,8 +128,7 @@ public class OrganizationSubscriber(
 
         var addedItems = new List<OrganizationMember>();
         foreach (var organizationMember in organization.OrganizationMembers
-                     .Where(organizationMember =>
-                         organizationMembers.All(item => item.Id != organizationMember.Id)))
+                     .Where(organizationMember => organizationMembers.All(item => item.Id != organizationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(
                 organizationMember.Customer.Id,

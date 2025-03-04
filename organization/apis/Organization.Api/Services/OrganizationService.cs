@@ -110,9 +110,7 @@ public class OrganizationService(
                 .AddInclude(query => query.IndustryMainCategory))
             .ToListAsync(cancellationToken);
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var organizationEntity = mapper.MapTo(organization, termsOfUse, industrySubCategories);
 
@@ -172,13 +170,8 @@ public class OrganizationService(
         repositoryFactory.OrganizationMemberRepository.AddRange(organizationMembers);
         organization = mapper.MapTo(organizationEntity);
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
-            [organization],
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationMemberRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await repositoryFactory.OrganizationOfferingRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationAsync([organization], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return organization;
     }
@@ -213,17 +206,11 @@ public class OrganizationService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
-
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
         var deletedOrganization = mapper.MapTo(repositoryFactory.OrganizationRepository.Remove(organization));
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
-            [deletedOrganization],
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationAsync([deletedOrganization], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedOrganization;
     }
@@ -318,9 +305,7 @@ public class OrganizationService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var industrySubCategoryIds = organization.IndustrySubCategories.Select(item => item.Id).ToList();
         var industrySubCategoryEntities = industrySubCategoryIds.Count == 0
@@ -336,11 +321,8 @@ public class OrganizationService(
         organization = mapper.MapTo(
             repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)));
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
-            [organization],
-            repositoryFactory.OrganizationRepository.UnitOfWork,
-            cancellationToken);
-        await repositoryFactory.OrganizationRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationAsync([organization], repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return organization;
     }

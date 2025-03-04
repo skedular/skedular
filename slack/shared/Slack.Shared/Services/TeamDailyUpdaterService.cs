@@ -153,6 +153,6 @@ public class TeamDailyUpdaterService(
 
         teamEntity.SlackChannelDailyUpdateLastSentAt = now;
         repositoryFactory.TeamRepository.Update(teamEntity);
-        await repositoryFactory.TeamRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

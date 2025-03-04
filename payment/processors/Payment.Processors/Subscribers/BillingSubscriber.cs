@@ -126,6 +126,6 @@ public class BillingSubscriber(
                 Organization = organizationOffering.Organization
             });
 
-        await repositoryFactory.OrganizationOfferingStripePaymentIntentRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
