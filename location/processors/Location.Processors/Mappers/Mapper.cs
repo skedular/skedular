@@ -369,6 +369,7 @@ public class Mapper : IMapper
         };
 
         location.LocationMembers = MapTo(src.LocationMembers, location).ToList();
+        location.Resources = MapTo(src.Resources, location).ToList();
         location.Desks = MapTo(src.Desks, location).ToList();
         location.Rooms = MapTo(src.Rooms, location).ToList();
 
@@ -418,6 +419,43 @@ public class Mapper : IMapper
             Location = MapTo(src.Location),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
+        };
+
+    private static IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src, Shared.Models.Location location) =>
+        src.Select(item => MapTo(item, location));
+
+    private static Resource MapTo(Shared.Database.Entities.Resource src, Shared.Models.Location location) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
+            OrganizationResourceType = MapTo(src.OrganizationResourceType),
+            Location = location
+        };
+
+    private static Shared.Models.OrganizationResourceType MapTo(OrganizationResourceType src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Color = src.Color,
+            SystemType = string.IsNullOrWhiteSpace(src.SystemType)
+                ? null
+                : src.SystemType switch
+                {
+                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
+                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
         };
 
     private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk> src, Shared.Models.Location location) =>

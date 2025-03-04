@@ -58,7 +58,7 @@ public class RoomService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var room = await repositoryFactory.RoomRepository.GetByIdAsync(id, cancellationToken);
+        var room = await repositoryFactory.RoomRepository.GetByIdAsync(id, false, cancellationToken);
         if (room is null)
         {
             throw new RoomNotFound();
@@ -96,7 +96,7 @@ public class RoomService(
 
         if (!string.IsNullOrWhiteSpace(room.Id))
         {
-            var existingRoom = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, cancellationToken);
+            var existingRoom = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, false, cancellationToken);
             if (existingRoom is not null)
             {
                 return await UpdateInternalAsync(room, existingRoom, customer, cancellationToken);
@@ -257,7 +257,7 @@ public class RoomService(
         ArgumentException.ThrowIfNullOrWhiteSpace(room.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingRoom = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, cancellationToken);
+        var existingRoom = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, false, cancellationToken);
         if (existingRoom is null)
         {
             throw new RoomNotFound();
@@ -271,7 +271,7 @@ public class RoomService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var room = await repositoryFactory.RoomRepository.GetByIdAsync(id, cancellationToken);
+        var room = await repositoryFactory.RoomRepository.GetByIdAsync(id, false, cancellationToken);
         if (room is null)
         {
             throw new RoomNotFound();
@@ -320,7 +320,7 @@ public class RoomService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var rooms = await repositoryFactory.RoomRepository.GetByIdsAsync(ids, cancellationToken);
+        var rooms = await repositoryFactory.RoomRepository.GetByIdsAsync(ids, false, cancellationToken);
         var locationIds = rooms.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
@@ -371,7 +371,7 @@ public class RoomService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var rooms = await repositoryFactory.RoomRepository.GetByIdsAsync(ids, cancellationToken);
+        var rooms = await repositoryFactory.RoomRepository.GetByIdsAsync(ids, false, cancellationToken);
         var locationIds = rooms.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
@@ -426,7 +426,7 @@ public class RoomService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var rooms = await repositoryFactory.RoomRepository.GetByIdsAsync(ids, cancellationToken);
+        var rooms = await repositoryFactory.RoomRepository.GetByIdsAsync(ids, false, cancellationToken);
         var locationIds = rooms.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 

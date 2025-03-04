@@ -13,17 +13,15 @@ namespace Location.Shared.Repositories;
 public interface ILocationRepository : IRepository<Database.Entities.Location>
 {
     Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Location>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(string customerId, string? locationId, CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Location>> GetByIdsAsync(
-        ICollection<string> ids,
+    Task<ICollection<Database.Entities.Location>> GetAllAsync(
+        bool includeDeletedResources,
+        bool includeDeletedDesks,
+        bool includeDeletedRooms,
         CancellationToken cancellationToken);
 
-    Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
-        string customerId,
-        string? locationId,
-        CancellationToken cancellationToken);
-
-    Task<ICollection<Database.Entities.Location>> GetAllAsync(CancellationToken cancellationToken);
     Database.Entities.Location Add(Database.Entities.Location location);
     Database.Entities.Location Update(Database.Entities.Location location);
     Database.Entities.Location Remove(Database.Entities.Location location);
@@ -38,16 +36,22 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
 internal static class LocationExtensions
 {
     internal static IIncludableQueryable<Database.Entities.Location, Customer> AddDependentObjects(
-        this IQueryable<Database.Entities.Location> originalQuery) =>
+        this IQueryable<Database.Entities.Location> originalQuery,
+        bool includeDeletedResources,
+        bool includeDeletedDesks,
+        bool includeDeletedRooms) =>
         originalQuery
             .Include(query => query.Organization)
-            .ThenInclude(query =>
-                query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .Include(query => query.PhysicalAddress)
-            .Include(query => query.Desks.Where(desk => !desk.DeletedAt.HasValue))
+            .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
-            .Include(query => query.Rooms.Where(room => !room.DeletedAt.HasValue))
+            .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))
+            .ThenInclude(query => query.OrganizationResourceType)
+            .Include(query => query.Desks.Where(desk => includeDeletedDesks || !desk.DeletedAt.HasValue))
+            .ThenInclude(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
+            .Include(query => query.Rooms.Where(room => includeDeletedRooms || !room.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
             .Include(query => query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer);
@@ -72,13 +76,12 @@ internal static class LocationExtensions
         }
         else
         {
-            query = query.Where(item =>
-                item.Organization != null && !item.Organization.DeletedAt.HasValue &&
-                item.Organization.Id == searchCriteria.OrganizationId &&
-                (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
-                    !organizationMember.DeletedAt.HasValue &&
-                    organizationMember.Customer.Id ==
-                    searchCriteria.CustomerId)));
+            query = query.Where(item => item.Organization != null && !item.Organization.DeletedAt.HasValue &&
+                                        item.Organization.Id == searchCriteria.OrganizationId &&
+                                        (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
+                                            !organizationMember.DeletedAt.HasValue &&
+                                            organizationMember.Customer.Id ==
+                                            searchCriteria.CustomerId)));
         }
 
         if (searchCriteria.LocationIds is not null && searchCriteria.LocationIds.Length > 0)
@@ -106,13 +109,11 @@ internal static class LocationExtensions
         {
             searchCriteria.CustomTagIds.ForEach(id =>
                 query = query.Where(item =>
-                    item.Desks.Any(desk =>
-                        !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
+                    item.Desks.Any(desk => !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
 
             searchCriteria.CustomTagIds.ForEach(id =>
                 query = query.Where(item =>
-                    item.Rooms.Any(room =>
-                        !room.DeletedAt.HasValue && room.OrganizationTags.Select(tag => tag.Id).Contains(id))));
+                    item.Rooms.Any(room => !room.DeletedAt.HasValue && room.OrganizationTags.Select(tag => tag.Id).Contains(id))));
         }
 
         return query;
@@ -156,7 +157,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
 {
     public async Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .AddDependentObjects()
+            .AddDependentObjects(false, false, false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Database.Entities.Location>> GetByIdsAsync(
@@ -164,7 +165,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects()
+            .AddDependentObjects(false, false, false)
             .ToListAsync(cancellationToken);
 
     public Database.Entities.Location Add(Database.Entities.Location location)
@@ -187,32 +188,31 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         CancellationToken cancellationToken)
     {
         var query = DbContext.Location
-            .Where(location =>
-                !location.DeletedAt.HasValue && ((location.Organization == null &&
-                                                  location.LocationMembers.Any(item =>
-                                                      item.Customer.Id == customerId)) ||
-                                                 (location.Organization != null &&
-                                                  !location.Organization.DeletedAt.HasValue &&
-                                                  location.Organization.OrganizationMembers.Any(organizationMember =>
-                                                      organizationMember.Customer.Id == customerId))));
+            .Where(location => !location.DeletedAt.HasValue && ((location.Organization == null &&
+                                                                 location.LocationMembers.Any(item =>
+                                                                     item.Customer.Id == customerId)) ||
+                                                                (location.Organization != null &&
+                                                                 !location.Organization.DeletedAt.HasValue &&
+                                                                 location.Organization.OrganizationMembers.Any(organizationMember =>
+                                                                     organizationMember.Customer.Id == customerId))));
 
         query = string.IsNullOrWhiteSpace(locationId)
-            ? query.Where(team =>
-                team.Organization == null || (team.Organization != null && !team.Organization.DeletedAt.HasValue))
-            : query.Where(team =>
-                team.Organization != null &&
-                !team.Organization.DeletedAt.HasValue &&
-                team.Organization.Id == locationId);
+            ? query.Where(team => team.Organization == null || (team.Organization != null && !team.Organization.DeletedAt.HasValue))
+            : query.Where(team => team.Organization != null && !team.Organization.DeletedAt.HasValue && team.Organization.Id == locationId);
 
         return await query
-            .AddDependentObjects()
+            .AddDependentObjects(false, false, false)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<ICollection<Database.Entities.Location>> GetAllAsync(CancellationToken cancellationToken) =>
+    public async Task<ICollection<Database.Entities.Location>> GetAllAsync(
+        bool includeDeletedResources,
+        bool includeDeletedDesks,
+        bool includeDeletedRooms,
+        CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => !query.DeletedAt.HasValue)
-            .AddDependentObjects()
+            .AddDependentObjects(includeDeletedResources, includeDeletedDesks, includeDeletedRooms)
             .ToListAsync(cancellationToken);
 
     public Database.Entities.Location Remove(Database.Entities.Location location)
@@ -230,7 +230,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         (await DbContext.Location
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects()
+            .AddDependentObjects(false, false, false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }

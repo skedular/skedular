@@ -16,6 +16,12 @@ service LocationService {
     rpc Update (UpdateInput) returns (Location);
     rpc Remove (RemoveInput) returns (Location);
 
+    rpc GetPaginatedResources (GetPaginatedResourcesInput) returns (ResourceConnection);
+    rpc GetResource (GetResourceInput) returns (Resource);
+    rpc AddResource (AddResourceInput) returns (Resource);
+    rpc UpdateResource (UpdateResourceInput) returns (Resource);
+    rpc RemoveResource (RemoveResourceInput) returns (Resource);
+
     rpc GetPaginatedDesks (GetPaginatedDesksInput) returns (DeskConnection);
     rpc GetDesk (GetDeskInput) returns (Desk);
     rpc AddDesk (AddDeskInput) returns (Desk);
@@ -111,13 +117,14 @@ message Location {
     string about = 3;
     string organizationId = 4;
     string timezone = 5;
-    repeated Desk desks = 6;
-    repeated Room rooms = 7;
-    bool hasFutureBooking = 8;
-    Permissions permissions = 9;
-    repeated LocationMember members = 10;
-    repeated OrganizationCustomTag customTags = 11;
-    repeated OrganizationZone zones = 12;
+    repeated Resource resources = 6;
+    repeated Desk desks = 7;
+    repeated Room rooms = 8;
+    bool hasFutureBooking = 9;
+    Permissions permissions = 10;
+    repeated LocationMember members = 11;
+    repeated OrganizationCustomTag customTags = 12;
+    repeated OrganizationZone zones = 13;
 }
 
 message Admin_GetInput {
@@ -165,6 +172,12 @@ enum LocationOrderField {
     Timezone = 2;
 }
 
+message OrganizationResourceType {
+    string id = 1;
+    string name = 2;
+    string color = 3;
+}
+
 message OrganizationCustomTag {
     string id = 1;
     string name = 2;
@@ -207,6 +220,82 @@ message UpdateInput {
 }
 
 message RemoveInput {
+    string id = 1;
+}
+
+message Resource {
+    string id = 1;
+    string name = 2;
+    bool inactive = 3;
+    bool requireBookingApproval = 4;
+    OrganizationResourceType organizationResourceType = 5;
+    repeated OrganizationCustomTag organizationCustomTags = 6;
+    repeated OrganizationZone organizationZones = 7;
+    string color = 8;
+}
+
+message ResourceConnection {
+    PageInfo pageInfo = 1;
+    repeated ResourceEdge edges = 2;
+    int32 totalCount = 3;
+}
+
+message ResourceEdge {
+    Resource node = 1;
+    string cursor = 2;
+}
+
+message GetPaginatedResourcesInput {
+    string after = 1;
+    int32 first = 2;
+    string before = 3;
+    int32 last = 4;
+    ResourceWhereInput where = 5;
+    repeated ResourceOrderInput orderBy = 6;
+}
+
+message ResourceWhereInput {
+    string locationId = 1;
+    string nameContains = 2;
+    repeated string zoneIds = 3;
+    repeated string customTagIds = 4;
+}
+
+message ResourceOrderInput {
+    OrderDirection direction = 1;
+    ResourceOrderField field = 2;
+}
+
+enum ResourceOrderField {
+    ResourceName = 0;
+}
+
+message GetResourceInput {
+    string id = 1;
+}
+
+message AddResourceInput {
+    string id = 1;
+    string locationId = 2;
+    string name = 3;
+    bool inactive = 4;
+    bool requireBookingApproval = 5;
+    repeated string customTagIds = 6;
+    repeated string zoneIds = 7;
+    string color = 8;
+}
+
+message UpdateResourceInput {
+    string id = 1;
+    string name = 2;
+    bool inactive = 3;
+    bool requireBookingApproval = 4;
+    repeated string customTagIds = 5;
+    repeated string zoneIds = 6;
+    string color = 7;
+}
+
+message RemoveResourceInput {
     string id = 1;
 }
 
@@ -300,7 +389,6 @@ message UpdateDeskInput {
 message RemoveDeskInput {
     string id = 1;
 }
-
 
 message Room {
     string id = 1;

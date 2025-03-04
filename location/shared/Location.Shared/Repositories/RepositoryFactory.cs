@@ -11,6 +11,7 @@ public interface IRepositoryFactory
     ICustomerRepository CustomerRepository { get; }
     IDailyDeskCountRecordingRepository DailyDeskCountRecordingRepository { get; }
     IDailyRoomCountRecordingRepository DailyRoomCountRecordingRepository { get; }
+    IResourceRepository ResourceRepository { get; }
     IDeskRepository DeskRepository { get; }
     IRoomRepository RoomRepository { get; }
     IIdentityRepository IdentityRepository { get; }
@@ -37,6 +38,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         DailyDeskCountRecordingRepository = new DailyDeskCountRecordingRepository(_dbContext, timeProvider);
         DailyRoomCountRecordingRepository = new DailyRoomCountRecordingRepository(_dbContext, timeProvider);
+        ResourceRepository = new ResourceRepository(_dbContext, timeProvider);
         DeskRepository = new DeskRepository(_dbContext, timeProvider);
         RoomRepository = new RoomRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
@@ -60,6 +62,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public ICustomerRepository CustomerRepository { get; }
     public IDailyDeskCountRecordingRepository DailyDeskCountRecordingRepository { get; }
     public IDailyRoomCountRecordingRepository DailyRoomCountRecordingRepository { get; }
+    public IResourceRepository ResourceRepository { get; }
     public IDeskRepository DeskRepository { get; }
     public IRoomRepository RoomRepository { get; }
     public IIdentityRepository IdentityRepository { get; }

@@ -10,7 +10,7 @@ namespace Location.Shared.Database.Entities;
 public class Resource : EntityBaseWithDeleted
 {
     public string Name { get; set; } = string.Empty;
-    public bool Deactivated { get; set; }
+    public bool Inactive { get; set; }
     public bool RequireBookingApproval { get; set; }
     public string? Color { get; set; }
 
@@ -35,7 +35,7 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
         builder.HasOne(item => item.OrganizationResourceType).WithMany(item => item.Resources);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.Deactivated);
+        builder.HasIndex(item => item.Inactive);
         builder.HasIndex(item => item.RequireBookingApproval);
     }
 }

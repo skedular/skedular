@@ -2,9 +2,9 @@ using Enterprise.Shared.Pagination;
 
 namespace Location.Shared.Models;
 
-public class RoomSearchCriteria
+public class ResourceSearchCriteria
 {
-    public RoomSearchCriteria(string locationId, string? nameContains, ICollection<string>? zoneIds, ICollection<string>? customTagIds)
+    public ResourceSearchCriteria(string locationId, string? nameContains, ICollection<string>? zoneIds, ICollection<string>? customTagIds)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
@@ -20,9 +20,9 @@ public class RoomSearchCriteria
     public ICollection<string> CustomTagIds { get; }
 }
 
-public record RoomOrder(OrderDirection Direction, RoomOrderField Field);
+public record ResourceOrder(OrderDirection Direction, ResourceOrderField Field);
 
-public enum RoomOrderField
+public enum ResourceOrderField
 {
     Name
 }

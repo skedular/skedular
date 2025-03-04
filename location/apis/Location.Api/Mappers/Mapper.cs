@@ -8,7 +8,9 @@ using Booking = Location.Shared.Models.Booking;
 using Customer = Location.Shared.Models.Customer;
 using AddDeskInput = Location.Api.GraphQL.AddDeskInput;
 using DailyDeskCountRecording = Location.Shared.Models.DailyDeskCountRecording;
+using Resource = Location.Shared.Database.Entities.Resource;
 using Desk = Location.Shared.Database.Entities.Desk;
+using OrganizationResourceType = Location.Shared.Database.Entities.OrganizationResourceType;
 using DeskEdge = Location.Api.GraphQL.DeskEdge;
 using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOccupancyPercentage;
 using UpdateDeskInput = Location.Api.GraphQL.UpdateDeskInput;
@@ -61,6 +63,7 @@ public interface IMapper
         Shared.Database.Entities.Location location,
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
 
+    Shared.Models.Resource MapTo(Resource src, Shared.Models.Location location);
     Shared.Models.Desk MapTo(Desk src, Shared.Models.Location location);
     Shared.Models.Room MapTo(Room src, Shared.Models.Location location);
     LocationMember MapTo(Shared.Database.Entities.LocationMember src, Shared.Models.Location location);
@@ -87,6 +90,8 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src);
     Shared.Models.Location MapTo(AddInput src);
     Shared.Models.Location MapTo(UpdateInput src);
+    global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationResourceType MapToGrpcResponse(Shared.Models.OrganizationResourceType src);
+    global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource MapToGrpcResponse(Shared.Models.Resource src);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk MapToGrpcResponse(Shared.Models.Desk src);
     Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddDeskInput src);
     Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateDeskInput src);
@@ -128,6 +133,7 @@ public class Mapper : IMapper
         location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
         location.DailyRoomCountRecordings = MapTo(src.DailyRoomCountRecordings, location).ToList();
         location.JoinInvitations = MapTo(src.JoinInvitations, location).ToList();
+        location.Resources = MapTo(src.Resources, location).ToList();
         location.Desks = MapTo(src.Desks, location).ToList();
         location.Rooms = MapTo(src.Rooms, location).ToList();
         location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
@@ -199,6 +205,7 @@ public class Mapper : IMapper
                 DeskCapacity = src.Desks.Count,
                 RoomCapacity = src.Rooms.Count,
                 Organization = MapTo(src.Organization),
+                Desks = MapTo(src.Desks).ToArray(),
                 Rooms = MapTo(src.Rooms).ToArray(),
                 CustomTags = MapTo(src.CustomTags).ToArray(),
                 Zones = MapTo(src.Zones).ToArray(),
@@ -516,6 +523,7 @@ public class Mapper : IMapper
             HasFutureBooking = src.HasFutureBooking
         };
 
+        location.Resources.AddRange(MapToGrpcResponse(src.Resources));
         location.Desks.AddRange(MapToGrpcResponse(src.Desks));
         location.Rooms.AddRange(MapToGrpcResponse(src.Rooms));
         location.CustomTags.AddRange(MapToGrpcResponseOrganizationCustomTags(src.CustomTags));
@@ -559,6 +567,52 @@ public class Mapper : IMapper
             CustomTags = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Custom), location.Organization).ToList(),
             Zones = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Zone), location.Organization).ToList()
         };
+
+    public Shared.Models.Resource MapTo(Resource src, Shared.Models.Location location) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
+            Location = location,
+            CustomTags = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Custom), location.Organization).ToList(),
+            Zones = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Zone), location.Organization).ToList(),
+            OrganizationResourceType = MapTo(src.OrganizationResourceType)
+        };
+
+    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationResourceType MapToGrpcResponse(
+        Shared.Models.OrganizationResourceType src)
+    {
+        var organizationResourceType = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationResourceType
+        {
+            Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()
+        };
+
+        return organizationResourceType;
+    }
+
+    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource MapToGrpcResponse(Shared.Models.Resource src)
+    {
+        var resource = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color.ToSafeString(),
+            OrganizationResourceType = MapToGrpcResponse(src.OrganizationResourceType)
+        };
+
+        resource.OrganizationCustomTags.AddRange(MapToGrpcResponseOrganizationCustomTags(src.CustomTags));
+        resource.OrganizationZones.AddRange(MapToGrpcResponseOrganizationZones(src.Zones));
+
+        return resource;
+    }
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk MapToGrpcResponse(Shared.Models.Desk src)
     {
@@ -728,6 +782,9 @@ public class Mapper : IMapper
         Shared.Models.Organization? organization) =>
         src.Select(item => MapTo(item, organization));
 
+    private IEnumerable<Shared.Models.Resource> MapTo(IEnumerable<Resource> src, Shared.Models.Location location) =>
+        src.Select(item => MapTo(item, location));
+
     private IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
 
@@ -741,6 +798,9 @@ public class Mapper : IMapper
 
     private static IEnumerable<OrganizationZone> MapToGrpcResponseOrganizationZones(IEnumerable<OrganizationTag> src) =>
         src.Select(MapToGrpcResponseOrganizationZone);
+
+    private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> MapToGrpcResponse(IEnumerable<Shared.Models.Resource> src) =>
+        src.Select(MapToGrpcResponse);
 
     private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk> MapToGrpcResponse(IEnumerable<Shared.Models.Desk> src) =>
         src.Select(MapToGrpcResponse);
@@ -955,4 +1015,23 @@ public class Mapper : IMapper
                 Country = src.Country,
                 Location = location
             };
+
+    private static Shared.Models.OrganizationResourceType MapTo(OrganizationResourceType src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Color = src.Color,
+            SystemType = string.IsNullOrWhiteSpace(src.SystemType)
+                ? null
+                : src.SystemType switch
+                {
+                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
+                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+        };
 }

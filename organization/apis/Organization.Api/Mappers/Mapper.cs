@@ -764,10 +764,8 @@ public class Mapper : IMapper
             },
             Status = src.Status switch
             {
-                OrganizationMemberStatus.Active =>
-                    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active,
-                OrganizationMemberStatus.Inactive =>
-                    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive,
+                OrganizationMemberStatus.Active => global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Active,
+                OrganizationMemberStatus.Inactive => global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,

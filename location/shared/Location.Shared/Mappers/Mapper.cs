@@ -5,6 +5,7 @@ using Location.Shared.Models;
 using Desk = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk;
 using Room = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room;
 using LocationMember = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember;
+using Resource = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource;
 
 namespace Location.Shared.Mappers;
 
@@ -38,6 +39,24 @@ public class Mapper : IMapper
                 LocationMemberRole.Member => Role.Member,
                 _ => throw new ArgumentOutOfRangeException()
             }
+        }));
+
+        location.Resources.AddRange(src.Resources.Select(item =>
+        {
+            var resource = new Resource
+            {
+                Id = item.Id,
+                Name = item.Name.ToSafeString(),
+                Inactive = item.Inactive,
+                RequireBookingApproval = item.RequireBookingApproval,
+                Color = item.Color.ToSafeString(),
+                OrganizationResourceTypeId = item.OrganizationResourceType.Id
+            };
+
+            resource.CustomTagIds.AddRange(item.CustomTags.Select(tag => tag.Id));
+            resource.ZoneIds.AddRange(item.Zones.Select(tag => tag.Id));
+
+            return resource;
         }));
 
         location.Desks.AddRange(src.Desks.Select(item =>

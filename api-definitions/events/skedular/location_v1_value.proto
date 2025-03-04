@@ -61,7 +61,7 @@ message LocationMember {
 message Resource {
   string id = 1;
   string name = 2;
-  bool deactivated = 3;
+  bool inactive = 3;
   bool requireBookingApproval = 4;
   string organizationResourceTypeId = 5;
   repeated string customTagIds = 6;

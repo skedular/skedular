@@ -10,7 +10,7 @@ namespace Booking.Shared.Database.Entities;
 public class LocationResource : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
-    public bool Deactivated { get; set; }
+    public bool Inactive { get; set; }
     public bool RequireBookingApproval { get; set; }
     public string? Color { get; set; }
 
@@ -29,7 +29,7 @@ public class LocationResourceConfiguration : IEntityTypeConfiguration<LocationRe
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxDeskNameLength);
-        builder.Property(item => item.Deactivated).HasDefaultValue(false);
+        builder.Property(item => item.Inactive).HasDefaultValue(false);
         builder.Property(item => item.RequireBookingApproval).HasDefaultValue(false);
         builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
 
@@ -38,7 +38,7 @@ public class LocationResourceConfiguration : IEntityTypeConfiguration<LocationRe
         builder.HasOne(item => item.OrganizationResourceType).WithMany(item => item.LocationResources);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.Deactivated);
+        builder.HasIndex(item => item.Inactive);
         builder.HasIndex(item => item.RequireBookingApproval);
     }
 }

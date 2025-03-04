@@ -6,42 +6,44 @@ using Location.Shared.Database;
 using Location.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Desk = Location.Shared.Database.Entities.Desk;
+using Resource = Location.Shared.Database.Entities.Resource;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Shared.Repositories;
 
-public interface IDeskRepository : IRepository<Desk>
+public interface IResourceRepository : IRepository<Resource>
 {
-    Task<Desk?> GetByIdAsync(string id, bool includeBookings, CancellationToken cancellationToken);
-    Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, bool includeBookings, CancellationToken cancellationToken);
-    Desk Add(Desk desk);
-    Desk Update(Desk desk);
-    void RemoveRange(ICollection<Desk> desks);
-    Desk Remove(Desk desk);
+    Task<Resource?> GetByIdAsync(string id, bool includeBookings, CancellationToken cancellationToken);
+    Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeBookings, CancellationToken cancellationToken);
+    Resource Add(Resource resource);
+    Resource Update(Resource resource);
+    void RemoveRange(ICollection<Resource> resources);
+    Resource Remove(Resource resource);
 
-    Task<(PaginatedInfo, ICollection<Edge<Desk>>, int )> GetPaginatedDesksAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Resource>>, int )> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
-        DeskSearchCriteria searchCriteria,
-        ICollection<DeskOrder> orderByFields,
+        ResourceSearchCriteria searchCriteria,
+        ICollection<ResourceOrder> orderByFields,
         CancellationToken cancellationToken);
 }
 
-internal static class DeskExtensions
+internal static class ResourceExtensions
 {
-    internal static IIncludableQueryable<Desk, IEnumerable<OrganizationTag>> AddDependentObjects(
-        this IQueryable<Desk> originalQuery,
+    internal static IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects(
+        this IQueryable<Resource> originalQuery,
         bool includeBookings) =>
         includeBookings
             ? originalQuery
                 .Include(query => query.Bookings)
+                .Include(query => query.OrganizationResourceType)
                 .Include(query => query.Location)
                 .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
             : originalQuery
+                .Include(query => query.OrganizationResourceType)
                 .Include(query => query.Location)
                 .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
 
-    internal static IQueryable<Desk> AddSearchCriteria(this IQueryable<Desk> query, DeskSearchCriteria searchCriteria)
+    internal static IQueryable<Resource> AddSearchCriteria(this IQueryable<Resource> query, ResourceSearchCriteria searchCriteria)
     {
         query = query.Where(item => !item.DeletedAt.HasValue && item.Location.Id == searchCriteria.LocationId);
 
@@ -63,7 +65,7 @@ internal static class DeskExtensions
         return query;
     }
 
-    internal static IQueryable<Desk> AddSortingOrders(this IQueryable<Desk> originalQuery, ICollection<DeskOrder> orderByFields)
+    internal static IQueryable<Resource> AddSortingOrders(this IQueryable<Resource> originalQuery, ICollection<ResourceOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {
@@ -73,14 +75,14 @@ internal static class DeskExtensions
         var orderByField = orderByFields.First();
         return orderByFields.Skip(1).Aggregate(orderByField.Field switch
         {
-            DeskOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+            ResourceOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Name)
                 : originalQuery.OrderByDescending(x => x.Name),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch
             {
-                DeskOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                ResourceOrderField.Name => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Name)
                     : query.ThenByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()
@@ -88,54 +90,54 @@ internal static class DeskExtensions
     }
 }
 
-public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<LocationDbContext, Desk>(dbContext, timeProvider), IDeskRepository
+public class ResourceRepository(LocationDbContext dbContext, TimeProvider timeProvider)
+    : RepositoryBase<LocationDbContext, Resource>(dbContext, timeProvider), IResourceRepository
 {
-    public async Task<Desk?> GetByIdAsync(string id, bool includeBookings, CancellationToken cancellationToken) =>
-        await DbContext.Desk
+    public async Task<Resource?> GetByIdAsync(string id, bool includeBookings, CancellationToken cancellationToken) =>
+        await DbContext.Resource
             .AddDependentObjects(includeBookings)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, bool includeBookings, CancellationToken cancellationToken) =>
-        await DbContext.Desk
+    public async Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeBookings, CancellationToken cancellationToken) =>
+        await DbContext.Resource
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects(includeBookings)
             .ToListAsync(cancellationToken);
 
-    public Desk Add(Desk desk)
+    public Resource Add(Resource resource)
     {
         var now = TimeProvider.GetUtcNow();
-        desk.CreatedAt = now;
-        return DbContext.Desk.Add(desk).Entity;
+        resource.CreatedAt = now;
+        return DbContext.Resource.Add(resource).Entity;
     }
 
-    public void RemoveRange(ICollection<Desk> desks)
+    public void RemoveRange(ICollection<Resource> resources)
     {
         var now = TimeProvider.GetUtcNow();
-        desks.ForEach(desk => desk.DeletedAt = now);
-        DbContext.Desk.UpdateRange(desks);
+        resources.ForEach(resource => resource.DeletedAt = now);
+        DbContext.Resource.UpdateRange(resources);
     }
 
-    public Desk Remove(Desk desk)
+    public Resource Remove(Resource resource)
     {
         var now = TimeProvider.GetUtcNow();
-        desk.DeletedAt = now;
-        return DbContext.Desk.Update(desk).Entity;
+        resource.DeletedAt = now;
+        return DbContext.Resource.Update(resource).Entity;
     }
 
-    public Desk Update(Desk desk)
+    public Resource Update(Resource resource)
     {
         var now = TimeProvider.GetUtcNow();
-        desk.ModifiedAt = now;
-        return DbContext.Desk.Update(desk).Entity;
+        resource.ModifiedAt = now;
+        return DbContext.Resource.Update(resource).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Desk>>, int)> GetPaginatedDesksAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
-        DeskSearchCriteria searchCriteria,
-        ICollection<DeskOrder> orderByFields,
+        ResourceSearchCriteria searchCriteria,
+        ICollection<ResourceOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.Desk
+        (await DbContext.Resource
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
             .AddDependentObjects(false)

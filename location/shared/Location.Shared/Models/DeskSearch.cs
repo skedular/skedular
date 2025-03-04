@@ -4,11 +4,7 @@ namespace Location.Shared.Models;
 
 public class DeskSearchCriteria
 {
-    public DeskSearchCriteria(
-        string locationId,
-        string? nameContains,
-        ICollection<string>? zoneIds,
-        ICollection<string>? customTagIds)
+    public DeskSearchCriteria(string locationId, string? nameContains, ICollection<string>? zoneIds, ICollection<string>? customTagIds)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 

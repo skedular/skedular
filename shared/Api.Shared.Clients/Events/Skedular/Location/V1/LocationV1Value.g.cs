@@ -41,26 +41,26 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "c291cmNlcxgIIAMoCzISLmxvY2F0aW9uLlJlc291cmNlEh0KBWRlc2tzGAkg",
             "AygLMg4ubG9jYXRpb24uRGVzaxIdCgVyb29tcxgKIAMoCzIOLmxvY2F0aW9u",
             "LlJvb20iTgoOTG9jYXRpb25NZW1iZXISCgoCaWQYASABKAkSHAoEcm9sZRgC",
-            "IAEoDjIOLmxvY2F0aW9uLlJvbGUSEgoKY3VzdG9tZXJJZBgDIAEoCSKzAQoI",
-            "UmVzb3VyY2USCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZWFjdGl2",
-            "YXRlZBgDIAEoCBIeChZyZXF1aXJlQm9va2luZ0FwcHJvdmFsGAQgASgIEiIK",
-            "Gm9yZ2FuaXphdGlvblJlc291cmNlVHlwZUlkGAUgASgJEhQKDGN1c3RvbVRh",
-            "Z0lkcxgGIAMoCRIPCgd6b25lSWRzGAcgAygJEg0KBWNvbG9yGAggASgJIosB",
-            "CgREZXNrEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVhY3RpdmF0",
-            "ZWQYAyABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3ZhbBgEIAEoCBIUCgxj",
-            "dXN0b21UYWdJZHMYBSADKAkSDwoHem9uZUlkcxgGIAMoCRINCgVjb2xvchgH",
-            "IAEoCSKLAQoEUm9vbRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2Rl",
-            "YWN0aXZhdGVkGAMgASgIEh4KFnJlcXVpcmVCb29raW5nQXBwcm92YWwYBCAB",
-            "KAgSFAoMY3VzdG9tVGFnSWRzGAUgAygJEg8KB3pvbmVJZHMYBiADKAkSDQoF",
-            "Y29sb3IYByABKAkikQEKGEludml0YXRpb25Ub0pvaW5Mb2NhdGlvbhIKCgJp",
-            "ZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYu",
-            "VGltZXN0YW1wEhIKCmxvY2F0aW9uSWQYAyABKAkSEwoLaW52aXRlZEJ5SWQY",
-            "BCABKAkSEQoJaW52aXRlZUlkGAUgASgJKnwKBFR5cGUSFAoQTG9jYXRpb25V",
-            "cHNlcnRlZBAAEhMKD0xvY2F0aW9uRGVsZXRlZBABEiQKIEludml0YXRpb25U",
-            "b0pvaW5Mb2NhdGlvblVwc2VydGVkEAISIwofSW52aXRhdGlvblRvSm9pbkxv",
-            "Y2F0aW9uRGVsZXRlZBADKjAKBFJvbGUSCQoFT3duZXIQABIRCg1BZG1pbmlz",
-            "dHJhdG9yEAESCgoGTWVtYmVyEAJCN6oCNEFwaS5TaGFyZWQuQ2xpZW50cy5F",
-            "dmVudHMuU2tlZHVsYXIuTG9jYXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
+            "IAEoDjIOLmxvY2F0aW9uLlJvbGUSEgoKY3VzdG9tZXJJZBgDIAEoCSKwAQoI",
+            "UmVzb3VyY2USCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIQCghpbmFjdGl2",
+            "ZRgDIAEoCBIeChZyZXF1aXJlQm9va2luZ0FwcHJvdmFsGAQgASgIEiIKGm9y",
+            "Z2FuaXphdGlvblJlc291cmNlVHlwZUlkGAUgASgJEhQKDGN1c3RvbVRhZ0lk",
+            "cxgGIAMoCRIPCgd6b25lSWRzGAcgAygJEg0KBWNvbG9yGAggASgJIosBCgRE",
+            "ZXNrEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVhY3RpdmF0ZWQY",
+            "AyABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3ZhbBgEIAEoCBIUCgxjdXN0",
+            "b21UYWdJZHMYBSADKAkSDwoHem9uZUlkcxgGIAMoCRINCgVjb2xvchgHIAEo",
+            "CSKLAQoEUm9vbRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2RlYWN0",
+            "aXZhdGVkGAMgASgIEh4KFnJlcXVpcmVCb29raW5nQXBwcm92YWwYBCABKAgS",
+            "FAoMY3VzdG9tVGFnSWRzGAUgAygJEg8KB3pvbmVJZHMYBiADKAkSDQoFY29s",
+            "b3IYByABKAkikQEKGEludml0YXRpb25Ub0pvaW5Mb2NhdGlvbhIKCgJpZBgB",
+            "IAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGlt",
+            "ZXN0YW1wEhIKCmxvY2F0aW9uSWQYAyABKAkSEwoLaW52aXRlZEJ5SWQYBCAB",
+            "KAkSEQoJaW52aXRlZUlkGAUgASgJKnwKBFR5cGUSFAoQTG9jYXRpb25VcHNl",
+            "cnRlZBAAEhMKD0xvY2F0aW9uRGVsZXRlZBABEiQKIEludml0YXRpb25Ub0pv",
+            "aW5Mb2NhdGlvblVwc2VydGVkEAISIwofSW52aXRhdGlvblRvSm9pbkxvY2F0",
+            "aW9uRGVsZXRlZBADKjAKBFJvbGUSCQoFT3duZXIQABIRCg1BZG1pbmlzdHJh",
+            "dG9yEAESCgoGTWVtYmVyEAJCN6oCNEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVu",
+            "dHMuU2tlZHVsYXIuTG9jYXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -69,7 +69,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "Location", "InvitationToJoinLocation" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Resources", "Desks", "Rooms" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember.Parser, new[]{ "Id", "Role", "CustomerId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "OrganizationResourceTypeId", "CustomTagIds", "ZoneIds", "Color" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource.Parser, new[]{ "Id", "Name", "Inactive", "RequireBookingApproval", "OrganizationResourceTypeId", "CustomTagIds", "ZoneIds", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "CustomTagIds", "ZoneIds", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "CustomTagIds", "ZoneIds", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null)
@@ -1839,7 +1839,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     public Resource(Resource other) : this() {
       id_ = other.id_;
       name_ = other.name_;
-      deactivated_ = other.deactivated_;
+      inactive_ = other.inactive_;
       requireBookingApproval_ = other.requireBookingApproval_;
       organizationResourceTypeId_ = other.organizationResourceTypeId_;
       customTagIds_ = other.customTagIds_.Clone();
@@ -1878,15 +1878,15 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "deactivated" field.</summary>
-    public const int DeactivatedFieldNumber = 3;
-    private bool deactivated_;
+    /// <summary>Field number for the "inactive" field.</summary>
+    public const int InactiveFieldNumber = 3;
+    private bool inactive_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Deactivated {
-      get { return deactivated_; }
+    public bool Inactive {
+      get { return inactive_; }
       set {
-        deactivated_ = value;
+        inactive_ = value;
       }
     }
 
@@ -1965,7 +1965,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
       if (Id != other.Id) return false;
       if (Name != other.Name) return false;
-      if (Deactivated != other.Deactivated) return false;
+      if (Inactive != other.Inactive) return false;
       if (RequireBookingApproval != other.RequireBookingApproval) return false;
       if (OrganizationResourceTypeId != other.OrganizationResourceTypeId) return false;
       if(!customTagIds_.Equals(other.customTagIds_)) return false;
@@ -1980,7 +1980,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
-      if (Deactivated != false) hash ^= Deactivated.GetHashCode();
+      if (Inactive != false) hash ^= Inactive.GetHashCode();
       if (RequireBookingApproval != false) hash ^= RequireBookingApproval.GetHashCode();
       if (OrganizationResourceTypeId.Length != 0) hash ^= OrganizationResourceTypeId.GetHashCode();
       hash ^= customTagIds_.GetHashCode();
@@ -2012,9 +2012,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(Name);
       }
-      if (Deactivated != false) {
+      if (Inactive != false) {
         output.WriteRawTag(24);
-        output.WriteBool(Deactivated);
+        output.WriteBool(Inactive);
       }
       if (RequireBookingApproval != false) {
         output.WriteRawTag(32);
@@ -2048,9 +2048,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(Name);
       }
-      if (Deactivated != false) {
+      if (Inactive != false) {
         output.WriteRawTag(24);
-        output.WriteBool(Deactivated);
+        output.WriteBool(Inactive);
       }
       if (RequireBookingApproval != false) {
         output.WriteRawTag(32);
@@ -2082,7 +2082,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
-      if (Deactivated != false) {
+      if (Inactive != false) {
         size += 1 + 1;
       }
       if (RequireBookingApproval != false) {
@@ -2114,8 +2114,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (other.Name.Length != 0) {
         Name = other.Name;
       }
-      if (other.Deactivated != false) {
-        Deactivated = other.Deactivated;
+      if (other.Inactive != false) {
+        Inactive = other.Inactive;
       }
       if (other.RequireBookingApproval != false) {
         RequireBookingApproval = other.RequireBookingApproval;
@@ -2156,7 +2156,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 24: {
-            Deactivated = input.ReadBool();
+            Inactive = input.ReadBool();
             break;
           }
           case 32: {
@@ -2207,7 +2207,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 24: {
-            Deactivated = input.ReadBool();
+            Inactive = input.ReadBool();
             break;
           }
           case 32: {

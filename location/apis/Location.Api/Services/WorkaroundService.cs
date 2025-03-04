@@ -29,7 +29,7 @@ public class WorkaroundService(
 
     public async Task RepublishAllLocationsAsync(CancellationToken cancellationToken)
     {
-        var locations = await repositoryFactory.LocationRepository.GetAllAsync(cancellationToken);
+        var locations = await repositoryFactory.LocationRepository.GetAllAsync(false, false, false, cancellationToken);
         await locationPublisher.PublishLocationAsync(locations.Select(mapper.MapTo), cancellationToken);
     }
 }
