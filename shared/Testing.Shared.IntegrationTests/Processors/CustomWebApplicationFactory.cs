@@ -4,12 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Testing.Shared.IntegrationTests.Pact;
-using Xunit.DependencyInjection;
+//using Xunit.DependencyInjection;
 
 namespace Testing.Shared.IntegrationTests.Processors;
 
 public class CustomWebApplicationFactory<TStartup>(
-    ITestOutputHelperAccessor testOutputHelper,
+    //ITestOutputHelperAccessor testOutputHelper,
     IServiceProvider serviceProvider)
     : WebApplicationFactory<TStartup>
     where TStartup : class
@@ -22,8 +22,7 @@ public class CustomWebApplicationFactory<TStartup>(
             collection.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.SetMinimumLevel(LogLevel.Trace);
-                loggingBuilder.Services.AddSingleton(testOutputHelper)
-                    .AddSingleton<ILoggerProvider, ConsoleLoggerProvider>();
+                //loggingBuilder.Services.AddSingleton(testOutputHelper).AddSingleton<ILoggerProvider, ConsoleLoggerProvider>();
             });
 
             if (_accessor is not null)
