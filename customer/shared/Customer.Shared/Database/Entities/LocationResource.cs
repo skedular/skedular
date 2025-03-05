@@ -25,7 +25,7 @@ public class LocationResourceConfiguration : IEntityTypeConfiguration<LocationRe
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxResourceNameLength);
 
-        builder.HasOne(item => item.Location).WithMany(item => item.LocationResources);
+        builder.HasOne(item => item.Location).WithMany(item => item.Resources);
         builder.HasOne(item => item.OrganizationResourceType).WithMany(item => item.LocationResources);
 
         builder.HasIndex(item => item.Name);

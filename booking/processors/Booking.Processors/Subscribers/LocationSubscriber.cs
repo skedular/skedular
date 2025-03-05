@@ -81,6 +81,7 @@ public class LocationSubscriber(
             ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, organization))
             : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
 
+        existingLocation = await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
         existingLocation = await RebuildDesksAsync(location, existingLocation, organization, cancellationToken);
         existingLocation = await RebuildRoomsAsync(location, existingLocation, organization, cancellationToken);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
@@ -93,6 +94,81 @@ public class LocationSubscriber(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
+    private async Task<Location> RebuildResourcesAsync(
+        Shared.Models.Location location,
+        Location existingLocation,
+        Organization? organization,
+        CancellationToken cancellationToken)
+    {
+        if (organization is null)
+        {
+            return existingLocation;
+        }
+
+        var organizationTags = new List<OrganizationTag>();
+        var organizationTagIds = location.Resources.SelectMany(item => item.OrganizationTags.Select(tag => tag.Id)).Distinct().ToList();
+        foreach (var tagId in organizationTagIds)
+        {
+            organizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(tagId, organization, cancellationToken));
+        }
+
+        var organizationResourceTypes = new List<OrganizationResourceType>();
+        var organizationResourceTypeIds = location.Resources.Select(item => item.OrganizationResourceType.Id).Distinct().ToList();
+        foreach (var organizationResourceTypeId in organizationResourceTypeIds)
+        {
+            organizationResourceTypes.Add(
+                await repositoryFactory.OrganizationResourceTypeRepository.UpsertNakedAsync(
+                    organizationResourceTypeId,
+                    organization,
+                    cancellationToken));
+        }
+
+        var resources = await repositoryFactory.LocationResourceRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
+        var itemsToRemove = resources.Where(resource => location.Resources.All(item => item.Id != resource.Id)).ToList();
+        var updatedItems = resources
+            .Where(resource => location.Resources.Any(item => item.Id == resource.Id))
+            .Select(resource =>
+            {
+                var filteredOrganizationTags = organizationTags
+                    .Where(tag =>
+                        location.Resources
+                            .First(item => item.Id == resource.Id).OrganizationTags
+                            .Any(organizationTag => organizationTag.Id == tag.Id))
+                    .ToList();
+
+                var updatedResource = mapper.MergeToEntity(
+                    location.Resources.First(item => item.Id == resource.Id),
+                    resource,
+                    existingLocation,
+                    filteredOrganizationTags,
+                    organizationResourceTypes.First(item => item.Id == resource.OrganizationResourceType.Id));
+                updatedResource.DeletedAt = null;
+                return repositoryFactory.LocationResourceRepository.Update(updatedResource);
+            })
+            .ToList();
+        var addedItems = location.Resources
+            .Where(resource => resources.All(item => item.Id != resource.Id))
+            .Select(resource =>
+            {
+                var filteredOrganizationTags = organizationTags
+                    .Where(tag => resource.OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
+                    .ToList();
+
+                return repositoryFactory.LocationResourceRepository.Add(
+                    mapper.MapToEntity(
+                        resource,
+                        existingLocation,
+                        filteredOrganizationTags,
+                        organizationResourceTypes.First(item => item.Id == resource.OrganizationResourceType.Id)));
+            })
+            .ToList();
+
+        repositoryFactory.LocationResourceRepository.RemoveRange(itemsToRemove);
+        existingLocation.Resources = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+
+        return existingLocation;
+    }
+
     private async Task<Location> RebuildDesksAsync(
         Shared.Models.Location location,
         Location existingLocation,
@@ -102,8 +178,7 @@ public class LocationSubscriber(
         var organizationTags = new List<OrganizationTag>();
         if (organization is not null)
         {
-            var organizationTagIds = location.Desks.SelectMany(item => item.OrganizationTags.Select(tag => tag.Id)).ToList();
-
+            var organizationTagIds = location.Desks.SelectMany(item => item.OrganizationTags.Select(tag => tag.Id)).Distinct().ToList();
             foreach (var tagId in organizationTagIds)
             {
                 organizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(tagId, organization, cancellationToken));
@@ -111,8 +186,7 @@ public class LocationSubscriber(
         }
 
         var desks = await repositoryFactory.DeskRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
-        var itemsToRemove = desks
-            .Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
+        var itemsToRemove = desks.Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
         var updatedItems = desks
             .Where(desk => location.Desks.Any(item => item.Id == desk.Id))
             .Select(desk =>
@@ -158,8 +232,7 @@ public class LocationSubscriber(
         var organizationTags = new List<OrganizationTag>();
         if (organization is not null)
         {
-            var organizationTagIds = location.Rooms.SelectMany(item => item.OrganizationTags.Select(tag => tag.Id)).ToList();
-
+            var organizationTagIds = location.Rooms.SelectMany(item => item.OrganizationTags.Select(tag => tag.Id)).Distinct().ToList();
             foreach (var tagId in organizationTagIds)
             {
                 organizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(tagId, organization, cancellationToken));

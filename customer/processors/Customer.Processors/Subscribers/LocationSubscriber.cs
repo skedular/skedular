@@ -1,6 +1,7 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Customer.Processors.Mappers;
+using Customer.Shared.Database.Entities;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
@@ -89,8 +90,9 @@ public class LocationSubscriber(
             ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, organization))
             : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
 
-        existingLocation = await RebuildDesks(location, existingLocation, cancellationToken);
-        existingLocation = await RebuildRooms(location, existingLocation, cancellationToken);
+        existingLocation = await RebuildResourcesAsync(location, existingLocation, cancellationToken);
+        existingLocation = await RebuildDesksAsync(location, existingLocation, cancellationToken);
+        existingLocation = await RebuildRoomsAsync(location, existingLocation, cancellationToken);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -103,7 +105,56 @@ public class LocationSubscriber(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task<Location> RebuildDesks(Shared.Models.Location location, Location existingLocation, CancellationToken cancellationToken)
+    private async Task<Location> RebuildResourcesAsync(Shared.Models.Location location, Location existingLocation,
+        CancellationToken cancellationToken)
+    {
+        if (existingLocation.Organization is null)
+        {
+            return existingLocation;
+        }
+
+        var organizationResourceTypes = new List<OrganizationResourceType>();
+        var organizationResourceTypeIds = location.Resources.Select(item => item.OrganizationResourceType.Id).Distinct().ToList();
+        foreach (var organizationResourceTypeId in organizationResourceTypeIds)
+        {
+            organizationResourceTypes.Add(
+                await repositoryFactory.OrganizationResourceTypeRepository.UpsertNakedAsync(
+                    organizationResourceTypeId,
+                    existingLocation.Organization,
+                    cancellationToken));
+        }
+
+        var resources = await repositoryFactory.LocationResourceRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
+        var itemsToRemove = resources.Where(resource => location.Resources.All(item => item.Id != resource.Id)).ToList();
+        var updatedItems = resources
+            .Where(resource => location.Resources.Any(item => item.Id == resource.Id))
+            .Select(resource =>
+            {
+                var updatedResource = mapper.MergeToEntity(
+                    location.Resources.First(item => item.Id == resource.Id),
+                    resource,
+                    existingLocation,
+                    organizationResourceTypes.First(item => item.Id == resource.OrganizationResourceType.Id));
+                updatedResource.DeletedAt = null;
+                return repositoryFactory.LocationResourceRepository.Update(updatedResource);
+            })
+            .ToList();
+        var addedItems = location.Resources
+            .Where(resource => resources.All(item => item.Id != resource.Id))
+            .Select(resource => repositoryFactory.LocationResourceRepository.Add(
+                mapper.MapToEntity(
+                    resource,
+                    existingLocation,
+                    organizationResourceTypes.First(item => item.Id == resource.OrganizationResourceType.Id))))
+            .ToList();
+
+        repositoryFactory.LocationResourceRepository.RemoveRange(itemsToRemove);
+        existingLocation.Resources = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+
+        return existingLocation;
+    }
+
+    private async Task<Location> RebuildDesksAsync(Shared.Models.Location location, Location existingLocation, CancellationToken cancellationToken)
     {
         var desks = await repositoryFactory.DeskRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
         var itemsToRemove = desks.Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
@@ -127,7 +178,7 @@ public class LocationSubscriber(
         return existingLocation;
     }
 
-    private async Task<Location> RebuildRooms(Shared.Models.Location location, Location existingLocation, CancellationToken cancellationToken)
+    private async Task<Location> RebuildRoomsAsync(Shared.Models.Location location, Location existingLocation, CancellationToken cancellationToken)
     {
         var rooms = await repositoryFactory.RoomRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
         var itemsToRemove = rooms.Where(room => location.Rooms.All(item => item.Id != room.Id)).ToList();

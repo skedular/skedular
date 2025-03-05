@@ -1,4 +1,5 @@
 using Api.Shared.Services.Models;
+using Customer.Shared.Database.Entities;
 using Desk = Customer.Shared.Models.Desk;
 using Room = Customer.Shared.Models.Room;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
@@ -30,6 +31,17 @@ public interface IMapper
         Location src,
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization? organization);
+
+    LocationResource MapToEntity(
+        Shared.Models.LocationResource src,
+        Shared.Database.Entities.Location location,
+        Shared.Database.Entities.OrganizationResourceType organizationResourceType);
+
+    LocationResource MergeToEntity(
+        Shared.Models.LocationResource src,
+        LocationResource dest,
+        Shared.Database.Entities.Location location,
+        Shared.Database.Entities.OrganizationResourceType organizationResourceType);
 
     Shared.Database.Entities.Desk MapToEntity(Desk src, Shared.Database.Entities.Location location);
     Shared.Database.Entities.Desk MergeToEntity(Desk src, Shared.Database.Entities.Desk dest, Shared.Database.Entities.Location location);
@@ -176,10 +188,9 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = locationAfterState.Name,
-            Organization =
-                string.IsNullOrWhiteSpace(locationAfterState.OrganizationId)
-                    ? null
-                    : new Organization { Id = locationAfterState.OrganizationId }
+            Organization = string.IsNullOrWhiteSpace(locationAfterState.OrganizationId)
+                ? null
+                : new Organization { Id = locationAfterState.OrganizationId }
         };
 
         location.LocationMembers = locationAfterState.Members.Select(item => new Shared.Models.LocationMember
@@ -198,23 +209,36 @@ public class Mapper : IMapper
             Location = location
         }).ToList();
 
-        location.Desks = locationAfterState.Desks.Select(item => new Desk
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
-            Location = location
-        }).ToList();
+        location.Resources = locationAfterState.Resources.Select(item =>
+            new Shared.Models.LocationResource
+            {
+                Id = item.Id,
+                DeletedAt = deletedAt,
+                EventRaisedAt = eventRaisedAt,
+                Name = item.Name,
+                Location = location,
+                OrganizationResourceType = new OrganizationResourceType { Id = item.OrganizationResourceTypeId }
+            }).ToList();
 
-        location.Rooms = locationAfterState.Rooms.Select(item => new Room
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
-            Location = location
-        }).ToList();
+        location.Desks = locationAfterState.Desks.Select(item =>
+            new Desk
+            {
+                Id = item.Id,
+                DeletedAt = deletedAt,
+                EventRaisedAt = eventRaisedAt,
+                Name = item.Name,
+                Location = location
+            }).ToList();
+
+        location.Rooms = locationAfterState.Rooms.Select(item =>
+            new Room
+            {
+                Id = item.Id,
+                DeletedAt = deletedAt,
+                EventRaisedAt = eventRaisedAt,
+                Name = item.Name,
+                Location = location
+            }).ToList();
 
         return location;
     }
@@ -338,6 +362,26 @@ public class Mapper : IMapper
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
         dest.Organization = organization;
+        return dest;
+    }
+
+    public LocationResource MapToEntity(
+        Shared.Models.LocationResource src,
+        Shared.Database.Entities.Location location,
+        Shared.Database.Entities.OrganizationResourceType organizationResourceType) =>
+        MergeToEntity(src, new LocationResource(), location, organizationResourceType);
+
+    public LocationResource MergeToEntity(
+        Shared.Models.LocationResource src,
+        LocationResource dest,
+        Shared.Database.Entities.Location location,
+        Shared.Database.Entities.OrganizationResourceType organizationResourceType)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Location = location;
+        dest.OrganizationResourceType = organizationResourceType;
         return dest;
     }
 

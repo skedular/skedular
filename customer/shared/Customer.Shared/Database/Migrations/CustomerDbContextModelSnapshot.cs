@@ -995,7 +995,7 @@ namespace Customer.Shared.Database.Migrations
             modelBuilder.Entity("Customer.Shared.Database.Entities.LocationResource", b =>
                 {
                     b.HasOne("Customer.Shared.Database.Entities.Location", "Location")
-                        .WithMany("LocationResources")
+                        .WithMany("Resources")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1206,7 +1206,7 @@ namespace Customer.Shared.Database.Migrations
 
                     b.Navigation("LocationMembers");
 
-                    b.Navigation("LocationResources");
+                    b.Navigation("Resources");
 
                     b.Navigation("Rooms");
                 });

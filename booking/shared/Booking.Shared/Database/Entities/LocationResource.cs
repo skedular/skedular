@@ -33,7 +33,7 @@ public class LocationResourceConfiguration : IEntityTypeConfiguration<LocationRe
         builder.Property(item => item.RequireBookingApproval).HasDefaultValue(false);
         builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
 
-        builder.HasOne(item => item.Location).WithMany(item => item.LocationResources);
+        builder.HasOne(item => item.Location).WithMany(item => item.Resources);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.LocationResources);
         builder.HasOne(item => item.OrganizationResourceType).WithMany(item => item.LocationResources);
 

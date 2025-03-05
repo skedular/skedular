@@ -59,6 +59,19 @@ public interface IMapper
         Shared.Database.Entities.Team team,
         Customer customer);
 
+    LocationResource MapToEntity(
+        Shared.Models.LocationResource src,
+        Shared.Database.Entities.Location location,
+        ICollection<OrganizationTag> organizationTags,
+        OrganizationResourceType organizationResourceType);
+
+    LocationResource MergeToEntity(
+        Shared.Models.LocationResource src,
+        LocationResource dest,
+        Shared.Database.Entities.Location location,
+        ICollection<OrganizationTag> organizationTags,
+        OrganizationResourceType organizationResourceType);
+
     Desk MapToEntity(Shared.Models.Desk src, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
     Desk MergeToEntity(Shared.Models.Desk src, Desk dest, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
     Room MapToEntity(Shared.Models.Room src, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
@@ -91,6 +104,7 @@ public interface IMapper
     OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization);
     OrganizationTag MergeToEntity(Shared.Models.OrganizationTag src, OrganizationTag dest, Shared.Database.Entities.Organization organization);
     OrganizationResourceType MapToEntity(Shared.Models.OrganizationResourceType src, Shared.Database.Entities.Organization organization);
+
     OrganizationResourceType MergeToEntity(
         Shared.Models.OrganizationResourceType src,
         OrganizationResourceType dest,
@@ -212,12 +226,14 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
             Color = item.Color,
-            SystemType = string.IsNullOrWhiteSpace(item.SystemType) ? null : item.SystemType switch
-            {
-                OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
-                OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            SystemType = string.IsNullOrWhiteSpace(item.SystemType)
+                ? null
+                : item.SystemType switch
+                {
+                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
+                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
+                    _ => throw new ArgumentOutOfRangeException()
+                },
             Organization = organization
         }).ToList();
 
@@ -262,6 +278,20 @@ public class Mapper : IMapper
                 .SelectMany(item => item.CustomTagIds.Concat(item.ZoneIds))
                 .Concat(locationAfterState.Rooms.SelectMany(item => item.CustomTagIds.Concat(item.ZoneIds)))
                 .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
+
+        location.Resources = locationAfterState.Resources.Select(item => new Shared.Models.LocationResource
+        {
+            Id = item.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = item.Name,
+            Inactive = item.Inactive,
+            RequireBookingApproval = item.RequireBookingApproval,
+            Color = item.Color,
+            OrganizationTags = organizationTags.Where(tag => item.CustomTagIds.Concat(item.ZoneIds).Contains(tag.Id)).ToList(),
+            Location = location,
+            OrganizationResourceType = new Shared.Models.OrganizationResourceType { Id = item.OrganizationResourceTypeId }
+        }).ToList();
 
         location.Desks = locationAfterState.Desks.Select(item => new Shared.Models.Desk
         {
@@ -460,6 +490,32 @@ public class Mapper : IMapper
         return dest;
     }
 
+    public LocationResource MapToEntity(
+        Shared.Models.LocationResource src,
+        Shared.Database.Entities.Location location,
+        ICollection<OrganizationTag> organizationTags,
+        OrganizationResourceType organizationResourceType) =>
+        MergeToEntity(src, new LocationResource(), location, organizationTags, organizationResourceType);
+
+    public LocationResource MergeToEntity(
+        Shared.Models.LocationResource src,
+        LocationResource dest,
+        Shared.Database.Entities.Location location,
+        ICollection<OrganizationTag> organizationTags,
+        OrganizationResourceType organizationResourceType)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Inactive = src.Inactive;
+        dest.RequireBookingApproval = src.RequireBookingApproval;
+        dest.Color = src.Color;
+        dest.Location = location;
+        dest.OrganizationTags = organizationTags;
+        dest.OrganizationResourceType = organizationResourceType;
+        return dest;
+    }
+
     public Desk MapToEntity(
         Shared.Models.Desk src,
         Shared.Database.Entities.Location location,
@@ -605,12 +661,14 @@ public class Mapper : IMapper
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
         dest.Color = src.Color;
-        dest.SystemType = src.SystemType is null ? null : src.SystemType switch
-        {
-            OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
-            OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        dest.SystemType = src.SystemType is null
+            ? null
+            : src.SystemType switch
+            {
+                OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
+                OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         dest.Organization = organization;
         return dest;
     }

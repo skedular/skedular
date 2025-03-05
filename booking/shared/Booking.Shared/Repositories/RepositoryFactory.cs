@@ -13,6 +13,7 @@ public interface IRepositoryFactory
     IOrganizationRepository OrganizationRepository { get; }
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     ILocationRepository LocationRepository { get; }
+    ILocationResourceRepository LocationResourceRepository { get; }
     ILocationMemberRepository LocationMemberRepository { get; }
     IDeskRepository DeskRepository { get; }
     IRoomRepository RoomRepository { get; }
@@ -37,6 +38,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
+        LocationResourceRepository = new LocationResourceRepository(_dbContext, timeProvider);
         LocationMemberRepository = new LocationMemberRepository(_dbContext, timeProvider);
         DeskRepository = new DeskRepository(_dbContext, timeProvider);
         RoomRepository = new RoomRepository(_dbContext, timeProvider);
@@ -59,6 +61,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationRepository OrganizationRepository { get; }
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public ILocationRepository LocationRepository { get; }
+    public ILocationResourceRepository LocationResourceRepository { get; }
     public ILocationMemberRepository LocationMemberRepository { get; }
     public IDeskRepository DeskRepository { get; }
     public IRoomRepository RoomRepository { get; }
