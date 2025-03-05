@@ -19,8 +19,14 @@ public class BookingRepository(LocationDbContext dbContext, TimeProvider timePro
     public async Task<Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
             .Include(query => query.Location)
+            .Include(query => query.Resources)
+            .ThenInclude(query => query.OrganizationResourceType)
+            .Include(query => query.Resources)
+            .ThenInclude(query => query.OrganizationTags)
             .Include(query => query.Desks)
+            .ThenInclude(query => query.OrganizationTags)
             .Include(query => query.Rooms)
+            .ThenInclude(query => query.OrganizationTags)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Booking Add(Booking booking)

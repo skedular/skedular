@@ -69,6 +69,7 @@ public class RoomService(
                 false,
                 false,
                 false,
+                false,
                 cancellationToken);
             if (location is null)
             {
@@ -120,6 +121,7 @@ public class RoomService(
 
         var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(
             organizationId,
+            false,
             false,
             false,
             false,

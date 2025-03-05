@@ -43,7 +43,8 @@ public class LocationSubscriber(
             case Type.LocationDeleted:
                 {
                     var location = mapper.MapTo(@event);
-                    var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, true, true, true, cancellationToken);
+                    var existingLocation =
+                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, true, true, true, true, cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Location event. Event timestamp is older that what is already processed.");

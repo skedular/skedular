@@ -29,6 +29,8 @@ public class LocationRepository(CustomerDbContext dbContext, TimeProvider timePr
             .Include(query => query.LocationMembers.Where(locationMember => includeDeletedLocationMembers || !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
+            .Include(query => query.Resources)
+            .ThenInclude(query => query.OrganizationResourceType)
             .Include(query => query.Desks)
             .Include(query => query.Rooms)
             .Include(query => query.Organization)
