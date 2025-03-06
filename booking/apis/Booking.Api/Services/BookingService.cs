@@ -878,14 +878,14 @@ public class BookingService(
             booking.Location is null &&
             booking.Team is null)
         {
-            location = customer.DefaultLocations
+            location = customer.PreferredLocations
                 .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
             if (location is not null)
             {
                 location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
             }
 
-            team = customer.DefaultTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
             if (team is not null)
             {
                 team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
@@ -895,7 +895,7 @@ public class BookingService(
                  booking.Location is not null &&
                  booking.Team is null)
         {
-            team = customer.DefaultTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
             if (team is not null)
             {
                 team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
@@ -905,7 +905,7 @@ public class BookingService(
                  booking.Location is null &&
                  booking.Team is not null)
         {
-            location = customer.DefaultLocations.FirstOrDefault(
+            location = customer.PreferredLocations.FirstOrDefault(
                 item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
             if (location is not null)
             {
@@ -922,11 +922,11 @@ public class BookingService(
         {
             if (customer.DefaultOrganization is null)
             {
-                team = customer.DefaultTeams.FirstOrDefault(item => item.Organization is not null) ?? customer.DefaultTeams.FirstOrDefault();
+                team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null) ?? customer.PreferredTeams.FirstOrDefault();
                 if (team is null)
                 {
-                    location = customer.DefaultLocations.FirstOrDefault(item => item.Organization is not null) ??
-                               customer.DefaultLocations.FirstOrDefault();
+                    location = customer.PreferredLocations.FirstOrDefault(item => item.Organization is not null) ??
+                               customer.PreferredLocations.FirstOrDefault();
                     if (location is not null)
                     {
                         location =
@@ -946,14 +946,14 @@ public class BookingService(
             else
             {
                 organization = customer.DefaultOrganization;
-                location = customer.DefaultLocations
+                location = customer.PreferredLocations
                     .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
                 if (location is not null)
                 {
                     location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
                 }
 
-                team = customer.DefaultTeams.FirstOrDefault(
+                team = customer.PreferredTeams.FirstOrDefault(
                     item => item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
                 if (team is not null)
                 {

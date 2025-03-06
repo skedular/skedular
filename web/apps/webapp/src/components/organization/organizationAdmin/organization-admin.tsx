@@ -32,7 +32,7 @@ import { Zone } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
 import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { organizationAdmin_addCustomerDefaultOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerDefaultOrganizationTagMutation.graphql';
+import type { organizationAdmin_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_cancelOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_cancelOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_customTags_query$key } from '@/queries/__generated__/organizationAdmin_customTags_query.graphql';
 import type { organizationAdmin_customTags_refetchableFragment } from '@/queries/__generated__/organizationAdmin_customTags_refetchableFragment.graphql';
@@ -43,7 +43,7 @@ import type { organizationAdmin_deleteZonesMutation } from '@/queries/__generate
 import type { organizationAdmin_organizationPaymentMethodsDetails_query$key } from '@/queries/__generated__/organizationAdmin_organizationPaymentMethodsDetails_query.graphql';
 import type { organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment.graphql';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
-import type { organizationAdmin_removeCustomerDefaultOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_removeCustomerDefaultOrganizationTagMutation.graphql';
+import type { organizationAdmin_removeCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_removeCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdmin_resourceTypes_query$key } from '@/queries/__generated__/organizationAdmin_resourceTypes_query.graphql';
 import type { organizationAdmin_resourceTypes_refetchableFragment } from '@/queries/__generated__/organizationAdmin_resourceTypes_refetchableFragment.graphql';
@@ -402,9 +402,9 @@ const OrganizationAdmin = ({
     }
   `);
 
-  const [commitAddCustomerDefaultOrganizationTag] = useMutation<organizationAdmin_addCustomerDefaultOrganizationTagMutation>(graphql`
-    mutation organizationAdmin_addCustomerDefaultOrganizationTagMutation($input: AddCustomerDefaultOrganizationTagInput!) {
-      addCustomerDefaultOrganizationTag(input: $input) {
+  const [commitAddCustomerPreferredOrganizationTag] = useMutation<organizationAdmin_addCustomerPreferredOrganizationTagMutation>(graphql`
+    mutation organizationAdmin_addCustomerPreferredOrganizationTagMutation($input: AddCustomerPreferredOrganizationTagInput!) {
+      addCustomerPreferredOrganizationTag(input: $input) {
         customer {
           id
           preferredZones {
@@ -415,9 +415,9 @@ const OrganizationAdmin = ({
     }
   `);
 
-  const [commitRemoveCustomerDefaultOrganizationTag] = useMutation<organizationAdmin_removeCustomerDefaultOrganizationTagMutation>(graphql`
-    mutation organizationAdmin_removeCustomerDefaultOrganizationTagMutation($input: RemoveCustomerDefaultOrganizationTagInput!) {
-      removeCustomerDefaultOrganizationTag(input: $input) {
+  const [commitRemoveCustomerPreferredOrganizationTag] = useMutation<organizationAdmin_removeCustomerPreferredOrganizationTagMutation>(graphql`
+    mutation organizationAdmin_removeCustomerPreferredOrganizationTagMutation($input: RemoveCustomerPreferredOrganizationTagInput!) {
+      removeCustomerPreferredOrganizationTag(input: $input) {
         customer {
           id
           preferredZones {
@@ -1176,7 +1176,7 @@ const OrganizationAdmin = ({
 
     const toastId = themedToast(<NotificationContent content={`Setting zone '${organizationTagDetails.name}' as your preferred zone...`} />, infoNotificationOptions);
 
-    commitAddCustomerDefaultOrganizationTag({
+    commitAddCustomerPreferredOrganizationTag({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -1225,7 +1225,7 @@ const OrganizationAdmin = ({
 
     const toastId = themedToast(<NotificationContent content={`Removing zone '${organizationTagDetails.name}' as your preferred zone...`} />, infoNotificationOptions);
 
-    commitRemoveCustomerDefaultOrganizationTag({
+    commitRemoveCustomerPreferredOrganizationTag({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -1274,7 +1274,7 @@ const OrganizationAdmin = ({
 
     const toastId = themedToast(<NotificationContent content={`Setting tag '${organizationTagDetails.name}' as your preferred tag...`} />, infoNotificationOptions);
 
-    commitAddCustomerDefaultOrganizationTag({
+    commitAddCustomerPreferredOrganizationTag({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -1323,7 +1323,7 @@ const OrganizationAdmin = ({
 
     const toastId = themedToast(<NotificationContent content={`Removing tag '${organizationTagDetails.name}' as your preferred tag...`} />, infoNotificationOptions);
 
-    commitRemoveCustomerDefaultOrganizationTag({
+    commitRemoveCustomerPreferredOrganizationTag({
       variables: {
         input: {
           clientMutationId: nanoid(),

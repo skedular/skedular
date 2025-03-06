@@ -27,7 +27,7 @@ internal static class CustomerExtensions
         originalQuery
             .Include(query => query.Identities)
             .Include(query => query.DefaultOrganization)
-            .Include(query => query.DefaultLocations.Where(location => !includeActiveItemsOnly || !location.DeletedAt.HasValue))
+            .Include(query => query.PreferredLocations.Where(location => !includeActiveItemsOnly || !location.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization)
             .Include(query => query.PreferredOrganizationTags.Where(tag => !includeActiveItemsOnly || !tag.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization)
@@ -35,7 +35,7 @@ internal static class CustomerExtensions
             .Include(query => query.PreferredRooms.Where(room => !includeActiveItemsOnly || (!room.DeletedAt.HasValue && !room.Deactivated)))
             .ThenInclude(query => query.Location)
             .ThenInclude(query => query.Organization)
-            .Include(query => query.DefaultTeams.Where(team => !includeActiveItemsOnly || !team.DeletedAt.HasValue))
+            .Include(query => query.PreferredTeams.Where(team => !includeActiveItemsOnly || !team.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization);
 }
 

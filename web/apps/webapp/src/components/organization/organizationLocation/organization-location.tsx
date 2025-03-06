@@ -28,8 +28,8 @@ import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, default
 import { joinErrors } from '@/libs/utils';
 import type { organizationLocation_activateDesksMutation } from '@/queries/__generated__/organizationLocation_activateDesksMutation.graphql';
 import type { organizationLocation_activateRoomsMutation } from '@/queries/__generated__/organizationLocation_activateRoomsMutation.graphql';
-import type { organizationLocation_addCustomerDefaultDeskMutation } from '@/queries/__generated__/organizationLocation_addCustomerDefaultDeskMutation.graphql';
-import type { organizationLocation_addCustomerDefaultRoomMutation } from '@/queries/__generated__/organizationLocation_addCustomerDefaultRoomMutation.graphql';
+import type { organizationLocation_addCustomerPreferredDeskMutation } from '@/queries/__generated__/organizationLocation_addCustomerPreferredDeskMutation.graphql';
+import type { organizationLocation_addCustomerPreferredRoomMutation } from '@/queries/__generated__/organizationLocation_addCustomerPreferredRoomMutation.graphql';
 import type { organizationLocation_deactivateDesksMutation } from '@/queries/__generated__/organizationLocation_deactivateDesksMutation.graphql';
 import type { organizationLocation_deactivateRoomsMutation } from '@/queries/__generated__/organizationLocation_deactivateRoomsMutation.graphql';
 import type { organizationLocation_deleteDesksMutation } from '@/queries/__generated__/organizationLocation_deleteDesksMutation.graphql';
@@ -38,8 +38,8 @@ import type { organizationLocation_deleteRoomsMutation } from '@/queries/__gener
 import type { organizationLocation_desks_query$key } from '@/queries/__generated__/organizationLocation_desks_query.graphql';
 import type { organizationLocation_desks_refetchableFragment } from '@/queries/__generated__/organizationLocation_desks_refetchableFragment.graphql';
 import type { organizationLocation_query$key } from '@/queries/__generated__/organizationLocation_query.graphql';
-import type { organizationLocation_removeCustomerDefaultDeskMutation } from '@/queries/__generated__/organizationLocation_removeCustomerDefaultDeskMutation.graphql';
-import type { organizationLocation_removeCustomerDefaultRoomMutation } from '@/queries/__generated__/organizationLocation_removeCustomerDefaultRoomMutation.graphql';
+import type { organizationLocation_removeCustomerPreferredDeskMutation } from '@/queries/__generated__/organizationLocation_removeCustomerPreferredDeskMutation.graphql';
+import type { organizationLocation_removeCustomerPreferredRoomMutation } from '@/queries/__generated__/organizationLocation_removeCustomerPreferredRoomMutation.graphql';
 import type { organizationLocation_rooms_query$key } from '@/queries/__generated__/organizationLocation_rooms_query.graphql';
 import type { organizationLocation_rooms_refetchableFragment } from '@/queries/__generated__/organizationLocation_rooms_refetchableFragment.graphql';
 import type { organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
@@ -298,9 +298,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
     }
   `);
 
-  const [commitAddCustomerDefaultDesk] = useMutation<organizationLocation_addCustomerDefaultDeskMutation>(graphql`
-    mutation organizationLocation_addCustomerDefaultDeskMutation($input: AddCustomerDefaultDeskInput!) {
-      addCustomerDefaultDesk(input: $input) {
+  const [commitAddCustomerPreferredDesk] = useMutation<organizationLocation_addCustomerPreferredDeskMutation>(graphql`
+    mutation organizationLocation_addCustomerPreferredDeskMutation($input: AddCustomerPreferredDeskInput!) {
+      addCustomerPreferredDesk(input: $input) {
         customer {
           id
           preferredDesks {
@@ -311,9 +311,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
     }
   `);
 
-  const [commitRemoveCustomerDefaultDesk] = useMutation<organizationLocation_removeCustomerDefaultDeskMutation>(graphql`
-    mutation organizationLocation_removeCustomerDefaultDeskMutation($input: RemoveCustomerDefaultDeskInput!) {
-      removeCustomerDefaultDesk(input: $input) {
+  const [commitRemoveCustomerPreferredDesk] = useMutation<organizationLocation_removeCustomerPreferredDeskMutation>(graphql`
+    mutation organizationLocation_removeCustomerPreferredDeskMutation($input: RemoveCustomerPreferredDeskInput!) {
+      removeCustomerPreferredDesk(input: $input) {
         customer {
           id
           preferredDesks {
@@ -382,9 +382,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
     }
   `);
 
-  const [commitAddCustomerDefaultRoom] = useMutation<organizationLocation_addCustomerDefaultRoomMutation>(graphql`
-    mutation organizationLocation_addCustomerDefaultRoomMutation($input: AddCustomerDefaultRoomInput!) {
-      addCustomerDefaultRoom(input: $input) {
+  const [commitAddCustomerPreferredRoom] = useMutation<organizationLocation_addCustomerPreferredRoomMutation>(graphql`
+    mutation organizationLocation_addCustomerPreferredRoomMutation($input: AddCustomerPreferredRoomInput!) {
+      addCustomerPreferredRoom(input: $input) {
         customer {
           id
           preferredRooms {
@@ -395,9 +395,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
     }
   `);
 
-  const [commitRemoveCustomerDefaultRoom] = useMutation<organizationLocation_removeCustomerDefaultRoomMutation>(graphql`
-    mutation organizationLocation_removeCustomerDefaultRoomMutation($input: RemoveCustomerDefaultRoomInput!) {
-      removeCustomerDefaultRoom(input: $input) {
+  const [commitRemoveCustomerPreferredRoom] = useMutation<organizationLocation_removeCustomerPreferredRoomMutation>(graphql`
+    mutation organizationLocation_removeCustomerPreferredRoomMutation($input: RemoveCustomerPreferredRoomInput!) {
+      removeCustomerPreferredRoom(input: $input) {
         customer {
           id
           preferredRooms {
@@ -881,7 +881,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
 
     const toastId = themedToast(<NotificationContent content={`Setting desk '${deskDetails.name}' as your preferred desk...`} />, infoNotificationOptions);
 
-    commitAddCustomerDefaultDesk({
+    commitAddCustomerPreferredDesk({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -929,7 +929,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
 
     const toastId = themedToast(<NotificationContent content={`Removing desk '${deskDetails.name}' as your preferred desk...`} />, infoNotificationOptions);
 
-    commitRemoveCustomerDefaultDesk({
+    commitRemoveCustomerPreferredDesk({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -1248,7 +1248,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
 
     const toastId = themedToast(<NotificationContent content={`Setting room '${roomDetails.name}' as your preferred room...`} />, infoNotificationOptions);
 
-    commitAddCustomerDefaultRoom({
+    commitAddCustomerPreferredRoom({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -1296,7 +1296,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
 
     const toastId = themedToast(<NotificationContent content={`Removing room '${roomDetails.name}' as your preferred room...`} />, infoNotificationOptions);
 
-    commitRemoveCustomerDefaultRoom({
+    commitRemoveCustomerPreferredRoom({
       variables: {
         input: {
           clientMutationId: nanoid(),

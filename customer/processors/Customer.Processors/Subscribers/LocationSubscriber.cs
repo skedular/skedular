@@ -263,9 +263,9 @@ public class LocationSubscriber(
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
-            var existingLocationIds = customer.DefaultLocations.Select(item => item.Id).Distinct().ToList();
-            customer.DefaultLocations = customer.DefaultLocations.Where(item => item.Id != existingLocation.Id).ToList();
-            var newLocationIds = customer.DefaultLocations.Select(item => item.Id).Distinct().ToList();
+            var existingLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
+            customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != existingLocation.Id).ToList();
+            var newLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
 
             var existingDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
             customer.PreferredDesks = customer.PreferredDesks.Where(item => item.Location.Id != existingLocation.Id).ToList();
@@ -291,13 +291,13 @@ public class LocationSubscriber(
 
     private async Task UpdateCustomerDefaultLocationsAsync(Location location, CancellationToken cancellationToken)
     {
-        var customerIds = location.DefaultedByCustomers.Select(customer => customer.Id).ToList();
+        var customerIds = location.PreferredByCustomers.Select(customer => customer.Id).ToList();
         foreach (var customerId in customerIds)
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
-            customer.DefaultLocations = customer.DefaultLocations.Where(item => item.Id != location.Id).ToList();
+            customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != location.Id).ToList();
             customer.PreferredDesks = customer.PreferredDesks.Where(item => item.Location.Id != location.Id).ToList();
             customer.PreferredRooms = customer.PreferredRooms.Where(item => item.Location.Id != location.Id).ToList();
             _ = repositoryFactory.CustomerRepository.Update(customer);

@@ -33,7 +33,7 @@ internal static class CustomerExtensions
         originalQuery
             .Include(query => query.Identities)
             .Include(query => query.DefaultOrganization)
-            .Include(query => query.DefaultLocations)
+            .Include(query => query.PreferredLocations)
             .ThenInclude(query => query.Organization)
             .Include(query => query.PreferredOrganizationTags)
             .ThenInclude(query => query.Organization)
@@ -42,7 +42,7 @@ internal static class CustomerExtensions
             .Include(query => query.PreferredRooms)
             .ThenInclude(query => query.Location)
             .ThenInclude(query => query.Organization)
-            .Include(query => query.DefaultTeams)
+            .Include(query => query.PreferredTeams)
             .ThenInclude(query => query.Organization);
 
     internal static IQueryable<Database.Entities.Customer> AddSearchCriteria(
@@ -65,7 +65,7 @@ internal static class CustomerExtensions
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.LocationId))
         {
-            query = query.Where(item => item.DefaultLocations.Select(location => location.Id).Contains(searchCriteria.LocationId));
+            query = query.Where(item => item.PreferredLocations.Select(location => location.Id).Contains(searchCriteria.LocationId));
         }
 
         return query;

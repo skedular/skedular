@@ -54,9 +54,6 @@ namespace Customer.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<bool?>("IsDefaultLocationOnboardingDone")
-                        .HasColumnType("boolean");
-
                     b.Property<bool?>("IsDefaultOrganizationOnboardingDone")
                         .HasColumnType("boolean");
 
@@ -67,6 +64,9 @@ namespace Customer.Shared.Database.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<bool?>("IsPreferredDeskOnboardingDone")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("IsPreferredLocationOnboardingDone")
                         .HasColumnType("boolean");
 
                     b.Property<bool?>("IsPreferredRoomOnboardingDone")
@@ -804,15 +804,15 @@ namespace Customer.Shared.Database.Migrations
 
             modelBuilder.Entity("CustomerLocation", b =>
                 {
-                    b.Property<string>("DefaultLocationsId")
+                    b.Property<string>("PreferredByCustomersId")
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("DefaultedByCustomersId")
+                    b.Property<string>("PreferredLocationsId")
                         .HasColumnType("character varying(100)");
 
-                    b.HasKey("DefaultLocationsId", "DefaultedByCustomersId");
+                    b.HasKey("PreferredByCustomersId", "PreferredLocationsId");
 
-                    b.HasIndex("DefaultedByCustomersId");
+                    b.HasIndex("PreferredLocationsId");
 
                     b.ToTable("CustomerLocation");
                 });
@@ -864,15 +864,15 @@ namespace Customer.Shared.Database.Migrations
 
             modelBuilder.Entity("CustomerTeam", b =>
                 {
-                    b.Property<string>("DefaultTeamsId")
+                    b.Property<string>("PreferredByCustomersId")
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("DefaultedByCustomersId")
+                    b.Property<string>("PreferredTeamsId")
                         .HasColumnType("character varying(100)");
 
-                    b.HasKey("DefaultTeamsId", "DefaultedByCustomersId");
+                    b.HasKey("PreferredByCustomersId", "PreferredTeamsId");
 
-                    b.HasIndex("DefaultedByCustomersId");
+                    b.HasIndex("PreferredTeamsId");
 
                     b.ToTable("CustomerTeam");
                 });
@@ -1114,15 +1114,15 @@ namespace Customer.Shared.Database.Migrations
 
             modelBuilder.Entity("CustomerLocation", b =>
                 {
-                    b.HasOne("Customer.Shared.Database.Entities.Location", null)
+                    b.HasOne("Customer.Shared.Database.Entities.Customer", null)
                         .WithMany()
-                        .HasForeignKey("DefaultLocationsId")
+                        .HasForeignKey("PreferredByCustomersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Customer.Shared.Database.Entities.Customer", null)
+                    b.HasOne("Customer.Shared.Database.Entities.Location", null)
                         .WithMany()
-                        .HasForeignKey("DefaultedByCustomersId")
+                        .HasForeignKey("PreferredLocationsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1174,15 +1174,15 @@ namespace Customer.Shared.Database.Migrations
 
             modelBuilder.Entity("CustomerTeam", b =>
                 {
-                    b.HasOne("Customer.Shared.Database.Entities.Team", null)
+                    b.HasOne("Customer.Shared.Database.Entities.Customer", null)
                         .WithMany()
-                        .HasForeignKey("DefaultTeamsId")
+                        .HasForeignKey("PreferredByCustomersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Customer.Shared.Database.Entities.Customer", null)
+                    b.HasOne("Customer.Shared.Database.Entities.Team", null)
                         .WithMany()
-                        .HasForeignKey("DefaultedByCustomersId")
+                        .HasForeignKey("PreferredTeamsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

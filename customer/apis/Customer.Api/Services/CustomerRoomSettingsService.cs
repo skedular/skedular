@@ -7,8 +7,8 @@ namespace Customer.Api.Services;
 
 public interface ICustomerRoomSettingsService
 {
-    Task<Shared.Models.Customer> AddCustomerDefaultRoomAsync(string roomId, string? customerId, CancellationToken cancellationToken);
-    Task<Shared.Models.Customer> RemoveCustomerDefaultRoomAsync(string roomId, string? customerId, CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> AddCustomerPreferredRoomAsync(string roomId, string? customerId, CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> RemoveCustomerPreferredRoomAsync(string roomId, string? customerId, CancellationToken cancellationToken);
 }
 
 public class CustomerRoomSettingsService(
@@ -18,7 +18,7 @@ public class CustomerRoomSettingsService(
     IMapper mapper)
     : ICustomerRoomSettingsService
 {
-    public async Task<Shared.Models.Customer> AddCustomerDefaultRoomAsync(string roomId, string? customerId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> AddCustomerPreferredRoomAsync(string roomId, string? customerId, CancellationToken cancellationToken)
     {
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
@@ -35,7 +35,7 @@ public class CustomerRoomSettingsService(
             throw new LocationNotFound();
         }
 
-        if (!await locationAuthorizationService.CanAddLocationAsDefaultAsync(location, customer, cancellationToken))
+        if (!await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer, cancellationToken))
         {
             throw new Unauthorized();
         }
@@ -49,7 +49,7 @@ public class CustomerRoomSettingsService(
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Customer> RemoveCustomerDefaultRoomAsync(string roomId, string? customerId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> RemoveCustomerPreferredRoomAsync(string roomId, string? customerId, CancellationToken cancellationToken)
     {
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)

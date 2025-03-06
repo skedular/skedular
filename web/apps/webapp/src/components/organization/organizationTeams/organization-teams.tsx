@@ -14,9 +14,9 @@ import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { organizationTeams_addCustomerDefaultTeamMutation } from '@/queries/__generated__/organizationTeams_addCustomerDefaultTeamMutation.graphql';
+import type { organizationTeams_addCustomerPreferredTeamMutation } from '@/queries/__generated__/organizationTeams_addCustomerPreferredTeamMutation.graphql';
 import type { organizationTeams_deleteTeamMutation } from '@/queries/__generated__/organizationTeams_deleteTeamMutation.graphql';
-import type { organizationTeams_removeCustomerDefaultTeamMutation } from '@/queries/__generated__/organizationTeams_removeCustomerDefaultTeamMutation.graphql';
+import type { organizationTeams_removeCustomerPreferredTeamMutation } from '@/queries/__generated__/organizationTeams_removeCustomerPreferredTeamMutation.graphql';
 import type { organizationTeams_rootQuery } from '@/queries/__generated__/organizationTeams_rootQuery.graphql';
 import type { organizationTeams_teams_query$key } from '@/queries/__generated__/organizationTeams_teams_query.graphql';
 import type { organizationTeams_teams_refetchableFragment } from '@/queries/__generated__/organizationTeams_teams_refetchableFragment.graphql';
@@ -53,7 +53,7 @@ const RootQuery = graphql`
   ) {
     me {
       id
-      defaultTeams {
+      preferredTeams {
         uniqueId
       }
     }
@@ -136,12 +136,12 @@ const Teams = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
-  const [commitAddCustomerDefaultTeam] = useMutation<organizationTeams_addCustomerDefaultTeamMutation>(graphql`
-    mutation organizationTeams_addCustomerDefaultTeamMutation($input: AddCustomerDefaultTeamInput!) {
-      addCustomerDefaultTeam(input: $input) {
+  const [commitAddCustomerPreferredTeam] = useMutation<organizationTeams_addCustomerPreferredTeamMutation>(graphql`
+    mutation organizationTeams_addCustomerPreferredTeamMutation($input: AddCustomerPreferredTeamInput!) {
+      addCustomerPreferredTeam(input: $input) {
         customer {
           id
-          defaultTeams {
+          preferredTeams {
             uniqueId
           }
         }
@@ -149,12 +149,12 @@ const Teams = ({ queryReference, organizationId }: Props) => {
     }
   `);
 
-  const [commitRemoveCustomerDefaultTeam] = useMutation<organizationTeams_removeCustomerDefaultTeamMutation>(graphql`
-    mutation organizationTeams_removeCustomerDefaultTeamMutation($input: RemoveCustomerDefaultTeamInput!) {
-      removeCustomerDefaultTeam(input: $input) {
+  const [commitRemoveCustomerPreferredTeam] = useMutation<organizationTeams_removeCustomerPreferredTeamMutation>(graphql`
+    mutation organizationTeams_removeCustomerPreferredTeamMutation($input: RemoveCustomerPreferredTeamInput!) {
+      removeCustomerPreferredTeam(input: $input) {
         customer {
           id
-          defaultTeams {
+          preferredTeams {
             uniqueId
           }
         }
@@ -172,7 +172,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
-  const [preferredTeams, setPreferredTeams] = useState(rootData.me?.defaultTeams.map(({ uniqueId }) => uniqueId) ?? []);
+  const [preferredTeams, setPreferredTeams] = useState(rootData.me?.preferredTeams.map(({ uniqueId }) => uniqueId) ?? []);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam],
@@ -293,7 +293,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
 
     const toastId = themedToast(<NotificationContent content={`Setting team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
 
-    commitAddCustomerDefaultTeam({
+    commitAddCustomerPreferredTeam({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -338,7 +338,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
 
     const toastId = themedToast(<NotificationContent content={`Removing team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
 
-    commitRemoveCustomerDefaultTeam({
+    commitRemoveCustomerPreferredTeam({
       variables: {
         input: {
           clientMutationId: nanoid(),

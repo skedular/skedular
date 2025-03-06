@@ -137,10 +137,10 @@ public class Mapper : IMapper
             PhotoUrl512 = customer.PhotoUrl512,
             Identities = customer.Identities.Select(item =>
                 new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified }).ToList(),
-            DefaultOrganization = string.IsNullOrWhiteSpace(customer.DefaultOrganizationId)
+            DefaultOrganization = string.IsNullOrWhiteSpace(customer.PreferredOrganizationId)
                 ? null
-                : new Organization { Id = customer.DefaultOrganizationId },
-            DefaultLocations = customer.DefaultLocations.Select(item => new Location
+                : new Organization { Id = customer.PreferredOrganizationId },
+            DefaultLocations = customer.PreferredLocations.Select(item => new Location
             {
                 Id = item.Id, Organization = string.IsNullOrWhiteSpace(item.OrganizationId) ? null : new Organization { Id = item.OrganizationId }
             }).ToList(),
@@ -148,7 +148,7 @@ public class Mapper : IMapper
                 new Shared.Models.Desk { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
             PreferredRooms = customer.PreferredRooms.Select(item =>
                 new Shared.Models.Room { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
-            DefaultTeams = customer.DefaultTeams.Select(item => new Team
+            DefaultTeams = customer.PreferredTeams.Select(item => new Team
             {
                 Id = item.Id, Organization = string.IsNullOrWhiteSpace(item.OrganizationId) ? null : new Organization { Id = item.OrganizationId }
             }).ToList(),
@@ -607,10 +607,10 @@ public class Mapper : IMapper
         dest.PhotoUrl512 = src.PhotoUrl512;
         dest.Identities = identities;
         dest.DefaultOrganization = defaultOrganization;
-        dest.DefaultLocations = defaultLocations;
+        dest.PreferredLocations = defaultLocations;
         dest.PreferredDesks = preferredDesks;
         dest.PreferredRooms = preferredRooms;
-        dest.DefaultTeams = defaultTeams;
+        dest.PreferredTeams = defaultTeams;
         dest.PreferredOrganizationTags = preferredOrganizationTags;
         return dest;
     }

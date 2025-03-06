@@ -31,7 +31,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "U291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIcCgR0eXBlGAQgASgO",
             "Mg4uY3VzdG9tZXIuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3Rv",
             "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIiwKBERhdGES",
-            "JAoIY3VzdG9tZXIYASABKAsyEi5jdXN0b21lci5DdXN0b21lciKEBgoIQ3Vz",
+            "JAoIY3VzdG9tZXIYASABKAsyEi5jdXN0b21lci5DdXN0b21lciKKBgoIQ3Vz",
             "dG9tZXISCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xl",
             "LnByb3RvYnVmLlRpbWVzdGFtcBImCgppZGVudGl0aWVzGAMgAygLMhIuY3Vz",
             "dG9tZXIuSWRlbnRpdHkSEwoLZGVzaWduYXRpb24YBCABKAkSDQoFdGl0bGUY",
@@ -40,43 +40,43 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "GAogASgJEhIKCnBob3RvVXJsMjQYCyABKAkSEgoKcGhvdG9VcmwzMhgMIAEo",
             "CRISCgpwaG90b1VybDQ4GA0gASgJEhIKCnBob3RvVXJsNzIYDiABKAkSEwoL",
             "cGhvdG9VcmwxOTIYDyABKAkSEwoLcGhvdG9Vcmw1MTIYECABKAkSEAoIdGlt",
-            "ZXpvbmUYESABKAkSDgoGbG9jYWxlGBIgASgJEiwKEGRlZmF1bHRMb2NhdGlv",
-            "bnMYEyADKAsyEi5jdXN0b21lci5Mb2NhdGlvbhIdChVkZWZhdWx0T3JnYW5p",
-            "emF0aW9uSWQYFCABKAkSPgoacHJlZmVycmVkTG9jYXRpb25SZXNvdXJjZXMY",
-            "FSADKAsyGi5jdXN0b21lci5Mb2NhdGlvblJlc291cmNlEiYKDnByZWZlcnJl",
-            "ZERlc2tzGBYgAygLMg4uY3VzdG9tZXIuRGVzaxImCg5wcmVmZXJyZWRSb29t",
-            "cxgXIAMoCzIOLmN1c3RvbWVyLlJvb20SJAoIc2V0dGluZ3MYGCABKAsyEi5j",
-            "dXN0b21lci5TZXR0aW5ncxIkCgxkZWZhdWx0VGVhbXMYGSADKAsyDi5jdXN0",
-            "b21lci5UZWFtEjwKGXByZWZlcnJlZE9yZ2FuaXphdGlvblRhZ3MYGiADKAsy",
-            "GS5jdXN0b21lci5Pcmdhbml6YXRpb25UYWcSEwoLcGhvbmVOdW1iZXIYGyAB",
-            "KAkiPAoISWRlbnRpdHkSCgoCaWQYASABKAkSDQoFZW1haWwYAiABKAkSFQoN",
-            "ZW1haWxWZXJpZmllZBgDIAEoCCLHAgoIU2V0dGluZ3MSCgoCaWQYASABKAkS",
-            "JAocaXNPcmdhbml6YXRpb25PbmJvYXJkaW5nRG9uZRgCIAEoCBIgChhpc0xv",
-            "Y2F0aW9uT25ib2FyZGluZ0RvbmUYAyABKAgSHAoUaXNUZWFtT25ib2FyZGlu",
-            "Z0RvbmUYBCABKAgSKwojaXNEZWZhdWx0T3JnYW5pemF0aW9uT25ib2FyZGlu",
-            "Z0RvbmUYBSABKAgSJwofaXNEZWZhdWx0TG9jYXRpb25PbmJvYXJkaW5nRG9u",
-            "ZRgGIAEoCBIlCh1pc1ByZWZlcnJlZFpvbmVPbmJvYXJkaW5nRG9uZRgHIAEo",
-            "CBIlCh1pc1ByZWZlcnJlZERlc2tPbmJvYXJkaW5nRG9uZRgIIAEoCBIlCh1p",
-            "c1ByZWZlcnJlZFJvb21PbmJvYXJkaW5nRG9uZRgJIAEoCCIuCghMb2NhdGlv",
-            "bhIKCgJpZBgBIAEoCRIWCg5vcmdhbml6YXRpb25JZBgCIAEoCSIqCgRUZWFt",
-            "EgoKAmlkGAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIgASgJIkoKEExvY2F0",
-            "aW9uUmVzb3VyY2USCgoCaWQYASABKAkSFgoOb3JnYW5pemF0aW9uSWQYAiAB",
-            "KAkSEgoKbG9jYXRpb25JZBgDIAEoCSImCgREZXNrEgoKAmlkGAEgASgJEhIK",
-            "CmxvY2F0aW9uSWQYAiABKAkiJgoEUm9vbRIKCgJpZBgBIAEoCRISCgpsb2Nh",
-            "dGlvbklkGAIgASgJIjUKD09yZ2FuaXphdGlvblRhZxIKCgJpZBgBIAEoCRIW",
-            "Cg5vcmdhbml6YXRpb25JZBgCIAEoCSoxCgRUeXBlEhQKEEN1c3RvbWVyVXBz",
-            "ZXJ0ZWQQABITCg9DdXN0b21lckRlbGV0ZWQQAUI3qgI0QXBpLlNoYXJlZC5D",
-            "bGllbnRzLkV2ZW50cy5Ta2VkdWxhci5DdXN0b21lci5WMS5WYWx1ZWIGcHJv",
-            "dG8z"));
+            "ZXpvbmUYESABKAkSDgoGbG9jYWxlGBIgASgJEi4KEnByZWZlcnJlZExvY2F0",
+            "aW9ucxgTIAMoCzISLmN1c3RvbWVyLkxvY2F0aW9uEh8KF3ByZWZlcnJlZE9y",
+            "Z2FuaXphdGlvbklkGBQgASgJEj4KGnByZWZlcnJlZExvY2F0aW9uUmVzb3Vy",
+            "Y2VzGBUgAygLMhouY3VzdG9tZXIuTG9jYXRpb25SZXNvdXJjZRImCg5wcmVm",
+            "ZXJyZWREZXNrcxgWIAMoCzIOLmN1c3RvbWVyLkRlc2sSJgoOcHJlZmVycmVk",
+            "Um9vbXMYFyADKAsyDi5jdXN0b21lci5Sb29tEiQKCHNldHRpbmdzGBggASgL",
+            "MhIuY3VzdG9tZXIuU2V0dGluZ3MSJgoOcHJlZmVycmVkVGVhbXMYGSADKAsy",
+            "Di5jdXN0b21lci5UZWFtEjwKGXByZWZlcnJlZE9yZ2FuaXphdGlvblRhZ3MY",
+            "GiADKAsyGS5jdXN0b21lci5Pcmdhbml6YXRpb25UYWcSEwoLcGhvbmVOdW1i",
+            "ZXIYGyABKAkiPAoISWRlbnRpdHkSCgoCaWQYASABKAkSDQoFZW1haWwYAiAB",
+            "KAkSFQoNZW1haWxWZXJpZmllZBgDIAEoCCLJAgoIU2V0dGluZ3MSCgoCaWQY",
+            "ASABKAkSJAocaXNPcmdhbml6YXRpb25PbmJvYXJkaW5nRG9uZRgCIAEoCBIg",
+            "Chhpc0xvY2F0aW9uT25ib2FyZGluZ0RvbmUYAyABKAgSHAoUaXNUZWFtT25i",
+            "b2FyZGluZ0RvbmUYBCABKAgSKwojaXNEZWZhdWx0T3JnYW5pemF0aW9uT25i",
+            "b2FyZGluZ0RvbmUYBSABKAgSKQohaXNQcmVmZXJyZWRMb2NhdGlvbk9uYm9h",
+            "cmRpbmdEb25lGAYgASgIEiUKHWlzUHJlZmVycmVkWm9uZU9uYm9hcmRpbmdE",
+            "b25lGAcgASgIEiUKHWlzUHJlZmVycmVkRGVza09uYm9hcmRpbmdEb25lGAgg",
+            "ASgIEiUKHWlzUHJlZmVycmVkUm9vbU9uYm9hcmRpbmdEb25lGAkgASgIIi4K",
+            "CExvY2F0aW9uEgoKAmlkGAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIgASgJ",
+            "IioKBFRlYW0SCgoCaWQYASABKAkSFgoOb3JnYW5pemF0aW9uSWQYAiABKAki",
+            "SgoQTG9jYXRpb25SZXNvdXJjZRIKCgJpZBgBIAEoCRIWCg5vcmdhbml6YXRp",
+            "b25JZBgCIAEoCRISCgpsb2NhdGlvbklkGAMgASgJIiYKBERlc2sSCgoCaWQY",
+            "ASABKAkSEgoKbG9jYXRpb25JZBgCIAEoCSImCgRSb29tEgoKAmlkGAEgASgJ",
+            "EhIKCmxvY2F0aW9uSWQYAiABKAkiNQoPT3JnYW5pemF0aW9uVGFnEgoKAmlk",
+            "GAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIgASgJKjEKBFR5cGUSFAoQQ3Vz",
+            "dG9tZXJVcHNlcnRlZBAAEhMKD0N1c3RvbWVyRGVsZXRlZBABQjeqAjRBcGku",
+            "U2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkN1c3RvbWVyLlYxLlZh",
+            "bHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Data.Parser, new[]{ "Customer" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer.Parser, new[]{ "Id", "DeletedAt", "Identities", "Designation", "Title", "Name", "GivenName", "MiddleName", "FamilyName", "PhotoUrl", "PhotoUrl24", "PhotoUrl32", "PhotoUrl48", "PhotoUrl72", "PhotoUrl192", "PhotoUrl512", "Timezone", "Locale", "DefaultLocations", "DefaultOrganizationId", "PreferredLocationResources", "PreferredDesks", "PreferredRooms", "Settings", "DefaultTeams", "PreferredOrganizationTags", "PhoneNumber" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer.Parser, new[]{ "Id", "DeletedAt", "Identities", "Designation", "Title", "Name", "GivenName", "MiddleName", "FamilyName", "PhotoUrl", "PhotoUrl24", "PhotoUrl32", "PhotoUrl48", "PhotoUrl72", "PhotoUrl192", "PhotoUrl512", "Timezone", "Locale", "PreferredLocations", "PreferredOrganizationId", "PreferredLocationResources", "PreferredDesks", "PreferredRooms", "Settings", "PreferredTeams", "PreferredOrganizationTags", "PhoneNumber" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity.Parser, new[]{ "Id", "Email", "EmailVerified" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings.Parser, new[]{ "Id", "IsOrganizationOnboardingDone", "IsLocationOnboardingDone", "IsTeamOnboardingDone", "IsDefaultOrganizationOnboardingDone", "IsDefaultLocationOnboardingDone", "IsPreferredZoneOnboardingDone", "IsPreferredDeskOnboardingDone", "IsPreferredRoomOnboardingDone" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings.Parser, new[]{ "Id", "IsOrganizationOnboardingDone", "IsLocationOnboardingDone", "IsTeamOnboardingDone", "IsDefaultOrganizationOnboardingDone", "IsPreferredLocationOnboardingDone", "IsPreferredZoneOnboardingDone", "IsPreferredDeskOnboardingDone", "IsPreferredRoomOnboardingDone" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource.Parser, new[]{ "Id", "OrganizationId", "LocationId" }, null, null, null, null),
@@ -1002,13 +1002,13 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       photoUrl512_ = other.photoUrl512_;
       timezone_ = other.timezone_;
       locale_ = other.locale_;
-      defaultLocations_ = other.defaultLocations_.Clone();
-      defaultOrganizationId_ = other.defaultOrganizationId_;
+      preferredLocations_ = other.preferredLocations_.Clone();
+      preferredOrganizationId_ = other.preferredOrganizationId_;
       preferredLocationResources_ = other.preferredLocationResources_.Clone();
       preferredDesks_ = other.preferredDesks_.Clone();
       preferredRooms_ = other.preferredRooms_.Clone();
       settings_ = other.settings_ != null ? other.settings_.Clone() : null;
-      defaultTeams_ = other.defaultTeams_.Clone();
+      preferredTeams_ = other.preferredTeams_.Clone();
       preferredOrganizationTags_ = other.preferredOrganizationTags_.Clone();
       phoneNumber_ = other.phoneNumber_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -1235,26 +1235,26 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "defaultLocations" field.</summary>
-    public const int DefaultLocationsFieldNumber = 19;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location> _repeated_defaultLocations_codec
+    /// <summary>Field number for the "preferredLocations" field.</summary>
+    public const int PreferredLocationsFieldNumber = 19;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location> _repeated_preferredLocations_codec
         = pb::FieldCodec.ForMessage(154, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location> defaultLocations_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location>();
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location> preferredLocations_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location> DefaultLocations {
-      get { return defaultLocations_; }
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location> PreferredLocations {
+      get { return preferredLocations_; }
     }
 
-    /// <summary>Field number for the "defaultOrganizationId" field.</summary>
-    public const int DefaultOrganizationIdFieldNumber = 20;
-    private string defaultOrganizationId_ = "";
+    /// <summary>Field number for the "preferredOrganizationId" field.</summary>
+    public const int PreferredOrganizationIdFieldNumber = 20;
+    private string preferredOrganizationId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string DefaultOrganizationId {
-      get { return defaultOrganizationId_; }
+    public string PreferredOrganizationId {
+      get { return preferredOrganizationId_; }
       set {
-        defaultOrganizationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        preferredOrganizationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -1303,15 +1303,15 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "defaultTeams" field.</summary>
-    public const int DefaultTeamsFieldNumber = 25;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team> _repeated_defaultTeams_codec
+    /// <summary>Field number for the "preferredTeams" field.</summary>
+    public const int PreferredTeamsFieldNumber = 25;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team> _repeated_preferredTeams_codec
         = pb::FieldCodec.ForMessage(202, global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team> defaultTeams_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team>();
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team> preferredTeams_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team> DefaultTeams {
-      get { return defaultTeams_; }
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team> PreferredTeams {
+      get { return preferredTeams_; }
     }
 
     /// <summary>Field number for the "preferredOrganizationTags" field.</summary>
@@ -1370,13 +1370,13 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (PhotoUrl512 != other.PhotoUrl512) return false;
       if (Timezone != other.Timezone) return false;
       if (Locale != other.Locale) return false;
-      if(!defaultLocations_.Equals(other.defaultLocations_)) return false;
-      if (DefaultOrganizationId != other.DefaultOrganizationId) return false;
+      if(!preferredLocations_.Equals(other.preferredLocations_)) return false;
+      if (PreferredOrganizationId != other.PreferredOrganizationId) return false;
       if(!preferredLocationResources_.Equals(other.preferredLocationResources_)) return false;
       if(!preferredDesks_.Equals(other.preferredDesks_)) return false;
       if(!preferredRooms_.Equals(other.preferredRooms_)) return false;
       if (!object.Equals(Settings, other.Settings)) return false;
-      if(!defaultTeams_.Equals(other.defaultTeams_)) return false;
+      if(!preferredTeams_.Equals(other.preferredTeams_)) return false;
       if(!preferredOrganizationTags_.Equals(other.preferredOrganizationTags_)) return false;
       if (PhoneNumber != other.PhoneNumber) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -1404,13 +1404,13 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (PhotoUrl512.Length != 0) hash ^= PhotoUrl512.GetHashCode();
       if (Timezone.Length != 0) hash ^= Timezone.GetHashCode();
       if (Locale.Length != 0) hash ^= Locale.GetHashCode();
-      hash ^= defaultLocations_.GetHashCode();
-      if (DefaultOrganizationId.Length != 0) hash ^= DefaultOrganizationId.GetHashCode();
+      hash ^= preferredLocations_.GetHashCode();
+      if (PreferredOrganizationId.Length != 0) hash ^= PreferredOrganizationId.GetHashCode();
       hash ^= preferredLocationResources_.GetHashCode();
       hash ^= preferredDesks_.GetHashCode();
       hash ^= preferredRooms_.GetHashCode();
       if (settings_ != null) hash ^= Settings.GetHashCode();
-      hash ^= defaultTeams_.GetHashCode();
+      hash ^= preferredTeams_.GetHashCode();
       hash ^= preferredOrganizationTags_.GetHashCode();
       if (PhoneNumber.Length != 0) hash ^= PhoneNumber.GetHashCode();
       if (_unknownFields != null) {
@@ -1500,10 +1500,10 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(146, 1);
         output.WriteString(Locale);
       }
-      defaultLocations_.WriteTo(output, _repeated_defaultLocations_codec);
-      if (DefaultOrganizationId.Length != 0) {
+      preferredLocations_.WriteTo(output, _repeated_preferredLocations_codec);
+      if (PreferredOrganizationId.Length != 0) {
         output.WriteRawTag(162, 1);
-        output.WriteString(DefaultOrganizationId);
+        output.WriteString(PreferredOrganizationId);
       }
       preferredLocationResources_.WriteTo(output, _repeated_preferredLocationResources_codec);
       preferredDesks_.WriteTo(output, _repeated_preferredDesks_codec);
@@ -1512,7 +1512,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(194, 1);
         output.WriteMessage(Settings);
       }
-      defaultTeams_.WriteTo(output, _repeated_defaultTeams_codec);
+      preferredTeams_.WriteTo(output, _repeated_preferredTeams_codec);
       preferredOrganizationTags_.WriteTo(output, _repeated_preferredOrganizationTags_codec);
       if (PhoneNumber.Length != 0) {
         output.WriteRawTag(218, 1);
@@ -1597,10 +1597,10 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(146, 1);
         output.WriteString(Locale);
       }
-      defaultLocations_.WriteTo(ref output, _repeated_defaultLocations_codec);
-      if (DefaultOrganizationId.Length != 0) {
+      preferredLocations_.WriteTo(ref output, _repeated_preferredLocations_codec);
+      if (PreferredOrganizationId.Length != 0) {
         output.WriteRawTag(162, 1);
-        output.WriteString(DefaultOrganizationId);
+        output.WriteString(PreferredOrganizationId);
       }
       preferredLocationResources_.WriteTo(ref output, _repeated_preferredLocationResources_codec);
       preferredDesks_.WriteTo(ref output, _repeated_preferredDesks_codec);
@@ -1609,7 +1609,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(194, 1);
         output.WriteMessage(Settings);
       }
-      defaultTeams_.WriteTo(ref output, _repeated_defaultTeams_codec);
+      preferredTeams_.WriteTo(ref output, _repeated_preferredTeams_codec);
       preferredOrganizationTags_.WriteTo(ref output, _repeated_preferredOrganizationTags_codec);
       if (PhoneNumber.Length != 0) {
         output.WriteRawTag(218, 1);
@@ -1677,9 +1677,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (Locale.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(Locale);
       }
-      size += defaultLocations_.CalculateSize(_repeated_defaultLocations_codec);
-      if (DefaultOrganizationId.Length != 0) {
-        size += 2 + pb::CodedOutputStream.ComputeStringSize(DefaultOrganizationId);
+      size += preferredLocations_.CalculateSize(_repeated_preferredLocations_codec);
+      if (PreferredOrganizationId.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(PreferredOrganizationId);
       }
       size += preferredLocationResources_.CalculateSize(_repeated_preferredLocationResources_codec);
       size += preferredDesks_.CalculateSize(_repeated_preferredDesks_codec);
@@ -1687,7 +1687,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (settings_ != null) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(Settings);
       }
-      size += defaultTeams_.CalculateSize(_repeated_defaultTeams_codec);
+      size += preferredTeams_.CalculateSize(_repeated_preferredTeams_codec);
       size += preferredOrganizationTags_.CalculateSize(_repeated_preferredOrganizationTags_codec);
       if (PhoneNumber.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(PhoneNumber);
@@ -1759,9 +1759,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (other.Locale.Length != 0) {
         Locale = other.Locale;
       }
-      defaultLocations_.Add(other.defaultLocations_);
-      if (other.DefaultOrganizationId.Length != 0) {
-        DefaultOrganizationId = other.DefaultOrganizationId;
+      preferredLocations_.Add(other.preferredLocations_);
+      if (other.PreferredOrganizationId.Length != 0) {
+        PreferredOrganizationId = other.PreferredOrganizationId;
       }
       preferredLocationResources_.Add(other.preferredLocationResources_);
       preferredDesks_.Add(other.preferredDesks_);
@@ -1772,7 +1772,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         }
         Settings.MergeFrom(other.Settings);
       }
-      defaultTeams_.Add(other.defaultTeams_);
+      preferredTeams_.Add(other.preferredTeams_);
       preferredOrganizationTags_.Add(other.preferredOrganizationTags_);
       if (other.PhoneNumber.Length != 0) {
         PhoneNumber = other.PhoneNumber;
@@ -1872,11 +1872,11 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 154: {
-            defaultLocations_.AddEntriesFrom(input, _repeated_defaultLocations_codec);
+            preferredLocations_.AddEntriesFrom(input, _repeated_preferredLocations_codec);
             break;
           }
           case 162: {
-            DefaultOrganizationId = input.ReadString();
+            PreferredOrganizationId = input.ReadString();
             break;
           }
           case 170: {
@@ -1899,7 +1899,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 202: {
-            defaultTeams_.AddEntriesFrom(input, _repeated_defaultTeams_codec);
+            preferredTeams_.AddEntriesFrom(input, _repeated_preferredTeams_codec);
             break;
           }
           case 210: {
@@ -2005,11 +2005,11 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 154: {
-            defaultLocations_.AddEntriesFrom(ref input, _repeated_defaultLocations_codec);
+            preferredLocations_.AddEntriesFrom(ref input, _repeated_preferredLocations_codec);
             break;
           }
           case 162: {
-            DefaultOrganizationId = input.ReadString();
+            PreferredOrganizationId = input.ReadString();
             break;
           }
           case 170: {
@@ -2032,7 +2032,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 202: {
-            defaultTeams_.AddEntriesFrom(ref input, _repeated_defaultTeams_codec);
+            preferredTeams_.AddEntriesFrom(ref input, _repeated_preferredTeams_codec);
             break;
           }
           case 210: {
@@ -2362,7 +2362,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       isLocationOnboardingDone_ = other.isLocationOnboardingDone_;
       isTeamOnboardingDone_ = other.isTeamOnboardingDone_;
       isDefaultOrganizationOnboardingDone_ = other.isDefaultOrganizationOnboardingDone_;
-      isDefaultLocationOnboardingDone_ = other.isDefaultLocationOnboardingDone_;
+      isPreferredLocationOnboardingDone_ = other.isPreferredLocationOnboardingDone_;
       isPreferredZoneOnboardingDone_ = other.isPreferredZoneOnboardingDone_;
       isPreferredDeskOnboardingDone_ = other.isPreferredDeskOnboardingDone_;
       isPreferredRoomOnboardingDone_ = other.isPreferredRoomOnboardingDone_;
@@ -2435,15 +2435,15 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "isDefaultLocationOnboardingDone" field.</summary>
-    public const int IsDefaultLocationOnboardingDoneFieldNumber = 6;
-    private bool isDefaultLocationOnboardingDone_;
+    /// <summary>Field number for the "isPreferredLocationOnboardingDone" field.</summary>
+    public const int IsPreferredLocationOnboardingDoneFieldNumber = 6;
+    private bool isPreferredLocationOnboardingDone_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool IsDefaultLocationOnboardingDone {
-      get { return isDefaultLocationOnboardingDone_; }
+    public bool IsPreferredLocationOnboardingDone {
+      get { return isPreferredLocationOnboardingDone_; }
       set {
-        isDefaultLocationOnboardingDone_ = value;
+        isPreferredLocationOnboardingDone_ = value;
       }
     }
 
@@ -2503,7 +2503,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (IsLocationOnboardingDone != other.IsLocationOnboardingDone) return false;
       if (IsTeamOnboardingDone != other.IsTeamOnboardingDone) return false;
       if (IsDefaultOrganizationOnboardingDone != other.IsDefaultOrganizationOnboardingDone) return false;
-      if (IsDefaultLocationOnboardingDone != other.IsDefaultLocationOnboardingDone) return false;
+      if (IsPreferredLocationOnboardingDone != other.IsPreferredLocationOnboardingDone) return false;
       if (IsPreferredZoneOnboardingDone != other.IsPreferredZoneOnboardingDone) return false;
       if (IsPreferredDeskOnboardingDone != other.IsPreferredDeskOnboardingDone) return false;
       if (IsPreferredRoomOnboardingDone != other.IsPreferredRoomOnboardingDone) return false;
@@ -2519,7 +2519,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (IsLocationOnboardingDone != false) hash ^= IsLocationOnboardingDone.GetHashCode();
       if (IsTeamOnboardingDone != false) hash ^= IsTeamOnboardingDone.GetHashCode();
       if (IsDefaultOrganizationOnboardingDone != false) hash ^= IsDefaultOrganizationOnboardingDone.GetHashCode();
-      if (IsDefaultLocationOnboardingDone != false) hash ^= IsDefaultLocationOnboardingDone.GetHashCode();
+      if (IsPreferredLocationOnboardingDone != false) hash ^= IsPreferredLocationOnboardingDone.GetHashCode();
       if (IsPreferredZoneOnboardingDone != false) hash ^= IsPreferredZoneOnboardingDone.GetHashCode();
       if (IsPreferredDeskOnboardingDone != false) hash ^= IsPreferredDeskOnboardingDone.GetHashCode();
       if (IsPreferredRoomOnboardingDone != false) hash ^= IsPreferredRoomOnboardingDone.GetHashCode();
@@ -2561,9 +2561,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(40);
         output.WriteBool(IsDefaultOrganizationOnboardingDone);
       }
-      if (IsDefaultLocationOnboardingDone != false) {
+      if (IsPreferredLocationOnboardingDone != false) {
         output.WriteRawTag(48);
-        output.WriteBool(IsDefaultLocationOnboardingDone);
+        output.WriteBool(IsPreferredLocationOnboardingDone);
       }
       if (IsPreferredZoneOnboardingDone != false) {
         output.WriteRawTag(56);
@@ -2607,9 +2607,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(40);
         output.WriteBool(IsDefaultOrganizationOnboardingDone);
       }
-      if (IsDefaultLocationOnboardingDone != false) {
+      if (IsPreferredLocationOnboardingDone != false) {
         output.WriteRawTag(48);
-        output.WriteBool(IsDefaultLocationOnboardingDone);
+        output.WriteBool(IsPreferredLocationOnboardingDone);
       }
       if (IsPreferredZoneOnboardingDone != false) {
         output.WriteRawTag(56);
@@ -2648,7 +2648,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (IsDefaultOrganizationOnboardingDone != false) {
         size += 1 + 1;
       }
-      if (IsDefaultLocationOnboardingDone != false) {
+      if (IsPreferredLocationOnboardingDone != false) {
         size += 1 + 1;
       }
       if (IsPreferredZoneOnboardingDone != false) {
@@ -2687,8 +2687,8 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (other.IsDefaultOrganizationOnboardingDone != false) {
         IsDefaultOrganizationOnboardingDone = other.IsDefaultOrganizationOnboardingDone;
       }
-      if (other.IsDefaultLocationOnboardingDone != false) {
-        IsDefaultLocationOnboardingDone = other.IsDefaultLocationOnboardingDone;
+      if (other.IsPreferredLocationOnboardingDone != false) {
+        IsPreferredLocationOnboardingDone = other.IsPreferredLocationOnboardingDone;
       }
       if (other.IsPreferredZoneOnboardingDone != false) {
         IsPreferredZoneOnboardingDone = other.IsPreferredZoneOnboardingDone;
@@ -2739,7 +2739,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 48: {
-            IsDefaultLocationOnboardingDone = input.ReadBool();
+            IsPreferredLocationOnboardingDone = input.ReadBool();
             break;
           }
           case 56: {
@@ -2794,7 +2794,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 48: {
-            IsDefaultLocationOnboardingDone = input.ReadBool();
+            IsPreferredLocationOnboardingDone = input.ReadBool();
             break;
           }
           case 56: {

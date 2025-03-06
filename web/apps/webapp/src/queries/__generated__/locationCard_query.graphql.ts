@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<578f9c2cbac0a410f9aa451862b4457b>>
+ * @generated SignedSource<<efe065fa46c9c7402a226389813e30e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,10 +12,10 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type locationCard_query$data = {
   readonly me: {
-    readonly defaultLocations: ReadonlyArray<{
+    readonly id: string;
+    readonly preferredLocations: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
-    readonly id: string;
   } | null | undefined;
   readonly " $fragmentType": "locationCard_query";
 };
@@ -50,7 +50,7 @@ const node: ReaderFragment = {
           "args": null,
           "concreteType": "CustomerLocationDetails",
           "kind": "LinkedField",
-          "name": "defaultLocations",
+          "name": "preferredLocations",
           "plural": true,
           "selections": [
             {
@@ -71,6 +71,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "9f5e637d22866a028399737dc4835b75";
+(node as any).hash = "84fb5f6aadd6565aa9e312e851f5de5b";
 
 export default node;

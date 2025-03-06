@@ -196,9 +196,9 @@ public class TeamSubscriber(
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
-            var existingTeamIds = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
-            customer.DefaultTeams = customer.DefaultTeams.Where(item => item.Id != existingTeam.Id).ToList();
-            var newTeamIds = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
+            var existingTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
+            customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != existingTeam.Id).ToList();
+            var newTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
             customer = repositoryFactory.CustomerRepository.Update(customer);
 
             if (newTeamIds.Count != existingTeamIds.Count || newTeamIds.Except(existingTeamIds).Any())
@@ -210,13 +210,13 @@ public class TeamSubscriber(
 
     private async Task UpdateCustomerDefaultTeamsAsync(Team team, CancellationToken cancellationToken)
     {
-        var customerIds = team.DefaultedByCustomers.Select(customer => customer.Id).ToList();
+        var customerIds = team.PreferredByCustomers.Select(customer => customer.Id).ToList();
         foreach (var customerId in customerIds)
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
-            customer.DefaultTeams = customer.DefaultTeams.Where(item => item.Id != team.Id).ToList();
+            customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != team.Id).ToList();
             _ = repositoryFactory.CustomerRepository.Update(customer);
         }
     }

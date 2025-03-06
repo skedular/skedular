@@ -9,36 +9,36 @@ using HotChocolate.Types.Relay;
 
 namespace Customer.Api.GraphQL;
 
-[GraphQLName("AddCustomerDefaultDeskInput")]
-public class AddCustomerDefaultDeskInput
+[GraphQLName("AddCustomerPreferredDeskInput")]
+public class AddCustomerPreferredDeskInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("deskId")] public required string DeskId { get; set; }
 }
 
-[GraphQLName("AddCustomerDefaultRoomInput")]
-public class AddCustomerDefaultRoomInput
+[GraphQLName("AddCustomerPreferredRoomInput")]
+public class AddCustomerPreferredRoomInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("roomId")] public required string RoomId { get; set; }
 }
 
-[GraphQLName("AddCustomerDefaultLocationInput")]
-public class AddCustomerDefaultLocationInput
+[GraphQLName("AddCustomerPreferredLocationInput")]
+public class AddCustomerPreferredLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("locationId")] public required string LocationId { get; set; }
 }
 
-[GraphQLName("AddCustomerDefaultOrganizationTagInput")]
-public class AddCustomerDefaultOrganizationTagInput
+[GraphQLName("AddCustomerPreferredOrganizationTagInput")]
+public class AddCustomerPreferredOrganizationTagInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("organizationTagId")] public required string OrganizationTagId { get; set; }
 }
 
-[GraphQLName("AddCustomerDefaultTeamInput")]
-public class AddCustomerDefaultTeamInput
+[GraphQLName("AddCustomerPreferredTeamInput")]
+public class AddCustomerPreferredTeamInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("teamId")] public required string TeamId { get; set; }
@@ -50,8 +50,8 @@ public class ClearCustomerDefaultOrganizationInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("CompleteDefaultLocationOnboardingInput")]
-public class CompleteDefaultLocationOnboardingInput
+[GraphQLName("CompletePreferredLocationOnboardingInput")]
+public class CompletePreferredLocationOnboardingInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
@@ -149,8 +149,8 @@ public class CustomerDetails : Node
     [GraphQLName("isDefaultOrganizationOnboardingDone")]
     public bool IsDefaultOrganizationOnboardingDone { get; set; }
 
-    [GraphQLName("isDefaultLocationOnboardingDone")]
-    public bool IsDefaultLocationOnboardingDone { get; set; }
+    [GraphQLName("isPreferredLocationOnboardingDone")]
+    public bool IsPreferredLocationOnboardingDone { get; set; }
 
     [GraphQLName("isPreferredZoneOnboardingDone")]
     public bool IsPreferredZoneOnboardingDone { get; set; }
@@ -161,9 +161,9 @@ public class CustomerDetails : Node
     [GraphQLName("isPreferredRoomOnboardingDone")]
     public bool IsPreferredRoomOnboardingDone { get; set; }
 
-    [GraphQLName("defaultLocations")] public CustomerLocationDetails[] DefaultLocations { get; set; } = [];
-    [GraphQLName("defaultTeams")] public CustomerTeamDetails[] DefaultTeams { get; set; } = [];
     [GraphQLName("defaultOrganization")] public CustomerOrganizationDetails? DefaultOrganization { get; set; }
+    [GraphQLName("preferredLocations")] public CustomerLocationDetails[] PreferredLocations { get; set; } = [];
+    [GraphQLName("preferredTeams")] public CustomerTeamDetails[] PreferredTeams { get; set; } = [];
     [GraphQLName("preferredZones")] public CustomerOrganizationTagDetails[] PreferredZones { get; set; } = [];
     [GraphQLName("preferredCustomTags")] public CustomerOrganizationTagDetails[] PreferredCustomTags { get; set; } = [];
     [GraphQLName("preferredDesks")] public CustomerDeskDetails[] PreferredDesks { get; set; } = [];
@@ -228,43 +228,43 @@ public class CustomerTeamDetails
     [GraphQLName("organization")] public CustomerOrganizationDetails? Organization { get; set; }
 }
 
-[GraphQLName("CustomersByDefaultLocationWhereInput")]
-public class CustomersByDefaultLocationWhereInput
+[GraphQLName("CustomersByPreferredLocationWhereInput")]
+public class CustomersByPreferredLocationWhereInput
 {
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }
 
-[GraphQLName("RemoveCustomerDefaultDeskInput")]
-public class RemoveCustomerDefaultDeskInput
+[GraphQLName("RemoveCustomerPreferredDeskInput")]
+public class RemoveCustomerPreferredDeskInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("deskId")] public required string DeskId { get; set; }
 }
 
-[GraphQLName("RemoveCustomerDefaultRoomInput")]
-public class RemoveCustomerDefaultRoomInput
+[GraphQLName("RemoveCustomerPreferredRoomInput")]
+public class RemoveCustomerPreferredRoomInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("roomId")] public required string RoomId { get; set; }
 }
 
-[GraphQLName("RemoveCustomerDefaultLocationInput")]
-public class RemoveCustomerDefaultLocationInput
+[GraphQLName("RemoveCustomerPreferredLocationInput")]
+public class RemoveCustomerPreferredLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("locationId")] public required string LocationId { get; set; }
 }
 
-[GraphQLName("RemoveCustomerDefaultOrganizationTagInput")]
-public class RemoveCustomerDefaultOrganizationTagInput
+[GraphQLName("RemoveCustomerPreferredOrganizationTagInput")]
+public class RemoveCustomerPreferredOrganizationTagInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("organizationTagId")] public required string OrganizationTagId { get; set; }
 }
 
-[GraphQLName("RemoveCustomerDefaultTeamInput")]
-public class RemoveCustomerDefaultTeamInput
+[GraphQLName("RemoveCustomerPreferredTeamInput")]
+public class RemoveCustomerPreferredTeamInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("teamId")] public required string TeamId { get; set; }

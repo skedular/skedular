@@ -167,7 +167,7 @@ public class CustomerService(
             : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(customer.DefaultOrganization.Id, cancellationToken);
 
         var defaultLocations = new List<Location>();
-        foreach (var location in customer.DefaultLocations)
+        foreach (var location in customer.PreferredLocations)
         {
             var organization = location.Organization is null
                 ? null
@@ -180,7 +180,7 @@ public class CustomerService(
         }
 
         var defaultTeams = new List<Team>();
-        foreach (var team in customer.DefaultTeams)
+        foreach (var team in customer.PreferredTeams)
         {
             var organization = team.Organization is null
                 ? null

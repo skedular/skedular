@@ -7,12 +7,12 @@ namespace Customer.Api.Services;
 
 public interface ICustomerOrganizationTagSettingsService
 {
-    Task<Shared.Models.Customer> AddCustomerDefaultOrganizationTagAsync(
+    Task<Shared.Models.Customer> AddCustomerPreferredOrganizationTagAsync(
         string organizationTagId,
         string? customerId,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Customer> RemoveCustomerDefaultOrganizationTagAsync(
+    Task<Shared.Models.Customer> RemoveCustomerPreferredOrganizationTagAsync(
         string organizationTagId,
         string? customerId,
         CancellationToken cancellationToken);
@@ -25,7 +25,7 @@ public class CustomerOrganizationTagSettingsService(
     IMapper mapper)
     : ICustomerOrganizationTagSettingsService
 {
-    public async Task<Shared.Models.Customer> AddCustomerDefaultOrganizationTagAsync(
+    public async Task<Shared.Models.Customer> AddCustomerPreferredOrganizationTagAsync(
         string organizationTagId,
         string? customerId,
         CancellationToken cancellationToken)
@@ -66,7 +66,7 @@ public class CustomerOrganizationTagSettingsService(
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Customer> RemoveCustomerDefaultOrganizationTagAsync(
+    public async Task<Shared.Models.Customer> RemoveCustomerPreferredOrganizationTagAsync(
         string organizationTagId,
         string? customerId,
         CancellationToken cancellationToken)

@@ -37,23 +37,23 @@ public class Mapper : IMapper
                 IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
                 IsTeamOnboardingDone = src.IsTeamOnboardingDone ?? false,
                 IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
-                IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone ?? false,
+                IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone ?? false,
                 IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
                 IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false,
                 IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone ?? false
             },
-            DefaultOrganizationId = src.DefaultOrganization is null ? string.Empty : src.DefaultOrganization.Id
+            PreferredOrganizationId = src.DefaultOrganization is null ? string.Empty : src.DefaultOrganization.Id
         };
 
         customer.Identities.AddRange(MapTo(src.Identities));
-        customer.DefaultLocations.AddRange(
-            src.DefaultLocations.Select(item =>
+        customer.PreferredLocations.AddRange(
+            src.PreferredLocations.Select(item =>
                 new Location { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
         );
         customer.PreferredDesks.AddRange(src.PreferredDesks.Select(item => new Desk { Id = item.Id, LocationId = item.Location.Id }));
         customer.PreferredRooms.AddRange(src.PreferredRooms.Select(item => new Room { Id = item.Id, LocationId = item.Location.Id }));
-        customer.DefaultTeams.AddRange(
-            src.DefaultTeams.Select(item =>
+        customer.PreferredTeams.AddRange(
+            src.PreferredTeams.Select(item =>
                 new Team { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
         );
         customer.PreferredOrganizationTags.AddRange(

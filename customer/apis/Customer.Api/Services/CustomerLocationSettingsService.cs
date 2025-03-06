@@ -7,13 +7,13 @@ namespace Customer.Api.Services;
 
 public interface ICustomerLocationSettingsService
 {
-    Task<Shared.Models.Customer> AddCustomerDefaultLocationAsync(
+    Task<Shared.Models.Customer> AddCustomerPreferredLocationAsync(
         string locationId,
         string? customerId,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Customer> RemoveCustomerDefaultLocationAsync(
+    Task<Shared.Models.Customer> RemoveCustomerPreferredLocationAsync(
         string locationId,
         string? customerId,
         CancellationToken cancellationToken);
@@ -26,7 +26,7 @@ public class CustomerLocationSettingsService(
     IMapper mapper)
     : ICustomerLocationSettingsService
 {
-    public async Task<Shared.Models.Customer> AddCustomerDefaultLocationAsync(
+    public async Task<Shared.Models.Customer> AddCustomerPreferredLocationAsync(
         string locationId,
         string? customerId,
         bool ignoreAuthorizationCheck,
@@ -42,21 +42,21 @@ public class CustomerLocationSettingsService(
         }
 
         if (!ignoreAuthorizationCheck &&
-            !await locationAuthorizationService.CanAddLocationAsDefaultAsync(location, customer, cancellationToken))
+            !await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer, cancellationToken))
         {
             throw new Unauthorized();
         }
 
-        if (customer.DefaultLocations.Any(item => item.Id == locationId))
+        if (customer.PreferredLocations.Any(item => item.Id == locationId))
         {
             return mapper.MapTo(customer);
         }
 
-        customer.DefaultLocations = customer.DefaultLocations.Concat([location]).ToList();
+        customer.PreferredLocations = customer.PreferredLocations.Concat([location]).ToList();
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Customer> RemoveCustomerDefaultLocationAsync(
+    public async Task<Shared.Models.Customer> RemoveCustomerPreferredLocationAsync(
         string locationId,
         string? customerId,
         CancellationToken cancellationToken)
@@ -64,7 +64,7 @@ public class CustomerLocationSettingsService(
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        customer.DefaultLocations = customer.DefaultLocations.Where(item => item.Id != locationId).ToList();
+        customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != locationId).ToList();
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 }

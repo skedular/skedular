@@ -730,8 +730,8 @@ public class LocationsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.AddDefaultLocationAsync(
-            new AddDefaultLocationInput { LocationId = context.LocationId },
+        await customerServiceClient.AddPreferredLocationAsync(
+            new AddPreferredLocationInput { LocationId = context.LocationId },
             customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
@@ -750,8 +750,8 @@ public class LocationsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.RemoveDefaultLocationAsync(
-            new RemoveDefaultLocationInput { LocationId = context.LocationId },
+        await customerServiceClient.RemovePreferredLocationAsync(
+            new RemovePreferredLocationInput { LocationId = context.LocationId },
             customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 

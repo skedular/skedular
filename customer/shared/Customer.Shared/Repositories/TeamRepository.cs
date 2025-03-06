@@ -45,7 +45,7 @@ public class TeamRepository(CustomerDbContext dbContext, TimeProvider timeProvid
             .ThenInclude(query => query.OrganizationMember)
             .ThenInclude(query => query.Customer)
             .Include(query => query.Organization)
-            .Include(query => query.DefaultedByCustomers)
+            .Include(query => query.PreferredByCustomers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Team Add(Team team)

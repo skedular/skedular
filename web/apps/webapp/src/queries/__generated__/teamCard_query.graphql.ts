@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b74a7fd6ea0541c9b4c034af763b8494>>
+ * @generated SignedSource<<a5750d782a0cf9c55c306b0cf2a051fa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,10 +12,10 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type teamCard_query$data = {
   readonly me: {
-    readonly defaultTeams: ReadonlyArray<{
+    readonly id: string;
+    readonly preferredTeams: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
-    readonly id: string;
   } | null | undefined;
   readonly " $fragmentType": "teamCard_query";
 };
@@ -50,7 +50,7 @@ const node: ReaderFragment = {
           "args": null,
           "concreteType": "CustomerTeamDetails",
           "kind": "LinkedField",
-          "name": "defaultTeams",
+          "name": "preferredTeams",
           "plural": true,
           "selections": [
             {
@@ -71,6 +71,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "0f0786724d6cd8b909870321bbe9de02";
+(node as any).hash = "e770a28ae90a2a46a43128474f9b6278";
 
 export default node;

@@ -41,7 +41,7 @@ public class SettingsComponents(
         var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
         ArgumentNullException.ThrowIfNull(customer);
 
-        if (customer.IsDefaultLocationOnboardingDone.HasValue && customer.IsDefaultLocationOnboardingDone.Value)
+        if (customer.IsPreferredLocationOnboardingDone.HasValue && customer.IsPreferredLocationOnboardingDone.Value)
         {
             return [];
         }
@@ -50,7 +50,7 @@ public class SettingsComponents(
 
         return
         [
-            new SectionBlock { Text = "*Setting default location makes make a bookings easier. Setup one now?*".ToMarkdown() },
+            new SectionBlock { Text = "*Setting preferred location makes make a bookings easier. Setup one now?*".ToMarkdown() },
             new ActionsBlock
             {
                 Elements =

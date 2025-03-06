@@ -228,8 +228,8 @@ public class OrganizationInternalSubscriber(
 
                 if (getLocationsResponse.TotalCount == 1)
                 {
-                    await customerServiceClient.Admin_AddDefaultLocationAsync(
-                        new Admin_AddDefaultLocationInput
+                    await customerServiceClient.Admin_AddPreferredLocationAsync(
+                        new Admin_AddPreferredLocationInput
                         {
                             LocationId = getLocationsResponse.Edges.First().Node.Id,
                             CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
@@ -267,8 +267,8 @@ public class OrganizationInternalSubscriber(
 
                 if (getLocationsResponse.TotalCount == 1)
                 {
-                    await customerServiceClient.Admin_AddDefaultLocationAsync(
-                        new Admin_AddDefaultLocationInput
+                    await customerServiceClient.Admin_AddPreferredLocationAsync(
+                        new Admin_AddPreferredLocationInput
                         {
                             LocationId = getLocationsResponse.Edges.First().Node.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
                         },

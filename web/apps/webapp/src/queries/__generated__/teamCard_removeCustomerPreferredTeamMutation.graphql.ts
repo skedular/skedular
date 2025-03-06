@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<43526ad35ccd8e01ccb182445f01fe1a>>
+ * @generated SignedSource<<3770561d269815e26e2c44b0f25b31fb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,26 +9,26 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type RemoveCustomerDefaultTeamInput = {
+export type RemoveCustomerPreferredTeamInput = {
   clientMutationId?: string | null | undefined;
   teamId: string;
 };
-export type teamCard_removeCustomerDefaultTeamMutation$variables = {
-  input: RemoveCustomerDefaultTeamInput;
+export type teamCard_removeCustomerPreferredTeamMutation$variables = {
+  input: RemoveCustomerPreferredTeamInput;
 };
-export type teamCard_removeCustomerDefaultTeamMutation$data = {
-  readonly removeCustomerDefaultTeam: {
+export type teamCard_removeCustomerPreferredTeamMutation$data = {
+  readonly removeCustomerPreferredTeam: {
     readonly customer: {
-      readonly defaultTeams: ReadonlyArray<{
+      readonly id: string;
+      readonly preferredTeams: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
-      readonly id: string;
     };
   } | null | undefined;
 };
-export type teamCard_removeCustomerDefaultTeamMutation = {
-  response: teamCard_removeCustomerDefaultTeamMutation$data;
-  variables: teamCard_removeCustomerDefaultTeamMutation$variables;
+export type teamCard_removeCustomerPreferredTeamMutation = {
+  response: teamCard_removeCustomerPreferredTeamMutation$data;
+  variables: teamCard_removeCustomerPreferredTeamMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -51,7 +51,7 @@ v1 = [
     ],
     "concreteType": "CustomerPayload",
     "kind": "LinkedField",
-    "name": "removeCustomerDefaultTeam",
+    "name": "removeCustomerPreferredTeam",
     "plural": false,
     "selections": [
       {
@@ -74,7 +74,7 @@ v1 = [
             "args": null,
             "concreteType": "CustomerTeamDetails",
             "kind": "LinkedField",
-            "name": "defaultTeams",
+            "name": "preferredTeams",
             "plural": true,
             "selections": [
               {
@@ -99,7 +99,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "teamCard_removeCustomerDefaultTeamMutation",
+    "name": "teamCard_removeCustomerPreferredTeamMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -108,20 +108,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "teamCard_removeCustomerDefaultTeamMutation",
+    "name": "teamCard_removeCustomerPreferredTeamMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "3c4ac61965fc2f98bdfa0f3d490aa2e3",
+    "cacheID": "4835326f2d7d268e8028febd3b257df5",
     "id": null,
     "metadata": {},
-    "name": "teamCard_removeCustomerDefaultTeamMutation",
+    "name": "teamCard_removeCustomerPreferredTeamMutation",
     "operationKind": "mutation",
-    "text": "mutation teamCard_removeCustomerDefaultTeamMutation(\n  $input: RemoveCustomerDefaultTeamInput!\n) {\n  removeCustomerDefaultTeam(input: $input) {\n    customer {\n      id\n      defaultTeams {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation teamCard_removeCustomerPreferredTeamMutation(\n  $input: RemoveCustomerPreferredTeamInput!\n) {\n  removeCustomerPreferredTeam(input: $input) {\n    customer {\n      id\n      preferredTeams {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5c9d0d6b0f75b0e19841ac3fc5d3813c";
+(node as any).hash = "cb984ddc7a1daa14091b401c100496f8";
 
 export default node;

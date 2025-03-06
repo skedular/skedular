@@ -84,7 +84,7 @@ internal static class LocationExtensions
             .Include(query => query.Organization)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
-            .Include(query => query.DefaultedByCustomers);
+            .Include(query => query.PreferredByCustomers);
 }
 
 public class LocationRepository(BookingDbContext dbContext, TimeProvider timeProvider)

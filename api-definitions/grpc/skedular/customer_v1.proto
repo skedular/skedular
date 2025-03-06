@@ -11,22 +11,22 @@ service CustomerService {
     rpc Admin_AnyCustomerExistByVerifiableToken (Admin_AnyCustomerExistByVerifiableTokenInput) returns (AnyCustomerExistByVerifiableTokenResponse);
     rpc Admin_AnyCustomerExistByEmail (Admin_AnyCustomerExistByEmailInput) returns (AnyCustomerExistByEmailResponse);
     rpc Admin_SetDefaultOrganization (Admin_SetDefaultOrganizationInput) returns (Customer);
-    rpc Admin_AddDefaultLocation (Admin_AddDefaultLocationInput) returns (Customer);
-    rpc Admin_AddDefaultTeam (Admin_AddDefaultTeamInput) returns (Customer);
+    rpc Admin_AddPreferredLocation (Admin_AddPreferredLocationInput) returns (Customer);
+    rpc Admin_AddPreferredTeam (Admin_AddPreferredTeamInput) returns (Customer);
 
     rpc GetVersion (VersionInput) returns (Version);
     rpc Get (GetInput) returns (Customer);
-    rpc DismissDefaultLocationOnboardingSetup (DismissDefaultLocationOnboardingSetupInput) returns (Customer);
+    rpc DismissPreferredLocationOnboardingSetup (DismissDefaultLocationOnboardingSetupInput) returns (Customer);
     rpc DismissSetupPreferredZones (DismissSetupPreferredZonesInput) returns (Customer);
     rpc DismissSetupPreferredDesks (DismissSetupPreferredDesksInput) returns (Customer);
     rpc DismissSetupPreferredRooms (DismissSetupPreferredRoomsInput) returns (Customer);
     rpc SubmitFeedback (SubmitFeedbackInput) returns (Feedback);
     rpc SetDefaultOrganization (SetDefaultOrganizationInput) returns (Customer);
-    rpc AddDefaultLocation (AddDefaultLocationInput) returns (Customer);
-    rpc AddDefaultTeam (AddDefaultTeamInput) returns (Customer);
+    rpc AddPreferredLocation (AddPreferredLocationInput) returns (Customer);
+    rpc AddPreferredTeam (AddPreferredTeamInput) returns (Customer);
     rpc ClearDefaultOrganization (ClearDefaultOrganizationInput) returns (Customer);
-    rpc RemoveDefaultLocation (RemoveDefaultLocationInput) returns (Customer);
-    rpc RemoveDefaultTeam (RemoveDefaultTeamInput) returns (Customer);
+    rpc RemovePreferredLocation (RemovePreferredLocationInput) returns (Customer);
+    rpc RemovePreferredTeam (RemovePreferredTeamInput) returns (Customer);
     rpc AddPreferredDesk (AddPreferredDeskInput) returns (Customer);
     rpc RemovePreferredDesk (RemovePreferredDeskInput) returns (Customer);
     rpc AddPreferredRoom (AddPreferredRoomInput) returns (Customer);
@@ -92,15 +92,15 @@ message Admin_AddInput {
     bool isLocationOnboardingDone = 19;
     bool isTeamOnboardingDone = 20;
     bool isDefaultOrganizationOnboardingDone = 21;
-    bool isDefaultLocationOnboardingDone = 22;
+    bool isPreferredLocationOnboardingDone = 22;
     bool isPreferredZoneOnboardingDone = 23;
     bool isPreferredDeskOnboardingDone = 24;
     bool isPreferredRoomOnboardingDone = 25;
     Organization defaultOrganization = 26;
-    repeated Location defaultLocations = 27;
+    repeated Location preferredLocations = 27;
     repeated Desk preferredDesks = 28;
     repeated Room preferredRooms = 29;
-    repeated Team defaultTeams = 30;
+    repeated Team preferredTeams = 30;
     repeated OrganizationTag preferredOrganizationTags = 31;
     string phoneNumber = 32;
 }
@@ -127,15 +127,15 @@ message Customer {
     bool isLocationOnboardingDone = 19;
     bool isTeamOnboardingDone = 20;
     bool isDefaultOrganizationOnboardingDone = 21;
-    bool isDefaultLocationOnboardingDone = 22;
+    bool isPreferredLocationOnboardingDone = 22;
     bool isPreferredZoneOnboardingDone = 23;
     bool isPreferredDeskOnboardingDone = 24;
     bool isPreferredRoomOnboardingDone = 25;
     Organization defaultOrganization = 26;
-    repeated Location defaultLocations = 27;
+    repeated Location preferredLocations = 27;
     repeated Desk preferredDesks = 28;
     repeated Room preferredRooms = 29;
-    repeated Team defaultTeams = 30;
+    repeated Team preferredTeams = 30;
     repeated OrganizationTag preferredOrganizationTags = 31;
     string phoneNumber = 32;
 }
@@ -194,12 +194,12 @@ message Admin_SetDefaultOrganizationInput {
     string organizationId = 2;
 }
 
-message Admin_AddDefaultLocationInput {
+message Admin_AddPreferredLocationInput {
     string customerId = 1;
     string locationId = 2;
 }
 
-message Admin_AddDefaultTeamInput {
+message Admin_AddPreferredTeamInput {
     string customerId = 1;
     string teamId = 2;
 }
@@ -236,22 +236,22 @@ message SetDefaultOrganizationInput {
     string organizationId = 1;
 }
 
-message AddDefaultLocationInput {
+message AddPreferredLocationInput {
     string locationId = 1;
 }
 
-message AddDefaultTeamInput {
+message AddPreferredTeamInput {
     string teamId = 1;
 }
 
 message ClearDefaultOrganizationInput {
 }
 
-message RemoveDefaultLocationInput {
+message RemovePreferredLocationInput {
     string locationId = 1;
 }
 
-message RemoveDefaultTeamInput {
+message RemovePreferredTeamInput {
     string teamId = 1;
 }
 

@@ -46,7 +46,7 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
             .ThenInclude(query =>
                 query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
-            .Include(query => query.DefaultedByCustomers)
+            .Include(query => query.PreferredByCustomers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public Team Add(Team team)

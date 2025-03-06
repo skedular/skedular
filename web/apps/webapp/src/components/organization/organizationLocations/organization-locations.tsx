@@ -17,11 +17,11 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { joinErrors, startOfDay } from '@/libs/utils';
-import type { organizationLocations_addCustomerDefaultLocationMutation } from '@/queries/__generated__/organizationLocations_addCustomerDefaultLocationMutation.graphql';
+import type { organizationLocations_addCustomerPreferredLocationMutation } from '@/queries/__generated__/organizationLocations_addCustomerPreferredLocationMutation.graphql';
 import type { organizationLocations_deleteLocationMutation } from '@/queries/__generated__/organizationLocations_deleteLocationMutation.graphql';
 import type { organizationLocations_locations_availableOrganizationDesks_query$key } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationDesks_query.graphql';
 import type { organizationLocations_locations_availableOrganizationDesks_refetchableFragment } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationDesks_refetchableFragment.graphql';
-import type { organizationLocations_removeCustomerDefaultLocationMutation } from '@/queries/__generated__/organizationLocations_removeCustomerDefaultLocationMutation.graphql';
+import type { organizationLocations_removeCustomerPreferredLocationMutation } from '@/queries/__generated__/organizationLocations_removeCustomerPreferredLocationMutation.graphql';
 import type { organizationLocations_rootQuery } from '@/queries/__generated__/organizationLocations_rootQuery.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Dialog from '@mui/material/Dialog';
@@ -61,7 +61,7 @@ const RootQuery = graphql`
   ) {
     me {
       id
-      defaultLocations {
+      preferredLocations {
         uniqueId
       }
     }
@@ -192,12 +192,12 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
     }
   `);
 
-  const [commitAddCustomerDefaultLocation] = useMutation<organizationLocations_addCustomerDefaultLocationMutation>(graphql`
-    mutation organizationLocations_addCustomerDefaultLocationMutation($input: AddCustomerDefaultLocationInput!) {
-      addCustomerDefaultLocation(input: $input) {
+  const [commitAddCustomerPreferredLocation] = useMutation<organizationLocations_addCustomerPreferredLocationMutation>(graphql`
+    mutation organizationLocations_addCustomerPreferredLocationMutation($input: AddCustomerPreferredLocationInput!) {
+      addCustomerPreferredLocation(input: $input) {
         customer {
           id
-          defaultLocations {
+          preferredLocations {
             uniqueId
           }
         }
@@ -205,12 +205,12 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
     }
   `);
 
-  const [commitRemoveCustomerDefaultLocation] = useMutation<organizationLocations_removeCustomerDefaultLocationMutation>(graphql`
-    mutation organizationLocations_removeCustomerDefaultLocationMutation($input: RemoveCustomerDefaultLocationInput!) {
-      removeCustomerDefaultLocation(input: $input) {
+  const [commitRemoveCustomerPreferredLocation] = useMutation<organizationLocations_removeCustomerPreferredLocationMutation>(graphql`
+    mutation organizationLocations_removeCustomerPreferredLocationMutation($input: RemoveCustomerPreferredLocationInput!) {
+      removeCustomerPreferredLocation(input: $input) {
         customer {
           id
-          defaultLocations {
+          preferredLocations {
             uniqueId
           }
         }
@@ -230,7 +230,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
-  const [preferredLocations, setPreferredLocations] = useState(rootData.me?.defaultLocations.map(({ uniqueId }) => uniqueId) ?? []);
+  const [preferredLocations, setPreferredLocations] = useState(rootData.me?.preferredLocations.map(({ uniqueId }) => uniqueId) ?? []);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation],
@@ -356,7 +356,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
 
     const toastId = themedToast(<NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
 
-    commitAddCustomerDefaultLocation({
+    commitAddCustomerPreferredLocation({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -401,7 +401,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
 
     const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
 
-    commitRemoveCustomerDefaultLocation({
+    commitRemoveCustomerPreferredLocation({
       variables: {
         input: {
           clientMutationId: nanoid(),

@@ -36,7 +36,7 @@ public class DismissSetupDefaultLocationButtonHandler(
             request.User.Id,
             cancellationToken);
 
-        await customerServiceClient.DismissDefaultLocationOnboardingSetupAsync(
+        await customerServiceClient.DismissPreferredLocationOnboardingSetupAsync(
             new DismissDefaultLocationOnboardingSetupInput(),
             customerConfiguration.ApiKey.CreateMetadata(workspaceMemberEntity.Id),
             cancellationToken: cancellationToken);

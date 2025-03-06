@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e932e0b35851279366e8dfd419c44047>>
+ * @generated SignedSource<<d0b43b45264d3b0f94c26c16bd6f841f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,15 +9,15 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type RemoveCustomerDefaultOrganizationTagInput = {
+export type AddCustomerPreferredOrganizationTagInput = {
   clientMutationId?: string | null | undefined;
   organizationTagId: string;
 };
-export type organizationAdmin_removeCustomerDefaultOrganizationTagMutation$variables = {
-  input: RemoveCustomerDefaultOrganizationTagInput;
+export type organizationAdmin_addCustomerPreferredOrganizationTagMutation$variables = {
+  input: AddCustomerPreferredOrganizationTagInput;
 };
-export type organizationAdmin_removeCustomerDefaultOrganizationTagMutation$data = {
-  readonly removeCustomerDefaultOrganizationTag: {
+export type organizationAdmin_addCustomerPreferredOrganizationTagMutation$data = {
+  readonly addCustomerPreferredOrganizationTag: {
     readonly customer: {
       readonly id: string;
       readonly preferredZones: ReadonlyArray<{
@@ -26,9 +26,9 @@ export type organizationAdmin_removeCustomerDefaultOrganizationTagMutation$data 
     };
   } | null | undefined;
 };
-export type organizationAdmin_removeCustomerDefaultOrganizationTagMutation = {
-  response: organizationAdmin_removeCustomerDefaultOrganizationTagMutation$data;
-  variables: organizationAdmin_removeCustomerDefaultOrganizationTagMutation$variables;
+export type organizationAdmin_addCustomerPreferredOrganizationTagMutation = {
+  response: organizationAdmin_addCustomerPreferredOrganizationTagMutation$data;
+  variables: organizationAdmin_addCustomerPreferredOrganizationTagMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -51,7 +51,7 @@ v1 = [
     ],
     "concreteType": "CustomerPayload",
     "kind": "LinkedField",
-    "name": "removeCustomerDefaultOrganizationTag",
+    "name": "addCustomerPreferredOrganizationTag",
     "plural": false,
     "selections": [
       {
@@ -99,7 +99,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_removeCustomerDefaultOrganizationTagMutation",
+    "name": "organizationAdmin_addCustomerPreferredOrganizationTagMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -108,20 +108,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_removeCustomerDefaultOrganizationTagMutation",
+    "name": "organizationAdmin_addCustomerPreferredOrganizationTagMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "bf863da91d87e259db3fbac9f8b6e8ae",
+    "cacheID": "6c00ece078fee4faaaf85c2102c6c21f",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_removeCustomerDefaultOrganizationTagMutation",
+    "name": "organizationAdmin_addCustomerPreferredOrganizationTagMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_removeCustomerDefaultOrganizationTagMutation(\n  $input: RemoveCustomerDefaultOrganizationTagInput!\n) {\n  removeCustomerDefaultOrganizationTag(input: $input) {\n    customer {\n      id\n      preferredZones {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_addCustomerPreferredOrganizationTagMutation(\n  $input: AddCustomerPreferredOrganizationTagInput!\n) {\n  addCustomerPreferredOrganizationTag(input: $input) {\n    customer {\n      id\n      preferredZones {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f2e4cc603dbc6e6289c8883c7edaf480";
+(node as any).hash = "148e8412b84c5a8861398dcfbb5dbc8c";
 
 export default node;

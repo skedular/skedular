@@ -7,8 +7,8 @@ namespace Customer.Api.Services.Authorization;
 
 public interface ILocationAuthorizationService
 {
-    Task<bool> CanAddLocationAsDefaultAsync(Location location, Shared.Database.Entities.Customer customer, CancellationToken cancellationToken);
-    Task<bool> CanAddLocationTagAsDefaultAsync(Location location, Shared.Database.Entities.Customer customer, CancellationToken cancellationToken);
+    Task<bool> CanAddLocationAsPreferredAsync(Location location, Shared.Database.Entities.Customer customer, CancellationToken cancellationToken);
+    Task<bool> CanAddLocationTagAsPreferredAsync(Location location, Shared.Database.Entities.Customer customer, CancellationToken cancellationToken);
     public bool IsLocationMember(Location location, Shared.Database.Entities.Customer customer);
 }
 
@@ -17,7 +17,7 @@ public class LocationAuthorizationService(
     IRepositoryFactory repositoryFactory)
     : ILocationAuthorizationService
 {
-    public async Task<bool> CanAddLocationAsDefaultAsync(
+    public async Task<bool> CanAddLocationAsPreferredAsync(
         Location location,
         Shared.Database.Entities.Customer customer,
         CancellationToken cancellationToken)
@@ -42,7 +42,7 @@ public class LocationAuthorizationService(
         return organizationAuthorizationService.IsOrganizationMember(organization, customer);
     }
 
-    public async Task<bool> CanAddLocationTagAsDefaultAsync(
+    public async Task<bool> CanAddLocationTagAsPreferredAsync(
         Location location,
         Shared.Database.Entities.Customer customer,
         CancellationToken cancellationToken)

@@ -30,7 +30,7 @@ internal static class LocationExtensions
             .Include(query => query.Desks)
             .Include(query => query.Rooms)
             .Include(query => query.Organization)
-            .Include(query => query.DefaultedByCustomers);
+            .Include(query => query.PreferredByCustomers);
 }
 
 public class LocationRepository(CustomerDbContext dbContext, TimeProvider timeProvider)

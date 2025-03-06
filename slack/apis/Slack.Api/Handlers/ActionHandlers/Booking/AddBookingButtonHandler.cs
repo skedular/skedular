@@ -334,7 +334,7 @@ public class AddBookingButtonHandler(
     {
         if (context.LocationId is null)
         {
-            var defaultLocation = customer.DefaultLocations.FirstOrDefault(item =>
+            var defaultLocation = customer.PreferredLocations.FirstOrDefault(item =>
                 item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
 
             return
@@ -387,7 +387,7 @@ public class AddBookingButtonHandler(
         if (context.TeamId is null)
         {
             var defaultTeam =
-                customer.DefaultTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
+                customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
 
             return
             [

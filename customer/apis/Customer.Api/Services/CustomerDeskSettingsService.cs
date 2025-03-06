@@ -7,8 +7,8 @@ namespace Customer.Api.Services;
 
 public interface ICustomerDeskSettingsService
 {
-    Task<Shared.Models.Customer> AddCustomerDefaultDeskAsync(string deskId, string? customerId, CancellationToken cancellationToken);
-    Task<Shared.Models.Customer> RemoveCustomerDefaultDeskAsync(string deskId, string? customerId, CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> AddCustomerPreferredDeskAsync(string deskId, string? customerId, CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> RemoveCustomerPreferredDeskAsync(string deskId, string? customerId, CancellationToken cancellationToken);
 }
 
 public class CustomerDeskSettingsService(
@@ -18,7 +18,7 @@ public class CustomerDeskSettingsService(
     IMapper mapper)
     : ICustomerDeskSettingsService
 {
-    public async Task<Shared.Models.Customer> AddCustomerDefaultDeskAsync(string deskId, string? customerId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> AddCustomerPreferredDeskAsync(string deskId, string? customerId, CancellationToken cancellationToken)
     {
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
@@ -35,7 +35,7 @@ public class CustomerDeskSettingsService(
             throw new LocationNotFound();
         }
 
-        if (!await locationAuthorizationService.CanAddLocationAsDefaultAsync(location, customer, cancellationToken))
+        if (!await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer, cancellationToken))
         {
             throw new Unauthorized();
         }
@@ -49,7 +49,7 @@ public class CustomerDeskSettingsService(
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Customer> RemoveCustomerDefaultDeskAsync(string deskId, string? customerId, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> RemoveCustomerPreferredDeskAsync(string deskId, string? customerId, CancellationToken cancellationToken)
     {
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)

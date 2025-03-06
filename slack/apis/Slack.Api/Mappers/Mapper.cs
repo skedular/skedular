@@ -135,7 +135,7 @@ public class Mapper : IMapper
             IsOrganizationOnboardingDone = false,
             IsLocationOnboardingDone = false,
             IsDefaultOrganizationOnboardingDone = false,
-            IsDefaultLocationOnboardingDone = false,
+            IsPreferredLocationOnboardingDone = false,
             IsPreferredZoneOnboardingDone = false,
             IsPreferredDeskOnboardingDone = false,
             IsPreferredRoomOnboardingDone = false,
@@ -144,7 +144,7 @@ public class Mapper : IMapper
 
         input.Identities.Add(new Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
-        input.DefaultLocations.AddRange(defaultLocations.Select(item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
+        input.PreferredLocations.AddRange(defaultLocations.Select(item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
         {
             Id = item.Id, Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         }));
@@ -178,7 +178,7 @@ public class Mapper : IMapper
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
-            IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
+            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
             IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone
@@ -193,15 +193,15 @@ public class Mapper : IMapper
             ? null
             : new Shared.Models.Organization { Id = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name.ToSafeString() };
 
-        customer.DefaultLocations = src.DefaultLocations.Select(item => new Shared.Models.Location
+        customer.PreferredLocations = src.PreferredLocations.Select(item => new Shared.Models.Location
         {
             Id = item.Id,
             Name = item.Name.ToSafeString(),
             Organization = string.IsNullOrWhiteSpace(item.Organization?.Id) ? null : new Shared.Models.Organization { Id = item.Organization.Id }
         }).ToList();
 
-        customer.DefaultTeams =
-            src.DefaultTeams.Select(item => new Team
+        customer.PreferredTeams =
+            src.PreferredTeams.Select(item => new Team
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),

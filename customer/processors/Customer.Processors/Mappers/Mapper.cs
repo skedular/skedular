@@ -325,16 +325,16 @@ public class Mapper : IMapper
                 IsLocationOnboardingDone = src.IsLocationOnboardingDone,
                 IsTeamOnboardingDone = src.IsTeamOnboardingDone,
                 IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
-                IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
+                IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
                 IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
                 IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
                 IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
                 Identities = MapTo(src.Identities).ToList(),
                 DefaultOrganization = MapTo(src.DefaultOrganization),
-                DefaultLocations = MapTo(src.DefaultLocations).ToList(),
+                PreferredLocations = MapTo(src.PreferredLocations).ToList(),
                 PreferredDesks = MapTo(src.PreferredDesks).ToList(),
                 PreferredRooms = MapTo(src.PreferredRooms).ToList(),
-                DefaultTeams = MapTo(src.DefaultTeams).ToList(),
+                PreferredTeams = MapTo(src.PreferredTeams).ToList(),
                 PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
             };
 

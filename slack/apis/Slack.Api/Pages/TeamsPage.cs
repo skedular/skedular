@@ -698,8 +698,8 @@ public class TeamsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.AddDefaultTeamAsync(
-            new AddDefaultTeamInput { TeamId = context.TeamId },
+        await customerServiceClient.AddPreferredTeamAsync(
+            new AddPreferredTeamInput { TeamId = context.TeamId },
             customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
@@ -718,8 +718,8 @@ public class TeamsPage(
         string? hash,
         CancellationToken cancellationToken)
     {
-        await customerServiceClient.RemoveDefaultTeamAsync(
-            new RemoveDefaultTeamInput { TeamId = context.TeamId },
+        await customerServiceClient.RemovePreferredTeamAsync(
+            new RemovePreferredTeamInput { TeamId = context.TeamId },
             customerConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 

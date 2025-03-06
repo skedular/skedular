@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2433f3692811661ea8a6664942bd2ba0>>
+ * @generated SignedSource<<b474bd3eb35836fd89b79e5237d4d555>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,26 +9,26 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type RemoveCustomerDefaultTeamInput = {
+export type RemoveCustomerPreferredRoomInput = {
   clientMutationId?: string | null | undefined;
-  teamId: string;
+  roomId: string;
 };
-export type organizationTeams_removeCustomerDefaultTeamMutation$variables = {
-  input: RemoveCustomerDefaultTeamInput;
+export type organizationLocation_removeCustomerPreferredRoomMutation$variables = {
+  input: RemoveCustomerPreferredRoomInput;
 };
-export type organizationTeams_removeCustomerDefaultTeamMutation$data = {
-  readonly removeCustomerDefaultTeam: {
+export type organizationLocation_removeCustomerPreferredRoomMutation$data = {
+  readonly removeCustomerPreferredRoom: {
     readonly customer: {
-      readonly defaultTeams: ReadonlyArray<{
+      readonly id: string;
+      readonly preferredRooms: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
-      readonly id: string;
     };
   } | null | undefined;
 };
-export type organizationTeams_removeCustomerDefaultTeamMutation = {
-  response: organizationTeams_removeCustomerDefaultTeamMutation$data;
-  variables: organizationTeams_removeCustomerDefaultTeamMutation$variables;
+export type organizationLocation_removeCustomerPreferredRoomMutation = {
+  response: organizationLocation_removeCustomerPreferredRoomMutation$data;
+  variables: organizationLocation_removeCustomerPreferredRoomMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -51,7 +51,7 @@ v1 = [
     ],
     "concreteType": "CustomerPayload",
     "kind": "LinkedField",
-    "name": "removeCustomerDefaultTeam",
+    "name": "removeCustomerPreferredRoom",
     "plural": false,
     "selections": [
       {
@@ -72,9 +72,9 @@ v1 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "CustomerTeamDetails",
+            "concreteType": "CustomerRoomDetails",
             "kind": "LinkedField",
-            "name": "defaultTeams",
+            "name": "preferredRooms",
             "plural": true,
             "selections": [
               {
@@ -99,7 +99,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationTeams_removeCustomerDefaultTeamMutation",
+    "name": "organizationLocation_removeCustomerPreferredRoomMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -108,20 +108,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationTeams_removeCustomerDefaultTeamMutation",
+    "name": "organizationLocation_removeCustomerPreferredRoomMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "5f0269c16ca06e9c2343604a6af52528",
+    "cacheID": "7c3bf669a2245a161e5cbc023dce8062",
     "id": null,
     "metadata": {},
-    "name": "organizationTeams_removeCustomerDefaultTeamMutation",
+    "name": "organizationLocation_removeCustomerPreferredRoomMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationTeams_removeCustomerDefaultTeamMutation(\n  $input: RemoveCustomerDefaultTeamInput!\n) {\n  removeCustomerDefaultTeam(input: $input) {\n    customer {\n      id\n      defaultTeams {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_removeCustomerPreferredRoomMutation(\n  $input: RemoveCustomerPreferredRoomInput!\n) {\n  removeCustomerPreferredRoom(input: $input) {\n    customer {\n      id\n      preferredRooms {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "67c780a35370d897cde41f752b930d8e";
+(node as any).hash = "f11014a626d47f8c886cf000b77f3e48";
 
 export default node;

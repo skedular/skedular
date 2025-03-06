@@ -312,7 +312,7 @@ public class Mapper : IMapper
             IsOrganizationOnboardingDone = true,
             IsLocationOnboardingDone = true,
             IsDefaultOrganizationOnboardingDone = true,
-            IsDefaultLocationOnboardingDone = true,
+            IsPreferredLocationOnboardingDone = true,
             IsPreferredZoneOnboardingDone = false,
             IsPreferredDeskOnboardingDone = false,
             DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
@@ -320,7 +320,7 @@ public class Mapper : IMapper
 
         input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
-        input.DefaultLocations.AddRange(defaultLocations.Select(item =>
+        input.PreferredLocations.AddRange(defaultLocations.Select(item =>
             new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
                 Id = item.Id, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }

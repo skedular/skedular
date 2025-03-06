@@ -175,11 +175,11 @@ public class OrganizationSubscriber(
 
             var newOrganizationId = customer.DefaultOrganization?.Id;
 
-            var existingLocationIds = customer.DefaultLocations.Select(item => item.Id).Distinct().ToList();
-            customer.DefaultLocations = customer.DefaultLocations
+            var existingLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
+            customer.PreferredLocations = customer.PreferredLocations
                 .Where(location => location.Organization is null || location.Organization.Id != organizationId)
                 .ToList();
-            var newLocationIds = customer.DefaultLocations.Select(item => item.Id).Distinct().ToList();
+            var newLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
 
             var existingDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
             customer.PreferredDesks = customer.PreferredDesks
@@ -187,9 +187,9 @@ public class OrganizationSubscriber(
                 .ToList();
             var newDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
 
-            var existingTeamIds = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
-            customer.DefaultTeams = customer.DefaultTeams.Where(team => team.Organization is null || team.Organization.Id != organizationId).ToList();
-            var newTeamIds = customer.DefaultTeams.Select(item => item.Id).Distinct().ToList();
+            var existingTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
+            customer.PreferredTeams = customer.PreferredTeams.Where(team => team.Organization is null || team.Organization.Id != organizationId).ToList();
+            var newTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
 
             customer = repositoryFactory.CustomerRepository.Update(customer);
 

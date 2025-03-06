@@ -10,11 +10,11 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { locationCard_addCustomerDefaultLocationMutation } from '@/queries/__generated__/locationCard_addCustomerDefaultLocationMutation.graphql';
+import type { locationCard_addCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_addCustomerPreferredLocationMutation.graphql';
 import type { locationCard_deleteLocationMutation } from '@/queries/__generated__/locationCard_deleteLocationMutation.graphql';
 import type { locationCard_LocationDetails$key } from '@/queries/__generated__/locationCard_LocationDetails.graphql';
 import type { locationCard_query$key } from '@/queries/__generated__/locationCard_query.graphql';
-import type { locationCard_removeCustomerDefaultLocationMutation } from '@/queries/__generated__/locationCard_removeCustomerDefaultLocationMutation.graphql';
+import type { locationCard_removeCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_removeCustomerPreferredLocationMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -72,7 +72,7 @@ const LocationCard = ({
       fragment locationCard_query on Query {
         me {
           id
-          defaultLocations {
+          preferredLocations {
             uniqueId
           }
         }
@@ -123,12 +123,12 @@ const LocationCard = ({
     }
   `);
 
-  const [commitAddCustomerDefaultLocation] = useMutation<locationCard_addCustomerDefaultLocationMutation>(graphql`
-    mutation locationCard_addCustomerDefaultLocationMutation($input: AddCustomerDefaultLocationInput!) {
-      addCustomerDefaultLocation(input: $input) {
+  const [commitAddCustomerPreferredLocation] = useMutation<locationCard_addCustomerPreferredLocationMutation>(graphql`
+    mutation locationCard_addCustomerPreferredLocationMutation($input: AddCustomerPreferredLocationInput!) {
+      addCustomerPreferredLocation(input: $input) {
         customer {
           id
-          defaultLocations {
+          preferredLocations {
             uniqueId
           }
         }
@@ -136,12 +136,12 @@ const LocationCard = ({
     }
   `);
 
-  const [commitRemoveCustomerDefaultLocation] = useMutation<locationCard_removeCustomerDefaultLocationMutation>(graphql`
-    mutation locationCard_removeCustomerDefaultLocationMutation($input: RemoveCustomerDefaultLocationInput!) {
-      removeCustomerDefaultLocation(input: $input) {
+  const [commitRemoveCustomerPreferredLocation] = useMutation<locationCard_removeCustomerPreferredLocationMutation>(graphql`
+    mutation locationCard_removeCustomerPreferredLocationMutation($input: RemoveCustomerPreferredLocationInput!) {
+      removeCustomerPreferredLocation(input: $input) {
         customer {
           id
-          defaultLocations {
+          preferredLocations {
             uniqueId
           }
         }
@@ -155,7 +155,7 @@ const LocationCard = ({
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
-  const isPreferred = useMemo(() => rootData.me?.defaultLocations.some((item) => item.uniqueId === locationDetails.id), [locationDetails.id, rootData.me?.defaultLocations]);
+  const isPreferred = useMemo(() => rootData.me?.preferredLocations.some((item) => item.uniqueId === locationDetails.id), [locationDetails.id, rootData.me?.preferredLocations]);
 
   let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation]];
 
@@ -239,7 +239,7 @@ const LocationCard = ({
 
     const toastId = themedToast(<NotificationContent content={`Setting location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
 
-    commitAddCustomerDefaultLocation({
+    commitAddCustomerPreferredLocation({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -277,7 +277,7 @@ const LocationCard = ({
 
     const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}' as your preferred location...`} />, infoNotificationOptions);
 
-    commitRemoveCustomerDefaultLocation({
+    commitRemoveCustomerPreferredLocation({
       variables: {
         input: {
           clientMutationId: nanoid(),

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<187d5e28fd4f497da8b48e7d446135e7>>
+ * @generated SignedSource<<c6bd967be258c1690cae4b4a9ead262e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,26 +9,26 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type AddCustomerDefaultRoomInput = {
+export type AddCustomerPreferredLocationInput = {
   clientMutationId?: string | null | undefined;
-  roomId: string;
+  locationId: string;
 };
-export type organizationLocation_addCustomerDefaultRoomMutation$variables = {
-  input: AddCustomerDefaultRoomInput;
+export type organizationLocations_addCustomerPreferredLocationMutation$variables = {
+  input: AddCustomerPreferredLocationInput;
 };
-export type organizationLocation_addCustomerDefaultRoomMutation$data = {
-  readonly addCustomerDefaultRoom: {
+export type organizationLocations_addCustomerPreferredLocationMutation$data = {
+  readonly addCustomerPreferredLocation: {
     readonly customer: {
       readonly id: string;
-      readonly preferredRooms: ReadonlyArray<{
+      readonly preferredLocations: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
     };
   } | null | undefined;
 };
-export type organizationLocation_addCustomerDefaultRoomMutation = {
-  response: organizationLocation_addCustomerDefaultRoomMutation$data;
-  variables: organizationLocation_addCustomerDefaultRoomMutation$variables;
+export type organizationLocations_addCustomerPreferredLocationMutation = {
+  response: organizationLocations_addCustomerPreferredLocationMutation$data;
+  variables: organizationLocations_addCustomerPreferredLocationMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -51,7 +51,7 @@ v1 = [
     ],
     "concreteType": "CustomerPayload",
     "kind": "LinkedField",
-    "name": "addCustomerDefaultRoom",
+    "name": "addCustomerPreferredLocation",
     "plural": false,
     "selections": [
       {
@@ -72,9 +72,9 @@ v1 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "CustomerRoomDetails",
+            "concreteType": "CustomerLocationDetails",
             "kind": "LinkedField",
-            "name": "preferredRooms",
+            "name": "preferredLocations",
             "plural": true,
             "selections": [
               {
@@ -99,7 +99,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationLocation_addCustomerDefaultRoomMutation",
+    "name": "organizationLocations_addCustomerPreferredLocationMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -108,20 +108,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationLocation_addCustomerDefaultRoomMutation",
+    "name": "organizationLocations_addCustomerPreferredLocationMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "9232c6e2a01bbc979e7d99d0c217269d",
+    "cacheID": "7455b7ca57376b0d958d4947068edf8a",
     "id": null,
     "metadata": {},
-    "name": "organizationLocation_addCustomerDefaultRoomMutation",
+    "name": "organizationLocations_addCustomerPreferredLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_addCustomerDefaultRoomMutation(\n  $input: AddCustomerDefaultRoomInput!\n) {\n  addCustomerDefaultRoom(input: $input) {\n    customer {\n      id\n      preferredRooms {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocations_addCustomerPreferredLocationMutation(\n  $input: AddCustomerPreferredLocationInput!\n) {\n  addCustomerPreferredLocation(input: $input) {\n    customer {\n      id\n      preferredLocations {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7e3d3822ebe086a1f8377b619d1d9b48";
+(node as any).hash = "8dd6bdd0297460628f9595d5e8f8086e";
 
 export default node;

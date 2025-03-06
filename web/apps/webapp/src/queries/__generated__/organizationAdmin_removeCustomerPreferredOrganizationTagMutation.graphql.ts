@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<84b1612eef5bccd2b92e03d13f58ce9f>>
+ * @generated SignedSource<<436611e90980c1fb74f992fcd3848aae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,26 +9,26 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type AddCustomerDefaultLocationInput = {
+export type RemoveCustomerPreferredOrganizationTagInput = {
   clientMutationId?: string | null | undefined;
-  locationId: string;
+  organizationTagId: string;
 };
-export type organizationLocations_addCustomerDefaultLocationMutation$variables = {
-  input: AddCustomerDefaultLocationInput;
+export type organizationAdmin_removeCustomerPreferredOrganizationTagMutation$variables = {
+  input: RemoveCustomerPreferredOrganizationTagInput;
 };
-export type organizationLocations_addCustomerDefaultLocationMutation$data = {
-  readonly addCustomerDefaultLocation: {
+export type organizationAdmin_removeCustomerPreferredOrganizationTagMutation$data = {
+  readonly removeCustomerPreferredOrganizationTag: {
     readonly customer: {
-      readonly defaultLocations: ReadonlyArray<{
+      readonly id: string;
+      readonly preferredZones: ReadonlyArray<{
         readonly uniqueId: string;
       }>;
-      readonly id: string;
     };
   } | null | undefined;
 };
-export type organizationLocations_addCustomerDefaultLocationMutation = {
-  response: organizationLocations_addCustomerDefaultLocationMutation$data;
-  variables: organizationLocations_addCustomerDefaultLocationMutation$variables;
+export type organizationAdmin_removeCustomerPreferredOrganizationTagMutation = {
+  response: organizationAdmin_removeCustomerPreferredOrganizationTagMutation$data;
+  variables: organizationAdmin_removeCustomerPreferredOrganizationTagMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -51,7 +51,7 @@ v1 = [
     ],
     "concreteType": "CustomerPayload",
     "kind": "LinkedField",
-    "name": "addCustomerDefaultLocation",
+    "name": "removeCustomerPreferredOrganizationTag",
     "plural": false,
     "selections": [
       {
@@ -72,9 +72,9 @@ v1 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "CustomerLocationDetails",
+            "concreteType": "CustomerOrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "defaultLocations",
+            "name": "preferredZones",
             "plural": true,
             "selections": [
               {
@@ -99,7 +99,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationLocations_addCustomerDefaultLocationMutation",
+    "name": "organizationAdmin_removeCustomerPreferredOrganizationTagMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -108,20 +108,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationLocations_addCustomerDefaultLocationMutation",
+    "name": "organizationAdmin_removeCustomerPreferredOrganizationTagMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "f010ca3ac4e5a48dd57ee29ed6742ab3",
+    "cacheID": "260fef67503053851292ec44d782b7e8",
     "id": null,
     "metadata": {},
-    "name": "organizationLocations_addCustomerDefaultLocationMutation",
+    "name": "organizationAdmin_removeCustomerPreferredOrganizationTagMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocations_addCustomerDefaultLocationMutation(\n  $input: AddCustomerDefaultLocationInput!\n) {\n  addCustomerDefaultLocation(input: $input) {\n    customer {\n      id\n      defaultLocations {\n        uniqueId\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_removeCustomerPreferredOrganizationTagMutation(\n  $input: RemoveCustomerPreferredOrganizationTagInput!\n) {\n  removeCustomerPreferredOrganizationTag(input: $input) {\n    customer {\n      id\n      preferredZones {\n        uniqueId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "64e05aac738f7f938c1f3a5c1b31a19d";
+(node as any).hash = "319993ca9d6e88728eda01e71b475a4d";
 
 export default node;

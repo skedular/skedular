@@ -8,10 +8,10 @@ import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { teamCard_addCustomerDefaultTeamMutation } from '@/queries/__generated__/teamCard_addCustomerDefaultTeamMutation.graphql';
+import type { teamCard_addCustomerPreferredTeamMutation } from '@/queries/__generated__/teamCard_addCustomerPreferredTeamMutation.graphql';
 import type { teamCard_deleteTeamMutation } from '@/queries/__generated__/teamCard_deleteTeamMutation.graphql';
 import type { teamCard_query$key } from '@/queries/__generated__/teamCard_query.graphql';
-import type { teamCard_removeCustomerDefaultTeamMutation } from '@/queries/__generated__/teamCard_removeCustomerDefaultTeamMutation.graphql';
+import type { teamCard_removeCustomerPreferredTeamMutation } from '@/queries/__generated__/teamCard_removeCustomerPreferredTeamMutation.graphql';
 import type { teamCard_TeamDetails$key } from '@/queries/__generated__/teamCard_TeamDetails.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
@@ -52,7 +52,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
       fragment teamCard_query on Query {
         me {
           id
-          defaultTeams {
+          preferredTeams {
             uniqueId
           }
         }
@@ -100,12 +100,12 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
     }
   `);
 
-  const [commitAddCustomerDefaultTeam] = useMutation<teamCard_addCustomerDefaultTeamMutation>(graphql`
-    mutation teamCard_addCustomerDefaultTeamMutation($input: AddCustomerDefaultTeamInput!) {
-      addCustomerDefaultTeam(input: $input) {
+  const [commitAddCustomerPreferredTeam] = useMutation<teamCard_addCustomerPreferredTeamMutation>(graphql`
+    mutation teamCard_addCustomerPreferredTeamMutation($input: AddCustomerPreferredTeamInput!) {
+      addCustomerPreferredTeam(input: $input) {
         customer {
           id
-          defaultTeams {
+          preferredTeams {
             uniqueId
           }
         }
@@ -113,12 +113,12 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
     }
   `);
 
-  const [commitRemoveCustomerDefaultTeam] = useMutation<teamCard_removeCustomerDefaultTeamMutation>(graphql`
-    mutation teamCard_removeCustomerDefaultTeamMutation($input: RemoveCustomerDefaultTeamInput!) {
-      removeCustomerDefaultTeam(input: $input) {
+  const [commitRemoveCustomerPreferredTeam] = useMutation<teamCard_removeCustomerPreferredTeamMutation>(graphql`
+    mutation teamCard_removeCustomerPreferredTeamMutation($input: RemoveCustomerPreferredTeamInput!) {
+      removeCustomerPreferredTeam(input: $input) {
         customer {
           id
-          defaultTeams {
+          preferredTeams {
             uniqueId
           }
         }
@@ -132,7 +132,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
-  const isPreferred = useMemo(() => rootData.me?.defaultTeams.some((item) => item.uniqueId === teamDetails.id), [teamDetails.id, rootData.me?.defaultTeams]);
+  const isPreferred = useMemo(() => rootData.me?.preferredTeams.some((item) => item.uniqueId === teamDetails.id), [teamDetails.id, rootData.me?.preferredTeams]);
 
   let moreActionsOption: MoreActionsMenuItemType[] = [moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam]];
 
@@ -216,7 +216,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
 
     const toastId = themedToast(<NotificationContent content={`Setting team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
 
-    commitAddCustomerDefaultTeam({
+    commitAddCustomerPreferredTeam({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -254,7 +254,7 @@ const TeamCard = ({ rootDataRelay, teamDetailsRelay, connectionIds, teammates }:
 
     const toastId = themedToast(<NotificationContent content={`Removing team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
 
-    commitRemoveCustomerDefaultTeam({
+    commitRemoveCustomerPreferredTeam({
       variables: {
         input: {
           clientMutationId: nanoid(),

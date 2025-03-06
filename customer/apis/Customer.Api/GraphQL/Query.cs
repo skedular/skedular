@@ -25,9 +25,7 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerDetails?> MeAsync(
-        [Service] ICustomerService customerService,
-        CancellationToken cancellationToken) =>
+    public async Task<CustomerDetails?> MeAsync([Service] ICustomerService customerService, CancellationToken cancellationToken) =>
         mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
     [UseResolverScope]
@@ -38,12 +36,12 @@ public class Query(IMapper mapper)
         mapper.MapTo(await customerService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
-    public async Task<CustomerConnection?> CustomersByDefaultLocationAsync(
+    public async Task<CustomerConnection?> CustomersByPreferredLocationAsync(
         string? after,
         int? first,
         string? before,
         int? last,
-        CustomersByDefaultLocationWhereInput where,
+        CustomersByPreferredLocationWhereInput where,
         CustomerOrderInput[]? orderBy,
         [Service] ICustomerService customerService,
         CancellationToken cancellationToken)

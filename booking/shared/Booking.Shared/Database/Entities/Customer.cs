@@ -27,11 +27,11 @@ public class Customer : ReplicatedEntityBaseWithDeleted
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
     public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual Organization? DefaultOrganization { get; set; }
-    public virtual ICollection<Location> DefaultLocations { get; set; }
+    public virtual ICollection<Location> PreferredLocations { get; set; }
     public virtual ICollection<LocationResource> PreferredLocationResources { get; set; }
     public virtual ICollection<Desk> PreferredDesks { get; set; }
     public virtual ICollection<Room> PreferredRooms { get; set; }
-    public virtual ICollection<Team> DefaultTeams { get; set; }
+    public virtual ICollection<Team> PreferredTeams { get; set; }
     public virtual ICollection<OrganizationTag> PreferredOrganizationTags { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -55,11 +55,11 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.PhotoUrl512).HasMaxLength(Constants.MaxUrlLength);
 
         builder.HasOne(item => item.DefaultOrganization).WithMany(item => item.DefaultedByCustomers);
-        builder.HasMany(item => item.DefaultLocations).WithMany(item => item.DefaultedByCustomers);
+        builder.HasMany(item => item.PreferredLocations).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredLocationResources).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredDesks).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredRooms).WithMany(item => item.PreferredByCustomers);
-        builder.HasMany(item => item.DefaultTeams).WithMany(item => item.DefaultedByCustomers);
+        builder.HasMany(item => item.PreferredTeams).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredOrganizationTags).WithMany(item => item.PreferredByCustomers);
 
         builder.HasIndex(item => item.Name);

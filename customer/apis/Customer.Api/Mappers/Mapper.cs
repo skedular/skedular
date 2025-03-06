@@ -84,13 +84,13 @@ public class Mapper(IContext context) : IMapper
             IsLocationOnboardingDone = false,
             IsTeamOnboardingDone = false,
             IsDefaultOrganizationOnboardingDone = false,
-            IsDefaultLocationOnboardingDone = false,
+            IsPreferredLocationOnboardingDone = false,
             IsPreferredZoneOnboardingDone = false,
             IsPreferredDeskOnboardingDone = false,
             IsPreferredRoomOnboardingDone = false,
             DefaultOrganization = null,
-            DefaultLocations = [],
-            DefaultTeams = [],
+            PreferredLocations = [],
+            PreferredTeams = [],
             PreferredOrganizationTags = [],
             PreferredDesks = [],
             PreferredRooms = []
@@ -130,7 +130,7 @@ public class Mapper(IContext context) : IMapper
             IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone ?? false,
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
-            IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone ?? false,
+            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone ?? false,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false,
             IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone ?? false,
@@ -140,7 +140,7 @@ public class Mapper(IContext context) : IMapper
                 {
                     UniqueId = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name, LogoUrl = src.DefaultOrganization.LogoUrl
                 },
-            DefaultLocations = src.DefaultLocations.Select(item => new CustomerLocationDetails
+            PreferredLocations = src.PreferredLocations.Select(item => new CustomerLocationDetails
             {
                 UniqueId = item.Id,
                 Name = item.Name,
@@ -164,7 +164,7 @@ public class Mapper(IContext context) : IMapper
                     .ToArray(),
             PreferredDesks = src.PreferredDesks.Select(item => new CustomerDeskDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
             PreferredRooms = src.PreferredRooms.Select(item => new CustomerRoomDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
-            DefaultTeams = src.DefaultTeams.Select(item => new CustomerTeamDetails
+            PreferredTeams = src.PreferredTeams.Select(item => new CustomerTeamDetails
             {
                 UniqueId = item.Id,
                 Name = item.Name,
@@ -216,16 +216,16 @@ public class Mapper(IContext context) : IMapper
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone,
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
-            IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
+            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
             IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
             Identities = MapTo(src.Identities).ToList(),
             DefaultOrganization = MapTo(src.DefaultOrganization),
-            DefaultLocations = MapTo(src.DefaultLocations).ToList(),
+            PreferredLocations = MapTo(src.PreferredLocations).ToList(),
             PreferredDesks = MapTo(src.PreferredDesks).ToList(),
             PreferredRooms = MapTo(src.PreferredRooms).ToList(),
-            DefaultTeams = MapTo(src.DefaultTeams).ToList(),
+            PreferredTeams = MapTo(src.PreferredTeams).ToList(),
             PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
         };
 
@@ -290,20 +290,20 @@ public class Mapper(IContext context) : IMapper
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone,
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
-            IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
+            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
             IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
             DefaultOrganization =
                 string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id) ? null : new Organization { Id = src.DefaultOrganization.Id },
-            DefaultLocations = src.DefaultLocations.Select(item =>
+            PreferredLocations = src.PreferredLocations.Select(item =>
                     new Location
                     {
                         Id = item.Id,
                         Organization = string.IsNullOrWhiteSpace(item.Organization?.Id) ? null : new Organization { Id = item.Organization.Id }
                     })
                 .ToList(),
-            DefaultTeams = src.DefaultTeams.Select(item =>
+            PreferredTeams = src.PreferredTeams.Select(item =>
                     new Team
                     {
                         Id = item.Id,
@@ -346,7 +346,7 @@ public class Mapper(IContext context) : IMapper
             IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone ?? false,
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
-            IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone ?? false,
+            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone ?? false,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false,
             IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone ?? false,
@@ -364,7 +364,7 @@ public class Mapper(IContext context) : IMapper
             {
                 Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
             }));
-        customer.DefaultLocations.AddRange(src.DefaultLocations.Select(
+        customer.PreferredLocations.AddRange(src.PreferredLocations.Select(
             item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
                 Id = item.Id,
@@ -373,7 +373,7 @@ public class Mapper(IContext context) : IMapper
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
                     : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
-        customer.DefaultTeams.AddRange(src.DefaultTeams.Select(
+        customer.PreferredTeams.AddRange(src.PreferredTeams.Select(
             item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Team
             {
                 Id = item.Id,
@@ -480,14 +480,14 @@ public class Mapper(IContext context) : IMapper
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone,
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
-            IsDefaultLocationOnboardingDone = src.IsDefaultLocationOnboardingDone,
+            IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
             IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
             IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
             Identities = identities,
             DefaultOrganization = defaultOrganization,
-            DefaultLocations = defaultLocations,
-            DefaultTeams = defaultTeams,
+            PreferredLocations = defaultLocations,
+            PreferredTeams = defaultTeams,
             PreferredDesks = preferredDesks,
             PreferredRooms = preferredRooms,
             PreferredOrganizationTags = preferredOrganizationTags
