@@ -200,13 +200,22 @@ public class LocationPayload
     [GraphQLName("location")] public LocationDetails Location { get; set; }
 }
 
-[GraphQLName("Organization_OrganizationTagDetails")]
+[GraphQLName("Location_OrganizationTagDetails")]
 public class OrganizationTagDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("tagType")] public string? TagType { get; set; }
     [GraphQLName("color")] public string? Color { get; set; }
+}
+
+[GraphQLName("Location_OrganizationResourceTypeDetails")]
+public class OrganizationResourceTypeDetails
+{
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("name")] public string? Name { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+    [GraphQLName("systemType")] public OrganizationResourceTypeSystemType? SystemType { get; set; }
 }
 
 [GraphQLName("LocationWhereInput")]
@@ -506,6 +515,131 @@ public class RoomWhereInput
 
 [GraphQLName("RoomsOccupancyPercentage")]
 public class RoomsOccupancyPercentage
+{
+    [GraphQLName("date")] public DateTimeOffset Date { get; set; }
+    [GraphQLName("percentage")] public float Percentage { get; set; }
+}
+
+[GraphQLName("AddResourceInput")]
+public class AddResourceInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string? Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
+    [GraphQLName("customTagIds")] public string[] CustomTagIds { get; set; } = [];
+    [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
+    [GraphQLName("color")] public string? Color { get; set; }
+
+    [GraphQLName("organizationResourceTypeId")]
+    public required string OrganizationResourceTypeId { get; set; }
+}
+
+[GraphQLName("UpdateResourceInput")]
+public class UpdateResourceInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("inactive")] public bool Inactive { get; set; }
+
+    [GraphQLName("requireBookingApproval")]
+    public bool RequireBookingApproval { get; set; }
+
+    [GraphQLName("color")] public string? Color { get; set; }
+
+    [GraphQLName("customTagIds")] public string[] CustomTagIds { get; set; } = [];
+    [GraphQLName("zoneIds")] public string[] ZoneIds { get; set; } = [];
+
+    [GraphQLName("organizationResourceTypeId")]
+    public required string OrganizationResourceTypeId { get; set; }
+}
+
+[GraphQLName("DeleteResourceInput")]
+public class DeleteResourceInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("ActivateResourcesInput")]
+public class ActivateResourcesInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; }
+}
+
+[GraphQLName("DeactivateResourcesInput")]
+public class DeactivateResourcesInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; }
+}
+
+[GraphQLName("DeleteResourcesInput")]
+public class DeleteResourcesInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required string[] Ids { get; set; }
+}
+
+[GraphQLName("ResourcesPayload")]
+public class ResourcesPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("resources")] public ResourceDetails[] Resources { get; set; } = [];
+}
+
+[GraphQLName("ResourceConnection")]
+public class ResourceConnection : Connection<ResourceEdge>;
+
+[GraphQLName("ResourceDetails")]
+public class ResourceDetails : Node
+{
+    [GraphQLName("name")] public required string Name { get; set; }
+    [GraphQLName("inactive")] public bool Inactive { get; set; }
+
+    [GraphQLName("requireBookingApproval")]
+    public bool RequireBookingApproval { get; set; }
+
+    [GraphQLName("color")] public string? Color { get; set; }
+    [GraphQLName("customTags")] public OrganizationTagDetails[] CustomTags { get; set; } = [];
+    [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
+
+    [GraphQLName("OrganizationResourceType")]
+    public OrganizationResourceTypeDetails OrganizationResourceType { get; set; }
+
+    [GraphQLName("id")] [ID] public required string Id { get; set; }
+}
+
+[GraphQLName("ResourceEdge")]
+public class ResourceEdge : Edge<ResourceDetails>;
+
+[GraphQLName("ResourceOrderInput")]
+public class ResourceOrderInput
+{
+    [GraphQLName("direction")] public OrderDirection Direction { get; set; }
+    [GraphQLName("field")] public ResourceOrderField Field { get; set; }
+}
+
+[GraphQLName("ResourcePayload")]
+public class ResourcePayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("resource")] public ResourceDetails Resource { get; set; }
+}
+
+[GraphQLName("ResourceWhereInput")]
+public class ResourceWhereInput
+{
+    [GraphQLName("locationId")] public required string LocationId { get; set; }
+    [GraphQLName("nameContains")] public string? NameContains { get; set; }
+    [GraphQLName("zoneIds")] public string[]? ZoneIds { get; set; }
+    [GraphQLName("customTagIds")] public string[]? CustomTagIds { get; set; }
+}
+
+[GraphQLName("ResourcesOccupancyPercentage")]
+public class ResourcesOccupancyPercentage
 {
     [GraphQLName("date")] public DateTimeOffset Date { get; set; }
     [GraphQLName("percentage")] public float Percentage { get; set; }

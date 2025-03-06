@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7aec1077f99f72227ed751cd64268c51>>
+ * @generated SignedSource<<849b1c383ebfeb9ce1e51a28324c2cd0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -149,7 +149,7 @@ v5 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Organization_OrganizationTagDetails",
+      "concreteType": "Location_OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "customTags",
       "plural": true,
@@ -159,7 +159,7 @@ v5 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "Organization_OrganizationTagDetails",
+      "concreteType": "Location_OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "zones",
       "plural": true,

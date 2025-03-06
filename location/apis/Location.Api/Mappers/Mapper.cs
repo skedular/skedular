@@ -28,6 +28,9 @@ using Room = Location.Shared.Database.Entities.Room;
 using RoomEdge = Location.Api.GraphQL.RoomEdge;
 using LocationRoomsOccupancyPercentage = Location.Shared.Models.LocationRoomsOccupancyPercentage;
 using UpdateRoomInput = Location.Api.GraphQL.UpdateRoomInput;
+using AddResourceInput = Location.Api.GraphQL.AddResourceInput;
+using UpdateResourceInput = Location.Api.GraphQL.UpdateResourceInput;
+using ResourceEdge = Location.Api.GraphQL.ResourceEdge;
 
 namespace Location.Api.Mappers;
 
@@ -37,6 +40,22 @@ public interface IMapper
     Customer? MapTo(Shared.Database.Entities.Customer? src);
     Shared.Database.Entities.Location MapTo(Shared.Models.Location src, Organization? organization);
     Shared.Database.Entities.Location MergeTo(Shared.Models.Location src, Shared.Database.Entities.Location dest, Address? physicalAddress);
+
+    Shared.Models.Resource MapTo(Resource src);
+
+    Resource MapTo(
+        Shared.Models.Resource src,
+        Shared.Database.Entities.Location location,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags,
+        OrganizationResourceType organizationResourceType);
+
+    Resource MergeTo(
+        Shared.Models.Resource src,
+        Resource dest,
+        Shared.Database.Entities.Location location,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags,
+        OrganizationResourceType organizationResourceType);
+
     Shared.Models.Desk MapTo(Desk src);
 
     Desk MapTo(
@@ -71,6 +90,7 @@ public interface IMapper
     LocationDetails? MapTo(Shared.Models.Location? src);
     DeskDetails MapTo(Shared.Models.Desk src);
     RoomDetails MapTo(Shared.Models.Room src);
+    ResourceDetails MapTo(Shared.Models.Resource src);
     IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src);
 
     LocationAnalytics MapTo(
@@ -110,6 +130,10 @@ public interface IMapper
     RoomEdge MapTo(Edge<Shared.Models.Room> src);
     IEnumerable<Edge<Shared.Models.Room>> MapTo(IEnumerable<Edge<Room>> src, Shared.Models.Location location);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.RoomEdge MapToGrpcResponse(Edge<Shared.Models.Room> src);
+    IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location);
+    Shared.Models.Resource MapTo(AddResourceInput src);
+    Shared.Models.Resource MapTo(UpdateResourceInput src);
+    ResourceEdge MapTo(Edge<Shared.Models.Resource> src);
 }
 
 public class Mapper : IMapper
@@ -211,6 +235,47 @@ public class Mapper : IMapper
                 Zones = MapTo(src.Zones).ToArray(),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress)
             };
+
+    public Shared.Models.Resource MapTo(Resource src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Name = src.Name,
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
+            CustomTags = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Custom)).ToList(),
+            Zones = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Zone)).ToList(),
+            OrganizationResourceType = MapTo(src.OrganizationResourceType)
+        };
+
+    public Resource MapTo(
+        Shared.Models.Resource src,
+        Shared.Database.Entities.Location location,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags,
+        OrganizationResourceType organizationResourceType) =>
+        MergeTo(src, new Resource(), location, organizationTags, organizationResourceType);
+
+    public Resource MergeTo(
+        Shared.Models.Resource src,
+        Resource dest,
+        Shared.Database.Entities.Location location,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags,
+        OrganizationResourceType organizationResourceType)
+    {
+        dest.Id = src.Id;
+        dest.Name = src.Name;
+        dest.Inactive = src.Inactive;
+        dest.RequireBookingApproval = src.RequireBookingApproval;
+        dest.Color = src.Color;
+        dest.OrganizationTags = organizationTags;
+        dest.Location = location;
+        dest.OrganizationResourceType = organizationResourceType;
+        return dest;
+    }
 
     public Shared.Models.Desk MapTo(Desk src) =>
         new()
@@ -339,6 +404,24 @@ public class Mapper : IMapper
             Zones = MapTo(src.Zones).ToArray()
         };
 
+    public ResourceEdge MapTo(Edge<Shared.Models.Resource> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+
+    public ResourceDetails MapTo(Shared.Models.Resource src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
+            CustomTags = MapTo(src.CustomTags).ToArray(),
+            Zones = MapTo(src.Zones).ToArray(),
+            OrganizationResourceType = MapTo(src.OrganizationResourceType)
+        };
+
+    public IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location) =>
+        src.Select(item => MapTo(item, location));
+
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.RoomEdge MapToGrpcResponse(Edge<Shared.Models.Room> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
@@ -462,6 +545,33 @@ public class Mapper : IMapper
             Color = src.Color,
             CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList()
+        };
+
+    public Shared.Models.Resource MapTo(AddResourceInput src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            Name = src.Name,
+            Inactive = false,
+            RequireBookingApproval = false,
+            Color = src.Color,
+            CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Location = new Shared.Models.Location { Id = src.LocationId },
+            OrganizationResourceType = new Shared.Models.OrganizationResourceType { Id = src.OrganizationResourceTypeId }
+        };
+
+    public Shared.Models.Resource MapTo(UpdateResourceInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
+            CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationResourceType = new Shared.Models.OrganizationResourceType { Id = src.OrganizationResourceTypeId }
         };
 
     public JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
@@ -984,6 +1094,13 @@ public class Mapper : IMapper
         return new Edge<Shared.Models.Room>(src.Cursor, room);
     }
 
+    private Edge<Shared.Models.Resource> MapTo(Edge<Resource> src, Shared.Models.Location location)
+    {
+        var resource = MapTo(src.Node);
+        resource.Location = location;
+        return new Edge<Shared.Models.Resource>(src.Cursor, resource);
+    }
+
     private static LocationAddressDetails? MapToGraphQl(Shared.Models.Address? src) =>
         src is null
             ? null
@@ -1034,4 +1151,7 @@ public class Mapper : IMapper
                     _ => throw new ArgumentOutOfRangeException()
                 }
         };
+
+    private static OrganizationResourceTypeDetails MapTo(Shared.Models.OrganizationResourceType src) =>
+        new() { UniqueId = src.Id, Name = src.Name, SystemType = src.SystemType, Color = src.Color };
 }

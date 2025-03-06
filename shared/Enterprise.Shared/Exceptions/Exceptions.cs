@@ -24,6 +24,10 @@ public class TeamMemberNotFound() : Exception("Team member ot found");
 
 public class TeamJoinInvitationNotFound() : Exception("Team join invitation not found");
 
+public class ResourceNotFound() : Exception("Resource not found");
+
+public class ResourceWithSameNameExist() : Exception("Resource with same name exist");
+
 public class DeskNotFound() : Exception("Desk not found");
 
 public class DeskWithSameNameExist() : Exception("Desk with same name exist");

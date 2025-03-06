@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b3699d3e07b2bee34faadd1cda3c45b2>>
+ * @generated SignedSource<<a68d7b0f28abd62ff68f9e453fa0508a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -242,7 +242,7 @@ v23 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "Organization_OrganizationTagDetails",
+    "concreteType": "Location_OrganizationTagDetails",
     "kind": "LinkedField",
     "name": "customTags",
     "plural": true,
@@ -252,7 +252,7 @@ v23 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "Organization_OrganizationTagDetails",
+    "concreteType": "Location_OrganizationTagDetails",
     "kind": "LinkedField",
     "name": "zones",
     "plural": true,

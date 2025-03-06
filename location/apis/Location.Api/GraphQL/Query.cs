@@ -303,4 +303,54 @@ public class Query(IMapper mapper)
         var room = await roomService.GetByIdAsync(id, cancellationToken);
         return mapper.MapTo(room);
     }
+
+    [UseResolverScope]
+    public async Task<ResourceConnection?> ResourcesAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        ResourceWhereInput where,
+        ResourceOrderInput[]? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IResourceService resourceService,
+        CancellationToken cancellationToken)
+    {
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        var (paginatedInfo, edges, totalCount) = await resourceService.GetPaginatedResourcesAsync(
+            new PaginationInputParam(after, first, before, last),
+            new ResourceSearchCriteria(where.LocationId, where.NameContains, where.ZoneIds, where.CustomTagIds),
+            orderBy is null
+                ? []
+                : orderBy.Select(item =>
+                {
+                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
+                    return new ResourceOrder(direction, item.Field);
+                }).ToList(),
+            cancellationToken);
+
+        return new ResourceConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor,
+                EndCursor = paginatedInfo.EndCursor
+            },
+            Edges = edges.Select(mapper.MapTo).ToArray(),
+            TotalCount = totalCount
+        };
+    }
+
+    [UseResolverScope]
+    public async Task<ResourceDetails?> ResourceAsync(string id, [Service] IResourceService resourceService, CancellationToken cancellationToken)
+    {
+        var resource = await resourceService.GetByIdAsync(id, cancellationToken);
+        return mapper.MapTo(resource);
+    }
 }

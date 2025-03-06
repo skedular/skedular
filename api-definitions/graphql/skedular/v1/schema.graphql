@@ -238,12 +238,12 @@ type DeskConnection {
 
 type DeskDetails {
   color: String
-  customTags: [Organization_OrganizationTagDetails!]!
+  customTags: [Location_OrganizationTagDetails!]!
   deactivated: Boolean!
   id: ID!
   name: String!
   requireBookingApproval: Boolean!
-  zones: [Organization_OrganizationTagDetails!]!
+  zones: [Location_OrganizationTagDetails!]!
 }
 
 type DeskEdge {
@@ -337,7 +337,7 @@ type LocationDetails {
   canInvitePeople: Boolean!
   canModify: Boolean!
   canViewAnalytics: Boolean!
-  customTags: [Organization_OrganizationTagDetails!]!
+  customTags: [Location_OrganizationTagDetails!]!
   deskCapacity: Int!
   desks: [DeskDetails!]!
   hasFutureBooking: Boolean!
@@ -348,7 +348,7 @@ type LocationDetails {
   roomCapacity: Int!
   rooms: [RoomDetails!]!
   timezone: String
-  zones: [Organization_OrganizationTagDetails!]!
+  zones: [Location_OrganizationTagDetails!]!
 }
 
 type LocationEdge {
@@ -389,11 +389,26 @@ type LocationPayload {
   location: LocationDetails!
 }
 
+type Location_OrganizationResourceTypeDetails {
+  color: String
+  name: String
+  systemType: OrganizationResourceTypeSystemType
+  uniqueId: ID!
+}
+
+type Location_OrganizationTagDetails {
+  color: String
+  name: String
+  tagType: String
+  uniqueId: ID!
+}
+
 type Mutation {
   acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
   acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): AcceptInvitationToJoinOrganizationPayload @cost(weight: "10")
   acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): AcceptInvitationToJoinTeamPayload @cost(weight: "10")
   activateDesks(input: ActivateDesksInput!): DesksPayload @cost(weight: "10")
+  activateResources(input: ActivateResourcesInput!): ResourcesPayload @cost(weight: "10")
   activateRooms(input: ActivateRoomsInput!): RoomsPayload @cost(weight: "10")
   addBooking(input: AddBookingInput!): BookingPayload @cost(weight: "10")
   addCustomerDefaultDesk(input: AddCustomerDefaultDeskInput!): CustomerPayload @cost(weight: "10")
@@ -406,6 +421,7 @@ type Mutation {
   addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse @cost(weight: "10")
+  addResource(input: AddResourceInput!): ResourcePayload @cost(weight: "10")
   addResourceType(input: AddResourceTypeInput!): OrganizationResourceTypePayload @cost(weight: "10")
   addRoom(input: AddRoomInput!): RoomPayload @cost(weight: "10")
   addTeam(input: AddTeamInput!): TeamPayload @cost(weight: "10")
@@ -432,6 +448,7 @@ type Mutation {
   completePreferredZoneOnboarding(input: CompletePreferredZoneOnboardingInput!): CustomerPayload @cost(weight: "10")
   completeTeamOnboarding(input: CompleteTeamOnboardingInput!): CustomerPayload @cost(weight: "10")
   deactivateDesks(input: DeactivateDesksInput!): DesksPayload @cost(weight: "10")
+  deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload @cost(weight: "10")
   deactivateRooms(input: DeactivateRoomsInput!): RoomsPayload @cost(weight: "10")
   deleteBooking(input: DeleteBookingInput!): BookingPayload @cost(weight: "10")
   deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
@@ -440,6 +457,8 @@ type Mutation {
   deleteDesks(input: DeleteDesksInput!): DesksPayload @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
+  deleteResource(input: DeleteResourceInput!): ResourcePayload @cost(weight: "10")
+  deleteResources(input: DeleteResourcesInput!): ResourcesPayload @cost(weight: "10")
   deleteResourceType(input: DeleteResourceTypeInput!): OrganizationResourceTypePayload @cost(weight: "10")
   deleteResourceTypes(input: DeleteResourceTypesInput!): OrganizationResourceTypesPayload @cost(weight: "10")
   deleteRoom(input: DeleteRoomInput!): RoomPayload @cost(weight: "10")
@@ -473,6 +492,7 @@ type Mutation {
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
+  updateResource(input: UpdateResourceInput!): ResourcePayload @cost(weight: "10")
   updateResourceType(input: UpdateResourceTypeInput!): OrganizationResourceTypePayload @cost(weight: "10")
   updateRoom(input: UpdateRoomInput!): RoomPayload @cost(weight: "10")
   updateTeam(input: UpdateTeamInput!): TeamPayload @cost(weight: "10")
@@ -798,13 +818,6 @@ type OrganizationTermsOfUse {
   terms: String!
 }
 
-type Organization_OrganizationTagDetails {
-  color: String
-  name: String
-  tagType: String
-  uniqueId: ID!
-}
-
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
@@ -870,6 +883,8 @@ type Query {
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
   paymentVersion: Version!
   pendingInvitationsCount: Int! @cost(weight: "10")
+  resource(id: String!): ResourceDetails @cost(weight: "10")
+  resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput!): ResourceConnection @cost(weight: "10")
   resourceType(id: String!): OrganizationResourceTypeDetails @cost(weight: "10")
   resourceTypes(after: String before: String first: Int last: Int orderBy: [OrganizationResourceTypeOrderInput!] where: OrganizationResourceTypeWhereInput!): OrganizationResourceTypeConnection @cost(weight: "10")
   room(id: String!): RoomDetails @cost(weight: "10")
@@ -904,6 +919,38 @@ type RemoveOrganizationPaymentMethodResponse {
   clientMutationId: String
 }
 
+type ResourceConnection {
+  edges: [ResourceEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ResourceDetails {
+  color: String
+  customTags: [Location_OrganizationTagDetails!]!
+  id: ID!
+  inactive: Boolean!
+  name: String!
+  OrganizationResourceType: Location_OrganizationResourceTypeDetails!
+  requireBookingApproval: Boolean!
+  zones: [Location_OrganizationTagDetails!]!
+}
+
+type ResourceEdge {
+  cursor: String!
+  node: ResourceDetails!
+}
+
+type ResourcePayload {
+  clientMutationId: String
+  resource: ResourceDetails!
+}
+
+type ResourcesPayload {
+  clientMutationId: String
+  resources: [ResourceDetails!]!
+}
+
 type RoomConnection {
   edges: [RoomEdge!]!
   pageInfo: PageInfo!
@@ -912,12 +959,12 @@ type RoomConnection {
 
 type RoomDetails {
   color: String
-  customTags: [Organization_OrganizationTagDetails!]!
+  customTags: [Location_OrganizationTagDetails!]!
   deactivated: Boolean!
   id: ID!
   name: String!
   requireBookingApproval: Boolean!
-  zones: [Organization_OrganizationTagDetails!]!
+  zones: [Location_OrganizationTagDetails!]!
 }
 
 type RoomEdge {
@@ -1082,6 +1129,11 @@ input ActivateDesksInput {
   ids: [String!]!
 }
 
+input ActivateResourcesInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input ActivateRoomsInput {
   clientMutationId: String
   ids: [String!]!
@@ -1170,6 +1222,17 @@ input AddOrganizationInput {
 input AddOrganizationPaymentMethodIntentInput {
   clientMutationId: String
   organizationId: String!
+}
+
+input AddResourceInput {
+  clientMutationId: String
+  color: String
+  customTagIds: [String!]!
+  id: String
+  locationId: String!
+  name: String!
+  organizationResourceTypeId: String!
+  zoneIds: [String!]!
 }
 
 input AddResourceTypeInput {
@@ -1396,6 +1459,11 @@ input DeactivateDesksInput {
   ids: [String!]!
 }
 
+input DeactivateResourcesInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeactivateRoomsInput {
   clientMutationId: String
   ids: [String!]!
@@ -1436,12 +1504,22 @@ input DeleteOrganizationInput {
   id: String!
 }
 
+input DeleteResourceInput {
+  clientMutationId: String
+  id: String!
+}
+
 input DeleteResourceTypeInput {
   clientMutationId: String
   id: String!
 }
 
 input DeleteResourceTypesInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+input DeleteResourcesInput {
   clientMutationId: String
   ids: [String!]!
 }
@@ -1649,6 +1727,18 @@ input RemoveTeamMembersInput {
   ids: [String!]!
 }
 
+input ResourceOrderInput {
+  direction: OrderDirection!
+  field: ResourceOrderField!
+}
+
+input ResourceWhereInput {
+  customTagIds: [String!]
+  locationId: String!
+  nameContains: String
+  zoneIds: [String!]
+}
+
 input RoomOrderInput {
   direction: OrderDirection!
   field: RoomOrderField!
@@ -1789,6 +1879,18 @@ input UpdateOrganizationOfferingInput {
   clientMutationId: String
   id: String!
   offeringCode: String!
+}
+
+input UpdateResourceInput {
+  clientMutationId: String
+  color: String
+  customTagIds: [String!]!
+  id: String!
+  inactive: Boolean!
+  name: String!
+  organizationResourceTypeId: String!
+  requireBookingApproval: Boolean!
+  zoneIds: [String!]!
 }
 
 input UpdateResourceTypeInput {
@@ -1975,6 +2077,10 @@ enum OrganizationTagOrderField {
   Description
   Name
   Type
+}
+
+enum ResourceOrderField {
+  Name
 }
 
 enum RoomOrderField {

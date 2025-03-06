@@ -226,4 +226,64 @@ public class Mutation(IMapper mapper)
         var rooms = await roomService.DeactivateAsync(input.Ids, cancellationToken);
         return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo).ToArray() };
     }
+
+    [UseResolverScope]
+    public async Task<ResourcePayload?> AddResourceAsync(
+        AddResourceInput input,
+        [Service] IResourceService resourceService,
+        CancellationToken cancellationToken)
+    {
+        var resource = await resourceService.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        return new ResourcePayload { ClientMutationId = input.ClientMutationId, Resource = mapper.MapTo(resource) };
+    }
+
+    [UseResolverScope]
+    public async Task<ResourcePayload?> UpdateResourceAsync(
+        UpdateResourceInput input,
+        [Service] IResourceService resourceService,
+        CancellationToken cancellationToken)
+    {
+        var resource = await resourceService.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        return new ResourcePayload { ClientMutationId = input.ClientMutationId, Resource = mapper.MapTo(resource) };
+    }
+
+    [UseResolverScope]
+    public async Task<ResourcePayload?> DeleteResourceAsync(
+        DeleteResourceInput input,
+        [Service] IResourceService resourceService,
+        CancellationToken cancellationToken)
+    {
+        var resource = await resourceService.DeleteAsync(input.Id, cancellationToken);
+        return new ResourcePayload { ClientMutationId = input.ClientMutationId, Resource = mapper.MapTo(resource) };
+    }
+
+    [UseResolverScope]
+    public async Task<ResourcesPayload?> DeleteResourcesAsync(
+        DeleteResourcesInput input,
+        [Service] IResourceService resourceService,
+        CancellationToken cancellationToken)
+    {
+        var resources = await resourceService.DeleteAsync(input.Ids, cancellationToken);
+        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo).ToArray() };
+    }
+
+    [UseResolverScope]
+    public async Task<ResourcesPayload?> ActivateResourcesAsync(
+        ActivateResourcesInput input,
+        [Service] IResourceService resourceService,
+        CancellationToken cancellationToken)
+    {
+        var resources = await resourceService.ActivateAsync(input.Ids, cancellationToken);
+        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo).ToArray() };
+    }
+
+    [UseResolverScope]
+    public async Task<ResourcesPayload?> DeactivateResourcesAsync(
+        DeactivateResourcesInput input,
+        [Service] IResourceService resourceService,
+        CancellationToken cancellationToken)
+    {
+        var resources = await resourceService.DeactivateAsync(input.Ids, cancellationToken);
+        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo).ToArray() };
+    }
 }
