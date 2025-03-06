@@ -134,6 +134,9 @@ public interface IMapper
     Shared.Models.Resource MapTo(AddResourceInput src);
     Shared.Models.Resource MapTo(UpdateResourceInput src);
     ResourceEdge MapTo(Edge<Shared.Models.Resource> src);
+    global::Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src);
+    Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddResourceInput src);
+    Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateResourceInput src);
 }
 
 public class Mapper : IMapper
@@ -405,6 +408,36 @@ public class Mapper : IMapper
         };
 
     public ResourceEdge MapTo(Edge<Shared.Models.Resource> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+
+    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src) =>
+        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+
+    public Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddResourceInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color.ToSafeString(),
+            Location = new Shared.Models.Location { Id = src.LocationId },
+            CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationResourceType = new Shared.Models.OrganizationResourceType { Id = src.OrganizationResourceTypeId }
+        };
+
+    public Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateResourceInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color.ToSafeString(),
+            CustomTags = src.CustomTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Zones = src.ZoneIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationResourceType = new Shared.Models.OrganizationResourceType { Id = src.OrganizationResourceTypeId }
+        };
 
     public ResourceDetails MapTo(Shared.Models.Resource src) =>
         new()
