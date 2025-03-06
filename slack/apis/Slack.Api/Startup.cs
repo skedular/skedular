@@ -82,7 +82,8 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                         .RegisterBlockActionHandler<ButtonAction, DismissSetupDefaultLocationButtonHandler>(
                             LocationActionTypes.DismissSetupDefaultLocation)
                         .RegisterBlockActionHandler<ButtonAction, DismissSetupPreferredDesksButtonHandler>(DeskActionTypes.DismissSetupPreferredDesks)
-                        .RegisterBlockActionHandler<ButtonAction,DismissSetupPreferredZonesButtonHandler>(ZoneActionTypes.DismissSetupPreferredZones);
+                        .RegisterBlockActionHandler<ButtonAction,
+                            DismissSetupPreferredZonesButtonHandler>(ZoneActionTypes.DismissSetupPreferredZones);
 
                     options
                         .RegisterBlockActionHandler<ButtonAction, InstantAddBookingButtonHandler>(BookingActionTypes.InstantAddBooking)

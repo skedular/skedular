@@ -29,10 +29,7 @@ public static class PactExtensions
 
         services.AddSingleton(new PactSettings(Path.Join(Path.GetFullPath("../../../pact/")))
         {
-            ConsumerName = consumerName,
-            ProviderName = providerName,
-            PactDirectory = GetPactDirectory(),
-            Port = pactPort
+            ConsumerName = consumerName, ProviderName = providerName, PactDirectory = GetPactDirectory(), Port = pactPort
         });
 
         services.AddScoped<IPactAccessor, PactAccessor>();

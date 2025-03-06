@@ -28,7 +28,8 @@ public interface IResourceTypeRepository : IRepository<ResourceType>
 
 internal static class ResourceTypeExtensions
 {
-    internal static IIncludableQueryable<ResourceType, Database.Entities.Organization> AddDependentObjects(this IQueryable<ResourceType> originalQuery) =>
+    internal static IIncludableQueryable<ResourceType, Database.Entities.Organization> AddDependentObjects(
+        this IQueryable<ResourceType> originalQuery) =>
         originalQuery.Include(query => query.Organization);
 
     internal static IQueryable<ResourceType> AddSearchCriteria(

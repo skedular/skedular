@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using Testing.Shared.IntegrationTests.Pact;
+
 //using Xunit.DependencyInjection;
 
 namespace Testing.Shared.IntegrationTests.Processors;

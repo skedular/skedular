@@ -29,13 +29,9 @@ public static class ServiceExtensions
             .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>();
 
         var postgresSqlConfigurationOptions =
-            configuration
-                .GetSection(PostgresConfigurationOptions.Key)
-                .Get<PostgresConfigurationOptions>() ?? new PostgresConfigurationOptions();
+            configuration.GetSection(PostgresConfigurationOptions.Key).Get<PostgresConfigurationOptions>() ?? new PostgresConfigurationOptions();
 
-        var applicationConfiguration = configuration
-            .GetSection(ApplicationConfiguration.Key)
-            .Get<ApplicationConfiguration>();
+        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
         ArgumentNullException.ThrowIfNull(applicationConfiguration);
 
         var connectionString = configuration.GetConnectionString(name);
@@ -44,8 +40,7 @@ public static class ServiceExtensions
         var npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
         if (!string.IsNullOrWhiteSpace(applicationConfiguration.Environment))
         {
-            npgsqlConnectionStringBuilder.Database =
-                $"{applicationConfiguration.Environment}.{npgsqlConnectionStringBuilder.Database}";
+            npgsqlConnectionStringBuilder.Database = $"{applicationConfiguration.Environment}.{npgsqlConnectionStringBuilder.Database}";
         }
 
         if (!string.IsNullOrWhiteSpace(postgresSqlConfigurationOptions.Server))
@@ -97,8 +92,7 @@ public static class ServiceExtensions
 
                 options.UseNpgsql(databaseSetup.NpgsqlDataSource, sqlOptions =>
                 {
-                    sqlOptions.UseQuerySplittingBehavior(
-                        applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
+                    sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
 
                     if (option != Migration.SetAssembly)
                     {
@@ -140,8 +134,7 @@ public static class ServiceExtensions
 
                 options.UseNpgsql(databaseSetup.NpgsqlDataSource, sqlOptions =>
                 {
-                    sqlOptions.UseQuerySplittingBehavior(
-                        applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
+                    sqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ?? QuerySplittingBehavior.SplitQuery);
 
                     if (option != Migration.SetAssembly)
                     {
@@ -165,8 +158,7 @@ public static class ServiceExtensions
 
     public static DatabaseSetup WithQuartzNpgsqlDbProvider(this DatabaseSetup databaseSetup)
     {
-        databaseSetup.ServiceCollection.AddSingleton<IDbProvider>(
-            new QuartzNpgsqlDbProvider(databaseSetup.NpgsqlDataSource));
+        databaseSetup.ServiceCollection.AddSingleton<IDbProvider>(new QuartzNpgsqlDbProvider(databaseSetup.NpgsqlDataSource));
 
         return databaseSetup;
     }

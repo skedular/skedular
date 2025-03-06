@@ -188,7 +188,9 @@ public class OrganizationSubscriber(
             var newDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
 
             var existingTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredTeams = customer.PreferredTeams.Where(team => team.Organization is null || team.Organization.Id != organizationId).ToList();
+            customer.PreferredTeams = customer.PreferredTeams
+                .Where(team => team.Organization is null || team.Organization.Id != organizationId)
+                .ToList();
             var newTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
 
             customer = repositoryFactory.CustomerRepository.Update(customer);

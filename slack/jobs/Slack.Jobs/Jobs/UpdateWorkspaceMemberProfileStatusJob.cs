@@ -2,7 +2,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore;
 using Slack.Shared.Models;
-using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
