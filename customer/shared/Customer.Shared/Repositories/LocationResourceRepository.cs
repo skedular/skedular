@@ -14,7 +14,7 @@ public interface ILocationResourceRepository : IRepository<LocationResource>
         OrganizationResourceType organizationResourceType,
         CancellationToken cancellationToken);
 
-    Task<LocationResource?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<LocationResource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     LocationResource Add(LocationResource locationResource);
     LocationResource Update(LocationResource locationResource);
     void RemoveRange(ICollection<LocationResource> locationResources);
@@ -32,7 +32,7 @@ public class LocationResourceRepository(CustomerDbContext dbContext, TimeProvide
     {
         await UpsertNakedAsync<Location, OrganizationResourceType>(id, location, organizationResourceType, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdAsync(id, false, cancellationToken))!;
     }
 
     public LocationResource Add(LocationResource locationResource)
@@ -56,11 +56,17 @@ public class LocationResourceRepository(CustomerDbContext dbContext, TimeProvide
         return DbContext.LocationResource.Update(locationResource).Entity;
     }
 
-    public async Task<LocationResource?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.LocationResource
-            .Include(query => query.Location)
-            .Include(query => query.OrganizationResourceType)
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+    public async Task<LocationResource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
+        includeAllRelatedEntities
+            ? await DbContext.LocationResource
+                .Include(query => query.PreferredByCustomers)
+                .Include(query => query.Location)
+                .Include(query => query.OrganizationResourceType)
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken)
+            : await DbContext.LocationResource
+                .Include(query => query.Location)
+                .Include(query => query.OrganizationResourceType)
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<LocationResource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
         await DbContext.LocationResource

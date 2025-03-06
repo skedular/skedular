@@ -10,6 +10,13 @@ public interface ILocationRepository : IRepository<Location>
 {
     Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
 
+    Task<ICollection<Location>> GetAllAsync(
+        bool includeDeletedLocationMembers,
+        bool includeDeletedResources,
+        bool includeDeletedDesks,
+        bool includeDeletedRooms,
+        CancellationToken cancellationToken);
+
     Task<Location?> GetByIdAsync(
         string id,
         bool includeDeletedLocationMembers,
@@ -89,6 +96,16 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
 
         return (await GetByIdAsync(id, true, true, true, true, cancellationToken))!;
     }
+
+    public async Task<ICollection<Location>> GetAllAsync(
+        bool includeDeletedLocationMembers,
+        bool includeDeletedResources,
+        bool includeDeletedDesks,
+        bool includeDeletedRooms,
+        CancellationToken cancellationToken) =>
+        await DbContext.Location
+            .AddDependentObjects(includeDeletedLocationMembers, includeDeletedResources, true, includeDeletedDesks, true, includeDeletedRooms, true)
+            .ToListAsync(cancellationToken);
 
     public async Task<Location?> GetByIdAsync(
         string id,

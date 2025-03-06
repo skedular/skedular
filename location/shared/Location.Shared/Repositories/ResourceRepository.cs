@@ -13,8 +13,8 @@ namespace Location.Shared.Repositories;
 
 public interface IResourceRepository : IRepository<Resource>
 {
-    Task<Resource?> GetByIdAsync(string id, bool includeBookings, CancellationToken cancellationToken);
-    Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeBookings, CancellationToken cancellationToken);
+    Task<Resource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
+    Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Resource Add(Resource resource);
     Resource Update(Resource resource);
     void RemoveRange(ICollection<Resource> resources);
@@ -31,8 +31,8 @@ internal static class ResourceExtensions
 {
     internal static IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects(
         this IQueryable<Resource> originalQuery,
-        bool includeBookings) =>
-        includeBookings
+        bool includeAllRelatedEntities) =>
+        includeAllRelatedEntities
             ? originalQuery
                 .Include(query => query.Bookings)
                 .Include(query => query.OrganizationResourceType)
@@ -93,15 +93,16 @@ internal static class ResourceExtensions
 public class ResourceRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Resource>(dbContext, timeProvider), IResourceRepository
 {
-    public async Task<Resource?> GetByIdAsync(string id, bool includeBookings, CancellationToken cancellationToken) =>
+    public async Task<Resource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
         await DbContext.Resource
-            .AddDependentObjects(includeBookings)
+            .AddDependentObjects(includeAllRelatedEntities)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeBookings, CancellationToken cancellationToken) =>
+    public async Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities,
+        CancellationToken cancellationToken) =>
         await DbContext.Resource
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects(includeBookings)
+            .AddDependentObjects(includeAllRelatedEntities)
             .ToListAsync(cancellationToken);
 
     public Resource Add(Resource resource)

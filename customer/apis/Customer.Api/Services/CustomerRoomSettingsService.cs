@@ -23,7 +23,7 @@ public class CustomerRoomSettingsService(
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        var room = await repositoryFactory.RoomRepository.GetByIdAsync(roomId, cancellationToken);
+        var room = await repositoryFactory.RoomRepository.GetByIdAsync(roomId, false, cancellationToken);
         if (room is null)
         {
             throw new RoomNotFound();

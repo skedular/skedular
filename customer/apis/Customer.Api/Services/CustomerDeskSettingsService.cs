@@ -23,7 +23,7 @@ public class CustomerDeskSettingsService(
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        var desk = await repositoryFactory.DeskRepository.GetByIdAsync(deskId, cancellationToken);
+        var desk = await repositoryFactory.DeskRepository.GetByIdAsync(deskId, false, cancellationToken);
         if (desk is null)
         {
             throw new DeskNotFound();

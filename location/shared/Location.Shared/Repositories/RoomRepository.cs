@@ -13,8 +13,8 @@ namespace Location.Shared.Repositories;
 
 public interface IRoomRepository : IRepository<Room>
 {
-    Task<Room?> GetByIdAsync(string id, bool includeBookings, CancellationToken cancellationToken);
-    Task<ICollection<Room>> GetByIdsAsync(ICollection<string> ids, bool includeBookings, CancellationToken cancellationToken);
+    Task<Room?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
+    Task<ICollection<Room>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Room Add(Room room);
     Room Update(Room room);
     void RemoveRange(ICollection<Room> rooms);
@@ -31,8 +31,8 @@ internal static class RoomExtensions
 {
     internal static IIncludableQueryable<Room, IEnumerable<OrganizationTag>> AddDependentObjects(
         this IQueryable<Room> originalQuery,
-        bool includeBookings) =>
-        includeBookings
+        bool includeAllRelatedEntities) =>
+        includeAllRelatedEntities
             ? originalQuery
                 .Include(query => query.Bookings)
                 .Include(query => query.Location)
@@ -91,15 +91,16 @@ internal static class RoomExtensions
 public class RoomRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Room>(dbContext, timeProvider), IRoomRepository
 {
-    public async Task<Room?> GetByIdAsync(string id, bool includeBookings, CancellationToken cancellationToken) =>
+    public async Task<Room?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
         await DbContext.Room
-            .AddDependentObjects(includeBookings)
+            .AddDependentObjects(includeAllRelatedEntities)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Room>> GetByIdsAsync(ICollection<string> ids, bool includeBookings, CancellationToken cancellationToken) =>
+    public async Task<ICollection<Room>>
+        GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
         await DbContext.Room
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects(includeBookings)
+            .AddDependentObjects(includeAllRelatedEntities)
             .ToListAsync(cancellationToken);
 
     public Room Add(Room room)

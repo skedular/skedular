@@ -10,7 +10,7 @@ namespace Booking.Shared.Repositories;
 public interface IDeskRepository : IRepository<Desk>
 {
     Task<Desk> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken);
-    Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Desk?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Desk Add(Desk desk);
     Desk Update(Desk desk);
     void RemoveRange(ICollection<Desk> desks);
@@ -35,7 +35,7 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
     {
         await UpsertNakedAsync<Location>(id, location, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdAsync(id, false, cancellationToken))!;
     }
 
     public Desk Add(Desk desk)
@@ -59,11 +59,18 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
         return DbContext.Desk.Update(desk).Entity;
     }
 
-    public async Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Desk
-            .Include(query => query.Location)
-            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+    public async Task<Desk?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
+        includeAllRelatedEntities
+            ? await DbContext.Desk
+                .Include(query => query.PreferredByCustomers)
+                .Include(query => query.Bookings)
+                .Include(query => query.Location)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken)
+            : await DbContext.Desk
+                .Include(query => query.Location)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Desk>> GetAvailableDesksAsync(
         string? organizationId,

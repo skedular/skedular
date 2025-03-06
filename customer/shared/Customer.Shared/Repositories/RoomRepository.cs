@@ -9,7 +9,7 @@ namespace Customer.Shared.Repositories;
 public interface IRoomRepository : IRepository<Room>
 {
     Task<Room> UpsertNakedAsync(string id, Location location, CancellationToken cancellationToken);
-    Task<Room?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Room?> GetByIdAsync(string id, bool includePreferredByCustomer, CancellationToken cancellationToken);
     Room Add(Room room);
     Room Update(Room room);
     void RemoveRange(ICollection<Room> rooms);
@@ -23,7 +23,7 @@ public class RoomRepository(CustomerDbContext dbContext, TimeProvider timeProvid
     {
         await UpsertNakedAsync<Location>(id, location, cancellationToken);
 
-        return (await GetByIdAsync(id, cancellationToken))!;
+        return (await GetByIdAsync(id, false, cancellationToken))!;
     }
 
     public Room Add(Room room)
@@ -47,10 +47,15 @@ public class RoomRepository(CustomerDbContext dbContext, TimeProvider timeProvid
         return DbContext.Room.Update(room).Entity;
     }
 
-    public async Task<Room?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Room
-            .Include(query => query.Location)
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+    public async Task<Room?> GetByIdAsync(string id, bool includePreferredByCustomer, CancellationToken cancellationToken) =>
+        includePreferredByCustomer
+            ? await DbContext.Room
+                .Include(query => query.PreferredByCustomers)
+                .Include(query => query.Location)
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken)
+            : await DbContext.Room
+                .Include(query => query.Location)
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Room>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
         await DbContext.Room

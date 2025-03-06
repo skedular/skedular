@@ -13,8 +13,8 @@ namespace Location.Shared.Repositories;
 
 public interface IDeskRepository : IRepository<Desk>
 {
-    Task<Desk?> GetByIdAsync(string id, bool includeBookings, CancellationToken cancellationToken);
-    Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, bool includeBookings, CancellationToken cancellationToken);
+    Task<Desk?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
+    Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Desk Add(Desk desk);
     Desk Update(Desk desk);
     void RemoveRange(ICollection<Desk> desks);
@@ -31,8 +31,8 @@ internal static class DeskExtensions
 {
     internal static IIncludableQueryable<Desk, IEnumerable<OrganizationTag>> AddDependentObjects(
         this IQueryable<Desk> originalQuery,
-        bool includeBookings) =>
-        includeBookings
+        bool includeAllRelatedEntities) =>
+        includeAllRelatedEntities
             ? originalQuery
                 .Include(query => query.Bookings)
                 .Include(query => query.Location)
@@ -91,15 +91,16 @@ internal static class DeskExtensions
 public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Desk>(dbContext, timeProvider), IDeskRepository
 {
-    public async Task<Desk?> GetByIdAsync(string id, bool includeBookings, CancellationToken cancellationToken) =>
+    public async Task<Desk?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
         await DbContext.Desk
-            .AddDependentObjects(includeBookings)
+            .AddDependentObjects(includeAllRelatedEntities)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, bool includeBookings, CancellationToken cancellationToken) =>
+    public async Task<ICollection<Desk>>
+        GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
         await DbContext.Desk
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects(includeBookings)
+            .AddDependentObjects(includeAllRelatedEntities)
             .ToListAsync(cancellationToken);
 
     public Desk Add(Desk desk)
