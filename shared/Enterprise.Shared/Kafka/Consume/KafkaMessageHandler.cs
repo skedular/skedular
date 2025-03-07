@@ -24,9 +24,7 @@ public class KafkaMessageHandler<TKey, TEvent>(
     : IKafkaMessageHandler<TKey, TEvent>
     where TKey : IEvent, new() where TEvent : IEvent, new()
 {
-    public async Task HandleMessageAsync(
-        ConsumeResult<byte[], byte[]> consumeResult,
-        CancellationToken cancellationToken)
+    public async Task HandleMessageAsync(ConsumeResult<byte[], byte[]> consumeResult, CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
         var eventSubscriber = scope.ServiceProvider.GetRequiredService<IEventSubscriber<TKey, TEvent>>();
@@ -34,7 +32,7 @@ public class KafkaMessageHandler<TKey, TEvent>(
         var className = eventSubscriber.GetType().ToFullName();
         using (activitySource.StartActivity($"handler {className}"))
         {
-            var key = keyDeserializer.Deserialize(consumeResult.Message.Value, false, SerializationContext.Empty);
+            var key = keyDeserializer.Deserialize(consumeResult.Message.Key, false, SerializationContext.Empty);
             var @event = valueDeserializer.Deserialize(consumeResult.Message.Value, false, SerializationContext.Empty);
 
             try
