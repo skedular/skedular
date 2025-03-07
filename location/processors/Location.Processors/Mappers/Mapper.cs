@@ -63,7 +63,7 @@ public interface IMapper
     OrganizationResourceType MergeToEntity(
         Shared.Models.OrganizationResourceType src,
         OrganizationResourceType dest,
-        Shared.Database.Entities.Organization organization);
+        Shared.Database.Entities.Organization? organization);
 }
 
 public class Mapper : IMapper
@@ -336,7 +336,7 @@ public class Mapper : IMapper
     public OrganizationResourceType MergeToEntity(
         Shared.Models.OrganizationResourceType src,
         OrganizationResourceType dest,
-        Shared.Database.Entities.Organization organization)
+        Shared.Database.Entities.Organization? organization)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;

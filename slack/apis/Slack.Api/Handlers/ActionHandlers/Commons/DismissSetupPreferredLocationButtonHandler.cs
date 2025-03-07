@@ -13,7 +13,7 @@ using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerSe
 
 namespace Slack.Api.Handlers.ActionHandlers.Commons;
 
-public class DismissSetupDefaultLocationButtonHandler(
+public class DismissSetupPreferredLocationButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfiguration slackConfiguration,
     CustomerConfiguration customerConfiguration,
@@ -37,7 +37,7 @@ public class DismissSetupDefaultLocationButtonHandler(
             cancellationToken);
 
         await customerServiceClient.DismissPreferredLocationOnboardingSetupAsync(
-            new DismissDefaultLocationOnboardingSetupInput(),
+            new DismissPreferredLocationOnboardingSetupInput(),
             customerConfiguration.ApiKey.CreateMetadata(workspaceMemberEntity.Id),
             cancellationToken: cancellationToken);
 

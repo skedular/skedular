@@ -4,10 +4,10 @@ namespace Slack.Api.Services;
 
 public interface ITeamsPageContextService
 {
-    TeamsPage GetDefaultTeamsPageContext();
+    TeamsPage GetPreferredTeamsPageContext();
 }
 
 public class TeamsPageContextService : ITeamsPageContextService
 {
-    public TeamsPage GetDefaultTeamsPageContext() => new(new PaginationContext());
+    public TeamsPage GetPreferredTeamsPageContext() => new(new PaginationContext());
 }

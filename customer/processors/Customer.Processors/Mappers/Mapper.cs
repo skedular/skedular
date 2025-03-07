@@ -97,7 +97,7 @@ public interface IMapper
     Shared.Database.Entities.OrganizationResourceType MergeToEntity(
         OrganizationResourceType src,
         Shared.Database.Entities.OrganizationResourceType dest,
-        Shared.Database.Entities.Organization organization);
+        Shared.Database.Entities.Organization? organization);
 }
 
 public class Mapper : IMapper
@@ -332,6 +332,7 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList(),
                 DefaultOrganization = MapTo(src.DefaultOrganization),
                 PreferredLocations = MapTo(src.PreferredLocations).ToList(),
+                PreferredLocationResources = MapTo(src.PreferredLocationResources).ToList(),
                 PreferredDesks = MapTo(src.PreferredDesks).ToList(),
                 PreferredRooms = MapTo(src.PreferredRooms).ToList(),
                 PreferredTeams = MapTo(src.PreferredTeams).ToList(),
@@ -547,7 +548,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.OrganizationResourceType MergeToEntity(
         OrganizationResourceType src,
         Shared.Database.Entities.OrganizationResourceType dest,
-        Shared.Database.Entities.Organization organization)
+        Shared.Database.Entities.Organization? organization)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -611,6 +612,37 @@ public class Mapper : IMapper
                 Organization = MapTo(src.Organization),
                 Desks = includeDesks ? MapTo(src.Desks).ToList() : [],
                 Rooms = includeRooms ? MapTo(src.Rooms).ToList() : []
+            };
+
+    private static IEnumerable<Shared.Models.LocationResource> MapTo(IEnumerable<LocationResource?>? src) =>
+        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
+
+    private static Shared.Models.LocationResource? MapTo(LocationResource? src) =>
+        src is null
+            ? null
+            : new Shared.Models.LocationResource
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name,
+                Location = MapTo(src.Location, false, false)!,
+                OrganizationResourceType = new OrganizationResourceType
+                {
+                    Id = src.OrganizationResourceType.Id,
+                    Name = src.OrganizationResourceType.Name,
+                    Color = src.OrganizationResourceType.Color,
+                    SystemType = string.IsNullOrWhiteSpace(src.OrganizationResourceType.SystemType)
+                        ? null
+                        : src.OrganizationResourceType.SystemType switch
+                        {
+                            OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
+                            OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
+                            _ => throw new ArgumentOutOfRangeException()
+                        }
+                }
             };
 
     private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk?>? src) =>

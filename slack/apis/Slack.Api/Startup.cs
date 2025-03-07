@@ -79,8 +79,8 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                         .RegisterBlockOptionProvider<OrganizationTeamOptionProvider>(OptionLoaderKeys.OrganizationTeamKey);
 
                     options
-                        .RegisterBlockActionHandler<ButtonAction, DismissSetupDefaultLocationButtonHandler>(
-                            LocationActionTypes.DismissSetupDefaultLocation)
+                        .RegisterBlockActionHandler<ButtonAction, DismissSetupPreferredLocationButtonHandler>(
+                            LocationActionTypes.DismissSetupPreferredLocation)
                         .RegisterBlockActionHandler<ButtonAction, DismissSetupPreferredDesksButtonHandler>(DeskActionTypes.DismissSetupPreferredDesks)
                         .RegisterBlockActionHandler<ButtonAction,
                             DismissSetupPreferredZonesButtonHandler>(ZoneActionTypes.DismissSetupPreferredZones);

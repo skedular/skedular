@@ -13,7 +13,7 @@ public class OrganizationResourceType : ReplicatedEntityBaseWithDeleted
     public string? Color { get; set; }
     public string? SystemType { get; set; }
 
-    public virtual Organization Organization { get; set; }
+    public virtual Organization? Organization { get; set; }
     public virtual ICollection<LocationResource> LocationResources { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

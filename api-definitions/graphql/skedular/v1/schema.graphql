@@ -177,6 +177,7 @@ type CustomerDetails {
   photoUrl72: String
   preferredCustomTags: [CustomerOrganizationTagDetails!]!
   preferredDesks: [CustomerDeskDetails!]!
+  preferredLocationResources: [CustomerLocationResourceDetails!]!
   preferredLocations: [CustomerLocationDetails!]!
   preferredRooms: [CustomerRoomDetails!]!
   preferredTeams: [CustomerTeamDetails!]!
@@ -199,6 +200,12 @@ type CustomerEmail {
 type CustomerLocationDetails {
   name: String
   organization: CustomerOrganizationDetails
+  uniqueId: ID!
+}
+
+type CustomerLocationResourceDetails {
+  name: String
+  organizationResourceType: Customer_OrganizationResourceTypeDetails!
   uniqueId: ID!
 }
 
@@ -227,6 +234,13 @@ type CustomerRoomDetails {
 type CustomerTeamDetails {
   name: String
   organization: CustomerOrganizationDetails
+  uniqueId: ID!
+}
+
+type Customer_OrganizationResourceTypeDetails {
+  color: String
+  name: String
+  systemType: OrganizationResourceTypeSystemType
   uniqueId: ID!
 }
 
@@ -413,6 +427,7 @@ type Mutation {
   addBooking(input: AddBookingInput!): BookingPayload @cost(weight: "10")
   addCustomerPreferredDesk(input: AddCustomerPreferredDeskInput!): CustomerPayload @cost(weight: "10")
   addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload @cost(weight: "10")
+  addCustomerPreferredLocationResource(input: AddCustomerPreferredLocationResourceInput!): CustomerPayload @cost(weight: "10")
   addCustomerPreferredOrganizationTag(input: AddCustomerPreferredOrganizationTagInput!): CustomerPayload @cost(weight: "10")
   addCustomerPreferredRoom(input: AddCustomerPreferredRoomInput!): CustomerPayload @cost(weight: "10")
   addCustomerPreferredTeam(input: AddCustomerPreferredTeamInput!): CustomerPayload @cost(weight: "10")
@@ -474,6 +489,7 @@ type Mutation {
   rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): RejectInvitationToJoinTeamPayload @cost(weight: "10")
   removeCustomerPreferredDesk(input: RemoveCustomerPreferredDeskInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload @cost(weight: "10")
+  removeCustomerPreferredLocationResource(input: RemoveCustomerPreferredLocationResourceInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredRoom(input: RemoveCustomerPreferredRoomInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredTeam(input: RemoveCustomerPreferredTeamInput!): CustomerPayload @cost(weight: "10")
@@ -931,7 +947,7 @@ type ResourceDetails {
   id: ID!
   inactive: Boolean!
   name: String!
-  OrganizationResourceType: Location_OrganizationResourceTypeDetails!
+  organizationResourceType: Location_OrganizationResourceTypeDetails!
   requireBookingApproval: Boolean!
   zones: [Location_OrganizationTagDetails!]!
 }
@@ -1171,6 +1187,11 @@ input AddCustomerPreferredDeskInput {
 input AddCustomerPreferredLocationInput {
   clientMutationId: String
   locationId: String!
+}
+
+input AddCustomerPreferredLocationResourceInput {
+  clientMutationId: String
+  locationResourceId: String!
 }
 
 input AddCustomerPreferredOrganizationTagInput {
@@ -1690,6 +1711,11 @@ input RemoveCustomerPreferredDeskInput {
 input RemoveCustomerPreferredLocationInput {
   clientMutationId: String
   locationId: String!
+}
+
+input RemoveCustomerPreferredLocationResourceInput {
+  clientMutationId: String
+  locationResourceId: String!
 }
 
 input RemoveCustomerPreferredOrganizationTagInput {

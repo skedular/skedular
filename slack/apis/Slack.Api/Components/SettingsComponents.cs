@@ -9,7 +9,7 @@ namespace Slack.Api.Components;
 
 public interface ISettingsComponents
 {
-    Task<ICollection<Block>> GetDefaultLocationOnboardingDoneAsync(
+    Task<ICollection<Block>> GetPreferredLocationOnboardingDoneAsync(
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken);
@@ -32,7 +32,7 @@ public class SettingsComponents(
     ILocationService locationService,
     TimeProvider timeProvider) : ISettingsComponents
 {
-    public async Task<ICollection<Block>> GetDefaultLocationOnboardingDoneAsync(
+    public async Task<ICollection<Block>> GetPreferredLocationOnboardingDoneAsync(
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken)
@@ -63,7 +63,7 @@ public class SettingsComponents(
                     },
                     new Button
                     {
-                        ActionId = LocationActionTypes.DismissSetupDefaultLocation,
+                        ActionId = LocationActionTypes.DismissSetupPreferredLocation,
                         Text = "Dismiss".ToPlainTextWithIcon(Icons.Cancel),
                         Value = new CommonPageContext(pageContext).Serialize()
                     }

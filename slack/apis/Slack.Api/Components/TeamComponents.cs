@@ -88,18 +88,18 @@ public class TeamComponents(ICustomerService customerService, IOrganizationServi
         {
             buttons.Add(new Button
             {
-                ActionId = TeamActionTypes.ClearDefaultTeam,
+                ActionId = TeamActionTypes.RemovePreferredTeam,
                 Text = "Remove preferred team".ToPlainTextWithIcon(Icons.ClearDefault),
-                Value = new ClearDefaultTeamContext(pageContext, team.Id).Serialize()
+                Value = new RemovePreferredTeamContext(pageContext, team.Id).Serialize()
             });
         }
         else
         {
             buttons.Add(new Button
             {
-                ActionId = TeamActionTypes.SetAsDefaultTeam,
+                ActionId = TeamActionTypes.AddAsPreferredTeam,
                 Text = "Add as preferred team".ToPlainTextWithIcon(Icons.SetAsDefault),
-                Value = new SetAsDefaultTeamContext(pageContext, team.Id).Serialize()
+                Value = new AddAsPreferredTeamContext(pageContext, team.Id).Serialize()
             });
         }
 

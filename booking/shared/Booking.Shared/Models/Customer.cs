@@ -22,9 +22,9 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public ICollection<TeamMember> TeamMembers { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
     public Organization? DefaultOrganization { get; set; }
-    public ICollection<Location> DefaultLocations { get; set; }
+    public ICollection<Location> PreferredLocations { get; set; }
     public ICollection<Desk> PreferredDesks { get; set; }
     public ICollection<Room> PreferredRooms { get; set; }
-    public ICollection<Team> DefaultTeams { get; set; }
+    public ICollection<Team> PreferredTeams { get; set; }
     public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
 }

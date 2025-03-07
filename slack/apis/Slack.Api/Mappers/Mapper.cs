@@ -40,7 +40,7 @@ public interface IMapper
     Workspace MapTo(OauthV2AccessResponse src, Organization organization);
     Workspace MergeTo(OauthV2AccessResponse src, Workspace dest, Organization organization);
     WorkspaceMember MapToEntity(User src, Workspace workspace);
-    Admin_AddInput MapTo(WorkspaceMember src, string customerId, Organization defaultOrganization, ICollection<Location> defaultLocations);
+    Admin_AddInput MapTo(WorkspaceMember src, string customerId, Organization defaultOrganization, ICollection<Location> preferredLocations);
     Admin_AddIdentityInput MapTo(WorkspaceMember src, string customerId);
     Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer src);
     Shared.Models.Organization MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization src);
@@ -115,7 +115,7 @@ public class Mapper : IMapper
 
     public WorkspaceMember MapToEntity(User src, Workspace workspace) => MergeToEntity(src, new WorkspaceMember(), workspace);
 
-    public Admin_AddInput MapTo(WorkspaceMember src, string customerId, Organization defaultOrganization, ICollection<Location> defaultLocations)
+    public Admin_AddInput MapTo(WorkspaceMember src, string customerId, Organization defaultOrganization, ICollection<Location> preferredLocations)
     {
         var input = new Admin_AddInput
         {
@@ -144,7 +144,7 @@ public class Mapper : IMapper
 
         input.Identities.Add(new Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
-        input.PreferredLocations.AddRange(defaultLocations.Select(item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
+        input.PreferredLocations.AddRange(preferredLocations.Select(item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
         {
             Id = item.Id, Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         }));

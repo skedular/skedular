@@ -86,8 +86,7 @@ message Team {
 
 message LocationResource {
   string id = 1;
-  string organizationId = 2;
-  string locationId = 3;
+  string locationId = 2;
 }
 
 message Desk {

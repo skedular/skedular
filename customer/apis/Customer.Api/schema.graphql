@@ -47,6 +47,7 @@ type CustomerDetails {
   preferredTeams: [CustomerTeamDetails!]!
   preferredZones: [CustomerOrganizationTagDetails!]!
   preferredCustomTags: [CustomerOrganizationTagDetails!]!
+  preferredLocationResources: [CustomerLocationResourceDetails!]!
   preferredDesks: [CustomerDeskDetails!]!
   preferredRooms: [CustomerRoomDetails!]!
   id: ID!
@@ -67,6 +68,12 @@ type CustomerLocationDetails {
   uniqueId: ID!
   name: String
   organization: CustomerOrganizationDetails
+}
+
+type CustomerLocationResourceDetails {
+  uniqueId: ID!
+  name: String
+  organizationResourceType: Customer_OrganizationResourceTypeDetails!
 }
 
 type CustomerOrganizationDetails {
@@ -97,6 +104,13 @@ type CustomerTeamDetails {
   organization: CustomerOrganizationDetails
 }
 
+type Customer_OrganizationResourceTypeDetails {
+  uniqueId: ID!
+  name: String
+  color: String
+  systemType: OrganizationResourceTypeSystemType
+}
+
 type Mutation {
   completeOrganizationOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload @cost(weight: "10")
   completeLocationOnboarding(input: CompleteLocationOnboardingInput!): CustomerPayload @cost(weight: "10")
@@ -121,6 +135,8 @@ type Mutation {
   completePreferredRoomOnboarding(input: CompletePreferredRoomOnboardingInput!): CustomerPayload @cost(weight: "10")
   addCustomerPreferredRoom(input: AddCustomerPreferredRoomInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredRoom(input: RemoveCustomerPreferredRoomInput!): CustomerPayload @cost(weight: "10")
+  addCustomerPreferredLocationResource(input: AddCustomerPreferredLocationResourceInput!): CustomerPayload @cost(weight: "10")
+  removeCustomerPreferredLocationResource(input: RemoveCustomerPreferredLocationResourceInput!): CustomerPayload @cost(weight: "10")
 }
 
 type PageInfo {
@@ -157,6 +173,11 @@ input AddCustomerPreferredDeskInput {
 input AddCustomerPreferredLocationInput {
   clientMutationId: String
   locationId: String!
+}
+
+input AddCustomerPreferredLocationResourceInput {
+  clientMutationId: String
+  locationResourceId: String!
 }
 
 input AddCustomerPreferredOrganizationTagInput {
@@ -228,6 +249,11 @@ input RemoveCustomerPreferredDeskInput {
 input RemoveCustomerPreferredLocationInput {
   clientMutationId: String
   locationId: String!
+}
+
+input RemoveCustomerPreferredLocationResourceInput {
+  clientMutationId: String
+  locationResourceId: String!
 }
 
 input RemoveCustomerPreferredOrganizationTagInput {
@@ -303,6 +329,11 @@ enum FeedbackChannelType {
 enum OrderDirection {
   Ascending
   Descending
+}
+
+enum OrganizationResourceTypeSystemType {
+  Desk
+  Room
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

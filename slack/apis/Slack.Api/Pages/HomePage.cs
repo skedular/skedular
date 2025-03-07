@@ -605,7 +605,7 @@ public class HomePage(
         var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
 
         var asyncBlocks = await Task.WhenAll(
-            settingsComponents.GetDefaultLocationOnboardingDoneAsync(workspaceMember, commonPageContext.PageContext, cancellationToken),
+            settingsComponents.GetPreferredLocationOnboardingDoneAsync(workspaceMember, commonPageContext.PageContext, cancellationToken),
             settingsComponents.GetPreferredZoneOnboardingDoneAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
             settingsComponents.GetPreferredDeskOnboardingDoneAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
             GetBookingCalendarSettingBlocksAsync(workspaceMember, myBookings, commonPageContext.PageContext, cancellationToken),

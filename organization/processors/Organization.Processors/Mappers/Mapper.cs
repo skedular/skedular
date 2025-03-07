@@ -73,7 +73,7 @@ public interface IMapper
         AzureTenantMember src,
         string customerId,
         Shared.Database.Entities.Organization defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> defaultLocations);
+        ICollection<Shared.Database.Entities.Location> preferredLocations);
 
     Shared.Models.AzureTenantMember MapTo(User src);
     AzureTenantMember MapTo(Shared.Models.AzureTenantMember src, AzureTenant azureTenant);
@@ -301,7 +301,7 @@ public class Mapper : IMapper
         AzureTenantMember src,
         string customerId,
         Shared.Database.Entities.Organization defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> defaultLocations)
+        ICollection<Shared.Database.Entities.Location> preferredLocations)
     {
         var input = new Admin_AddInput
         {
@@ -320,7 +320,7 @@ public class Mapper : IMapper
 
         input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
-        input.PreferredLocations.AddRange(defaultLocations.Select(item =>
+        input.PreferredLocations.AddRange(preferredLocations.Select(item =>
             new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
                 Id = item.Id, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }

@@ -94,25 +94,25 @@ public record JoinBookingContext(PageContext PageContext, string BookingId)
     }
 }
 
-public record ClearDefaultTeamContext(PageContext PageContext, string TeamId)
+public record RemovePreferredTeamContext(PageContext PageContext, string TeamId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static ClearDefaultTeamContext Deserialize(string value)
+    public static RemovePreferredTeamContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<ClearDefaultTeamContext>(value);
+        var context = JsonSerializer.Deserialize<RemovePreferredTeamContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
 }
 
-public record SetAsDefaultTeamContext(PageContext PageContext, string TeamId)
+public record AddAsPreferredTeamContext(PageContext PageContext, string TeamId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static SetAsDefaultTeamContext Deserialize(string value)
+    public static AddAsPreferredTeamContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<SetAsDefaultTeamContext>(value);
+        var context = JsonSerializer.Deserialize<AddAsPreferredTeamContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -146,25 +146,25 @@ public class RemoveTeamContext(PageContext pageContext, string teamId)
     }
 }
 
-public record ClearDefaultLocationContext(PageContext PageContext, string LocationId)
+public record ClearPreferredLocationContext(PageContext PageContext, string LocationId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static ClearDefaultLocationContext Deserialize(string value)
+    public static ClearPreferredLocationContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<ClearDefaultLocationContext>(value);
+        var context = JsonSerializer.Deserialize<ClearPreferredLocationContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
 }
 
-public record SetAsDefaultLocationContext(PageContext PageContext, string LocationId)
+public record AddAsPreferredLocationContext(PageContext PageContext, string LocationId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static SetAsDefaultLocationContext Deserialize(string value)
+    public static AddAsPreferredLocationContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<SetAsDefaultLocationContext>(value);
+        var context = JsonSerializer.Deserialize<AddAsPreferredLocationContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }

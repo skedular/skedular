@@ -88,18 +88,18 @@ public class LocationComponents(ICustomerService customerService, IOrganizationS
         {
             buttons.Add(new Button
             {
-                ActionId = LocationActionTypes.ClearDefaultLocation,
+                ActionId = LocationActionTypes.RemovePreferredLocation,
                 Text = "Remove preferred location".ToPlainTextWithIcon(Icons.ClearDefault),
-                Value = new ClearDefaultLocationContext(pageContext, location.Id).Serialize()
+                Value = new ClearPreferredLocationContext(pageContext, location.Id).Serialize()
             });
         }
         else
         {
             buttons.Add(new Button
             {
-                ActionId = LocationActionTypes.SetAsDefaultLocation,
+                ActionId = LocationActionTypes.AddAsPreferredLocation,
                 Text = "Add as preferred location".ToPlainTextWithIcon(Icons.SetAsDefault),
-                Value = new SetAsDefaultLocationContext(pageContext, location.Id).Serialize()
+                Value = new AddAsPreferredLocationContext(pageContext, location.Id).Serialize()
             });
         }
 

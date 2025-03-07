@@ -334,7 +334,7 @@ public class AddBookingButtonHandler(
     {
         if (context.LocationId is null)
         {
-            var defaultLocation = customer.PreferredLocations.FirstOrDefault(item =>
+            var preferredLocation = customer.PreferredLocations.FirstOrDefault(item =>
                 item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
 
             return
@@ -346,9 +346,9 @@ public class AddBookingButtonHandler(
                     Element = new ExternalSelectMenu
                     {
                         ActionId = OptionLoaderKeys.OrganizationLocationKey,
-                        InitialOption = defaultLocation is null
+                        InitialOption = preferredLocation is null
                             ? null
-                            : new Option { Text = defaultLocation.Name.ToOptionText(), Value = defaultLocation.Id },
+                            : new Option { Text = preferredLocation.Name.ToOptionText(), Value = preferredLocation.Id },
                         MinQueryLength = 0
                     },
                     Optional = false
@@ -386,7 +386,7 @@ public class AddBookingButtonHandler(
     {
         if (context.TeamId is null)
         {
-            var defaultTeam =
+            var preferredTeam =
                 customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
 
             return
@@ -398,9 +398,9 @@ public class AddBookingButtonHandler(
                     Element = new ExternalSelectMenu
                     {
                         ActionId = OptionLoaderKeys.OrganizationTeamKey,
-                        InitialOption = defaultTeam is null
+                        InitialOption = preferredTeam is null
                             ? null
-                            : new Option { Text = defaultTeam.Name.ToOptionText(), Value = defaultTeam.Id },
+                            : new Option { Text = preferredTeam.Name.ToOptionText(), Value = preferredTeam.Id },
                         MinQueryLength = 0
                     },
                     Optional = true

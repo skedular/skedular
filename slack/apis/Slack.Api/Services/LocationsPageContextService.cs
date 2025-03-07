@@ -4,10 +4,10 @@ namespace Slack.Api.Services;
 
 public interface ILocationsPageContextService
 {
-    LocationsPage GetDefaultLocationsPageContext();
+    LocationsPage GetPreferredLocationsPageContext();
 }
 
 public class LocationsPageContextService : ILocationsPageContextService
 {
-    public LocationsPage GetDefaultLocationsPageContext() => new(new PaginationContext());
+    public LocationsPage GetPreferredLocationsPageContext() => new(new PaginationContext());
 }

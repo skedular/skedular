@@ -36,7 +36,7 @@ public interface IMapper
         WorkspaceMember src,
         string customerId,
         Database.Entities.Organization defaultOrganization,
-        ICollection<Database.Entities.Location> defaultLocations);
+        ICollection<Database.Entities.Location> preferredLocations);
 }
 
 public class Mapper : IMapper
@@ -173,7 +173,7 @@ public class Mapper : IMapper
         WorkspaceMember src,
         string customerId,
         Database.Entities.Organization defaultOrganization,
-        ICollection<Database.Entities.Location> defaultLocations)
+        ICollection<Database.Entities.Location> preferredLocations)
     {
         var input = new Admin_AddInput
         {
@@ -202,7 +202,7 @@ public class Mapper : IMapper
 
         input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
 
-        input.PreferredLocations.AddRange(defaultLocations.Select(item =>
+        input.PreferredLocations.AddRange(preferredLocations.Select(item =>
             new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
                 Id = item.Id, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }

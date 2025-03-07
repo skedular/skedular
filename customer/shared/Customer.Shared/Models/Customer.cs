@@ -34,6 +34,7 @@ public class Customer : ModelBaseWithDeleted
     public ICollection<CustomerFeedback> CustomerFeedbacks { get; set; } = [];
     public Organization? DefaultOrganization { get; set; }
     public ICollection<Location> PreferredLocations { get; set; } = [];
+    public ICollection<LocationResource> PreferredLocationResources { get; set; } = [];
     public ICollection<Desk> PreferredDesks { get; set; } = [];
     public ICollection<Room> PreferredRooms { get; set; } = [];
     public ICollection<Team> PreferredTeams { get; set; } = [];

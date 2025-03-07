@@ -127,20 +127,20 @@ public class LocationsPage(
                     cancellationToken);
                 break;
 
-            case LocationActionTypes.SetAsDefaultLocation:
-                await SetAsDefaultLocationAsync(
+            case LocationActionTypes.AddAsPreferredLocation:
+                await AddAsPreferredLocationAsync(
                     workspace,
                     workspaceMember,
-                    SetAsDefaultLocationContext.Deserialize(action.Value),
+                    AddAsPreferredLocationContext.Deserialize(action.Value),
                     request.View.Hash,
                     cancellationToken);
                 break;
 
-            case LocationActionTypes.ClearDefaultLocation:
-                await ClearDefaultLocationAsync(
+            case LocationActionTypes.RemovePreferredLocation:
+                await RemovePreferredLocationAsync(
                     workspace,
                     workspaceMember,
-                    ClearDefaultLocationContext.Deserialize(action.Value),
+                    ClearPreferredLocationContext.Deserialize(action.Value),
                     request.View.Hash,
                     cancellationToken);
                 break;
@@ -481,8 +481,8 @@ public class LocationsPage(
             .RegisterBlockActionHandler<ButtonAction, LocationsPage>(LastPageLocations)
             .RegisterBlockActionHandler<ButtonAction, LocationsPage>(NextPageLocations)
             .RegisterBlockActionHandler<ButtonAction, LocationsPage>(PreviousPageLocations)
-            .RegisterBlockActionHandler<ButtonAction, LocationsPage>(LocationActionTypes.SetAsDefaultLocation)
-            .RegisterBlockActionHandler<ButtonAction, LocationsPage>(LocationActionTypes.ClearDefaultLocation);
+            .RegisterBlockActionHandler<ButtonAction, LocationsPage>(LocationActionTypes.AddAsPreferredLocation)
+            .RegisterBlockActionHandler<ButtonAction, LocationsPage>(LocationActionTypes.RemovePreferredLocation);
 
     private static ICollection<Block> GetTitle() =>
     [
@@ -723,10 +723,10 @@ public class LocationsPage(
             cancellationToken);
     }
 
-    private async Task SetAsDefaultLocationAsync(
+    private async Task AddAsPreferredLocationAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        SetAsDefaultLocationContext context,
+        AddAsPreferredLocationContext context,
         string? hash,
         CancellationToken cancellationToken)
     {
@@ -743,10 +743,10 @@ public class LocationsPage(
             cancellationToken);
     }
 
-    private async Task ClearDefaultLocationAsync(
+    private async Task RemovePreferredLocationAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        ClearDefaultLocationContext context,
+        ClearPreferredLocationContext context,
         string? hash,
         CancellationToken cancellationToken)
     {

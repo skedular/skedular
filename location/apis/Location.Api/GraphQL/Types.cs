@@ -606,7 +606,7 @@ public class ResourceDetails : Node
     [GraphQLName("customTags")] public OrganizationTagDetails[] CustomTags { get; set; } = [];
     [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
 
-    [GraphQLName("OrganizationResourceType")]
+    [GraphQLName("organizationResourceType")]
     public OrganizationResourceTypeDetails OrganizationResourceType { get; set; }
 
     [GraphQLName("id")] [ID] public required string Id { get; set; }

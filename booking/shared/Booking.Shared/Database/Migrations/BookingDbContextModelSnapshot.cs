@@ -582,7 +582,6 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(300)");
 
                     b.Property<string>("OrganizationId")
-                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("SystemType")
@@ -1175,9 +1174,7 @@ namespace Booking.Shared.Database.Migrations
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
                         .WithMany("ResourceTypes")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrganizationId");
 
                     b.Navigation("Organization");
                 });

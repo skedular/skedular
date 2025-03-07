@@ -181,6 +181,13 @@ public class OrganizationSubscriber(
                 .ToList();
             var newLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
 
+            var existingLocationResourceIds = customer.PreferredLocationResources.Select(item => item.Id).Distinct().ToList();
+            customer.PreferredLocationResources = customer.PreferredLocationResources
+                .Where(locationResource =>
+                    locationResource.Location.Organization is null || locationResource.Location.Organization.Id != organizationId)
+                .ToList();
+            var newLocationResourceIds = customer.PreferredLocationResources.Select(item => item.Id).Distinct().ToList();
+
             var existingDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
             customer.PreferredDesks = customer.PreferredDesks
                 .Where(desk => desk.Location.Organization is null || desk.Location.Organization.Id != organizationId)
@@ -198,6 +205,8 @@ public class OrganizationSubscriber(
             if (existingOrganizationId != newOrganizationId ||
                 newLocationIds.Count != existingLocationIds.Count ||
                 newLocationIds.Except(existingLocationIds).Any() ||
+                newLocationResourceIds.Count != existingLocationResourceIds.Count ||
+                newLocationResourceIds.Except(existingLocationResourceIds).Any() ||
                 newDeskIds.Count != existingDeskIds.Count ||
                 newDeskIds.Except(existingDeskIds).Any() ||
                 newTeamIds.Count != existingTeamIds.Count ||

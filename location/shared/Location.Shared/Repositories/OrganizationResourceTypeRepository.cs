@@ -8,7 +8,7 @@ namespace Location.Shared.Repositories;
 
 public interface IOrganizationResourceTypeRepository : IRepository<OrganizationResourceType>
 {
-    Task<OrganizationResourceType> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
+    Task<OrganizationResourceType> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
     Task<OrganizationResourceType?> GetByIdAsync(string id, CancellationToken cancellationToken);
     OrganizationResourceType Add(OrganizationResourceType organizationResourceType);
     OrganizationResourceType Update(OrganizationResourceType organizationResourceType);
@@ -18,7 +18,7 @@ public interface IOrganizationResourceTypeRepository : IRepository<OrganizationR
 public class OrganizationResourceTypeRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, OrganizationResourceType>(dbContext, timeProvider), IOrganizationResourceTypeRepository
 {
-    public async Task<OrganizationResourceType> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken)
+    public async Task<OrganizationResourceType> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 

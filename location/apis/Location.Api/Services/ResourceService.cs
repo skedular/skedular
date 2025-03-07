@@ -49,7 +49,7 @@ public class ResourceService(
         var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, false, cancellationToken);
         if (resource is null)
         {
-            throw new ResourceNotFound();
+            throw new LocationResourceNotFound();
         }
 
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken);
@@ -149,7 +149,7 @@ public class ResourceService(
             throw new OrganizationResourceTypeNotFound();
         }
 
-        if (organizationResourceType.Organization.Id != resource.Location.Organization.Id)
+        if (organizationResourceType.Organization is null || organizationResourceType.Organization.Id != resource.Location.Organization.Id)
         {
             throw new Unauthorized();
         }
@@ -172,7 +172,7 @@ public class ResourceService(
         var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, false, cancellationToken);
         if (existingResource is null)
         {
-            throw new ResourceNotFound();
+            throw new LocationResourceNotFound();
         }
 
         return await UpdateInternalAsync(resource, existingResource, customer, cancellationToken);
@@ -186,7 +186,7 @@ public class ResourceService(
         var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, false, cancellationToken);
         if (resource is null)
         {
-            throw new ResourceNotFound();
+            throw new LocationResourceNotFound();
         }
 
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken);
@@ -458,7 +458,7 @@ public class ResourceService(
             throw new OrganizationResourceTypeNotFound();
         }
 
-        if (organizationResourceType.Organization.Id != resource.Location.Organization.Id)
+        if (organizationResourceType.Organization is null || organizationResourceType.Organization.Id != resource.Location.Organization.Id)
         {
             throw new Unauthorized();
         }

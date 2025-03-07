@@ -74,15 +74,15 @@ public class CustomerSubscriber(
                 cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        var defaultLocations = new List<Location>();
-        foreach (var item in customer.DefaultLocations)
+        var preferredLocations = new List<Location>();
+        foreach (var item in customer.PreferredLocations)
         {
             var organization = item.Organization is null
                 ? null
                 : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
                     item.Organization!.Id,
                     cancellationToken);
-            defaultLocations.Add(
+            preferredLocations.Add(
                 await repositoryFactory.LocationRepository.UpsertNakedAsync(
                     item.Id,
                     organization,
@@ -91,13 +91,13 @@ public class CustomerSubscriber(
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        var defaultTeams = new List<Team>();
-        foreach (var item in customer.DefaultTeams)
+        var preferredTeams = new List<Team>();
+        foreach (var item in customer.PreferredTeams)
         {
             var organization = item.Organization is null
                 ? null
                 : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization!.Id, cancellationToken);
-            defaultTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(item.Id, organization, cancellationToken));
+            preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(item.Id, organization, cancellationToken));
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
@@ -143,8 +143,8 @@ public class CustomerSubscriber(
                 customer,
                 identities,
                 defaultOrganization,
-                defaultLocations,
-                defaultTeams,
+                preferredLocations,
+                preferredTeams,
                 preferredDesks,
                 preferredRooms,
                 preferredOrganizationTags);
@@ -163,8 +163,8 @@ public class CustomerSubscriber(
                     existingCustomer,
                     existingCustomer.Identities,
                     defaultOrganization,
-                    defaultLocations,
-                    defaultTeams,
+                    preferredLocations,
+                    preferredTeams,
                     preferredDesks,
                     preferredRooms,
                     preferredOrganizationTags)

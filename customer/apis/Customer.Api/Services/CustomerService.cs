@@ -12,6 +12,8 @@ using CustomerOrder = Customer.Shared.Models.CustomerOrder;
 using Desk = Customer.Shared.Database.Entities.Desk;
 using Room = Customer.Shared.Database.Entities.Room;
 using Location = Customer.Shared.Database.Entities.Location;
+using LocationResource = Customer.Shared.Database.Entities.LocationResource;
+using OrganizationResourceType = Customer.Shared.Database.Entities.OrganizationResourceType;
 using OrganizationTag = Customer.Shared.Database.Entities.OrganizationTag;
 using Team = Customer.Shared.Database.Entities.Team;
 
@@ -166,27 +168,47 @@ public class CustomerService(
             ? null
             : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(customer.DefaultOrganization.Id, cancellationToken);
 
-        var defaultLocations = new List<Location>();
+        var preferredLocations = new List<Location>();
         foreach (var location in customer.PreferredLocations)
         {
             var organization = location.Organization is null
                 ? null
                 : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
 
-            defaultLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(
+            preferredLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(
                 location.Id,
                 organization,
                 cancellationToken));
         }
 
-        var defaultTeams = new List<Team>();
+        var preferredTeams = new List<Team>();
         foreach (var team in customer.PreferredTeams)
         {
             var organization = team.Organization is null
                 ? null
                 : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
 
-            defaultTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken));
+            preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken));
+        }
+
+        var organizationResourceTypes = new List<OrganizationResourceType>();
+        var organizationResourceTypeIds = customer.PreferredLocationResources.Select(item => item.OrganizationResourceType.Id).Distinct().ToList();
+        foreach (var organizationResourceTypeId in organizationResourceTypeIds)
+        {
+            organizationResourceTypes.Add(
+                await repositoryFactory.OrganizationResourceTypeRepository.UpsertNakedAsync(organizationResourceTypeId, null, cancellationToken));
+        }
+
+        var preferredLocationResources = new List<LocationResource>();
+        foreach (var locationResource in customer.PreferredLocationResources)
+        {
+            var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(locationResource.Location.Id, null, cancellationToken);
+            preferredLocationResources.Add(
+                await repositoryFactory.LocationResourceRepository.UpsertNakedAsync(
+                    locationResource.Id,
+                    location,
+                    organizationResourceTypes.First(item => item.Id == locationResource.OrganizationResourceType.Id),
+                    cancellationToken));
         }
 
         var preferredDesks = new List<Desk>();
@@ -225,8 +247,9 @@ public class CustomerService(
                 customer,
                 identities,
                 defaultOrganization,
-                defaultLocations,
-                defaultTeams,
+                preferredLocations,
+                preferredTeams,
+                preferredLocationResources,
                 preferredDesks,
                 preferredRooms,
                 preferredOrganizationTags);

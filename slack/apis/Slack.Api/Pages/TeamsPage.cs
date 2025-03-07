@@ -122,18 +122,18 @@ public class TeamsPage(
                     cancellationToken);
                 break;
 
-            case TeamActionTypes.SetAsDefaultTeam:
-                await SetAsDefaultTeamAsync(workspace,
+            case TeamActionTypes.AddAsPreferredTeam:
+                await AddAdPreferredTeamAsync(workspace,
                     workspaceMember,
-                    SetAsDefaultTeamContext.Deserialize(action.Value),
+                    AddAsPreferredTeamContext.Deserialize(action.Value),
                     request.View.Hash,
                     cancellationToken);
                 break;
 
-            case TeamActionTypes.ClearDefaultTeam:
-                await ClearDefaultTeamAsync(workspace,
+            case TeamActionTypes.RemovePreferredTeam:
+                await RemovePreferredTeamAsync(workspace,
                     workspaceMember,
-                    ClearDefaultTeamContext.Deserialize(action.Value),
+                    RemovePreferredTeamContext.Deserialize(action.Value),
                     request.View.Hash,
                     cancellationToken);
                 break;
@@ -423,8 +423,8 @@ public class TeamsPage(
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(LastPageTeams)
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(NextPageTeams)
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(PreviousPageTeams)
-            .RegisterBlockActionHandler<ButtonAction, TeamsPage>(TeamActionTypes.SetAsDefaultTeam)
-            .RegisterBlockActionHandler<ButtonAction, TeamsPage>(TeamActionTypes.ClearDefaultTeam);
+            .RegisterBlockActionHandler<ButtonAction, TeamsPage>(TeamActionTypes.AddAsPreferredTeam)
+            .RegisterBlockActionHandler<ButtonAction, TeamsPage>(TeamActionTypes.RemovePreferredTeam);
 
     private static ICollection<Block> GetTitle() => [new SectionBlock { Text = "*Teams*".ToMarkdown() }];
 
@@ -691,10 +691,10 @@ public class TeamsPage(
             cancellationToken);
     }
 
-    private async Task SetAsDefaultTeamAsync(
+    private async Task AddAdPreferredTeamAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        SetAsDefaultTeamContext context,
+        AddAsPreferredTeamContext context,
         string? hash,
         CancellationToken cancellationToken)
     {
@@ -711,10 +711,10 @@ public class TeamsPage(
             cancellationToken);
     }
 
-    private async Task ClearDefaultTeamAsync(
+    private async Task RemovePreferredTeamAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
-        ClearDefaultTeamContext context,
+        RemovePreferredTeamContext context,
         string? hash,
         CancellationToken cancellationToken)
     {

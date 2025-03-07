@@ -60,14 +60,13 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "ASgIEiUKHWlzUHJlZmVycmVkUm9vbU9uYm9hcmRpbmdEb25lGAkgASgIIi4K",
             "CExvY2F0aW9uEgoKAmlkGAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIgASgJ",
             "IioKBFRlYW0SCgoCaWQYASABKAkSFgoOb3JnYW5pemF0aW9uSWQYAiABKAki",
-            "SgoQTG9jYXRpb25SZXNvdXJjZRIKCgJpZBgBIAEoCRIWCg5vcmdhbml6YXRp",
-            "b25JZBgCIAEoCRISCgpsb2NhdGlvbklkGAMgASgJIiYKBERlc2sSCgoCaWQY",
-            "ASABKAkSEgoKbG9jYXRpb25JZBgCIAEoCSImCgRSb29tEgoKAmlkGAEgASgJ",
-            "EhIKCmxvY2F0aW9uSWQYAiABKAkiNQoPT3JnYW5pemF0aW9uVGFnEgoKAmlk",
-            "GAEgASgJEhYKDm9yZ2FuaXphdGlvbklkGAIgASgJKjEKBFR5cGUSFAoQQ3Vz",
-            "dG9tZXJVcHNlcnRlZBAAEhMKD0N1c3RvbWVyRGVsZXRlZBABQjeqAjRBcGku",
-            "U2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkN1c3RvbWVyLlYxLlZh",
-            "bHVlYgZwcm90bzM="));
+            "MgoQTG9jYXRpb25SZXNvdXJjZRIKCgJpZBgBIAEoCRISCgpsb2NhdGlvbklk",
+            "GAIgASgJIiYKBERlc2sSCgoCaWQYASABKAkSEgoKbG9jYXRpb25JZBgCIAEo",
+            "CSImCgRSb29tEgoKAmlkGAEgASgJEhIKCmxvY2F0aW9uSWQYAiABKAkiNQoP",
+            "T3JnYW5pemF0aW9uVGFnEgoKAmlkGAEgASgJEhYKDm9yZ2FuaXphdGlvbklk",
+            "GAIgASgJKjEKBFR5cGUSFAoQQ3VzdG9tZXJVcHNlcnRlZBAAEhMKD0N1c3Rv",
+            "bWVyRGVsZXRlZBABQjeqAjRBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNr",
+            "ZWR1bGFyLkN1c3RvbWVyLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -79,7 +78,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings.Parser, new[]{ "Id", "IsOrganizationOnboardingDone", "IsLocationOnboardingDone", "IsTeamOnboardingDone", "IsDefaultOrganizationOnboardingDone", "IsPreferredLocationOnboardingDone", "IsPreferredZoneOnboardingDone", "IsPreferredDeskOnboardingDone", "IsPreferredRoomOnboardingDone" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource.Parser, new[]{ "Id", "OrganizationId", "LocationId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.LocationResource.Parser, new[]{ "Id", "LocationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Desk.Parser, new[]{ "Id", "LocationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Room.Parser, new[]{ "Id", "LocationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null)
@@ -3322,7 +3321,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public LocationResource(LocationResource other) : this() {
       id_ = other.id_;
-      organizationId_ = other.organizationId_;
       locationId_ = other.locationId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -3345,20 +3343,8 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "organizationId" field.</summary>
-    public const int OrganizationIdFieldNumber = 2;
-    private string organizationId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string OrganizationId {
-      get { return organizationId_; }
-      set {
-        organizationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "locationId" field.</summary>
-    public const int LocationIdFieldNumber = 3;
+    public const int LocationIdFieldNumber = 2;
     private string locationId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3385,7 +3371,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         return true;
       }
       if (Id != other.Id) return false;
-      if (OrganizationId != other.OrganizationId) return false;
       if (LocationId != other.LocationId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -3395,7 +3380,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
       if (LocationId.Length != 0) hash ^= LocationId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -3419,12 +3403,8 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (OrganizationId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(OrganizationId);
-      }
       if (LocationId.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteString(LocationId);
       }
       if (_unknownFields != null) {
@@ -3441,12 +3421,8 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (OrganizationId.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(OrganizationId);
-      }
       if (LocationId.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteString(LocationId);
       }
       if (_unknownFields != null) {
@@ -3461,9 +3437,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       int size = 0;
       if (Id.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (OrganizationId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
       }
       if (LocationId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(LocationId);
@@ -3482,9 +3455,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
       if (other.Id.Length != 0) {
         Id = other.Id;
-      }
-      if (other.OrganizationId.Length != 0) {
-        OrganizationId = other.OrganizationId;
       }
       if (other.LocationId.Length != 0) {
         LocationId = other.LocationId;
@@ -3513,10 +3483,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 18: {
-            OrganizationId = input.ReadString();
-            break;
-          }
-          case 26: {
             LocationId = input.ReadString();
             break;
           }
@@ -3544,10 +3510,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             break;
           }
           case 18: {
-            OrganizationId = input.ReadString();
-            break;
-          }
-          case 26: {
             LocationId = input.ReadString();
             break;
           }

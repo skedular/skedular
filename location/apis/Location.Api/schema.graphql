@@ -244,7 +244,7 @@ type ResourceDetails {
   color: String
   customTags: [Location_OrganizationTagDetails!]!
   zones: [Location_OrganizationTagDetails!]!
-  OrganizationResourceType: Location_OrganizationResourceTypeDetails!
+  organizationResourceType: Location_OrganizationResourceTypeDetails!
   id: ID!
 }
 

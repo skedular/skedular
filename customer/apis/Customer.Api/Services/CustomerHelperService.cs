@@ -22,8 +22,7 @@ public class CustomerHelperService(
     IContext context,
     ICachedCustomerService cachedCustomerService) : ICustomerHelperService
 {
-    public async Task<Shared.Database.Entities.Customer> GetCustomerAsync(string customerId,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Database.Entities.Customer> GetCustomerAsync(string customerId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
 

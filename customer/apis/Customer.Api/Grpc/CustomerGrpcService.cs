@@ -22,6 +22,7 @@ public class CustomerGrpcService(
     ICustomerSettingsService customerSettingsService,
     ICustomerFeedbackService customerFeedbackService,
     ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
+    ICustomerLocationResourceSettingsService customerLocationResourceSettingsService,
     ICustomerDeskSettingsService customerDeskSettingsService,
     ICustomerRoomSettingsService customerRoomSettingsService,
     IMapper mapper,
@@ -144,7 +145,7 @@ public class CustomerGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> DismissPreferredLocationOnboardingSetup(
-        DismissDefaultLocationOnboardingSetupInput request,
+        DismissPreferredLocationOnboardingSetupInput request,
         ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -325,6 +326,32 @@ public class CustomerGrpcService(
         return mapper.MapToGrpcResponse(
             await customerOrganizationTagSettingsService.RemoveCustomerPreferredOrganizationTagAsync(
                 request.OrganizationTagId,
+                null,
+                context.CancellationToken));
+    }
+
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddPreferredLocationResource(
+        AddPreferredLocationResourceInput request,
+        ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(
+            await customerLocationResourceSettingsService.AddCustomerPreferredLocationResourceAsync(
+                request.LocationResourceId,
+                null,
+                context.CancellationToken));
+    }
+
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemovePreferredLocationResource(
+        RemovePreferredLocationResourceInput request,
+        ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(
+            await customerLocationResourceSettingsService.RemoveCustomerPreferredLocationResourceAsync(
+                request.LocationResourceId,
                 null,
                 context.CancellationToken));
     }

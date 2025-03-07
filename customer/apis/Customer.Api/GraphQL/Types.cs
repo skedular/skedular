@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Customer.Shared.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
@@ -166,6 +167,10 @@ public class CustomerDetails : Node
     [GraphQLName("preferredTeams")] public CustomerTeamDetails[] PreferredTeams { get; set; } = [];
     [GraphQLName("preferredZones")] public CustomerOrganizationTagDetails[] PreferredZones { get; set; } = [];
     [GraphQLName("preferredCustomTags")] public CustomerOrganizationTagDetails[] PreferredCustomTags { get; set; } = [];
+
+    [GraphQLName("preferredLocationResources")]
+    public CustomerLocationResourceDetails[] PreferredLocationResources { get; set; } = [];
+
     [GraphQLName("preferredDesks")] public CustomerDeskDetails[] PreferredDesks { get; set; } = [];
     [GraphQLName("preferredRooms")] public CustomerRoomDetails[] PreferredRooms { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
@@ -320,4 +325,37 @@ public class UpdateCustomerDetailsInput
     [GraphQLName("middleName")] public string? MiddleName { get; set; }
     [GraphQLName("familyName")] public string? FamilyName { get; set; }
     [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
+}
+
+[GraphQLName("AddCustomerPreferredLocationResourceInput")]
+public class AddCustomerPreferredLocationResourceInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("locationResourceId")] public required string LocationResourceId { get; set; }
+}
+
+[GraphQLName("RemoveCustomerPreferredLocationResourceInput")]
+public class RemoveCustomerPreferredLocationResourceInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("locationResourceId")] public required string LocationResourceId { get; set; }
+}
+
+[GraphQLName("CustomerLocationResourceDetails")]
+public class CustomerLocationResourceDetails
+{
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("name")] public string? Name { get; set; }
+
+    [GraphQLName("organizationResourceType")]
+    public OrganizationResourceTypeDetails OrganizationResourceType { get; set; }
+}
+
+[GraphQLName("Customer_OrganizationResourceTypeDetails")]
+public class OrganizationResourceTypeDetails
+{
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("name")] public string? Name { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+    [GraphQLName("systemType")] public OrganizationResourceTypeSystemType? SystemType { get; set; }
 }

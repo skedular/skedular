@@ -20,9 +20,9 @@ public static class LocationActionTypes
 {
     public const string Locations = "Locations";
     public const string AddLocation = "AddLocation";
-    public const string DismissSetupDefaultLocation = "DismissSetupDefaultLocation";
-    public const string SetAsDefaultLocation = "SetAsDefaultLocation";
-    public const string ClearDefaultLocation = "ClearDefaultLocation";
+    public const string DismissSetupPreferredLocation = "DismissSetupPreferredLocation";
+    public const string AddAsPreferredLocation = "AddAsPreferredLocation";
+    public const string RemovePreferredLocation = "RemovePreferredLocation";
     public const string EditLocation = "EditLocation";
     public const string RemoveLocation = "RemoveLocation";
     public const string ActionsMenu = "Location_ActionsMenu";
@@ -35,8 +35,8 @@ public static class TeamActionTypes
 {
     public const string Teams = "Teams";
     public const string AddTeam = "AddTeam";
-    public const string SetAsDefaultTeam = "SetAsDefaultTeam";
-    public const string ClearDefaultTeam = "ClearDefaultTeam";
+    public const string AddAsPreferredTeam = "SetAsPreferredTeam";
+    public const string RemovePreferredTeam = "ClearPreferredTeam";
     public const string EditTeam = "EditTeam";
     public const string RemoveTeam = "RemoveTeam";
     public const string ActionsMenu = "Team_ActionsMenu";
