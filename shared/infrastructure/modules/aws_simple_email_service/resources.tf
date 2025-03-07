@@ -23,7 +23,7 @@ data "cloudflare_zone" "default" {
 resource "cloudflare_record" "dmarc" {
   zone_id = data.cloudflare_zone.default.id
   name    = "_dmarc.${aws_ses_domain_identity.default.domain}"
-  content = "\"v=DMARC1; p=none;\""
+  content = "\"v=DMARC1; p=none; rua=mailto:dmarc-reports@${var.cloudflare_domain}; ruf=mailto:dmarc-failures@${var.cloudflare_domain}; aspf=r; sp=none;\""
   type    = "TXT"
   proxied = false
   ttl     = 600

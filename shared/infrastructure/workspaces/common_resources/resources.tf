@@ -168,7 +168,7 @@ resource "cloudflare_record" "public_website_azure_custom_domain" {
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.public_website.id
   name    = "@"
-  content = "MS=ms14170435"
+  content = "\"MS=ms14170435\""
   type    = "TXT"
   proxied = false
   ttl     = 3600
@@ -178,7 +178,7 @@ resource "cloudflare_record" "webapp_azure_custom_domain" {
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.webapp.id
   name    = "@"
-  content = "MS=ms29548806"
+  content = "\"MS=ms29548806\""
   type    = "TXT"
   proxied = false
   ttl     = 3600
@@ -210,7 +210,7 @@ resource "cloudflare_record" "public_website_mx_forward_3" {
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.public_website.id
   name    = "@"
-  content = "forward-email=morteza.alizadeh@gmail.com"
+  content = "\"forward-email=morteza.alizadeh@gmail.com\""
   type    = "TXT"
   proxied = false
   ttl     = 3600
@@ -242,7 +242,7 @@ resource "cloudflare_record" "webapp_mx_forward_3" {
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.webapp.id
   name    = "@"
-  content = "forward-email=morteza.alizadeh@gmail.com"
+  content = "\"forward-email=morteza.alizadeh@gmail.com\""
   type    = "TXT"
   proxied = false
   ttl     = 3600
@@ -252,7 +252,7 @@ resource "cloudflare_record" "public_website_gmail_aws_ses_spf" {
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.public_website.id
   name    = "@"
-  content = "v=spf1 include:_spf.google.com include:amazonses.com ~all"
+  content = "\"v=spf1 include:_spf.google.com include:amazonses.com ~all\""
   type    = "TXT"
   proxied = false
   ttl     = 3600
@@ -262,7 +262,17 @@ resource "cloudflare_record" "webapp_gmail_aws_ses_spf" {
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.webapp.id
   name    = "@"
-  content = "v=spf1 include:_spf.google.com include:amazonses.com ~all"
+  content = "\"v=spf1 include:_spf.google.com include:amazonses.com ~all\""
+  type    = "TXT"
+  proxied = false
+  ttl     = 3600
+}
+
+resource "cloudflare_record" "public_website_gmail_aws_ses_dmarc" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.public_website.id
+  name    = "_dmarc"
+  content = "\"v=DMARC1; p=none; rua=mailto:dmarc-reports@${module.common.cloudflare_public_website_domain_name}; ruf=mailto:dmarc-failures@${module.common.cloudflare_public_website_domain_name}; aspf=r; sp=none;\""
   type    = "TXT"
   proxied = false
   ttl     = 3600
