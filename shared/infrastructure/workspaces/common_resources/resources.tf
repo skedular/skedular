@@ -248,25 +248,25 @@ resource "cloudflare_record" "webapp_mx_forward_3" {
   ttl     = 3600
 }
 
-resource "cloudflare_record" "public_website_gmail_aws_ses_spf" {
-  count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
-  name    = "@"
-  content = "\"v=spf1 include:_spf.google.com include:amazonses.com ~all\""
-  type    = "TXT"
-  proxied = false
-  ttl     = 3600
-}
+# resource "cloudflare_record" "public_website_gmail_aws_ses_spf" {
+#   count   = local.is_staging ? 0 : 1
+#   zone_id = data.cloudflare_zone.public_website.id
+#   name    = "@"
+#   content = "\"v=spf1 include:_spf.google.com include:amazonses.com ~all\""
+#   type    = "TXT"
+#   proxied = false
+#   ttl     = 3600
+# }
 
-resource "cloudflare_record" "webapp_gmail_aws_ses_spf" {
-  count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.webapp.id
-  name    = "@"
-  content = "\"v=spf1 include:_spf.google.com include:amazonses.com ~all\""
-  type    = "TXT"
-  proxied = false
-  ttl     = 3600
-}
+# resource "cloudflare_record" "webapp_gmail_aws_ses_spf" {
+#   count   = local.is_staging ? 0 : 1
+#   zone_id = data.cloudflare_zone.webapp.id
+#   name    = "@"
+#   content = "\"v=spf1 include:_spf.google.com include:amazonses.com ~all\""
+#   type    = "TXT"
+#   proxied = false
+#   ttl     = 3600
+# }
 
 resource "cloudflare_record" "public_website_gmail_aws_ses_dmarc" {
   count   = local.is_staging ? 0 : 1
