@@ -48,7 +48,7 @@ public class BuiltInTagsSyncJob(IServiceProvider serviceProvider, ILogger<BuiltI
                     }
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
+                await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
             }
             catch (OperationCanceledException)
             {

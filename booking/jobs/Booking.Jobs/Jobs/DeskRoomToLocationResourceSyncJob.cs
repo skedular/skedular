@@ -143,7 +143,7 @@ public class DeskRoomToLocationResourceSyncJob(
                     }
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
+                await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
             }
             catch (OperationCanceledException)
             {
