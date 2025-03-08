@@ -77,7 +77,6 @@ public class ResourceService(
         ArgumentException.ThrowIfNullOrWhiteSpace(resource.Location.Id);
         ArgumentNullException.ThrowIfNull(resource.Location.Organization);
         ArgumentException.ThrowIfNullOrWhiteSpace(resource.Location.Organization.Id);
-        ArgumentException.ThrowIfNullOrWhiteSpace(resource.OrganizationResourceType.Id);
 
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
@@ -122,8 +121,7 @@ public class ResourceService(
                     Criteria = query =>
                         !query.DeletedAt.HasValue &&
                         query.Location.Id == resource.Location.Id &&
-                        EF.Functions.ILike(query.Name, resource.Name) &&
-                        query.OrganizationResourceType.Id == resource.OrganizationResourceType.Id
+                        EF.Functions.ILike(query.Name, resource.Name)
                 })
             .AnyAsync(cancellationToken);
         if (matchingResourceFound)
@@ -137,27 +135,14 @@ public class ResourceService(
                 new Specification<OrganizationTag>
                 {
                     Criteria = query => !query.DeletedAt.HasValue &&
-                                        resource.CustomTags.Concat(resource.Zones).Select(item => item.Id).Contains(query.Id) &&
+                                        resource.Tags.Select(item => item.Id).Contains(query.Id) &&
                                         query.Organization.Id == existingLocation.Organization.Id &&
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        var organizationResourceType =
-            await repositoryFactory.OrganizationResourceTypeRepository.GetByIdAsync(resource.OrganizationResourceType.Id, cancellationToken);
-        if (organizationResourceType is null)
-        {
-            throw new OrganizationResourceTypeNotFound();
-        }
-
-        if (organizationResourceType.Organization is null || organizationResourceType.Organization.Id != resource.Location.Organization.Id)
-        {
-            throw new Unauthorized();
-        }
-
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var mappedResource = mapper.MapTo(repositoryFactory.ResourceRepository.Add(
-            mapper.MapTo(resource, existingLocation, organizationTags, organizationResourceType)));
+        var mappedResource = mapper.MapTo(repositoryFactory.ResourceRepository.Add(mapper.MapTo(resource, existingLocation, organizationTags)));
         await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -422,17 +407,14 @@ public class ResourceService(
 
         var resourceId = resource.Id;
         var resourceName = resource.Name;
-        var customTags = resource.CustomTags;
-        var zones = resource.Zones;
+        var tags = resource.Tags;
         var locationId = existingResource.Location.Id;
-        var organizationResourceTypeId = existingResource.OrganizationResourceType.Id;
         var matchingResourceFound = await repositoryFactory.ResourceRepository.Query(
             new Specification<Shared.Database.Entities.Resource>
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
                                     query.Location.Id == locationId &&
                                     EF.Functions.ILike(query.Name, resourceName) &&
-                                    query.OrganizationResourceType.Id == organizationResourceTypeId &&
                                     query.Id != resourceId
             }).AnyAsync(cancellationToken);
         if (matchingResourceFound)
@@ -446,28 +428,15 @@ public class ResourceService(
                 new Specification<OrganizationTag>
                 {
                     Criteria = query => !query.DeletedAt.HasValue &&
-                                        customTags.Concat(zones).Select(item => item.Id).Contains(query.Id) &&
+                                        tags.Select(item => item.Id).Contains(query.Id) &&
                                         query.Organization.Id == existingLocation.Organization.Id &&
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
-        var organizationResourceType =
-            await repositoryFactory.OrganizationResourceTypeRepository.GetByIdAsync(resource.OrganizationResourceType.Id, cancellationToken);
-        if (organizationResourceType is null)
-        {
-            throw new OrganizationResourceTypeNotFound();
-        }
-
-        if (organizationResourceType.Organization is null || organizationResourceType.Organization.Id != resource.Location.Organization.Id)
-        {
-            throw new Unauthorized();
-        }
-
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         resource = mapper.MapTo(
-            repositoryFactory.ResourceRepository.Update(
-                mapper.MergeTo(resource, existingResource, existingLocation, organizationTags, organizationResourceType)),
+            repositoryFactory.ResourceRepository.Update(mapper.MergeTo(resource, existingResource, existingLocation, organizationTags)),
             mapper.MapTo(existingLocation));
 
         await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);

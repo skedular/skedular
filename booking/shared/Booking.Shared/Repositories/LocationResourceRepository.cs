@@ -8,12 +8,7 @@ namespace Booking.Shared.Repositories;
 
 public interface ILocationResourceRepository : IRepository<LocationResource>
 {
-    Task<LocationResource> UpsertNakedAsync(
-        string id,
-        Location? location,
-        OrganizationResourceType organizationResourceType,
-        CancellationToken cancellationToken);
-
+    Task<LocationResource> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken);
     Task<LocationResource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     LocationResource Add(LocationResource locationResource);
     LocationResource Update(LocationResource locationResource);
@@ -25,13 +20,9 @@ public interface ILocationResourceRepository : IRepository<LocationResource>
 public class LocationResourceRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, LocationResource>(dbContext, timeProvider), ILocationResourceRepository
 {
-    public async Task<LocationResource> UpsertNakedAsync(
-        string id,
-        Location? location,
-        OrganizationResourceType organizationResourceType,
-        CancellationToken cancellationToken)
+    public async Task<LocationResource> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken)
     {
-        await UpsertNakedAsync<Location, OrganizationResourceType>(id, location, organizationResourceType, cancellationToken);
+        await UpsertNakedAsync<Location>(id, location, cancellationToken);
 
         return (await GetByIdAsync(id, false, cancellationToken))!;
     }

@@ -2,19 +2,13 @@ using Enterprise.Shared.Pagination;
 
 namespace Location.Shared.Models;
 
-public class LocationSearchCriteria(
-    string? organizationId,
-    string[]? locationIds,
-    string? nameContains,
-    string[] zoneIds,
-    string[] customTagIds)
+public class LocationSearchCriteria(string? organizationId, string[]? locationIds, string? nameContains, ICollection<string> tagIds)
 {
     public string? CustomerId { get; set; }
     public string? OrganizationId { get; } = organizationId;
     public string[]? LocationIds { get; } = locationIds;
     public string? NameContains { get; } = nameContains;
-    public string[] ZoneIds { get; set; } = zoneIds;
-    public string[] CustomTagIds { get; set; } = customTagIds;
+    public ICollection<string> TagIds { get; set; } = tagIds;
 }
 
 public record LocationOrder(OrderDirection Direction, LocationOrderField Field);

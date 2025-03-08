@@ -99,8 +99,10 @@ public class TagService(
 
         var tagType = tag.Type switch
         {
-            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
+            OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
+            OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -278,8 +280,10 @@ public class TagService(
         var tagName = tag.Name;
         var tagType = tag.Type switch
         {
-            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
+            OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
+            OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
             _ => throw new ArgumentOutOfRangeException()
         };
         var organizationId = existingTag.Organization.Id;

@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using Customer.Shared.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
@@ -346,16 +345,4 @@ public class CustomerLocationResourceDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
-
-    [GraphQLName("organizationResourceType")]
-    public OrganizationResourceTypeDetails OrganizationResourceType { get; set; }
-}
-
-[GraphQLName("Customer_OrganizationResourceTypeDetails")]
-public class OrganizationResourceTypeDetails
-{
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
-    [GraphQLName("name")] public string? Name { get; set; }
-    [GraphQLName("color")] public string? Color { get; set; }
-    [GraphQLName("systemType")] public OrganizationResourceTypeSystemType? SystemType { get; set; }
 }

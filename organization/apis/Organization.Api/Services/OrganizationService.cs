@@ -18,8 +18,8 @@ using Customer = Organization.Shared.Models.Customer;
 using IndustrySubCategory = Organization.Shared.Database.Entities.IndustrySubCategory;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
+using Tag = Organization.Shared.Database.Entities.Tag;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
-using ResourceType = Organization.Shared.Database.Entities.ResourceType;
 
 namespace Organization.Api.Services;
 
@@ -141,31 +141,30 @@ public class OrganizationService(
             UnitPrice = finalOfferingCode.GetOffering().UnitPrice
         };
 
-        var systemTypeResourceTypes = new List<ResourceType>
-        {
-            new()
-            {
-                Id = randomHelper.Generate(),
-                CreatedAt = now,
-                Organization = organizationEntity,
-                Name = "Desk",
-                SystemType = OrganizationResourceTypeSystemTypeConstants.Desk
-            },
-            new()
-            {
-                Id = randomHelper.Generate(),
-                CreatedAt = now,
-                Organization = organizationEntity,
-                Name = "Room",
-                SystemType = OrganizationResourceTypeSystemTypeConstants.Room
-            }
-        };
-
         organizationEntity.HasAttachedPaymentMethod = false;
         organizationEntity.OrganizationMembers = organizationMembers;
         organizationEntity.OrganizationOfferings = [organizationOffering];
-        organizationEntity.ResourceTypes = systemTypeResourceTypes;
         organizationEntity = repositoryFactory.OrganizationRepository.Add(organizationEntity);
+
+        repositoryFactory.TagRepository.Add(
+            new Tag
+            {
+                Id = randomHelper.Generate(),
+                Name = "Desk",
+                Type = OrganizationTagTypeConstants.Desk,
+                Color = null,
+                Organization = organizationEntity
+            });
+
+        repositoryFactory.TagRepository.Add(
+            new Tag
+            {
+                Id = randomHelper.Generate(),
+                Name = "Room",
+                Type = OrganizationTagTypeConstants.Room,
+                Color = null,
+                Organization = organizationEntity
+            });
 
         repositoryFactory.OrganizationMemberRepository.AddRange(organizationMembers);
         organization = mapper.MapTo(organizationEntity);

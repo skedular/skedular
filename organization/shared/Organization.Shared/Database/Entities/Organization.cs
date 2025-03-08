@@ -29,7 +29,6 @@ public class Organization : EntityBaseWithDeleted
     public virtual ICollection<AzureTenant> AzureTenants { get; set; } = [];
     public virtual ICollection<OrganizationSsoSetting> OrganizationSsoSettings { get; set; } = [];
     public virtual ICollection<Tag> Tags { get; set; } = [];
-    public virtual ICollection<ResourceType> ResourceTypes { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

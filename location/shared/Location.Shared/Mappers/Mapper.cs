@@ -49,12 +49,10 @@ public class Mapper : IMapper
                 Name = item.Name.ToSafeString(),
                 Inactive = item.Inactive,
                 RequireBookingApproval = item.RequireBookingApproval,
-                Color = item.Color.ToSafeString(),
-                OrganizationResourceTypeId = item.OrganizationResourceType.Id
+                Color = item.Color.ToSafeString()
             };
 
-            resource.CustomTagIds.AddRange(item.CustomTags.Select(tag => tag.Id));
-            resource.ZoneIds.AddRange(item.Zones.Select(tag => tag.Id));
+            resource.TagIds.AddRange(item.Tags.Select(tag => tag.Id));
 
             return resource;
         }));
@@ -70,8 +68,7 @@ public class Mapper : IMapper
                 Color = item.Color.ToSafeString()
             };
 
-            desk.CustomTagIds.AddRange(item.CustomTags.Select(tag => tag.Id));
-            desk.ZoneIds.AddRange(item.Zones.Select(tag => tag.Id));
+            desk.TagIds.AddRange(item.Tags.Select(tag => tag.Id));
 
             return desk;
         }));
@@ -87,8 +84,7 @@ public class Mapper : IMapper
                 Color = item.Color.ToSafeString()
             };
 
-            room.CustomTagIds.AddRange(item.CustomTags.Select(tag => tag.Id));
-            room.ZoneIds.AddRange(item.Zones.Select(tag => tag.Id));
+            room.TagIds.AddRange(item.Tags.Select(tag => tag.Id));
 
             return room;
         }));

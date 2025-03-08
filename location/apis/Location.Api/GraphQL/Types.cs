@@ -209,15 +209,6 @@ public class OrganizationTagDetails
     [GraphQLName("color")] public string? Color { get; set; }
 }
 
-[GraphQLName("Location_OrganizationResourceTypeDetails")]
-public class OrganizationResourceTypeDetails
-{
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
-    [GraphQLName("name")] public string? Name { get; set; }
-    [GraphQLName("color")] public string? Color { get; set; }
-    [GraphQLName("systemType")] public OrganizationResourceTypeSystemType? SystemType { get; set; }
-}
-
 [GraphQLName("LocationWhereInput")]
 public class LocationWhereInput
 {
@@ -605,10 +596,6 @@ public class ResourceDetails : Node
     [GraphQLName("color")] public string? Color { get; set; }
     [GraphQLName("customTags")] public OrganizationTagDetails[] CustomTags { get; set; } = [];
     [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
-
-    [GraphQLName("organizationResourceType")]
-    public OrganizationResourceTypeDetails OrganizationResourceType { get; set; }
-
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 

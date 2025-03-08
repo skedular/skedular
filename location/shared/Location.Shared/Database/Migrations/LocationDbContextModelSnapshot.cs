@@ -779,58 +779,6 @@ namespace Location.Shared.Database.Migrations
                     b.ToTable("OrganizationMember");
                 });
 
-            modelBuilder.Entity("Location.Shared.Database.Entities.OrganizationResourceType", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Color")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("OrganizationId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("SystemType")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("SystemType");
-
-                    b.ToTable("OrganizationResourceType");
-                });
-
             modelBuilder.Entity("Location.Shared.Database.Entities.OrganizationTag", b =>
                 {
                     b.Property<string>("Id")
@@ -915,10 +863,6 @@ namespace Location.Shared.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<string>("OrganizationResourceTypeId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
                     b.Property<bool>("RequireBookingApproval")
                         .HasColumnType("boolean");
 
@@ -937,8 +881,6 @@ namespace Location.Shared.Database.Migrations
                     b.HasIndex("LocationId");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("OrganizationResourceTypeId");
 
                     b.HasIndex("RequireBookingApproval");
 
@@ -1208,15 +1150,6 @@ namespace Location.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Location.Shared.Database.Entities.OrganizationResourceType", b =>
-                {
-                    b.HasOne("Location.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("ResourceTypes")
-                        .HasForeignKey("OrganizationId");
-
-                    b.Navigation("Organization");
-                });
-
             modelBuilder.Entity("Location.Shared.Database.Entities.OrganizationTag", b =>
                 {
                     b.HasOne("Location.Shared.Database.Entities.Organization", "Organization")
@@ -1236,15 +1169,7 @@ namespace Location.Shared.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Location.Shared.Database.Entities.OrganizationResourceType", "OrganizationResourceType")
-                        .WithMany("Resources")
-                        .HasForeignKey("OrganizationResourceTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Location");
-
-                    b.Navigation("OrganizationResourceType");
                 });
 
             modelBuilder.Entity("Location.Shared.Database.Entities.Room", b =>
@@ -1332,14 +1257,7 @@ namespace Location.Shared.Database.Migrations
 
                     b.Navigation("OrganizationMembers");
 
-                    b.Navigation("ResourceTypes");
-
                     b.Navigation("Tags");
-                });
-
-            modelBuilder.Entity("Location.Shared.Database.Entities.OrganizationResourceType", b =>
-                {
-                    b.Navigation("Resources");
                 });
 #pragma warning restore 612, 618
         }

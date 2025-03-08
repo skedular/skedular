@@ -12,7 +12,6 @@ using Room = Customer.Shared.Models.Room;
 using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
 using Organization = Customer.Shared.Models.Organization;
-using OrganizationResourceType = Customer.Shared.Models.OrganizationResourceType;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
 using Team = Customer.Shared.Models.Team;
 
@@ -167,10 +166,7 @@ public class Mapper(IContext context) : IMapper
                     .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color })
                     .ToArray(),
             PreferredLocationResources = src.PreferredLocationResources
-                .Select(item => new CustomerLocationResourceDetails
-                {
-                    UniqueId = item.Id, Name = item.Name, OrganizationResourceType = MapTo(item.OrganizationResourceType)
-                })
+                .Select(item => new CustomerLocationResourceDetails { UniqueId = item.Id, Name = item.Name })
                 .ToArray(),
             PreferredDesks = src.PreferredDesks.Select(item => new CustomerDeskDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
             PreferredRooms = src.PreferredRooms.Select(item => new CustomerRoomDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
@@ -320,25 +316,7 @@ public class Mapper(IContext context) : IMapper
                     })
                 .ToList(),
             PreferredLocationResources = src.PreferredLocationResources
-                .Select(item => new LocationResource
-                {
-                    Id = item.Id,
-                    Location = new Location { Id = item.Location.Id },
-                    OrganizationResourceType = new OrganizationResourceType
-                    {
-                        Id = item.OrganizationResourceType.Id,
-                        Name = item.OrganizationResourceType.Name,
-                        Color = item.OrganizationResourceType.Color,
-                        SystemType = string.IsNullOrWhiteSpace(item.OrganizationResourceType.SystemType)
-                            ? null
-                            : item.OrganizationResourceType.SystemType switch
-                            {
-                                OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
-                                OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
-                                _ => throw new ArgumentOutOfRangeException()
-                            }
-                    }
-                })
+                .Select(item => new LocationResource { Id = item.Id, Location = new Location { Id = item.Location.Id } })
                 .ToList(),
             PreferredDesks = src.PreferredDesks
                 .Select(item => new Desk { Id = item.Id, Location = new Location { Id = item.Location.Id } })
@@ -394,7 +372,7 @@ public class Mapper(IContext context) : IMapper
             {
                 Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
             }));
-        
+
         customer.PreferredLocations.AddRange(src.PreferredLocations.Select(
             item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
             {
@@ -404,7 +382,7 @@ public class Mapper(IContext context) : IMapper
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
                     : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
-        
+
         customer.PreferredTeams.AddRange(src.PreferredTeams.Select(
             item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Team
             {
@@ -414,27 +392,15 @@ public class Mapper(IContext context) : IMapper
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
                     : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
-        
+
         customer.PreferredLocationResources.AddRange(src.PreferredLocationResources.Select(
             item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.LocationResource
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
-                Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id },
-                OrganizationResourceType = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.OrganizationResourceType
-                {
-                    Id = item.OrganizationResourceType.Id,
-                    Name = item.OrganizationResourceType.Name.ToSafeString(),
-                    Color = item.OrganizationResourceType.Color.ToSafeString(),
-                    SystemType = item.OrganizationResourceType.SystemType is null ? string.Empty : item.OrganizationResourceType.SystemType switch
-                    {
-                        OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
-                        OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
-                        _ => throw new ArgumentOutOfRangeException()
-                    }
-                }
+                Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id }
             }));
-        
+
         customer.PreferredDesks.AddRange(src.PreferredDesks.Select(
             item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Desk
             {
@@ -442,7 +408,7 @@ public class Mapper(IContext context) : IMapper
                 Name = item.Name.ToSafeString(),
                 Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id }
             }));
-        
+
         customer.PreferredRooms.AddRange(src.PreferredRooms.Select(
             item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Room
             {
@@ -450,7 +416,7 @@ public class Mapper(IContext context) : IMapper
                 Name = item.Name.ToSafeString(),
                 Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id }
             }));
-        
+
         customer.PreferredOrganizationTags.AddRange(src.PreferredOrganizationTags.Select(
             item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.OrganizationTag
             {
@@ -458,14 +424,16 @@ public class Mapper(IContext context) : IMapper
                 Name = item.Name.ToSafeString(),
                 Type = item.Type switch
                 {
-                    OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                     OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+                    OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
+                    OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
+                    OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 Color = item.Color.ToSafeString(),
                 Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
-        
+
         return customer;
     }
 
@@ -617,8 +585,10 @@ public class Mapper(IContext context) : IMapper
                 Name = src.Name,
                 Type = src.Type switch
                 {
-                    OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                     OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                    OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
+                    OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
+                    OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 Color = src.Color,
@@ -639,21 +609,7 @@ public class Mapper(IContext context) : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Location = new Location { Id = src.Location.Id },
-                OrganizationResourceType = new OrganizationResourceType
-                {
-                    Id = src.OrganizationResourceType.Id,
-                    Name = src.OrganizationResourceType.Name,
-                    Color = src.OrganizationResourceType.Color,
-                    SystemType = string.IsNullOrWhiteSpace(src.OrganizationResourceType.SystemType)
-                        ? null
-                        : src.OrganizationResourceType.SystemType switch
-                        {
-                            OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
-                            OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
-                            _ => throw new ArgumentOutOfRangeException()
-                        }
-                }
+                Location = new Location { Id = src.Location.Id }
             };
 
     private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk?>? src) =>
@@ -711,7 +667,4 @@ public class Mapper(IContext context) : IMapper
 
     private static CustomerIdentity MapTo(Shared.Models.Identity src) =>
         new() { Id = src.Id, Email = src.Email, Verified = src.EmailVerified ?? false };
-
-    private static OrganizationResourceTypeDetails MapTo(OrganizationResourceType src) =>
-        new() { UniqueId = src.Id, Name = src.Name, Color = src.Name, SystemType = src.SystemType };
 }

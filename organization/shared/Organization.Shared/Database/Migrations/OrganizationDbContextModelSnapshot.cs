@@ -2258,63 +2258,6 @@ namespace Organization.Shared.Database.Migrations
                     b.ToTable("OrganizationSsoSetting");
                 });
 
-            modelBuilder.Entity("Organization.Shared.Database.Entities.ResourceType", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Color")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("SystemType")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("Description");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("SystemType");
-
-                    b.ToTable("ResourceType");
-                });
-
             modelBuilder.Entity("Organization.Shared.Database.Entities.Tag", b =>
                 {
                     b.Property<string>("Id")
@@ -2644,17 +2587,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Organization.Shared.Database.Entities.ResourceType", b =>
-                {
-                    b.HasOne("Organization.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("ResourceTypes")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Organization");
-                });
-
             modelBuilder.Entity("Organization.Shared.Database.Entities.Tag", b =>
                 {
                     b.HasOne("Organization.Shared.Database.Entities.Organization", "Organization")
@@ -2715,8 +2647,6 @@ namespace Organization.Shared.Database.Migrations
                     b.Navigation("OrganizationOfferings");
 
                     b.Navigation("OrganizationSsoSettings");
-
-                    b.Navigation("ResourceTypes");
 
                     b.Navigation("Tags");
 

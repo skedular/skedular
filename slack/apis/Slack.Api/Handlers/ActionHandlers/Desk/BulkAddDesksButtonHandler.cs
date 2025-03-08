@@ -306,7 +306,7 @@ public class BulkAddDesksButtonHandler(
             {
                 if (customTags is StaticMultiSelectValue value)
                 {
-                    bulkAddDesksInput.CustomTagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    bulkAddDesksInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {
@@ -325,7 +325,7 @@ public class BulkAddDesksButtonHandler(
             {
                 if (zones is StaticMultiSelectValue value)
                 {
-                    bulkAddDesksInput.ZoneIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    bulkAddDesksInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {

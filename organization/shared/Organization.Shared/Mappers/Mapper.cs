@@ -7,7 +7,6 @@ using Organization.Shared.Models;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
-using ResourceType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ResourceType;
 
 namespace Organization.Shared.Mappers;
 
@@ -52,27 +51,13 @@ public class Mapper : IMapper
             Description = item.Description.ToSafeString(),
             Type = item.Type switch
             {
-                OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                 OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+                OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
+                OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
+                OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Color = item.Color.ToSafeString()
-        }));
-
-        organization.ResourceTypes.AddRange(src.ResourceTypes.Select(item => new ResourceType
-        {
-            Id = item.Id,
-            Name = item.Name.ToSafeString(),
-            Description = item.Description.ToSafeString(),
-            Color = item.Color.ToSafeString(),
-            SystemType = item.SystemType is null
-                ? string.Empty
-                : item.SystemType switch
-                {
-                    OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
-                    OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
-                    _ => throw new ArgumentOutOfRangeException()
-                }
         }));
 
         organization.Offering.ActiveCustomerIds.AddRange(

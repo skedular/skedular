@@ -46,13 +46,11 @@ internal static class LocationExtensions
             .ThenInclude(query => query.Customer)
             .Include(query => query.PhysicalAddress)
             .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
-            .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationResourceType)
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Desks.Where(desk => includeDeletedDesks || !desk.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.Rooms.Where(room => includeDeletedRooms || !room.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer);
 
@@ -94,26 +92,15 @@ internal static class LocationExtensions
             query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
         }
 
-        if (searchCriteria.ZoneIds.Length != 0)
+        if (searchCriteria.TagIds.Count != 0)
         {
-            searchCriteria.ZoneIds.ForEach(id =>
+            searchCriteria.TagIds.ForEach(id =>
                 query = query.Where(item =>
                     item.Desks.Any(desk => !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
 
-            searchCriteria.ZoneIds.ForEach(id =>
-                query = query.Where(item =>
-                    item.Rooms.Any(room => !room.DeletedAt.HasValue && room.OrganizationTags.Select(tag => tag.Id).Contains(id))));
-        }
-
-        if (searchCriteria.CustomTagIds.Length != 0)
-        {
-            searchCriteria.CustomTagIds.ForEach(id =>
-                query = query.Where(item =>
-                    item.Desks.Any(desk => !desk.DeletedAt.HasValue && desk.OrganizationTags.Select(tag => tag.Id).Contains(id))));
-
-            searchCriteria.CustomTagIds.ForEach(id =>
-                query = query.Where(item =>
-                    item.Rooms.Any(room => !room.DeletedAt.HasValue && room.OrganizationTags.Select(tag => tag.Id).Contains(id))));
+            searchCriteria.TagIds.ForEach(id =>
+                query = query
+                    .Where(item => item.Rooms.Any(room => !room.DeletedAt.HasValue && room.OrganizationTags.Select(tag => tag.Id).Contains(id))));
         }
 
         return query;

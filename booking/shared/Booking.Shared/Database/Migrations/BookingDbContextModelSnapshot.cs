@@ -420,10 +420,6 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<string>("OrganizationResourceTypeId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
                     b.Property<bool>("RequireBookingApproval")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -444,8 +440,6 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("LocationId");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("OrganizationResourceTypeId");
 
                     b.HasIndex("RequireBookingApproval");
 
@@ -553,58 +547,6 @@ namespace Booking.Shared.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("OrganizationMember");
-                });
-
-            modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationResourceType", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Color")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("OrganizationId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("SystemType")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("SystemType");
-
-                    b.ToTable("OrganizationResourceType");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationTag", b =>
@@ -1125,15 +1067,7 @@ namespace Booking.Shared.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Booking.Shared.Database.Entities.OrganizationResourceType", "OrganizationResourceType")
-                        .WithMany("LocationResources")
-                        .HasForeignKey("OrganizationResourceTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Location");
-
-                    b.Navigation("OrganizationResourceType");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationMember", b =>
@@ -1151,15 +1085,6 @@ namespace Booking.Shared.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Organization");
-                });
-
-            modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationResourceType", b =>
-                {
-                    b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("ResourceTypes")
-                        .HasForeignKey("OrganizationId");
 
                     b.Navigation("Organization");
                 });
@@ -1413,16 +1338,9 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Navigation("OrganizationMembers");
 
-                    b.Navigation("ResourceTypes");
-
                     b.Navigation("Tags");
 
                     b.Navigation("Teams");
-                });
-
-            modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationResourceType", b =>
-                {
-                    b.Navigation("LocationResources");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Team", b =>

@@ -20,7 +20,7 @@ public interface IDeskRepository : IRepository<Desk>
     void RemoveRange(ICollection<Desk> desks);
     Desk Remove(Desk desk);
 
-    Task<(PaginatedInfo, ICollection<Edge<Desk>>, int )> GetPaginatedDesksAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Desk>>, int)> GetPaginatedDesksAsync(
         PaginationInputParam paginationInputParam,
         DeskSearchCriteria searchCriteria,
         ICollection<DeskOrder> orderByFields,
@@ -32,7 +32,7 @@ internal static class DeskExtensions
     internal static IIncludableQueryable<Desk, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Desk> originalQuery) =>
         originalQuery
             .Include(query => query.Location)
-            .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
+            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
     internal static IQueryable<Desk> AddSearchCriteria(this IQueryable<Desk> query, DeskSearchCriteria searchCriteria)
     {
@@ -43,14 +43,9 @@ internal static class DeskExtensions
             query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
         }
 
-        if (searchCriteria.ZoneIds.Count != 0)
+        if (searchCriteria.TagIds.Count != 0)
         {
-            query = query.Where(item => searchCriteria.ZoneIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
-        }
-
-        if (searchCriteria.CustomTagIds.Count != 0)
-        {
-            query = query.Where(item => searchCriteria.CustomTagIds.All(customTagId => item.OrganizationTags.Any(tag => tag.Id == customTagId)));
+            query = query.Where(item => searchCriteria.TagIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
         }
 
         return query;

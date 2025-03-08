@@ -295,7 +295,6 @@ message LocationResource {
     string id = 1;
     string name = 2;
     Location location = 3;
-    OrganizationResourceType organizationResourceType = 4;
 }
 
 message AddPreferredLocationResourceInput {
@@ -304,11 +303,4 @@ message AddPreferredLocationResourceInput {
 
 message RemovePreferredLocationResourceInput {
     string locationResourceId = 1;
-}
-
-message OrganizationResourceType {
-    string id = 1;
-    string name = 2;
-    string color = 3;
-    string systemType = 4;
 }

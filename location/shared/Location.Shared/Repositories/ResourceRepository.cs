@@ -20,7 +20,7 @@ public interface IResourceRepository : IRepository<Resource>
     void RemoveRange(ICollection<Resource> resources);
     Resource Remove(Resource resource);
 
-    Task<(PaginatedInfo, ICollection<Edge<Resource>>, int )> GetPaginatedResourcesAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
         ICollection<ResourceOrder> orderByFields,
@@ -31,9 +31,8 @@ internal static class ResourceExtensions
 {
     internal static IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Resource> originalQuery) =>
         originalQuery
-            .Include(query => query.OrganizationResourceType)
             .Include(query => query.Location)
-            .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
+            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
     internal static IQueryable<Resource> AddSearchCriteria(this IQueryable<Resource> query, ResourceSearchCriteria searchCriteria)
     {
@@ -44,14 +43,9 @@ internal static class ResourceExtensions
             query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
         }
 
-        if (searchCriteria.ZoneIds.Count != 0)
+        if (searchCriteria.TagIds.Count != 0)
         {
-            query = query.Where(item => searchCriteria.ZoneIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
-        }
-
-        if (searchCriteria.CustomTagIds.Count != 0)
-        {
-            query = query.Where(item => searchCriteria.CustomTagIds.All(customTagId => item.OrganizationTags.Any(tag => tag.Id == customTagId)));
+            query = query.Where(item => searchCriteria.TagIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
         }
 
         return query;

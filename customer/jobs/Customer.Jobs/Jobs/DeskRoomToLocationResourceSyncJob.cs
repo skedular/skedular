@@ -28,13 +28,11 @@ public class DeskRoomToLocationResourceSyncJob(
                     ArgumentNullException.ThrowIfNull(location.Organization);
 
                     var organization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization!.Id, true, true, true, cancellationToken);
+                        await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization!.Id, true, true, cancellationToken);
 
                     ArgumentNullException.ThrowIfNull(organization);
 
-                    var deskResourceType =
-                        organization.ResourceTypes.SingleOrDefault(item => item.SystemType == OrganizationResourceTypeSystemTypeConstants.Desk);
-
+                    var deskResourceType = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Desk);
                     if (deskResourceType is not null)
                     {
                         foreach (var desk in location.Desks)
@@ -54,7 +52,6 @@ public class DeskRoomToLocationResourceSyncJob(
                                     EventRaisedAt = desk.EventRaisedAt,
                                     Name = desk.Name,
                                     Location = location,
-                                    OrganizationResourceType = deskResourceType,
                                     PreferredByCustomers = deskWithBookings.PreferredByCustomers
                                 };
 
@@ -68,12 +65,7 @@ public class DeskRoomToLocationResourceSyncJob(
                                 existingResource.EventRaisedAt = desk.EventRaisedAt;
                                 existingResource.Name = desk.Name;
                                 existingResource.Location = location;
-                                existingResource.OrganizationResourceType = deskResourceType;
-                                existingResource.PreferredByCustomers =
-                                    existingResource.PreferredByCustomers
-                                        .Concat(deskWithBookings.PreferredByCustomers.Where(item =>
-                                            existingResource.PreferredByCustomers.All(preferredByCustomer => preferredByCustomer.Id != item.Id)))
-                                        .ToList();
+                                existingResource.PreferredByCustomers = existingResource.PreferredByCustomers;
 
                                 repositoryFactory.LocationResourceRepository.Update(existingResource);
                             }
@@ -82,9 +74,7 @@ public class DeskRoomToLocationResourceSyncJob(
                         }
                     }
 
-                    var roomResourceType =
-                        organization.ResourceTypes.SingleOrDefault(item => item.SystemType == OrganizationResourceTypeSystemTypeConstants.Room);
-
+                    var roomResourceType = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Room);
                     if (roomResourceType is not null)
                     {
                         foreach (var room in location.Rooms)
@@ -104,7 +94,6 @@ public class DeskRoomToLocationResourceSyncJob(
                                     EventRaisedAt = room.EventRaisedAt,
                                     Name = room.Name,
                                     Location = location,
-                                    OrganizationResourceType = roomResourceType,
                                     PreferredByCustomers = roomWithBookings.PreferredByCustomers
                                 };
 
@@ -118,12 +107,7 @@ public class DeskRoomToLocationResourceSyncJob(
                                 existingResource.EventRaisedAt = room.EventRaisedAt;
                                 existingResource.Name = room.Name;
                                 existingResource.Location = location;
-                                existingResource.OrganizationResourceType = roomResourceType;
-                                existingResource.PreferredByCustomers =
-                                    existingResource.PreferredByCustomers
-                                        .Concat(roomWithBookings.PreferredByCustomers.Where(item =>
-                                            existingResource.PreferredByCustomers.All(preferredByCustomer => preferredByCustomer.Id != item.Id)))
-                                        .ToList();
+                                existingResource.PreferredByCustomers = existingResource.PreferredByCustomers;
 
                                 repositoryFactory.LocationResourceRepository.Update(existingResource);
                             }

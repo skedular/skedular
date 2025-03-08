@@ -20,7 +20,6 @@ public class CustomerDbContext(
     public DbSet<Location> Location { get; set; }
     public DbSet<LocationMember> LocationMember { get; set; }
     public DbSet<Organization> Organization { get; set; }
-    public DbSet<OrganizationResourceType> OrganizationResourceType { get; set; }
     public DbSet<OrganizationTag> OrganizationTag { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<Team> Team { get; set; }

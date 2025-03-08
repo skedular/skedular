@@ -10,7 +10,6 @@ public class LocationResource : ReplicatedModelBaseWithDeleted
     public string? Color { get; set; }
 
     public Location? Location { get; set; }
-    public OrganizationResourceType OrganizationResourceType { get; set; }
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public ICollection<Customer> PreferredByCustomers { get; set; } = [];
 }

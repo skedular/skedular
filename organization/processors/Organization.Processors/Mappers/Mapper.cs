@@ -284,7 +284,6 @@ public class Mapper : IMapper
         organization.Teams = MapTo(src.Teams, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
-        organization.ResourceTypes = MapTo(src.ResourceTypes, organization).ToList();
 
         return organization;
     }
@@ -656,35 +655,13 @@ public class Mapper : IMapper
             Description = src.Description,
             Type = src.Type switch
             {
-                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
+                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
+                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Color = src.Color,
-            Organization = organization
-        };
-
-    private static IEnumerable<ResourceType> MapTo(IEnumerable<Shared.Database.Entities.ResourceType> src, Shared.Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private static ResourceType MapTo(Shared.Database.Entities.ResourceType src, Shared.Models.Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Description = src.Description,
-            Color = src.Color,
-            SystemType = string.IsNullOrWhiteSpace(src.SystemType)
-                ? null
-                : src.SystemType switch
-                {
-                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
-                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
             Organization = organization
         };
 }

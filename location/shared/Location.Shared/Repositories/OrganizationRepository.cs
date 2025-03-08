@@ -13,7 +13,6 @@ public interface IOrganizationRepository : IRepository<Organization>
         string id,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
-        bool includeDeletedOrganizationResourceTypes,
         CancellationToken cancellationToken);
 
     Organization Add(Organization location);
@@ -28,22 +27,20 @@ public class OrganizationRepository(LocationDbContext dbContext, TimeProvider ti
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdAsync(id, true, true, true, cancellationToken))!;
+        return (await GetByIdAsync(id, true, true, cancellationToken))!;
     }
 
     public async Task<Organization?> GetByIdAsync(
         string id,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
-        bool includeDeletedOrganizationResourceTypes,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Include(query => query.OrganizationMembers.Where(organizationMember =>
                 includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query => query.Tags.Where(organizationTag => includeDeletedOrganizationTags || !organizationTag.DeletedAt.HasValue))
-            .Include(query => query.ResourceTypes.Where(resourceType => includeDeletedOrganizationResourceTypes || !resourceType.DeletedAt.HasValue))
+            .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
             .Include(query => query.Locations.Where(location => !location.DeletedAt.HasValue))
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 

@@ -7,7 +7,6 @@ using Google.Protobuf.WellKnownTypes;
 using Organization.Api.GraphQL;
 using Organization.Shared.Models;
 using AddCustomTagInput = Organization.Api.GraphQL.AddCustomTagInput;
-using AddResourceTypeInput = Organization.Api.GraphQL.AddResourceTypeInput;
 using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
@@ -29,8 +28,6 @@ using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 using UpdateCustomTagInput = Organization.Api.GraphQL.UpdateCustomTagInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
-using ResourceType = Organization.Shared.Models.ResourceType;
-using UpdateResourceTypeInput = Organization.Api.GraphQL.UpdateResourceTypeInput;
 
 namespace Organization.Api.Mappers;
 
@@ -111,24 +108,6 @@ public interface IMapper
     Tag MapTo(UpdateZoneInput src);
 
     IEnumerable<string> MapTo(Offering offering);
-
-    ResourceType MapTo(Shared.Database.Entities.ResourceType src);
-    Shared.Database.Entities.ResourceType MapTo(ResourceType src, Shared.Database.Entities.Organization organization);
-
-    Shared.Database.Entities.ResourceType MergeTo(
-        ResourceType src,
-        Shared.Database.Entities.ResourceType dest,
-        Shared.Database.Entities.Organization organization);
-
-    IEnumerable<Edge<ResourceType>> MapTo(IEnumerable<Edge<Shared.Database.Entities.ResourceType>> src, Shared.Models.Organization organization);
-    OrganizationResourceTypeDetails? MapTo(ResourceType? src);
-    OrganizationResourceTypeEdge MapTo(Edge<ResourceType> src);
-    ResourceType MapTo(AddResourceTypeInput src);
-    ResourceType MapTo(UpdateResourceTypeInput src);
-    global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType MapToGrpcResponseResourceType(ResourceType? src);
-    ResourceTypeEdge MapToGrpcResponseResourceType(Edge<ResourceType> src);
-    ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddResourceTypeInput src);
-    ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateResourceTypeInput src);
 }
 
 public class Mapper : IMapper
@@ -162,7 +141,6 @@ public class Mapper : IMapper
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
-        organization.ResourceTypes = MapTo(src.ResourceTypes, organization).ToList();
 
         return organization;
     }
@@ -510,8 +488,10 @@ public class Mapper : IMapper
             Description = src.Description,
             Type = src.Type switch
             {
-                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
+                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
+                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Color = src.Color
@@ -530,8 +510,10 @@ public class Mapper : IMapper
         dest.Description = src.Description;
         dest.Type = src.Type switch
         {
-            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
+            OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
+            OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
             _ => throw new ArgumentOutOfRangeException()
         };
         dest.Color = src.Color;
@@ -594,65 +576,16 @@ public class Mapper : IMapper
                 Description = src.Description,
                 TagType = src.Type switch
                 {
-                    OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                     OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+                    OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
+                    OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
+                    OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
                     _ => throw new ArgumentOutOfRangeException()
                 },
                 Color = src.Color
             };
 
     public OrganizationTagEdge MapTo(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
-
-    public OrganizationResourceTypeDetails? MapTo(ResourceType? src) =>
-        src is null
-            ? null
-            : new OrganizationResourceTypeDetails
-            {
-                Id = src.Id,
-                Name = src.Name,
-                Description = src.Description,
-                Color = src.Color,
-                SystemType = src.SystemType
-            };
-
-    public OrganizationResourceTypeEdge MapTo(Edge<ResourceType> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
-
-    public ResourceType MapTo(AddResourceTypeInput src) =>
-        new()
-        {
-            Id = src.Id.ToSafeString(),
-            Name = src.Name,
-            Description = src.Description,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Color = src.Color
-        };
-
-    public ResourceType MapTo(UpdateResourceTypeInput src) =>
-        new() { Id = src.Id, Name = src.Name, Description = src.Description, Color = src.Color };
-
-    public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType MapToGrpcResponseResourceType(ResourceType? src) =>
-        src is null
-            ? new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType()
-            : new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType
-            {
-                Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color
-            };
-
-    public ResourceTypeEdge MapToGrpcResponseResourceType(Edge<ResourceType> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponseResourceType(src.Node) };
-
-    public ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddResourceTypeInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
-            Color = src.Color,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
-        };
-
-    public ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateResourceTypeInput src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString() };
 
     public CustomTag MapToGrpcResponseCustomTag(Tag? src) =>
         src is null
@@ -704,47 +637,6 @@ public class Mapper : IMapper
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Type = OrganizationTagType.Zone };
 
     public IEnumerable<string> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
-
-    public ResourceType MapTo(Shared.Database.Entities.ResourceType src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Description = src.Description,
-            Color = src.Color,
-            SystemType = src.SystemType is null
-                ? null
-                : src.SystemType switch
-                {
-                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
-                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
-                    _ => throw new ArgumentOutOfRangeException()
-                }
-        };
-
-    public Shared.Database.Entities.ResourceType MapTo(ResourceType src, Shared.Database.Entities.Organization organization) =>
-        MergeTo(src, new Shared.Database.Entities.ResourceType(), organization);
-
-    public Shared.Database.Entities.ResourceType MergeTo(
-        ResourceType src,
-        Shared.Database.Entities.ResourceType dest,
-        Shared.Database.Entities.Organization organization)
-    {
-        dest.Id = src.Id;
-        dest.Name = src.Name;
-        dest.Description = src.Description;
-        dest.Color = src.Color;
-        dest.Organization = organization;
-        return dest;
-    }
-
-    public IEnumerable<Edge<ResourceType>> MapTo(
-        IEnumerable<Edge<Shared.Database.Entities.ResourceType>> src,
-        Shared.Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
 
     private IEnumerable<OrganizationMember> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationMember> src,
@@ -1140,42 +1032,13 @@ public class Mapper : IMapper
             Description = src.Description,
             Type = src.Type switch
             {
-                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
+                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
+                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Color = src.Color,
             Organization = organization
         };
-
-    private static IEnumerable<ResourceType> MapTo(IEnumerable<Shared.Database.Entities.ResourceType> src, Shared.Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private static ResourceType MapTo(Shared.Database.Entities.ResourceType src, Shared.Models.Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Description = src.Description,
-            Color = src.Color,
-            SystemType = string.IsNullOrWhiteSpace(src.SystemType)
-                ? null
-                : src.SystemType switch
-                {
-                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
-                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-            Organization = organization
-        };
-
-    private Edge<ResourceType> MapTo(Edge<Shared.Database.Entities.ResourceType> src, Shared.Models.Organization organization)
-    {
-        var tag = MapTo(src.Node);
-        tag.Organization = organization;
-        return new Edge<ResourceType>(src.Cursor, tag);
-    }
 }

@@ -39,8 +39,7 @@ public static class Extensions
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
             .AddScoped<ITeamRepository, TeamRepository>()
             .AddScoped<ITermsOfUseRepository, TermsOfUseRepository>()
-            .AddScoped<ITagRepository, TagRepository>()
-            .AddScoped<IResourceTypeRepository, ResourceTypeRepository>();
+            .AddScoped<ITagRepository, TagRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services

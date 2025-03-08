@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -137,16 +138,32 @@ public class RoomService(
             throw new RoomWithSameNameExist();
         }
 
-        var organizationTags = existingLocation.Organization is null
-            ? []
-            : await repositoryFactory.OrganizationTagRepository.Query(
+        List<OrganizationTag> organizationTags = [];
+        if (existingLocation.Organization is not null)
+        {
+            organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
                 new Specification<OrganizationTag>
                 {
                     Criteria = query => !query.DeletedAt.HasValue &&
-                                        room.CustomTags.Concat(room.Zones).Select(item => item.Id).Contains(query.Id) &&
+                                        room.Tags.Select(item => item.Id).Contains(query.Id) &&
                                         query.Organization.Id == existingLocation.Organization.Id &&
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
+
+            var roomTag = await repositoryFactory.OrganizationTagRepository.Query(
+                new Specification<OrganizationTag>
+                {
+                    Criteria = query => !query.DeletedAt.HasValue &&
+                                        query.Type == OrganizationTagTypeConstants.Room &&
+                                        query.Organization.Id == existingLocation.Organization.Id &&
+                                        !query.Organization.DeletedAt.HasValue
+                }).FirstOrDefaultAsync(cancellationToken);
+
+            if (roomTag is not null && organizationTags.All(item => item.Id != roomTag.Id))
+            {
+                organizationTags = organizationTags.Concat([roomTag]).ToList();
+            }
+        }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -336,7 +353,6 @@ public class RoomService(
         }
 
         await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
-
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -436,7 +452,6 @@ public class RoomService(
         }
 
         await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
-
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -462,11 +477,7 @@ public class RoomService(
         }
 
         var (paginatedInfo, edges, totalCount) =
-            await repositoryFactory.RoomRepository.GetPaginatedRoomsAsync(
-                paginationInputParam,
-                searchCriteria,
-                orderByFields,
-                cancellationToken);
+            await repositoryFactory.RoomRepository.GetPaginatedRoomsAsync(paginationInputParam, searchCriteria, orderByFields, cancellationToken);
 
         return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(location)).ToList(), totalCount);
     }
@@ -497,8 +508,7 @@ public class RoomService(
 
         var roomId = room.Id;
         var roomName = room.Name;
-        var customTags = room.CustomTags;
-        var zones = room.Zones;
+        var tags = room.Tags;
         var locationId = existingRoom.Location.Id;
         var matchingRoomFound = await repositoryFactory.RoomRepository.Query(
             new Specification<Shared.Database.Entities.Room>
@@ -513,16 +523,32 @@ public class RoomService(
             throw new RoomWithSameNameExist();
         }
 
-        var organizationTags = existingLocation.Organization is null
-            ? []
-            : await repositoryFactory.OrganizationTagRepository.Query(
+        List<OrganizationTag> organizationTags = [];
+        if (existingLocation.Organization is not null)
+        {
+            organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
                 new Specification<OrganizationTag>
                 {
                     Criteria = query => !query.DeletedAt.HasValue &&
-                                        customTags.Concat(zones).Select(item => item.Id).Contains(query.Id) &&
+                                        tags.Select(item => item.Id).Contains(query.Id) &&
                                         query.Organization.Id == existingLocation.Organization.Id &&
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
+
+            var roomTag = await repositoryFactory.OrganizationTagRepository.Query(
+                new Specification<OrganizationTag>
+                {
+                    Criteria = query => !query.DeletedAt.HasValue &&
+                                        query.Type == OrganizationTagTypeConstants.Room &&
+                                        query.Organization.Id == existingLocation.Organization.Id &&
+                                        !query.Organization.DeletedAt.HasValue
+                }).FirstOrDefaultAsync(cancellationToken);
+
+            if (roomTag is not null && organizationTags.All(item => item.Id != roomTag.Id))
+            {
+                organizationTags = organizationTags.Concat([roomTag]).ToList();
+            }
+        }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 

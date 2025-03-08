@@ -76,7 +76,7 @@ public class LocationSubscriber(
     {
         var organization = location.Organization is null
             ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, true, true, true, cancellationToken);
+            : await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, true, true, cancellationToken);
 
         existingLocation = existingLocation is null
             ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, organization))
@@ -113,17 +113,6 @@ public class LocationSubscriber(
             organizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(tagId, organization, cancellationToken));
         }
 
-        var organizationResourceTypes = new List<OrganizationResourceType>();
-        var organizationResourceTypeIds = location.Resources.Select(item => item.OrganizationResourceType.Id).Distinct().ToList();
-        foreach (var organizationResourceTypeId in organizationResourceTypeIds)
-        {
-            organizationResourceTypes.Add(
-                await repositoryFactory.OrganizationResourceTypeRepository.UpsertNakedAsync(
-                    organizationResourceTypeId,
-                    organization,
-                    cancellationToken));
-        }
-
         var resources = await repositoryFactory.LocationResourceRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
         var itemsToRemove = resources.Where(resource => location.Resources.All(item => item.Id != resource.Id)).ToList();
         var updatedItems = resources
@@ -138,11 +127,7 @@ public class LocationSubscriber(
                     .ToList();
 
                 var updatedResource = mapper.MergeToEntity(
-                    location.Resources.First(item => item.Id == resource.Id),
-                    resource,
-                    existingLocation,
-                    filteredOrganizationTags,
-                    organizationResourceTypes.First(item => item.Id == resource.OrganizationResourceType.Id));
+                    location.Resources.First(item => item.Id == resource.Id), resource, existingLocation, filteredOrganizationTags);
                 updatedResource.DeletedAt = null;
                 return repositoryFactory.LocationResourceRepository.Update(updatedResource);
             })
@@ -155,12 +140,7 @@ public class LocationSubscriber(
                     .Where(tag => resource.OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
-                return repositoryFactory.LocationResourceRepository.Add(
-                    mapper.MapToEntity(
-                        resource,
-                        existingLocation,
-                        filteredOrganizationTags,
-                        organizationResourceTypes.First(item => item.Id == resource.OrganizationResourceType.Id)));
+                return repositoryFactory.LocationResourceRepository.Add(mapper.MapToEntity(resource, existingLocation, filteredOrganizationTags));
             })
             .ToList();
 

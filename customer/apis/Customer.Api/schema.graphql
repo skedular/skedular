@@ -73,7 +73,6 @@ type CustomerLocationDetails {
 type CustomerLocationResourceDetails {
   uniqueId: ID!
   name: String
-  organizationResourceType: Customer_OrganizationResourceTypeDetails!
 }
 
 type CustomerOrganizationDetails {
@@ -102,13 +101,6 @@ type CustomerTeamDetails {
   uniqueId: ID!
   name: String
   organization: CustomerOrganizationDetails
-}
-
-type Customer_OrganizationResourceTypeDetails {
-  uniqueId: ID!
-  name: String
-  color: String
-  systemType: OrganizationResourceTypeSystemType
 }
 
 type Mutation {
@@ -329,11 +321,6 @@ enum FeedbackChannelType {
 enum OrderDirection {
   Ascending
   Descending
-}
-
-enum OrganizationResourceTypeSystemType {
-  Desk
-  Room
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

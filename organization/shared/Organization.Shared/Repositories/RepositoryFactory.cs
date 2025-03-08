@@ -27,7 +27,6 @@ public interface IRepositoryFactory
     ITermsOfUseRepository TermsOfUseRepository { get; }
     IJoinInvitationRepository JoinInvitationRepository { get; }
     ITagRepository TagRepository { get; }
-    IResourceTypeRepository ResourceTypeRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -58,7 +57,6 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         TermsOfUseRepository = new TermsOfUseRepository(_dbContext, timeProvider);
         JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
         TagRepository = new TagRepository(_dbContext, timeProvider);
-        ResourceTypeRepository = new ResourceTypeRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -87,7 +85,6 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public ITermsOfUseRepository TermsOfUseRepository { get; }
     public IJoinInvitationRepository JoinInvitationRepository { get; }
     public ITagRepository TagRepository { get; }
-    public IResourceTypeRepository ResourceTypeRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 

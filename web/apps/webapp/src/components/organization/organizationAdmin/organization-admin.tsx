@@ -22,11 +22,8 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { OrganizationMultipleChoicesIndustries } from '@/components/organization';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
-import { AddOrganizationResourceTypeButton } from '@/components/organization/addOrganizationResourceType';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
-import { EditOrganizationResourceTypeDialog } from '@/components/organization/editOrganizationResourceType';
 import { EditOrganizationZoneDialog } from '@/components/organization/editOrganizationZone/';
-import { ResourceType } from '@/components/resourceType';
 import { Search } from '@/components/search';
 import { Zone } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
@@ -38,15 +35,12 @@ import type { organizationAdmin_customTags_query$key } from '@/queries/__generat
 import type { organizationAdmin_customTags_refetchableFragment } from '@/queries/__generated__/organizationAdmin_customTags_refetchableFragment.graphql';
 import type { organizationAdmin_deleteCustomTagsMutation } from '@/queries/__generated__/organizationAdmin_deleteCustomTagsMutation.graphql';
 import type { organizationAdmin_deleteOrganizationMutation } from '@/queries/__generated__/organizationAdmin_deleteOrganizationMutation.graphql';
-import type { organizationAdmin_deleteResourceTypesMutation } from '@/queries/__generated__/organizationAdmin_deleteResourceTypesMutation.graphql';
 import type { organizationAdmin_deleteZonesMutation } from '@/queries/__generated__/organizationAdmin_deleteZonesMutation.graphql';
 import type { organizationAdmin_organizationPaymentMethodsDetails_query$key } from '@/queries/__generated__/organizationAdmin_organizationPaymentMethodsDetails_query.graphql';
 import type { organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/organizationAdmin_organizationPaymentMethodsDetails_refetchableFragment.graphql';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
 import type { organizationAdmin_removeCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_removeCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
-import type { organizationAdmin_resourceTypes_query$key } from '@/queries/__generated__/organizationAdmin_resourceTypes_query.graphql';
-import type { organizationAdmin_resourceTypes_refetchableFragment } from '@/queries/__generated__/organizationAdmin_resourceTypes_refetchableFragment.graphql';
 import type { organizationAdmin_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationAdmin_setOrganizationBillingInfoMutation.graphql';
 import type { organizationAdmin_updateOrganizationMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_updateOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
@@ -80,7 +74,6 @@ import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin
 type Props = {
   rootDataRelay: organizationAdmin_query$key;
   rootDataOrganizationPaymentMethodsDetailsRelay: organizationAdmin_organizationPaymentMethodsDetails_query$key;
-  rootDataResourceTypesRelay: organizationAdmin_resourceTypes_query$key;
   rootDataZonesRelay: organizationAdmin_zones_query$key;
   rootDataCustomTagsRelay: organizationAdmin_customTags_query$key;
   onReloadRequired: () => void;
@@ -123,13 +116,6 @@ const organizationBillingSchema = object({
   billingCountry: string().nullable(),
 });
 
-type ResourceTypeRowType = {
-  id: string;
-  name: string;
-  description: string | null | undefined;
-  isSystemType: boolean;
-};
-
 type ZoneRowType = {
   id: string;
   name: string;
@@ -147,7 +133,6 @@ type CustomTagRowType = {
 const OrganizationAdmin = ({
   rootDataRelay,
   rootDataOrganizationPaymentMethodsDetailsRelay,
-  rootDataResourceTypesRelay,
   rootDataZonesRelay,
   rootDataCustomTagsRelay,
   onReloadRequired,
@@ -240,30 +225,6 @@ const OrganizationAdmin = ({
     rootDataOrganizationPaymentMethodsDetailsRelay,
   );
 
-  const [rootDataResourceTypes, refetchResourceTypes] = useRefetchableFragment<organizationAdmin_resourceTypes_refetchableFragment, organizationAdmin_resourceTypes_query$key>(
-    graphql`
-      fragment organizationAdmin_resourceTypes_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "organizationAdmin_resourceTypes_refetchableFragment") {
-        resourceTypes(first: $count, after: $cursor, where: { organizationId: $organizationId, nameContains: $resourceTypeNameSearchText })
-          @connection(key: "organizationAdmin_resourceTypes") {
-          __id
-          totalCount
-          edges {
-            node {
-              id
-              name
-              description
-              color
-              systemType
-            }
-          }
-        }
-      }
-    `,
-    rootDataResourceTypesRelay,
-  );
-
   const [rootDataZones, refetchZones] = useRefetchableFragment<organizationAdmin_zones_refetchableFragment, organizationAdmin_zones_query$key>(
     graphql`
       fragment organizationAdmin_zones_query on Query
@@ -325,16 +286,6 @@ const OrganizationAdmin = ({
             id
             name
           }
-        }
-      }
-    }
-  `);
-
-  const [commitDeleteResourceTypes] = useMutation<organizationAdmin_deleteResourceTypesMutation>(graphql`
-    mutation organizationAdmin_deleteResourceTypesMutation($connectionIds: [ID!]!, $input: DeleteResourceTypesInput!) {
-      deleteResourceTypes(input: $input) {
-        organizationResourceTypes {
-          id @deleteEdge(connections: $connectionIds)
         }
       }
     }
@@ -450,38 +401,6 @@ const OrganizationAdmin = ({
   const validateOrganizationBilling = makeValidate(organizationBillingSchema);
   const requiredOrganizationBillingFields = makeRequired(organizationBillingSchema);
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
-
-  const [resourceTypeNameSearchText, setResourceTypeNameSearchText] = useState<string>('');
-  const [seledctedResourceTypes, setSeledctedResourceTypes] = useState<GridRowSelectionModel>([]);
-  const [selectedResourceTypeId, setSelectedResourceTypeId] = useState<null | string>(null);
-  const [resourceTypeMoreActionsAnchorEl, setResourceTypeMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
-  const resourceTypeMoreActionsMenuOpen = Boolean(resourceTypeMoreActionsAnchorEl);
-  const [isEditResourceTypeDialogOpen, setIsEditResourceTypeDialogOpen] = useState(false);
-  const resourceTypesConnectionIds = useMemo(() => (rootDataResourceTypes.resourceTypes ? [rootDataResourceTypes.resourceTypes.__id] : []), [rootDataResourceTypes.resourceTypes]);
-  const resourceTypes = useMemo(
-    () => (rootDataResourceTypes.resourceTypes ? rootDataResourceTypes.resourceTypes.edges.map(({ node }) => node) : []),
-    [rootDataResourceTypes.resourceTypes],
-  );
-  const resourceTypeMoreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditResourceType],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteResourceType],
-  ];
-
-  const handleRefetchResourceTypes = useCallback(
-    (resourceTypeNameSearchText: string) => {
-      startTransition(() => {
-        refetchResourceTypes(
-          {
-            resourceTypeNameSearchText,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [refetchResourceTypes],
-  );
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>([]);
@@ -701,12 +620,6 @@ const OrganizationAdmin = ({
     });
   };
 
-  const handleResourceTypesSearchTextChange = (str: string) => {
-    setResourceTypeNameSearchText(str);
-
-    handleRefetchResourceTypes(str);
-  };
-
   const handleZonesSearchTextChange = (str: string) => {
     setZoneNameSearchText(str);
 
@@ -719,30 +632,12 @@ const OrganizationAdmin = ({
     handleRefetchCustomTags(str);
   };
 
-  const handleSelectedResourceTypesChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedResourceTypes(newRowSelectionModel);
-  };
-
   const handleSelectedZonesChanged = (newRowSelectionModel: GridRowSelectionModel) => {
     setSeledctedZones(newRowSelectionModel);
   };
 
   const handleSelectedCustomTagsChanged = (newRowSelectionModel: GridRowSelectionModel) => {
     setSeledctedCustomTags(newRowSelectionModel);
-  };
-
-  const handleResourceTypeMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
-    setResourceTypeMoreActionsAnchorEl(null);
-
-    switch (id) {
-      case MoreActionsMenuOptionType.EditResourceType:
-        setIsEditResourceTypeDialogOpen(true);
-        break;
-
-      case MoreActionsMenuOptionType.DeleteResourceType:
-        handleRemoveResourceTypeClick();
-        break;
-    }
   };
 
   const handleZoneMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
@@ -771,79 +666,6 @@ const OrganizationAdmin = ({
         handleRemoveCustomTagClick();
         break;
     }
-  };
-
-  const handleRemoveResourceTypesClick = () => {
-    const toastId = themedToast(<NotificationContent content="Removing resource types ..." />, infoNotificationOptions);
-
-    commitDeleteResourceTypes({
-      variables: {
-        connectionIds: resourceTypesConnectionIds,
-        input: {
-          clientMutationId: nanoid(),
-          ids: seledctedResourceTypes.map((id) => id as string),
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove resource types. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Resource types removed.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove resource types. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleRemoveResourceTypeClick = () => {
-    if (!selectedResourceTypeId) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content="Removing resource type ..." />, infoNotificationOptions);
-
-    commitDeleteResourceTypes({
-      variables: {
-        connectionIds: resourceTypesConnectionIds,
-        input: {
-          clientMutationId: nanoid(),
-          ids: [selectedResourceTypeId],
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove resource type. Error: ${joinErrors(errors)}.`} />,
-          });
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Resource type removed.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove resource type. Error: ${error.message}.`} />,
-        });
-      },
-    });
   };
 
   const handleRemoveZonesClick = () => {
@@ -993,14 +815,6 @@ const OrganizationAdmin = ({
         });
       },
     });
-  };
-
-  const handleEditResourceTypeClick = () => {
-    setIsEditResourceTypeDialogOpen(false);
-  };
-
-  const onEditResourceTypeCancel = () => {
-    setIsEditResourceTypeDialogOpen(false);
   };
 
   const handleEditZoneClick = () => {
@@ -1406,59 +1220,6 @@ const OrganizationAdmin = ({
     return <></>;
   }
 
-  const resourceTypeRows: ResourceTypeRowType[] = resourceTypes.map((resourceType) => ({
-    id: resourceType.id,
-    name: resourceType.name,
-    description: resourceType.description,
-    isSystemType: false,
-  }));
-
-  const resourceTypeColumns: GridColDef<(typeof resourceTypeRows)[number]>[] = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      editable: false,
-      renderCell: (params) => {
-        const resourceType = resourceTypes.find((resourceType) => resourceType.id === (params.id as string));
-        if (!resourceType) {
-          return <></>;
-        }
-
-        return <ResourceType resourceType={resourceType} showFullName />;
-      },
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'description',
-      headerName: 'Description',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'moreActions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedResourceTypeId(params.id as string);
-              setResourceTypeMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
-
   const zoneRows: ZoneRowType[] = zones.map((zone) => ({
     id: zone.id,
     name: zone.name,
@@ -1809,80 +1570,6 @@ const OrganizationAdmin = ({
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
               ref={(divElement) => {
-                sectionRefs.current['resource-types-setup'] = divElement;
-              }}
-            >
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Resource Types Setup" />
-                  <BodyIconTypography label="Edit your organization resource types details" />
-                </Grid>
-
-                <Grid>
-                  <AddOrganizationResourceTypeButton organizationId={organizationId} connectionIds={resourceTypesConnectionIds} />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
-
-            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search size="small" placeholder="Search for resource types" defaultValue={resourceTypeNameSearchText} onChange={handleResourceTypesSearchTextChange} />
-            </GridContainer>
-
-            {seledctedResourceTypes.length > 0 && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    padding: defaultGridActionPadding,
-                    border: 1,
-                    borderColor: (theme) => theme.palette.divider,
-                    borderRadius: 2,
-                    flexGrow: 1,
-                  }}
-                >
-                  <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedResourceTypes.length} records selected`} />
-                    <PushToRight />
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveResourceTypesClick} sx={{ textTransform: 'none' }}>
-                      Remove ResourceType
-                    </Button>
-                  </StackRow>
-                </Box>
-              </StackRow>
-            )}
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedResourceTypes}
-                onRowSelectionModelChange={handleSelectedResourceTypesChanged}
-                rows={resourceTypeRows}
-                columns={resourceTypeColumns}
-                hideFooterPagination={resourceTypeRows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: resourceTypeRows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No resource type found' }}
-              />
-            </StackRow>
-
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
                 sectionRefs.current['zones-setup'] = divElement;
               }}
             >
@@ -2180,23 +1867,6 @@ const OrganizationAdmin = ({
           </AppBarWithStackColumn>
         </Box>
       </Box>
-
-      <MoreActionsMenu
-        anchorEl={resourceTypeMoreActionsAnchorEl}
-        open={resourceTypeMoreActionsMenuOpen}
-        onMenuItemClick={handleResourceTypeMoreActionsMenuItemClick}
-        options={resourceTypeMoreActionsOption}
-      />
-
-      {selectedResourceTypeId && (
-        <EditOrganizationResourceTypeDialog
-          onReloadRequired={onReloadRequired}
-          resourceTypeId={selectedResourceTypeId}
-          isDialogOpen={isEditResourceTypeDialogOpen}
-          onAddClicked={handleEditResourceTypeClick}
-          onCancel={onEditResourceTypeCancel}
-        />
-      )}
 
       <MoreActionsMenu anchorEl={zoneMoreActionsAnchorEl} open={zoneMoreActionsMenuOpen} onMenuItemClick={handleZoneMoreActionsMenuItemClick} options={zoneMoreActionsOption} />
 

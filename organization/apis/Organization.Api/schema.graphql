@@ -41,10 +41,6 @@ type Mutation {
   updateZone(input: UpdateZoneInput!): OrganizationTagPayload @cost(weight: "10")
   deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
   deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload @cost(weight: "10")
-  addResourceType(input: AddResourceTypeInput!): OrganizationResourceTypePayload @cost(weight: "10")
-  updateResourceType(input: UpdateResourceTypeInput!): OrganizationResourceTypePayload @cost(weight: "10")
-  deleteResourceType(input: DeleteResourceTypeInput!): OrganizationResourceTypePayload @cost(weight: "10")
-  deleteResourceTypes(input: DeleteResourceTypesInput!): OrganizationResourceTypesPayload @cost(weight: "10")
 }
 
 type OrganizationActiveOfferingDetails {
@@ -188,35 +184,6 @@ type OrganizationPayload {
   organization: OrganizationDetails!
 }
 
-type OrganizationResourceTypeConnection {
-  pageInfo: PageInfo!
-  edges: [OrganizationResourceTypeEdge!]!
-  totalCount: Int
-}
-
-type OrganizationResourceTypeDetails {
-  name: String!
-  description: String
-  color: String
-  systemType: OrganizationResourceTypeSystemType
-  id: ID!
-}
-
-type OrganizationResourceTypeEdge {
-  node: OrganizationResourceTypeDetails!
-  cursor: String!
-}
-
-type OrganizationResourceTypePayload {
-  clientMutationId: String
-  organizationResourceType: OrganizationResourceTypeDetails!
-}
-
-type OrganizationResourceTypesPayload {
-  clientMutationId: String
-  organizationResourceTypes: [OrganizationResourceTypeDetails!]!
-}
-
 type OrganizationTagConnection {
   pageInfo: PageInfo!
   edges: [OrganizationTagEdge!]!
@@ -278,8 +245,6 @@ type Query {
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   organizationOffering(code: String!): OrganizationOfferingDetails!
-  resourceTypes(after: String first: Int before: String last: Int where: OrganizationResourceTypeWhereInput! orderBy: [OrganizationResourceTypeOrderInput!]): OrganizationResourceTypeConnection @cost(weight: "10")
-  resourceType(id: String!): OrganizationResourceTypeDetails @cost(weight: "10")
 }
 
 type RejectInvitationToJoinOrganizationPayload {
@@ -320,15 +285,6 @@ input AddOrganizationInput {
   agreedToTermsOfUse: Boolean!
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
-}
-
-input AddResourceTypeInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  description: String
-  color: String
-  organizationId: String!
 }
 
 input AddZoneInput {
@@ -387,16 +343,6 @@ input DeleteOrganizationInput {
   id: String!
 }
 
-input DeleteResourceTypeInput {
-  clientMutationId: String
-  id: String!
-}
-
-input DeleteResourceTypesInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
 input DeleteZoneInput {
   clientMutationId: String
   id: String!
@@ -427,16 +373,6 @@ input OrganizationMemberWhereInput {
 input OrganizationOrderInput {
   direction: OrderDirection!
   field: OrganizationOrderField!
-}
-
-input OrganizationResourceTypeOrderInput {
-  direction: OrderDirection!
-  field: OrganizationResourceTypeOrderField!
-}
-
-input OrganizationResourceTypeWhereInput {
-  organizationId: String!
-  nameContains: String
 }
 
 input OrganizationTagOrderInput {
@@ -481,14 +417,6 @@ input UpdateOrganizationOfferingInput {
   offeringCode: String!
 }
 
-input UpdateResourceTypeInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  description: String
-  color: String
-}
-
 input UpdateZoneInput {
   clientMutationId: String
   id: String!
@@ -530,16 +458,6 @@ enum OrganizationMemberStatus {
 
 enum OrganizationOrderField {
   Name
-}
-
-enum OrganizationResourceTypeOrderField {
-  Name
-  Description
-}
-
-enum OrganizationResourceTypeSystemType {
-  Desk
-  Room
 }
 
 enum OrganizationTagOrderField {

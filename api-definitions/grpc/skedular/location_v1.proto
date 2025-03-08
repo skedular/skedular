@@ -157,8 +157,7 @@ message LocationWhereInput {
     string organizationId = 1;
     repeated string locationIds = 2;
     string nameContains = 3;
-    repeated string zoneIds = 4;
-    repeated string customTagIds = 5;
+    repeated string tagIds = 4;
 }
 
 message LocationOrderInput {
@@ -170,12 +169,6 @@ enum LocationOrderField {
     Name = 0;
     About = 1;
     Timezone = 2;
-}
-
-message OrganizationResourceType {
-    string id = 1;
-    string name = 2;
-    string color = 3;
 }
 
 message OrganizationCustomTag {
@@ -228,10 +221,9 @@ message Resource {
     string name = 2;
     bool inactive = 3;
     bool requireBookingApproval = 4;
-    OrganizationResourceType organizationResourceType = 5;
-    repeated OrganizationCustomTag organizationCustomTags = 6;
-    repeated OrganizationZone organizationZones = 7;
-    string color = 8;
+    repeated OrganizationCustomTag organizationCustomTags = 5;
+    repeated OrganizationZone organizationZones = 6;
+    string color = 7;
 }
 
 message ResourceConnection {
@@ -257,8 +249,7 @@ message GetPaginatedResourcesInput {
 message ResourceWhereInput {
     string locationId = 1;
     string nameContains = 2;
-    repeated string zoneIds = 3;
-    repeated string customTagIds = 4;
+    repeated string tagIds = 3;
 }
 
 message ResourceOrderInput {
@@ -280,10 +271,8 @@ message AddResourceInput {
     string name = 3;
     bool inactive = 4;
     bool requireBookingApproval = 5;
-    string organizationResourceTypeId = 6;
-    repeated string customTagIds = 7;
-    repeated string zoneIds = 8;
-    string color = 9;
+    repeated string tagIds = 6;
+    string color = 7;
 }
 
 message UpdateResourceInput {
@@ -291,10 +280,8 @@ message UpdateResourceInput {
     string name = 2;
     bool inactive = 3;
     bool requireBookingApproval = 4;
-    string organizationResourceTypeId = 5;
-    repeated string customTagIds = 6;
-    repeated string zoneIds = 7;
-    string color = 8;
+    repeated string tagIds = 5;
+    string color = 6;
 }
 
 message RemoveResourceInput {
@@ -334,8 +321,7 @@ message GetPaginatedDesksInput {
 message DeskWhereInput {
     string locationId = 1;
     string nameContains = 2;
-    repeated string zoneIds = 3;
-    repeated string customTagIds = 4;
+    repeated string tagIds = 3;
 }
 
 message DeskOrderInput {
@@ -358,9 +344,8 @@ message BulkAddDesksInput {
     int32 count = 4;
     bool deactivated = 5;
     bool requireBookingApproval = 6;
-    repeated string customTagIds = 7;
-    repeated string zoneIds = 8;
-    string color = 9;
+    repeated string tagIds = 7;
+    string color = 8;
 }
 
 message BulkAddDesksResponse {
@@ -373,9 +358,8 @@ message AddDeskInput {
     string name = 3;
     bool deactivated = 4;
     bool requireBookingApproval = 5;
-    repeated string customTagIds = 6;
-    repeated string zoneIds = 7;
-    string color = 8;
+    repeated string tagIds = 6;
+    string color = 7;
 }
 
 message UpdateDeskInput {
@@ -383,9 +367,8 @@ message UpdateDeskInput {
     string name = 2;
     bool deactivated = 3;
     bool requireBookingApproval = 4;
-    repeated string customTagIds = 5;
-    repeated string zoneIds = 6;
-    string color = 7;
+    repeated string tagIds = 5;
+    string color = 6;
 }
 
 message RemoveDeskInput {
@@ -425,8 +408,7 @@ message GetPaginatedRoomsInput {
 message RoomWhereInput {
     string locationId = 1;
     string nameContains = 2;
-    repeated string zoneIds = 3;
-    repeated string customTagIds = 4;
+    repeated string tagIds = 3;
 }
 
 message RoomOrderInput {
@@ -448,9 +430,8 @@ message AddRoomInput {
     string name = 3;
     bool deactivated = 4;
     bool requireBookingApproval = 5;
-    repeated string customTagIds = 6;
-    repeated string zoneIds = 7;
-    string color = 8;
+    repeated string tagIds = 6;
+    string color = 7;
 }
 
 message UpdateRoomInput {
@@ -458,9 +439,8 @@ message UpdateRoomInput {
     string name = 2;
     bool deactivated = 3;
     bool requireBookingApproval = 4;
-    repeated string customTagIds = 5;
-    repeated string zoneIds = 6;
-    string color = 7;
+    repeated string tagIds = 5;
+    string color = 6;
 }
 
 message RemoveRoomInput {

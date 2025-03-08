@@ -4,20 +4,18 @@ namespace Location.Shared.Models;
 
 public class ResourceSearchCriteria
 {
-    public ResourceSearchCriteria(string locationId, string? nameContains, ICollection<string>? zoneIds, ICollection<string>? customTagIds)
+    public ResourceSearchCriteria(string locationId, string? nameContains, ICollection<string>? tagIds)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
         LocationId = locationId;
         NameContains = nameContains;
-        ZoneIds = zoneIds ?? [];
-        CustomTagIds = customTagIds ?? [];
+        TagIds = tagIds ?? [];
     }
 
     public string LocationId { get; }
     public string? NameContains { get; }
-    public ICollection<string> ZoneIds { get; }
-    public ICollection<string> CustomTagIds { get; }
+    public ICollection<string> TagIds { get; }
 }
 
 public record ResourceOrder(OrderDirection Direction, ResourceOrderField Field);

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -22,8 +23,7 @@ public interface IDeskService
         string locationId,
         string? namePrefix,
         int count,
-        ICollection<string> customTagIds,
-        ICollection<string> zoneIds,
+        ICollection<string> tagIds,
         bool deactivated,
         bool requireBookingApproval,
         string? color,
@@ -137,16 +137,32 @@ public class DeskService(
             throw new DeskWithSameNameExist();
         }
 
-        var organizationTags = existingLocation.Organization is null
-            ? []
-            : await repositoryFactory.OrganizationTagRepository.Query(
+        List<OrganizationTag> organizationTags = [];
+        if (existingLocation.Organization is not null)
+        {
+            organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
                 new Specification<OrganizationTag>
                 {
                     Criteria = query => !query.DeletedAt.HasValue &&
-                                        desk.CustomTags.Concat(desk.Zones).Select(item => item.Id).Contains(query.Id) &&
+                                        desk.Tags.Select(item => item.Id).Contains(query.Id) &&
                                         query.Organization.Id == existingLocation.Organization.Id &&
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
+
+            var deskTag = await repositoryFactory.OrganizationTagRepository.Query(
+                new Specification<OrganizationTag>
+                {
+                    Criteria = query => !query.DeletedAt.HasValue &&
+                                        query.Type == OrganizationTagTypeConstants.Desk &&
+                                        query.Organization.Id == existingLocation.Organization.Id &&
+                                        !query.Organization.DeletedAt.HasValue
+                }).FirstOrDefaultAsync(cancellationToken);
+
+            if (deskTag is not null && organizationTags.All(item => item.Id != deskTag.Id))
+            {
+                organizationTags = organizationTags.Concat([deskTag]).ToList();
+            }
+        }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -164,8 +180,7 @@ public class DeskService(
         string locationId,
         string? namePrefix,
         int count,
-        ICollection<string> customTagIds,
-        ICollection<string> zoneIds,
+        ICollection<string> tagIds,
         bool deactivated,
         bool requireBookingApproval,
         string? color,
@@ -196,16 +211,32 @@ public class DeskService(
             throw new Unauthorized();
         }
 
-        var organizationTags = existingLocation.Organization is null
-            ? []
-            : await repositoryFactory.OrganizationTagRepository.Query(
+        List<OrganizationTag> organizationTags = [];
+        if (existingLocation.Organization is not null)
+        {
+            organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
                 new Specification<OrganizationTag>
                 {
                     Criteria = query => !query.DeletedAt.HasValue &&
-                                        customTagIds.Concat(zoneIds).Contains(query.Id) &&
+                                        tagIds.Contains(query.Id) &&
                                         query.Organization.Id == existingLocation.Organization.Id &&
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
+
+            var deskTag = await repositoryFactory.OrganizationTagRepository.Query(
+                new Specification<OrganizationTag>
+                {
+                    Criteria = query => !query.DeletedAt.HasValue &&
+                                        query.Type == OrganizationTagTypeConstants.Desk &&
+                                        query.Organization.Id == existingLocation.Organization.Id &&
+                                        !query.Organization.DeletedAt.HasValue
+                }).FirstOrDefaultAsync(cancellationToken);
+
+            if (deskTag is not null && organizationTags.All(item => item.Id != deskTag.Id))
+            {
+                organizationTags = organizationTags.Concat([deskTag]).ToList();
+            }
+        }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -228,10 +259,7 @@ public class DeskService(
                 ++suffixIdx;
             } while (true);
 
-            var deskEntity = mapper.MapTo(
-                new Desk { Id = randomHelper.Generate(), Name = finalDeskName },
-                existingLocation,
-                organizationTags);
+            var deskEntity = mapper.MapTo(new Desk { Id = randomHelper.Generate(), Name = finalDeskName }, existingLocation, organizationTags);
 
             deskEntity.Deactivated = deactivated;
             deskEntity.RequireBookingApproval = requireBookingApproval;
@@ -239,10 +267,7 @@ public class DeskService(
             desks.Add(mapper.MapTo(repositoryFactory.DeskRepository.Add(deskEntity), mapper.MapTo(existingLocation)));
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            [mapper.MapTo(existingLocation)],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return desks;
@@ -297,10 +322,7 @@ public class DeskService(
         var mappedLocation = mapper.MapTo(existingLocation);
         mappedLocation.Desks = mappedLocation.Desks.Where(item => item.Id != id).ToList();
 
-        await locationOutboxPublisher.PublishLocationAsync(
-            [mappedLocation],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        await locationOutboxPublisher.PublishLocationAsync([mappedLocation], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedDesk;
@@ -507,8 +529,7 @@ public class DeskService(
 
         var deskId = desk.Id;
         var deskName = desk.Name;
-        var customTags = desk.CustomTags;
-        var zones = desk.Zones;
+        var tags = desk.Tags;
         var locationId = existingDesk.Location.Id;
         var matchingDeskFound = await repositoryFactory.DeskRepository.Query(
             new Specification<Shared.Database.Entities.Desk>
@@ -523,16 +544,32 @@ public class DeskService(
             throw new DeskWithSameNameExist();
         }
 
-        var organizationTags = existingLocation.Organization is null
-            ? []
-            : await repositoryFactory.OrganizationTagRepository.Query(
+        List<OrganizationTag> organizationTags = [];
+        if (existingLocation.Organization is not null)
+        {
+            organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
                 new Specification<OrganizationTag>
                 {
                     Criteria = query => !query.DeletedAt.HasValue &&
-                                        customTags.Concat(zones).Select(item => item.Id).Contains(query.Id) &&
+                                        tags.Select(item => item.Id).Contains(query.Id) &&
                                         query.Organization.Id == existingLocation.Organization.Id &&
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
+
+            var deskTag = await repositoryFactory.OrganizationTagRepository.Query(
+                new Specification<OrganizationTag>
+                {
+                    Criteria = query => !query.DeletedAt.HasValue &&
+                                        query.Type == OrganizationTagTypeConstants.Desk &&
+                                        query.Organization.Id == existingLocation.Organization.Id &&
+                                        !query.Organization.DeletedAt.HasValue
+                }).FirstOrDefaultAsync(cancellationToken);
+
+            if (deskTag is not null && organizationTags.All(item => item.Id != deskTag.Id))
+            {
+                organizationTags = organizationTags.Concat([deskTag]).ToList();
+            }
+        }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 

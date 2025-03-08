@@ -41,26 +41,24 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "c291cmNlcxgIIAMoCzISLmxvY2F0aW9uLlJlc291cmNlEh0KBWRlc2tzGAkg",
             "AygLMg4ubG9jYXRpb24uRGVzaxIdCgVyb29tcxgKIAMoCzIOLmxvY2F0aW9u",
             "LlJvb20iTgoOTG9jYXRpb25NZW1iZXISCgoCaWQYASABKAkSHAoEcm9sZRgC",
-            "IAEoDjIOLmxvY2F0aW9uLlJvbGUSEgoKY3VzdG9tZXJJZBgDIAEoCSKwAQoI",
-            "UmVzb3VyY2USCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIQCghpbmFjdGl2",
-            "ZRgDIAEoCBIeChZyZXF1aXJlQm9va2luZ0FwcHJvdmFsGAQgASgIEiIKGm9y",
-            "Z2FuaXphdGlvblJlc291cmNlVHlwZUlkGAUgASgJEhQKDGN1c3RvbVRhZ0lk",
-            "cxgGIAMoCRIPCgd6b25lSWRzGAcgAygJEg0KBWNvbG9yGAggASgJIosBCgRE",
-            "ZXNrEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVhY3RpdmF0ZWQY",
-            "AyABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3ZhbBgEIAEoCBIUCgxjdXN0",
-            "b21UYWdJZHMYBSADKAkSDwoHem9uZUlkcxgGIAMoCRINCgVjb2xvchgHIAEo",
-            "CSKLAQoEUm9vbRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2RlYWN0",
-            "aXZhdGVkGAMgASgIEh4KFnJlcXVpcmVCb29raW5nQXBwcm92YWwYBCABKAgS",
-            "FAoMY3VzdG9tVGFnSWRzGAUgAygJEg8KB3pvbmVJZHMYBiADKAkSDQoFY29s",
-            "b3IYByABKAkikQEKGEludml0YXRpb25Ub0pvaW5Mb2NhdGlvbhIKCgJpZBgB",
-            "IAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGlt",
-            "ZXN0YW1wEhIKCmxvY2F0aW9uSWQYAyABKAkSEwoLaW52aXRlZEJ5SWQYBCAB",
-            "KAkSEQoJaW52aXRlZUlkGAUgASgJKnwKBFR5cGUSFAoQTG9jYXRpb25VcHNl",
-            "cnRlZBAAEhMKD0xvY2F0aW9uRGVsZXRlZBABEiQKIEludml0YXRpb25Ub0pv",
-            "aW5Mb2NhdGlvblVwc2VydGVkEAISIwofSW52aXRhdGlvblRvSm9pbkxvY2F0",
-            "aW9uRGVsZXRlZBADKjAKBFJvbGUSCQoFT3duZXIQABIRCg1BZG1pbmlzdHJh",
-            "dG9yEAESCgoGTWVtYmVyEAJCN6oCNEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVu",
-            "dHMuU2tlZHVsYXIuTG9jYXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
+            "IAEoDjIOLmxvY2F0aW9uLlJvbGUSEgoKY3VzdG9tZXJJZBgDIAEoCSJ1CghS",
+            "ZXNvdXJjZRIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhAKCGluYWN0aXZl",
+            "GAMgASgIEh4KFnJlcXVpcmVCb29raW5nQXBwcm92YWwYBCABKAgSDgoGdGFn",
+            "SWRzGAUgAygJEg0KBWNvbG9yGAYgASgJInQKBERlc2sSCgoCaWQYASABKAkS",
+            "DAoEbmFtZRgCIAEoCRITCgtkZWFjdGl2YXRlZBgDIAEoCBIeChZyZXF1aXJl",
+            "Qm9va2luZ0FwcHJvdmFsGAQgASgIEg4KBnRhZ0lkcxgFIAMoCRINCgVjb2xv",
+            "chgGIAEoCSJ0CgRSb29tEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoL",
+            "ZGVhY3RpdmF0ZWQYAyABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3ZhbBgE",
+            "IAEoCBIOCgZ0YWdJZHMYBSADKAkSDQoFY29sb3IYBiABKAkikQEKGEludml0",
+            "YXRpb25Ub0pvaW5Mb2NhdGlvbhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQY",
+            "AiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhIKCmxvY2F0aW9u",
+            "SWQYAyABKAkSEwoLaW52aXRlZEJ5SWQYBCABKAkSEQoJaW52aXRlZUlkGAUg",
+            "ASgJKnwKBFR5cGUSFAoQTG9jYXRpb25VcHNlcnRlZBAAEhMKD0xvY2F0aW9u",
+            "RGVsZXRlZBABEiQKIEludml0YXRpb25Ub0pvaW5Mb2NhdGlvblVwc2VydGVk",
+            "EAISIwofSW52aXRhdGlvblRvSm9pbkxvY2F0aW9uRGVsZXRlZBADKjAKBFJv",
+            "bGUSCQoFT3duZXIQABIRCg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAJC",
+            "N6oCNEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuTG9jYXRp",
+            "b24uVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -69,9 +67,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "Location", "InvitationToJoinLocation" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Resources", "Desks", "Rooms" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember.Parser, new[]{ "Id", "Role", "CustomerId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource.Parser, new[]{ "Id", "Name", "Inactive", "RequireBookingApproval", "OrganizationResourceTypeId", "CustomTagIds", "ZoneIds", "Color" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "CustomTagIds", "ZoneIds", "Color" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "CustomTagIds", "ZoneIds", "Color" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource.Parser, new[]{ "Id", "Name", "Inactive", "RequireBookingApproval", "TagIds", "Color" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "TagIds", "Color" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "TagIds", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null)
           }));
     }
@@ -1841,9 +1839,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       name_ = other.name_;
       inactive_ = other.inactive_;
       requireBookingApproval_ = other.requireBookingApproval_;
-      organizationResourceTypeId_ = other.organizationResourceTypeId_;
-      customTagIds_ = other.customTagIds_.Clone();
-      zoneIds_ = other.zoneIds_.Clone();
+      tagIds_ = other.tagIds_.Clone();
       color_ = other.color_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1902,42 +1898,19 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "organizationResourceTypeId" field.</summary>
-    public const int OrganizationResourceTypeIdFieldNumber = 5;
-    private string organizationResourceTypeId_ = "";
+    /// <summary>Field number for the "tagIds" field.</summary>
+    public const int TagIdsFieldNumber = 5;
+    private static readonly pb::FieldCodec<string> _repeated_tagIds_codec
+        = pb::FieldCodec.ForString(42);
+    private readonly pbc::RepeatedField<string> tagIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string OrganizationResourceTypeId {
-      get { return organizationResourceTypeId_; }
-      set {
-        organizationResourceTypeId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "customTagIds" field.</summary>
-    public const int CustomTagIdsFieldNumber = 6;
-    private static readonly pb::FieldCodec<string> _repeated_customTagIds_codec
-        = pb::FieldCodec.ForString(50);
-    private readonly pbc::RepeatedField<string> customTagIds_ = new pbc::RepeatedField<string>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> CustomTagIds {
-      get { return customTagIds_; }
-    }
-
-    /// <summary>Field number for the "zoneIds" field.</summary>
-    public const int ZoneIdsFieldNumber = 7;
-    private static readonly pb::FieldCodec<string> _repeated_zoneIds_codec
-        = pb::FieldCodec.ForString(58);
-    private readonly pbc::RepeatedField<string> zoneIds_ = new pbc::RepeatedField<string>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> ZoneIds {
-      get { return zoneIds_; }
+    public pbc::RepeatedField<string> TagIds {
+      get { return tagIds_; }
     }
 
     /// <summary>Field number for the "color" field.</summary>
-    public const int ColorFieldNumber = 8;
+    public const int ColorFieldNumber = 6;
     private string color_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1967,9 +1940,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Name != other.Name) return false;
       if (Inactive != other.Inactive) return false;
       if (RequireBookingApproval != other.RequireBookingApproval) return false;
-      if (OrganizationResourceTypeId != other.OrganizationResourceTypeId) return false;
-      if(!customTagIds_.Equals(other.customTagIds_)) return false;
-      if(!zoneIds_.Equals(other.zoneIds_)) return false;
+      if(!tagIds_.Equals(other.tagIds_)) return false;
       if (Color != other.Color) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1982,9 +1953,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Inactive != false) hash ^= Inactive.GetHashCode();
       if (RequireBookingApproval != false) hash ^= RequireBookingApproval.GetHashCode();
-      if (OrganizationResourceTypeId.Length != 0) hash ^= OrganizationResourceTypeId.GetHashCode();
-      hash ^= customTagIds_.GetHashCode();
-      hash ^= zoneIds_.GetHashCode();
+      hash ^= tagIds_.GetHashCode();
       if (Color.Length != 0) hash ^= Color.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -2020,14 +1989,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(32);
         output.WriteBool(RequireBookingApproval);
       }
-      if (OrganizationResourceTypeId.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(OrganizationResourceTypeId);
-      }
-      customTagIds_.WriteTo(output, _repeated_customTagIds_codec);
-      zoneIds_.WriteTo(output, _repeated_zoneIds_codec);
+      tagIds_.WriteTo(output, _repeated_tagIds_codec);
       if (Color.Length != 0) {
-        output.WriteRawTag(66);
+        output.WriteRawTag(50);
         output.WriteString(Color);
       }
       if (_unknownFields != null) {
@@ -2056,14 +2020,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(32);
         output.WriteBool(RequireBookingApproval);
       }
-      if (OrganizationResourceTypeId.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(OrganizationResourceTypeId);
-      }
-      customTagIds_.WriteTo(ref output, _repeated_customTagIds_codec);
-      zoneIds_.WriteTo(ref output, _repeated_zoneIds_codec);
+      tagIds_.WriteTo(ref output, _repeated_tagIds_codec);
       if (Color.Length != 0) {
-        output.WriteRawTag(66);
+        output.WriteRawTag(50);
         output.WriteString(Color);
       }
       if (_unknownFields != null) {
@@ -2088,11 +2047,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (RequireBookingApproval != false) {
         size += 1 + 1;
       }
-      if (OrganizationResourceTypeId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationResourceTypeId);
-      }
-      size += customTagIds_.CalculateSize(_repeated_customTagIds_codec);
-      size += zoneIds_.CalculateSize(_repeated_zoneIds_codec);
+      size += tagIds_.CalculateSize(_repeated_tagIds_codec);
       if (Color.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Color);
       }
@@ -2120,11 +2075,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (other.RequireBookingApproval != false) {
         RequireBookingApproval = other.RequireBookingApproval;
       }
-      if (other.OrganizationResourceTypeId.Length != 0) {
-        OrganizationResourceTypeId = other.OrganizationResourceTypeId;
-      }
-      customTagIds_.Add(other.customTagIds_);
-      zoneIds_.Add(other.zoneIds_);
+      tagIds_.Add(other.tagIds_);
       if (other.Color.Length != 0) {
         Color = other.Color;
       }
@@ -2164,18 +2115,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 42: {
-            OrganizationResourceTypeId = input.ReadString();
+            tagIds_.AddEntriesFrom(input, _repeated_tagIds_codec);
             break;
           }
           case 50: {
-            customTagIds_.AddEntriesFrom(input, _repeated_customTagIds_codec);
-            break;
-          }
-          case 58: {
-            zoneIds_.AddEntriesFrom(input, _repeated_zoneIds_codec);
-            break;
-          }
-          case 66: {
             Color = input.ReadString();
             break;
           }
@@ -2215,18 +2158,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 42: {
-            OrganizationResourceTypeId = input.ReadString();
+            tagIds_.AddEntriesFrom(ref input, _repeated_tagIds_codec);
             break;
           }
           case 50: {
-            customTagIds_.AddEntriesFrom(ref input, _repeated_customTagIds_codec);
-            break;
-          }
-          case 58: {
-            zoneIds_.AddEntriesFrom(ref input, _repeated_zoneIds_codec);
-            break;
-          }
-          case 66: {
             Color = input.ReadString();
             break;
           }
@@ -2276,8 +2211,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       name_ = other.name_;
       deactivated_ = other.deactivated_;
       requireBookingApproval_ = other.requireBookingApproval_;
-      customTagIds_ = other.customTagIds_.Clone();
-      zoneIds_ = other.zoneIds_.Clone();
+      tagIds_ = other.tagIds_.Clone();
       color_ = other.color_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -2336,30 +2270,19 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "customTagIds" field.</summary>
-    public const int CustomTagIdsFieldNumber = 5;
-    private static readonly pb::FieldCodec<string> _repeated_customTagIds_codec
+    /// <summary>Field number for the "tagIds" field.</summary>
+    public const int TagIdsFieldNumber = 5;
+    private static readonly pb::FieldCodec<string> _repeated_tagIds_codec
         = pb::FieldCodec.ForString(42);
-    private readonly pbc::RepeatedField<string> customTagIds_ = new pbc::RepeatedField<string>();
+    private readonly pbc::RepeatedField<string> tagIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> CustomTagIds {
-      get { return customTagIds_; }
-    }
-
-    /// <summary>Field number for the "zoneIds" field.</summary>
-    public const int ZoneIdsFieldNumber = 6;
-    private static readonly pb::FieldCodec<string> _repeated_zoneIds_codec
-        = pb::FieldCodec.ForString(50);
-    private readonly pbc::RepeatedField<string> zoneIds_ = new pbc::RepeatedField<string>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> ZoneIds {
-      get { return zoneIds_; }
+    public pbc::RepeatedField<string> TagIds {
+      get { return tagIds_; }
     }
 
     /// <summary>Field number for the "color" field.</summary>
-    public const int ColorFieldNumber = 7;
+    public const int ColorFieldNumber = 6;
     private string color_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2389,8 +2312,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Name != other.Name) return false;
       if (Deactivated != other.Deactivated) return false;
       if (RequireBookingApproval != other.RequireBookingApproval) return false;
-      if(!customTagIds_.Equals(other.customTagIds_)) return false;
-      if(!zoneIds_.Equals(other.zoneIds_)) return false;
+      if(!tagIds_.Equals(other.tagIds_)) return false;
       if (Color != other.Color) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -2403,8 +2325,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Deactivated != false) hash ^= Deactivated.GetHashCode();
       if (RequireBookingApproval != false) hash ^= RequireBookingApproval.GetHashCode();
-      hash ^= customTagIds_.GetHashCode();
-      hash ^= zoneIds_.GetHashCode();
+      hash ^= tagIds_.GetHashCode();
       if (Color.Length != 0) hash ^= Color.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -2440,10 +2361,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(32);
         output.WriteBool(RequireBookingApproval);
       }
-      customTagIds_.WriteTo(output, _repeated_customTagIds_codec);
-      zoneIds_.WriteTo(output, _repeated_zoneIds_codec);
+      tagIds_.WriteTo(output, _repeated_tagIds_codec);
       if (Color.Length != 0) {
-        output.WriteRawTag(58);
+        output.WriteRawTag(50);
         output.WriteString(Color);
       }
       if (_unknownFields != null) {
@@ -2472,10 +2392,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(32);
         output.WriteBool(RequireBookingApproval);
       }
-      customTagIds_.WriteTo(ref output, _repeated_customTagIds_codec);
-      zoneIds_.WriteTo(ref output, _repeated_zoneIds_codec);
+      tagIds_.WriteTo(ref output, _repeated_tagIds_codec);
       if (Color.Length != 0) {
-        output.WriteRawTag(58);
+        output.WriteRawTag(50);
         output.WriteString(Color);
       }
       if (_unknownFields != null) {
@@ -2500,8 +2419,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (RequireBookingApproval != false) {
         size += 1 + 1;
       }
-      size += customTagIds_.CalculateSize(_repeated_customTagIds_codec);
-      size += zoneIds_.CalculateSize(_repeated_zoneIds_codec);
+      size += tagIds_.CalculateSize(_repeated_tagIds_codec);
       if (Color.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Color);
       }
@@ -2529,8 +2447,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (other.RequireBookingApproval != false) {
         RequireBookingApproval = other.RequireBookingApproval;
       }
-      customTagIds_.Add(other.customTagIds_);
-      zoneIds_.Add(other.zoneIds_);
+      tagIds_.Add(other.tagIds_);
       if (other.Color.Length != 0) {
         Color = other.Color;
       }
@@ -2570,14 +2487,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 42: {
-            customTagIds_.AddEntriesFrom(input, _repeated_customTagIds_codec);
+            tagIds_.AddEntriesFrom(input, _repeated_tagIds_codec);
             break;
           }
           case 50: {
-            zoneIds_.AddEntriesFrom(input, _repeated_zoneIds_codec);
-            break;
-          }
-          case 58: {
             Color = input.ReadString();
             break;
           }
@@ -2617,14 +2530,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 42: {
-            customTagIds_.AddEntriesFrom(ref input, _repeated_customTagIds_codec);
+            tagIds_.AddEntriesFrom(ref input, _repeated_tagIds_codec);
             break;
           }
           case 50: {
-            zoneIds_.AddEntriesFrom(ref input, _repeated_zoneIds_codec);
-            break;
-          }
-          case 58: {
             Color = input.ReadString();
             break;
           }
@@ -2674,8 +2583,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       name_ = other.name_;
       deactivated_ = other.deactivated_;
       requireBookingApproval_ = other.requireBookingApproval_;
-      customTagIds_ = other.customTagIds_.Clone();
-      zoneIds_ = other.zoneIds_.Clone();
+      tagIds_ = other.tagIds_.Clone();
       color_ = other.color_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -2734,30 +2642,19 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "customTagIds" field.</summary>
-    public const int CustomTagIdsFieldNumber = 5;
-    private static readonly pb::FieldCodec<string> _repeated_customTagIds_codec
+    /// <summary>Field number for the "tagIds" field.</summary>
+    public const int TagIdsFieldNumber = 5;
+    private static readonly pb::FieldCodec<string> _repeated_tagIds_codec
         = pb::FieldCodec.ForString(42);
-    private readonly pbc::RepeatedField<string> customTagIds_ = new pbc::RepeatedField<string>();
+    private readonly pbc::RepeatedField<string> tagIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> CustomTagIds {
-      get { return customTagIds_; }
-    }
-
-    /// <summary>Field number for the "zoneIds" field.</summary>
-    public const int ZoneIdsFieldNumber = 6;
-    private static readonly pb::FieldCodec<string> _repeated_zoneIds_codec
-        = pb::FieldCodec.ForString(50);
-    private readonly pbc::RepeatedField<string> zoneIds_ = new pbc::RepeatedField<string>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> ZoneIds {
-      get { return zoneIds_; }
+    public pbc::RepeatedField<string> TagIds {
+      get { return tagIds_; }
     }
 
     /// <summary>Field number for the "color" field.</summary>
-    public const int ColorFieldNumber = 7;
+    public const int ColorFieldNumber = 6;
     private string color_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2787,8 +2684,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Name != other.Name) return false;
       if (Deactivated != other.Deactivated) return false;
       if (RequireBookingApproval != other.RequireBookingApproval) return false;
-      if(!customTagIds_.Equals(other.customTagIds_)) return false;
-      if(!zoneIds_.Equals(other.zoneIds_)) return false;
+      if(!tagIds_.Equals(other.tagIds_)) return false;
       if (Color != other.Color) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -2801,8 +2697,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Deactivated != false) hash ^= Deactivated.GetHashCode();
       if (RequireBookingApproval != false) hash ^= RequireBookingApproval.GetHashCode();
-      hash ^= customTagIds_.GetHashCode();
-      hash ^= zoneIds_.GetHashCode();
+      hash ^= tagIds_.GetHashCode();
       if (Color.Length != 0) hash ^= Color.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -2838,10 +2733,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(32);
         output.WriteBool(RequireBookingApproval);
       }
-      customTagIds_.WriteTo(output, _repeated_customTagIds_codec);
-      zoneIds_.WriteTo(output, _repeated_zoneIds_codec);
+      tagIds_.WriteTo(output, _repeated_tagIds_codec);
       if (Color.Length != 0) {
-        output.WriteRawTag(58);
+        output.WriteRawTag(50);
         output.WriteString(Color);
       }
       if (_unknownFields != null) {
@@ -2870,10 +2764,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(32);
         output.WriteBool(RequireBookingApproval);
       }
-      customTagIds_.WriteTo(ref output, _repeated_customTagIds_codec);
-      zoneIds_.WriteTo(ref output, _repeated_zoneIds_codec);
+      tagIds_.WriteTo(ref output, _repeated_tagIds_codec);
       if (Color.Length != 0) {
-        output.WriteRawTag(58);
+        output.WriteRawTag(50);
         output.WriteString(Color);
       }
       if (_unknownFields != null) {
@@ -2898,8 +2791,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (RequireBookingApproval != false) {
         size += 1 + 1;
       }
-      size += customTagIds_.CalculateSize(_repeated_customTagIds_codec);
-      size += zoneIds_.CalculateSize(_repeated_zoneIds_codec);
+      size += tagIds_.CalculateSize(_repeated_tagIds_codec);
       if (Color.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Color);
       }
@@ -2927,8 +2819,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (other.RequireBookingApproval != false) {
         RequireBookingApproval = other.RequireBookingApproval;
       }
-      customTagIds_.Add(other.customTagIds_);
-      zoneIds_.Add(other.zoneIds_);
+      tagIds_.Add(other.tagIds_);
       if (other.Color.Length != 0) {
         Color = other.Color;
       }
@@ -2968,14 +2859,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 42: {
-            customTagIds_.AddEntriesFrom(input, _repeated_customTagIds_codec);
+            tagIds_.AddEntriesFrom(input, _repeated_tagIds_codec);
             break;
           }
           case 50: {
-            zoneIds_.AddEntriesFrom(input, _repeated_zoneIds_codec);
-            break;
-          }
-          case 58: {
             Color = input.ReadString();
             break;
           }
@@ -3015,14 +2902,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 42: {
-            customTagIds_.AddEntriesFrom(ref input, _repeated_customTagIds_codec);
+            tagIds_.AddEntriesFrom(ref input, _repeated_tagIds_codec);
             break;
           }
           case 50: {
-            zoneIds_.AddEntriesFrom(ref input, _repeated_zoneIds_codec);
-            break;
-          }
-          case 58: {
             Color = input.ReadString();
             break;
           }

@@ -26,7 +26,6 @@ public class CachedOrganizationService(IRepositoryFactory repositoryFactory, IMe
                     id,
                     false,
                     false,
-                    false,
                     cancellationToken);
                 if (organization is null)
                 {

@@ -15,7 +15,6 @@ public class LocationResource : ReplicatedEntityBaseWithDeleted
     public string? Color { get; set; }
 
     public virtual Location Location { get; set; }
-    public virtual OrganizationResourceType OrganizationResourceType { get; set; }
     public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
 }
@@ -34,7 +33,6 @@ public class LocationResourceConfiguration : IEntityTypeConfiguration<LocationRe
 
         builder.HasOne(item => item.Location).WithMany(item => item.Resources);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.LocationResources);
-        builder.HasOne(item => item.OrganizationResourceType).WithMany(item => item.LocationResources);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Inactive);

@@ -62,15 +62,13 @@ public interface IMapper
     LocationResource MapToEntity(
         Shared.Models.LocationResource src,
         Shared.Database.Entities.Location location,
-        ICollection<OrganizationTag> organizationTags,
-        OrganizationResourceType organizationResourceType);
+        ICollection<OrganizationTag> organizationTags);
 
     LocationResource MergeToEntity(
         Shared.Models.LocationResource src,
         LocationResource dest,
         Shared.Database.Entities.Location location,
-        ICollection<OrganizationTag> organizationTags,
-        OrganizationResourceType organizationResourceType);
+        ICollection<OrganizationTag> organizationTags);
 
     Desk MapToEntity(Shared.Models.Desk src, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
     Desk MergeToEntity(Shared.Models.Desk src, Desk dest, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
@@ -103,12 +101,6 @@ public interface IMapper
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer);
     OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization);
     OrganizationTag MergeToEntity(Shared.Models.OrganizationTag src, OrganizationTag dest, Shared.Database.Entities.Organization organization);
-    OrganizationResourceType MapToEntity(Shared.Models.OrganizationResourceType src, Shared.Database.Entities.Organization organization);
-
-    OrganizationResourceType MergeToEntity(
-        Shared.Models.OrganizationResourceType src,
-        OrganizationResourceType dest,
-        Shared.Database.Entities.Organization? organization);
 }
 
 public class Mapper : IMapper
@@ -211,29 +203,13 @@ public class Mapper : IMapper
             Name = item.Name,
             Type = item.Type switch
             {
-                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
+                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
+                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Color = item.Color,
-            Organization = organization
-        }).ToList();
-
-        organization.ResourceTypes = organizationAfterState.ResourceTypes.Select(item => new Shared.Models.OrganizationResourceType
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
-            Color = item.Color,
-            SystemType = string.IsNullOrWhiteSpace(item.SystemType)
-                ? null
-                : item.SystemType switch
-                {
-                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
-                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
             Organization = organization
         }).ToList();
 
@@ -275,8 +251,8 @@ public class Mapper : IMapper
         var organizationTags = location.Organization is null
             ? []
             : locationAfterState.Desks
-                .SelectMany(item => item.CustomTagIds.Concat(item.ZoneIds))
-                .Concat(locationAfterState.Rooms.SelectMany(item => item.CustomTagIds.Concat(item.ZoneIds)))
+                .SelectMany(item => item.TagIds)
+                .Concat(locationAfterState.Rooms.SelectMany(item => item.TagIds))
                 .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
 
         location.Resources = locationAfterState.Resources.Select(item => new Shared.Models.LocationResource
@@ -288,9 +264,8 @@ public class Mapper : IMapper
             Inactive = item.Inactive,
             RequireBookingApproval = item.RequireBookingApproval,
             Color = item.Color,
-            OrganizationTags = organizationTags.Where(tag => item.CustomTagIds.Concat(item.ZoneIds).Contains(tag.Id)).ToList(),
-            Location = location,
-            OrganizationResourceType = new Shared.Models.OrganizationResourceType { Id = item.OrganizationResourceTypeId }
+            OrganizationTags = organizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
+            Location = location
         }).ToList();
 
         location.Desks = locationAfterState.Desks.Select(item => new Shared.Models.Desk
@@ -302,7 +277,7 @@ public class Mapper : IMapper
             Deactivated = item.Deactivated,
             RequireBookingApproval = item.RequireBookingApproval,
             Color = item.Color,
-            OrganizationTags = organizationTags.Where(tag => item.CustomTagIds.Concat(item.ZoneIds).Contains(tag.Id)).ToList(),
+            OrganizationTags = organizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
             Location = location
         }).ToList();
 
@@ -315,7 +290,7 @@ public class Mapper : IMapper
             Deactivated = item.Deactivated,
             RequireBookingApproval = item.RequireBookingApproval,
             Color = item.Color,
-            OrganizationTags = organizationTags.Where(tag => item.CustomTagIds.Concat(item.ZoneIds).Contains(tag.Id)).ToList(),
+            OrganizationTags = organizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
             Location = location
         }).ToList();
 
@@ -493,16 +468,14 @@ public class Mapper : IMapper
     public LocationResource MapToEntity(
         Shared.Models.LocationResource src,
         Shared.Database.Entities.Location location,
-        ICollection<OrganizationTag> organizationTags,
-        OrganizationResourceType organizationResourceType) =>
-        MergeToEntity(src, new LocationResource(), location, organizationTags, organizationResourceType);
+        ICollection<OrganizationTag> organizationTags) =>
+        MergeToEntity(src, new LocationResource(), location, organizationTags);
 
     public LocationResource MergeToEntity(
         Shared.Models.LocationResource src,
         LocationResource dest,
         Shared.Database.Entities.Location location,
-        ICollection<OrganizationTag> organizationTags,
-        OrganizationResourceType organizationResourceType)
+        ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -512,7 +485,6 @@ public class Mapper : IMapper
         dest.Color = src.Color;
         dest.Location = location;
         dest.OrganizationTags = organizationTags;
-        dest.OrganizationResourceType = organizationResourceType;
         return dest;
     }
 
@@ -637,8 +609,10 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.Type = src.Type switch
         {
-            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
+            OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
+            OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
             _ => throw new ArgumentOutOfRangeException()
         };
         dest.Color = src.Color;
@@ -648,28 +622,4 @@ public class Mapper : IMapper
 
     public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new OrganizationTag(), organization);
-
-    public OrganizationResourceType MapToEntity(Shared.Models.OrganizationResourceType src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new OrganizationResourceType(), organization);
-
-    public OrganizationResourceType MergeToEntity(
-        Shared.Models.OrganizationResourceType src,
-        OrganizationResourceType dest,
-        Shared.Database.Entities.Organization? organization)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
-        dest.Color = src.Color;
-        dest.SystemType = src.SystemType is null
-            ? null
-            : src.SystemType switch
-            {
-                OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
-                OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        dest.Organization = organization;
-        return dest;
-    }
 }

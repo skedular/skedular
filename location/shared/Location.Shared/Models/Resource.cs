@@ -10,7 +10,5 @@ public class Resource : ModelBaseWithDeleted
     public string? Color { get; set; }
 
     public Location Location { get; set; }
-    public OrganizationResourceType OrganizationResourceType { get; set; }
-    public ICollection<OrganizationTag> CustomTags { get; set; } = [];
-    public ICollection<OrganizationTag> Zones { get; set; } = [];
+    public ICollection<OrganizationTag> Tags { get; set; } = [];
 }

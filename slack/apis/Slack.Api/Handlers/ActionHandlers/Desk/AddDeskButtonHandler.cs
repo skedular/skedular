@@ -257,7 +257,7 @@ public class AddDeskButtonHandler(
             {
                 if (customTags is StaticMultiSelectValue value)
                 {
-                    addDeskInput.CustomTagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    addDeskInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {
@@ -280,7 +280,7 @@ public class AddDeskButtonHandler(
             {
                 if (zones is StaticMultiSelectValue value)
                 {
-                    addDeskInput.ZoneIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    addDeskInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {

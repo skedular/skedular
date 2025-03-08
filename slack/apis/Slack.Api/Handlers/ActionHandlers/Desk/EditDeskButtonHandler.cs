@@ -126,7 +126,7 @@ public class EditDeskButtonHandler(
             {
                 if (customTags is StaticMultiSelectValue value)
                 {
-                    updateDeskInput.CustomTagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    updateDeskInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {
@@ -145,7 +145,7 @@ public class EditDeskButtonHandler(
             {
                 if (zones is StaticMultiSelectValue value)
                 {
-                    updateDeskInput.ZoneIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    updateDeskInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {

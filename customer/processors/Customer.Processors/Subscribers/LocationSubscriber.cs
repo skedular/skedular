@@ -1,7 +1,6 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Customer.Processors.Mappers;
-using Customer.Shared.Database.Entities;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
@@ -83,7 +82,6 @@ public class LocationSubscriber(
                 location.Organization.Id,
                 true,
                 true,
-                true,
                 cancellationToken);
 
         existingLocation = existingLocation is null
@@ -113,17 +111,6 @@ public class LocationSubscriber(
             return existingLocation;
         }
 
-        var organizationResourceTypes = new List<OrganizationResourceType>();
-        var organizationResourceTypeIds = location.Resources.Select(item => item.OrganizationResourceType.Id).Distinct().ToList();
-        foreach (var organizationResourceTypeId in organizationResourceTypeIds)
-        {
-            organizationResourceTypes.Add(
-                await repositoryFactory.OrganizationResourceTypeRepository.UpsertNakedAsync(
-                    organizationResourceTypeId,
-                    existingLocation.Organization,
-                    cancellationToken));
-        }
-
         var resources = await repositoryFactory.LocationResourceRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
         var itemsToRemove = resources.Where(resource => location.Resources.All(item => item.Id != resource.Id)).ToList();
         var updatedItems = resources
@@ -133,19 +120,14 @@ public class LocationSubscriber(
                 var updatedResource = mapper.MergeToEntity(
                     location.Resources.First(item => item.Id == resource.Id),
                     resource,
-                    existingLocation,
-                    organizationResourceTypes.First(item => item.Id == resource.OrganizationResourceType.Id));
+                    existingLocation);
                 updatedResource.DeletedAt = null;
                 return repositoryFactory.LocationResourceRepository.Update(updatedResource);
             })
             .ToList();
         var addedItems = location.Resources
             .Where(resource => resources.All(item => item.Id != resource.Id))
-            .Select(resource => repositoryFactory.LocationResourceRepository.Add(
-                mapper.MapToEntity(
-                    resource,
-                    existingLocation,
-                    organizationResourceTypes.First(item => item.Id == resource.OrganizationResourceType.Id))))
+            .Select(resource => repositoryFactory.LocationResourceRepository.Add(mapper.MapToEntity(resource, existingLocation)))
             .ToList();
 
         repositoryFactory.LocationResourceRepository.RemoveRange(itemsToRemove);

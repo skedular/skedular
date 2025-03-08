@@ -158,13 +158,6 @@ type LocationPayload {
   location: LocationDetails!
 }
 
-type Location_OrganizationResourceTypeDetails {
-  uniqueId: ID!
-  name: String
-  color: String
-  systemType: OrganizationResourceTypeSystemType
-}
-
 type Location_OrganizationTagDetails {
   uniqueId: ID!
   name: String
@@ -244,7 +237,6 @@ type ResourceDetails {
   color: String
   customTags: [Location_OrganizationTagDetails!]!
   zones: [Location_OrganizationTagDetails!]!
-  organizationResourceType: Location_OrganizationResourceTypeDetails!
   id: ID!
 }
 
@@ -593,11 +585,6 @@ enum LocationOrderField {
 enum OrderDirection {
   Ascending
   Descending
-}
-
-enum OrganizationResourceTypeSystemType {
-  Desk
-  Room
 }
 
 enum ResourceOrderField {

@@ -47,12 +47,10 @@ internal static class OrganizationExtensions
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.TermsOfUse)
-            .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.ResourceTypes.Where(resourceType => !resourceType.DeletedAt.HasValue));
+            .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue));
 
         return includeAllOfferings
-            ? updatedQuery.Include(query => query.OrganizationOfferings
-                    .OrderByDescending(organizationOffering => organizationOffering.End))
+            ? updatedQuery.Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
                 .ThenInclude(query => query.OrganizationOfferingActiveMembers)
                 .ThenInclude(query => query.OrganizationMember)
                 .ThenInclude(query => query.Customer)
@@ -80,10 +78,9 @@ internal static class OrganizationExtensions
         ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.CustomerId);
 
         query = query.Where(item => !item.DeletedAt.HasValue);
-        query = query.Where(item => item.OrganizationMembers.Any(organizationMember =>
-            !organizationMember.DeletedAt.HasValue &&
-            organizationMember.Customer.Id ==
-            searchCriteria.CustomerId));
+        query = query
+            .Where(item => item.OrganizationMembers
+                .Any(organizationMember => !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == searchCriteria.CustomerId));
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
         {
@@ -141,15 +138,10 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
     public async Task<Database.Entities.Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await GetByIdAsync(id, false, cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(
-        ICollection<string> ids,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<Database.Entities.Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await GetByIdsAsync(ids, false, cancellationToken);
 
-    public async Task<Database.Entities.Organization?> GetByIdAsync(
-        string id,
-        bool includeAllOfferings,
-        CancellationToken cancellationToken) =>
+    public async Task<Database.Entities.Organization?> GetByIdAsync(string id, bool includeAllOfferings, CancellationToken cancellationToken) =>
         await DbContext.Organization
             .AddDependentObjects(includeAllOfferings)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
@@ -163,19 +155,14 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
             .AddDependentObjects(includeAllOfferings)
             .ToListAsync(cancellationToken);
 
-    public async Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(
-        string customerId,
-        CancellationToken cancellationToken) =>
+    public async Task<IEnumerable<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.Organization
-            .Where(query => !query.DeletedAt.HasValue &&
-                            query.OrganizationMembers.Select(item => item.Customer.Id).Contains(customerId))
+            .Where(query => !query.DeletedAt.HasValue && query.OrganizationMembers.Select(item => item.Customer.Id).Contains(customerId))
             .AddDependentObjects(false)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-    public async Task<Database.Entities.Organization?> GetByAzureTenantIdAsync(
-        string azureTenantId,
-        CancellationToken cancellationToken) =>
+    public async Task<Database.Entities.Organization?> GetByAzureTenantIdAsync(string azureTenantId, CancellationToken cancellationToken) =>
         await DbContext.Organization
             .AddDependentObjects(false)
             .FirstOrDefaultAsync(

@@ -8,12 +8,7 @@ namespace Customer.Shared.Repositories;
 
 public interface ILocationResourceRepository : IRepository<LocationResource>
 {
-    Task<LocationResource> UpsertNakedAsync(
-        string id,
-        Location location,
-        OrganizationResourceType organizationResourceType,
-        CancellationToken cancellationToken);
-
+    Task<LocationResource> UpsertNakedAsync(string id, Location location, CancellationToken cancellationToken);
     Task<LocationResource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     LocationResource Add(LocationResource locationResource);
     LocationResource Update(LocationResource locationResource);
@@ -24,13 +19,9 @@ public interface ILocationResourceRepository : IRepository<LocationResource>
 public class LocationResourceRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<CustomerDbContext, LocationResource>(dbContext, timeProvider), ILocationResourceRepository
 {
-    public async Task<LocationResource> UpsertNakedAsync(
-        string id,
-        Location location,
-        OrganizationResourceType organizationResourceType,
-        CancellationToken cancellationToken)
+    public async Task<LocationResource> UpsertNakedAsync(string id, Location location, CancellationToken cancellationToken)
     {
-        await UpsertNakedAsync<Location, OrganizationResourceType>(id, location, organizationResourceType, cancellationToken);
+        await UpsertNakedAsync<Location>(id, location, cancellationToken);
 
         return (await GetByIdAsync(id, false, cancellationToken))!;
     }
@@ -61,17 +52,14 @@ public class LocationResourceRepository(CustomerDbContext dbContext, TimeProvide
             ? await DbContext.LocationResource
                 .Include(query => query.PreferredByCustomers)
                 .Include(query => query.Location)
-                .Include(query => query.OrganizationResourceType)
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken)
             : await DbContext.LocationResource
                 .Include(query => query.Location)
-                .Include(query => query.OrganizationResourceType)
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<LocationResource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
         await DbContext.LocationResource
             .Include(query => query.Location)
-            .Include(query => query.OrganizationResourceType)
             .Where(query => query.Location.Id == locationId)
             .ToListAsync(cancellationToken);
 }

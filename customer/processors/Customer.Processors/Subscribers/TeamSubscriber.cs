@@ -80,7 +80,7 @@ public class TeamSubscriber(
     {
         var organization = team.Organization is null
             ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, true, true, true, cancellationToken);
+            : await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, true, true, cancellationToken);
 
         existingTeam = existingTeam is null
             ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team, organization))

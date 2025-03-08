@@ -13,7 +13,6 @@ using Desk = Customer.Shared.Database.Entities.Desk;
 using Room = Customer.Shared.Database.Entities.Room;
 using Location = Customer.Shared.Database.Entities.Location;
 using LocationResource = Customer.Shared.Database.Entities.LocationResource;
-using OrganizationResourceType = Customer.Shared.Database.Entities.OrganizationResourceType;
 using OrganizationTag = Customer.Shared.Database.Entities.OrganizationTag;
 using Team = Customer.Shared.Database.Entities.Team;
 
@@ -71,7 +70,7 @@ public class CustomerService(
                 .Select(item => item.Id)
                 .ToList();
 
-            if (!askingCustomerOrganizationIds.Any(id => callingCustomerOrganizationIds.Contains(id)))
+            if (!askingCustomerOrganizationIds.Any(item => callingCustomerOrganizationIds.Contains(item)))
             {
                 throw new Unauthorized();
             }
@@ -191,24 +190,12 @@ public class CustomerService(
             preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken));
         }
 
-        var organizationResourceTypes = new List<OrganizationResourceType>();
-        var organizationResourceTypeIds = customer.PreferredLocationResources.Select(item => item.OrganizationResourceType.Id).Distinct().ToList();
-        foreach (var organizationResourceTypeId in organizationResourceTypeIds)
-        {
-            organizationResourceTypes.Add(
-                await repositoryFactory.OrganizationResourceTypeRepository.UpsertNakedAsync(organizationResourceTypeId, null, cancellationToken));
-        }
-
         var preferredLocationResources = new List<LocationResource>();
         foreach (var locationResource in customer.PreferredLocationResources)
         {
             var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(locationResource.Location.Id, null, cancellationToken);
             preferredLocationResources.Add(
-                await repositoryFactory.LocationResourceRepository.UpsertNakedAsync(
-                    locationResource.Id,
-                    location,
-                    organizationResourceTypes.First(item => item.Id == locationResource.OrganizationResourceType.Id),
-                    cancellationToken));
+                await repositoryFactory.LocationResourceRepository.UpsertNakedAsync(locationResource.Id, location, cancellationToken));
         }
 
         var preferredDesks = new List<Desk>();

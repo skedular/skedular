@@ -15,7 +15,6 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public Offering? Offering { get; set; }
 
     public virtual ICollection<OrganizationTag> Tags { get; set; } = [];
-    public virtual ICollection<OrganizationResourceType> ResourceTypes { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<Location> Locations { get; set; } = [];
 }

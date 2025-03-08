@@ -232,15 +232,8 @@ public class LocationService(
         {
             var enrichedLocation = await EnrichLocationAsync(customer, edge.Node, cancellationToken);
 
-            searchCriteria.CustomTagIds.ForEach(id =>
-                enrichedLocation.Desks = enrichedLocation.Desks
-                    .Where(desk => desk.CustomTags.Select(tag => tag.Id).Contains(id))
-                    .ToList());
-
-            searchCriteria.ZoneIds.ForEach(id =>
-                enrichedLocation.Desks = enrichedLocation.Desks
-                    .Where(desk => desk.Zones.Select(tag => tag.Id).Contains(id))
-                    .ToList());
+            searchCriteria.TagIds.ForEach(id =>
+                enrichedLocation.Desks = enrichedLocation.Desks.Where(desk => desk.Tags.Select(tag => tag.Id).Contains(id)).ToList());
 
             mappedLocations.Add(new Edge<Shared.Models.Location>(edge.Cursor, enrichedLocation));
         }
@@ -254,12 +247,7 @@ public class LocationService(
 
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                organizationId,
-                false,
-                false,
-                false,
-                cancellationToken);
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
             if (organization is null)
             {
                 throw new OrganizationNotFound();
@@ -333,7 +321,7 @@ public class LocationService(
         var mappedLocation = mapper.MapTo(locationEdge);
 
         mappedLocation.CustomTags = mappedLocation.Desks
-            .SelectMany(item => item.CustomTags.Select(customTag => new OrganizationTag
+            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag => new OrganizationTag
             {
                 Id = customTag.Id, Name = customTag.Name, Type = OrganizationTagType.Custom, Color = customTag.Color
             }))
@@ -342,7 +330,7 @@ public class LocationService(
             .ToList();
 
         mappedLocation.Zones = mappedLocation.Desks
-            .SelectMany(item => item.Zones.Select(zone => new OrganizationTag
+            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone).Select(zone => new OrganizationTag
             {
                 Id = zone.Id, Name = zone.Name, Type = OrganizationTagType.Zone, Color = zone.Color
             }))

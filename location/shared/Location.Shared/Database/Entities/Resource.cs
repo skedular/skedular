@@ -16,7 +16,6 @@ public class Resource : EntityBaseWithDeleted
 
     public virtual Location Location { get; set; }
     public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
-    public virtual OrganizationResourceType OrganizationResourceType { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -31,7 +30,6 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
 
         builder.HasOne(item => item.Location).WithMany(item => item.Resources);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Resources);
-        builder.HasOne(item => item.OrganizationResourceType).WithMany(item => item.Resources);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Inactive);

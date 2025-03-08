@@ -12,7 +12,6 @@ using LocationMember = Location.Shared.Database.Entities.LocationMember;
 using Offering = Location.Shared.Models.Offering;
 using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
-using OrganizationResourceType = Location.Shared.Database.Entities.OrganizationResourceType;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Processors.Mappers;
@@ -58,12 +57,6 @@ public interface IMapper
 
     OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization);
     OrganizationTag MergeToEntity(Shared.Models.OrganizationTag src, OrganizationTag dest, Shared.Database.Entities.Organization organization);
-    OrganizationResourceType MapToEntity(Shared.Models.OrganizationResourceType src, Shared.Database.Entities.Organization organization);
-
-    OrganizationResourceType MergeToEntity(
-        Shared.Models.OrganizationResourceType src,
-        OrganizationResourceType dest,
-        Shared.Database.Entities.Organization? organization);
 }
 
 public class Mapper : IMapper
@@ -127,29 +120,13 @@ public class Mapper : IMapper
             Name = item.Name,
             Type = item.Type switch
             {
-                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
+                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
+                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Color = item.Color,
-            Organization = organization
-        }).ToList();
-
-        organization.ResourceTypes = organizationAfterState.ResourceTypes.Select(item => new Shared.Models.OrganizationResourceType
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
-            Color = item.Color,
-            SystemType = string.IsNullOrWhiteSpace(item.SystemType)
-                ? null
-                : item.SystemType switch
-                {
-                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
-                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
             Organization = organization
         }).ToList();
 
@@ -321,34 +298,12 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.Type = src.Type switch
         {
-            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
+            OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
+            OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
             _ => throw new ArgumentOutOfRangeException()
         };
-        dest.Color = src.Color;
-        dest.Organization = organization;
-        return dest;
-    }
-
-    public OrganizationResourceType MapToEntity(Shared.Models.OrganizationResourceType src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new OrganizationResourceType(), organization);
-
-    public OrganizationResourceType MergeToEntity(
-        Shared.Models.OrganizationResourceType src,
-        OrganizationResourceType dest,
-        Shared.Database.Entities.Organization? organization)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
-        dest.SystemType = src.SystemType is null
-            ? null
-            : src.SystemType switch
-            {
-                OrganizationResourceTypeSystemType.Desk => OrganizationResourceTypeSystemTypeConstants.Desk,
-                OrganizationResourceTypeSystemType.Room => OrganizationResourceTypeSystemTypeConstants.Room,
-                _ => throw new ArgumentOutOfRangeException()
-            };
         dest.Color = src.Color;
         dest.Organization = organization;
         return dest;
@@ -435,27 +390,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            OrganizationResourceType = MapTo(src.OrganizationResourceType),
             Location = location
-        };
-
-    private static Shared.Models.OrganizationResourceType MapTo(OrganizationResourceType src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Color = src.Color,
-            SystemType = string.IsNullOrWhiteSpace(src.SystemType)
-                ? null
-                : src.SystemType switch
-                {
-                    OrganizationResourceTypeSystemTypeConstants.Desk => OrganizationResourceTypeSystemType.Desk,
-                    OrganizationResourceTypeSystemTypeConstants.Room => OrganizationResourceTypeSystemType.Room,
-                    _ => throw new ArgumentOutOfRangeException()
-                }
         };
 
     private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk> src, Shared.Models.Location location) =>

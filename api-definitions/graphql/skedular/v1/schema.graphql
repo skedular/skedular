@@ -205,7 +205,6 @@ type CustomerLocationDetails {
 
 type CustomerLocationResourceDetails {
   name: String
-  organizationResourceType: Customer_OrganizationResourceTypeDetails!
   uniqueId: ID!
 }
 
@@ -234,13 +233,6 @@ type CustomerRoomDetails {
 type CustomerTeamDetails {
   name: String
   organization: CustomerOrganizationDetails
-  uniqueId: ID!
-}
-
-type Customer_OrganizationResourceTypeDetails {
-  color: String
-  name: String
-  systemType: OrganizationResourceTypeSystemType
   uniqueId: ID!
 }
 
@@ -403,13 +395,6 @@ type LocationPayload {
   location: LocationDetails!
 }
 
-type Location_OrganizationResourceTypeDetails {
-  color: String
-  name: String
-  systemType: OrganizationResourceTypeSystemType
-  uniqueId: ID!
-}
-
 type Location_OrganizationTagDetails {
   color: String
   name: String
@@ -437,7 +422,6 @@ type Mutation {
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse @cost(weight: "10")
   addResource(input: AddResourceInput!): ResourcePayload @cost(weight: "10")
-  addResourceType(input: AddResourceTypeInput!): OrganizationResourceTypePayload @cost(weight: "10")
   addRoom(input: AddRoomInput!): RoomPayload @cost(weight: "10")
   addTeam(input: AddTeamInput!): TeamPayload @cost(weight: "10")
   addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
@@ -474,8 +458,6 @@ type Mutation {
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
   deleteResource(input: DeleteResourceInput!): ResourcePayload @cost(weight: "10")
   deleteResources(input: DeleteResourcesInput!): ResourcesPayload @cost(weight: "10")
-  deleteResourceType(input: DeleteResourceTypeInput!): OrganizationResourceTypePayload @cost(weight: "10")
-  deleteResourceTypes(input: DeleteResourceTypesInput!): OrganizationResourceTypesPayload @cost(weight: "10")
   deleteRoom(input: DeleteRoomInput!): RoomPayload @cost(weight: "10")
   deleteRooms(input: DeleteRoomsInput!): RoomsPayload @cost(weight: "10")
   deleteTeam(input: DeleteTeamInput!): TeamPayload @cost(weight: "10")
@@ -509,7 +491,6 @@ type Mutation {
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload @cost(weight: "10")
-  updateResourceType(input: UpdateResourceTypeInput!): OrganizationResourceTypePayload @cost(weight: "10")
   updateRoom(input: UpdateRoomInput!): RoomPayload @cost(weight: "10")
   updateTeam(input: UpdateTeamInput!): TeamPayload @cost(weight: "10")
   updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload @cost(weight: "10")
@@ -771,35 +752,6 @@ type OrganizationPaymentMethod {
   id: ID!
 }
 
-type OrganizationResourceTypeConnection {
-  edges: [OrganizationResourceTypeEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int
-}
-
-type OrganizationResourceTypeDetails {
-  color: String
-  description: String
-  id: ID!
-  name: String!
-  systemType: OrganizationResourceTypeSystemType
-}
-
-type OrganizationResourceTypeEdge {
-  cursor: String!
-  node: OrganizationResourceTypeDetails!
-}
-
-type OrganizationResourceTypePayload {
-  clientMutationId: String
-  organizationResourceType: OrganizationResourceTypeDetails!
-}
-
-type OrganizationResourceTypesPayload {
-  clientMutationId: String
-  organizationResourceTypes: [OrganizationResourceTypeDetails!]!
-}
-
 type OrganizationTagConnection {
   edges: [OrganizationTagEdge!]!
   pageInfo: PageInfo!
@@ -901,8 +853,6 @@ type Query {
   pendingInvitationsCount: Int! @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
   resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput!): ResourceConnection @cost(weight: "10")
-  resourceType(id: String!): OrganizationResourceTypeDetails @cost(weight: "10")
-  resourceTypes(after: String before: String first: Int last: Int orderBy: [OrganizationResourceTypeOrderInput!] where: OrganizationResourceTypeWhereInput!): OrganizationResourceTypeConnection @cost(weight: "10")
   room(id: String!): RoomDetails @cost(weight: "10")
   rooms(after: String before: String first: Int last: Int orderBy: [RoomOrderInput!] where: RoomWhereInput!): RoomConnection @cost(weight: "10")
   slackCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -947,7 +897,6 @@ type ResourceDetails {
   id: ID!
   inactive: Boolean!
   name: String!
-  organizationResourceType: Location_OrganizationResourceTypeDetails!
   requireBookingApproval: Boolean!
   zones: [Location_OrganizationTagDetails!]!
 }
@@ -1256,15 +1205,6 @@ input AddResourceInput {
   zoneIds: [String!]!
 }
 
-input AddResourceTypeInput {
-  clientMutationId: String
-  color: String
-  description: String
-  id: String
-  name: String!
-  organizationId: String!
-}
-
 input AddRoomInput {
   clientMutationId: String
   color: String
@@ -1530,16 +1470,6 @@ input DeleteResourceInput {
   id: String!
 }
 
-input DeleteResourceTypeInput {
-  clientMutationId: String
-  id: String!
-}
-
-input DeleteResourceTypesInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
 input DeleteResourcesInput {
   clientMutationId: String
   ids: [String!]!
@@ -1667,16 +1597,6 @@ input OrganizationMemberWhereInput {
 input OrganizationOrderInput {
   direction: OrderDirection!
   field: OrganizationOrderField!
-}
-
-input OrganizationResourceTypeOrderInput {
-  direction: OrderDirection!
-  field: OrganizationResourceTypeOrderField!
-}
-
-input OrganizationResourceTypeWhereInput {
-  nameContains: String
-  organizationId: String!
 }
 
 input OrganizationTagOrderInput {
@@ -1919,14 +1839,6 @@ input UpdateResourceInput {
   zoneIds: [String!]!
 }
 
-input UpdateResourceTypeInput {
-  clientMutationId: String
-  color: String
-  description: String
-  id: String!
-  name: String!
-}
-
 input UpdateRoomInput {
   clientMutationId: String
   color: String
@@ -2087,16 +1999,6 @@ enum OrganizationMemberStatus {
 
 enum OrganizationOrderField {
   Name
-}
-
-enum OrganizationResourceTypeOrderField {
-  Description
-  Name
-}
-
-enum OrganizationResourceTypeSystemType {
-  Desk
-  Room
 }
 
 enum OrganizationTagOrderField {

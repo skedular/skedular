@@ -20,7 +20,7 @@ public interface IRoomRepository : IRepository<Room>
     void RemoveRange(ICollection<Room> rooms);
     Room Remove(Room room);
 
-    Task<(PaginatedInfo, ICollection<Edge<Room>>, int )> GetPaginatedRoomsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Room>>, int)> GetPaginatedRoomsAsync(
         PaginationInputParam paginationInputParam,
         RoomSearchCriteria searchCriteria,
         ICollection<RoomOrder> orderByFields,
@@ -32,7 +32,7 @@ internal static class RoomExtensions
     internal static IIncludableQueryable<Room, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Room> originalQuery) =>
         originalQuery
             .Include(query => query.Location)
-            .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
+            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
     internal static IQueryable<Room> AddSearchCriteria(this IQueryable<Room> query, RoomSearchCriteria searchCriteria)
     {
@@ -43,14 +43,9 @@ internal static class RoomExtensions
             query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
         }
 
-        if (searchCriteria.ZoneIds.Count != 0)
+        if (searchCriteria.TagIds.Count != 0)
         {
-            query = query.Where(item => searchCriteria.ZoneIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
-        }
-
-        if (searchCriteria.CustomTagIds.Count != 0)
-        {
-            query = query.Where(item => searchCriteria.CustomTagIds.All(customTagId => item.OrganizationTags.Any(tag => tag.Id == customTagId)));
+            query = query.Where(item => searchCriteria.TagIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
         }
 
         return query;

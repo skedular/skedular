@@ -66,8 +66,7 @@ public class Query(IMapper mapper)
                 where.OrganizationId,
                 where.LocationIds,
                 where.NameContains,
-                where.ZoneIds ?? [],
-                where.CustomTagIds ?? []),
+                (where.ZoneIds ?? []).Concat(where.CustomTagIds ?? []).ToList()),
             orderBy is null
                 ? []
                 : orderBy.Select(item =>
@@ -171,7 +170,7 @@ public class Query(IMapper mapper)
 
         var (paginatedInfo, edges, totalCount) = await deskService.GetPaginatedDesksAsync(
             new PaginationInputParam(after, first, before, last),
-            new DeskSearchCriteria(where.LocationId, where.NameContains, where.ZoneIds, where.CustomTagIds),
+            new DeskSearchCriteria(where.LocationId, where.NameContains, (where.CustomTagIds ?? []).Concat(where.ZoneIds ?? []).ToList()),
             orderBy is null
                 ? []
                 : orderBy.Select(item =>
@@ -234,8 +233,7 @@ public class Query(IMapper mapper)
                 where.OrganizationId,
                 where.LocationIds,
                 where.NameContains,
-                where.ZoneIds ?? [],
-                where.CustomTagIds ?? []),
+                (where.CustomTagIds ?? []).Concat(where.ZoneIds ?? []).ToList()),
             orderBy is null
                 ? []
                 : orderBy.Select(item =>
@@ -273,7 +271,7 @@ public class Query(IMapper mapper)
 
         var (paginatedInfo, edges, totalCount) = await roomService.GetPaginatedRoomsAsync(
             new PaginationInputParam(after, first, before, last),
-            new RoomSearchCriteria(where.LocationId, where.NameContains, where.ZoneIds, where.CustomTagIds),
+            new RoomSearchCriteria(where.LocationId, where.NameContains, (where.CustomTagIds ?? []).Concat(where.ZoneIds ?? []).ToList()),
             orderBy is null
                 ? []
                 : orderBy.Select(item =>
@@ -323,7 +321,7 @@ public class Query(IMapper mapper)
 
         var (paginatedInfo, edges, totalCount) = await resourceService.GetPaginatedResourcesAsync(
             new PaginationInputParam(after, first, before, last),
-            new ResourceSearchCriteria(where.LocationId, where.NameContains, where.ZoneIds, where.CustomTagIds),
+            new ResourceSearchCriteria(where.LocationId, where.NameContains, (where.CustomTagIds ?? []).Concat(where.ZoneIds ?? []).ToList()),
             orderBy is null
                 ? []
                 : orderBy.Select(item =>

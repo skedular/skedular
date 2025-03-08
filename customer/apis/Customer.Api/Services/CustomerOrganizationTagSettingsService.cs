@@ -45,7 +45,6 @@ public class CustomerOrganizationTagSettingsService(
             organizationTag.Organization.Id,
             false,
             false,
-            false,
             cancellationToken);
         if (organization is null)
         {
