@@ -46,7 +46,7 @@ public class ResourceService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, false, cancellationToken);
+        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken);
         if (resource is null)
         {
             throw new LocationResourceNotFound();
@@ -87,7 +87,7 @@ public class ResourceService(
 
         if (!string.IsNullOrWhiteSpace(resource.Id))
         {
-            var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, false, cancellationToken);
+            var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken);
             if (existingResource is not null)
             {
                 return await UpdateInternalAsync(resource, existingResource, customer, cancellationToken);
@@ -169,7 +169,7 @@ public class ResourceService(
         ArgumentException.ThrowIfNullOrWhiteSpace(resource.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, false, cancellationToken);
+        var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken);
         if (existingResource is null)
         {
             throw new LocationResourceNotFound();
@@ -183,7 +183,7 @@ public class ResourceService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, false, cancellationToken);
+        var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken);
         if (resource is null)
         {
             throw new LocationResourceNotFound();
@@ -227,7 +227,7 @@ public class ResourceService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, false, cancellationToken);
+        var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
@@ -273,7 +273,7 @@ public class ResourceService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, false, cancellationToken);
+        var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
@@ -323,7 +323,7 @@ public class ResourceService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, false, cancellationToken);
+        var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 

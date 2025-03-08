@@ -13,8 +13,8 @@ namespace Location.Shared.Repositories;
 
 public interface IResourceRepository : IRepository<Resource>
 {
-    Task<Resource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
-    Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
+    Task<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Resource Add(Resource resource);
     Resource Update(Resource resource);
     void RemoveRange(ICollection<Resource> resources);
@@ -29,19 +29,11 @@ public interface IResourceRepository : IRepository<Resource>
 
 internal static class ResourceExtensions
 {
-    internal static IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects(
-        this IQueryable<Resource> originalQuery,
-        bool includeAllRelatedEntities) =>
-        includeAllRelatedEntities
-            ? originalQuery
-                .Include(query => query.Bookings)
-                .Include(query => query.OrganizationResourceType)
-                .Include(query => query.Location)
-                .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
-            : originalQuery
-                .Include(query => query.OrganizationResourceType)
-                .Include(query => query.Location)
-                .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
+    internal static IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Resource> originalQuery) =>
+        originalQuery
+            .Include(query => query.OrganizationResourceType)
+            .Include(query => query.Location)
+            .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
 
     internal static IQueryable<Resource> AddSearchCriteria(this IQueryable<Resource> query, ResourceSearchCriteria searchCriteria)
     {
@@ -93,16 +85,15 @@ internal static class ResourceExtensions
 public class ResourceRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Resource>(dbContext, timeProvider), IResourceRepository
 {
-    public async Task<Resource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
+    public async Task<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Resource
-            .AddDependentObjects(includeAllRelatedEntities)
+            .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Resource
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects(includeAllRelatedEntities)
+            .AddDependentObjects()
             .ToListAsync(cancellationToken);
 
     public Resource Add(Resource resource)
@@ -141,7 +132,7 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
         (await DbContext.Resource
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects(false)
+            .AddDependentObjects()
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }

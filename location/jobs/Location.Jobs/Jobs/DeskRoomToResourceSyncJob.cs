@@ -39,10 +39,10 @@ public class DeskRoomToResourceSyncJob(
                     {
                         foreach (var desk in location.Desks)
                         {
-                            var deskWithBookings = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, true, cancellationToken);
+                            var deskWithBookings = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
                             ArgumentNullException.ThrowIfNull(deskWithBookings);
 
-                            var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(desk.Id, true, cancellationToken);
+                            var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(desk.Id, cancellationToken);
                             if (existingResource is null)
                             {
                                 var resource = new Resource
@@ -57,8 +57,7 @@ public class DeskRoomToResourceSyncJob(
                                     Color = desk.Color,
                                     Location = location,
                                     OrganizationTags = deskWithBookings.OrganizationTags,
-                                    OrganizationResourceType = deskResourceType,
-                                    Bookings = deskWithBookings.Bookings
+                                    OrganizationResourceType = deskResourceType
                                 };
 
                                 repositoryFactory.ResourceRepository.Add(resource);
@@ -75,9 +74,6 @@ public class DeskRoomToResourceSyncJob(
                                 existingResource.Location = location;
                                 existingResource.OrganizationTags = deskWithBookings.OrganizationTags;
                                 existingResource.OrganizationResourceType = deskResourceType;
-                                existingResource.Bookings = existingResource.Bookings
-                                    .Concat(deskWithBookings.Bookings.Where(item => existingResource.Bookings.All(booking => booking.Id != item.Id)))
-                                    .ToList();
 
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }
@@ -93,11 +89,11 @@ public class DeskRoomToResourceSyncJob(
                     {
                         foreach (var room in location.Rooms)
                         {
-                            var roomWithBookings = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, true, cancellationToken);
+                            var roomWithBookings = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, cancellationToken);
                             ArgumentNullException.ThrowIfNull(roomWithBookings);
 
                             var existingResource =
-                                await repositoryFactory.ResourceRepository.GetByIdAsync(roomWithBookings.Id, true, cancellationToken);
+                                await repositoryFactory.ResourceRepository.GetByIdAsync(roomWithBookings.Id, cancellationToken);
                             if (existingResource is null)
                             {
                                 var resource = new Resource
@@ -112,8 +108,7 @@ public class DeskRoomToResourceSyncJob(
                                     Color = room.Color,
                                     Location = location,
                                     OrganizationTags = roomWithBookings.OrganizationTags,
-                                    OrganizationResourceType = roomResourceType,
-                                    Bookings = roomWithBookings.Bookings
+                                    OrganizationResourceType = roomResourceType
                                 };
 
                                 repositoryFactory.ResourceRepository.Add(resource);
@@ -130,9 +125,6 @@ public class DeskRoomToResourceSyncJob(
                                 existingResource.Location = location;
                                 existingResource.OrganizationTags = roomWithBookings.OrganizationTags;
                                 existingResource.OrganizationResourceType = roomResourceType;
-                                existingResource.Bookings = existingResource.Bookings
-                                    .Concat(roomWithBookings.Bookings.Where(item => existingResource.Bookings.All(booking => booking.Id != item.Id)))
-                                    .ToList();
 
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }

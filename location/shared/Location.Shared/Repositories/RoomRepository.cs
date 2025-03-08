@@ -13,8 +13,8 @@ namespace Location.Shared.Repositories;
 
 public interface IRoomRepository : IRepository<Room>
 {
-    Task<Room?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
-    Task<ICollection<Room>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
+    Task<Room?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Room>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Room Add(Room room);
     Room Update(Room room);
     void RemoveRange(ICollection<Room> rooms);
@@ -29,17 +29,10 @@ public interface IRoomRepository : IRepository<Room>
 
 internal static class RoomExtensions
 {
-    internal static IIncludableQueryable<Room, IEnumerable<OrganizationTag>> AddDependentObjects(
-        this IQueryable<Room> originalQuery,
-        bool includeAllRelatedEntities) =>
-        includeAllRelatedEntities
-            ? originalQuery
-                .Include(query => query.Bookings)
-                .Include(query => query.Location)
-                .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
-            : originalQuery
-                .Include(query => query.Location)
-                .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
+    internal static IIncludableQueryable<Room, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Room> originalQuery) =>
+        originalQuery
+            .Include(query => query.Location)
+            .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
 
     internal static IQueryable<Room> AddSearchCriteria(this IQueryable<Room> query, RoomSearchCriteria searchCriteria)
     {
@@ -91,16 +84,16 @@ internal static class RoomExtensions
 public class RoomRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Room>(dbContext, timeProvider), IRoomRepository
 {
-    public async Task<Room?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
+    public async Task<Room?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Room
-            .AddDependentObjects(includeAllRelatedEntities)
+            .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Room>>
-        GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
+        GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Room
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects(includeAllRelatedEntities)
+            .AddDependentObjects()
             .ToListAsync(cancellationToken);
 
     public Room Add(Room room)
@@ -139,7 +132,7 @@ public class RoomRepository(LocationDbContext dbContext, TimeProvider timeProvid
         (await DbContext.Room
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects(false)
+            .AddDependentObjects()
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }

@@ -63,7 +63,6 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
         includeAllRelatedEntities
             ? await DbContext.Desk
                 .Include(query => query.PreferredByCustomers)
-                .Include(query => query.Bookings)
                 .Include(query => query.Location)
                 .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken)

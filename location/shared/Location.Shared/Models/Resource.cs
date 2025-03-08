@@ -11,7 +11,6 @@ public class Resource : ModelBaseWithDeleted
 
     public Location Location { get; set; }
     public OrganizationResourceType OrganizationResourceType { get; set; }
-    public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<OrganizationTag> CustomTags { get; set; } = [];
     public ICollection<OrganizationTag> Zones { get; set; } = [];
 }

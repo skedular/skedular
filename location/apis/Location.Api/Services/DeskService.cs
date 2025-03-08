@@ -58,7 +58,7 @@ public class DeskService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var desk = await repositoryFactory.DeskRepository.GetByIdAsync(id, false, cancellationToken);
+        var desk = await repositoryFactory.DeskRepository.GetByIdAsync(id, cancellationToken);
         if (desk is null)
         {
             throw new DeskNotFound();
@@ -96,7 +96,7 @@ public class DeskService(
 
         if (!string.IsNullOrWhiteSpace(desk.Id))
         {
-            var existingDesk = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, false, cancellationToken);
+            var existingDesk = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
             if (existingDesk is not null)
             {
                 return await UpdateInternalAsync(desk, existingDesk, customer, cancellationToken);
@@ -253,7 +253,7 @@ public class DeskService(
         ArgumentException.ThrowIfNullOrWhiteSpace(desk.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingDesk = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, false, cancellationToken);
+        var existingDesk = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
         if (existingDesk is null)
         {
             throw new DeskNotFound();
@@ -267,7 +267,7 @@ public class DeskService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var desk = await repositoryFactory.DeskRepository.GetByIdAsync(id, false, cancellationToken);
+        var desk = await repositoryFactory.DeskRepository.GetByIdAsync(id, cancellationToken);
         if (desk is null)
         {
             throw new DeskNotFound();
@@ -314,7 +314,7 @@ public class DeskService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, false, cancellationToken);
+        var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = desks.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
@@ -360,7 +360,7 @@ public class DeskService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, false, cancellationToken);
+        var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = desks.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
@@ -410,7 +410,7 @@ public class DeskService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, false, cancellationToken);
+        var desks = await repositoryFactory.DeskRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = desks.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 

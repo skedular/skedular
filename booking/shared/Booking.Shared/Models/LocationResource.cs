@@ -13,5 +13,4 @@ public class LocationResource : ReplicatedModelBaseWithDeleted
     public OrganizationResourceType OrganizationResourceType { get; set; }
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public ICollection<Customer> PreferredByCustomers { get; set; } = [];
-    public ICollection<Booking> Bookings { get; set; }
 }

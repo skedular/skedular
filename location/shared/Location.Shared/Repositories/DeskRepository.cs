@@ -13,8 +13,8 @@ namespace Location.Shared.Repositories;
 
 public interface IDeskRepository : IRepository<Desk>
 {
-    Task<Desk?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
-    Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
+    Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Desk Add(Desk desk);
     Desk Update(Desk desk);
     void RemoveRange(ICollection<Desk> desks);
@@ -29,17 +29,10 @@ public interface IDeskRepository : IRepository<Desk>
 
 internal static class DeskExtensions
 {
-    internal static IIncludableQueryable<Desk, IEnumerable<OrganizationTag>> AddDependentObjects(
-        this IQueryable<Desk> originalQuery,
-        bool includeAllRelatedEntities) =>
-        includeAllRelatedEntities
-            ? originalQuery
-                .Include(query => query.Bookings)
-                .Include(query => query.Location)
-                .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue))
-            : originalQuery
-                .Include(query => query.Location)
-                .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
+    internal static IIncludableQueryable<Desk, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Desk> originalQuery) =>
+        originalQuery
+            .Include(query => query.Location)
+            .Include(query => query.OrganizationTags.Where(organizationTag => !organizationTag.DeletedAt.HasValue));
 
     internal static IQueryable<Desk> AddSearchCriteria(this IQueryable<Desk> query, DeskSearchCriteria searchCriteria)
     {
@@ -91,16 +84,16 @@ internal static class DeskExtensions
 public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Desk>(dbContext, timeProvider), IDeskRepository
 {
-    public async Task<Desk?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
+    public async Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Desk
-            .AddDependentObjects(includeAllRelatedEntities)
+            .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Desk>>
-        GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
+        GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Desk
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects(includeAllRelatedEntities)
+            .AddDependentObjects()
             .ToListAsync(cancellationToken);
 
     public Desk Add(Desk desk)
@@ -139,7 +132,7 @@ public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvid
         (await DbContext.Desk
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects(false)
+            .AddDependentObjects()
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }

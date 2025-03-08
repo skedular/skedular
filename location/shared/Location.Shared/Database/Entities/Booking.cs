@@ -12,7 +12,6 @@ public class Booking : ReplicatedEntityBaseWithDeleted
     public DateTimeOffset To { get; set; }
 
     public virtual Location Location { get; set; }
-    public virtual ICollection<Resource> Resources { get; set; } = [];
     public virtual ICollection<Desk> Desks { get; set; } = [];
     public virtual ICollection<Room> Rooms { get; set; } = [];
 }
@@ -25,7 +24,6 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.HasOne(item => item.Location).WithMany(item => item.Bookings);
-        builder.HasMany(item => item.Resources).WithMany(item => item.Bookings);
         builder.HasMany(item => item.Desks).WithMany(item => item.Bookings);
         builder.HasMany(item => item.Rooms).WithMany(item => item.Bookings);
 

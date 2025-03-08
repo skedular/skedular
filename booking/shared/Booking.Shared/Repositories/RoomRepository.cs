@@ -63,7 +63,6 @@ public class RoomRepository(BookingDbContext dbContext, TimeProvider timeProvide
         includeAllRelatedEntities
             ? await DbContext.Room
                 .Include(query => query.PreferredByCustomers)
-                .Include(query => query.Bookings)
                 .Include(query => query.Location)
                 .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken)

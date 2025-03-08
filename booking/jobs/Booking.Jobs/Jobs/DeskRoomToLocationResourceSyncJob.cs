@@ -59,7 +59,6 @@ public class DeskRoomToLocationResourceSyncJob(
                                     Location = location,
                                     OrganizationTags = deskWithBookings.OrganizationTags,
                                     OrganizationResourceType = deskResourceType,
-                                    Bookings = deskWithBookings.Bookings,
                                     PreferredByCustomers = deskWithBookings.PreferredByCustomers
                                 };
 
@@ -78,9 +77,6 @@ public class DeskRoomToLocationResourceSyncJob(
                                 existingResource.Location = location;
                                 existingResource.OrganizationTags = deskWithBookings.OrganizationTags;
                                 existingResource.OrganizationResourceType = deskResourceType;
-                                existingResource.Bookings = existingResource.Bookings
-                                    .Concat(deskWithBookings.Bookings.Where(item => existingResource.Bookings.All(booking => booking.Id != item.Id)))
-                                    .ToList();
 
                                 existingResource.PreferredByCustomers =
                                     existingResource.PreferredByCustomers
@@ -122,7 +118,6 @@ public class DeskRoomToLocationResourceSyncJob(
                                     Location = location,
                                     OrganizationTags = roomWithBookings.OrganizationTags,
                                     OrganizationResourceType = roomResourceType,
-                                    Bookings = roomWithBookings.Bookings,
                                     PreferredByCustomers = roomWithBookings.PreferredByCustomers
                                 };
 
@@ -141,10 +136,6 @@ public class DeskRoomToLocationResourceSyncJob(
                                 existingResource.Location = location;
                                 existingResource.OrganizationTags = roomWithBookings.OrganizationTags;
                                 existingResource.OrganizationResourceType = roomResourceType;
-                                existingResource.Bookings = existingResource.Bookings
-                                    .Concat(roomWithBookings.Bookings.Where(item => existingResource.Bookings.All(booking => booking.Id != item.Id)))
-                                    .ToList();
-
                                 existingResource.PreferredByCustomers =
                                     existingResource.PreferredByCustomers
                                         .Concat(roomWithBookings.PreferredByCustomers.Where(item =>
