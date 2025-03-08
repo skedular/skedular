@@ -13,6 +13,8 @@ public class UpdateWorkspaceMemberProfileStatusJob(
     TimeProvider timeProvider,
     ILogger<UpdateWorkspaceMemberProfileStatusJob> logger) : BackgroundService
 {
+    private readonly string _jobName = typeof(UpdateWorkspaceMemberProfileStatusJob).FullName!;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         do
@@ -69,7 +71,7 @@ public class UpdateWorkspaceMemberProfileStatusJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(UpdateWorkspaceMemberProfileStatusJob));
+                logger.LogError(ex, "Failed to run job: {job}", _jobName);
             }
         } while (true);
     }

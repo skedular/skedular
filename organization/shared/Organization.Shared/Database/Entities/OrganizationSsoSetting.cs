@@ -13,6 +13,8 @@ public class OrganizationSsoSetting : EntityBase
     public string LoginUrl { get; set; }
     public string AppFederationMetadataUrl { get; set; }
 
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? OrganizationId { get; set; }
     public virtual Organization Organization { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -27,6 +29,9 @@ public class OrganizationSsoConfiguration : IEntityTypeConfiguration<Organizatio
         builder.Property(item => item.LoginUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.AppFederationMetadataUrl).HasMaxLength(Constants.MaxUrlLength);
 
-        builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationSsoSettings);
+        builder
+            .HasOne(item => item.Organization)
+            .WithOne(item => item.OrganizationSsoSettings)
+            .HasForeignKey<OrganizationSsoSetting>(item => item.OrganizationId);
     }
 }

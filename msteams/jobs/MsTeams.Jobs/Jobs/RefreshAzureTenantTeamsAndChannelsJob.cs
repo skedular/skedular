@@ -11,6 +11,8 @@ public class RefreshAzureTenantTeamsAndChannelsJob(
     TimeProvider timeProvider,
     ILogger<RefreshAzureTenantTeamsAndChannelsJob> logger) : BackgroundService
 {
+    private readonly string _jobName = typeof(RefreshAzureTenantTeamsAndChannelsJob).FullName!;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         do
@@ -32,9 +34,7 @@ public class RefreshAzureTenantTeamsAndChannelsJob(
                     .ToListAsync(cancellationToken);
                 if (azureTenantIds.Count != 0)
                 {
-                    await msTeamsInternalPublisher.PublishRefreshAzureTenantTeamsAndChannelsAsync(
-                        azureTenantIds,
-                        cancellationToken);
+                    await msTeamsInternalPublisher.PublishRefreshAzureTenantTeamsAndChannelsAsync(azureTenantIds, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromHours(1), cancellationToken);
@@ -45,7 +45,7 @@ public class RefreshAzureTenantTeamsAndChannelsJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshAzureTenantTeamsAndChannelsJob));
+                logger.LogError(ex, "Failed to run job: {job}", _jobName);
             }
         } while (true);
     }

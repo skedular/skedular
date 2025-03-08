@@ -16,7 +16,6 @@ public class LocationDbContext(
     public DbSet<Customer> Customer { get; set; }
     public DbSet<DailyDeskCountRecording> DailyDeskCountRecording { get; set; }
     public DbSet<DailyRoomCountRecording> DailyRoomCountRecording { get; set; }
-    public DbSet<Resource> Resource { get; set; }
     public DbSet<Desk> Desk { get; set; }
     public DbSet<Room> Room { get; set; }
     public DbSet<Identity> Identity { get; set; }
@@ -26,6 +25,7 @@ public class LocationDbContext(
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<OrganizationTag> OrganizationTag { get; set; }
+    public DbSet<Resource> Resource { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class LocationDbContextDesignFactory : IDesignTimeDbContextFactory<LocationDbContext>

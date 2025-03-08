@@ -13,7 +13,6 @@ public class CustomerDbContext(
 {
     public DbSet<Entities.Customer> Customer { get; set; }
     public DbSet<CustomerFeedback> CustomerFeedback { get; set; }
-    public DbSet<Resource> Resource { get; set; }
     public DbSet<Desk> Desk { get; set; }
     public DbSet<Room> Room { get; set; }
     public DbSet<Identity> Identity { get; set; }
@@ -24,6 +23,7 @@ public class CustomerDbContext(
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<Team> Team { get; set; }
     public DbSet<TeamMember> TeamMember { get; set; }
+    public DbSet<Resource> Resource { get; set; }
 
     // ReSharper disable once UnusedType.Global
     public class CustomerDbContextDesignFactory : IDesignTimeDbContextFactory<CustomerDbContext>

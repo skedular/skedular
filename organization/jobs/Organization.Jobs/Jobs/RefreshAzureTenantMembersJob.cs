@@ -6,11 +6,11 @@ using Organization.Shared.Repositories;
 
 namespace Organization.Jobs.Jobs;
 
-public class RefreshAzureTenantMembersJob(
-    IServiceProvider serviceProvider,
-    TimeProvider timeProvider,
-    ILogger<RefreshAzureTenantMembersJob> logger) : BackgroundService
+public class RefreshAzureTenantMembersJob(IServiceProvider serviceProvider, TimeProvider timeProvider, ILogger<RefreshAzureTenantMembersJob> logger)
+    : BackgroundService
 {
+    private readonly string _jobName = typeof(RefreshAzureTenantMembersJob).FullName!;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         do
@@ -19,15 +19,12 @@ public class RefreshAzureTenantMembersJob(
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var msTeamsInternalPublisher =
-                    scope.ServiceProvider.GetRequiredService<IOrganizationInternalPublisher>();
+                var msTeamsInternalPublisher = scope.ServiceProvider.GetRequiredService<IOrganizationInternalPublisher>();
                 var now = timeProvider.GetUtcNow();
                 var tenantIds = await repositoryFactory.AzureTenantRepository.Query(
                     new Specification<AzureTenant>
                     {
-                        Criteria = query =>
-                            !query.MembersLastRefreshedAt.HasValue ||
-                            (now - query.MembersLastRefreshedAt.Value).TotalHours >= 24
+                        Criteria = query => !query.MembersLastRefreshedAt.HasValue || (now - query.MembersLastRefreshedAt.Value).TotalHours >= 24
                     }).Select(item => item.Id).ToListAsync(cancellationToken);
                 if (tenantIds.Count != 0)
                 {
@@ -42,7 +39,7 @@ public class RefreshAzureTenantMembersJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshAzureTenantMembersJob));
+                logger.LogError(ex, "Failed to run job: {job}", _jobName);
             }
         } while (true);
     }

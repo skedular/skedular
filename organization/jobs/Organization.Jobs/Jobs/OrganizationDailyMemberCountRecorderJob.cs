@@ -11,6 +11,8 @@ public class OrganizationDailyMemberCountRecorderJob(
     TimeProvider timeProvider,
     ILogger<OrganizationDailyMemberCountRecorderJob> logger) : BackgroundService
 {
+    private readonly string _jobName = typeof(OrganizationDailyMemberCountRecorderJob).FullName!;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         do
@@ -19,8 +21,7 @@ public class OrganizationDailyMemberCountRecorderJob(
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var organizationInternalPublisher =
-                    scope.ServiceProvider.GetRequiredService<IOrganizationInternalPublisher>();
+                var organizationInternalPublisher = scope.ServiceProvider.GetRequiredService<IOrganizationInternalPublisher>();
                 var yesterday = timeProvider.GetUtcNow().EndOfYesterday();
                 var organizationIds = await repositoryFactory.OrganizationRepository.Query(
                     new Specification<Shared.Database.Entities.Organization>
@@ -33,9 +34,7 @@ public class OrganizationDailyMemberCountRecorderJob(
                     }).Select(query => query.Id).ToListAsync(cancellationToken);
                 if (organizationIds.Count != 0)
                 {
-                    await organizationInternalPublisher.PublishRecordOrganizationDailyMemberCountAsync(
-                        organizationIds,
-                        cancellationToken);
+                    await organizationInternalPublisher.PublishRecordOrganizationDailyMemberCountAsync(organizationIds, cancellationToken);
                 }
 
                 await Task.Delay(TimeSpan.FromHours(1), cancellationToken);
@@ -46,7 +45,7 @@ public class OrganizationDailyMemberCountRecorderJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(OrganizationDailyMemberCountRecorderJob));
+                logger.LogError(ex, "Failed to run job: {job}", _jobName);
             }
         } while (true);
     }

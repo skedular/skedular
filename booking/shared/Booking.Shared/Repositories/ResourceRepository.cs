@@ -13,7 +13,6 @@ public interface IResourceRepository : IRepository<Resource>
     Resource Add(Resource resource);
     Resource Update(Resource resource);
     void RemoveRange(ICollection<Resource> resources);
-
     Task<ICollection<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
 }
 

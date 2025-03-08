@@ -7,11 +7,11 @@ using Slack.Shared.Services;
 
 namespace Slack.Jobs.Jobs;
 
-public class LocationDailyUpdateJob(
-    IServiceProvider serviceProvider,
-    TimeProvider timeProvider,
-    ILogger<LocationDailyUpdateJob> logger) : BackgroundService
+public class LocationDailyUpdateJob(IServiceProvider serviceProvider, TimeProvider timeProvider, ILogger<LocationDailyUpdateJob> logger)
+    : BackgroundService
 {
+    private readonly string _jobName = typeof(LocationDailyUpdateJob).FullName!;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         do
@@ -48,7 +48,7 @@ public class LocationDailyUpdateJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(LocationDailyUpdateJob));
+                logger.LogError(ex, "Failed to run job: {job}", _jobName);
             }
         } while (true);
     }

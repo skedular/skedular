@@ -2,6 +2,7 @@ using Booking.Shared.Configurations;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,8 @@ public static class Extensions
         services.AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services;
+        services
+            .AddSingleton<IResourceBookingSlotHelper, ResourceBookingSlotHelper>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services.AddScoped<IRepositoryFactory, RepositoryFactory>();
@@ -27,6 +29,7 @@ public static class Extensions
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<IResourceRepository, ResourceRepository>()
+            .AddScoped<IResourceBookingSlotRepository, ResourceBookingSlotRepository>()
             .AddScoped<ILocationMemberRepository, LocationMemberRepository>()
             .AddScoped<IDeskRepository, DeskRepository>()
             .AddScoped<IRoomRepository, RoomRepository>()

@@ -6,11 +6,11 @@ using Slack.Shared.Services;
 
 namespace Slack.Jobs.Jobs;
 
-public class RefreshWorkspaceChannelsJob(
-    IServiceProvider serviceProvider,
-    TimeProvider timeProvider,
-    ILogger<RefreshWorkspaceChannelsJob> logger) : BackgroundService
+public class RefreshWorkspaceChannelsJob(IServiceProvider serviceProvider, TimeProvider timeProvider, ILogger<RefreshWorkspaceChannelsJob> logger)
+    : BackgroundService
 {
+    private readonly string _jobName = typeof(RefreshWorkspaceChannelsJob).FullName!;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         do
@@ -45,7 +45,7 @@ public class RefreshWorkspaceChannelsJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(RefreshWorkspaceChannelsJob));
+                logger.LogError(ex, "Failed to run job: {job}", _jobName);
             }
         } while (true);
     }

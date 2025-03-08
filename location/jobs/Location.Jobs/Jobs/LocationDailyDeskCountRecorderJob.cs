@@ -11,6 +11,8 @@ public class LocationDailyDeskCountRecorderJob(
     TimeProvider timeProvider,
     ILogger<LocationDailyDeskCountRecorderJob> logger) : BackgroundService
 {
+    private readonly string _jobName = typeof(LocationDailyDeskCountRecorderJob).FullName!;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         do
@@ -21,10 +23,13 @@ public class LocationDailyDeskCountRecorderJob(
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
                 var locationInternalPublisher = scope.ServiceProvider.GetRequiredService<ILocationInternalPublisher>();
                 var yesterday = timeProvider.GetUtcNow().EndOfYesterday();
-                var locationIds = await repositoryFactory.LocationRepository.Query(new Specification<Shared.Database.Entities.Location>
-                {
-                    Criteria = query => !query.DailyDeskCountLastRecordedAt.HasValue || query.DailyDeskCountLastRecordedAt < yesterday
-                }).Select(location => location.Id).ToListAsync(cancellationToken);
+                var locationIds = await repositoryFactory.LocationRepository.Query(
+                        new Specification<Shared.Database.Entities.Location>
+                        {
+                            Criteria = query => !query.DailyDeskCountLastRecordedAt.HasValue || query.DailyDeskCountLastRecordedAt < yesterday
+                        })
+                    .Select(location => location.Id)
+                    .ToListAsync(cancellationToken);
                 if (locationIds.Count != 0)
                 {
                     await locationInternalPublisher.PublishRecordLocationDailyDeskCountAsync(locationIds, cancellationToken);
@@ -38,7 +43,7 @@ public class LocationDailyDeskCountRecorderJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(LocationDailyDeskCountRecorderJob));
+                logger.LogError(ex, "Failed to run job: {job}", _jobName);
             }
         } while (true);
     }

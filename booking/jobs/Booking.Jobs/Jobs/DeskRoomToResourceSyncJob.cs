@@ -1,13 +1,18 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services;
+using Enterprise.Shared.Database;
 
 namespace Booking.Jobs.Jobs;
 
 public class DeskRoomToResourceSyncJob(
     IServiceProvider serviceProvider,
+    IResourceBookingSlotHelper resourceBookingSlotHelper,
     ILogger<DeskRoomToResourceSyncJob> logger) : BackgroundService
 {
+    private readonly string _jobName = typeof(DeskRoomToResourceSyncJob).FullName!;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         do
@@ -16,10 +21,13 @@ public class DeskRoomToResourceSyncJob(
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
+                var transactionBuilder = scope.ServiceProvider.GetRequiredService<IDbTransactionBuilder>();
                 var locations = await repositoryFactory.LocationRepository.GetAllAsync(true, true, true, true, cancellationToken);
 
                 foreach (var location in locations)
                 {
+                    await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
                     if (location.Organization is null)
                     {
                         continue;
@@ -65,6 +73,7 @@ public class DeskRoomToResourceSyncJob(
                                 };
 
                                 repositoryFactory.ResourceRepository.Add(resource);
+                                repositoryFactory.ResourceBookingSlotRepository.AddRange(resourceBookingSlotHelper.CreateAllAvailableSlots(resource));
                             }
                             else
                             {
@@ -120,6 +129,7 @@ public class DeskRoomToResourceSyncJob(
                                 };
 
                                 repositoryFactory.ResourceRepository.Add(resource);
+                                repositoryFactory.ResourceBookingSlotRepository.AddRange(resourceBookingSlotHelper.CreateAllAvailableSlots(resource));
                             }
                             else
                             {
@@ -141,7 +151,11 @@ public class DeskRoomToResourceSyncJob(
                             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                         }
                     }
+
+                    await transaction.CommitAsync(cancellationToken);
                 }
+
+                logger.LogInformation("Finished running job: {job}", _jobName);
 
                 await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
             }
@@ -151,7 +165,7 @@ public class DeskRoomToResourceSyncJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(DeskRoomToResourceSyncJob));
+                logger.LogError(ex, "Failed to run job: {job}", _jobName);
             }
         } while (true);
     }

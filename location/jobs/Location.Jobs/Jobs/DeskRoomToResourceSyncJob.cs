@@ -4,10 +4,10 @@ using Location.Shared.Repositories;
 
 namespace Location.Jobs.Jobs;
 
-public class DeskRoomToResourceSyncJob(
-    IServiceProvider serviceProvider,
-    ILogger<DeskRoomToResourceSyncJob> logger) : BackgroundService
+public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger<DeskRoomToResourceSyncJob> logger) : BackgroundService
 {
+    private readonly string _jobName = typeof(DeskRoomToResourceSyncJob).FullName!;
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         do
@@ -135,6 +135,8 @@ public class DeskRoomToResourceSyncJob(
                     }
                 }
 
+                logger.LogInformation("Finished running job: {job}", nameof(DeskRoomToResourceSyncJob));
+
                 await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
             }
             catch (OperationCanceledException)
@@ -143,7 +145,7 @@ public class DeskRoomToResourceSyncJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(DeskRoomToResourceSyncJob));
+                logger.LogError(ex, "Failed to run job: {job}", _jobName);
             }
         } while (true);
     }

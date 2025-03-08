@@ -33,6 +33,7 @@ public class Customer : ReplicatedEntityBaseWithDeleted
     public virtual ICollection<Room> PreferredRooms { get; set; }
     public virtual ICollection<Team> PreferredTeams { get; set; }
     public virtual ICollection<OrganizationTag> PreferredOrganizationTags { get; set; }
+    public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

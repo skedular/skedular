@@ -2,6 +2,8 @@
 using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services;
+using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using IMapper = Booking.Processors.Mappers.IMapper;
 using Location = Booking.Shared.Database.Entities.Location;
@@ -13,6 +15,8 @@ namespace Booking.Processors.Subscribers;
 public class LocationSubscriber(
     ILogger<LocationSubscriber> logger,
     IMapper mapper,
+    IResourceBookingSlotHelper resourceBookingSlotHelper,
+    IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -36,7 +40,9 @@ public class LocationSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
+                    await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
                     await HandleLocationUpsertedEventAsync(location, existingLocation, cancellationToken);
+                    await transaction.CommitAsync(cancellationToken);
                 }
                 break;
 
@@ -140,7 +146,11 @@ public class LocationSubscriber(
                     .Where(tag => resource.OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
-                return repositoryFactory.ResourceRepository.Add(mapper.MapToEntity(resource, existingLocation, filteredOrganizationTags));
+                var resourceEntity =
+                    repositoryFactory.ResourceRepository.Add(mapper.MapToEntity(resource, existingLocation, filteredOrganizationTags));
+                repositoryFactory.ResourceBookingSlotRepository.AddRange(resourceBookingSlotHelper.CreateAllAvailableSlots(resourceEntity));
+
+                return resourceEntity;
             })
             .ToList();
 
