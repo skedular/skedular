@@ -33,8 +33,8 @@ service CustomerService {
     rpc RemovePreferredRoom (RemovePreferredRoomInput) returns (Customer);
     rpc AddPreferredOrganizationTag (AddPreferredOrganizationTagInput) returns (Customer);
     rpc RemovePreferredOrganizationTag (RemovePreferredOrganizationTagInput) returns (Customer);
-    rpc AddPreferredLocationResource (AddPreferredLocationResourceInput) returns (Customer);
-    rpc RemovePreferredLocationResource (RemovePreferredLocationResourceInput) returns (Customer);
+    rpc AddPreferredResource (AddPreferredResourceInput) returns (Customer);
+    rpc RemovePreferredResource (RemovePreferredResourceInput) returns (Customer);
 }
 
 message VersionInput {
@@ -100,7 +100,7 @@ message Admin_AddInput {
     bool isPreferredRoomOnboardingDone = 25;
     Organization defaultOrganization = 26;
     repeated Location preferredLocations = 27;
-    repeated LocationResource preferredLocationResources = 28;
+    repeated Resource preferredResources = 28;
     repeated Desk preferredDesks = 29;
     repeated Room preferredRooms = 30;
     repeated Team preferredTeams = 31;
@@ -136,7 +136,7 @@ message Customer {
     bool isPreferredRoomOnboardingDone = 25;
     Organization defaultOrganization = 26;
     repeated Location preferredLocations = 27;
-    repeated LocationResource preferredLocationResources = 28;
+    repeated Resource preferredResources = 28;
     repeated Desk preferredDesks = 29;
     repeated Room preferredRooms = 30;
     repeated Team preferredTeams = 31;
@@ -291,16 +291,16 @@ message RemovePreferredOrganizationTagInput {
     string organizationTagId = 1;
 }
 
-message LocationResource {
+message Resource {
     string id = 1;
     string name = 2;
     Location location = 3;
 }
 
-message AddPreferredLocationResourceInput {
-    string locationResourceId = 1;
+message AddPreferredResourceInput {
+    string resourceId = 1;
 }
 
-message RemovePreferredLocationResourceInput {
-    string locationResourceId = 1;
+message RemovePreferredResourceInput {
+    string resourceId = 1;
 }

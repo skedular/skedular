@@ -167,8 +167,7 @@ public class CustomerDetails : Node
     [GraphQLName("preferredZones")] public CustomerOrganizationTagDetails[] PreferredZones { get; set; } = [];
     [GraphQLName("preferredCustomTags")] public CustomerOrganizationTagDetails[] PreferredCustomTags { get; set; } = [];
 
-    [GraphQLName("preferredLocationResources")]
-    public CustomerLocationResourceDetails[] PreferredLocationResources { get; set; } = [];
+    [GraphQLName("preferredResources")] public CustomerResourceDetails[] PreferredResources { get; set; } = [];
 
     [GraphQLName("preferredDesks")] public CustomerDeskDetails[] PreferredDesks { get; set; } = [];
     [GraphQLName("preferredRooms")] public CustomerRoomDetails[] PreferredRooms { get; set; } = [];
@@ -326,22 +325,22 @@ public class UpdateCustomerDetailsInput
     [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
 }
 
-[GraphQLName("AddCustomerPreferredLocationResourceInput")]
-public class AddCustomerPreferredLocationResourceInput
+[GraphQLName("AddCustomerPreferredResourceInput")]
+public class AddCustomerPreferredResourceInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("locationResourceId")] public required string LocationResourceId { get; set; }
+    [GraphQLName("resourceId")] public required string ResourceId { get; set; }
 }
 
-[GraphQLName("RemoveCustomerPreferredLocationResourceInput")]
-public class RemoveCustomerPreferredLocationResourceInput
+[GraphQLName("RemoveCustomerPreferredResourceInput")]
+public class RemoveCustomerPreferredResourceInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("locationResourceId")] public required string LocationResourceId { get; set; }
+    [GraphQLName("resourceId")] public required string ResourceId { get; set; }
 }
 
-[GraphQLName("CustomerLocationResourceDetails")]
-public class CustomerLocationResourceDetails
+[GraphQLName("CustomerResourceDetails")]
+public class CustomerResourceDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }

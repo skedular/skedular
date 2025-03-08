@@ -47,7 +47,7 @@ type CustomerDetails {
   preferredTeams: [CustomerTeamDetails!]!
   preferredZones: [CustomerOrganizationTagDetails!]!
   preferredCustomTags: [CustomerOrganizationTagDetails!]!
-  preferredLocationResources: [CustomerLocationResourceDetails!]!
+  preferredResources: [CustomerResourceDetails!]!
   preferredDesks: [CustomerDeskDetails!]!
   preferredRooms: [CustomerRoomDetails!]!
   id: ID!
@@ -70,11 +70,6 @@ type CustomerLocationDetails {
   organization: CustomerOrganizationDetails
 }
 
-type CustomerLocationResourceDetails {
-  uniqueId: ID!
-  name: String
-}
-
 type CustomerOrganizationDetails {
   uniqueId: ID!
   name: String
@@ -90,6 +85,11 @@ type CustomerOrganizationTagDetails {
 type CustomerPayload {
   clientMutationId: String
   customer: CustomerDetails!
+}
+
+type CustomerResourceDetails {
+  uniqueId: ID!
+  name: String
 }
 
 type CustomerRoomDetails {
@@ -127,8 +127,8 @@ type Mutation {
   completePreferredRoomOnboarding(input: CompletePreferredRoomOnboardingInput!): CustomerPayload @cost(weight: "10")
   addCustomerPreferredRoom(input: AddCustomerPreferredRoomInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredRoom(input: RemoveCustomerPreferredRoomInput!): CustomerPayload @cost(weight: "10")
-  addCustomerPreferredLocationResource(input: AddCustomerPreferredLocationResourceInput!): CustomerPayload @cost(weight: "10")
-  removeCustomerPreferredLocationResource(input: RemoveCustomerPreferredLocationResourceInput!): CustomerPayload @cost(weight: "10")
+  addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload @cost(weight: "10")
+  removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload @cost(weight: "10")
 }
 
 type PageInfo {
@@ -167,14 +167,14 @@ input AddCustomerPreferredLocationInput {
   locationId: String!
 }
 
-input AddCustomerPreferredLocationResourceInput {
-  clientMutationId: String
-  locationResourceId: String!
-}
-
 input AddCustomerPreferredOrganizationTagInput {
   clientMutationId: String
   organizationTagId: String!
+}
+
+input AddCustomerPreferredResourceInput {
+  clientMutationId: String
+  resourceId: String!
 }
 
 input AddCustomerPreferredRoomInput {
@@ -243,14 +243,14 @@ input RemoveCustomerPreferredLocationInput {
   locationId: String!
 }
 
-input RemoveCustomerPreferredLocationResourceInput {
-  clientMutationId: String
-  locationResourceId: String!
-}
-
 input RemoveCustomerPreferredOrganizationTagInput {
   clientMutationId: String
   organizationTagId: String!
+}
+
+input RemoveCustomerPreferredResourceInput {
+  clientMutationId: String
+  resourceId: String!
 }
 
 input RemoveCustomerPreferredRoomInput {

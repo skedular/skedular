@@ -49,7 +49,7 @@ public class ResourceService(
         var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken);
         if (resource is null)
         {
-            throw new LocationResourceNotFound();
+            throw new ResourceNotFound();
         }
 
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken);
@@ -157,7 +157,7 @@ public class ResourceService(
         var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken);
         if (existingResource is null)
         {
-            throw new LocationResourceNotFound();
+            throw new ResourceNotFound();
         }
 
         return await UpdateInternalAsync(resource, existingResource, customer, cancellationToken);
@@ -171,7 +171,7 @@ public class ResourceService(
         var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken);
         if (resource is null)
         {
-            throw new LocationResourceNotFound();
+            throw new ResourceNotFound();
         }
 
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken);

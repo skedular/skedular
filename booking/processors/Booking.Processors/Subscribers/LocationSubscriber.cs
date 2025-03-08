@@ -113,7 +113,7 @@ public class LocationSubscriber(
             organizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(tagId, organization, cancellationToken));
         }
 
-        var resources = await repositoryFactory.LocationResourceRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
+        var resources = await repositoryFactory.ResourceRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
         var itemsToRemove = resources.Where(resource => location.Resources.All(item => item.Id != resource.Id)).ToList();
         var updatedItems = resources
             .Where(resource => location.Resources.Any(item => item.Id == resource.Id))
@@ -129,7 +129,7 @@ public class LocationSubscriber(
                 var updatedResource = mapper.MergeToEntity(
                     location.Resources.First(item => item.Id == resource.Id), resource, existingLocation, filteredOrganizationTags);
                 updatedResource.DeletedAt = null;
-                return repositoryFactory.LocationResourceRepository.Update(updatedResource);
+                return repositoryFactory.ResourceRepository.Update(updatedResource);
             })
             .ToList();
         var addedItems = location.Resources
@@ -140,11 +140,11 @@ public class LocationSubscriber(
                     .Where(tag => resource.OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
-                return repositoryFactory.LocationResourceRepository.Add(mapper.MapToEntity(resource, existingLocation, filteredOrganizationTags));
+                return repositoryFactory.ResourceRepository.Add(mapper.MapToEntity(resource, existingLocation, filteredOrganizationTags));
             })
             .ToList();
 
-        repositoryFactory.LocationResourceRepository.RemoveRange(itemsToRemove);
+        repositoryFactory.ResourceRepository.RemoveRange(itemsToRemove);
         existingLocation.Resources = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         return existingLocation;

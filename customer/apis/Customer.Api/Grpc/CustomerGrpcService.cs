@@ -22,7 +22,7 @@ public class CustomerGrpcService(
     ICustomerSettingsService customerSettingsService,
     ICustomerFeedbackService customerFeedbackService,
     ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
-    ICustomerLocationResourceSettingsService customerLocationResourceSettingsService,
+    ICustomerResourceSettingsService customerResourceSettingsService,
     ICustomerDeskSettingsService customerDeskSettingsService,
     ICustomerRoomSettingsService customerRoomSettingsService,
     IMapper mapper,
@@ -330,29 +330,23 @@ public class CustomerGrpcService(
                 context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddPreferredLocationResource(
-        AddPreferredLocationResourceInput request,
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddPreferredResource(
+        AddPreferredResourceInput request,
         ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(
-            await customerLocationResourceSettingsService.AddCustomerPreferredLocationResourceAsync(
-                request.LocationResourceId,
-                null,
-                context.CancellationToken));
+            await customerResourceSettingsService.AddCustomerPreferredResourceAsync(request.ResourceId, null, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemovePreferredLocationResource(
-        RemovePreferredLocationResourceInput request,
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemovePreferredResource(
+        RemovePreferredResourceInput request,
         ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(
-            await customerLocationResourceSettingsService.RemoveCustomerPreferredLocationResourceAsync(
-                request.LocationResourceId,
-                null,
-                context.CancellationToken));
+            await customerResourceSettingsService.RemoveCustomerPreferredResourceAsync(request.ResourceId, null, context.CancellationToken));
     }
 }

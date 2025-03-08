@@ -59,15 +59,15 @@ public interface IMapper
         Shared.Database.Entities.Team team,
         Customer customer);
 
-    LocationResource MapToEntity(
-        Shared.Models.LocationResource src,
+    Resource MapToEntity(
+        Shared.Models.Resource src,
         Shared.Database.Entities.Location location,
         ICollection<OrganizationTag> organizationTags);
 
-    LocationResource MergeToEntity(
-        Shared.Models.LocationResource src,
-        LocationResource dest,
-        Shared.Database.Entities.Location location,
+    Resource MergeToEntity(
+        Shared.Models.Resource src,
+        Resource dest,
+        Shared.Database.Entities.Location? location,
         ICollection<OrganizationTag> organizationTags);
 
     Desk MapToEntity(Shared.Models.Desk src, Shared.Database.Entities.Location location, ICollection<OrganizationTag> organizationTags);
@@ -255,7 +255,7 @@ public class Mapper : IMapper
                 .Concat(locationAfterState.Rooms.SelectMany(item => item.TagIds))
                 .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
 
-        location.Resources = locationAfterState.Resources.Select(item => new Shared.Models.LocationResource
+        location.Resources = locationAfterState.Resources.Select(item => new Shared.Models.Resource
         {
             Id = item.Id,
             DeletedAt = deletedAt,
@@ -465,16 +465,16 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public LocationResource MapToEntity(
-        Shared.Models.LocationResource src,
+    public Resource MapToEntity(
+        Shared.Models.Resource src,
         Shared.Database.Entities.Location location,
         ICollection<OrganizationTag> organizationTags) =>
-        MergeToEntity(src, new LocationResource(), location, organizationTags);
+        MergeToEntity(src, new Resource(), location, organizationTags);
 
-    public LocationResource MergeToEntity(
-        Shared.Models.LocationResource src,
-        LocationResource dest,
-        Shared.Database.Entities.Location location,
+    public Resource MergeToEntity(
+        Shared.Models.Resource src,
+        Resource dest,
+        Shared.Database.Entities.Location? location,
         ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;

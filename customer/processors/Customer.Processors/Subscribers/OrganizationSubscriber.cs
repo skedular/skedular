@@ -179,12 +179,11 @@ public class OrganizationSubscriber(
                 .ToList();
             var newLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
 
-            var existingLocationResourceIds = customer.PreferredLocationResources.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredLocationResources = customer.PreferredLocationResources
-                .Where(locationResource =>
-                    locationResource.Location.Organization is null || locationResource.Location.Organization.Id != organizationId)
+            var existingResourceIds = customer.PreferredResources.Select(item => item.Id).Distinct().ToList();
+            customer.PreferredResources = customer.PreferredResources
+                .Where(resource => resource.Location?.Organization is null || resource.Location.Organization.Id != organizationId)
                 .ToList();
-            var newLocationResourceIds = customer.PreferredLocationResources.Select(item => item.Id).Distinct().ToList();
+            var newResourceIds = customer.PreferredResources.Select(item => item.Id).Distinct().ToList();
 
             var existingDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
             customer.PreferredDesks = customer.PreferredDesks
@@ -203,8 +202,8 @@ public class OrganizationSubscriber(
             if (existingOrganizationId != newOrganizationId ||
                 newLocationIds.Count != existingLocationIds.Count ||
                 newLocationIds.Except(existingLocationIds).Any() ||
-                newLocationResourceIds.Count != existingLocationResourceIds.Count ||
-                newLocationResourceIds.Except(existingLocationResourceIds).Any() ||
+                newResourceIds.Count != existingResourceIds.Count ||
+                newResourceIds.Except(existingResourceIds).Any() ||
                 newDeskIds.Count != existingDeskIds.Count ||
                 newDeskIds.Except(existingDeskIds).Any() ||
                 newTeamIds.Count != existingTeamIds.Count ||

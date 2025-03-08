@@ -6,13 +6,13 @@ using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Models;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
-using LocationResource = Customer.Shared.Models.LocationResource;
 using Desk = Customer.Shared.Models.Desk;
 using Room = Customer.Shared.Models.Room;
 using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
 using Organization = Customer.Shared.Models.Organization;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
+using Resource = Customer.Shared.Database.Entities.Resource;
 using Team = Customer.Shared.Models.Team;
 
 namespace Customer.Api.Mappers;
@@ -33,7 +33,7 @@ public interface IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
         ICollection<Shared.Database.Entities.Team> preferredTeams,
-        ICollection<Shared.Database.Entities.LocationResource> preferredLocationResources,
+        ICollection<Resource> preferredResources,
         ICollection<Shared.Database.Entities.Desk> preferredDesks,
         ICollection<Shared.Database.Entities.Room> preferredRooms,
         ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags);
@@ -94,7 +94,7 @@ public class Mapper(IContext context) : IMapper
             PreferredLocations = [],
             PreferredTeams = [],
             PreferredOrganizationTags = [],
-            PreferredLocationResources = [],
+            PreferredResources = [],
             PreferredDesks = [],
             PreferredRooms = []
         };
@@ -165,8 +165,8 @@ public class Mapper(IContext context) : IMapper
                     .Where(item => item.Type == OrganizationTagType.Custom)
                     .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color })
                     .ToArray(),
-            PreferredLocationResources = src.PreferredLocationResources
-                .Select(item => new CustomerLocationResourceDetails { UniqueId = item.Id, Name = item.Name })
+            PreferredResources = src.PreferredResources
+                .Select(item => new CustomerResourceDetails { UniqueId = item.Id, Name = item.Name })
                 .ToArray(),
             PreferredDesks = src.PreferredDesks.Select(item => new CustomerDeskDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
             PreferredRooms = src.PreferredRooms.Select(item => new CustomerRoomDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
@@ -227,7 +227,7 @@ public class Mapper(IContext context) : IMapper
             Identities = MapTo(src.Identities).ToList(),
             DefaultOrganization = MapTo(src.DefaultOrganization),
             PreferredLocations = MapTo(src.PreferredLocations).ToList(),
-            PreferredLocationResources = MapTo(src.PreferredLocationResources).ToList(),
+            PreferredResources = MapTo(src.PreferredResources).ToList(),
             PreferredDesks = MapTo(src.PreferredDesks).ToList(),
             PreferredRooms = MapTo(src.PreferredRooms).ToList(),
             PreferredTeams = MapTo(src.PreferredTeams).ToList(),
@@ -315,8 +315,8 @@ public class Mapper(IContext context) : IMapper
                         Organization = string.IsNullOrWhiteSpace(item.Organization?.Id) ? null : new Organization { Id = item.Organization.Id }
                     })
                 .ToList(),
-            PreferredLocationResources = src.PreferredLocationResources
-                .Select(item => new LocationResource { Id = item.Id, Location = new Location { Id = item.Location.Id } })
+            PreferredResources = src.PreferredResources
+                .Select(item => new Shared.Models.Resource { Id = item.Id, Location = new Location { Id = item.Location.Id } })
                 .ToList(),
             PreferredDesks = src.PreferredDesks
                 .Select(item => new Desk { Id = item.Id, Location = new Location { Id = item.Location.Id } })
@@ -393,12 +393,17 @@ public class Mapper(IContext context) : IMapper
                     : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
 
-        customer.PreferredLocationResources.AddRange(src.PreferredLocationResources.Select(
-            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.LocationResource
+        customer.PreferredResources.AddRange(src.PreferredResources.Select(
+            item =>
             {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id }
+                var resource = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Resource { Id = item.Id, Name = item.Name.ToSafeString() };
+
+                if (item.Location is not null)
+                {
+                    resource.Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id };
+                }
+
+                return resource;
             }));
 
         customer.PreferredDesks.AddRange(src.PreferredDesks.Select(
@@ -478,7 +483,7 @@ public class Mapper(IContext context) : IMapper
             Shared.Database.Entities.Organization? defaultOrganization,
             ICollection<Shared.Database.Entities.Location> preferredLocations,
             ICollection<Shared.Database.Entities.Team> preferredTeams,
-            ICollection<Shared.Database.Entities.LocationResource> preferredLocationResources,
+            ICollection<Resource> preferredResources,
             ICollection<Shared.Database.Entities.Desk> preferredDesks,
             ICollection<Shared.Database.Entities.Room> preferredRooms,
             ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags) =>
@@ -513,7 +518,7 @@ public class Mapper(IContext context) : IMapper
             DefaultOrganization = defaultOrganization,
             PreferredLocations = preferredLocations,
             PreferredTeams = preferredTeams,
-            PreferredLocationResources = preferredLocationResources,
+            PreferredResources = preferredResources,
             PreferredDesks = preferredDesks,
             PreferredRooms = preferredRooms,
             PreferredOrganizationTags = preferredOrganizationTags
@@ -595,13 +600,13 @@ public class Mapper(IContext context) : IMapper
                 Organization = new Organization { Id = src.Organization.Id }
             };
 
-    private static IEnumerable<LocationResource> MapTo(IEnumerable<Shared.Database.Entities.LocationResource?>? src) =>
+    private static IEnumerable<Shared.Models.Resource> MapTo(IEnumerable<Resource?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
 
-    private static LocationResource? MapTo(Shared.Database.Entities.LocationResource? src) =>
+    private static Shared.Models.Resource? MapTo(Resource? src) =>
         src is null
             ? null
-            : new LocationResource
+            : new Shared.Models.Resource
             {
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,
@@ -609,7 +614,7 @@ public class Mapper(IContext context) : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Location = new Location { Id = src.Location.Id }
+                Location = src.Location is null ? null : new Location { Id = src.Location.Id }
             };
 
     private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk?>? src) =>

@@ -7,18 +7,18 @@ namespace Customer.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class LocationResource : ReplicatedEntityBaseWithDeleted
+public class Resource : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
 
-    public virtual Location Location { get; set; }
+    public virtual Location? Location { get; set; }
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-public class LocationResourceConfiguration : IEntityTypeConfiguration<LocationResource>
+public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
 {
-    public void Configure(EntityTypeBuilder<LocationResource> builder)
+    public void Configure(EntityTypeBuilder<Resource> builder)
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 

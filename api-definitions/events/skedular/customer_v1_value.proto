@@ -47,7 +47,7 @@ message Customer {
   string locale = 18;
   repeated Location preferredLocations = 19;
   string preferredOrganizationId = 20;
-  repeated LocationResource preferredLocationResources = 21;
+  repeated Resource preferredResources = 21;
   repeated Desk preferredDesks = 22;
   repeated Room preferredRooms = 23;
   Settings settings = 24;
@@ -84,7 +84,7 @@ message Team {
   string organizationId = 2;
 }
 
-message LocationResource {
+message Resource {
   string id = 1;
   string locationId = 2;
 }

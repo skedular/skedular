@@ -2,7 +2,7 @@ using Enterprise.Shared.Models;
 
 namespace Booking.Shared.Models;
 
-public class LocationResource : ReplicatedModelBaseWithDeleted
+public class Resource : ReplicatedModelBaseWithDeleted
 {
     public string? Name { get; set; }
     public bool Inactive { get; set; }

@@ -283,24 +283,22 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> AddCustomerPreferredLocationResourceAsync(
-        AddCustomerPreferredLocationResourceInput input,
-        [Service] ICustomerLocationResourceSettingsService customerLocationResourceSettingsService,
+    public async Task<CustomerPayload?> AddCustomerPreferredResourceAsync(
+        AddCustomerPreferredResourceInput input,
+        [Service] ICustomerResourceSettingsService customerResourceSettingsService,
         CancellationToken cancellationToken)
     {
-        var customer = await customerLocationResourceSettingsService.AddCustomerPreferredLocationResourceAsync(input.LocationResourceId, null,
-            cancellationToken);
+        var customer = await customerResourceSettingsService.AddCustomerPreferredResourceAsync(input.ResourceId, null, cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload?> RemoveCustomerPreferredLocationResourceAsync(
-        RemoveCustomerPreferredLocationResourceInput input,
-        [Service] ICustomerLocationResourceSettingsService customerLocationResourceSettingsService,
+    public async Task<CustomerPayload?> RemoveCustomerPreferredResourceAsync(
+        RemoveCustomerPreferredResourceInput input,
+        [Service] ICustomerResourceSettingsService customerResourceSettingsService,
         CancellationToken cancellationToken)
     {
-        var customer = await customerLocationResourceSettingsService.RemoveCustomerPreferredLocationResourceAsync(input.LocationResourceId, null,
-            cancellationToken);
+        var customer = await customerResourceSettingsService.RemoveCustomerPreferredResourceAsync(input.ResourceId, null, cancellationToken);
         return mapper.MapTo(customer, input.ClientMutationId);
     }
 }

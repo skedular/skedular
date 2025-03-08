@@ -50,8 +50,9 @@ public class Mapper : IMapper
             src.PreferredLocations.Select(item =>
                 new Location { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
         );
-        customer.PreferredLocationResources.AddRange(
-            src.PreferredLocationResources.Select(item => new LocationResource { Id = item.Id, LocationId = item.Location.Id}));
+        customer.PreferredResources.AddRange(
+            src.PreferredResources.Select(item =>
+                new Resource { Id = item.Id, LocationId = item.Location is null ? string.Empty : item.Location.Id }));
         customer.PreferredDesks.AddRange(src.PreferredDesks.Select(item => new Desk { Id = item.Id, LocationId = item.Location.Id }));
         customer.PreferredRooms.AddRange(src.PreferredRooms.Select(item => new Room { Id = item.Id, LocationId = item.Location.Id }));
         customer.PreferredTeams.AddRange(

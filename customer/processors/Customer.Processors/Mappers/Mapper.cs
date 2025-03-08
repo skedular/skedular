@@ -31,8 +31,8 @@ public interface IMapper
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization? organization);
 
-    LocationResource MapToEntity(Shared.Models.LocationResource src, Shared.Database.Entities.Location location);
-    LocationResource MergeToEntity(Shared.Models.LocationResource src, LocationResource dest, Shared.Database.Entities.Location location);
+    Resource MapToEntity(Shared.Models.Resource src, Shared.Database.Entities.Location location);
+    Resource MergeToEntity(Shared.Models.Resource src, Resource dest, Shared.Database.Entities.Location location);
     Shared.Database.Entities.Desk MapToEntity(Desk src, Shared.Database.Entities.Location location);
     Shared.Database.Entities.Desk MergeToEntity(Desk src, Shared.Database.Entities.Desk dest, Shared.Database.Entities.Location location);
     Shared.Database.Entities.Room MapToEntity(Room src, Shared.Database.Entities.Location location);
@@ -178,7 +178,7 @@ public class Mapper : IMapper
         }).ToList();
 
         location.Resources = locationAfterState.Resources.Select(item =>
-            new Shared.Models.LocationResource
+            new Shared.Models.Resource
             {
                 Id = item.Id,
                 DeletedAt = deletedAt,
@@ -299,7 +299,7 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList(),
                 DefaultOrganization = MapTo(src.DefaultOrganization),
                 PreferredLocations = MapTo(src.PreferredLocations).ToList(),
-                PreferredLocationResources = MapTo(src.PreferredLocationResources).ToList(),
+                PreferredResources = MapTo(src.PreferredResources).ToList(),
                 PreferredDesks = MapTo(src.PreferredDesks).ToList(),
                 PreferredRooms = MapTo(src.PreferredRooms).ToList(),
                 PreferredTeams = MapTo(src.PreferredTeams).ToList(),
@@ -333,10 +333,10 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public LocationResource MapToEntity(Shared.Models.LocationResource src, Shared.Database.Entities.Location location) =>
-        MergeToEntity(src, new LocationResource(), location);
+    public Resource MapToEntity(Shared.Models.Resource src, Shared.Database.Entities.Location location) =>
+        MergeToEntity(src, new Resource(), location);
 
-    public LocationResource MergeToEntity(Shared.Models.LocationResource src, LocationResource dest, Shared.Database.Entities.Location location)
+    public Resource MergeToEntity(Shared.Models.Resource src, Resource dest, Shared.Database.Entities.Location location)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -549,13 +549,13 @@ public class Mapper : IMapper
                 Rooms = includeRooms ? MapTo(src.Rooms).ToList() : []
             };
 
-    private static IEnumerable<Shared.Models.LocationResource> MapTo(IEnumerable<LocationResource?>? src) =>
+    private static IEnumerable<Shared.Models.Resource> MapTo(IEnumerable<Resource?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
 
-    private static Shared.Models.LocationResource? MapTo(LocationResource? src) =>
+    private static Shared.Models.Resource? MapTo(Resource? src) =>
         src is null
             ? null
-            : new Shared.Models.LocationResource
+            : new Shared.Models.Resource
             {
                 Id = src.Id,
                 CreatedAt = src.CreatedAt,

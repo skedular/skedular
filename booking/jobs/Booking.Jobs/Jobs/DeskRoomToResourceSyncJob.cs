@@ -4,9 +4,9 @@ using Booking.Shared.Repositories;
 
 namespace Booking.Jobs.Jobs;
 
-public class DeskRoomToLocationResourceSyncJob(
+public class DeskRoomToResourceSyncJob(
     IServiceProvider serviceProvider,
-    ILogger<DeskRoomToLocationResourceSyncJob> logger) : BackgroundService
+    ILogger<DeskRoomToResourceSyncJob> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -32,23 +32,23 @@ public class DeskRoomToLocationResourceSyncJob(
 
                     ArgumentNullException.ThrowIfNull(organization);
 
-                    var deskResourceType = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Desk);
-                    if (deskResourceType is not null)
+                    var deskTag = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Desk);
+                    if (deskTag is not null)
                     {
                         foreach (var desk in location.Desks)
                         {
                             var deskWithBookings = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, true, cancellationToken);
                             ArgumentNullException.ThrowIfNull(deskWithBookings);
 
-                            if (deskWithBookings.OrganizationTags.All(item => item.Id != deskResourceType.Id))
+                            if (deskWithBookings.OrganizationTags.All(item => item.Id != deskTag.Id))
                             {
-                                deskWithBookings.OrganizationTags = deskWithBookings.OrganizationTags.Concat([deskResourceType]).ToList();
+                                deskWithBookings.OrganizationTags = deskWithBookings.OrganizationTags.Concat([deskTag]).ToList();
                             }
 
-                            var existingResource = await repositoryFactory.LocationResourceRepository.GetByIdAsync(desk.Id, true, cancellationToken);
+                            var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(desk.Id, true, cancellationToken);
                             if (existingResource is null)
                             {
-                                var locationResource = new LocationResource
+                                var resource = new Resource
                                 {
                                     Id = desk.Id,
                                     CreatedAt = desk.CreatedAt,
@@ -64,7 +64,7 @@ public class DeskRoomToLocationResourceSyncJob(
                                     PreferredByCustomers = deskWithBookings.PreferredByCustomers
                                 };
 
-                                repositoryFactory.LocationResourceRepository.Add(locationResource);
+                                repositoryFactory.ResourceRepository.Add(resource);
                             }
                             else
                             {
@@ -78,32 +78,32 @@ public class DeskRoomToLocationResourceSyncJob(
                                 existingResource.Color = desk.Color;
                                 existingResource.Location = location;
                                 existingResource.OrganizationTags = deskWithBookings.OrganizationTags;
-                                existingResource.PreferredByCustomers = existingResource.PreferredByCustomers;
+                                existingResource.PreferredByCustomers = deskWithBookings.PreferredByCustomers;
 
-                                repositoryFactory.LocationResourceRepository.Update(existingResource);
+                                repositoryFactory.ResourceRepository.Update(existingResource);
                             }
 
                             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                         }
                     }
 
-                    var roomResourceType = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Room);
-                    if (roomResourceType is not null)
+                    var roomTag = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Room);
+                    if (roomTag is not null)
                     {
                         foreach (var room in location.Rooms)
                         {
                             var roomWithBookings = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, true, cancellationToken);
                             ArgumentNullException.ThrowIfNull(roomWithBookings);
 
-                            if (roomWithBookings.OrganizationTags.All(item => item.Id != roomResourceType.Id))
+                            if (roomWithBookings.OrganizationTags.All(item => item.Id != roomTag.Id))
                             {
-                                roomWithBookings.OrganizationTags = roomWithBookings.OrganizationTags.Concat([roomResourceType]).ToList();
+                                roomWithBookings.OrganizationTags = roomWithBookings.OrganizationTags.Concat([roomTag]).ToList();
                             }
 
-                            var existingResource = await repositoryFactory.LocationResourceRepository.GetByIdAsync(room.Id, true, cancellationToken);
+                            var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(room.Id, true, cancellationToken);
                             if (existingResource is null)
                             {
-                                var locationResource = new LocationResource
+                                var resource = new Resource
                                 {
                                     Id = room.Id,
                                     CreatedAt = room.CreatedAt,
@@ -119,7 +119,7 @@ public class DeskRoomToLocationResourceSyncJob(
                                     PreferredByCustomers = roomWithBookings.PreferredByCustomers
                                 };
 
-                                repositoryFactory.LocationResourceRepository.Add(locationResource);
+                                repositoryFactory.ResourceRepository.Add(resource);
                             }
                             else
                             {
@@ -133,9 +133,9 @@ public class DeskRoomToLocationResourceSyncJob(
                                 existingResource.Color = room.Color;
                                 existingResource.Location = location;
                                 existingResource.OrganizationTags = roomWithBookings.OrganizationTags;
-                                existingResource.PreferredByCustomers = existingResource.PreferredByCustomers;
+                                existingResource.PreferredByCustomers = roomWithBookings.PreferredByCustomers;
 
-                                repositoryFactory.LocationResourceRepository.Update(existingResource);
+                                repositoryFactory.ResourceRepository.Update(existingResource);
                             }
 
                             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -151,7 +151,7 @@ public class DeskRoomToLocationResourceSyncJob(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to run job: {job}", nameof(DeskRoomToLocationResourceSyncJob));
+                logger.LogError(ex, "Failed to run job: {job}", nameof(DeskRoomToResourceSyncJob));
             }
         } while (true);
     }

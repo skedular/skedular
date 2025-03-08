@@ -10,10 +10,11 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using CustomerOrder = Customer.Shared.Models.CustomerOrder;
 using Desk = Customer.Shared.Database.Entities.Desk;
+using Identity = Customer.Shared.Models.Identity;
 using Room = Customer.Shared.Database.Entities.Room;
 using Location = Customer.Shared.Database.Entities.Location;
-using LocationResource = Customer.Shared.Database.Entities.LocationResource;
 using OrganizationTag = Customer.Shared.Database.Entities.OrganizationTag;
+using Resource = Customer.Shared.Database.Entities.Resource;
 using Team = Customer.Shared.Database.Entities.Team;
 
 namespace Customer.Api.Services;
@@ -186,16 +187,16 @@ public class CustomerService(
             var organization = team.Organization is null
                 ? null
                 : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
-
             preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken));
         }
 
-        var preferredLocationResources = new List<LocationResource>();
-        foreach (var locationResource in customer.PreferredLocationResources)
+        var preferredResources = new List<Resource>();
+        foreach (var resource in customer.PreferredResources)
         {
-            var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(locationResource.Location.Id, null, cancellationToken);
-            preferredLocationResources.Add(
-                await repositoryFactory.LocationResourceRepository.UpsertNakedAsync(locationResource.Id, location, cancellationToken));
+            var location = resource.Location is null
+                ? null
+                : await repositoryFactory.LocationRepository.UpsertNakedAsync(resource.Location.Id, null, cancellationToken);
+            preferredResources.Add(await repositoryFactory.ResourceRepository.UpsertNakedAsync(resource.Id, location, cancellationToken));
         }
 
         var preferredDesks = new List<Desk>();
@@ -236,7 +237,7 @@ public class CustomerService(
                 defaultOrganization,
                 preferredLocations,
                 preferredTeams,
-                preferredLocationResources,
+                preferredResources,
                 preferredDesks,
                 preferredRooms,
                 preferredOrganizationTags);

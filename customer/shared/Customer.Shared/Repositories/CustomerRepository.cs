@@ -37,7 +37,7 @@ internal static class CustomerExtensions
             .ThenInclude(query => query.Organization)
             .Include(query => query.PreferredOrganizationTags)
             .ThenInclude(query => query.Organization)
-            .Include(query => query.PreferredLocationResources)
+            .Include(query => query.PreferredResources)
             .ThenInclude(query => query.Location)
             .Include(query => query.PreferredDesks)
             .ThenInclude(query => query.Location)

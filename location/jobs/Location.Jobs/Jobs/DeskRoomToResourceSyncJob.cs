@@ -32,17 +32,17 @@ public class DeskRoomToResourceSyncJob(
 
                     ArgumentNullException.ThrowIfNull(organization);
 
-                    var deskResourceType = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Desk);
-                    if (deskResourceType is not null)
+                    var deskTag = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Desk);
+                    if (deskTag is not null)
                     {
                         foreach (var desk in location.Desks)
                         {
                             var deskWithBookings = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
                             ArgumentNullException.ThrowIfNull(deskWithBookings);
 
-                            if (deskWithBookings.OrganizationTags.All(item => item.Id != deskResourceType.Id))
+                            if (deskWithBookings.OrganizationTags.All(item => item.Id != deskTag.Id))
                             {
-                                deskWithBookings.OrganizationTags = deskWithBookings.OrganizationTags.Concat([deskResourceType]).ToList();
+                                deskWithBookings.OrganizationTags = deskWithBookings.OrganizationTags.Concat([deskTag]).ToList();
                             }
 
                             var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(desk.Id, cancellationToken);
@@ -83,17 +83,17 @@ public class DeskRoomToResourceSyncJob(
                         }
                     }
 
-                    var roomResourceType = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Room);
-                    if (roomResourceType is not null)
+                    var roomTag = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Room);
+                    if (roomTag is not null)
                     {
                         foreach (var room in location.Rooms)
                         {
                             var roomWithBookings = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, cancellationToken);
                             ArgumentNullException.ThrowIfNull(roomWithBookings);
 
-                            if (roomWithBookings.OrganizationTags.All(item => item.Id != roomResourceType.Id))
+                            if (roomWithBookings.OrganizationTags.All(item => item.Id != roomTag.Id))
                             {
-                                roomWithBookings.OrganizationTags = roomWithBookings.OrganizationTags.Concat([roomResourceType]).ToList();
+                                roomWithBookings.OrganizationTags = roomWithBookings.OrganizationTags.Concat([roomTag]).ToList();
                             }
 
                             var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(roomWithBookings.Id, cancellationToken);

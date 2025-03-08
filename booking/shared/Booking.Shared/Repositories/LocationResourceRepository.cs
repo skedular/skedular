@@ -6,63 +6,63 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Shared.Repositories;
 
-public interface ILocationResourceRepository : IRepository<LocationResource>
+public interface IResourceRepository : IRepository<Resource>
 {
-    Task<LocationResource> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken);
-    Task<LocationResource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
-    LocationResource Add(LocationResource locationResource);
-    LocationResource Update(LocationResource locationResource);
-    void RemoveRange(ICollection<LocationResource> locationResources);
+    Task<Resource> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken);
+    Task<Resource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
+    Resource Add(Resource resource);
+    Resource Update(Resource resource);
+    void RemoveRange(ICollection<Resource> resources);
 
-    Task<ICollection<LocationResource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
+    Task<ICollection<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
 }
 
-public class LocationResourceRepository(BookingDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<BookingDbContext, LocationResource>(dbContext, timeProvider), ILocationResourceRepository
+public class ResourceRepository(BookingDbContext dbContext, TimeProvider timeProvider)
+    : RepositoryBase<BookingDbContext, Resource>(dbContext, timeProvider), IResourceRepository
 {
-    public async Task<LocationResource> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken)
+    public async Task<Resource> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Location>(id, location, cancellationToken);
 
         return (await GetByIdAsync(id, false, cancellationToken))!;
     }
 
-    public LocationResource Add(LocationResource locationResource)
+    public Resource Add(Resource resource)
     {
         var now = TimeProvider.GetUtcNow();
-        locationResource.CreatedAt = now;
-        return DbContext.LocationResource.Add(locationResource).Entity;
+        resource.CreatedAt = now;
+        return DbContext.Resource.Add(resource).Entity;
     }
 
-    public void RemoveRange(ICollection<LocationResource> locationResources)
+    public void RemoveRange(ICollection<Resource> resources)
     {
         var now = TimeProvider.GetUtcNow();
-        locationResources.ForEach(locationResource => locationResource.DeletedAt = now);
-        DbContext.LocationResource.UpdateRange(locationResources);
+        resources.ForEach(resource => resource.DeletedAt = now);
+        DbContext.Resource.UpdateRange(resources);
     }
 
-    public LocationResource Update(LocationResource locationResource)
+    public Resource Update(Resource resource)
     {
         var now = TimeProvider.GetUtcNow();
-        locationResource.ModifiedAt = now;
-        return DbContext.LocationResource.Update(locationResource).Entity;
+        resource.ModifiedAt = now;
+        return DbContext.Resource.Update(resource).Entity;
     }
 
-    public async Task<LocationResource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
+    public async Task<Resource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
         includeAllRelatedEntities
-            ? await DbContext.LocationResource
+            ? await DbContext.Resource
                 .Include(query => query.PreferredByCustomers)
                 .Include(query => query.Location)
                 .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken)
-            : await DbContext.LocationResource
+            : await DbContext.Resource
                 .Include(query => query.Location)
                 .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<LocationResource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
-        await DbContext.LocationResource
-            .Where(query => query.Location.Id == locationId)
+    public async Task<ICollection<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
+        await DbContext.Resource
+            .Where(query => query.Location != null && query.Location.Id == locationId)
             .Include(query => query.OrganizationTags)
             .ToListAsync(cancellationToken);
 }
