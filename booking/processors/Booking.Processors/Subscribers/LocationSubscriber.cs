@@ -15,8 +15,6 @@ namespace Booking.Processors.Subscribers;
 public class LocationSubscriber(
     ILogger<LocationSubscriber> logger,
     IMapper mapper,
-    IResourceBookingSlotHelper resourceBookingSlotHelper,
-    IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -40,9 +38,7 @@ public class LocationSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
                     await HandleLocationUpsertedEventAsync(location, existingLocation, cancellationToken);
-                    await transaction.CommitAsync(cancellationToken);
                 }
                 break;
 
@@ -148,7 +144,6 @@ public class LocationSubscriber(
 
                 var resourceEntity =
                     repositoryFactory.ResourceRepository.Add(mapper.MapToEntity(resource, existingLocation, filteredOrganizationTags));
-                repositoryFactory.ResourceBookingSlotRepository.AddRange(resourceBookingSlotHelper.CreateAllAvailableSlots(resourceEntity));
 
                 return resourceEntity;
             })
