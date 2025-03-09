@@ -2,7 +2,6 @@ import { StackColumn } from '@/components/commons';
 import { getOrganizationBaseLink } from '@/components/links';
 import { AddLocation } from '@/components/location/addLocation';
 import { AddOrganization } from '@/components/organization/addOrganization';
-import { AddTeam } from '@/components/team/addTeam';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
@@ -20,16 +19,12 @@ const OrganizationOnboarding = () => {
   };
 
   const handleLocationAdded = () => {
-    setActiveStep(2);
+    if (organizationId) {
+      router.push(getOrganizationBaseLink(organizationId));
+    }
   };
 
   const handleLocationDismissed = () => {
-    setActiveStep(2);
-  };
-
-  const handleTeamAdded = () => {};
-
-  const handleTeamDismissed = () => {
     if (organizationId) {
       router.push(getOrganizationBaseLink(organizationId));
     }
@@ -44,9 +39,6 @@ const OrganizationOnboarding = () => {
         <Step>
           <StepLabel>Create Location</StepLabel>
         </Step>
-        <Step>
-          <StepLabel>Create Team</StepLabel>
-        </Step>
       </Stepper>
       {activeStep === 0 && <AddOrganization onReloadRequired={() => {}} showCancel={false} onAdded={handleOrganizationAdded} addLabel="Create Organization" />}
       {activeStep === 1 && organizationId && (
@@ -58,9 +50,6 @@ const OrganizationOnboarding = () => {
           onCancel={handleLocationDismissed}
           addLabel="Create Location"
         />
-      )}
-      {activeStep === 2 && organizationId && (
-        <AddTeam organizationId={organizationId} onReloadRequired={() => {}} showDismiss onAdded={handleTeamAdded} onCancel={handleTeamDismissed} addLabel="Create Team" />
       )}
     </StackColumn>
   );
