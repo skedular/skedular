@@ -31,16 +31,13 @@ public class BillingInternalSubscriber(
         return EventSubscriberResults.Success;
     }
 
-    private async Task HandleGenerateOrganizationOfferingInvoiceEventAsync(
-        string organizationOfferingId,
-        CancellationToken cancellationToken)
+    private async Task HandleGenerateOrganizationOfferingInvoiceEventAsync(string organizationOfferingId, CancellationToken cancellationToken)
     {
         var now = timeProvider.GetUtcNow();
         var organizationOffering = await repositoryFactory.OrganizationOfferingRepository
             .Query(new Specification<OrganizationOffering>
                 {
-                    Criteria = query =>
-                        query.Id == organizationOfferingId && query.End <= now && !query.InvoiceDate.HasValue
+                    Criteria = query => query.Id == organizationOfferingId && query.End <= now && !query.InvoiceDate.HasValue
                 }
                 .AddInclude(query => query.Organization))
             .FirstOrDefaultAsync(cancellationToken);

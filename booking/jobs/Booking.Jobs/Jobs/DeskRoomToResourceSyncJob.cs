@@ -1,12 +1,12 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
+using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
-using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 
 namespace Booking.Jobs.Jobs;
 
-public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider,ILogger<DeskRoomToResourceSyncJob> logger) : BackgroundService
+public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger<DeskRoomToResourceSyncJob> logger) : BackgroundService
 {
     private readonly string _jobName = typeof(DeskRoomToResourceSyncJob).FullName!;
 
@@ -18,7 +18,11 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider,ILogger<
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
+                var transactionBuilder = scope.ServiceProvider.GetRequiredService<IDbTransactionBuilder>();
+                var bookingInternalOutboxPublisher = scope.ServiceProvider.GetRequiredService<IBookingInternalOutboxPublisher>();
                 var locations = await repositoryFactory.LocationRepository.GetAllAsync(true, true, true, true, cancellationToken);
+
+                await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
                 foreach (var location in locations)
                 {
@@ -67,6 +71,11 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider,ILogger<
                                 };
 
                                 repositoryFactory.ResourceRepository.Add(resource);
+
+                                await bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlotAsync(
+                                    [resource.Id],
+                                    repositoryFactory.UnitOfWork,
+                                    cancellationToken);
                             }
                             else
                             {
@@ -84,8 +93,6 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider,ILogger<
 
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }
-
-                            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                         }
                     }
 
@@ -122,6 +129,11 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider,ILogger<
                                 };
 
                                 repositoryFactory.ResourceRepository.Add(resource);
+
+                                await bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlotAsync(
+                                    [resource.Id],
+                                    repositoryFactory.UnitOfWork,
+                                    cancellationToken);
                             }
                             else
                             {
@@ -139,11 +151,12 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider,ILogger<
 
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }
-
-                            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                         }
                     }
                 }
+
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
 
                 logger.LogInformation("Finished running job: {job}", _jobName);
 

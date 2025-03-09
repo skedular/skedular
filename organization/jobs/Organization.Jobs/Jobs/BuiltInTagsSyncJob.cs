@@ -31,8 +31,6 @@ public class BuiltInTagsSyncJob(IServiceProvider serviceProvider, ILogger<BuiltI
                             Color = null,
                             Organization = organization
                         });
-
-                        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                     }
 
                     if (organization.Tags.All(item => item.Type != OrganizationTagTypeConstants.Room))
@@ -45,10 +43,10 @@ public class BuiltInTagsSyncJob(IServiceProvider serviceProvider, ILogger<BuiltI
                             Color = null,
                             Organization = organization
                         });
-
-                        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                     }
                 }
+
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
                 logger.LogInformation("Finished running job: {job}", _jobName);
 

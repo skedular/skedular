@@ -11,7 +11,7 @@ public interface IResourceBookingSlotRepository : IRepository<ResourceBookingSlo
     void AddRange(ICollection<ResourceBookingSlot> resourceBookingSlots);
     void UpdateRange(ICollection<ResourceBookingSlot> resourceBookingSlots);
     void RemoveRange(ICollection<ResourceBookingSlot> resourceBookingSlots);
-    Task<ICollection<ResourceBookingSlot>> GetByResourceIdAsync(string resourceId, CancellationToken cancellationToken);
+    Task<ICollection<ResourceBookingSlot>> GetByResourceIdAsync(string resourceId, DateTimeOffset from, CancellationToken cancellationToken);
 }
 
 public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -33,9 +33,9 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
         DbContext.ResourceBookingSlot.UpdateRange(resourceBookingSlots);
     }
 
-    public async Task<ICollection<ResourceBookingSlot>> GetByResourceIdAsync(string resourceId, CancellationToken cancellationToken) =>
+    public async Task<ICollection<ResourceBookingSlot>> GetByResourceIdAsync(string resourceId, DateTimeOffset from, CancellationToken cancellationToken) =>
         await DbContext.ResourceBookingSlot
-            .Where(query => query.Resource.Id == resourceId)
+            .Where(query => query.Resource.Id == resourceId && query.Start >= from)
             .Include(query => query.Resource)
             .ThenInclude(query => query.Location)
             .ToListAsync(cancellationToken);

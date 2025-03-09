@@ -1,8 +1,8 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Booking.Shared.Database.Entities;
+using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
-using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using IMapper = Booking.Processors.Mappers.IMapper;
@@ -15,7 +15,9 @@ namespace Booking.Processors.Subscribers;
 public class LocationSubscriber(
     ILogger<LocationSubscriber> logger,
     IMapper mapper,
-    IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
+    IRepositoryFactory repositoryFactory,
+    IDbTransactionBuilder transactionBuilder,
+    IBookingInternalOutboxPublisher bookingInternalOutboxPublisher) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -38,7 +40,9 @@ public class LocationSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
+                    await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
                     await HandleLocationUpsertedEventAsync(location, existingLocation, cancellationToken);
+                    await transaction.CommitAsync(cancellationToken);
                 }
                 break;
 
@@ -84,10 +88,12 @@ public class LocationSubscriber(
             ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, organization))
             : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
 
-        existingLocation = await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
+        (existingLocation, var resourceIds) = await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
         existingLocation = await RebuildDesksAsync(location, existingLocation, organization, cancellationToken);
         existingLocation = await RebuildRoomsAsync(location, existingLocation, organization, cancellationToken);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
+
+        await bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlotAsync(resourceIds, repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
@@ -97,7 +103,7 @@ public class LocationSubscriber(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task<Location> RebuildResourcesAsync(
+    private async Task<(Location, ICollection<string>)> RebuildResourcesAsync(
         Shared.Models.Location location,
         Location existingLocation,
         Organization? organization,
@@ -105,7 +111,7 @@ public class LocationSubscriber(
     {
         if (organization is null)
         {
-            return existingLocation;
+            return (existingLocation, []);
         }
 
         var organizationTags = new List<OrganizationTag>();
@@ -142,17 +148,14 @@ public class LocationSubscriber(
                     .Where(tag => resource.OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
-                var resourceEntity =
-                    repositoryFactory.ResourceRepository.Add(mapper.MapToEntity(resource, existingLocation, filteredOrganizationTags));
-
-                return resourceEntity;
+                return repositoryFactory.ResourceRepository.Add(mapper.MapToEntity(resource, existingLocation, filteredOrganizationTags));
             })
             .ToList();
 
         repositoryFactory.ResourceRepository.RemoveRange(itemsToRemove);
         existingLocation.Resources = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
-        return existingLocation;
+        return (existingLocation, addedItems.Select(item => item.Id).ToList());
     }
 
     private async Task<Location> RebuildDesksAsync(

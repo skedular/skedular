@@ -19,10 +19,7 @@ public interface IBillingOutboxPublisher
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken);
 
-    Task PublishOrganizationsBillingInfoAsync(
-        IEnumerable<Organization> organizations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    Task PublishOrganizationsBillingInfoAsync(IEnumerable<Organization> organizations, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 }
 
 public class BillingOutboxPublisher(

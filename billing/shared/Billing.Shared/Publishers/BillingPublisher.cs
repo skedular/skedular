@@ -13,13 +13,8 @@ namespace Billing.Shared.Publishers;
 
 public interface IBillingPublisher
 {
-    Task PublishBillingOrganizationsOfferingsAsync(
-        IEnumerable<OrganizationOffering> organizationOfferings,
-        CancellationToken cancellationToken);
-
-    Task PublishOrganizationsBillingInfoAsync(
-        IEnumerable<Organization> organizations,
-        CancellationToken cancellationToken);
+    Task PublishBillingOrganizationsOfferingsAsync(IEnumerable<OrganizationOffering> organizationOfferings, CancellationToken cancellationToken);
+    Task PublishOrganizationsBillingInfoAsync(IEnumerable<Organization> organizations, CancellationToken cancellationToken);
 }
 
 public class BillingPublisher(
@@ -48,9 +43,7 @@ public class BillingPublisher(
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
 
-    public async Task PublishOrganizationsBillingInfoAsync(
-        IEnumerable<Organization> organizations,
-        CancellationToken cancellationToken) =>
+    public async Task PublishOrganizationsBillingInfoAsync(IEnumerable<Organization> organizations, CancellationToken cancellationToken) =>
         await Task.WhenAll(organizations.Select(async organization =>
         {
             var key = new Key { OrganizationId = organization.Id };

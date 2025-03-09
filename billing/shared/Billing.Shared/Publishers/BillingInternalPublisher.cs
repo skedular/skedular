@@ -9,9 +9,7 @@ namespace Billing.Shared.Publishers;
 
 public interface IBillingInternalPublisher
 {
-    Task PublishOrganizationOfferingRequireBillingAsync(
-        IEnumerable<string> organizationOfferingIds,
-        CancellationToken cancellationToken);
+    Task PublishOrganizationOfferingRequireBillingAsync(IEnumerable<string> organizationOfferingIds, CancellationToken cancellationToken);
 }
 
 public class BillingInternalPublisher(

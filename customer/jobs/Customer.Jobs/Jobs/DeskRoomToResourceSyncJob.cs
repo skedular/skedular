@@ -69,8 +69,6 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
 
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }
-
-                            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                         }
                     }
 
@@ -111,11 +109,11 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
 
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }
-
-                            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                         }
                     }
                 }
+
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
                 logger.LogInformation("Finished running job: {job}", _jobName);
 

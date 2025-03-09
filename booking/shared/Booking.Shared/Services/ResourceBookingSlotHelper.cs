@@ -6,14 +6,17 @@ namespace Booking.Shared.Services;
 
 public interface IResourceBookingSlotHelper
 {
+    DateTimeOffset GetStartPeriod();
     ICollection<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource);
 }
 
 public class ResourceBookingSlotHelper(IRandomHelper randomHelper, TimeProvider timeProvider) : IResourceBookingSlotHelper
 {
+    public DateTimeOffset GetStartPeriod() => timeProvider.GetUtcNow().StartOfDay();
+
     public ICollection<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource)
     {
-        var periodStart = timeProvider.GetUtcNow().StartOfDay();
+        var periodStart = GetStartPeriod();
         var periodEnd = periodStart.AddMonths(3);
         var count = (periodEnd - periodStart).TotalMinutes / 15;
 

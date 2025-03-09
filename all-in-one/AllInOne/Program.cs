@@ -40,6 +40,7 @@ public class Program : WebHostServiceBase<Program>
         await kafkaHelper.CreateTopicForEventAsync<Event>();
         await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.BillingInternal.V1.Value.Event>();
         await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event>();
+        await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>();
         await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>();
         await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>();
         await kafkaHelper
@@ -65,6 +66,10 @@ public class Program : WebHostServiceBase<Program>
         //
         //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Booking.V1.Key.Key>(),
         //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event>(),
+        //
+        //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key>(),
+        //     kafkaHelper
+        //         .RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>(),
         //
         //     kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key>(),
         //     kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(),

@@ -1,0 +1,8 @@
+syntax = "proto3";
+package bookinginternal;
+
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key";
+
+message Key {
+    string resourceId = 1;
+}

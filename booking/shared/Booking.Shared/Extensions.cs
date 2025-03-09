@@ -38,10 +38,14 @@ public static class Extensions
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services.AddScoped<IBookingPublisher, BookingPublisher>();
+        services
+            .AddScoped<IBookingInternalPublisher, BookingInternalPublisher>()
+            .AddScoped<IBookingPublisher, BookingPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
-        services.AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
+        services
+            .AddScoped<IBookingInternalOutboxPublisher, BookingInternalOutboxPublisher>()
+            .AddScoped<IBookingOutboxPublisher, BookingOutboxPublisher>();
 
     public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {

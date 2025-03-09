@@ -7,6 +7,7 @@ using Enterprise.Shared.Application.WebHostService;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Outbox;
 
 namespace Booking.Processors;
 
@@ -18,6 +19,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddDatabase(Configuration, true, "BookingPostgresConnection")
             .WithPooledDbContextFactory<BookingDbContext>(Configuration, Migration.SetAssembly, Environment)
+            .AddOutboxService()
             .AddDatabaseHealthCheck();
 
         var kafkaConfiguration = Configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
@@ -25,6 +27,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 
         services
             .AddKafka()
+            .AddKafkaReliableEventConsumers<
+                BookingInternalSubscriber,
+                Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
@@ -48,6 +54,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddMappers()
             .AddRepositoryFactory()
             .AddPublishers()
+            .AddOutboxPublishers()
             .AddMappers()
             .AddSkedularGrpcServices(Configuration);
     }

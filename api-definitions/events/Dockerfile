@@ -92,6 +92,29 @@ RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
     --protobuf-schema-file-path /events/skedular/booking_v1_value.proto \
     --output-file-path /output/Skedular/Booking/BookingValueMetadata.g.cs
 
+RUN mkdir -p /output/Skedular/BookingInternal/V1
+RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/BookingInternal/V1 --csharp_opt=file_extension=.g.cs booking_internal_v1_key.proto
+RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/BookingInternal/V1 --csharp_opt=file_extension=.g.cs booking_internal_v1_value.proto
+RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
+    --namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key \
+    --event-type Key \
+    --topic-name booking.v1.internal \
+    --retry-topic-name-prefix booking.v1.internal.retry \
+    --retry-topic-count 1 \
+    --dead-letter-topic-name booking.v1.internal.deadletter \
+    --generate-metadata-function-helper False \
+    --protobuf-schema-file-path /events/skedular/booking_internal_v1_key.proto \
+    --output-file-path /output/Skedular/BookingInternal/V1/BookingInternalKeyMetadata.g.cs
+RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
+    --namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value \
+    --event-type Event \
+    --topic-name booking.v1.internal \
+    --retry-topic-name-prefix booking.v1.internal.retry \
+    --retry-topic-count 1 \
+    --dead-letter-topic-name booking.v1.internal.deadletter \
+    --protobuf-schema-file-path /events/skedular/booking_internal_v1_value.proto \
+    --output-file-path /output/Skedular/BookingInternal/V1/BookingInternalValueMetadata.g.cs
+
 RUN mkdir -p /output/Skedular/Customer/V1
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Customer/V1 --csharp_opt=file_extension=.g.cs customer_v1_key.proto
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Customer/V1 --csharp_opt=file_extension=.g.cs customer_v1_value.proto
