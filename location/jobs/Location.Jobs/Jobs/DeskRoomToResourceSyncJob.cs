@@ -133,7 +133,7 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
 
                 await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-                logger.LogInformation("Finished running job: {job}", nameof(DeskRoomToResourceSyncJob));
+                logger.LogInformation("Finished running job: {job}", _jobName);
 
                 await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
             }
