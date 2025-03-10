@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="OpenApi\"/>
+        <ProjectReference Include="..\Api.Shared\Api.Shared.csproj"/>
     </ItemGroup>
 
 </Project>
