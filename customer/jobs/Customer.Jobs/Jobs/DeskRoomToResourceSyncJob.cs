@@ -16,7 +16,7 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var locations = await repositoryFactory.LocationRepository.GetAllAsync(true, cancellationToken);
+                var locations = await repositoryFactory.LocationRepository.GetAllAsync(false, cancellationToken);
 
                 foreach (var location in locations)
                 {

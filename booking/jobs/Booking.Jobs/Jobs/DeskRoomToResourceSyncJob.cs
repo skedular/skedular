@@ -20,7 +20,7 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
                 var transactionBuilder = scope.ServiceProvider.GetRequiredService<IDbTransactionBuilder>();
                 var bookingInternalOutboxPublisher = scope.ServiceProvider.GetRequiredService<IBookingInternalOutboxPublisher>();
-                var locations = await repositoryFactory.LocationRepository.GetAllAsync(true, true, true, true, cancellationToken);
+                var locations = await repositoryFactory.LocationRepository.GetAllAsync(false, false, false, false, cancellationToken);
 
                 await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
