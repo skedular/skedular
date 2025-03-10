@@ -17,7 +17,7 @@ public class ResourceBookingSlotHelper(IRandomHelper randomHelper, TimeProvider 
     public ICollection<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource)
     {
         var periodStart = GetStartPeriod();
-        var periodEnd = periodStart.AddMonths(3);
+        var periodEnd = periodStart.AddMonths(6);
         var count = (periodEnd - periodStart).TotalMinutes / 15;
 
         return Enumerable
