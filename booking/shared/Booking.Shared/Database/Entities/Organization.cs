@@ -1,5 +1,5 @@
 using Api.Shared;
-using Booking.Shared.Models;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

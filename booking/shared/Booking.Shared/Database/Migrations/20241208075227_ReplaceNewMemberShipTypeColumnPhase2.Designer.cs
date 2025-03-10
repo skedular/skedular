@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
+using Api.Shared.Services.Models;
 
 namespace Booking.Shared.Database.Migrations
 {

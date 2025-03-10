@@ -9,6 +9,7 @@ using Team.Shared.Database;
 using Team.Shared.Models;
 
 #nullable disable
+using Api.Shared.Services.Models;
 
 namespace Team.Shared.Database.Migrations
 {

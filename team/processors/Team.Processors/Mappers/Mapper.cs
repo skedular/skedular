@@ -8,7 +8,7 @@ using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Team.Shared.Database.Entities.Identity;
 using Location = Team.Shared.Models.Location;
 using TeamMember = Team.Shared.Database.Entities.TeamMember;
-using Offering = Team.Shared.Models.Offering;
+using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Team.Shared.Models.Organization;
 using OrganizationMember = Team.Shared.Database.Entities.OrganizationMember;
 

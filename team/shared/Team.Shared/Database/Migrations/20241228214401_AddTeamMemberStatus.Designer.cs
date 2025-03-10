@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Team.Shared.Database;
 using Team.Shared.Models;
+using Api.Shared.Services.Models;
 
 #nullable disable
 

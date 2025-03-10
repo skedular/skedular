@@ -4,6 +4,7 @@ using Location.Shared.Models;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
+using Api.Shared.Services.Models;
 
 namespace Location.Shared.Database.Migrations
 {

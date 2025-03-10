@@ -1,8 +1,8 @@
 using Api.Shared;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Team.Shared.Models;
 
 namespace Team.Shared.Database.Entities;
 

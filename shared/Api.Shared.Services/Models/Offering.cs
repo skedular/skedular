@@ -1,6 +1,6 @@
 ﻿using Api.Shared.Services.Offering;
 
-namespace Location.Shared.Models;
+namespace Api.Shared.Services.Models;
 
 public class Offering
 {

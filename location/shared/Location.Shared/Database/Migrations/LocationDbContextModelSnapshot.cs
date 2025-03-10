@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
+using Api.Shared.Services.Models;
 
 namespace Location.Shared.Database.Migrations
 {

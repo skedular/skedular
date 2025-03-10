@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace Booking.Shared.Models;

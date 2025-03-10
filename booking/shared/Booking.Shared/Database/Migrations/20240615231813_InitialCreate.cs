@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Microsoft.EntityFrameworkCore.Migrations;
 
