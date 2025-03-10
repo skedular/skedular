@@ -1,4 +1,5 @@
 using Api.Shared;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,6 +11,7 @@ namespace Booking.Shared.Database.Entities;
 public class Location : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
+    public OpeningHours? OpeningHours { get; set; }
 
     public virtual Organization? Organization { get; set; }
     public virtual ICollection<LocationMember> LocationMembers { get; set; } = [];
@@ -28,6 +30,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationNameLength);
+        builder.Property(item => item.OpeningHours).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
 
