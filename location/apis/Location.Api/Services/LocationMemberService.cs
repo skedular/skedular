@@ -83,26 +83,19 @@ public class LocationMemberService(
         }
 
         var myMemberDetails = location.LocationMembers.Single(item => item.Customer.Id == customer.Id);
-        if (myMemberDetails.Role == LocationRoleConstants.Administrator &&
+        if (myMemberDetails.Role == LocationMemberRoleConstants.Administrator &&
             memberRole == LocationMemberRole.Owner)
         {
             throw new Unauthorized();
         }
 
-        if (myMemberDetails.Role == LocationRoleConstants.Member &&
+        if (myMemberDetails.Role == LocationMemberRoleConstants.Member &&
             memberRole == LocationMemberRole.Administrator)
         {
             throw new Unauthorized();
         }
 
-        var mappedRole = memberRole switch
-        {
-            LocationMemberRole.Owner => LocationRoleConstants.Owner,
-            LocationMemberRole.Administrator => LocationRoleConstants.Administrator,
-            LocationMemberRole.Member => LocationRoleConstants.Member,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
+        var mappedRole = memberRole.ToLocationMemberRole();
         if (locationMember.Role == mappedRole)
         {
             return mapper.MapTo(locationMember, mapper.MapTo(location));

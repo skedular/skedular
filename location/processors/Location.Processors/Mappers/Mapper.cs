@@ -118,14 +118,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
-            Type = item.Type switch
-            {
-                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
-                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
-                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
-                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Type = item.Type.ToNullableOrganizationTagType(),
             Color = item.Color,
             Organization = organization
         }).ToList();
@@ -270,19 +263,8 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Role = src.Role switch
-        {
-            OrganizationMemberRole.Owner => OrganizationMemberRoleConstants.Owner,
-            OrganizationMemberRole.Administrator => OrganizationMemberRoleConstants.Administrator,
-            OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        dest.Status = src.Status switch
-        {
-            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
-            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        dest.Role = src.Role.ToNullableOrganizationMemberRole();
+        dest.Status = src.Status.ToOrganizationMemberStatus();
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;
@@ -296,14 +278,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
-        dest.Type = src.Type switch
-        {
-            OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
-            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
-            OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
-            OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        dest.Type = src.Type.ToNullableOrganizationTagType();
         dest.Color = src.Color;
         dest.Organization = organization;
         return dest;
@@ -364,14 +339,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status switch
-            {
-                InvitationStatusConstants.Pending => InvitationStatus.Pending,
-                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
-                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
-                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Status = src.Status.ToInvitationStatus(),
             Location = MapTo(src.Location),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -440,13 +408,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Role = src.Role switch
-            {
-                LocationRoleConstants.Owner => LocationMemberRole.Owner,
-                LocationRoleConstants.Administrator => LocationMemberRole.Administrator,
-                LocationRoleConstants.Member => LocationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Role = src.Role.ToLocationMemberRole(),
             Customer = MapTo(src.Customer)!,
             Location = location
         };
@@ -461,19 +423,8 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Role = src.Role switch
-            {
-                OrganizationMemberRoleConstants.Owner => OrganizationMemberRole.Owner,
-                OrganizationMemberRoleConstants.Administrator => OrganizationMemberRole.Administrator,
-                OrganizationMemberRoleConstants.Member => OrganizationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Status = src.Status switch
-            {
-                OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
-                OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Role = src.Role.ToNullableOrganizationMemberRole(),
+            Status = src.Status.ToOrganizationMemberStatus(),
             Customer = MapTo(src.Customer)!,
             Organization = organization
         };

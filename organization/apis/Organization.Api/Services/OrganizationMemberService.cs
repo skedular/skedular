@@ -116,14 +116,7 @@ public class OrganizationMemberService(
             throw new Unauthorized();
         }
 
-        var mappedRole = memberRole switch
-        {
-            OrganizationMemberRole.Owner => OrganizationMemberRoleConstants.Owner,
-            OrganizationMemberRole.Administrator => OrganizationMemberRoleConstants.Administrator,
-            OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
+        var mappedRole = memberRole.ToOrganizationMemberRole();
         if (organizationMember.Role == mappedRole)
         {
             return mapper.MapTo(organizationMember, mapper.MapTo(organization));
@@ -179,12 +172,7 @@ public class OrganizationMemberService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var mappedStatus = status switch
-        {
-            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
-            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        var mappedStatus = status.ToOrganizationMemberStatus();
 
         foreach (var organizationMember in organizationMembers)
         {

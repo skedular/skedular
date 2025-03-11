@@ -75,19 +75,7 @@ public class Mapper : IMapper
             From = src.From,
             To = src.To,
             Notes = src.Notes,
-            Type = src.Type switch
-            {
-                BookingTypeConstants.WorkingFromHome => BookingType.WorkingFromHome,
-                BookingTypeConstants.WorkingFromOffice => BookingType.WorkingFromOffice,
-                BookingTypeConstants.SickLeave => BookingType.SickLeave,
-                BookingTypeConstants.AnnualLeave => BookingType.AnnualLeave,
-                BookingTypeConstants.WellBeingLeave => BookingType.WellBeingLeave,
-                BookingTypeConstants.ClientOffices => BookingType.ClientOffices,
-                BookingTypeConstants.Vacation => BookingType.Vacation,
-                BookingTypeConstants.TravelingForWork => BookingType.TravelingForWork,
-                BookingTypeConstants.NonWorkingDay => BookingType.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Type = src.Type.ToBookingType(),
             Customer = MapTo(src.Customer)!,
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
@@ -195,19 +183,7 @@ public class Mapper : IMapper
         dest.From = src.From;
         dest.To = src.To;
         dest.Notes = src.Notes;
-        dest.Type = src.Type switch
-        {
-            BookingType.WorkingFromHome => BookingTypeConstants.WorkingFromHome,
-            BookingType.WorkingFromOffice => BookingTypeConstants.WorkingFromOffice,
-            BookingType.SickLeave => BookingTypeConstants.SickLeave,
-            BookingType.AnnualLeave => BookingTypeConstants.AnnualLeave,
-            BookingType.WellBeingLeave => BookingTypeConstants.WellBeingLeave,
-            BookingType.ClientOffices => BookingTypeConstants.ClientOffices,
-            BookingType.Vacation => BookingTypeConstants.Vacation,
-            BookingType.TravelingForWork => BookingTypeConstants.TravelingForWork,
-            BookingType.NonWorkingDay => BookingTypeConstants.NonWorkingDay,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        dest.Type = src.Type.ToBookingType();
         dest.Customer = customer;
         dest.Organization = organization;
         dest.Location = location;
@@ -622,18 +598,5 @@ public class Mapper : IMapper
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Type = src.Type switch
-            {
-                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
-                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
-                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
-                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Color = src.Color
-        };
+        new() { Id = src.Id, Name = src.Name, Type = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
 }

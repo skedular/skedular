@@ -427,14 +427,7 @@ public class Mapper(IContext context) : IMapper
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
-                Type = item.Type switch
-                {
-                    OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
-                    OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
-                    OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
-                    OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
+                Type = item.Type.ToNullableOrganizationTagType(),
                 Color = item.Color.ToSafeString(),
                 Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
@@ -588,14 +581,7 @@ public class Mapper(IContext context) : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Type = src.Type switch
-                {
-                    OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
-                    OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
-                    OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
-                    OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
+                Type = src.Type.ToNullableOrganizationTagType(),
                 Color = src.Color,
                 Organization = new Organization { Id = src.Organization.Id }
             };

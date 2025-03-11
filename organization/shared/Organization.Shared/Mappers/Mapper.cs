@@ -49,14 +49,7 @@ public class Mapper : IMapper
             Id = item.Id,
             Name = item.Name.ToSafeString(),
             Description = item.Description.ToSafeString(),
-            Type = item.Type switch
-            {
-                OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
-                OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
-                OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
-                OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Type = item.Type.ToOrganizationTagType(),
             Color = item.Color.ToSafeString()
         }));
 

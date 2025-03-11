@@ -128,14 +128,7 @@ public class TeamMemberService(
             throw new Unauthorized();
         }
 
-        var mappedRole = memberRole switch
-        {
-            TeamMemberRole.Owner => TeamMemberRoleConstants.Owner,
-            TeamMemberRole.Administrator => TeamMemberRoleConstants.Administrator,
-            TeamMemberRole.Member => TeamMemberRoleConstants.Member,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
+        var mappedRole = memberRole.ToTeamMemberRole();
         if (teamMember.Role == mappedRole)
         {
             return mapper.MapTo(teamMember, mapper.MapTo(team));
@@ -186,13 +179,7 @@ public class TeamMemberService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var mappedStatus = status switch
-        {
-            TeamMemberStatus.Active => TeamMemberStatusConstants.Active,
-            TeamMemberStatus.Inactive => TeamMemberStatusConstants.Inactive,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
+        var mappedStatus = status.ToTeamMemberStatus();
         foreach (var organizationMember in teamMembers)
         {
             organizationMember.Status = mappedStatus;

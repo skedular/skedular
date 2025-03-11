@@ -69,19 +69,8 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Role = src.Role switch
-            {
-                TeamMemberRoleConstants.Owner => TeamMemberRole.Owner,
-                TeamMemberRoleConstants.Administrator => TeamMemberRole.Administrator,
-                TeamMemberRoleConstants.Member => TeamMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Status = src.Status switch
-            {
-                TeamMemberStatusConstants.Active => TeamMemberStatus.Active,
-                TeamMemberStatusConstants.Inactive => TeamMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Role = src.Role.ToTeamMemberRole(),
+            Status = src.Status.ToTeamMemberStatus(),
             Customer = MapTo(src.Customer)!,
             OrganizationMember = MapTo(src.OrganizationMember)
         };
@@ -180,19 +169,8 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Role = src.Role switch
-            {
-                TeamMemberRoleConstants.Owner => TeamMemberRole.Owner,
-                TeamMemberRoleConstants.Administrator => TeamMemberRole.Administrator,
-                TeamMemberRoleConstants.Member => TeamMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Status = src.Status switch
-            {
-                TeamMemberStatusConstants.Active => TeamMemberStatus.Active,
-                TeamMemberStatusConstants.Inactive => TeamMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Role = src.Role.ToTeamMemberRole(),
+            Status = src.Status.ToTeamMemberStatus(),
             Customer = MapTo(src.Customer)!,
             Team = team,
             OrganizationMember = MapTo(src.OrganizationMember)
@@ -298,21 +276,8 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status switch
-            {
-                InvitationStatusConstants.Pending => InvitationStatus.Pending,
-                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
-                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
-                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Role = src.Role switch
-            {
-                TeamMemberRoleConstants.Owner => TeamMemberRole.Owner,
-                TeamMemberRoleConstants.Administrator => TeamMemberRole.Administrator,
-                TeamMemberRoleConstants.Member => TeamMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Status = src.Status.ToInvitationStatus(),
+            Role = src.Role.ToTeamMemberRole(),
             Team = MapTo(src.Team),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -534,19 +499,8 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                Role = src.Role switch
-                {
-                    OrganizationMemberRoleConstants.Owner => OrganizationMemberRole.Owner,
-                    OrganizationMemberRoleConstants.Administrator => OrganizationMemberRole.Administrator,
-                    OrganizationMemberRoleConstants.Member => OrganizationMemberRole.Member,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                Status = src.Status switch
-                {
-                    OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
-                    OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
+                Role = src.Role.ToNullableOrganizationMemberRole(),
+                Status = src.Status.ToOrganizationMemberStatus(),
                 Customer = MapTo(src.Customer)!,
                 Organization = MapTo(src.Organization)!
             };
@@ -636,14 +590,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status switch
-            {
-                InvitationStatusConstants.Pending => InvitationStatus.Pending,
-                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
-                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
-                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Status = src.Status.ToInvitationStatus(),
             Team = team,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)

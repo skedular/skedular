@@ -95,7 +95,7 @@ public class LocationInvitationService(
                     Location = location,
                     Email = email,
                     Status = InvitationStatusConstants.Pending,
-                    Role = LocationRoleConstants.Member,
+                    Role = LocationMemberRoleConstants.Member,
                     CreatedBy = customerEntity,
                     Invitee = matchingCustomerByEmail
                 })

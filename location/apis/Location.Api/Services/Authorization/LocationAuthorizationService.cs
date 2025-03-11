@@ -28,8 +28,8 @@ public class LocationAuthorizationService(
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                Role: LocationRoleConstants.Owner or LocationRoleConstants.Administrator
-                or LocationRoleConstants.Member
+                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
+                or LocationMemberRoleConstants.Member
             };
         }
 
@@ -42,7 +42,7 @@ public class LocationAuthorizationService(
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                Role: LocationRoleConstants.Owner or LocationRoleConstants.Administrator
+                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
             };
         }
 
@@ -55,7 +55,7 @@ public class LocationAuthorizationService(
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                Role: LocationRoleConstants.Owner
+                Role: LocationMemberRoleConstants.Owner
             };
         }
 
@@ -68,7 +68,7 @@ public class LocationAuthorizationService(
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                Role: LocationRoleConstants.Owner or LocationRoleConstants.Administrator
+                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
             };
         }
 
@@ -83,7 +83,7 @@ public class LocationAuthorizationService(
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                Role: LocationRoleConstants.Owner or LocationRoleConstants.Administrator
+                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
             };
         }
 
@@ -96,7 +96,7 @@ public class LocationAuthorizationService(
         {
             return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
             {
-                Role: LocationRoleConstants.Owner or LocationRoleConstants.Administrator
+                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
             };
         }
 

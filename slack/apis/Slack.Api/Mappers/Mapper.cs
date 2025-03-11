@@ -224,14 +224,7 @@ public class Mapper : IMapper
         {
             Id = item.Id,
             Name = item.Name.ToSafeString(),
-            Type = item.Type switch
-            {
-                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
-                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
-                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
-                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Type = item.Type.ToNullableOrganizationTagType(),
             Color = item.Color.ToSafeString(),
             Organization = new Shared.Models.Organization { Id = item.Organization.Id }
         }).ToList();

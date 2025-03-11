@@ -97,14 +97,7 @@ public class TagService(
             throw new Unauthorized();
         }
 
-        var tagType = tag.Type switch
-        {
-            OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
-            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
-            OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
-            OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        var tagType = tag.Type.ToOrganizationTagType();
 
         var matchingTagFound = await repositoryFactory.TagRepository
             .Query(new Specification<Shared.Database.Entities.Tag>
@@ -278,14 +271,7 @@ public class TagService(
 
         var tagId = tag.Id;
         var tagName = tag.Name;
-        var tagType = tag.Type switch
-        {
-            OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
-            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
-            OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
-            OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        var tagType = tag.Type.ToOrganizationTagType();
         var organizationId = existingTag.Organization.Id;
         var matchingTagFound = await repositoryFactory.TagRepository
             .Query(new Specification<Shared.Database.Entities.Tag>

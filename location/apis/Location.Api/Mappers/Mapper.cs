@@ -362,13 +362,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Role = src.Role switch
-            {
-                LocationRoleConstants.Owner => LocationMemberRole.Owner,
-                LocationRoleConstants.Administrator => LocationMemberRole.Administrator,
-                LocationRoleConstants.Member => LocationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Role = src.Role.ToLocationMemberRole(),
             Customer = MapTo(src.Customer)!,
             Location = location
         };
@@ -602,21 +596,8 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status switch
-            {
-                InvitationStatusConstants.Pending => InvitationStatus.Pending,
-                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
-                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
-                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Role = src.Role switch
-            {
-                LocationRoleConstants.Owner => LocationMemberRole.Owner,
-                LocationRoleConstants.Administrator => LocationMemberRole.Administrator,
-                LocationRoleConstants.Member => LocationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Status = src.Status.ToInvitationStatus(),
+            Role = src.Role.ToLocationMemberRole(),
             Location = MapTo(src.Location),
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -843,20 +824,7 @@ public class Mapper : IMapper
         src.Select(item => MapTo(item, location));
 
     private static OrganizationTagDetails MapTo(OrganizationTag src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Name = src.Name,
-            TagType = src.Type switch
-            {
-                OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
-                OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
-                OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
-                OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Color = src.Color
-        };
+        new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
         new()
@@ -866,14 +834,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
-            Type = src.Type switch
-            {
-                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
-                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
-                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
-                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Type = src.Type.ToNullableOrganizationTagType(),
             Color = src.Color
         };
 
@@ -1050,14 +1011,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
-            Status = src.Status switch
-            {
-                InvitationStatusConstants.Pending => InvitationStatus.Pending,
-                InvitationStatusConstants.Accepted => InvitationStatus.Accepted,
-                InvitationStatusConstants.Rejected => InvitationStatus.Rejected,
-                InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Status = src.Status.ToInvitationStatus(),
             Location = location,
             CreatedBy = MapTo(src.CreatedBy)!,
             Invitee = MapTo(src.Invitee)
@@ -1072,14 +1026,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
-            Type = src.Type switch
-            {
-                OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
-                OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
-                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
-                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            Type = src.Type.ToNullableOrganizationTagType(),
             Color = src.Color
         };
 

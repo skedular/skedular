@@ -108,7 +108,7 @@ public class LocationService(
             {
                 locationMembers.Add(new LocationMember
                 {
-                    Id = randomHelper.Generate(), Role = LocationRoleConstants.Owner, Customer = customerEntity, Location = locationEntity
+                    Id = randomHelper.Generate(), Role = LocationMemberRoleConstants.Owner, Customer = customerEntity, Location = locationEntity
                 });
             }
 

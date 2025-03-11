@@ -225,19 +225,8 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Role = src.Role switch
-        {
-            OrganizationMemberRole.Owner => OrganizationMemberRoleConstants.Owner,
-            OrganizationMemberRole.Administrator => OrganizationMemberRoleConstants.Administrator,
-            OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        dest.Status = src.Status switch
-        {
-            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
-            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        dest.Role = src.Role.ToNullableOrganizationMemberRole();
+        dest.Status = src.Status.ToOrganizationMemberStatus();
         dest.Organization = organization;
         dest.Customer = customer;
         return dest;
