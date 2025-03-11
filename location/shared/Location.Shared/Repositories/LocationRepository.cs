@@ -82,7 +82,7 @@ internal static class LocationExtensions
                                             searchCriteria.CustomerId)));
         }
 
-        if (searchCriteria.LocationIds is not null && searchCriteria.LocationIds.Length > 0)
+        if (searchCriteria.LocationIds.Count > 0)
         {
             query = query.Where(item => searchCriteria.LocationIds.Contains(item.Id));
         }

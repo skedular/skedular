@@ -2,17 +2,19 @@
 
 public record OpeningHoursDetails
 {
-    public OpeningHoursDetails(bool isClosed, bool open24, TimeOnly? from, TimeOnly? until)
+    public static OpeningHoursDetails Default = new(false, true, null, null);
+
+    public OpeningHoursDetails(bool closed, bool openAllDay, TimeOnly? from, TimeOnly? until)
     {
-        if (isClosed && open24)
+        if (closed && openAllDay)
         {
-            throw new ArgumentException("open24 can't be set while isClosed is true.", nameof(open24));
+            throw new ArgumentException("openAllDay can't be set while closed is true.", nameof(openAllDay));
         }
 
-        IsClosed = isClosed;
-        Open24 = open24;
+        Closed = closed;
+        OpenAllDay = openAllDay;
 
-        if (IsClosed || Open24)
+        if (Closed || OpenAllDay)
         {
             return;
         }
@@ -34,22 +36,24 @@ public record OpeningHoursDetails
         Until = until.Value;
     }
 
-    public bool IsClosed { get; }
-    public bool Open24 { get; }
+    public bool Closed { get; }
+    public bool OpenAllDay { get; }
     public TimeOnly? From { get; }
     public TimeOnly? Until { get; }
 
     private static bool IsMultipleOf15(TimeOnly time) => time.Minute % 15 == 0;
 }
 
-public record OpeningHours(
+public record WeekOpeningHours(
     OpeningHoursDetails Monday,
     OpeningHoursDetails Tuesday,
     OpeningHoursDetails Wednesday,
     OpeningHoursDetails Thursday,
     OpeningHoursDetails Friday,
     OpeningHoursDetails Saturday,
-    OpeningHoursDetails Sunday,
+    OpeningHoursDetails Sunday);
+
+public record OpeningHours(
+    WeekOpeningHours WeekOpeningHours,
     ICollection<DateTimeOffset> ClosedDates,
     Dictionary<DateTimeOffset, OpeningHoursDetails> DatesWithVariedOpeningHours);
-

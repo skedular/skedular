@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a24199c9278cfb4c6704030867f549fa>>
+ * @generated SignedSource<<09ed537c205bfcf1920be28d29bc490d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,52 @@ export type organizationLocation_query$data = {
     readonly about: string | null | undefined;
     readonly id: string;
     readonly name: string;
+    readonly openingHours: {
+      readonly weekOpeningHours: {
+        readonly friday: {
+          readonly closed: boolean;
+          readonly from: string | null | undefined;
+          readonly openAllDay: boolean;
+          readonly until: string | null | undefined;
+        };
+        readonly monday: {
+          readonly closed: boolean;
+          readonly from: string | null | undefined;
+          readonly openAllDay: boolean;
+          readonly until: string | null | undefined;
+        };
+        readonly saturday: {
+          readonly closed: boolean;
+          readonly from: string | null | undefined;
+          readonly openAllDay: boolean;
+          readonly until: string | null | undefined;
+        };
+        readonly sunday: {
+          readonly closed: boolean;
+          readonly from: string | null | undefined;
+          readonly openAllDay: boolean;
+          readonly until: string | null | undefined;
+        };
+        readonly thursday: {
+          readonly closed: boolean;
+          readonly from: string | null | undefined;
+          readonly openAllDay: boolean;
+          readonly until: string | null | undefined;
+        };
+        readonly tuesday: {
+          readonly closed: boolean;
+          readonly from: string | null | undefined;
+          readonly openAllDay: boolean;
+          readonly until: string | null | undefined;
+        };
+        readonly wednesday: {
+          readonly closed: boolean;
+          readonly from: string | null | undefined;
+          readonly openAllDay: boolean;
+          readonly until: string | null | undefined;
+        };
+      };
+    };
     readonly physicalAddress: {
       readonly formattedAddress: string | null | undefined;
     } | null | undefined;
@@ -29,6 +75,7 @@ export type organizationLocation_query$data = {
       readonly uniqueId: string;
     }>;
   } | null | undefined;
+  readonly openingHoursMinutesStep: number;
   readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "zoneSelector_allZones_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
@@ -51,6 +98,36 @@ v1 = [
     "args": null,
     "kind": "ScalarField",
     "name": "uniqueId",
+    "storageKey": null
+  }
+],
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "closed",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "openAllDay",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "from",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "until",
     "storageKey": null
   }
 ];
@@ -150,8 +227,107 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OpeningHours",
+          "kind": "LinkedField",
+          "name": "openingHours",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "WeekOpeningHours",
+              "kind": "LinkedField",
+              "name": "weekOpeningHours",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OpeningHoursDetails",
+                  "kind": "LinkedField",
+                  "name": "monday",
+                  "plural": false,
+                  "selections": (v2/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OpeningHoursDetails",
+                  "kind": "LinkedField",
+                  "name": "tuesday",
+                  "plural": false,
+                  "selections": (v2/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OpeningHoursDetails",
+                  "kind": "LinkedField",
+                  "name": "wednesday",
+                  "plural": false,
+                  "selections": (v2/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OpeningHoursDetails",
+                  "kind": "LinkedField",
+                  "name": "thursday",
+                  "plural": false,
+                  "selections": (v2/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OpeningHoursDetails",
+                  "kind": "LinkedField",
+                  "name": "friday",
+                  "plural": false,
+                  "selections": (v2/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OpeningHoursDetails",
+                  "kind": "LinkedField",
+                  "name": "saturday",
+                  "plural": false,
+                  "selections": (v2/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OpeningHoursDetails",
+                  "kind": "LinkedField",
+                  "name": "sunday",
+                  "plural": false,
+                  "selections": (v2/*: any*/),
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "openingHoursMinutesStep",
       "storageKey": null
     },
     {
@@ -170,6 +346,6 @@ return {
 };
 })();
 
-(node as any).hash = "f558d274bbf6a4dd7ef5128b3548a073";
+(node as any).hash = "a52c75aa5884b8882fca584cfde3b58e";
 
 export default node;

@@ -9,6 +9,7 @@ using LocationMember = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Loca
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
 using Resource = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource;
+using WeekOpeningHours = Api.Shared.Services.Models.WeekOpeningHours;
 
 namespace Location.Shared.Mappers;
 
@@ -55,7 +56,7 @@ public class Mapper : IMapper
                 RequireBookingApproval = item.RequireBookingApproval,
                 Color = item.Color.ToSafeString(),
                 IsOpeningHoursOverriden = item.IsOpeningHoursOverriden,
-                OpeningHours = MapTo(item.OpeningHours)
+                AvailableHours = item.AvailableHours is null ? null : MapTo(item.AvailableHours)
             };
 
             resource.TagIds.AddRange(item.Tags.Select(tag => tag.Id));
@@ -107,14 +108,37 @@ public class Mapper : IMapper
             InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
         };
 
-    private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours? MapTo(OpeningHours? src)
+    private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours MapTo(OpeningHours? src)
     {
         if (src is null)
         {
-            return null;
+            return new Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours
+            {
+                WeekOpeningHours = new Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours
+                {
+                    Monday = MapToDefault(),
+                    Tuesday = MapToDefault(),
+                    Wednesday = MapToDefault(),
+                    Thursday = MapToDefault(),
+                    Friday = MapToDefault(),
+                    Saturday = MapToDefault(),
+                    Sunday = MapToDefault()
+                }
+            };
         }
 
-        var openingHours = new Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours
+        var openingHours = new Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours { WeekOpeningHours = MapTo(src.WeekOpeningHours) };
+        openingHours.ClosedDates.AddRange(src.ClosedDates.Select(item => item.ToTimestamp()));
+        openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.ToList().Select(item => new VariedDateOpeningHours
+        {
+            Date = item.Key.ToTimestamp(), OpeningHoursDetails = MapTo(item.Value)
+        }));
+
+        return openingHours;
+    }
+
+    private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours MapTo(WeekOpeningHours src) =>
+        new()
         {
             Monday = MapTo(src.Monday),
             Tuesday = MapTo(src.Tuesday),
@@ -125,22 +149,15 @@ public class Mapper : IMapper
             Sunday = MapTo(src.Sunday)
         };
 
-        openingHours.ClosedDates.AddRange(src.ClosedDates.Select(item => item.ToTimestamp()));
-        openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.ToList().Select(item => new VariedDateOpeningHours
-        {
-            Date = item.Key.ToTimestamp(),
-            OpeningHoursDetails = MapTo(item.Value)
-        }));
-
-        return openingHours;
-    }
-
     private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails MapTo(OpeningHoursDetails src) =>
         new()
         {
-            IsClosed = src.IsClosed,
-            Open24 = src.Open24,
+            Closed = src.Closed,
+            OpenAllDay = src.OpenAllDay,
             From = src.From is null ? string.Empty : src.From.ToString(),
             Until = src.Until is null ? string.Empty : src.Until.ToString()
         };
+
+    private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails MapToDefault() =>
+        new() { Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty };
 }

@@ -360,7 +360,7 @@ public class Mapper : IMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
             IsOpeningHoursOverriden = src.IsOpeningHoursOverriden ?? false,
-            OpeningHours = src.OpeningHours,
+            AvailableHours = src.AvailableHours,
             Location = location
         };
 

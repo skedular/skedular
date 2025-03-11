@@ -8,5 +8,5 @@ public class Offering
     public OfferingCode Code { get; set; }
     public DateTimeOffset Start { get; set; }
     public DateTimeOffset End { get; set; }
-    public string[] ActiveCustomerIds { get; set; } = [];
+    public ICollection<string> ActiveCustomerIds { get; set; } = [];
 }

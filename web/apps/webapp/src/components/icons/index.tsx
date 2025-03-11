@@ -47,6 +47,7 @@ export { default as ArrowLeftIcon } from '@mui/icons-material/KeyboardArrowLeft'
 export { default as ArrowRightIcon } from '@mui/icons-material/KeyboardArrowRight';
 export { default as ArrowUpIcon } from '@mui/icons-material/KeyboardArrowUp';
 export { default as ListViewIcon } from '@mui/icons-material/List';
+export { default as ClosedAllDayIcon } from '@mui/icons-material/Lock';
 export { default as LogoutIcon } from '@mui/icons-material/Logout';
 export { default as RoomIcon } from '@mui/icons-material/MeetingRoom';
 export { default as MenuIcon } from '@mui/icons-material/Menu';
@@ -58,7 +59,9 @@ export { default as BillingAndPaymentIcon } from '@mui/icons-material/Payment';
 export { default as CustomerIcon, default as ProfileIcon } from '@mui/icons-material/Person';
 export { default as InviteMemberIcon } from '@mui/icons-material/PersonAdd';
 export { default as InvitePeopleIcon } from '@mui/icons-material/PersonAddAlt1';
+export { default as OpeningHoursIcon } from '@mui/icons-material/QueryBuilder';
 export { default as RemoveIcon } from '@mui/icons-material/Remove';
+export { default as CustomOpeningHoursIcon } from '@mui/icons-material/Schedule';
 export { default as SearchRoundedIcon } from '@mui/icons-material/SearchRounded';
 export { default as PreferredIcon } from '@mui/icons-material/Star';
 export { default as NotPreferredIcon } from '@mui/icons-material/StarOutline';
@@ -69,6 +72,7 @@ export { default as ToggleOffIcon } from '@mui/icons-material/ToggleOff';
 export { default as ToggleOnIcon } from '@mui/icons-material/ToggleOn';
 export { default as UpgradeIcon } from '@mui/icons-material/Upgrade';
 export { default as ViewIcon } from '@mui/icons-material/Visibility';
+export { default as OpenAllDayIcon } from '@mui/icons-material/WbSunny';
 
 type Props = {
   fontSize?: 'inherit' | 'large' | 'medium' | 'small';

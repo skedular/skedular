@@ -42,41 +42,43 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "AygLMg4ubG9jYXRpb24uRGVzaxIdCgVyb29tcxgKIAMoCzIOLmxvY2F0aW9u",
             "LlJvb20SLAoMb3BlbmluZ0hvdXJzGAsgASgLMhYubG9jYXRpb24uT3Blbmlu",
             "Z0hvdXJzIk4KDkxvY2F0aW9uTWVtYmVyEgoKAmlkGAEgASgJEhwKBHJvbGUY",
-            "AiABKA4yDi5sb2NhdGlvbi5Sb2xlEhIKCmN1c3RvbWVySWQYAyABKAkixAEK",
+            "AiABKA4yDi5sb2NhdGlvbi5Sb2xlEhIKCmN1c3RvbWVySWQYAyABKAkixgEK",
             "CFJlc291cmNlEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEAoIaW5hY3Rp",
             "dmUYAyABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3ZhbBgEIAEoCBIOCgZ0",
             "YWdJZHMYBSADKAkSDQoFY29sb3IYBiABKAkSHwoXaXNPcGVuaW5nSG91cnNP",
-            "dmVycmlkZW4YByABKAgSLAoMb3BlbmluZ0hvdXJzGAggASgLMhYubG9jYXRp",
-            "b24uT3BlbmluZ0hvdXJzInQKBERlc2sSCgoCaWQYASABKAkSDAoEbmFtZRgC",
-            "IAEoCRITCgtkZWFjdGl2YXRlZBgDIAEoCBIeChZyZXF1aXJlQm9va2luZ0Fw",
-            "cHJvdmFsGAQgASgIEg4KBnRhZ0lkcxgFIAMoCRINCgVjb2xvchgGIAEoCSJ0",
-            "CgRSb29tEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVhY3RpdmF0",
-            "ZWQYAyABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3ZhbBgEIAEoCBIOCgZ0",
-            "YWdJZHMYBSADKAkSDQoFY29sb3IYBiABKAkikQEKGEludml0YXRpb25Ub0pv",
-            "aW5Mb2NhdGlvbhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5n",
-            "b29nbGUucHJvdG9idWYuVGltZXN0YW1wEhIKCmxvY2F0aW9uSWQYAyABKAkS",
-            "EwoLaW52aXRlZEJ5SWQYBCABKAkSEQoJaW52aXRlZUlkGAUgASgJItcDCgxP",
-            "cGVuaW5nSG91cnMSLQoGbW9uZGF5GAEgASgLMh0ubG9jYXRpb24uT3Blbmlu",
-            "Z0hvdXJzRGV0YWlscxIuCgd0dWVzZGF5GAIgASgLMh0ubG9jYXRpb24uT3Bl",
-            "bmluZ0hvdXJzRGV0YWlscxIwCgl3ZWRuZXNkYXkYAyABKAsyHS5sb2NhdGlv",
-            "bi5PcGVuaW5nSG91cnNEZXRhaWxzEi8KCHRodXJzZGF5GAQgASgLMh0ubG9j",
-            "YXRpb24uT3BlbmluZ0hvdXJzRGV0YWlscxItCgZmcmlkYXkYBSABKAsyHS5s",
-            "b2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi8KCHNhdHVyZGF5GAYgASgL",
-            "Mh0ubG9jYXRpb24uT3BlbmluZ0hvdXJzRGV0YWlscxItCgZzdW5kYXkYByAB",
-            "KAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi8KC2Nsb3NlZERh",
-            "dGVzGAggAygLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBJFChtEYXRl",
-            "c1dpdGhWYXJpZWRPcGVuaW5nSG91cnMYCSADKAsyIC5sb2NhdGlvbi5WYXJp",
-            "ZWREYXRlT3BlbmluZ0hvdXJzIn4KFlZhcmllZERhdGVPcGVuaW5nSG91cnMS",
-            "KAoEZGF0ZRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASOgoT",
-            "b3BlbmluZ0hvdXJzRGV0YWlscxgCIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdI",
-            "b3Vyc0RldGFpbHMiVAoTT3BlbmluZ0hvdXJzRGV0YWlscxIQCghpc0Nsb3Nl",
-            "ZBgBIAEoCBIOCgZvcGVuMjQYAiABKAgSDAoEZnJvbRgDIAEoCRINCgV1bnRp",
-            "bBgEIAEoCSp8CgRUeXBlEhQKEExvY2F0aW9uVXBzZXJ0ZWQQABITCg9Mb2Nh",
-            "dGlvbkRlbGV0ZWQQARIkCiBJbnZpdGF0aW9uVG9Kb2luTG9jYXRpb25VcHNl",
-            "cnRlZBACEiMKH0ludml0YXRpb25Ub0pvaW5Mb2NhdGlvbkRlbGV0ZWQQAyow",
-            "CgRSb2xlEgkKBU93bmVyEAASEQoNQWRtaW5pc3RyYXRvchABEgoKBk1lbWJl",
-            "chACQjeqAjRBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkxv",
-            "Y2F0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "dmVycmlkZW4YByABKAgSLgoOYXZhaWxhYmxlSG91cnMYCCABKAsyFi5sb2Nh",
+            "dGlvbi5PcGVuaW5nSG91cnMidAoERGVzaxIKCgJpZBgBIAEoCRIMCgRuYW1l",
+            "GAIgASgJEhMKC2RlYWN0aXZhdGVkGAMgASgIEh4KFnJlcXVpcmVCb29raW5n",
+            "QXBwcm92YWwYBCABKAgSDgoGdGFnSWRzGAUgAygJEg0KBWNvbG9yGAYgASgJ",
+            "InQKBFJvb20SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZWFjdGl2",
+            "YXRlZBgDIAEoCBIeChZyZXF1aXJlQm9va2luZ0FwcHJvdmFsGAQgASgIEg4K",
+            "BnRhZ0lkcxgFIAMoCRINCgVjb2xvchgGIAEoCSKRAQoYSW52aXRhdGlvblRv",
+            "Sm9pbkxvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIa",
+            "Lmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEgoKbG9jYXRpb25JZBgDIAEo",
+            "CRITCgtpbnZpdGVkQnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSABKAkivAEK",
+            "DE9wZW5pbmdIb3VycxI0ChB3ZWVrT3BlbmluZ0hvdXJzGAEgASgLMhoubG9j",
+            "YXRpb24uV2Vla09wZW5pbmdIb3VycxIvCgtjbG9zZWREYXRlcxgCIAMoCzIa",
+            "Lmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASRQobRGF0ZXNXaXRoVmFyaWVk",
+            "T3BlbmluZ0hvdXJzGAMgAygLMiAubG9jYXRpb24uVmFyaWVkRGF0ZU9wZW5p",
+            "bmdIb3VycyLjAgoQV2Vla09wZW5pbmdIb3VycxItCgZtb25kYXkYASABKAsy",
+            "HS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi4KB3R1ZXNkYXkYAiAB",
+            "KAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEjAKCXdlZG5lc2Rh",
+            "eRgDIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMSLwoIdGh1",
+            "cnNkYXkYBCABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi0K",
+            "BmZyaWRheRgFIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMS",
+            "LwoIc2F0dXJkYXkYBiABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRh",
+            "aWxzEi0KBnN1bmRheRgHIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0Rl",
+            "dGFpbHMifgoWVmFyaWVkRGF0ZU9wZW5pbmdIb3VycxIoCgRkYXRlGAEgASgL",
+            "MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBI6ChNvcGVuaW5nSG91cnNE",
+            "ZXRhaWxzGAIgASgLMh0ubG9jYXRpb24uT3BlbmluZ0hvdXJzRGV0YWlscyJW",
+            "ChNPcGVuaW5nSG91cnNEZXRhaWxzEg4KBmNsb3NlZBgBIAEoCBISCgpvcGVu",
+            "QWxsRGF5GAIgASgIEgwKBGZyb20YAyABKAkSDQoFdW50aWwYBCABKAkqfAoE",
+            "VHlwZRIUChBMb2NhdGlvblVwc2VydGVkEAASEwoPTG9jYXRpb25EZWxldGVk",
+            "EAESJAogSW52aXRhdGlvblRvSm9pbkxvY2F0aW9uVXBzZXJ0ZWQQAhIjCh9J",
+            "bnZpdGF0aW9uVG9Kb2luTG9jYXRpb25EZWxldGVkEAMqMAoEUm9sZRIJCgVP",
+            "d25lchAAEhEKDUFkbWluaXN0cmF0b3IQARIKCgZNZW1iZXIQAkI3qgI0QXBp",
+            "LlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Mb2NhdGlvbi5WMS5W",
+            "YWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -85,13 +87,14 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "Location", "InvitationToJoinLocation" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Resources", "Desks", "Rooms", "OpeningHours" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember.Parser, new[]{ "Id", "Role", "CustomerId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource.Parser, new[]{ "Id", "Name", "Inactive", "RequireBookingApproval", "TagIds", "Color", "IsOpeningHoursOverriden", "OpeningHours" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource.Parser, new[]{ "Id", "Name", "Inactive", "RequireBookingApproval", "TagIds", "Color", "IsOpeningHoursOverriden", "AvailableHours" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "TagIds", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "TagIds", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours.Parser, new[]{ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "ClosedDates", "DatesWithVariedOpeningHours" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours.Parser, new[]{ "WeekOpeningHours", "ClosedDates", "DatesWithVariedOpeningHours" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours.Parser, new[]{ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours.Parser, new[]{ "Date", "OpeningHoursDetails" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails.Parser, new[]{ "IsClosed", "Open24", "From", "Until" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails.Parser, new[]{ "Closed", "OpenAllDay", "From", "Until" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1909,7 +1912,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       tagIds_ = other.tagIds_.Clone();
       color_ = other.color_;
       isOpeningHoursOverriden_ = other.isOpeningHoursOverriden_;
-      openingHours_ = other.openingHours_ != null ? other.openingHours_.Clone() : null;
+      availableHours_ = other.availableHours_ != null ? other.availableHours_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2002,15 +2005,15 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "openingHours" field.</summary>
-    public const int OpeningHoursFieldNumber = 8;
-    private global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours openingHours_;
+    /// <summary>Field number for the "availableHours" field.</summary>
+    public const int AvailableHoursFieldNumber = 8;
+    private global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours availableHours_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours OpeningHours {
-      get { return openingHours_; }
+    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours AvailableHours {
+      get { return availableHours_; }
       set {
-        openingHours_ = value;
+        availableHours_ = value;
       }
     }
 
@@ -2036,7 +2039,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if(!tagIds_.Equals(other.tagIds_)) return false;
       if (Color != other.Color) return false;
       if (IsOpeningHoursOverriden != other.IsOpeningHoursOverriden) return false;
-      if (!object.Equals(OpeningHours, other.OpeningHours)) return false;
+      if (!object.Equals(AvailableHours, other.AvailableHours)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2051,7 +2054,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       hash ^= tagIds_.GetHashCode();
       if (Color.Length != 0) hash ^= Color.GetHashCode();
       if (IsOpeningHoursOverriden != false) hash ^= IsOpeningHoursOverriden.GetHashCode();
-      if (openingHours_ != null) hash ^= OpeningHours.GetHashCode();
+      if (availableHours_ != null) hash ^= AvailableHours.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2095,9 +2098,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(56);
         output.WriteBool(IsOpeningHoursOverriden);
       }
-      if (openingHours_ != null) {
+      if (availableHours_ != null) {
         output.WriteRawTag(66);
-        output.WriteMessage(OpeningHours);
+        output.WriteMessage(AvailableHours);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -2134,9 +2137,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(56);
         output.WriteBool(IsOpeningHoursOverriden);
       }
-      if (openingHours_ != null) {
+      if (availableHours_ != null) {
         output.WriteRawTag(66);
-        output.WriteMessage(OpeningHours);
+        output.WriteMessage(AvailableHours);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -2167,8 +2170,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (IsOpeningHoursOverriden != false) {
         size += 1 + 1;
       }
-      if (openingHours_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(OpeningHours);
+      if (availableHours_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(AvailableHours);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2201,11 +2204,11 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (other.IsOpeningHoursOverriden != false) {
         IsOpeningHoursOverriden = other.IsOpeningHoursOverriden;
       }
-      if (other.openingHours_ != null) {
-        if (openingHours_ == null) {
-          OpeningHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours();
+      if (other.availableHours_ != null) {
+        if (availableHours_ == null) {
+          AvailableHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours();
         }
-        OpeningHours.MergeFrom(other.OpeningHours);
+        AvailableHours.MergeFrom(other.AvailableHours);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2255,10 +2258,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 66: {
-            if (openingHours_ == null) {
-              OpeningHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours();
+            if (availableHours_ == null) {
+              AvailableHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours();
             }
-            input.ReadMessage(OpeningHours);
+            input.ReadMessage(AvailableHours);
             break;
           }
         }
@@ -2309,10 +2312,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 66: {
-            if (openingHours_ == null) {
-              OpeningHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours();
+            if (availableHours_ == null) {
+              AvailableHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours();
             }
-            input.ReadMessage(OpeningHours);
+            input.ReadMessage(AvailableHours);
             break;
           }
         }
@@ -3456,13 +3459,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OpeningHours(OpeningHours other) : this() {
-      monday_ = other.monday_ != null ? other.monday_.Clone() : null;
-      tuesday_ = other.tuesday_ != null ? other.tuesday_.Clone() : null;
-      wednesday_ = other.wednesday_ != null ? other.wednesday_.Clone() : null;
-      thursday_ = other.thursday_ != null ? other.thursday_.Clone() : null;
-      friday_ = other.friday_ != null ? other.friday_.Clone() : null;
-      saturday_ = other.saturday_ != null ? other.saturday_.Clone() : null;
-      sunday_ = other.sunday_ != null ? other.sunday_.Clone() : null;
+      weekOpeningHours_ = other.weekOpeningHours_ != null ? other.weekOpeningHours_.Clone() : null;
       closedDates_ = other.closedDates_.Clone();
       datesWithVariedOpeningHours_ = other.datesWithVariedOpeningHours_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -3472,6 +3469,269 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OpeningHours Clone() {
       return new OpeningHours(this);
+    }
+
+    /// <summary>Field number for the "weekOpeningHours" field.</summary>
+    public const int WeekOpeningHoursFieldNumber = 1;
+    private global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours weekOpeningHours_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours WeekOpeningHours {
+      get { return weekOpeningHours_; }
+      set {
+        weekOpeningHours_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "closedDates" field.</summary>
+    public const int ClosedDatesFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Google.Protobuf.WellKnownTypes.Timestamp> _repeated_closedDates_codec
+        = pb::FieldCodec.ForMessage(18, global::Google.Protobuf.WellKnownTypes.Timestamp.Parser);
+    private readonly pbc::RepeatedField<global::Google.Protobuf.WellKnownTypes.Timestamp> closedDates_ = new pbc::RepeatedField<global::Google.Protobuf.WellKnownTypes.Timestamp>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Google.Protobuf.WellKnownTypes.Timestamp> ClosedDates {
+      get { return closedDates_; }
+    }
+
+    /// <summary>Field number for the "DatesWithVariedOpeningHours" field.</summary>
+    public const int DatesWithVariedOpeningHoursFieldNumber = 3;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours> _repeated_datesWithVariedOpeningHours_codec
+        = pb::FieldCodec.ForMessage(26, global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours> datesWithVariedOpeningHours_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours> DatesWithVariedOpeningHours {
+      get { return datesWithVariedOpeningHours_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as OpeningHours);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(OpeningHours other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(WeekOpeningHours, other.WeekOpeningHours)) return false;
+      if(!closedDates_.Equals(other.closedDates_)) return false;
+      if(!datesWithVariedOpeningHours_.Equals(other.datesWithVariedOpeningHours_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (weekOpeningHours_ != null) hash ^= WeekOpeningHours.GetHashCode();
+      hash ^= closedDates_.GetHashCode();
+      hash ^= datesWithVariedOpeningHours_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (weekOpeningHours_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(WeekOpeningHours);
+      }
+      closedDates_.WriteTo(output, _repeated_closedDates_codec);
+      datesWithVariedOpeningHours_.WriteTo(output, _repeated_datesWithVariedOpeningHours_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (weekOpeningHours_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(WeekOpeningHours);
+      }
+      closedDates_.WriteTo(ref output, _repeated_closedDates_codec);
+      datesWithVariedOpeningHours_.WriteTo(ref output, _repeated_datesWithVariedOpeningHours_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (weekOpeningHours_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(WeekOpeningHours);
+      }
+      size += closedDates_.CalculateSize(_repeated_closedDates_codec);
+      size += datesWithVariedOpeningHours_.CalculateSize(_repeated_datesWithVariedOpeningHours_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(OpeningHours other) {
+      if (other == null) {
+        return;
+      }
+      if (other.weekOpeningHours_ != null) {
+        if (weekOpeningHours_ == null) {
+          WeekOpeningHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours();
+        }
+        WeekOpeningHours.MergeFrom(other.WeekOpeningHours);
+      }
+      closedDates_.Add(other.closedDates_);
+      datesWithVariedOpeningHours_.Add(other.datesWithVariedOpeningHours_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (weekOpeningHours_ == null) {
+              WeekOpeningHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours();
+            }
+            input.ReadMessage(WeekOpeningHours);
+            break;
+          }
+          case 18: {
+            closedDates_.AddEntriesFrom(input, _repeated_closedDates_codec);
+            break;
+          }
+          case 26: {
+            datesWithVariedOpeningHours_.AddEntriesFrom(input, _repeated_datesWithVariedOpeningHours_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            if (weekOpeningHours_ == null) {
+              WeekOpeningHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours();
+            }
+            input.ReadMessage(WeekOpeningHours);
+            break;
+          }
+          case 18: {
+            closedDates_.AddEntriesFrom(ref input, _repeated_closedDates_codec);
+            break;
+          }
+          case 26: {
+            datesWithVariedOpeningHours_.AddEntriesFrom(ref input, _repeated_datesWithVariedOpeningHours_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class WeekOpeningHours : pb::IMessage<WeekOpeningHours>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<WeekOpeningHours> _parser = new pb::MessageParser<WeekOpeningHours>(() => new WeekOpeningHours());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<WeekOpeningHours> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[10]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public WeekOpeningHours() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public WeekOpeningHours(WeekOpeningHours other) : this() {
+      monday_ = other.monday_ != null ? other.monday_.Clone() : null;
+      tuesday_ = other.tuesday_ != null ? other.tuesday_.Clone() : null;
+      wednesday_ = other.wednesday_ != null ? other.wednesday_.Clone() : null;
+      thursday_ = other.thursday_ != null ? other.thursday_.Clone() : null;
+      friday_ = other.friday_ != null ? other.friday_.Clone() : null;
+      saturday_ = other.saturday_ != null ? other.saturday_.Clone() : null;
+      sunday_ = other.sunday_ != null ? other.sunday_.Clone() : null;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public WeekOpeningHours Clone() {
+      return new WeekOpeningHours(this);
     }
 
     /// <summary>Field number for the "monday" field.</summary>
@@ -3558,37 +3818,15 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "closedDates" field.</summary>
-    public const int ClosedDatesFieldNumber = 8;
-    private static readonly pb::FieldCodec<global::Google.Protobuf.WellKnownTypes.Timestamp> _repeated_closedDates_codec
-        = pb::FieldCodec.ForMessage(66, global::Google.Protobuf.WellKnownTypes.Timestamp.Parser);
-    private readonly pbc::RepeatedField<global::Google.Protobuf.WellKnownTypes.Timestamp> closedDates_ = new pbc::RepeatedField<global::Google.Protobuf.WellKnownTypes.Timestamp>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Google.Protobuf.WellKnownTypes.Timestamp> ClosedDates {
-      get { return closedDates_; }
-    }
-
-    /// <summary>Field number for the "DatesWithVariedOpeningHours" field.</summary>
-    public const int DatesWithVariedOpeningHoursFieldNumber = 9;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours> _repeated_datesWithVariedOpeningHours_codec
-        = pb::FieldCodec.ForMessage(74, global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours> datesWithVariedOpeningHours_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours> DatesWithVariedOpeningHours {
-      get { return datesWithVariedOpeningHours_; }
-    }
-
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as OpeningHours);
+      return Equals(other as WeekOpeningHours);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(OpeningHours other) {
+    public bool Equals(WeekOpeningHours other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -3602,8 +3840,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (!object.Equals(Friday, other.Friday)) return false;
       if (!object.Equals(Saturday, other.Saturday)) return false;
       if (!object.Equals(Sunday, other.Sunday)) return false;
-      if(!closedDates_.Equals(other.closedDates_)) return false;
-      if(!datesWithVariedOpeningHours_.Equals(other.datesWithVariedOpeningHours_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3618,8 +3854,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (friday_ != null) hash ^= Friday.GetHashCode();
       if (saturday_ != null) hash ^= Saturday.GetHashCode();
       if (sunday_ != null) hash ^= Sunday.GetHashCode();
-      hash ^= closedDates_.GetHashCode();
-      hash ^= datesWithVariedOpeningHours_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3666,8 +3900,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(58);
         output.WriteMessage(Sunday);
       }
-      closedDates_.WriteTo(output, _repeated_closedDates_codec);
-      datesWithVariedOpeningHours_.WriteTo(output, _repeated_datesWithVariedOpeningHours_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3706,8 +3938,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(58);
         output.WriteMessage(Sunday);
       }
-      closedDates_.WriteTo(ref output, _repeated_closedDates_codec);
-      datesWithVariedOpeningHours_.WriteTo(ref output, _repeated_datesWithVariedOpeningHours_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -3739,8 +3969,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (sunday_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Sunday);
       }
-      size += closedDates_.CalculateSize(_repeated_closedDates_codec);
-      size += datesWithVariedOpeningHours_.CalculateSize(_repeated_datesWithVariedOpeningHours_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -3749,7 +3977,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(OpeningHours other) {
+    public void MergeFrom(WeekOpeningHours other) {
       if (other == null) {
         return;
       }
@@ -3795,8 +4023,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         }
         Sunday.MergeFrom(other.Sunday);
       }
-      closedDates_.Add(other.closedDates_);
-      datesWithVariedOpeningHours_.Add(other.datesWithVariedOpeningHours_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -3863,14 +4089,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
               Sunday = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails();
             }
             input.ReadMessage(Sunday);
-            break;
-          }
-          case 66: {
-            closedDates_.AddEntriesFrom(input, _repeated_closedDates_codec);
-            break;
-          }
-          case 74: {
-            datesWithVariedOpeningHours_.AddEntriesFrom(input, _repeated_datesWithVariedOpeningHours_codec);
             break;
           }
         }
@@ -3941,14 +4159,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             input.ReadMessage(Sunday);
             break;
           }
-          case 66: {
-            closedDates_.AddEntriesFrom(ref input, _repeated_closedDates_codec);
-            break;
-          }
-          case 74: {
-            datesWithVariedOpeningHours_.AddEntriesFrom(ref input, _repeated_datesWithVariedOpeningHours_codec);
-            break;
-          }
         }
       }
     }
@@ -3971,7 +4181,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4224,7 +4434,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4244,8 +4454,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OpeningHoursDetails(OpeningHoursDetails other) : this() {
-      isClosed_ = other.isClosed_;
-      open24_ = other.open24_;
+      closed_ = other.closed_;
+      openAllDay_ = other.openAllDay_;
       from_ = other.from_;
       until_ = other.until_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -4257,27 +4467,27 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       return new OpeningHoursDetails(this);
     }
 
-    /// <summary>Field number for the "isClosed" field.</summary>
-    public const int IsClosedFieldNumber = 1;
-    private bool isClosed_;
+    /// <summary>Field number for the "closed" field.</summary>
+    public const int ClosedFieldNumber = 1;
+    private bool closed_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool IsClosed {
-      get { return isClosed_; }
+    public bool Closed {
+      get { return closed_; }
       set {
-        isClosed_ = value;
+        closed_ = value;
       }
     }
 
-    /// <summary>Field number for the "open24" field.</summary>
-    public const int Open24FieldNumber = 2;
-    private bool open24_;
+    /// <summary>Field number for the "openAllDay" field.</summary>
+    public const int OpenAllDayFieldNumber = 2;
+    private bool openAllDay_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Open24 {
-      get { return open24_; }
+    public bool OpenAllDay {
+      get { return openAllDay_; }
       set {
-        open24_ = value;
+        openAllDay_ = value;
       }
     }
 
@@ -4320,8 +4530,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (IsClosed != other.IsClosed) return false;
-      if (Open24 != other.Open24) return false;
+      if (Closed != other.Closed) return false;
+      if (OpenAllDay != other.OpenAllDay) return false;
       if (From != other.From) return false;
       if (Until != other.Until) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -4331,8 +4541,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (IsClosed != false) hash ^= IsClosed.GetHashCode();
-      if (Open24 != false) hash ^= Open24.GetHashCode();
+      if (Closed != false) hash ^= Closed.GetHashCode();
+      if (OpenAllDay != false) hash ^= OpenAllDay.GetHashCode();
       if (From.Length != 0) hash ^= From.GetHashCode();
       if (Until.Length != 0) hash ^= Until.GetHashCode();
       if (_unknownFields != null) {
@@ -4353,13 +4563,13 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (IsClosed != false) {
+      if (Closed != false) {
         output.WriteRawTag(8);
-        output.WriteBool(IsClosed);
+        output.WriteBool(Closed);
       }
-      if (Open24 != false) {
+      if (OpenAllDay != false) {
         output.WriteRawTag(16);
-        output.WriteBool(Open24);
+        output.WriteBool(OpenAllDay);
       }
       if (From.Length != 0) {
         output.WriteRawTag(26);
@@ -4379,13 +4589,13 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (IsClosed != false) {
+      if (Closed != false) {
         output.WriteRawTag(8);
-        output.WriteBool(IsClosed);
+        output.WriteBool(Closed);
       }
-      if (Open24 != false) {
+      if (OpenAllDay != false) {
         output.WriteRawTag(16);
-        output.WriteBool(Open24);
+        output.WriteBool(OpenAllDay);
       }
       if (From.Length != 0) {
         output.WriteRawTag(26);
@@ -4405,10 +4615,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (IsClosed != false) {
+      if (Closed != false) {
         size += 1 + 1;
       }
-      if (Open24 != false) {
+      if (OpenAllDay != false) {
         size += 1 + 1;
       }
       if (From.Length != 0) {
@@ -4429,11 +4639,11 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (other == null) {
         return;
       }
-      if (other.IsClosed != false) {
-        IsClosed = other.IsClosed;
+      if (other.Closed != false) {
+        Closed = other.Closed;
       }
-      if (other.Open24 != false) {
-        Open24 = other.Open24;
+      if (other.OpenAllDay != false) {
+        OpenAllDay = other.OpenAllDay;
       }
       if (other.From.Length != 0) {
         From = other.From;
@@ -4461,11 +4671,11 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            IsClosed = input.ReadBool();
+            Closed = input.ReadBool();
             break;
           }
           case 16: {
-            Open24 = input.ReadBool();
+            OpenAllDay = input.ReadBool();
             break;
           }
           case 26: {
@@ -4496,11 +4706,11 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            IsClosed = input.ReadBool();
+            Closed = input.ReadBool();
             break;
           }
           case 16: {
-            Open24 = input.ReadBool();
+            OpenAllDay = input.ReadBool();
             break;
           }
           case 26: {

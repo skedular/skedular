@@ -10,7 +10,7 @@ public class Resource : ModelBaseWithDeleted
     public bool RequireBookingApproval { get; set; }
     public string? Color { get; set; }
     public bool IsOpeningHoursOverriden { get; set; }
-    public OpeningHours? OpeningHours { get; set; }
+    public OpeningHours? AvailableHours { get; set; }
 
     public Location Location { get; set; }
     public ICollection<OrganizationTag> Tags { get; set; } = [];

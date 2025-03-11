@@ -14,10 +14,7 @@ public interface ICustomerService
 {
     Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
     Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
-
-    Task<(Customer, Shared.Database.Entities.Customer)>
-        GetCustomerAsync(string id, CancellationToken cancellationToken);
-
+    Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(string id, CancellationToken cancellationToken);
     ValueTask<Customer> GetAsync(WorkspaceMember workspaceMember, CancellationToken cancellationToken);
     ValueTask<Customer> GetByIdAsync(string customerId, CancellationToken cancellationToken);
 }
@@ -36,15 +33,11 @@ public class CustomerService(
     private Customer? _cachedCustomerById;
     private bool _disposed;
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
-        CancellationToken cancellationToken)
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
-        var customer =
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                context.GetVerifiableToken(),
-                cancellationToken);
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
         if (customer is null)
         {
             throw new CustomerNotFound();
@@ -53,24 +46,18 @@ public class CustomerService(
         return (mapper.MapTo(customer)!, customer);
     }
 
-    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
-        CancellationToken cancellationToken)
+    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(context.GetVerifiableToken()))
         {
             return (null, null);
         }
 
-        var customer =
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                context.GetVerifiableToken(),
-                cancellationToken);
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
         return customer is null ? (null, null) : (mapper.MapTo(customer)!, customer);
     }
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
-        string id,
-        CancellationToken cancellationToken)
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -83,8 +70,7 @@ public class CustomerService(
         return (mapper.MapTo(customer)!, customer);
     }
 
-    public async ValueTask<Customer>
-        GetAsync(WorkspaceMember workspaceMember, CancellationToken cancellationToken)
+    public async ValueTask<Customer> GetAsync(WorkspaceMember workspaceMember, CancellationToken cancellationToken)
     {
         if (_cachedCustomer is not null)
         {

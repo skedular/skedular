@@ -65,7 +65,7 @@ public class Query(IMapper mapper)
             new PaginationInputParam(after, first, before, last),
             new LocationSearchCriteria(
                 where.OrganizationId,
-                where.LocationIds,
+                where.LocationIds ?? [],
                 where.NameContains,
                 (where.ZoneIds ?? []).Concat(where.CustomTagIds ?? []).ToList()),
             orderBy is null
@@ -232,7 +232,7 @@ public class Query(IMapper mapper)
             until,
             new LocationSearchCriteria(
                 where.OrganizationId,
-                where.LocationIds,
+                where.LocationIds ?? [],
                 where.NameContains,
                 (where.CustomTagIds ?? []).Concat(where.ZoneIds ?? []).ToList()),
             orderBy is null

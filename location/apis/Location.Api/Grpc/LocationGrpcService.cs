@@ -72,16 +72,8 @@ public class LocationGrpcService(
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
         var (paginatedInfo, edges, totalCount) = await locationService.GetPaginatedLocationsAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
-            new LocationSearchCriteria(
-                request.Where.OrganizationId,
-                request.Where.LocationIds.ToArray(),
-                request.Where.NameContains,
-                request.Where.TagIds.ToArray()),
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new LocationSearchCriteria(request.Where.OrganizationId, request.Where.LocationIds, request.Where.NameContains, request.Where.TagIds),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
@@ -136,16 +128,8 @@ public class LocationGrpcService(
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
         var (paginatedInfo, edges, totalCount) = await locationService.GetPaginatedLocationsAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
-            new LocationSearchCriteria(
-                request.Where.OrganizationId,
-                request.Where.LocationIds.ToArray(),
-                request.Where.NameContains,
-                request.Where.TagIds.ToArray()),
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new LocationSearchCriteria(request.Where.OrganizationId, request.Where.LocationIds, request.Where.NameContains, request.Where.TagIds),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending

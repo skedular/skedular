@@ -93,7 +93,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var desks = await deskService.DeleteAsync(input.Ids, cancellationToken);
-        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray() };
+        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToList() };
     }
 
     [UseResolverScope]
@@ -103,7 +103,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var desks = await deskService.ActivateAsync(input.Ids, cancellationToken);
-        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray() };
+        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToList() };
     }
 
     [UseResolverScope]
@@ -113,7 +113,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var desks = await deskService.DeactivateAsync(input.Ids, cancellationToken);
-        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray() };
+        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToList() };
     }
 
     [UseResolverScope]
@@ -284,5 +284,15 @@ public class Mutation(IMapper mapper)
     {
         var resources = await resourceService.DeactivateAsync(input.Ids, cancellationToken);
         return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo).ToArray() };
+    }
+
+    [UseResolverScope]
+    public async Task<LocationPayload?> UpdateLocationOpeningHoursAsync(
+        UpdateLocationOpeningHoursInput input,
+        [Service] ILocationOpeningHoursService locationOpeningHoursService,
+        CancellationToken cancellationToken)
+    {
+        var location = await locationOpeningHoursService.UpdateOpeningHoursAsync(input.Id, mapper.MapTo(input.WeekOpeningHours), cancellationToken);
+        return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
     }
 }

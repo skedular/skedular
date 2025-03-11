@@ -3,7 +3,6 @@ using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
-using Enterprise.Shared.Time;
 using HotChocolate;
 using HotChocolate.Types;
 using Organization.Api.Mappers;
@@ -14,25 +13,8 @@ using Version = Enterprise.Shared.GraphQL.Types.Version;
 namespace Organization.Api.GraphQL;
 
 [QueryType]
-public class Query
+public class Query(IMapper mapper)
 {
-    private readonly ICollection<string> _allowedBusinessHours;
-    private readonly IMapper _mapper;
-
-    public Query(IMapper mapper, TimeProvider timeProvider)
-    {
-        _mapper = mapper;
-
-        var startPeriod = timeProvider.GetUtcNow().StartOfDay();
-        var endPeriod = startPeriod.AddDays(1);
-        var count = (endPeriod - startPeriod).TotalMinutes / 15;
-
-        _allowedBusinessHours = Enumerable
-            .Range(0, (int)count)
-            .Select(idx => TimeOnly.FromTimeSpan(startPeriod.AddMinutes(idx * 15).TimeOfDay).ToString("HH:mm"))
-            .ToList();
-    }
-
     [UseResolverScope]
     public Version OrganizationVersion()
     {
@@ -45,7 +27,7 @@ public class Query
     }
 
     [UseResolverScope]
-    public ICollection<string> AllowedHours() => _allowedBusinessHours;
+    public int OpeningHoursMinutesStep() => 15;
 
     [UseResolverScope]
     public async Task<bool> OrganizationCustomerRecordSyncedAsync(
@@ -57,7 +39,7 @@ public class Query
     public async Task<OrganizationTermsOfUse> ActiveOrganizationTermsOfUseAsync(
         [Service] IOrganizationTermsOfUseService organizationTermsOfUseService,
         CancellationToken cancellationToken) =>
-        _mapper.MapTo(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken))!;
+        mapper.MapTo(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken))!;
 
     [UseResolverScope]
     public OrganizationMemberRole[] OrganizationMemberRoles() =>
@@ -71,14 +53,14 @@ public class Query
     public async Task<OrganizationIndustryMainCategoryReferenceDetails[]> OrganizationIndustryMainCategoriesReferencesAsync(
         [Service] IIndustryMainCategoryService industryMainCategoryService,
         CancellationToken cancellationToken) =>
-        _mapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken)).ToArray();
+        mapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken)).ToArray();
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> OrganizationAsync(
         string id,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        _mapper.MapTo(await organizationService.GetByIdAsync(id, cancellationToken));
+        mapper.MapTo(await organizationService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationConnection?> OrganizationsAsync(
@@ -118,7 +100,7 @@ public class Query
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(_mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo).ToArray(),
             TotalCount = totalCount
         };
     }
@@ -130,7 +112,7 @@ public class Query
         CancellationToken cancellationToken) =>
         !await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
             ? []
-            : _mapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken)).ToArray();
+            : mapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken)).ToArray();
 
     [UseResolverScope]
     public async Task<OrganizationMemberConnection?> OrganizationMembersAsync(
@@ -171,7 +153,7 @@ public class Query
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(_mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo).ToArray(),
             TotalCount = totalCount
         };
     }
@@ -185,7 +167,7 @@ public class Query
         CancellationToken cancellationToken)
     {
         var organizationAnalytics = await organizationAnalyticsService.GetAnalyticsAsync(organizationId, from, until, cancellationToken);
-        return _mapper.MapTo(organizationAnalytics.MemberAttendancePercentage, organizationAnalytics.DailyBookingsTotal);
+        return mapper.MapTo(organizationAnalytics.MemberAttendancePercentage, organizationAnalytics.DailyBookingsTotal);
     }
 
     [UseResolverScope]
@@ -210,7 +192,7 @@ public class Query
     public async Task<OrganizationDetails?> AzureTenantOrganizationAsync(
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        _mapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
+        mapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationTagConnection?> CustomTagsAsync(
@@ -258,11 +240,11 @@ public class Query
 
     [UseResolverScope]
     public async Task<OrganizationTagDetails?> ZoneAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
-        _mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
+        mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationTagDetails?> CustomTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
-        _mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
+        mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public OrganizationOfferingDetails OrganizationOffering(string code)
@@ -278,7 +260,7 @@ public class Query
             IsEnterprise = matchedOffering.IsEnterpriseOffering(),
             Name = offering.Name,
             UnitPrice = offering.UnitPrice,
-            FeatureSet = _mapper.MapTo(offering).ToArray(),
+            FeatureSet = mapper.MapTo(offering).ToArray(),
             UnderPriceLines = offering.UnderPriceLines.ToArray(),
             Free = matchedOffering.IsFreeOffering(),
             EarlyBird = matchedOffering.IsEarlyBirdOffering()
@@ -322,7 +304,7 @@ public class Query
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(_mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo).ToArray(),
             TotalCount = totalCount
         };
     }

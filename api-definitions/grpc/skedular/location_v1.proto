@@ -228,7 +228,7 @@ message Resource {
     repeated OrganizationZone organizationZones = 6;
     string color = 7;
     bool isOpeningHoursOverriden = 8;
-    OpeningHours openingHours = 9;
+    OpeningHours availableHours = 9;
 }
 
 message ResourceConnection {
@@ -453,6 +453,12 @@ message RemoveRoomInput {
 }
 
 message OpeningHours {
+    WeekOpeningHours weekOpeningHours = 1;
+    repeated google.protobuf.Timestamp closedDates = 2;
+    repeated VariedDateOpeningHours DatesWithVariedOpeningHours = 3;
+}
+
+message WeekOpeningHours {
     OpeningHoursDetails monday = 1;
     OpeningHoursDetails tuesday = 2;
     OpeningHoursDetails wednesday = 3;
@@ -460,8 +466,6 @@ message OpeningHours {
     OpeningHoursDetails friday = 5;
     OpeningHoursDetails saturday = 6;
     OpeningHoursDetails sunday = 7;
-    repeated google.protobuf.Timestamp closedDates = 8;
-    repeated VariedDateOpeningHours DatesWithVariedOpeningHours = 9;
 }
 
 message VariedDateOpeningHours {
@@ -470,8 +474,8 @@ message VariedDateOpeningHours {
 }
 
 message OpeningHoursDetails {
-    bool isClosed = 1;
-    bool open24 = 2;
+    bool closed = 1;
+    bool openAllDay = 2;
     string from = 3;
     string until = 4;
 }

@@ -67,7 +67,7 @@ message Resource {
   repeated string tagIds = 5;
   string color = 6;
   bool isOpeningHoursOverriden = 7;
-  OpeningHours openingHours = 8;
+  OpeningHours availableHours = 8;
 }
 
 message Desk {
@@ -97,6 +97,12 @@ message InvitationToJoinLocation {
 }
 
 message OpeningHours {
+  WeekOpeningHours weekOpeningHours = 1;
+  repeated google.protobuf.Timestamp closedDates = 2;
+  repeated VariedDateOpeningHours DatesWithVariedOpeningHours = 3;
+}
+
+message WeekOpeningHours {
   OpeningHoursDetails monday = 1;
   OpeningHoursDetails tuesday = 2;
   OpeningHoursDetails wednesday = 3;
@@ -104,8 +110,6 @@ message OpeningHours {
   OpeningHoursDetails friday = 5;
   OpeningHoursDetails saturday = 6;
   OpeningHoursDetails sunday = 7;
-  repeated google.protobuf.Timestamp closedDates = 8;
-  repeated VariedDateOpeningHours DatesWithVariedOpeningHours = 9;
 }
 
 message VariedDateOpeningHours {
@@ -114,8 +118,8 @@ message VariedDateOpeningHours {
 }
 
 message OpeningHoursDetails {
-  bool isClosed = 1;
-  bool open24 = 2;
+  bool closed = 1;
+  bool openAllDay = 2;
   string from = 3;
   string until = 4;
 }

@@ -15,7 +15,7 @@ public class OrganizationOfferingService : IOrganizationOfferingService
     {
         var offering = organization.Offering;
         return offering is not null && (offering.Code.GetOffering().MaxUserCount == -1 ||
-                                        offering.ActiveCustomerIds.Length <= offering.Code.GetOffering().MaxUserCount ||
+                                        offering.ActiveCustomerIds.Count <= offering.Code.GetOffering().MaxUserCount ||
                                         offering.ActiveCustomerIds.Contains(customer.Id));
     }
 }

@@ -34,6 +34,7 @@ using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
 using UpdateResourceInput = Location.Api.GraphQL.UpdateResourceInput;
 using ResourceEdge = Location.Api.GraphQL.ResourceEdge;
 using VariedDateOpeningHours = Api.Shared.Services.Grpc.Skedular.Location.V1.VariedDateOpeningHours;
+using WeekOpeningHours = Api.Shared.Services.Models.WeekOpeningHours;
 
 namespace Location.Api.Mappers;
 
@@ -43,7 +44,6 @@ public interface IMapper
     Customer? MapTo(Shared.Database.Entities.Customer? src);
     Shared.Database.Entities.Location MapTo(Shared.Models.Location src, Organization? organization);
     Shared.Database.Entities.Location MergeTo(Shared.Models.Location src, Shared.Database.Entities.Location dest, Address? physicalAddress);
-
     Shared.Models.Resource MapTo(Resource src);
 
     Resource MapTo(
@@ -137,6 +137,7 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src);
     Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddResourceInput src);
     Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateResourceInput src);
+    public WeekOpeningHours MapTo(GraphQL.WeekOpeningHours src);
 }
 
 public class Mapper : IMapper
@@ -227,6 +228,7 @@ public class Mapper : IMapper
                 Name = src.Name,
                 About = src.About,
                 Timezone = src.Timezone,
+                OpeningHours = MapTo(src.OpeningHours),
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
@@ -235,10 +237,11 @@ public class Mapper : IMapper
                 DeskCapacity = src.Desks.Count,
                 RoomCapacity = src.Rooms.Count,
                 Organization = MapTo(src.Organization),
-                Desks = MapTo(src.Desks).ToArray(),
-                Rooms = MapTo(src.Rooms).ToArray(),
-                CustomTags = MapTo(src.CustomTags).ToArray(),
-                Zones = MapTo(src.Zones).ToArray(),
+                Resources = MapTo(src.Resources).ToList(),
+                Desks = MapTo(src.Desks).ToList(),
+                Rooms = MapTo(src.Rooms).ToList(),
+                CustomTags = MapTo(src.CustomTags).ToList(),
+                Zones = MapTo(src.Zones).ToList(),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress)
             };
 
@@ -254,7 +257,7 @@ public class Mapper : IMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
             IsOpeningHoursOverriden = src.IsOpeningHoursOverriden ?? false,
-            OpeningHours = src.OpeningHours,
+            AvailableHours = src.AvailableHours,
             Tags = MapTo(src.OrganizationTags).ToList()
         };
 
@@ -276,7 +279,7 @@ public class Mapper : IMapper
         dest.RequireBookingApproval = src.RequireBookingApproval;
         dest.Color = src.Color;
         dest.IsOpeningHoursOverriden = src.IsOpeningHoursOverriden;
-        dest.OpeningHours = src.OpeningHours;
+        dest.AvailableHours = src.AvailableHours;
         dest.OrganizationTags = organizationTags;
         dest.Location = location;
         return dest;
@@ -380,8 +383,8 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)).ToArray(),
-            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)).ToArray()
+            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)).ToList(),
+            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)).ToList()
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.DeskEdge MapToGrpcResponse(Edge<Shared.Models.Desk> src) =>
@@ -397,8 +400,8 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)).ToArray(),
-            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)).ToArray()
+            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)).ToList(),
+            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)).ToList()
         };
 
     public ResourceEdge MapTo(Edge<Shared.Models.Resource> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
@@ -429,6 +432,15 @@ public class Mapper : IMapper
             Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
+    public WeekOpeningHours MapTo(GraphQL.WeekOpeningHours src) =>
+        new(MapTo(src.Monday),
+            MapTo(src.Tuesday),
+            MapTo(src.Wednesday),
+            MapTo(src.Thursday),
+            MapTo(src.Friday),
+            MapTo(src.Saturday),
+            MapTo(src.Sunday));
+
     public ResourceDetails MapTo(Shared.Models.Resource src) =>
         new()
         {
@@ -437,8 +449,10 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)).ToArray(),
-            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)).ToArray()
+            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
+            AvailableHours = src.AvailableHours is null ? null : MapTo(src.AvailableHours),
+            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)).ToList(),
+            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)).ToList()
         };
 
     public IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location) =>
@@ -485,13 +499,13 @@ public class Mapper : IMapper
             Name = name,
             DesksOccupancyPercentage = locationDesksOccupancyPercentage
                 .Select(item => new DesksOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
-                .ToArray(),
+                .ToList(),
             DailyBookingsTotals = locationDailyBookingsTotal
                 .Select(item => new GraphQL.LocationDailyBookingsTotal { Date = item.Date, Total = item.Total })
-                .ToArray(),
+                .ToList(),
             RoomsOccupancyPercentage = locationRoomsOccupancyPercentage
                 .Select(item => new RoomsOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
-                .ToArray()
+                .ToList()
         };
 
     public Shared.Models.Location MapTo(AddLocationInput src)
@@ -621,7 +635,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
-            OpeningHours = MapTo(src.OpeningHours),
+            OpeningHours = MapToGrpcResponse(src.OpeningHours),
             OrganizationId = string.IsNullOrWhiteSpace(src.Organization?.Id) ? string.Empty : src.Organization.Id,
             Permissions = new Permissions
             {
@@ -691,7 +705,7 @@ public class Mapper : IMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
             IsOpeningHoursOverriden = src.IsOpeningHoursOverriden ?? false,
-            OpeningHours = src.OpeningHours,
+            AvailableHours = src.AvailableHours,
             Location = location,
             Tags = MapTo(src.OrganizationTags, location.Organization).ToList()
         };
@@ -706,7 +720,7 @@ public class Mapper : IMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
             IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
-            OpeningHours = MapTo(src.OpeningHours)
+            AvailableHours = src.AvailableHours is null ? null : MapToGrpcResponse(src.AvailableHours)
         };
 
         resource.OrganizationCustomTags.AddRange(
@@ -897,6 +911,8 @@ public class Mapper : IMapper
             : new LocationOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
 
     private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
+
+    private IEnumerable<ResourceDetails> MapTo(IEnumerable<Shared.Models.Resource> src) => src.Select(MapTo);
 
     private IEnumerable<DeskDetails> MapTo(IEnumerable<Shared.Models.Desk> src) => src.Select(MapTo);
 
@@ -1094,14 +1110,94 @@ public class Mapper : IMapper
                 Location = location
             };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours? MapTo(OpeningHours? src)
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours? MapToGrpcResponse(OpeningHours? src)
     {
         if (src is null)
         {
-            return null;
+            return new global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours
+            {
+                WeekOpeningHours = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.WeekOpeningHours
+                {
+                    Monday = MapToGrpcDefault(),
+                    Tuesday = MapToGrpcDefault(),
+                    Wednesday = MapToGrpcDefault(),
+                    Thursday = MapToGrpcDefault(),
+                    Friday = MapToGrpcDefault(),
+                    Saturday = MapToGrpcDefault(),
+                    Sunday = MapToGrpcDefault()
+                }
+            };
         }
 
-        var openingHours = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours
+        var openingHours =
+            new global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours { WeekOpeningHours = MapToGrpcResponse(src.WeekOpeningHours) };
+        openingHours.ClosedDates.AddRange(src.ClosedDates.Select(item => item.ToTimestamp()));
+        openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.ToList().Select(item => new VariedDateOpeningHours
+        {
+            Date = item.Key.ToTimestamp(), OpeningHoursDetails = MapToGrpcResponse(item.Value)
+        }));
+
+        return openingHours;
+    }
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.WeekOpeningHours MapToGrpcResponse(WeekOpeningHours src) =>
+        new()
+        {
+            Monday = MapToGrpcResponse(src.Monday),
+            Tuesday = MapToGrpcResponse(src.Tuesday),
+            Wednesday = MapToGrpcResponse(src.Wednesday),
+            Thursday = MapToGrpcResponse(src.Thursday),
+            Friday = MapToGrpcResponse(src.Friday),
+            Saturday = MapToGrpcResponse(src.Saturday),
+            Sunday = MapToGrpcResponse(src.Sunday)
+        };
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHoursDetails MapToGrpcResponse(OpeningHoursDetails src) =>
+        new()
+        {
+            Closed = src.Closed,
+            OpenAllDay = src.OpenAllDay,
+            From = src.From is null ? string.Empty : src.From.ToString(),
+            Until = src.Until is null ? string.Empty : src.Until.ToString()
+        };
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHoursDetails MapToGrpcDefault() =>
+        new() { Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty };
+
+    private static GraphQL.OpeningHours MapTo(OpeningHours? src)
+    {
+        if (src is null)
+        {
+            return new GraphQL.OpeningHours
+            {
+                WeekOpeningHours = new GraphQL.WeekOpeningHours
+                {
+                    Monday = MapToDefault(),
+                    Tuesday = MapToDefault(),
+                    Wednesday = MapToDefault(),
+                    Thursday = MapToDefault(),
+                    Friday = MapToDefault(),
+                    Saturday = MapToDefault(),
+                    Sunday = MapToDefault()
+                },
+                ClosedDates = [],
+                DatesWithVariedOpeningHours = []
+            };
+        }
+
+        return new GraphQL.OpeningHours
+        {
+            WeekOpeningHours = MapTo(src.WeekOpeningHours),
+            ClosedDates = src.ClosedDates,
+            DatesWithVariedOpeningHours = src.DatesWithVariedOpeningHours.ToList().Select(item => new GraphQL.VariedDateOpeningHours
+            {
+                Date = item.Key, OpeningHoursDetails = MapTo(item.Value)
+            }).ToList()
+        };
+    }
+
+    private static GraphQL.WeekOpeningHours MapTo(WeekOpeningHours src) =>
+        new()
         {
             Monday = MapTo(src.Monday),
             Tuesday = MapTo(src.Tuesday),
@@ -1112,21 +1208,24 @@ public class Mapper : IMapper
             Sunday = MapTo(src.Sunday)
         };
 
-        openingHours.ClosedDates.AddRange(src.ClosedDates.Select(item => item.ToTimestamp()));
-        openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.ToList().Select(item => new VariedDateOpeningHours
-        {
-            Date = item.Key.ToTimestamp(), OpeningHoursDetails = MapTo(item.Value)
-        }));
-
-        return openingHours;
-    }
-
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHoursDetails MapTo(OpeningHoursDetails src) =>
+    private static GraphQL.OpeningHoursDetails MapTo(OpeningHoursDetails src) =>
         new()
         {
-            IsClosed = src.IsClosed,
-            Open24 = src.Open24,
+            Closed = src.Closed,
+            OpenAllDay = src.OpenAllDay,
             From = src.From is null ? string.Empty : src.From.ToString(),
             Until = src.Until is null ? string.Empty : src.Until.ToString()
         };
+
+    private static OpeningHoursDetails MapTo(GraphQL.OpeningHoursDetails src) =>
+        new(
+            src.Closed,
+            src.OpenAllDay,
+            string.IsNullOrWhiteSpace(src.From) ? null : TimeOnly.Parse(src.From),
+            string.IsNullOrWhiteSpace(src.Until) ? null : TimeOnly.Parse(src.Until));
+
+    private static GraphQL.OpeningHoursDetails MapToDefault() => new()
+    {
+        Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty
+    };
 }

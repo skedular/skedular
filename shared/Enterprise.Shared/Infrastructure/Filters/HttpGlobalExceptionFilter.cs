@@ -41,7 +41,7 @@ public class HttpGlobalExceptionFilter(
 
     public class JsonErrorResponse
     {
-        public string[] Messages { get; set; } = [];
+        public ICollection<string> Messages { get; set; } = [];
         public string DeveloperMessage { get; set; } = string.Empty;
     }
 }

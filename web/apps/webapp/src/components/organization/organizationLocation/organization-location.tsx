@@ -1,3 +1,4 @@
+import { ClosedOpenAllDayCustomToggle } from '@/components/closedOpenAllDayCustomToggle';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -50,6 +51,8 @@ import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs from 'dayjs';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -127,6 +130,8 @@ const locationSchema = object({
   physicalAddress: string().nullable(),
 });
 
+const getDateFromTime = (time?: string | null | undefined) => (time ? dayjs(`2025-03-12T${time}`) : null);
+
 const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRoomsRelay, onReloadRequired, organizationId, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
@@ -148,7 +153,54 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
           physicalAddress {
             formattedAddress
           }
+          openingHours {
+            weekOpeningHours {
+              monday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              tuesday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              wednesday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              thursday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              friday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              saturday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              sunday {
+                closed
+                openAllDay
+                from
+                until
+              }
+            }
+          }
         }
+        openingHoursMinutesStep
         ...customTagSelector_allCustomTags_query
         ...zoneSelector_allZones_query
       }
@@ -427,6 +479,49 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredLocationDetailsFields = makeRequired(locationSchema);
+
+  const [mondayOpeningState, setMondayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+    rootData.location?.openingHours.weekOpeningHours.monday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.monday.openAllDay ? 'openAllDay' : 'custom',
+  );
+  const [mondayOpeningHoursFrom, setMondayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.monday.from));
+  const [mondayOpeningHoursUntil, setMondayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.monday.until));
+
+  const [tuesdayOpeningState, setTuesdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+    rootData.location?.openingHours.weekOpeningHours.tuesday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.tuesday.openAllDay ? 'openAllDay' : 'custom',
+  );
+  const [tuesdayOpeningHoursFrom, setTuesdayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.tuesday.from));
+  const [tuesdayOpeningHoursUntil, setTuesdayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.tuesday.until));
+
+  const [wednesdayOpeningState, setWednesdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+    rootData.location?.openingHours.weekOpeningHours.wednesday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.wednesday.openAllDay ? 'openAllDay' : 'custom',
+  );
+  const [wednesdayOpeningHoursFrom, setWednesdayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.wednesday.from));
+  const [wednesdayOpeningHoursUntil, setWednesdayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.wednesday.until));
+
+  const [thursdayOpeningState, setThursdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+    rootData.location?.openingHours.weekOpeningHours.thursday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.thursday.openAllDay ? 'openAllDay' : 'custom',
+  );
+  const [thursdayOpeningHoursFrom, setThursdayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.thursday.from));
+  const [thursdayOpeningHoursUntil, setThursdayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.thursday.until));
+
+  const [fridayOpeningState, setFridayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+    rootData.location?.openingHours.weekOpeningHours.friday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.friday.openAllDay ? 'openAllDay' : 'custom',
+  );
+  const [fridayOpeningHoursFrom, setFridayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.friday.from));
+  const [fridayOpeningHoursUntil, setFridayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.friday.until));
+
+  const [saturdayOpeningState, setSaturdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+    rootData.location?.openingHours.weekOpeningHours.saturday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.saturday.openAllDay ? 'openAllDay' : 'custom',
+  );
+  const [saturdayOpeningHoursFrom, setSaturdayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.saturday.from));
+  const [saturdayOpeningHoursUntil, setSaturdayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.saturday.until));
+
+  const [sundayOpeningState, setSundayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+    rootData.location?.openingHours.weekOpeningHours.sunday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.sunday.openAllDay ? 'openAllDay' : 'custom',
+  );
+  const [sundayOpeningHoursFrom, setSundayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.sunday.from));
+  const [sundayOpeningHoursUntil, setSundayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.sunday.until));
+
   const [deskNameSearchText, setDeskNameSearchText] = useState<string>('');
   const [deskCustomTagIds, setDeskCustomTagIds] = useState<string[]>([]);
   const [deskZoneIds, setDeskZoneIds] = useState<string[]>([]);
@@ -1650,12 +1745,161 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
               ref={(divElement) => {
+                sectionRefs.current['opening-hours'] = divElement;
+              }}
+            >
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Opening Hours" />
+                  <BodyIconTypography label="Manage your location opening hours" />
+                </Grid>
+              </GridContainer>
+              <Divider />
+            </StackColumn>
+
+            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <FormFieldLabel label="Monday">
+                <StackRow>
+                  <ClosedOpenAllDayCustomToggle defaultValue={mondayOpeningState} onChange={(value) => setMondayOpeningState(value)} />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={mondayOpeningState !== 'custom'}
+                    defaultValue={mondayOpeningHoursFrom}
+                    onChange={(value) => setMondayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={mondayOpeningState !== 'custom'}
+                    defaultValue={mondayOpeningHoursUntil}
+                    onChange={(value) => setMondayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                </StackRow>
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Tuesday">
+                <StackRow>
+                  <ClosedOpenAllDayCustomToggle defaultValue={tuesdayOpeningState} onChange={(value) => setTuesdayOpeningState(value)} />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={tuesdayOpeningState !== 'custom'}
+                    defaultValue={tuesdayOpeningHoursFrom}
+                    onChange={(value) => setTuesdayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={tuesdayOpeningState !== 'custom'}
+                    defaultValue={tuesdayOpeningHoursUntil}
+                    onChange={(value) => setTuesdayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                </StackRow>
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Wednesday">
+                <StackRow>
+                  <ClosedOpenAllDayCustomToggle defaultValue={wednesdayOpeningState} onChange={(value) => setWednesdayOpeningState(value)} />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={wednesdayOpeningState !== 'custom'}
+                    defaultValue={wednesdayOpeningHoursFrom}
+                    onChange={(value) => setWednesdayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={wednesdayOpeningState !== 'custom'}
+                    defaultValue={wednesdayOpeningHoursUntil}
+                    onChange={(value) => setWednesdayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                </StackRow>
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Thursday">
+                <StackRow>
+                  <ClosedOpenAllDayCustomToggle defaultValue={thursdayOpeningState} onChange={(value) => setThursdayOpeningState(value)} />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={thursdayOpeningState !== 'custom'}
+                    defaultValue={thursdayOpeningHoursFrom}
+                    onChange={(value) => setThursdayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={thursdayOpeningState !== 'custom'}
+                    defaultValue={thursdayOpeningHoursUntil}
+                    onChange={(value) => setThursdayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                </StackRow>
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Friday">
+                <StackRow>
+                  <ClosedOpenAllDayCustomToggle defaultValue={fridayOpeningState} onChange={(value) => setFridayOpeningState(value)} />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={fridayOpeningState !== 'custom'}
+                    defaultValue={fridayOpeningHoursFrom}
+                    onChange={(value) => setFridayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={fridayOpeningState !== 'custom'}
+                    defaultValue={fridayOpeningHoursUntil}
+                    onChange={(value) => setFridayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                </StackRow>
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Saturday">
+                <StackRow>
+                  <ClosedOpenAllDayCustomToggle defaultValue={saturdayOpeningState} onChange={(value) => setSaturdayOpeningState(value)} />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={saturdayOpeningState !== 'custom'}
+                    defaultValue={saturdayOpeningHoursFrom}
+                    onChange={(value) => setSaturdayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={saturdayOpeningState !== 'custom'}
+                    defaultValue={saturdayOpeningHoursUntil}
+                    onChange={(value) => setSaturdayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                </StackRow>
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Sunday">
+                <StackRow>
+                  <ClosedOpenAllDayCustomToggle defaultValue={sundayOpeningState} onChange={(value) => setSundayOpeningState(value)} />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={sundayOpeningState !== 'custom'}
+                    defaultValue={sundayOpeningHoursFrom}
+                    onChange={(value) => setSundayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                  <TimePicker
+                    minutesStep={rootData.openingHoursMinutesStep}
+                    disabled={sundayOpeningState !== 'custom'}
+                    defaultValue={sundayOpeningHoursUntil}
+                    onChange={(value) => setSundayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
+                  />
+                </StackRow>
+              </FormFieldLabel>
+
+              <StackRow>
+                <Button variant="contained" sx={defaultButtonStyle}>
+                  Update
+                </Button>
+              </StackRow>
+            </StackColumn>
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
                 sectionRefs.current['manage-desks'] = divElement;
               }}
             >
               <GridContainer sx={{ justifyContent: 'space-between' }}>
                 <Grid>
-                  <SectionIconTypography label=" Manage Desks" />
+                  <SectionIconTypography label="Manage Desks" />
                   <BodyIconTypography label="Manage your location desks details" />
                 </Grid>
 
@@ -1738,7 +1982,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
             >
               <GridContainer sx={{ justifyContent: 'space-between' }}>
                 <Grid>
-                  <SectionIconTypography label=" Manage Rooms" />
+                  <SectionIconTypography label="Manage Rooms" />
                   <BodyIconTypography label="Manage your location rooms details" />
                 </Grid>
 

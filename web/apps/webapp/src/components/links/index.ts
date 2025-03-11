@@ -29,6 +29,7 @@ export const getOrganizationTeamManageTeamBaseLink = (id: string, teamId: string
 export const getOrganizationBookingBaseLink = (id: string, bookingId: string) => `${getOrganizationBaseLink(id)}/bookings/${bookingId}`;
 export const getOrganizationLocationsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/locations`;
 export const getOrganizationLocationSetupBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=setup`;
+export const getOrganizationLocationOpeningHoursBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=opening-hours`;
 export const getOrganizationLocationManageDesksBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=manage-desks`;
 export const getOrganizationLocationManageRoomsBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=manage-rooms`;
 export const getOrganizationLocationManageLocationBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=manage-location`;

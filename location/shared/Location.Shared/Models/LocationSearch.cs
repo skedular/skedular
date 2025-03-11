@@ -2,11 +2,11 @@ using Enterprise.Shared.Pagination;
 
 namespace Location.Shared.Models;
 
-public class LocationSearchCriteria(string? organizationId, string[]? locationIds, string? nameContains, ICollection<string> tagIds)
+public class LocationSearchCriteria(string? organizationId, ICollection<string> locationIds, string? nameContains, ICollection<string> tagIds)
 {
     public string? CustomerId { get; set; }
     public string? OrganizationId { get; } = organizationId;
-    public string[]? LocationIds { get; } = locationIds;
+    public ICollection<string> LocationIds { get; } = locationIds;
     public string? NameContains { get; } = nameContains;
     public ICollection<string> TagIds { get; set; } = tagIds;
 }

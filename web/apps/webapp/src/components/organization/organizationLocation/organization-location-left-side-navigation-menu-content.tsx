@@ -1,9 +1,10 @@
 import { BodyIconTypography } from '@/components/commons';
-import { DeskIcon, EditIcon, RoomIcon } from '@/components/icons';
+import { DeskIcon, EditIcon, OpeningHoursIcon, RoomIcon } from '@/components/icons';
 import {
   getOrganizationLocationManageDesksBaseLink,
   getOrganizationLocationManageLocationBaseLink,
   getOrganizationLocationManageRoomsBaseLink,
+  getOrganizationLocationOpeningHoursBaseLink,
   getOrganizationLocationSetupBaseLink,
 } from '@/components/links';
 import { PaletteModeContext } from '@/libs/providers';
@@ -66,6 +67,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getOrganizationLocationSetupBaseLink(organizationId, locationId);
+  const openingHoursLink = getOrganizationLocationOpeningHoursBaseLink(organizationId, locationId);
   const manageDesksLink = getOrganizationLocationManageDesksBaseLink(organizationId, locationId);
   const manageRoomsLink = getOrganizationLocationManageRoomsBaseLink(organizationId, locationId);
   const manageLocationLink = getOrganizationLocationManageLocationBaseLink(organizationId, locationId);
@@ -92,6 +94,25 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
                 startElement={!hideIcons && <EditIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === setupLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={openingHoursLink}>
+          <ListItemButton selected={fullPath === openingHoursLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === openingHoursLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <OpeningHoursIcon color="inherit" />} invertDefaultColor={fullPath === openingHoursLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Opening Hours"
+                startElement={!hideIcons && <OpeningHoursIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === openingHoursLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

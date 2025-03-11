@@ -279,7 +279,6 @@ public class LocationSubscriber(
         foreach (var locationMember in locationMembers.Where(locationMember => location.LocationMembers.Any(item => item.Id == locationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id, false, cancellationToken);
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             var updatedLocationMember = mapper.MergeToEntity(
                 location.LocationMembers.First(item => item.Id == locationMember.Id),
@@ -294,7 +293,6 @@ public class LocationSubscriber(
         foreach (var locationMember in location.LocationMembers.Where(locationMember => locationMembers.All(item => item.Id != locationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id, false, cancellationToken);
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             addedItems.Add(repositoryFactory.LocationMemberRepository.Add(mapper.MapToEntity(locationMember, existingLocation, customer)));
         }
 

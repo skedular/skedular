@@ -11,27 +11,15 @@ public interface ICachedCustomerService
 {
     Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
-
-    Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
-        CancellationToken cancellationToken);
-
-    Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerByIdAsync(
-        string id,
-        CancellationToken cancellationToken);
-
-    Task<(Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(
-        string verifiableToken,
-        CancellationToken cancellationToken);
-
+    Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
+    Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerByIdAsync(string id, CancellationToken cancellationToken);
+    Task<(Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     void CleanCache();
     void CleanCache(string id);
 }
 
-public class CachedCustomerService(
-    IRepositoryFactory repositoryFactory,
-    IMapper mapper,
-    IContext context,
-    IMemoryCache memoryCache) : ICachedCustomerService
+public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper mapper, IContext context, IMemoryCache memoryCache)
+    : ICachedCustomerService
 {
     public async Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
     {
@@ -48,16 +36,14 @@ public class CachedCustomerService(
         }
     }
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(
-        CancellationToken cancellationToken)
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
         return await GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
     }
 
-    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
-        CancellationToken cancellationToken)
+    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(context.GetVerifiableToken()))
         {
@@ -74,9 +60,7 @@ public class CachedCustomerService(
         }
     }
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerByIdAsync(
-        string id,
-        CancellationToken cancellationToken)
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerByIdAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -108,10 +92,7 @@ public class CachedCustomerService(
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
 
-                var customer =
-                    await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                        verifiableToken,
-                        cancellationToken);
+                var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken);
                 if (customer is null)
                 {
                     throw new CustomerNotFound();

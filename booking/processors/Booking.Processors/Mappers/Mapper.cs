@@ -221,6 +221,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = locationAfterState.Name,
+            OpeningHours = MapTo(locationAfterState.OpeningHours),
             Organization =
                 string.IsNullOrWhiteSpace(locationAfterState.OrganizationId) ? null : new Organization { Id = locationAfterState.OrganizationId }
         };
@@ -257,6 +258,7 @@ public class Mapper : IMapper
             Inactive = item.Inactive,
             RequireBookingApproval = item.RequireBookingApproval,
             Color = item.Color,
+            AvailableHours = item.AvailableHours is null ? null : MapTo(item.AvailableHours),
             OrganizationTags = organizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
             Location = location
         }).ToList();
@@ -355,6 +357,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
+        dest.OpeningHours = src.OpeningHours;
         dest.Organization = organization;
         return dest;
     }
@@ -448,6 +451,7 @@ public class Mapper : IMapper
         dest.Inactive = src.Inactive;
         dest.RequireBookingApproval = src.RequireBookingApproval;
         dest.Color = src.Color;
+        dest.AvailableHours = src.AvailableHours;
         dest.Location = location;
         dest.OrganizationTags = organizationTags;
         return dest;
@@ -580,4 +584,27 @@ public class Mapper : IMapper
 
     public OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new OrganizationTag(), organization);
+
+    private static OpeningHours MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours src) =>
+        new(
+            MapTo(src.WeekOpeningHours),
+            src.ClosedDates.Select(item => item.ToDateTimeOffset()).ToList(),
+            src.DatesWithVariedOpeningHours.ToDictionary(item => item.Date.ToDateTimeOffset(), item => MapTo(item.OpeningHoursDetails)));
+
+    private static WeekOpeningHours MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours src) =>
+        new(
+            MapTo(src.Monday),
+            MapTo(src.Tuesday),
+            MapTo(src.Wednesday),
+            MapTo(src.Thursday),
+            MapTo(src.Friday),
+            MapTo(src.Saturday),
+            MapTo(src.Sunday));
+
+    private static OpeningHoursDetails MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails src) =>
+        new(
+            src.Closed,
+            src.OpenAllDay,
+            string.IsNullOrWhiteSpace(src.From) ? null : TimeOnly.Parse(src.From),
+            string.IsNullOrWhiteSpace(src.Until) ? null : TimeOnly.Parse(src.Until));
 }
