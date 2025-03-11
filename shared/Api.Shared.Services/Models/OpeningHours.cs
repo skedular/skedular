@@ -36,8 +36,8 @@ public record OpeningHoursDetails
 
     public bool IsClosed { get; }
     public bool Open24 { get; }
-    public TimeOnly From { get; }
-    public TimeOnly Until { get; }
+    public TimeOnly? From { get; }
+    public TimeOnly? Until { get; }
 
     private static bool IsMultipleOf15(TimeOnly time) => time.Minute % 15 == 0;
 }
@@ -51,4 +51,5 @@ public record OpeningHours(
     OpeningHoursDetails Saturday,
     OpeningHoursDetails Sunday,
     ICollection<DateTimeOffset> ClosedDates,
-    Dictionary<DateTimeOffset, OpeningHours> DatesWithVariedOpeningHours);
+    Dictionary<DateTimeOffset, OpeningHoursDetails> DatesWithVariedOpeningHours);
+

@@ -320,6 +320,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization)
         };
 
@@ -390,6 +391,8 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
+            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
+            OpeningHours = src.OpeningHours,
             Location = location
         };
 

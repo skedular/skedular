@@ -148,6 +148,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization)
         };
 
@@ -195,6 +196,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            OpeningHours = src.OpeningHours,
             Organization = organization
         };
 
@@ -207,6 +209,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Timezone = src.Timezone;
+        dest.OpeningHours = src.OpeningHours;
         dest.PhysicalAddress = physicalAddress;
         return dest;
     }
@@ -246,6 +249,8 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
+            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
+            OpeningHours = src.OpeningHours,
             Tags = MapTo(src.OrganizationTags).ToList()
         };
 
@@ -266,6 +271,8 @@ public class Mapper : IMapper
         dest.Inactive = src.Inactive;
         dest.RequireBookingApproval = src.RequireBookingApproval;
         dest.Color = src.Color;
+        dest.IsOpeningHoursOverriden = src.IsOpeningHoursOverriden;
+        dest.OpeningHours = src.OpeningHours;
         dest.OrganizationTags = organizationTags;
         dest.Location = location;
         return dest;
@@ -697,6 +704,8 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
+            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
+            OpeningHours = src.OpeningHours,
             Location = location,
             Tags = MapTo(src.OrganizationTags, location.Organization).ToList()
         };

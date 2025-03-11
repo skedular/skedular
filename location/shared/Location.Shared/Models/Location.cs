@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace Location.Shared.Models;
@@ -9,6 +10,7 @@ public class Location : ModelBaseWithDeleted
     public string? Timezone { get; set; }
     public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
     public DateTimeOffset? DailyRoomCountLastRecordedAt { get; set; }
+    public OpeningHours? OpeningHours { get; set; }
 
     public Address? PhysicalAddress { get; set; }
 

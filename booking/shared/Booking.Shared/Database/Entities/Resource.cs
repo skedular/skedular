@@ -14,7 +14,7 @@ public class Resource : ReplicatedEntityBaseWithDeleted
     public bool Inactive { get; set; }
     public bool RequireBookingApproval { get; set; }
     public string? Color { get; set; }
-    public bool? OverrideOpeningHoursOverriden { get; set; }
+    public bool? IsOpeningHoursOverriden { get; set; }
     public OpeningHours? OpeningHours { get; set; }
 
     public virtual Location? Location { get; set; }
@@ -34,7 +34,7 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
         builder.Property(item => item.Inactive).HasDefaultValue(false);
         builder.Property(item => item.RequireBookingApproval).HasDefaultValue(false);
         builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
-        builder.Property(item => item.OverrideOpeningHoursOverriden).HasDefaultValue(false);
+        builder.Property(item => item.IsOpeningHoursOverriden).HasDefaultValue(false);
         builder.Property(item => item.OpeningHours).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Location).WithMany(item => item.Resources);
@@ -43,6 +43,6 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Inactive);
         builder.HasIndex(item => item.RequireBookingApproval);
-        builder.HasIndex(item => item.OverrideOpeningHoursOverriden);
+        builder.HasIndex(item => item.IsOpeningHoursOverriden);
     }
 }

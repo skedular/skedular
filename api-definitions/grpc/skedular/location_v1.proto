@@ -1,6 +1,8 @@
 syntax = "proto3";
 package location;
 
+import "google/protobuf/timestamp.proto";
+
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Location.V1";
 
 service LocationService {
@@ -125,6 +127,7 @@ message Location {
     repeated LocationMember members = 11;
     repeated OrganizationCustomTag customTags = 12;
     repeated OrganizationZone zones = 13;
+    OpeningHours openingHours = 14;
 }
 
 message Admin_GetInput {
@@ -224,6 +227,8 @@ message Resource {
     repeated OrganizationCustomTag organizationCustomTags = 5;
     repeated OrganizationZone organizationZones = 6;
     string color = 7;
+    bool isOpeningHoursOverriden = 8;
+    OpeningHours openingHours = 9;
 }
 
 message ResourceConnection {
@@ -445,4 +450,28 @@ message UpdateRoomInput {
 
 message RemoveRoomInput {
     string id = 1;
+}
+
+message OpeningHours {
+    OpeningHoursDetails monday = 1;
+    OpeningHoursDetails tuesday = 2;
+    OpeningHoursDetails wednesday = 3;
+    OpeningHoursDetails thursday = 4;
+    OpeningHoursDetails friday = 5;
+    OpeningHoursDetails saturday = 6;
+    OpeningHoursDetails sunday = 7;
+    repeated google.protobuf.Timestamp closedDates = 8;
+    repeated VariedDateOpeningHours DatesWithVariedOpeningHours = 9;
+}
+
+message VariedDateOpeningHours {
+    google.protobuf.Timestamp date = 1;
+    OpeningHoursDetails openingHoursDetails = 2;
+}
+
+message OpeningHoursDetails {
+    bool isClosed = 1;
+    bool open24 = 2;
+    string from = 3;
+    string until = 4;
 }

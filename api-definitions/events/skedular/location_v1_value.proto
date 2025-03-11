@@ -44,6 +44,7 @@ message Location {
   repeated Resource resources = 8;
   repeated Desk desks = 9;
   repeated Room rooms = 10;
+  OpeningHours openingHours = 11;
 }
 
 enum Role {
@@ -65,6 +66,8 @@ message Resource {
   bool requireBookingApproval = 4;
   repeated string tagIds = 5;
   string color = 6;
+  bool isOpeningHoursOverriden = 7;
+  OpeningHours openingHours = 8;
 }
 
 message Desk {
@@ -91,4 +94,28 @@ message InvitationToJoinLocation {
   string locationId = 3;
   string invitedById = 4;
   string inviteeId = 5;
+}
+
+message OpeningHours {
+  OpeningHoursDetails monday = 1;
+  OpeningHoursDetails tuesday = 2;
+  OpeningHoursDetails wednesday = 3;
+  OpeningHoursDetails thursday = 4;
+  OpeningHoursDetails friday = 5;
+  OpeningHoursDetails saturday = 6;
+  OpeningHoursDetails sunday = 7;
+  repeated google.protobuf.Timestamp closedDates = 8;
+  repeated VariedDateOpeningHours DatesWithVariedOpeningHours = 9;
+}
+
+message VariedDateOpeningHours {
+  google.protobuf.Timestamp date = 1;
+  OpeningHoursDetails openingHoursDetails = 2;
+}
+
+message OpeningHoursDetails {
+  bool isClosed = 1;
+  bool open24 = 2;
+  string from = 3;
+  string until = 4;
 }
