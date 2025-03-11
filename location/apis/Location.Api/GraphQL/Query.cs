@@ -2,6 +2,7 @@ using System.Reflection;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Time;
 using HotChocolate;
 using HotChocolate.Types;
 using Location.Api.Mappers;

@@ -54,7 +54,7 @@ public class Mapper : IMapper
                 Inactive = item.Inactive,
                 RequireBookingApproval = item.RequireBookingApproval,
                 Color = item.Color.ToSafeString(),
-                IsOpeningHoursOverriden = item.IsOpeningHoursOverriden ?? false,
+                IsOpeningHoursOverriden = item.IsOpeningHoursOverriden,
                 OpeningHours = MapTo(item.OpeningHours)
             };
 

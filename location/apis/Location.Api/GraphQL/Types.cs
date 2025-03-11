@@ -3,6 +3,7 @@ using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types.Relay;
+using Location.Shared.Database.Migrations;
 using Location.Shared.Models;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -125,6 +126,7 @@ public class LocationDetails : Node
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("organization")] public LocationOrganizationDetails? Organization { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
+    [GraphQLName("openingHours")] public OpeningHours? OpeningHours { get; set; }
     [GraphQLName("deskCapacity")] public int DeskCapacity { get; set; }
     [GraphQLName("roomCapacity")] public int RoomCapacity { get; set; }
     [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
@@ -132,6 +134,7 @@ public class LocationDetails : Node
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
+    [GraphQLName("resources")] public ResourceDetails[] Resources { get; set; } = [];
     [GraphQLName("desks")] public DeskDetails[] Desks { get; set; } = [];
     [GraphQLName("rooms")] public RoomDetails[] Rooms { get; set; } = [];
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
@@ -596,6 +599,8 @@ public class ResourceDetails : Node
     [GraphQLName("color")] public string? Color { get; set; }
     [GraphQLName("customTags")] public OrganizationTagDetails[] CustomTags { get; set; } = [];
     [GraphQLName("zones")] public OrganizationTagDetails[] Zones { get; set; } = [];
+    [GraphQLName("isOpeningHoursOverriden")] public bool IsOpeningHoursOverriden { get; set; }
+    [GraphQLName("openingHours")] public OpeningHours? OpeningHours { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -630,4 +635,36 @@ public class ResourcesOccupancyPercentage
 {
     [GraphQLName("date")] public DateTimeOffset Date { get; set; }
     [GraphQLName("percentage")] public float Percentage { get; set; }
+}
+
+[GraphQLName("OpeningHoursDetails")]
+public class OpeningHoursDetails
+{
+    [GraphQLName("isClosed")] public bool IsClosed { get; set; }
+    [GraphQLName("open24")] public bool Open24 { get; }
+    [GraphQLName("from")] public string? From { get; }
+    [GraphQLName("until")] public string? Until { get; }
+}
+
+[GraphQLName("VariedDateOpeningHours")]
+public class VariedDateOpeningHours
+{
+    [GraphQLName("date")] public DateTimeOffset Date { get; set; }
+    [GraphQLName("openingHoursDetails")] public OpeningHoursDetails OpeningHoursDetails { get; }
+}
+
+[GraphQLName("OpeningHours")]
+public class OpeningHours
+{
+    [GraphQLName("monday")] public OpeningHoursDetails Monday { get; set; }
+    [GraphQLName("tuesday")] public OpeningHoursDetails Tuesday { get; set; }
+    [GraphQLName("wednesday")] public OpeningHoursDetails Wednesday { get; set; }
+    [GraphQLName("thursday")] public OpeningHoursDetails Thursday { get; set; }
+    [GraphQLName("friday")] public OpeningHoursDetails Friday { get; set; }
+    [GraphQLName("saturday")] public OpeningHoursDetails Saturday { get; set; }
+    [GraphQLName("sunday")] public OpeningHoursDetails Sunday { get; set; }
+    [GraphQLName("closedDates")] public ICollection<DateTimeOffset> ClosedDates { get; set; }
+
+    [GraphQLName("datesWithVariedOpeningHours")]
+    public ICollection<VariedDateOpeningHours> DatesWithVariedOpeningHours { get; set; }
 }

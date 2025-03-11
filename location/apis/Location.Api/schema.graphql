@@ -105,6 +105,7 @@ type LocationDetails {
   about: String
   organization: LocationOrganizationDetails
   timezone: String
+  openingHours: OpeningHours
   deskCapacity: Int!
   roomCapacity: Int!
   hasFutureBooking: Boolean!
@@ -112,6 +113,7 @@ type LocationDetails {
   canDelete: Boolean!
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
+  resources: [ResourceDetails!]!
   desks: [DeskDetails!]!
   rooms: [RoomDetails!]!
   physicalAddress: LocationAddressDetails
@@ -195,6 +197,25 @@ type Mutation {
   deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload @cost(weight: "10")
 }
 
+type OpeningHours {
+  monday: OpeningHoursDetails!
+  tuesday: OpeningHoursDetails!
+  wednesday: OpeningHoursDetails!
+  thursday: OpeningHoursDetails!
+  friday: OpeningHoursDetails!
+  saturday: OpeningHoursDetails!
+  sunday: OpeningHoursDetails!
+  closedDates: [DateTime!]!
+  datesWithVariedOpeningHours: [VariedDateOpeningHours!]!
+}
+
+type OpeningHoursDetails {
+  isClosed: Boolean!
+  open24: Boolean!
+  from: String
+  until: String
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -237,6 +258,8 @@ type ResourceDetails {
   color: String
   customTags: [Location_OrganizationTagDetails!]!
   zones: [Location_OrganizationTagDetails!]!
+  isOpeningHoursOverriden: Boolean!
+  openingHours: OpeningHours
   id: ID!
 }
 
@@ -289,6 +312,11 @@ type RoomsOccupancyPercentage {
 type RoomsPayload {
   clientMutationId: String
   rooms: [RoomDetails!]!
+}
+
+type VariedDateOpeningHours {
+  date: DateTime!
+  openingHoursDetails: OpeningHoursDetails!
 }
 
 type Version {

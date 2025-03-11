@@ -391,7 +391,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
+            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden ?? false,
             OpeningHours = src.OpeningHours,
             Location = location
         };

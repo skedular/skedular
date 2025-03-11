@@ -349,8 +349,10 @@ type LocationDetails {
   hasFutureBooking: Boolean!
   id: ID!
   name: String!
+  openingHours: OpeningHours
   organization: LocationOrganizationDetails
   physicalAddress: LocationAddressDetails
+  resources: [ResourceDetails!]!
   roomCapacity: Int!
   rooms: [RoomDetails!]!
   timezone: String
@@ -551,6 +553,25 @@ type NotificationOrganizationDetails {
 type NotificationTeamDetails {
   name: String!
   uniqueId: ID!
+}
+
+type OpeningHours {
+  closedDates: [DateTime!]!
+  datesWithVariedOpeningHours: [VariedDateOpeningHours!]!
+  friday: OpeningHoursDetails!
+  monday: OpeningHoursDetails!
+  saturday: OpeningHoursDetails!
+  sunday: OpeningHoursDetails!
+  thursday: OpeningHoursDetails!
+  tuesday: OpeningHoursDetails!
+  wednesday: OpeningHoursDetails!
+}
+
+type OpeningHoursDetails {
+  from: String
+  isClosed: Boolean!
+  open24: Boolean!
+  until: String
 }
 
 type OrganizationActiveOfferingDetails {
@@ -796,6 +817,7 @@ type PageInfo {
 type Query {
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!] @cost(weight: "10")
+  allowedHours: [String!]!
   availableDesks(where: AvailableDesksWhereInput!): [BookingDeskDetails!] @cost(weight: "10")
   availableRooms(where: AvailableRoomsWhereInput!): [BookingRoomDetails!] @cost(weight: "10")
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
@@ -896,7 +918,9 @@ type ResourceDetails {
   customTags: [Location_OrganizationTagDetails!]!
   id: ID!
   inactive: Boolean!
+  isOpeningHoursOverriden: Boolean!
   name: String!
+  openingHours: OpeningHours
   requireBookingApproval: Boolean!
   zones: [Location_OrganizationTagDetails!]!
 }
@@ -1065,6 +1089,11 @@ type TeamPayload {
 
 type UpdateOrganizationOfferingPayload {
   clientMutationId: String
+}
+
+type VariedDateOpeningHours {
+  date: DateTime!
+  openingHoursDetails: OpeningHoursDetails!
 }
 
 type Version {

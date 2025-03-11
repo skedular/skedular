@@ -2,6 +2,7 @@ using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
+using Google.Protobuf.WellKnownTypes;
 using Location.Api.GraphQL;
 using Location.Shared.Database.Entities;
 using Booking = Location.Shared.Models.Booking;
@@ -28,8 +29,11 @@ using RoomEdge = Location.Api.GraphQL.RoomEdge;
 using LocationRoomsOccupancyPercentage = Location.Shared.Models.LocationRoomsOccupancyPercentage;
 using UpdateRoomInput = Location.Api.GraphQL.UpdateRoomInput;
 using AddResourceInput = Location.Api.GraphQL.AddResourceInput;
+using OpeningHours = Api.Shared.Services.Models.OpeningHours;
+using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
 using UpdateResourceInput = Location.Api.GraphQL.UpdateResourceInput;
 using ResourceEdge = Location.Api.GraphQL.ResourceEdge;
+using VariedDateOpeningHours = Api.Shared.Services.Grpc.Skedular.Location.V1.VariedDateOpeningHours;
 
 namespace Location.Api.Mappers;
 
@@ -249,7 +253,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
+            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden ?? false,
             OpeningHours = src.OpeningHours,
             Tags = MapTo(src.OrganizationTags).ToList()
         };
@@ -636,6 +640,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
+            OpeningHours = MapTo(src.OpeningHours),
             OrganizationId = string.IsNullOrWhiteSpace(src.Organization?.Id) ? string.Empty : src.Organization.Id,
             Permissions = new Permissions
             {
@@ -704,7 +709,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
+            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden ?? false,
             OpeningHours = src.OpeningHours,
             Location = location,
             Tags = MapTo(src.OrganizationTags, location.Organization).ToList()
@@ -718,7 +723,9 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString()
+            Color = src.Color.ToSafeString(),
+            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
+            OpeningHours = MapTo(src.OpeningHours)
         };
 
         resource.OrganizationCustomTags.AddRange(
@@ -1139,4 +1146,40 @@ public class Mapper : IMapper
                 Country = src.Country,
                 Location = location
             };
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours? MapTo(OpeningHours? src)
+    {
+        if (src is null)
+        {
+            return null;
+        }
+
+        var openingHours = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours
+        {
+            Monday = MapTo(src.Monday),
+            Tuesday = MapTo(src.Tuesday),
+            Wednesday = MapTo(src.Wednesday),
+            Thursday = MapTo(src.Thursday),
+            Friday = MapTo(src.Friday),
+            Saturday = MapTo(src.Saturday),
+            Sunday = MapTo(src.Sunday)
+        };
+
+        openingHours.ClosedDates.AddRange(src.ClosedDates.Select(item => item.ToTimestamp()));
+        openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.ToList().Select(item => new VariedDateOpeningHours
+        {
+            Date = item.Key.ToTimestamp(), OpeningHoursDetails = MapTo(item.Value)
+        }));
+
+        return openingHours;
+    }
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHoursDetails MapTo(OpeningHoursDetails src) =>
+        new()
+        {
+            IsClosed = src.IsClosed,
+            Open24 = src.Open24,
+            From = src.From is null ? string.Empty : src.From.ToString(),
+            Until = src.Until is null ? string.Empty : src.Until.ToString()
+        };
 }

@@ -227,6 +227,7 @@ type PageInfo {
 
 type Query {
   organizationVersion: Version!
+  allowedHours: [String!]!
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
