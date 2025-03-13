@@ -184,95 +184,91 @@ resource "cloudflare_record" "webapp_azure_custom_domain" {
   ttl     = 3600
 }
 
-resource "cloudflare_record" "public_website_mx_forward_1" {
+resource "cloudflare_record" "spaceship_public_website_srv" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.public_website.id
+  name    = "_autodiscover._tcp.${module.common.cloudflare_public_website_domain_name}"
+  type    = "SRV"
+  data {
+    service  = "_autodiscover"
+    proto    = "_tcp"
+    name     = module.common.cloudflare_public_website_domain_name
+    priority = 0
+    weight   = 0
+    port     = 443
+    target   = "autoconfig.spacemail.com"
+  }
+  proxied = false
+  ttl     = 1200
+}
+
+resource "cloudflare_record" "spaceship_public_website_mx_1" {
   count    = local.is_staging ? 0 : 1
   zone_id  = data.cloudflare_zone.public_website.id
   name     = "@"
-  content  = "mx1.forwardemail.net"
+  content  = "mx1.spacemail.com"
   type     = "MX"
   proxied  = false
-  ttl      = 3600
+  ttl      = 1200
   priority = 10
 }
 
-resource "cloudflare_record" "public_website_mx_forward_2" {
+resource "cloudflare_record" "spaceship_public_website_mx_2" {
   count    = local.is_staging ? 0 : 1
   zone_id  = data.cloudflare_zone.public_website.id
   name     = "@"
-  content  = "mx2.forwardemail.net"
+  content  = "mx2.spacemail.com"
   type     = "MX"
   proxied  = false
-  ttl      = 3600
+  ttl      = 1200
   priority = 10
 }
 
-resource "cloudflare_record" "public_website_mx_forward_3" {
+resource "cloudflare_record" "spaceship_public_website_spf" {
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.public_website.id
   name    = "@"
-  content = "\"forward-email=morteza.alizadeh@gmail.com\""
+  content = "\"v=spf1 include:spf.spacemail.com ~all\""
   type    = "TXT"
   proxied = false
-  ttl     = 3600
+  ttl     = 1200
 }
 
-resource "cloudflare_record" "webapp_mx_forward_1" {
-  count    = local.is_staging ? 0 : 1
-  zone_id  = data.cloudflare_zone.webapp.id
-  name     = "@"
-  content  = "mx1.forwardemail.net"
-  type     = "MX"
-  proxied  = false
-  ttl      = 3600
-  priority = 10
-}
-
-resource "cloudflare_record" "webapp_mx_forward_2" {
-  count    = local.is_staging ? 0 : 1
-  zone_id  = data.cloudflare_zone.webapp.id
-  name     = "@"
-  content  = "mx2.forwardemail.net"
-  type     = "MX"
-  proxied  = false
-  ttl      = 3600
-  priority = 10
-}
-
-resource "cloudflare_record" "webapp_mx_forward_3" {
+resource "cloudflare_record" "spaceship_public_website_domain_key" {
   count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.webapp.id
+  zone_id = data.cloudflare_zone.public_website.id
+  name    = "spacemail._domainkey"
+  content = "\"v=DKIM1;k=rsa;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxZjRvEBVPMWyyB8rSk4U3fszE48BpiUY/7byuVqSXG+ZmMrpU249AfQ70+NSAQxpxcU/5nKsx/BNSaYjFMS51IjCWeJg0I3EaTxeRsGirPO0GhYHpexV33KXOaJju8iDA2kLgr9BT0OYRD6m24uN00y+VA52JBexGBvlgmLh6KoIiKR+6pqURyhi/qw7aLqjX7ZKzEAtZHHvCCJCOyzurxpxTBVEco5zreGerrKkHr5LP+z59DY6xXtt4F2MMolS85sVCtYtJ+JPtHE8d5jJgKFvKPv7vNcgD3q2KJdECGkNskFYGyr0Hzf/NR2N7gZFYFmyRBv30VbEWJb4lzpn2QIDAQAB\""
+  type    = "TXT"
+  proxied = false
+  ttl     = 1200
+}
+
+resource "cloudflare_record" "spaceship_public_website_domain_verification" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.public_website.id
   name    = "@"
-  content = "\"forward-email=morteza.alizadeh@gmail.com\""
+  content = "\"297dd8c8-b379-40ec-b71a-d9175d8e2c13\""
+  type    = "TXT"
+  proxied = false
+  ttl     = 1800
+}
+
+resource "cloudflare_record" "public_website_dmarc" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.public_website.id
+  name    = "_dmarc"
+  content = "\"v=DMARC1; p=reject; rua=mailto:dmarc-reports@${module.common.cloudflare_public_website_domain_name}; ruf=mailto:dmarc-failures@${module.common.cloudflare_public_website_domain_name}; aspf=r; sp=reject;\""
   type    = "TXT"
   proxied = false
   ttl     = 3600
 }
-
-# resource "cloudflare_record" "public_website_gmail_aws_ses_spf" {
-#   count   = local.is_staging ? 0 : 1
-#   zone_id = data.cloudflare_zone.public_website.id
-#   name    = "@"
-#   content = "\"v=spf1 include:_spf.google.com include:amazonses.com ~all\""
-#   type    = "TXT"
-#   proxied = false
-#   ttl     = 3600
-# }
 
 resource "cloudflare_record" "webapp_gmail_aws_ses_spf" {
   count   = local.is_staging ? 0 : 1
   zone_id = data.cloudflare_zone.webapp.id
   name    = "@"
   content = "\"v=spf1 include:amazonses.com ~all\""
-  type    = "TXT"
-  proxied = false
-  ttl     = 3600
-}
-
-resource "cloudflare_record" "public_website_gmail_aws_ses_dmarc" {
-  count   = local.is_staging ? 0 : 1
-  zone_id = data.cloudflare_zone.public_website.id
-  name    = "_dmarc"
-  content = "\"v=DMARC1; p=none; rua=mailto:dmarc-reports@${module.common.cloudflare_public_website_domain_name}; ruf=mailto:dmarc-failures@${module.common.cloudflare_public_website_domain_name}; aspf=r; sp=none;\""
   type    = "TXT"
   proxied = false
   ttl     = 3600
