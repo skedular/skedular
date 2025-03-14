@@ -1,4 +1,3 @@
-import { ClosedOpenAllDayCustomToggle } from '@/components/closedOpenAllDayCustomToggle';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -23,6 +22,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { Room } from '@/components/room';
 import AddRoomButton from '@/components/room/addRoom/add-room-button';
 import { Search } from '@/components/search';
+import { WeekOpeningHoursDetails, WeekOpeningHoursForm } from '@/components/weekOpeningHoursForm';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
@@ -44,6 +44,7 @@ import type { organizationLocation_removeCustomerPreferredRoomMutation } from '@
 import type { organizationLocation_rooms_query$key } from '@/queries/__generated__/organizationLocation_rooms_query.graphql';
 import type { organizationLocation_rooms_refetchableFragment } from '@/queries/__generated__/organizationLocation_rooms_refetchableFragment.graphql';
 import type { organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
+import type { organizationLocation_updateLocationOpeningHoursMutation } from '@/queries/__generated__/organizationLocation_updateLocationOpeningHoursMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -51,8 +52,6 @@ import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import dayjs from 'dayjs';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -130,8 +129,6 @@ const locationSchema = object({
   physicalAddress: string().nullable(),
 });
 
-const getDateFromTime = (time?: string | null | undefined) => (time ? dayjs(`2025-03-12T${time}`) : null);
-
 const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRoomsRelay, onReloadRequired, organizationId, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
@@ -201,6 +198,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
           }
         }
         openingHoursMinutesStep
+        ...weekOpeningHoursForm_query
         ...customTagSelector_allCustomTags_query
         ...zoneSelector_allZones_query
       }
@@ -286,6 +284,52 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
           timezone
           physicalAddress {
             formattedAddress
+          }
+          openingHours {
+            weekOpeningHours {
+              monday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              tuesday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              wednesday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              thursday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              friday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              saturday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              sunday {
+                closed
+                openAllDay
+                from
+                until
+              }
+            }
           }
         }
       }
@@ -470,6 +514,68 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
     }
   `);
 
+  const [commitUpdateLocationOpeningHours] = useMutation<organizationLocation_updateLocationOpeningHoursMutation>(graphql`
+    mutation organizationLocation_updateLocationOpeningHoursMutation($input: UpdateLocationOpeningHoursInput!) @raw_response_type {
+      updateLocationOpeningHours(input: $input) {
+        location {
+          id
+          name
+          about
+          timezone
+          physicalAddress {
+            formattedAddress
+          }
+          openingHours {
+            weekOpeningHours {
+              monday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              tuesday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              wednesday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              thursday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              friday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              saturday {
+                closed
+                openAllDay
+                from
+                until
+              }
+              sunday {
+                closed
+                openAllDay
+                from
+                until
+              }
+            }
+          }
+        }
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -479,48 +585,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredLocationDetailsFields = makeRequired(locationSchema);
-
-  const [mondayOpeningState, setMondayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
-    rootData.location?.openingHours.weekOpeningHours.monday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.monday.openAllDay ? 'openAllDay' : 'custom',
-  );
-  const [mondayOpeningHoursFrom, setMondayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.monday.from));
-  const [mondayOpeningHoursUntil, setMondayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.monday.until));
-
-  const [tuesdayOpeningState, setTuesdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
-    rootData.location?.openingHours.weekOpeningHours.tuesday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.tuesday.openAllDay ? 'openAllDay' : 'custom',
-  );
-  const [tuesdayOpeningHoursFrom, setTuesdayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.tuesday.from));
-  const [tuesdayOpeningHoursUntil, setTuesdayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.tuesday.until));
-
-  const [wednesdayOpeningState, setWednesdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
-    rootData.location?.openingHours.weekOpeningHours.wednesday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.wednesday.openAllDay ? 'openAllDay' : 'custom',
-  );
-  const [wednesdayOpeningHoursFrom, setWednesdayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.wednesday.from));
-  const [wednesdayOpeningHoursUntil, setWednesdayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.wednesday.until));
-
-  const [thursdayOpeningState, setThursdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
-    rootData.location?.openingHours.weekOpeningHours.thursday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.thursday.openAllDay ? 'openAllDay' : 'custom',
-  );
-  const [thursdayOpeningHoursFrom, setThursdayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.thursday.from));
-  const [thursdayOpeningHoursUntil, setThursdayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.thursday.until));
-
-  const [fridayOpeningState, setFridayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
-    rootData.location?.openingHours.weekOpeningHours.friday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.friday.openAllDay ? 'openAllDay' : 'custom',
-  );
-  const [fridayOpeningHoursFrom, setFridayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.friday.from));
-  const [fridayOpeningHoursUntil, setFridayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.friday.until));
-
-  const [saturdayOpeningState, setSaturdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
-    rootData.location?.openingHours.weekOpeningHours.saturday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.saturday.openAllDay ? 'openAllDay' : 'custom',
-  );
-  const [saturdayOpeningHoursFrom, setSaturdayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.saturday.from));
-  const [saturdayOpeningHoursUntil, setSaturdayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.saturday.until));
-
-  const [sundayOpeningState, setSundayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
-    rootData.location?.openingHours.weekOpeningHours.sunday.closed ? 'closed' : rootData.location?.openingHours.weekOpeningHours.sunday.openAllDay ? 'openAllDay' : 'custom',
-  );
-  const [sundayOpeningHoursFrom, setSundayOpeningHoursFrom] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.sunday.from));
-  const [sundayOpeningHoursUntil, setSundayOpeningHoursUntil] = useState(getDateFromTime(rootData.location?.openingHours.weekOpeningHours.sunday.until));
 
   const [deskNameSearchText, setDeskNameSearchText] = useState<string>('');
   const [deskCustomTagIds, setDeskCustomTagIds] = useState<string[]>([]);
@@ -629,17 +693,18 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
   );
 
   const handleLocationDetailUpdateClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
-    if (!rootData.location) {
+    const location = rootData.location;
+    if (!location) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating location '${rootData.location.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating location '${location.name}'...`} />, infoNotificationOptions);
 
     commitUpdateLocation({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id: rootData.location.id,
+          id: location.id,
           name,
           about,
           timezone,
@@ -653,7 +718,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update location '${rootData.location?.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update location '${location?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -667,19 +732,20 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update location '${rootData.location?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update location '${location?.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
         updateLocation: {
           location: {
-            id: rootData.location.id,
+            id: location.id,
             name,
             about,
             timezone,
             physicalAddress: {
               formattedAddress: physicalAddress,
             },
+            openingHours: location.openingHours,
           },
         },
       },
@@ -1429,25 +1495,25 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
   };
 
   const handleRemoveLocationClicked = () => {
-    if (!rootData.location) {
+    const location = rootData.location;
+    if (!location) {
       return;
     }
 
-    const locationDetails = rootData.location;
-    const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Removing location '${location.name}'...`} />, infoNotificationOptions);
 
     commitDeleteLocation({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id: locationDetails.id,
+          id: location.id,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -1455,7 +1521,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Location '${locationDetails.name}' removed.`} />,
+          render: <NotificationContent content={`Location '${location.name}' removed.`} />,
         });
 
         router.push(getOrganizationLocationsBaseLink(organizationId));
@@ -1463,8 +1529,60 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${error.message}.`} />,
         });
+      },
+    });
+  };
+
+  const handleLocationOpeningHoursUpdateClick = (weekOpeningHours: WeekOpeningHoursDetails) => {
+    const location = rootData.location;
+    if (!location) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Updating location '${location.name}' opening hours...`} />, infoNotificationOptions);
+
+    commitUpdateLocationOpeningHours({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: location.id,
+          weekOpeningHours,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update location '${location?.name}' opening hours . Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location ${location.name} opening hours updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update location '${location?.name}' opening hours. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateLocationOpeningHours: {
+          location: {
+            id: location.id,
+            name: location.name,
+            about: location.about,
+            timezone: location.timezone,
+            physicalAddress: location.physicalAddress,
+            openingHours: location.openingHours,
+          },
+        },
       },
     });
   };
@@ -1757,139 +1875,19 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
               <Divider />
             </StackColumn>
 
-            <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <FormFieldLabel label="Monday">
-                <StackRow>
-                  <ClosedOpenAllDayCustomToggle defaultValue={mondayOpeningState} onChange={(value) => setMondayOpeningState(value)} />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={mondayOpeningState !== 'custom'}
-                    defaultValue={mondayOpeningHoursFrom}
-                    onChange={(value) => setMondayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={mondayOpeningState !== 'custom'}
-                    defaultValue={mondayOpeningHoursUntil}
-                    onChange={(value) => setMondayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                </StackRow>
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Tuesday">
-                <StackRow>
-                  <ClosedOpenAllDayCustomToggle defaultValue={tuesdayOpeningState} onChange={(value) => setTuesdayOpeningState(value)} />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={tuesdayOpeningState !== 'custom'}
-                    defaultValue={tuesdayOpeningHoursFrom}
-                    onChange={(value) => setTuesdayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={tuesdayOpeningState !== 'custom'}
-                    defaultValue={tuesdayOpeningHoursUntil}
-                    onChange={(value) => setTuesdayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                </StackRow>
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Wednesday">
-                <StackRow>
-                  <ClosedOpenAllDayCustomToggle defaultValue={wednesdayOpeningState} onChange={(value) => setWednesdayOpeningState(value)} />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={wednesdayOpeningState !== 'custom'}
-                    defaultValue={wednesdayOpeningHoursFrom}
-                    onChange={(value) => setWednesdayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={wednesdayOpeningState !== 'custom'}
-                    defaultValue={wednesdayOpeningHoursUntil}
-                    onChange={(value) => setWednesdayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                </StackRow>
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Thursday">
-                <StackRow>
-                  <ClosedOpenAllDayCustomToggle defaultValue={thursdayOpeningState} onChange={(value) => setThursdayOpeningState(value)} />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={thursdayOpeningState !== 'custom'}
-                    defaultValue={thursdayOpeningHoursFrom}
-                    onChange={(value) => setThursdayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={thursdayOpeningState !== 'custom'}
-                    defaultValue={thursdayOpeningHoursUntil}
-                    onChange={(value) => setThursdayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                </StackRow>
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Friday">
-                <StackRow>
-                  <ClosedOpenAllDayCustomToggle defaultValue={fridayOpeningState} onChange={(value) => setFridayOpeningState(value)} />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={fridayOpeningState !== 'custom'}
-                    defaultValue={fridayOpeningHoursFrom}
-                    onChange={(value) => setFridayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={fridayOpeningState !== 'custom'}
-                    defaultValue={fridayOpeningHoursUntil}
-                    onChange={(value) => setFridayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                </StackRow>
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Saturday">
-                <StackRow>
-                  <ClosedOpenAllDayCustomToggle defaultValue={saturdayOpeningState} onChange={(value) => setSaturdayOpeningState(value)} />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={saturdayOpeningState !== 'custom'}
-                    defaultValue={saturdayOpeningHoursFrom}
-                    onChange={(value) => setSaturdayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={saturdayOpeningState !== 'custom'}
-                    defaultValue={saturdayOpeningHoursUntil}
-                    onChange={(value) => setSaturdayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                </StackRow>
-              </FormFieldLabel>
-
-              <FormFieldLabel label="Sunday">
-                <StackRow>
-                  <ClosedOpenAllDayCustomToggle defaultValue={sundayOpeningState} onChange={(value) => setSundayOpeningState(value)} />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={sundayOpeningState !== 'custom'}
-                    defaultValue={sundayOpeningHoursFrom}
-                    onChange={(value) => setSundayOpeningHoursFrom(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                  <TimePicker
-                    minutesStep={rootData.openingHoursMinutesStep}
-                    disabled={sundayOpeningState !== 'custom'}
-                    defaultValue={sundayOpeningHoursUntil}
-                    onChange={(value) => setSundayOpeningHoursUntil(value ?? getDateFromTime(`12:00:00`))}
-                  />
-                </StackRow>
-              </FormFieldLabel>
-
-              <StackRow>
-                <Button variant="contained" sx={defaultButtonStyle}>
-                  Update
-                </Button>
-              </StackRow>
-            </StackColumn>
+            <WeekOpeningHoursForm
+              rootDataRelay={rootData}
+              defaultValue={{
+                monday: location.openingHours.weekOpeningHours.monday,
+                tuesday: location.openingHours.weekOpeningHours.tuesday,
+                wednesday: location.openingHours.weekOpeningHours.wednesday,
+                thursday: location.openingHours.weekOpeningHours.thursday,
+                friday: location.openingHours.weekOpeningHours.friday,
+                saturday: location.openingHours.weekOpeningHours.saturday,
+                sunday: location.openingHours.weekOpeningHours.sunday,
+              }}
+              onWeekOpeningHoursDetailUpdateClick={handleLocationOpeningHoursUpdateClick}
+            />
 
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}

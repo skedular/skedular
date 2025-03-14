@@ -154,8 +154,8 @@ public class Mapper : IMapper
         {
             Closed = src.Closed,
             OpenAllDay = src.OpenAllDay,
-            From = src.From is null ? string.Empty : src.From.ToString(),
-            Until = src.Until is null ? string.Empty : src.Until.ToString()
+            From = src.From is null ? string.Empty : $"{src.From.Value.Hour}:{src.From.Value.Minute}",
+            Until = src.Until is null ? string.Empty : $"{src.Until.Value.Hour}:{src.Until.Value.Minute}"
         };
 
     private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails MapToDefault() =>

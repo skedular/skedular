@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<09ed537c205bfcf1920be28d29bc490d>>
+ * @generated SignedSource<<346c5530a1b2d181198b9d3079b53ff2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -76,7 +76,7 @@ export type organizationLocation_query$data = {
     }>;
   } | null | undefined;
   readonly openingHoursMinutesStep: number;
-  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "zoneSelector_allZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "weekOpeningHoursForm_query" | "zoneSelector_allZones_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
 export type organizationLocation_query$key = {
@@ -333,6 +333,11 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
+      "name": "weekOpeningHoursForm_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
       "name": "customTagSelector_allCustomTags_query"
     },
     {
@@ -346,6 +351,6 @@ return {
 };
 })();
 
-(node as any).hash = "a52c75aa5884b8882fca584cfde3b58e";
+(node as any).hash = "72ab5ffa9cbcd69e9f3f807adff616df";
 
 export default node;

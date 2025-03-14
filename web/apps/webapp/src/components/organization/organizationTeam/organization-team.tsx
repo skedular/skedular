@@ -311,17 +311,18 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleTeamDetailUpdateClick = ({ name, about, timezone, primaryLocationId }: TeamDetails) => {
-    if (!rootData.team) {
+    const team = rootData.team;
+    if (!team) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating team '${rootData.team.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating team '${team.name}'...`} />, infoNotificationOptions);
 
     commitUpdateTeam({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id: rootData.team.id,
+          id: team.id,
           name,
           about,
           timezone,
@@ -333,7 +334,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update team '${rootData.team?.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update team '${team?.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -347,13 +348,13 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update team '${rootData.team?.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update team '${team?.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
         updateTeam: {
           team: {
-            id: rootData.team.id,
+            id: team.id,
             name,
             about,
             timezone,
@@ -666,25 +667,25 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleRemoveTeamClicked = () => {
-    if (!rootData.team) {
+    const team = rootData.team;
+    if (!team) {
       return;
     }
 
-    const teamDetails = rootData.team;
-    const toastId = themedToast(<NotificationContent content={`Removing team '${teamDetails.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Removing team '${team.name}'...`} />, infoNotificationOptions);
 
     commitDeleteTeam({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id: teamDetails.id,
+          id: team.id,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the team '${teamDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the team '${team.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -692,7 +693,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Team '${teamDetails.name}' removed.`} />,
+          render: <NotificationContent content={`Team '${team.name}' removed.`} />,
         });
 
         router.push(getOrganizationTeamsBaseLink(organizationId));
@@ -700,7 +701,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the team '${teamDetails.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove the team '${team.name}'. Error: ${error.message}.`} />,
         });
       },
     });

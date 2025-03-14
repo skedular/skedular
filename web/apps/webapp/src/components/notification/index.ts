@@ -13,9 +13,14 @@ const errorNotificationOptions: ToastOptions = {
   autoClose: false,
 };
 
+const autoCloseErrorNotificationOptions: ToastOptions = {
+  type: 'error',
+  autoClose: successNotificationAutoCloseTimeout,
+};
+
 const successNotificationOptions: ToastOptions = {
   type: 'success',
   autoClose: successNotificationAutoCloseTimeout,
 };
 
-export { errorNotificationOptions, infoNotificationOptions, successNotificationAutoCloseTimeout, successNotificationOptions };
+export { autoCloseErrorNotificationOptions, errorNotificationOptions, infoNotificationOptions, successNotificationAutoCloseTimeout, successNotificationOptions };

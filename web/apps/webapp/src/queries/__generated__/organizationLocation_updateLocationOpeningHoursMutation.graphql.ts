@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2ffad85bf4318a0234452fc3d4e0462>>
+ * @generated SignedSource<<261ebde9c1bd8aee6160822d88857cf6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,30 +9,31 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type UpdateLocationInput = {
-  about?: string | null | undefined;
+export type UpdateLocationOpeningHoursInput = {
   clientMutationId?: string | null | undefined;
   id: string;
-  name: string;
-  organizationId?: string | null | undefined;
-  physicalAddress?: LocationAddressDetailsInput | null | undefined;
-  timezone?: string | null | undefined;
+  weekOpeningHours: WeekOpeningHoursInput;
 };
-export type LocationAddressDetailsInput = {
-  addressLine1?: string | null | undefined;
-  addressLine2?: string | null | undefined;
-  city?: string | null | undefined;
-  country?: string | null | undefined;
-  formattedAddress?: string | null | undefined;
-  province?: string | null | undefined;
-  suburb?: string | null | undefined;
-  zipcode?: string | null | undefined;
+export type WeekOpeningHoursInput = {
+  friday: OpeningHoursDetailsInput;
+  monday: OpeningHoursDetailsInput;
+  saturday: OpeningHoursDetailsInput;
+  sunday: OpeningHoursDetailsInput;
+  thursday: OpeningHoursDetailsInput;
+  tuesday: OpeningHoursDetailsInput;
+  wednesday: OpeningHoursDetailsInput;
 };
-export type organizationLocation_updateLocationMutation$variables = {
-  input: UpdateLocationInput;
+export type OpeningHoursDetailsInput = {
+  closed: boolean;
+  from?: string | null | undefined;
+  openAllDay: boolean;
+  until?: string | null | undefined;
 };
-export type organizationLocation_updateLocationMutation$data = {
-  readonly updateLocation: {
+export type organizationLocation_updateLocationOpeningHoursMutation$variables = {
+  input: UpdateLocationOpeningHoursInput;
+};
+export type organizationLocation_updateLocationOpeningHoursMutation$data = {
+  readonly updateLocationOpeningHours: {
     readonly location: {
       readonly about: string | null | undefined;
       readonly id: string;
@@ -90,8 +91,8 @@ export type organizationLocation_updateLocationMutation$data = {
     };
   } | null | undefined;
 };
-export type organizationLocation_updateLocationMutation$rawResponse = {
-  readonly updateLocation: {
+export type organizationLocation_updateLocationOpeningHoursMutation$rawResponse = {
+  readonly updateLocationOpeningHours: {
     readonly location: {
       readonly about: string | null | undefined;
       readonly id: string;
@@ -149,10 +150,10 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
     };
   } | null | undefined;
 };
-export type organizationLocation_updateLocationMutation = {
-  rawResponse: organizationLocation_updateLocationMutation$rawResponse;
-  response: organizationLocation_updateLocationMutation$data;
-  variables: organizationLocation_updateLocationMutation$variables;
+export type organizationLocation_updateLocationOpeningHoursMutation = {
+  rawResponse: organizationLocation_updateLocationOpeningHoursMutation$rawResponse;
+  response: organizationLocation_updateLocationOpeningHoursMutation$data;
+  variables: organizationLocation_updateLocationOpeningHoursMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -205,7 +206,7 @@ v2 = [
     ],
     "concreteType": "LocationPayload",
     "kind": "LinkedField",
-    "name": "updateLocation",
+    "name": "updateLocationOpeningHours",
     "plural": false,
     "selections": [
       {
@@ -366,7 +367,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationLocation_updateLocationMutation",
+    "name": "organizationLocation_updateLocationOpeningHoursMutation",
     "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -375,20 +376,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationLocation_updateLocationMutation",
+    "name": "organizationLocation_updateLocationOpeningHoursMutation",
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "308f0711c1594c58c14b82f9b2dfcf4b",
+    "cacheID": "eca03d7d3ca95e7eaaa57b7738076ff0",
     "id": null,
     "metadata": {},
-    "name": "organizationLocation_updateLocationMutation",
+    "name": "organizationLocation_updateLocationOpeningHoursMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        formattedAddress\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationOpeningHoursMutation(\n  $input: UpdateLocationOpeningHoursInput!\n) {\n  updateLocationOpeningHours(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        formattedAddress\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "11cfdd14326019baa8b9abf846237e1f";
+(node as any).hash = "90c7afd23d3a550231fc859b54e1ce92";
 
 export default node;
