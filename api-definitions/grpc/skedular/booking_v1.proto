@@ -20,6 +20,7 @@ service BookingService {
     rpc Delete (DeleteInput) returns (Booking);
     rpc GetAvailableDesks (GetAvailableDesksInput) returns (AvailableDesks);
     rpc GetAvailableRooms (GetAvailableRoomsInput) returns (AvailableRooms);
+    rpc GetAvailableResources (GetAvailableResourcesInput) returns (AvailableResources);
 }
 
 message VersionInput {
@@ -256,7 +257,7 @@ message GetInput {
 message Admin_AddInput {
     string id = 1;
     google.protobuf.Timestamp from = 2;
-    google.protobuf.Timestamp to = 3;
+    google.protobuf.Timestamp until = 3;
     string notes = 4;
     string customerId = 5;
     string organizationId = 6;
@@ -272,7 +273,7 @@ message Admin_AddInput {
 message AddInput {
     string id = 1;
     google.protobuf.Timestamp from = 2;
-    google.protobuf.Timestamp to = 3;
+    google.protobuf.Timestamp until = 3;
     string notes = 4;
     string customerId = 5;
     string organizationId = 6;
@@ -286,7 +287,7 @@ message AddInput {
 message UpdateInput {
     string id = 1;
     google.protobuf.Timestamp from = 2;
-    google.protobuf.Timestamp to = 3;
+    google.protobuf.Timestamp until = 3;
     string notes = 4;
     string customerId = 5;
     string organizationId = 6;
@@ -327,4 +328,26 @@ message GetAvailableRoomsInput {
 
 message AvailableRooms {
     repeated Room rooms = 1;
+}
+
+message Resource {
+    string id = 1;
+    string name = 2;
+    Location location = 3;
+    repeated OrganizationCustomTag organizationCustomTags = 4;
+    repeated OrganizationZone organizationZones = 5;
+    string color = 6;
+}
+
+message GetAvailableResourcesInput {
+    string organizationId = 1;
+    string locationId = 2;
+    google.protobuf.Timestamp from = 3;
+    google.protobuf.Timestamp until = 4;
+    repeated string CustomTagIds = 5;
+    repeated string ZoneIds = 6;
+}
+
+message AvailableResources {
+    repeated Resource resources = 1;
 }

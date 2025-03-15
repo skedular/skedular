@@ -23,11 +23,7 @@ public interface IMapper
     TeamMember MapTo(Shared.Database.Entities.TeamMember src);
     Shared.Models.Team MapTo(Shared.Database.Entities.Team src);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
-
-    Shared.Database.Entities.Team MapTo(
-        Shared.Models.Team src,
-        Organization? organization,
-        Location? primaryLocation);
+    Shared.Database.Entities.Team MapTo(Shared.Models.Team src, Organization? organization, Location? primaryLocation);
 
     Shared.Database.Entities.Team MergeTo(
         Shared.Models.Team src,
@@ -52,11 +48,7 @@ public interface IMapper
     ICollection<TeamMember> MapTo(Admin_UpdateMembersInput src);
     TeamEdge MapTo(Edge<Shared.Models.Team> src);
     global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src);
-
-    IEnumerable<Edge<TeamMember>> MapTo(
-        IEnumerable<Edge<Shared.Database.Entities.TeamMember>> src,
-        Shared.Models.Team team);
-
+    IEnumerable<Edge<TeamMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.TeamMember>> src, Shared.Models.Team team);
     TeamMemberEdge MapTo(Edge<TeamMember> src);
 }
 
@@ -123,10 +115,7 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList()
             };
 
-    public Shared.Database.Entities.Team MapTo(
-        Shared.Models.Team src,
-        Organization? organization,
-        Location? primaryLocation) =>
+    public Shared.Database.Entities.Team MapTo(Shared.Models.Team src, Organization? organization, Location? primaryLocation) =>
         MergeTo(src, new Shared.Database.Entities.Team(), organization, primaryLocation);
 
     public Shared.Database.Entities.Team MergeTo(
@@ -159,7 +148,7 @@ public class Mapper : IMapper
                 HasFutureBooking = src.HasFutureBooking,
                 Organization = MapTo(src.Organization),
                 PrimaryLocation = MapTo(src.PrimaryLocation),
-                Members = MapTo(src.TeamMembers).ToArray()
+                Members = MapTo(src.TeamMembers)
             };
 
     public TeamMember MapTo(Shared.Database.Entities.TeamMember src, Shared.Models.Team team) =>
@@ -196,16 +185,11 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
-                ? null
-                : new Shared.Models.Organization { Id = src.OrganizationId },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
-                ? null
-                : new Shared.Models.Location { Id = src.PrimaryLocationId },
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.CustomerIds
                 .Select(item => new TeamMember { Customer = new Customer { Id = item } })
-                .Concat(src.OrganizationMemberIds.Select(item =>
-                    new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
+                .Concat(src.OrganizationMemberIds.Select(item => new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
                 .ToList()
         };
 
@@ -216,12 +200,8 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
-                ? null
-                : new Shared.Models.Organization { Id = src.OrganizationId },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
-                ? null
-                : new Shared.Models.Location { Id = src.PrimaryLocationId }
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId }
         };
 
     public Shared.Models.Team MapTo(UpdateTeamAndTeamMembersInput src) =>
@@ -231,16 +211,11 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
-                ? null
-                : new Shared.Models.Organization { Id = src.OrganizationId },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
-                ? null
-                : new Shared.Models.Location { Id = src.PrimaryLocationId },
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.CustomerIds
                 .Select(item => new TeamMember { Customer = new Customer { Id = item } })
-                .Concat(src.OrganizationMemberIds.Select(item =>
-                    new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
+                .Concat(src.OrganizationMemberIds.Select(item => new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
                 .ToList()
         };
 
@@ -264,8 +239,7 @@ public class Mapper : IMapper
     public ICollection<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src) =>
         src.CustomerIds
             .Select(item => new TeamMember { Customer = new Customer { Id = item } })
-            .Concat(src.OrganizationMemberIds.Select(item =>
-                new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
+            .Concat(src.OrganizationMemberIds.Select(item => new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
             .ToList();
 
     public JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
@@ -323,12 +297,8 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
-                ? null
-                : new Shared.Models.Organization { Id = src.OrganizationId },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
-                ? null
-                : new Shared.Models.Location { Id = src.PrimaryLocationId },
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
         };
 
@@ -339,12 +309,8 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
-                ? null
-                : new Shared.Models.Organization { Id = src.OrganizationId },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
-                ? null
-                : new Shared.Models.Location { Id = src.PrimaryLocationId },
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
         };
 
@@ -355,39 +321,29 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
-                ? null
-                : new Shared.Models.Organization { Id = src.OrganizationId },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
-                ? null
-                : new Shared.Models.Location { Id = src.PrimaryLocationId },
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
         };
 
     public ICollection<TeamMember> MapTo(Admin_UpdateMembersInput src) =>
         src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList();
 
-    public TeamEdge MapTo(Edge<Shared.Models.Team> src) =>
-        new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
+    public TeamEdge MapTo(Edge<Shared.Models.Team> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
 
     public global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
-    public IEnumerable<Edge<TeamMember>> MapTo(
-        IEnumerable<Edge<Shared.Database.Entities.TeamMember>> src,
-        Shared.Models.Team team) =>
+    public IEnumerable<Edge<TeamMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.TeamMember>> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
-    public TeamMemberEdge MapTo(Edge<TeamMember> src) =>
-        new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+    public TeamMemberEdge MapTo(Edge<TeamMember> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
-    private IEnumerable<TeamMember> MapTo(
-        IEnumerable<Shared.Database.Entities.TeamMember> src,
-        Shared.Models.Team team) =>
+    private IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
-    private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember>
-        MapToGrpcResponse(IEnumerable<TeamMember> src) => src.Select(MapToGrpcResponse);
+    private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember> MapToGrpcResponse(IEnumerable<TeamMember> src) =>
+        src.Select(MapToGrpcResponse);
 
     private global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember MapToGrpcResponse(TeamMember src) =>
         new()
@@ -424,8 +380,7 @@ public class Mapper : IMapper
                 }
         };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer MapToGrpcResponse(
-        Customer src)
+    private static global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer MapToGrpcResponse(Customer src)
     {
         var customer = new global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer
         {
@@ -463,8 +418,7 @@ public class Mapper : IMapper
             Status = src.Status switch
             {
                 global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Active => TeamMemberStatus.Active,
-                global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive =>
-                    TeamMemberStatus.Inactive,
+                global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive => TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = src.Customer.Id },
@@ -489,8 +443,7 @@ public class Mapper : IMapper
                 Offering = src.Offering
             };
 
-    private OrganizationMember?
-        MapTo(Shared.Database.Entities.OrganizationMember? src) =>
+    private OrganizationMember? MapTo(Shared.Database.Entities.OrganizationMember? src) =>
         src is null
             ? null
             : new OrganizationMember
@@ -511,14 +464,10 @@ public class Mapper : IMapper
     private IEnumerable<TeamMemberDetails> MapTo(IEnumerable<TeamMember> src) => src.Select(MapTo);
 
     private static TeamOrganizationDetails? MapTo(Shared.Models.Organization? src) =>
-        src is null
-            ? null
-            : new TeamOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
+        src is null ? null : new TeamOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
 
     private static TeamLocationDetails? MapTo(Shared.Models.Location? src) =>
-        src is null
-            ? null
-            : new TeamLocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+        src is null ? null : new TeamLocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static TeamCustomerDetails MapTo(Customer src) =>
         new()
@@ -543,8 +492,7 @@ public class Mapper : IMapper
             PhoneNumber = src.PhoneNumber
         };
 
-    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) =>
-        src.Select(MapTo);
+    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
         new()
@@ -557,8 +505,7 @@ public class Mapper : IMapper
             EmailVerified = src.EmailVerified
         };
 
-    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src,
-        Shared.Models.Team team) =>
+    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
     private static Booking MapTo(Shared.Database.Entities.Booking src,
@@ -571,13 +518,11 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             From = src.From,
-            To = src.To,
+            Until = src.To,
             Team = team
         };
 
-    private IEnumerable<JoinInvitation> MapTo(
-        IEnumerable<Shared.Database.Entities.JoinInvitation> src,
-        Shared.Models.Team team) =>
+    private IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
     private JoinInvitation MapTo(

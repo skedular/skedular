@@ -63,7 +63,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
       fragment myBookingCard_BookingDetails on BookingDetails {
         id
         from
-        to
+        until
         notes
         customer {
           uniqueId
@@ -97,6 +97,21 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
           }
         }
         rooms {
+          uniqueId
+          name
+          color
+          customTags {
+            uniqueId
+            name
+            color
+          }
+          zones {
+            uniqueId
+            name
+            color
+          }
+        }
+        resources {
           uniqueId
           name
           color

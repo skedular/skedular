@@ -161,7 +161,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             From = booking.From.ToDateTimeOffset(),
-            To = booking.To.ToDateTimeOffset(),
+            Until = booking.Until.ToDateTimeOffset(),
             Team = new Shared.Models.Team { Id = booking.TeamId }
         };
     }
@@ -260,7 +260,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.From = src.From;
-        dest.To = src.To;
+        dest.To = src.Until;
         dest.Team = team;
         return dest;
     }

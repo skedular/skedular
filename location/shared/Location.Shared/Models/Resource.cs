@@ -9,7 +9,7 @@ public class Resource : ModelBaseWithDeleted
     public bool Inactive { get; set; }
     public bool RequireBookingApproval { get; set; }
     public string? Color { get; set; }
-    public bool IsOpeningHoursOverriden { get; set; }
+    public bool IsAvailableHoursOverridden { get; set; }
     public OpeningHours? AvailableHours { get; set; }
 
     public Location Location { get; set; }

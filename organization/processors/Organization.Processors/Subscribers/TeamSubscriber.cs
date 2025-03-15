@@ -25,9 +25,7 @@ public class TeamSubscriber(
                         break;
                     }
 
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                        team.Organization.Id,
-                        cancellationToken);
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, cancellationToken);
                     ArgumentNullException.ThrowIfNull(existingOrganization);
 
                     var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(

@@ -77,13 +77,13 @@ const isInSameYear = (dayA: Dayjs, dayB: Dayjs | null | undefined) => {
   return dayA.isSame(dayB, 'year');
 };
 
-const startOfDay = (date?: Dayjs | string | null | undefined) => {
+const startOfDay = (date?: Dayjs | Date | string | null | undefined) => {
   const finalDate = date ? dayjs(date) : now();
 
   return finalDate.startOf('day');
 };
 
-const endOfDay = (date: Dayjs | string) => {
+const endOfDay = (date: Dayjs | Date | string) => {
   return dayjs(date).add(1, 'day').add(-1, 'milliseconds');
 };
 

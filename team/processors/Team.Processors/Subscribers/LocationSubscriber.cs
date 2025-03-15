@@ -71,14 +71,11 @@ public class LocationSubscriber(
 
     private async Task HandleLocationUpsertedEventAsync(
         Shared.Models.Location location,
-        Location? existingLocation,
+        Location existingLocation,
         Organization existingOrganization,
         CancellationToken cancellationToken)
     {
-        _ = existingLocation is null
-            ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, existingOrganization))
-            : repositoryFactory.LocationRepository.Update(
-                mapper.MergeToEntity(location, existingLocation, existingOrganization));
+        _ = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, existingOrganization));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 

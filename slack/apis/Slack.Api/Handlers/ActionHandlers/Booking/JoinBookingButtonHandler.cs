@@ -53,7 +53,7 @@ public class JoinBookingButtonHandler(
         {
             Id = randomHelper.Generate(),
             From = booking.From.ToTimestamp(),
-            To = booking.To.ToTimestamp(),
+            Until = booking.Until.ToTimestamp(),
             Type = BookingType.WorkingFromOffice,
             CustomerId = customerId,
             OrganizationId = string.IsNullOrWhiteSpace(booking.Organization?.Id) ? string.Empty : booking.Organization.Id,

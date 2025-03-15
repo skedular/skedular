@@ -1,5 +1,6 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
+using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
@@ -77,23 +78,38 @@ public class LocationSubscriber(
 
     private async Task HandleLocationUpsertedEventAsync(
         Shared.Models.Location location,
-        Location? existingLocation,
+        Location existingLocation,
         CancellationToken cancellationToken)
     {
         var organization = location.Organization is null
             ? null
             : await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, true, true, cancellationToken);
 
-        existingLocation = existingLocation is null
-            ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, organization))
-            : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
+        var locationOpeningHoursChanged = !location.OpeningHours.IsEqual(existingLocation.OpeningHours);
+        existingLocation = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
 
         (existingLocation, var resourceIds) = await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
         existingLocation = await RebuildDesksAsync(location, existingLocation, organization, cancellationToken);
         existingLocation = await RebuildRoomsAsync(location, existingLocation, organization, cancellationToken);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
 
-        await bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlotAsync(resourceIds, repositoryFactory.UnitOfWork, cancellationToken);
+        if (locationOpeningHoursChanged)
+        {
+            // Regenerate all
+            await bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlotAsync(
+                existingLocation.Resources.Where(item => item.DeletedAt is null).Select(item => item.Id),
+                repositoryFactory.UnitOfWork,
+                cancellationToken);
+        }
+        else
+        {
+            // Regenerate those changed
+            await bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlotAsync(
+                resourceIds, 
+                repositoryFactory.UnitOfWork,
+                cancellationToken);
+        }
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
@@ -121,22 +137,35 @@ public class LocationSubscriber(
             organizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(tagId, organization, cancellationToken));
         }
 
+        var resourceIdsToRegenerateBookingSlots = new List<string>();
         var resources = await repositoryFactory.ResourceRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
         var itemsToRemove = resources.Where(resource => location.Resources.All(item => item.Id != resource.Id)).ToList();
         var updatedItems = resources
             .Where(resource => location.Resources.Any(item => item.Id == resource.Id))
-            .Select(resource =>
+            .Select(existingResource =>
             {
                 var filteredOrganizationTags = organizationTags
                     .Where(tag =>
                         location.Resources
-                            .First(item => item.Id == resource.Id).OrganizationTags
+                            .First(item => item.Id == existingResource.Id).OrganizationTags
                             .Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
-                var updatedResource = mapper.MergeToEntity(
-                    location.Resources.First(item => item.Id == resource.Id), resource, existingLocation, filteredOrganizationTags);
+
+                var resource = location.Resources.First(item => item.Id == existingResource.Id);
+
+                if (resource.IsAvailableHoursOverridden != existingResource.IsAvailableHoursOverridden)
+                {
+                    resourceIdsToRegenerateBookingSlots.Add(resource.Id);
+                }
+                else if (!resource.AvailableHours.IsEqual(existingResource.AvailableHours))
+                {
+                    resourceIdsToRegenerateBookingSlots.Add(resource.Id);
+                }
+
+                var updatedResource = mapper.MergeToEntity(resource, existingResource, existingLocation, filteredOrganizationTags);
                 updatedResource.DeletedAt = null;
+
                 return repositoryFactory.ResourceRepository.Update(updatedResource);
             })
             .ToList();
@@ -155,7 +184,9 @@ public class LocationSubscriber(
         repositoryFactory.ResourceRepository.RemoveRange(itemsToRemove);
         existingLocation.Resources = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
-        return (existingLocation, addedItems.Select(item => item.Id).ToList());
+        resourceIdsToRegenerateBookingSlots.AddRange(addedItems.Select(item => item.Id));
+
+        return (existingLocation, resourceIdsToRegenerateBookingSlots.Distinct().ToList());
     }
 
     private async Task<Location> RebuildDesksAsync(

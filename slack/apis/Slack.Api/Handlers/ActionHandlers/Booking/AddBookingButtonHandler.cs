@@ -145,7 +145,7 @@ public class AddBookingButtonHandler(
                     ArgumentNullException.ThrowIfNull(value.SelectedDate);
                     var from = value.SelectedDate.Value.ToDateTimeOffset();
                     addInput.From = from.ToTimestamp();
-                    addInput.To = from.EndOfDay().ToTimestamp();
+                    addInput.Until = from.EndOfDay().ToTimestamp();
                 }
                 else
                 {

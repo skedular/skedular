@@ -130,7 +130,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
         booking(id: $bookingId) {
           id
           from
-          to
+          until
           notes
           type
           customer {
@@ -168,6 +168,20 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
             }
           }
           rooms {
+            uniqueId
+            name
+            customTags {
+              uniqueId
+              name
+              color
+            }
+            zones {
+              uniqueId
+              name
+              color
+            }
+          }
+          resources {
             uniqueId
             name
             customTags {
@@ -296,7 +310,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
         booking {
           id
           from
-          to
+          until
           notes
           type
           customer {
@@ -334,6 +348,20 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
             }
           }
           rooms {
+            uniqueId
+            name
+            customTags {
+              uniqueId
+              name
+              color
+            }
+            zones {
+              uniqueId
+              name
+              color
+            }
+          }
+          resources {
             uniqueId
             name
             customTags {
@@ -515,7 +543,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     const booking = rootData.booking;
     const start = date as unknown as Dayjs;
     const from = start.toISOString();
-    const to = endOfDay(start).toISOString();
+    const until = endOfDay(start).toISOString();
     const shortDateTimeFormatFrom = toShortDate(start);
     const type = booking.type;
     const shortDateFormatFrom = toShortDate(booking.from);
@@ -536,13 +564,14 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
           id: booking.id,
           customerId: memberId,
           from,
-          to,
+          until,
           notes,
           organizationId,
           locationId,
           teamId,
           deskIds: locationId ? deskIds.filter((deskId) => rootDataAvailableLocationDesks.availableDesks?.find((availableDesk) => availableDesk.uniqueId === deskId)) : [],
           roomIds: locationId ? roomIds.filter((roomId) => rootDataAvailableLocationRooms.availableRooms?.find((availableRoom) => availableRoom.uniqueId === roomId)) : [],
+          resourceIds: [],
           type,
         },
       },
@@ -575,7 +604,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
           booking: {
             id: booking.id,
             from,
-            to,
+            until,
             notes,
             type,
             customer: {
@@ -592,6 +621,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
             // TODO: 20240112 - Morteza: Below line stores the existing/old desk, but not the updated value for optimistic update, update this line with the updated value in future
             desks: booking.desks,
             rooms: booking.rooms,
+            resources: [],
           },
         },
       },

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<39bd91a29d132af7615b137e40701bbb>>
+ * @generated SignedSource<<d735291b05d3b0bcd31a80ff183e87ee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,10 +19,11 @@ export type AddBookingInput = {
   locationId?: string | null | undefined;
   notes?: string | null | undefined;
   organizationId?: string | null | undefined;
+  resourceIds: ReadonlyArray<string>;
   roomIds: ReadonlyArray<string>;
   teamId?: string | null | undefined;
-  to: any;
   type: BookingType;
+  until: any;
 };
 export type newBookingDialog_addBookingMutation$variables = {
   connectionIds: ReadonlyArray<string>;
@@ -64,6 +65,20 @@ export type newBookingDialog_addBookingMutation$data = {
         readonly name: string;
         readonly uniqueId: string;
       } | null | undefined;
+      readonly resources: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+        readonly name: string;
+        readonly uniqueId: string;
+        readonly zones: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+      }>;
       readonly rooms: ReadonlyArray<{
         readonly customTags: ReadonlyArray<{
           readonly color: string | null | undefined;
@@ -82,8 +97,8 @@ export type newBookingDialog_addBookingMutation$data = {
         readonly name: string;
         readonly uniqueId: string;
       } | null | undefined;
-      readonly to: any;
       readonly type: BookingType;
+      readonly until: any;
     };
   } | null | undefined;
 };
@@ -123,6 +138,20 @@ export type newBookingDialog_addBookingMutation$rawResponse = {
         readonly name: string;
         readonly uniqueId: string;
       } | null | undefined;
+      readonly resources: ReadonlyArray<{
+        readonly customTags: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+        readonly name: string;
+        readonly uniqueId: string;
+        readonly zones: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
+      }>;
       readonly rooms: ReadonlyArray<{
         readonly customTags: ReadonlyArray<{
           readonly color: string | null | undefined;
@@ -141,8 +170,8 @@ export type newBookingDialog_addBookingMutation$rawResponse = {
         readonly name: string;
         readonly uniqueId: string;
       } | null | undefined;
-      readonly to: any;
       readonly type: BookingType;
+      readonly until: any;
     };
   } | null | undefined;
 };
@@ -251,7 +280,7 @@ v7 = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "to",
+      "name": "until",
       "storageKey": null
     },
     {
@@ -358,6 +387,16 @@ v7 = {
       "plural": true,
       "selections": (v6/*: any*/),
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingResourceDetails",
+      "kind": "LinkedField",
+      "name": "resources",
+      "plural": true,
+      "selections": (v6/*: any*/),
+      "storageKey": null
     }
   ],
   "storageKey": null
@@ -427,16 +466,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "70204a3e55f7dd0fc15aae2fa6fe87e0",
+    "cacheID": "61bb4a4f10a6548949ab434be6e4ba84",
     "id": null,
     "metadata": {},
     "name": "newBookingDialog_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation newBookingDialog_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      to\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n      rooms {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation newBookingDialog_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n      rooms {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n      resources {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c1f7a0016e4f095914d7f94d13dd89ca";
+(node as any).hash = "6fc6a100c9baac3a0795e65e8646e4d9";
 
 export default node;

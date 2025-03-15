@@ -25,7 +25,7 @@ public interface ILocationRepository : IRepository<Location>
         bool includeDeletedRooms,
         CancellationToken cancellationToken);
 
-    Task<Location?> GetByIdAndExcludeDeactivatedDesksAndRoomsAsync(
+    Task<Location?> GetByIdAndExcludeInactiveDesksRoomsResourcesAsync(
         string id,
         bool includeDeletedLocationMembers,
         bool includeDeletedResources,
@@ -117,7 +117,7 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
             .AddDependentObjects(includeDeletedLocationMembers, includeDeletedResources, true, includeDeletedDesks, true, includeDeletedRooms, true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<Location?> GetByIdAndExcludeDeactivatedDesksAndRoomsAsync(
+    public async Task<Location?> GetByIdAndExcludeInactiveDesksRoomsResourcesAsync(
         string id,
         bool includeDeletedLocationMembers,
         bool includeDeletedResources,
@@ -125,7 +125,13 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         bool includeDeletedRooms,
         CancellationToken cancellationToken) =>
         await DbContext.Location
-            .AddDependentObjects(includeDeletedLocationMembers, includeDeletedResources, false, includeDeletedDesks, false, includeDeletedRooms,
+            .AddDependentObjects(
+                includeDeletedLocationMembers,
+                includeDeletedResources,
+                false,
+                includeDeletedDesks,
+                false,
+                includeDeletedRooms,
                 false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 

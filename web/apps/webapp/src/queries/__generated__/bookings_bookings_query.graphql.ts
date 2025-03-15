@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4d7a8f13d40b5a5dfbc0b7e5fd13ec9c>>
+ * @generated SignedSource<<bde68b2ff778c60c32494297c9df39bd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -48,6 +48,20 @@ export type bookings_bookings_query$data = {
         readonly organization: {
           readonly uniqueId: string;
         } | null | undefined;
+        readonly resources: ReadonlyArray<{
+          readonly customTags: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly name: string | null | undefined;
+            readonly uniqueId: string;
+          }>;
+          readonly name: string;
+          readonly uniqueId: string;
+          readonly zones: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly name: string | null | undefined;
+            readonly uniqueId: string;
+          }>;
+        }>;
         readonly rooms: ReadonlyArray<{
           readonly color: string | null | undefined;
           readonly customTags: ReadonlyArray<{
@@ -67,7 +81,7 @@ export type bookings_bookings_query$data = {
           readonly name: string;
           readonly uniqueId: string;
         } | null | undefined;
-        readonly to: any;
+        readonly until: any;
         readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
       };
     }>;
@@ -114,30 +128,32 @@ v5 = [
   (v2/*: any*/),
   (v4/*: any*/)
 ],
-v6 = [
+v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "BookingOrganizationCustomTagDetails",
+  "kind": "LinkedField",
+  "name": "customTags",
+  "plural": true,
+  "selections": (v5/*: any*/),
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "BookingOrganizationZoneDetails",
+  "kind": "LinkedField",
+  "name": "zones",
+  "plural": true,
+  "selections": (v5/*: any*/),
+  "storageKey": null
+},
+v8 = [
   (v1/*: any*/),
   (v2/*: any*/),
   (v4/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "BookingOrganizationCustomTagDetails",
-    "kind": "LinkedField",
-    "name": "customTags",
-    "plural": true,
-    "selections": (v5/*: any*/),
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "BookingOrganizationZoneDetails",
-    "kind": "LinkedField",
-    "name": "zones",
-    "plural": true,
-    "selections": (v5/*: any*/),
-    "storageKey": null
-  }
+  (v6/*: any*/),
+  (v7/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -308,7 +324,7 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "to",
+                  "name": "until",
                   "storageKey": null
                 },
                 {
@@ -398,7 +414,7 @@ return {
                   "kind": "LinkedField",
                   "name": "desks",
                   "plural": true,
-                  "selections": (v6/*: any*/),
+                  "selections": (v8/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -408,7 +424,22 @@ return {
                   "kind": "LinkedField",
                   "name": "rooms",
                   "plural": true,
-                  "selections": (v6/*: any*/),
+                  "selections": (v8/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "BookingResourceDetails",
+                  "kind": "LinkedField",
+                  "name": "resources",
+                  "plural": true,
+                  "selections": [
+                    (v1/*: any*/),
+                    (v2/*: any*/),
+                    (v6/*: any*/),
+                    (v7/*: any*/)
+                  ],
                   "storageKey": null
                 },
                 {
@@ -482,6 +513,6 @@ return {
 };
 })();
 
-(node as any).hash = "b72fd50d701421688baab9080b62d660";
+(node as any).hash = "68379b0d44c947abfb8fe3fb2d2f5ab8";
 
 export default node;

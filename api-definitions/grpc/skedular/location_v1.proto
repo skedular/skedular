@@ -227,7 +227,7 @@ message Resource {
     repeated OrganizationCustomTag organizationCustomTags = 5;
     repeated OrganizationZone organizationZones = 6;
     string color = 7;
-    bool isOpeningHoursOverriden = 8;
+    bool isAvailableHoursOverridden = 8;
     OpeningHours availableHours = 9;
 }
 

@@ -463,7 +463,7 @@ public class BookingService(
                 Criteria = query => !query.DeletedAt.HasValue &&
                                     query.Id != booking.Id &&
                                     query.From >= booking.From &&
-                                    query.To <= booking.To &&
+                                    query.To <= booking.Until &&
                                     query.Desks.Any(item => deskIds.Contains(item.Id))
             }).AnyAsync(cancellationToken);
         if (!ignoreDeskAvailability && existingBookingWithSameDesksFound)
@@ -529,7 +529,7 @@ public class BookingService(
                 Criteria = query => !query.DeletedAt.HasValue &&
                                     query.Id != booking.Id &&
                                     query.From >= booking.From &&
-                                    query.To <= booking.To &&
+                                    query.To <= booking.Until &&
                                     query.Rooms.Any(item => roomIds.Contains(item.Id))
             }).AnyAsync(cancellationToken);
         if (!ignoreRoomAvailability && existingBookingWithSameRoomsFound)
@@ -977,7 +977,7 @@ public class BookingService(
                 var bookings = await repositoryFactory.BookingRepository.Query(
                         new Specification<Shared.Database.Entities.Booking>
                             {
-                                Criteria = query => !query.DeletedAt.HasValue && booking.From <= query.From && query.To <= booking.To
+                                Criteria = query => !query.DeletedAt.HasValue && booking.From <= query.From && query.To <= booking.Until
                             }
                             .AddInclude(query => query.Desks))
                     .Where(query => query.Location != null)

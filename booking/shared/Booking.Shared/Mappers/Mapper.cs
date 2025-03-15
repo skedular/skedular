@@ -1,6 +1,8 @@
 using Api.Shared.Services.Models;
+using Booking.Shared.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
+using Resource = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource;
 
 namespace Booking.Shared.Mappers;
 
@@ -17,7 +19,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             From = src.From.ToTimestamp(),
-            To = src.To.ToTimestamp(),
+            Until = src.Until.ToTimestamp(),
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
@@ -41,6 +43,18 @@ public class Mapper : IMapper
         booking.DeskIds.AddRange(src.Desks.Select(item => item.Id));
         booking.RoomIds.AddRange(src.Rooms.Select(item => item.Id));
 
+        booking.Resources.AddRange(MapTo(src.Resources));
+
         return booking;
     }
+
+    private static IEnumerable<Resource> MapTo(IEnumerable<(Models.Resource, List<Customer>)> src) =>
+        src.Select(item =>
+        {
+            var resource = new Resource { Id = item.Item1.Id };
+
+            resource.CustomerIds.AddRange(item.Item2.Select(customer => customer.Id));
+
+            return resource;
+        });
 }

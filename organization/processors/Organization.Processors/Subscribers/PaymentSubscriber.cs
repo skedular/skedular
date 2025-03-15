@@ -49,8 +49,7 @@ public class PaymentSubscriber(
             if (organization.PaymentMethodEventRaisedAt is not null &&
                 organization.PaymentMethodEventRaisedAt > @event.Metadata.Time.ToDateTimeOffset())
             {
-                logger.LogInformation(
-                    "Ignoring Payment event. Event timestamp is older that what is already processed.");
+                logger.LogInformation("Ignoring Payment event. Event timestamp is older that what is already processed.");
 
                 return;
             }

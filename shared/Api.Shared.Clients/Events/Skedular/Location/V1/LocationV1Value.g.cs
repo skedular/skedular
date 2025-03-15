@@ -42,43 +42,43 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "AygLMg4ubG9jYXRpb24uRGVzaxIdCgVyb29tcxgKIAMoCzIOLmxvY2F0aW9u",
             "LlJvb20SLAoMb3BlbmluZ0hvdXJzGAsgASgLMhYubG9jYXRpb24uT3Blbmlu",
             "Z0hvdXJzIk4KDkxvY2F0aW9uTWVtYmVyEgoKAmlkGAEgASgJEhwKBHJvbGUY",
-            "AiABKA4yDi5sb2NhdGlvbi5Sb2xlEhIKCmN1c3RvbWVySWQYAyABKAkixgEK",
+            "AiABKA4yDi5sb2NhdGlvbi5Sb2xlEhIKCmN1c3RvbWVySWQYAyABKAkiyQEK",
             "CFJlc291cmNlEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEAoIaW5hY3Rp",
             "dmUYAyABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3ZhbBgEIAEoCBIOCgZ0",
-            "YWdJZHMYBSADKAkSDQoFY29sb3IYBiABKAkSHwoXaXNPcGVuaW5nSG91cnNP",
-            "dmVycmlkZW4YByABKAgSLgoOYXZhaWxhYmxlSG91cnMYCCABKAsyFi5sb2Nh",
-            "dGlvbi5PcGVuaW5nSG91cnMidAoERGVzaxIKCgJpZBgBIAEoCRIMCgRuYW1l",
-            "GAIgASgJEhMKC2RlYWN0aXZhdGVkGAMgASgIEh4KFnJlcXVpcmVCb29raW5n",
-            "QXBwcm92YWwYBCABKAgSDgoGdGFnSWRzGAUgAygJEg0KBWNvbG9yGAYgASgJ",
-            "InQKBFJvb20SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZWFjdGl2",
-            "YXRlZBgDIAEoCBIeChZyZXF1aXJlQm9va2luZ0FwcHJvdmFsGAQgASgIEg4K",
-            "BnRhZ0lkcxgFIAMoCRINCgVjb2xvchgGIAEoCSKRAQoYSW52aXRhdGlvblRv",
-            "Sm9pbkxvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIa",
-            "Lmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEgoKbG9jYXRpb25JZBgDIAEo",
-            "CRITCgtpbnZpdGVkQnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSABKAkivAEK",
-            "DE9wZW5pbmdIb3VycxI0ChB3ZWVrT3BlbmluZ0hvdXJzGAEgASgLMhoubG9j",
-            "YXRpb24uV2Vla09wZW5pbmdIb3VycxIvCgtjbG9zZWREYXRlcxgCIAMoCzIa",
-            "Lmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASRQobRGF0ZXNXaXRoVmFyaWVk",
-            "T3BlbmluZ0hvdXJzGAMgAygLMiAubG9jYXRpb24uVmFyaWVkRGF0ZU9wZW5p",
-            "bmdIb3VycyLjAgoQV2Vla09wZW5pbmdIb3VycxItCgZtb25kYXkYASABKAsy",
-            "HS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi4KB3R1ZXNkYXkYAiAB",
-            "KAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEjAKCXdlZG5lc2Rh",
-            "eRgDIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMSLwoIdGh1",
-            "cnNkYXkYBCABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi0K",
-            "BmZyaWRheRgFIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMS",
-            "LwoIc2F0dXJkYXkYBiABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRh",
-            "aWxzEi0KBnN1bmRheRgHIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0Rl",
-            "dGFpbHMifgoWVmFyaWVkRGF0ZU9wZW5pbmdIb3VycxIoCgRkYXRlGAEgASgL",
-            "MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBI6ChNvcGVuaW5nSG91cnNE",
-            "ZXRhaWxzGAIgASgLMh0ubG9jYXRpb24uT3BlbmluZ0hvdXJzRGV0YWlscyJW",
-            "ChNPcGVuaW5nSG91cnNEZXRhaWxzEg4KBmNsb3NlZBgBIAEoCBISCgpvcGVu",
-            "QWxsRGF5GAIgASgIEgwKBGZyb20YAyABKAkSDQoFdW50aWwYBCABKAkqfAoE",
-            "VHlwZRIUChBMb2NhdGlvblVwc2VydGVkEAASEwoPTG9jYXRpb25EZWxldGVk",
-            "EAESJAogSW52aXRhdGlvblRvSm9pbkxvY2F0aW9uVXBzZXJ0ZWQQAhIjCh9J",
-            "bnZpdGF0aW9uVG9Kb2luTG9jYXRpb25EZWxldGVkEAMqMAoEUm9sZRIJCgVP",
-            "d25lchAAEhEKDUFkbWluaXN0cmF0b3IQARIKCgZNZW1iZXIQAkI3qgI0QXBp",
-            "LlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Mb2NhdGlvbi5WMS5W",
-            "YWx1ZWIGcHJvdG8z"));
+            "YWdJZHMYBSADKAkSDQoFY29sb3IYBiABKAkSIgoaaXNBdmFpbGFibGVIb3Vy",
+            "c092ZXJyaWRkZW4YByABKAgSLgoOYXZhaWxhYmxlSG91cnMYCCABKAsyFi5s",
+            "b2NhdGlvbi5PcGVuaW5nSG91cnMidAoERGVzaxIKCgJpZBgBIAEoCRIMCgRu",
+            "YW1lGAIgASgJEhMKC2RlYWN0aXZhdGVkGAMgASgIEh4KFnJlcXVpcmVCb29r",
+            "aW5nQXBwcm92YWwYBCABKAgSDgoGdGFnSWRzGAUgAygJEg0KBWNvbG9yGAYg",
+            "ASgJInQKBFJvb20SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZWFj",
+            "dGl2YXRlZBgDIAEoCBIeChZyZXF1aXJlQm9va2luZ0FwcHJvdmFsGAQgASgI",
+            "Eg4KBnRhZ0lkcxgFIAMoCRINCgVjb2xvchgGIAEoCSKRAQoYSW52aXRhdGlv",
+            "blRvSm9pbkxvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEo",
+            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEgoKbG9jYXRpb25JZBgD",
+            "IAEoCRITCgtpbnZpdGVkQnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSABKAki",
+            "vAEKDE9wZW5pbmdIb3VycxI0ChB3ZWVrT3BlbmluZ0hvdXJzGAEgASgLMhou",
+            "bG9jYXRpb24uV2Vla09wZW5pbmdIb3VycxIvCgtjbG9zZWREYXRlcxgCIAMo",
+            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASRQobRGF0ZXNXaXRoVmFy",
+            "aWVkT3BlbmluZ0hvdXJzGAMgAygLMiAubG9jYXRpb24uVmFyaWVkRGF0ZU9w",
+            "ZW5pbmdIb3VycyLjAgoQV2Vla09wZW5pbmdIb3VycxItCgZtb25kYXkYASAB",
+            "KAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi4KB3R1ZXNkYXkY",
+            "AiABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEjAKCXdlZG5l",
+            "c2RheRgDIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMSLwoI",
+            "dGh1cnNkYXkYBCABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxz",
+            "Ei0KBmZyaWRheRgFIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFp",
+            "bHMSLwoIc2F0dXJkYXkYBiABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNE",
+            "ZXRhaWxzEi0KBnN1bmRheRgHIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vy",
+            "c0RldGFpbHMifgoWVmFyaWVkRGF0ZU9wZW5pbmdIb3VycxIoCgRkYXRlGAEg",
+            "ASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBI6ChNvcGVuaW5nSG91",
+            "cnNEZXRhaWxzGAIgASgLMh0ubG9jYXRpb24uT3BlbmluZ0hvdXJzRGV0YWls",
+            "cyJWChNPcGVuaW5nSG91cnNEZXRhaWxzEg4KBmNsb3NlZBgBIAEoCBISCgpv",
+            "cGVuQWxsRGF5GAIgASgIEgwKBGZyb20YAyABKAkSDQoFdW50aWwYBCABKAkq",
+            "fAoEVHlwZRIUChBMb2NhdGlvblVwc2VydGVkEAASEwoPTG9jYXRpb25EZWxl",
+            "dGVkEAESJAogSW52aXRhdGlvblRvSm9pbkxvY2F0aW9uVXBzZXJ0ZWQQAhIj",
+            "Ch9JbnZpdGF0aW9uVG9Kb2luTG9jYXRpb25EZWxldGVkEAMqMAoEUm9sZRIJ",
+            "CgVPd25lchAAEhEKDUFkbWluaXN0cmF0b3IQARIKCgZNZW1iZXIQAkI3qgI0",
+            "QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Mb2NhdGlvbi5W",
+            "MS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -87,7 +87,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "Location", "InvitationToJoinLocation" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Resources", "Desks", "Rooms", "OpeningHours" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember.Parser, new[]{ "Id", "Role", "CustomerId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource.Parser, new[]{ "Id", "Name", "Inactive", "RequireBookingApproval", "TagIds", "Color", "IsOpeningHoursOverriden", "AvailableHours" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource.Parser, new[]{ "Id", "Name", "Inactive", "RequireBookingApproval", "TagIds", "Color", "IsAvailableHoursOverridden", "AvailableHours" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "TagIds", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "TagIds", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null),
@@ -1911,7 +1911,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       requireBookingApproval_ = other.requireBookingApproval_;
       tagIds_ = other.tagIds_.Clone();
       color_ = other.color_;
-      isOpeningHoursOverriden_ = other.isOpeningHoursOverriden_;
+      isAvailableHoursOverridden_ = other.isAvailableHoursOverridden_;
       availableHours_ = other.availableHours_ != null ? other.availableHours_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1993,15 +1993,15 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "isOpeningHoursOverriden" field.</summary>
-    public const int IsOpeningHoursOverridenFieldNumber = 7;
-    private bool isOpeningHoursOverriden_;
+    /// <summary>Field number for the "isAvailableHoursOverridden" field.</summary>
+    public const int IsAvailableHoursOverriddenFieldNumber = 7;
+    private bool isAvailableHoursOverridden_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool IsOpeningHoursOverriden {
-      get { return isOpeningHoursOverriden_; }
+    public bool IsAvailableHoursOverridden {
+      get { return isAvailableHoursOverridden_; }
       set {
-        isOpeningHoursOverriden_ = value;
+        isAvailableHoursOverridden_ = value;
       }
     }
 
@@ -2038,7 +2038,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (RequireBookingApproval != other.RequireBookingApproval) return false;
       if(!tagIds_.Equals(other.tagIds_)) return false;
       if (Color != other.Color) return false;
-      if (IsOpeningHoursOverriden != other.IsOpeningHoursOverriden) return false;
+      if (IsAvailableHoursOverridden != other.IsAvailableHoursOverridden) return false;
       if (!object.Equals(AvailableHours, other.AvailableHours)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -2053,7 +2053,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (RequireBookingApproval != false) hash ^= RequireBookingApproval.GetHashCode();
       hash ^= tagIds_.GetHashCode();
       if (Color.Length != 0) hash ^= Color.GetHashCode();
-      if (IsOpeningHoursOverriden != false) hash ^= IsOpeningHoursOverriden.GetHashCode();
+      if (IsAvailableHoursOverridden != false) hash ^= IsAvailableHoursOverridden.GetHashCode();
       if (availableHours_ != null) hash ^= AvailableHours.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -2094,9 +2094,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(50);
         output.WriteString(Color);
       }
-      if (IsOpeningHoursOverriden != false) {
+      if (IsAvailableHoursOverridden != false) {
         output.WriteRawTag(56);
-        output.WriteBool(IsOpeningHoursOverriden);
+        output.WriteBool(IsAvailableHoursOverridden);
       }
       if (availableHours_ != null) {
         output.WriteRawTag(66);
@@ -2133,9 +2133,9 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(50);
         output.WriteString(Color);
       }
-      if (IsOpeningHoursOverriden != false) {
+      if (IsAvailableHoursOverridden != false) {
         output.WriteRawTag(56);
-        output.WriteBool(IsOpeningHoursOverriden);
+        output.WriteBool(IsAvailableHoursOverridden);
       }
       if (availableHours_ != null) {
         output.WriteRawTag(66);
@@ -2167,7 +2167,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (Color.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Color);
       }
-      if (IsOpeningHoursOverriden != false) {
+      if (IsAvailableHoursOverridden != false) {
         size += 1 + 1;
       }
       if (availableHours_ != null) {
@@ -2201,8 +2201,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (other.Color.Length != 0) {
         Color = other.Color;
       }
-      if (other.IsOpeningHoursOverriden != false) {
-        IsOpeningHoursOverriden = other.IsOpeningHoursOverriden;
+      if (other.IsAvailableHoursOverridden != false) {
+        IsAvailableHoursOverridden = other.IsAvailableHoursOverridden;
       }
       if (other.availableHours_ != null) {
         if (availableHours_ == null) {
@@ -2254,7 +2254,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 56: {
-            IsOpeningHoursOverriden = input.ReadBool();
+            IsAvailableHoursOverridden = input.ReadBool();
             break;
           }
           case 66: {
@@ -2308,7 +2308,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 56: {
-            IsOpeningHoursOverriden = input.ReadBool();
+            IsAvailableHoursOverridden = input.ReadBool();
             break;
           }
           case 66: {

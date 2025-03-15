@@ -184,7 +184,7 @@ public class BookingComponents(
                 });
             }
 
-            if (!myBookings.Any(item => item.From == booking.From && item.To == booking.To))
+            if (!myBookings.Any(item => item.From == booking.From && item.Until == booking.Until))
             {
                 buttons.Add(new Button
                 {

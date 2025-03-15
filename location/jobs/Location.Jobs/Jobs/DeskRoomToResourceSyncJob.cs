@@ -58,7 +58,7 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
                                     Inactive = desk.Deactivated,
                                     RequireBookingApproval = desk.RequireBookingApproval,
                                     Color = desk.Color,
-                                    IsOpeningHoursOverriden = false,
+                                    IsAvailableHoursOverridden = false,
                                     Location = location,
                                     OrganizationTags = deskWithBookings.OrganizationTags
                                 };
@@ -108,7 +108,7 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
                                     Inactive = room.Deactivated,
                                     RequireBookingApproval = room.RequireBookingApproval,
                                     Color = room.Color,
-                                    IsOpeningHoursOverriden = false,
+                                    IsAvailableHoursOverridden = false,
                                     Location = location,
                                     OrganizationTags = roomWithBookings.OrganizationTags
                                 };

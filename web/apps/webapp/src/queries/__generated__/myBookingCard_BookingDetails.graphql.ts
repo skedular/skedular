@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<399b7bcc8081aeb287b54f94fab9e401>>
+ * @generated SignedSource<<c99303b8a9cd5a0a13c4acf392b30889>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,6 +41,21 @@ export type myBookingCard_BookingDetails$data = {
     readonly uniqueId: string;
   } | null | undefined;
   readonly notes: string | null | undefined;
+  readonly resources: ReadonlyArray<{
+    readonly color: string | null | undefined;
+    readonly customTags: ReadonlyArray<{
+      readonly color: string | null | undefined;
+      readonly name: string | null | undefined;
+      readonly uniqueId: string;
+    }>;
+    readonly name: string;
+    readonly uniqueId: string;
+    readonly zones: ReadonlyArray<{
+      readonly color: string | null | undefined;
+      readonly name: string | null | undefined;
+      readonly uniqueId: string;
+    }>;
+  }>;
   readonly rooms: ReadonlyArray<{
     readonly color: string | null | undefined;
     readonly customTags: ReadonlyArray<{
@@ -60,7 +75,7 @@ export type myBookingCard_BookingDetails$data = {
     readonly name: string;
     readonly uniqueId: string;
   } | null | undefined;
-  readonly to: any;
+  readonly until: any;
   readonly " $fragmentType": "myBookingCard_BookingDetails";
 };
 export type myBookingCard_BookingDetails$key = {
@@ -148,7 +163,7 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "to",
+      "name": "until",
       "storageKey": null
     },
     {
@@ -238,6 +253,16 @@ return {
       "plural": true,
       "selections": (v5/*: any*/),
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingResourceDetails",
+      "kind": "LinkedField",
+      "name": "resources",
+      "plural": true,
+      "selections": (v5/*: any*/),
+      "storageKey": null
     }
   ],
   "type": "BookingDetails",
@@ -245,6 +270,6 @@ return {
 };
 })();
 
-(node as any).hash = "1ea82a0ca45299439bfb84b48ea59b8b";
+(node as any).hash = "b746d2bf481bfec0552accdd8f3a30af";
 
 export default node;

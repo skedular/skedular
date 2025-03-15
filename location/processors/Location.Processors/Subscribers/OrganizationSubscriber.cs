@@ -69,12 +69,10 @@ public class OrganizationSubscriber(
 
     private async Task HandleOrganizationUpsertedEventAsync(
         Shared.Models.Organization organization,
-        Organization? existingOrganization,
+        Organization existingOrganization,
         CancellationToken cancellationToken)
     {
-        existingOrganization = existingOrganization is null
-            ? repositoryFactory.OrganizationRepository.Add(mapper.MapToEntity(organization))
-            : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
+        existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
 
         existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
         _ = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);

@@ -28,6 +28,10 @@ public class ResourceNotFound() : Exception("Resource not found");
 
 public class ResourceWithSameNameExist() : Exception("Resource with same name exist");
 
+public class ResourceTypeRequired() : Exception("Resource type required");
+
+public class OnlySingleResourceTypeAllowed() : Exception("Only single resource type allowed");
+
 public class DeskNotFound() : Exception("Desk not found");
 
 public class DeskWithSameNameExist() : Exception("Desk with same name exist");

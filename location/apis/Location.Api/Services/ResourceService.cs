@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Models;
@@ -74,9 +75,12 @@ public class ResourceService(
 
     public async Task<Resource> AddAsync(Resource resource, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
+        foreach (var tag in resource.Tags)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(tag.Id);
+        }
+
         ArgumentException.ThrowIfNullOrWhiteSpace(resource.Location.Id);
-        ArgumentNullException.ThrowIfNull(resource.Location.Organization);
-        ArgumentException.ThrowIfNullOrWhiteSpace(resource.Location.Organization.Id);
 
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
@@ -140,6 +144,21 @@ public class ResourceService(
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
+        var resourceTypeTag = organizationTags
+            .Where(item => !string.IsNullOrWhiteSpace(item.Type))
+            .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type!.ToOrganizationTagType()))
+            .ToList();
+
+        if (resourceTypeTag.Count == 0)
+        {
+            throw new ResourceTypeRequired();
+        }
+
+        if (resourceTypeTag.Count > 1)
+        {
+            throw new OnlySingleResourceTypeAllowed();
+        }
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var mappedResource = mapper.MapTo(repositoryFactory.ResourceRepository.Add(mapper.MapTo(resource, existingLocation, organizationTags)));
@@ -151,6 +170,11 @@ public class ResourceService(
 
     public async Task<Resource> UpdateAsync(Resource resource, CancellationToken cancellationToken)
     {
+        foreach (var tag in resource.Tags)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(tag.Id);
+        }
+
         ArgumentException.ThrowIfNullOrWhiteSpace(resource.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -384,9 +408,6 @@ public class ResourceService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(resource.Location.Organization);
-        ArgumentException.ThrowIfNullOrWhiteSpace(resource.Location.Organization.Id);
-
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingResource.Location.Id, cancellationToken);
         if (existingLocation is null)
         {
@@ -433,11 +454,33 @@ public class ResourceService(
                                         !query.Organization.DeletedAt.HasValue
                 }).ToListAsync(cancellationToken);
 
+        var resourceTypeTag = organizationTags
+            .Where(item => !string.IsNullOrWhiteSpace(item.Type))
+            .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type!.ToOrganizationTagType()))
+            .ToList();
+
+        if (resourceTypeTag.Count == 0)
+        {
+            throw new ResourceTypeRequired();
+        }
+
+        if (resourceTypeTag.Count > 1)
+        {
+            throw new OnlySingleResourceTypeAllowed();
+        }
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        resource = mapper.MapTo(
-            repositoryFactory.ResourceRepository.Update(mapper.MergeTo(resource, existingResource, existingLocation, organizationTags)),
-            mapper.MapTo(existingLocation));
+        var originalIsAvailableHoursOverridden = existingResource.IsAvailableHoursOverridden;
+        var originalAvailableHours = existingResource.AvailableHours;
+
+        existingResource = mapper.MergeTo(resource, existingResource, existingLocation, organizationTags);
+
+        // Restoring original opening hours
+        existingResource.IsAvailableHoursOverridden = originalIsAvailableHoursOverridden;
+        existingResource.AvailableHours = originalAvailableHours;
+
+        resource = mapper.MapTo(repositoryFactory.ResourceRepository.Update(existingResource), mapper.MapTo(existingLocation));
 
         await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

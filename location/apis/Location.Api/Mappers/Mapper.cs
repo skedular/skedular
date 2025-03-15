@@ -137,7 +137,7 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src);
     Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddResourceInput src);
     Shared.Models.Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateResourceInput src);
-    public WeekOpeningHours MapTo(GraphQL.WeekOpeningHours src);
+    public WeekOpeningHours? MapTo(GraphQL.WeekOpeningHours? src);
 }
 
 public class Mapper : IMapper
@@ -261,7 +261,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden ?? false,
+            IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
             Tags = MapTo(src.OrganizationTags).ToList()
         };
@@ -283,7 +283,7 @@ public class Mapper : IMapper
         dest.Inactive = src.Inactive;
         dest.RequireBookingApproval = src.RequireBookingApproval;
         dest.Color = src.Color;
-        dest.IsOpeningHoursOverriden = src.IsOpeningHoursOverriden;
+        dest.IsAvailableHoursOverridden = src.IsAvailableHoursOverridden;
         dest.AvailableHours = src.AvailableHours;
         dest.OrganizationTags = organizationTags;
         dest.Location = location;
@@ -437,14 +437,16 @@ public class Mapper : IMapper
             Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
-    public WeekOpeningHours MapTo(GraphQL.WeekOpeningHours src) =>
-        new(MapTo(src.Monday),
-            MapTo(src.Tuesday),
-            MapTo(src.Wednesday),
-            MapTo(src.Thursday),
-            MapTo(src.Friday),
-            MapTo(src.Saturday),
-            MapTo(src.Sunday));
+    public WeekOpeningHours? MapTo(GraphQL.WeekOpeningHours? src) =>
+        src is null
+            ? null
+            : new WeekOpeningHours(MapTo(src.Monday),
+                MapTo(src.Tuesday),
+                MapTo(src.Wednesday),
+                MapTo(src.Thursday),
+                MapTo(src.Friday),
+                MapTo(src.Saturday),
+                MapTo(src.Sunday));
 
     public ResourceDetails MapTo(Shared.Models.Resource src) =>
         new()
@@ -454,10 +456,11 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
+            IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
             AvailableHours = src.AvailableHours is null ? null : MapTo(src.AvailableHours),
             CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
-            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone))
+            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)),
+            ResourceType = MapTo(src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))
         };
 
     public IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location) =>
@@ -589,7 +592,11 @@ public class Mapper : IMapper
             Inactive = false,
             RequireBookingApproval = false,
             Color = src.Color,
-            Tags = src.CustomTagIds.Concat(src.ZoneIds).Select(item => new OrganizationTag { Id = item }).ToList(),
+            Tags = src.CustomTagIds
+                .Concat(src.ZoneIds)
+                .Concat([src.OrganizationResourceTypeId])
+                .Select(item => new OrganizationTag { Id = item })
+                .ToList(),
             Location = new Shared.Models.Location { Id = src.LocationId }
         };
 
@@ -601,7 +608,11 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            Tags = src.CustomTagIds.Concat(src.ZoneIds).Select(item => new OrganizationTag { Id = item }).ToList()
+            Tags = src.CustomTagIds
+                .Concat(src.ZoneIds)
+                .Concat([src.OrganizationResourceTypeId])
+                .Select(item => new OrganizationTag { Id = item })
+                .ToList()
         };
 
     public JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
@@ -706,7 +717,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden ?? false,
+            IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
             Location = location,
             Tags = MapTo(src.OrganizationTags, location.Organization).ToList()
@@ -721,7 +732,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
-            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
+            IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
             AvailableHours = src.AvailableHours is null ? null : MapToGrpcResponse(src.AvailableHours)
         };
 
@@ -981,7 +992,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             From = src.From,
-            To = src.To,
+            Until = src.To,
             Location = location
         };
 

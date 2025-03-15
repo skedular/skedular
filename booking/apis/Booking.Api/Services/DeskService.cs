@@ -3,7 +3,6 @@ using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Exceptions;
-using ArgumentException = System.ArgumentException;
 
 namespace Booking.Api.Services;
 
@@ -61,7 +60,7 @@ public class DeskService(
 
         if (!string.IsNullOrWhiteSpace(locationId))
         {
-            var location = await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAndRoomsAsync(
+            var location = await repositoryFactory.LocationRepository.GetByIdAndExcludeInactiveDesksRoomsResourcesAsync(
                 locationId,
                 false,
                 false,
@@ -129,7 +128,7 @@ public class DeskService(
 
         foreach (var location in locations)
         {
-            var availableDesks = await repositoryFactory.DeskRepository.GetAvailableDesksAsync(
+            var desks = await repositoryFactory.DeskRepository.GetAvailableDesksAsync(
                 organizationId,
                 location.Id,
                 date,
@@ -138,7 +137,7 @@ public class DeskService(
                 [],
                 false,
                 cancellationToken);
-            availableDesksCount += availableDesks.Count;
+            availableDesksCount += desks.Count;
         }
 
         return (desksCount, availableDesksCount);

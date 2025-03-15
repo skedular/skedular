@@ -3,7 +3,7 @@ import { FormFieldLabel, StackColumn, StackRow } from '@/components/commons';
 import { autoCloseErrorNotificationOptions, NotificationContent } from '@/components/notification';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import type { weekOpeningHoursForm_query$key } from '@/queries/__generated__/weekOpeningHoursForm_query.graphql';
+import type { weekOpeningHours_query$key } from '@/queries/__generated__/weekOpeningHours_query.graphql';
 import Button from '@mui/material/Button';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs, { Dayjs } from 'dayjs';
@@ -12,7 +12,7 @@ import { graphql, useFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 
 type Props = {
-  rootDataRelay: weekOpeningHoursForm_query$key;
+  rootDataRelay: weekOpeningHours_query$key;
   defaultValue: WeekOpeningHoursDetails;
   onWeekOpeningHoursDetailUpdateClick: (weekOpeningHours: WeekOpeningHoursDetails) => void;
 };
@@ -43,10 +43,10 @@ export type OpeningHoursDetailsInternal = {
 const toOpeningHoursFromTime = (time?: string | null | undefined) => (time ? dayjs(`2025-03-12T${time}`) : null);
 const getOpeningHoursFromDateTime = (datetime: Dayjs | null) => (datetime ? `${datetime.format('HH')}:${datetime.format('mm')}` : '00:00');
 
-const WeekOpeningHoursForm = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetailUpdateClick }: Props) => {
-  const rootData = useFragment<weekOpeningHoursForm_query$key>(
+const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetailUpdateClick }: Props) => {
+  const rootData = useFragment<weekOpeningHours_query$key>(
     graphql`
-      fragment weekOpeningHoursForm_query on Query {
+      fragment weekOpeningHours_query on Query {
         openingHoursMinutesStep
       }
     `,
@@ -229,4 +229,4 @@ const WeekOpeningHoursForm = ({ rootDataRelay, defaultValue, onWeekOpeningHoursD
   );
 };
 
-export default memo(WeekOpeningHoursForm);
+export default memo(WeekOpeningHours);

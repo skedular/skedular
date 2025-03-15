@@ -12,41 +12,36 @@ public class Mutation(IMapper mapper)
     public async Task<LocationPayload?> AddLocationAsync(
         AddLocationInput input,
         [Service] ILocationService locationService,
-        CancellationToken cancellationToken)
-    {
-        var location = await locationService.AddAsync(mapper.MapTo(input), false, cancellationToken);
-        return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Location = mapper.MapTo(await locationService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
+        };
 
     [UseResolverScope]
     public async Task<LocationPayload?> UpdateLocationAsync(
         UpdateLocationInput input,
         [Service] ILocationService locationService,
-        CancellationToken cancellationToken)
-    {
-        var location = await locationService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Location = mapper.MapTo(await locationService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+        };
 
     [UseResolverScope]
     public async Task<LocationPayload?> DeleteLocationAsync(
         DeleteLocationInput input,
         [Service] ILocationService locationService,
-        CancellationToken cancellationToken)
-    {
-        var location = await locationService.DeleteAsync(input.Id, cancellationToken);
-        return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
-    }
+        CancellationToken cancellationToken) =>
+        new() { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(await locationService.DeleteAsync(input.Id, cancellationToken))! };
 
     [UseResolverScope]
-    public async Task<DeskPayload?> AddDeskAsync(
-        AddDeskInput input,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
+    public async Task<DeskPayload?> AddDeskAsync(AddDeskInput input, [Service] IDeskService deskService, CancellationToken cancellationToken) => new()
     {
-        var desk = await deskService.AddAsync(mapper.MapTo(input), false, cancellationToken);
-        return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
-    }
+        ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(await deskService.AddAsync(mapper.MapTo(input), false, cancellationToken))
+    };
 
     [UseResolverScope]
     public async Task<BulkDeskPayload?> BulkAddDeskAsync(
@@ -67,30 +62,18 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<DeskPayload?> UpdateDeskAsync(
-        UpdateDeskInput input,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
-    {
-        var desk = await deskService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
-    }
+    public async Task<DeskPayload?> UpdateDeskAsync(UpdateDeskInput input, [Service] IDeskService deskService, CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(await deskService.UpdateAsync(mapper.MapTo(input), cancellationToken))
+        };
 
     [UseResolverScope]
-    public async Task<DeskPayload?> DeleteDeskAsync(
-        DeleteDeskInput input,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
-    {
-        var desk = await deskService.DeleteAsync(input.Id, cancellationToken);
-        return new DeskPayload { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(desk) };
-    }
+    public async Task<DeskPayload?> DeleteDeskAsync(DeleteDeskInput input, [Service] IDeskService deskService, CancellationToken cancellationToken) =>
+        new() { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(await deskService.DeleteAsync(input.Id, cancellationToken)) };
 
     [UseResolverScope]
-    public async Task<DesksPayload?> DeleteDesksAsync(
-        DeleteDesksInput input,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
+    public async Task<DesksPayload?> DeleteDesksAsync(DeleteDesksInput input, [Service] IDeskService deskService, CancellationToken cancellationToken)
     {
         var desks = await deskService.DeleteAsync(input.Ids.ToList(), cancellationToken);
         return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo) };
@@ -120,11 +103,12 @@ public class Mutation(IMapper mapper)
     public async Task<LocationMemberDetailsPayload?> ChangeLocationMemberRoleAsync(
         ChangeLocationMemberRoleInput input,
         [Service] ILocationMemberService locationMemberService,
-        CancellationToken cancellationToken)
-    {
-        var locationMember = await locationMemberService.ChangeRoleAsync(input.Id, input.Role, cancellationToken);
-        return new LocationMemberDetailsPayload { ClientMutationId = input.ClientMutationId, Member = mapper.MapTo(locationMember) };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Member = mapper.MapTo(await locationMemberService.ChangeRoleAsync(input.Id, input.Role, cancellationToken))
+        };
 
     [UseResolverScope]
     public async Task<InviteCustomersToJoinLocationPayload?> InviteCustomersToJoinLocationAsync(
@@ -170,31 +154,29 @@ public class Mutation(IMapper mapper)
     public async Task<RoomPayload?> AddRoomAsync(
         AddRoomInput input,
         [Service] IRoomService roomService,
-        CancellationToken cancellationToken)
-    {
-        var room = await roomService.AddAsync(mapper.MapTo(input), false, cancellationToken);
-        return new RoomPayload { ClientMutationId = input.ClientMutationId, Room = mapper.MapTo(room) };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Room = mapper.MapTo(await roomService.AddAsync(mapper.MapTo(input), false, cancellationToken))
+        };
 
     [UseResolverScope]
     public async Task<RoomPayload?> UpdateRoomAsync(
         UpdateRoomInput input,
         [Service] IRoomService roomService,
-        CancellationToken cancellationToken)
-    {
-        var room = await roomService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new RoomPayload { ClientMutationId = input.ClientMutationId, Room = mapper.MapTo(room) };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId, Room = mapper.MapTo(await roomService.UpdateAsync(mapper.MapTo(input), cancellationToken))
+        };
 
     [UseResolverScope]
     public async Task<RoomPayload?> DeleteRoomAsync(
         DeleteRoomInput input,
         [Service] IRoomService roomService,
-        CancellationToken cancellationToken)
-    {
-        var room = await roomService.DeleteAsync(input.Id, cancellationToken);
-        return new RoomPayload { ClientMutationId = input.ClientMutationId, Room = mapper.MapTo(room) };
-    }
+        CancellationToken cancellationToken) =>
+        new() { ClientMutationId = input.ClientMutationId, Room = mapper.MapTo(await roomService.DeleteAsync(input.Id, cancellationToken)) };
 
     [UseResolverScope]
     public async Task<RoomsPayload?> DeleteRoomsAsync(
@@ -289,9 +271,27 @@ public class Mutation(IMapper mapper)
     public async Task<LocationPayload?> UpdateLocationOpeningHoursAsync(
         UpdateLocationOpeningHoursInput input,
         [Service] ILocationOpeningHoursService locationOpeningHoursService,
-        CancellationToken cancellationToken)
-    {
-        var location = await locationOpeningHoursService.UpdateOpeningHoursAsync(input.Id, mapper.MapTo(input.WeekOpeningHours), cancellationToken);
-        return new LocationPayload { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(location)! };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Location = mapper.MapTo(
+                await locationOpeningHoursService.UpdateOpeningHoursAsync(input.Id, mapper.MapTo(input.WeekOpeningHours)!, cancellationToken))!
+        };
+
+    [UseResolverScope]
+    public async Task<ResourcePayload?> UpdateLocationResourceAvailableHoursAsync(
+        UpdateLocationResourceAvailableHoursInput input,
+        [Service] IResourceAvailableHoursService resourceAvailableHoursService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Resource = mapper.MapTo(
+                await resourceAvailableHoursService.UpdateAvailableHoursAsync(
+                    input.Id,
+                    input.OverrideAvailableHours,
+                    mapper.MapTo(input.AvailableHours),
+                    cancellationToken))!
+        };
 }

@@ -2,6 +2,6 @@ namespace Enterprise.Shared.Sanitization;
 
 public static class StringSanitization
 {
-    public static string[]? RemoveInvalidIds(this string[]? input) =>
-        input?.Where(id => !string.IsNullOrWhiteSpace(id)).ToArray();
+    public static IEnumerable<string>? RemoveInvalidIds(this IEnumerable<string>? input) =>
+        input?.Where(id => !string.IsNullOrWhiteSpace(id));
 }

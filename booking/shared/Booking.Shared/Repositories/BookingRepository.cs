@@ -6,7 +6,7 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Team = Booking.Shared.Database.Entities.Team;
+using Organization = Booking.Shared.Database.Entities.Organization;
 
 namespace Booking.Shared.Repositories;
 
@@ -27,7 +27,7 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
 
 internal static class BookingExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Booking, Team> AddDependentObjects(
+    internal static IIncludableQueryable<Database.Entities.Booking, Organization?> AddDependentObjects(
         this IQueryable<Database.Entities.Booking> originalQuery) =>
         originalQuery
             .Include(query => query.Customer)
@@ -39,7 +39,14 @@ internal static class BookingExtensions
             .Include(query => query.Rooms.Where(room => !room.DeletedAt.HasValue))
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization)
-            .Include(query => query.Team);
+            .Include(query => query.Team)
+            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
+            .ThenInclude(query => query.Resource)
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
+            .ThenInclude(query => query.Resource)
+            .ThenInclude(query => query.Location)
+            .ThenInclude(query => query.Organization);
 
     internal static IQueryable<Database.Entities.Booking> AddSearchCriteria(
         this IQueryable<Database.Entities.Booking> query,

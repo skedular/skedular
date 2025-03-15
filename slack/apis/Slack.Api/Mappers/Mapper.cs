@@ -332,7 +332,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             From = src.From.ToTimestamp(),
-            To = src.To.ToTimestamp(),
+            Until = src.Until.ToTimestamp(),
             Notes = src.Notes.ToSafeString(),
             CustomerId = src.Customer.Id,
             OrganizationId = string.IsNullOrWhiteSpace(src.Organization?.Id) ? string.Empty : src.Organization?.Id,
@@ -520,7 +520,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             From = src.From.ToDateTimeOffset(),
-            To = src.To.ToDateTimeOffset(),
+            Until = src.To.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
             Customer = MapTo(src.Customer),
             Organization = MapTo(src.Organization),

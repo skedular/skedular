@@ -60,11 +60,9 @@ public class TeamSubscriber(
         return EventSubscriberResults.Success;
     }
 
-    private async Task HandleTeamUpsertedEventAsync(Shared.Models.Team team, Team? existingTeam, CancellationToken cancellationToken)
+    private async Task HandleTeamUpsertedEventAsync(Shared.Models.Team team, Team existingTeam, CancellationToken cancellationToken)
     {
-        _ = existingTeam is null
-            ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team))
-            : repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam));
+        _ = repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

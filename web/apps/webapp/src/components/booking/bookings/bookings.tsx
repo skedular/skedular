@@ -140,7 +140,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             node {
               id
               from
-              to
+              until
               notes
               customer {
                 uniqueId
@@ -191,6 +191,20 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
                   color
                 }
               }
+              resources {
+                uniqueId
+                name
+                customTags {
+                  uniqueId
+                  name
+                  color
+                }
+                zones {
+                  uniqueId
+                  name
+                  color
+                }
+              }
               ...bookingCard_BookingDetails
             }
           }
@@ -216,7 +230,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
         booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
           id
           from
-          to
+          until
           notes
           type
           customer {
@@ -250,6 +264,20 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
             }
           }
           rooms {
+            uniqueId
+            name
+            customTags {
+              uniqueId
+              name
+              color
+            }
+            zones {
+              uniqueId
+              name
+              color
+            }
+          }
+          resources {
             uniqueId
             name
             customTags {
@@ -408,12 +436,13 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           id,
           customerId: rootData.me.id,
           from: bookingDetails.from,
-          to: bookingDetails.to,
+          until: bookingDetails.until,
           organizationId: bookingDetails.organization?.uniqueId,
           locationId: bookingDetails.location?.uniqueId,
           teamId: bookingDetails.team?.uniqueId,
           deskIds: [],
           roomIds: [],
+          resourceIds: [],
           type,
         },
       },
@@ -476,7 +505,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           booking: {
             id,
             from: bookingDetails.from,
-            to: bookingDetails.to,
+            until: bookingDetails.until,
             notes: null,
             type,
             customer: {
@@ -501,6 +530,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
               : null,
             desks: [],
             rooms: [],
+            resources: [],
           },
         },
       },

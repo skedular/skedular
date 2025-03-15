@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<346c5530a1b2d181198b9d3079b53ff2>>
+ * @generated SignedSource<<ba856cad310070640fcd692c7bd16c51>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -71,12 +71,15 @@ export type organizationLocation_query$data = {
     readonly preferredDesks: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
+    readonly preferredResources: ReadonlyArray<{
+      readonly uniqueId: string;
+    }>;
     readonly preferredRooms: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
   } | null | undefined;
   readonly openingHoursMinutesStep: number;
-  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "weekOpeningHoursForm_query" | "zoneSelector_allZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "weekOpeningHours_query" | "zoneSelector_allZones_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
 export type organizationLocation_query$key = {
@@ -151,6 +154,16 @@ return {
       "plural": false,
       "selections": [
         (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CustomerResourceDetails",
+          "kind": "LinkedField",
+          "name": "preferredResources",
+          "plural": true,
+          "selections": (v1/*: any*/),
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -333,7 +346,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "weekOpeningHoursForm_query"
+      "name": "weekOpeningHours_query"
     },
     {
       "args": null,
@@ -351,6 +364,6 @@ return {
 };
 })();
 
-(node as any).hash = "72ab5ffa9cbcd69e9f3f807adff616df";
+(node as any).hash = "811c94e479b92ed1b8c39adfdb96a719";
 
 export default node;

@@ -33,7 +33,7 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public TeamMemberRole[] TeamMemberRoles() => [TeamMemberRole.Owner, TeamMemberRole.Administrator, TeamMemberRole.Member];
+    public IEnumerable<TeamMemberRole> TeamMemberRoles() => [TeamMemberRole.Owner, TeamMemberRole.Administrator, TeamMemberRole.Member];
 
     [UseResolverScope]
     public async Task<TeamDetails?> TeamAsync(
@@ -128,7 +128,7 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamDetails[]?> MyTeamsAsync(
+    public async Task<IEnumerable<TeamDetails>?> MyTeamsAsync(
         string? organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamService teamService,
@@ -139,8 +139,7 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var teams = await teamService.GetMyTeamsAsync(organizationId, cancellationToken);
-        return mapper.MapTo(teams).ToArray();
+        return mapper.MapTo(await teamService.GetMyTeamsAsync(organizationId, cancellationToken));
     }
 
     [UseResolverScope]

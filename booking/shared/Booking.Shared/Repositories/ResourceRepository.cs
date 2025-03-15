@@ -14,6 +14,15 @@ public interface IResourceRepository : IRepository<Resource>
     Resource Update(Resource resource);
     void RemoveRange(ICollection<Resource> resources);
     Task<ICollection<Resource>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
+
+    Task<ICollection<Resource>> GetAvailableResourcesAsync(
+        string? organizationId,
+        string? locationId,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ICollection<string> resourceIds,
+        ICollection<string> tagIds,
+        CancellationToken cancellationToken);
 }
 
 public class ResourceRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -64,4 +73,44 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .Where(query => query.Location != null && query.Location.Id == locationId)
             .Include(query => query.OrganizationTags)
             .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
+        string? organizationId,
+        string? locationId,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ICollection<string> resourceIds,
+        ICollection<string> tagIds,
+        CancellationToken cancellationToken)
+    {
+        var result = await DbContext.ResourceBookingSlot
+            .Where(query => !query.Resource.DeletedAt.HasValue &&
+                            !query.Resource.Inactive &&
+                            (resourceIds.Count == 0 || resourceIds.Contains(query.Resource.Id)) &&
+                            query.Start >= from && query.Start < until &&
+                            (string.IsNullOrWhiteSpace(organizationId) || (query.Resource.Location != null &&
+                                                                           query.Resource.Location.Organization != null &&
+                                                                           query.Resource.Location.Organization.Id == organizationId)) &&
+                            (string.IsNullOrWhiteSpace(locationId) ||
+                             (query.Resource.Location != null && query.Resource.Location.Id == organizationId)) &&
+                            (tagIds.Count == 0 || tagIds.All(tagId => query.Resource.OrganizationTags.Select(tag => tag.Id).Contains(tagId))))
+            .Include(query => query.Resource)
+            .ThenInclude(query => query.Location)
+            .Include(query => query.Resource)
+            .ThenInclude(query => query.OrganizationTags)
+            .OrderBy(query => query.Resource.Name)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        return result
+            .GroupBy(slot => slot.Resource.Id)
+            .Select(group => new { group.First().Resource, Slots = group.ToList() })
+            .Where(grouped => grouped.Slots.All(slot => slot.Available))
+            .Select(grouped =>
+            {
+                grouped.Resource.ResourceBookingSlots = grouped.Slots;
+                return grouped.Resource;
+            })
+            .ToList();
+    }
 }

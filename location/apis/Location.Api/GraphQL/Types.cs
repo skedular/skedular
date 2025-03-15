@@ -599,9 +599,10 @@ public class ResourceDetails : Node
     [GraphQLName("color")] public string? Color { get; set; }
     [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
     [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
+    [GraphQLName("resourceType")] public OrganizationTagDetails ResourceType { get; set; }
 
-    [GraphQLName("isOpeningHoursOverriden")]
-    public bool IsOpeningHoursOverriden { get; set; }
+    [GraphQLName("isAvailableHoursOverridden")]
+    public bool IsAvailableHoursOverridden { get; set; }
 
     [GraphQLName("availableHours")] public OpeningHours? AvailableHours { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
@@ -684,4 +685,16 @@ public class UpdateLocationOpeningHoursInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
     [GraphQLName("weekOpeningHours")] public WeekOpeningHours WeekOpeningHours { get; set; }
+}
+
+[GraphQLName("UpdateLocationResourceAvailableHoursInput")]
+public class UpdateLocationResourceAvailableHoursInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+
+    [GraphQLName("overrideAvailableHours")]
+    public bool OverrideAvailableHours { get; set; }
+
+    [GraphQLName("availableHours")] public WeekOpeningHours? AvailableHours { get; set; }
 }

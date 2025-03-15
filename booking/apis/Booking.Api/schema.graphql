@@ -37,7 +37,7 @@ type BookingDeskDetails {
 
 type BookingDetails {
   from: DateTime!
-  to: DateTime!
+  until: DateTime!
   notes: String
   type: BookingType!
   customer: BookingCustomerDetails!
@@ -45,6 +45,7 @@ type BookingDetails {
   location: BookingLocationDetails
   desks: [BookingDeskDetails!]!
   rooms: [BookingRoomDetails!]!
+  resources: [BookingResourceDetails!]!
   team: BookingTeamDetails
   id: ID!
 }
@@ -79,6 +80,18 @@ type BookingOrganizationZoneDetails {
 type BookingPayload {
   clientMutationId: String
   booking: BookingDetails!
+}
+
+type BookingResourceDetails {
+  uniqueId: ID!
+  name: String!
+  inactive: Boolean!
+  color: String
+  requireBookingApproval: Boolean!
+  location: BookingLocationDetails
+  customTags: [BookingOrganizationCustomTagDetails!]!
+  zones: [BookingOrganizationZoneDetails!]!
+  customers: [BookingCustomerDetails!]!
 }
 
 type BookingRoomDetails {
@@ -117,6 +130,11 @@ type OrganizationAvailableDesks {
   availableDesksCount: Int!
 }
 
+type OrganizationAvailableResources {
+  resourcesCount: Int!
+  availableResourcesCount: Int!
+}
+
 type OrganizationAvailableRooms {
   roomsCount: Int!
   availableRoomsCount: Int!
@@ -151,6 +169,8 @@ type Query {
   teamBookingPermissions(teamId: String!): TeamBookingPermissions @cost(weight: "10")
   organizationDesksAvailability(where: OrganizationAvailableDesksWhereInput!): OrganizationAvailableDesks @cost(weight: "10")
   organizationRoomsAvailability(where: OrganizationAvailableRoomsWhereInput!): OrganizationAvailableRooms @cost(weight: "10")
+  availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!] @cost(weight: "10")
+  organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources @cost(weight: "10")
 }
 
 type TeamBookingPermissions {
@@ -174,13 +194,14 @@ input AddBookingInput {
   id: String
   customerId: String!
   from: DateTime!
-  to: DateTime!
+  until: DateTime!
   notes: String
   type: BookingType!
   organizationId: String
   locationId: String
   deskIds: [String!]!
   roomIds: [String!]!
+  resourceIds: [String!]!
   teamId: String
 }
 
@@ -192,6 +213,15 @@ input AvailableDesksWhereInput {
   customTagIds: [String!]
   zoneIds: [String!]
   combineCustomTagsZones: Boolean
+}
+
+input AvailableResourcesWhereInput {
+  organizationId: String
+  locationId: String
+  from: DateTime!
+  until: DateTime!
+  customTagIds: [String!]
+  zoneIds: [String!]
 }
 
 input AvailableRoomsWhereInput {
@@ -240,6 +270,12 @@ input OrganizationAvailableDesksWhereInput {
   date: DateTime!
 }
 
+input OrganizationAvailableResourcesWhereInput {
+  organizationId: String!
+  from: DateTime!
+  until: DateTime!
+}
+
 input OrganizationAvailableRoomsWhereInput {
   organizationId: String!
   date: DateTime!
@@ -250,13 +286,14 @@ input UpdateBookingInput {
   id: String!
   customerId: String!
   from: DateTime!
-  to: DateTime!
+  until: DateTime!
   notes: String
   type: BookingType!
   organizationId: String
   locationId: String
   deskIds: [String!]!
   roomIds: [String!]!
+  resourceIds: [String!]!
   teamId: String
 }
 

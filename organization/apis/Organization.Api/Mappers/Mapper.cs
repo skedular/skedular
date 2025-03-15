@@ -826,7 +826,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             From = src.From,
-            To = src.To,
+            Until = src.To,
             Organization = organization
         };
 

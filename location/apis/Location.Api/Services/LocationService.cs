@@ -122,18 +122,7 @@ public class LocationService(
             _ = repositoryFactory.AddressRepository.Add(physicalAddress);
         }
 
-        locationEntity.OpeningHours = new OpeningHours(
-            new WeekOpeningHours(
-                OpeningHoursDetails.Default,
-                OpeningHoursDetails.Default,
-                OpeningHoursDetails.Default,
-                OpeningHoursDetails.Default,
-                OpeningHoursDetails.Default,
-                OpeningHoursDetails.Default,
-                OpeningHoursDetails.Default),
-            [],
-            new Dictionary<DateTimeOffset, OpeningHoursDetails>());
-
+        locationEntity.OpeningHours = OpeningHours.Default;
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
         location = mapper.MapTo(locationEntity);
 
@@ -309,7 +298,14 @@ public class LocationService(
             repositoryFactory.AddressRepository.Update(physicalAddress);
         }
 
-        location = mapper.MapTo(repositoryFactory.LocationRepository.Update(mapper.MergeTo(location, existingLocation, physicalAddress)));
+        var originalOpeningHours = existingLocation.OpeningHours;
+
+        existingLocation = mapper.MergeTo(location, existingLocation, physicalAddress);
+
+        // Restoring original opening hours
+        existingLocation.OpeningHours = originalOpeningHours;
+
+        location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
         await locationOutboxPublisher.PublishLocationAsync([location], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

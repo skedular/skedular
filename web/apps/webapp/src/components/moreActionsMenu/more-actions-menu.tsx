@@ -16,8 +16,6 @@ export enum MoreActionsMenuOptionType {
   DeleteBooking,
   EditTeam,
   DeleteTeam,
-  EnableDeskApprovalRequirement,
-  RemoveDeskApprovalRequirement,
   SetAsPreferredLocation,
   RemoveAsPreferredLocation,
   EditLocation,
@@ -39,6 +37,12 @@ export enum MoreActionsMenuOptionType {
   DeleteZone,
   EditCustomTag,
   DeleteCustomTag,
+  EditResource,
+  DeleteResource,
+  ActivateResource,
+  DeactivateResource,
+  EnableDeskApprovalRequirement,
+  RemoveDeskApprovalRequirement,
   EditDesk,
   DeleteDesk,
   ActivateDesk,
@@ -93,14 +97,6 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.RemoveTeam,
     label: 'Remove team',
     icon: <DeleteIcon color="warning" />,
-  },
-  [MoreActionsMenuOptionType.EnableDeskApprovalRequirement]: {
-    id: MoreActionsMenuOptionType.EnableDeskApprovalRequirement,
-    label: 'Enable desk approval requirement',
-  },
-  [MoreActionsMenuOptionType.RemoveDeskApprovalRequirement]: {
-    id: MoreActionsMenuOptionType.RemoveDeskApprovalRequirement,
-    label: 'Remove desk approval requirement',
   },
   [MoreActionsMenuOptionType.SetAsPreferredLocation]: {
     id: MoreActionsMenuOptionType.SetAsPreferredLocation,
@@ -187,6 +183,32 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.DeleteCustomTag,
     label: 'Remove Tag',
     icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.EditResource]: {
+    id: MoreActionsMenuOptionType.EditResource,
+    label: 'Edit Resource',
+    icon: <EditIcon />,
+  },
+  [MoreActionsMenuOptionType.DeleteResource]: {
+    id: MoreActionsMenuOptionType.DeleteResource,
+    label: 'Remove Resource',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.ActivateResource]: {
+    id: MoreActionsMenuOptionType.ActivateResource,
+    label: 'Activate Resource',
+  },
+  [MoreActionsMenuOptionType.DeactivateResource]: {
+    id: MoreActionsMenuOptionType.DeactivateResource,
+    label: 'Dectivate Resource',
+  },
+  [MoreActionsMenuOptionType.EnableDeskApprovalRequirement]: {
+    id: MoreActionsMenuOptionType.EnableDeskApprovalRequirement,
+    label: 'Enable desk approval requirement',
+  },
+  [MoreActionsMenuOptionType.RemoveDeskApprovalRequirement]: {
+    id: MoreActionsMenuOptionType.RemoveDeskApprovalRequirement,
+    label: 'Remove desk approval requirement',
   },
   [MoreActionsMenuOptionType.EditDesk]: {
     id: MoreActionsMenuOptionType.EditDesk,

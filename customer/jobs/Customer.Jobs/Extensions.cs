@@ -10,5 +10,4 @@ public static class Extensions
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;
-    //.AddHostedService<DeskRoomToResourceSyncJob>();
 }

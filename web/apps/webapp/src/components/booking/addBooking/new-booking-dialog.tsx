@@ -11,6 +11,8 @@ import type { newBookingDialog_availableLocationDesks_query$key } from '@/querie
 import type { newBookingDialog_availableLocationDesks_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableLocationDesks_refetchableFragment.graphql';
 import type { newBookingDialog_availableLocationRooms_query$key } from '@/queries/__generated__/newBookingDialog_availableLocationRooms_query.graphql';
 import type { newBookingDialog_availableLocationRooms_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableLocationRooms_refetchableFragment.graphql';
+import type { newBookingDialog_availableResources_query$key } from '@/queries/__generated__/newBookingDialog_availableResources_query.graphql';
+import type { newBookingDialog_availableResources_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableResources_refetchableFragment.graphql';
 import type { newBookingDialog_customerTeams_query$key } from '@/queries/__generated__/newBookingDialog_customerTeams_query.graphql';
 import type { newBookingDialog_customerTeams_refetchableFragment } from '@/queries/__generated__/newBookingDialog_customerTeams_refetchableFragment.graphql';
 import type { newBookingDialog_organizationMembers_query$key } from '@/queries/__generated__/newBookingDialog_organizationMembers_query.graphql';
@@ -35,6 +37,7 @@ type Props = {
   rootDataTeamsRelay: newBookingDialog_customerTeams_query$key;
   rootDataAvailableLocationDesksRelay: newBookingDialog_availableLocationDesks_query$key;
   rootDataAvailableLocationRoomsRelay: newBookingDialog_availableLocationRooms_query$key;
+  rootDataAvailableResourcesRelay: newBookingDialog_availableResources_query$key;
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
@@ -94,6 +97,13 @@ type RoomDetails = {
   zones: ZoneDetails[];
 };
 
+type ResourceDetails = {
+  uniqueId: string;
+  name: string;
+  customTags: CustomTagDetails[];
+  zones: ZoneDetails[];
+};
+
 type BookingDetails = {
   date: Date;
   member: string;
@@ -102,6 +112,7 @@ type BookingDetails = {
   location: string | undefined;
   desks: string[];
   rooms: string[];
+  resources: string[];
 };
 
 const bookingSchema = object({
@@ -112,6 +123,7 @@ const bookingSchema = object({
   location: string().notRequired(),
   desk: array().nullable(),
   rooms: array().nullable(),
+  resources: array().nullable(),
 });
 
 const NewBookingDialog = ({
@@ -120,6 +132,7 @@ const NewBookingDialog = ({
   rootDataOrganizationMembersRelay,
   rootDataAvailableLocationDesksRelay,
   rootDataAvailableLocationRoomsRelay,
+  rootDataAvailableResourcesRelay,
   connectionIds,
   isDialogOpen,
   onAddClicked,
@@ -208,7 +221,7 @@ const NewBookingDialog = ({
   >(
     graphql`
       fragment newBookingDialog_availableLocationDesks_query on Query @refetchable(queryName: "newBookingDialog_availableLocationDesks_refetchableFragment") {
-        availableDesks(where: { locationId: $locationId, date: $dateToGetAvailableDesks }) @include(if: $locationExists) {
+        availableDesks(where: { organizationId: $organizationId, locationId: $locationId, date: $dateToGetAvailableDesks }) @include(if: $locationExists) {
           uniqueId
           name
           customTags {
@@ -233,7 +246,7 @@ const NewBookingDialog = ({
   >(
     graphql`
       fragment newBookingDialog_availableLocationRooms_query on Query @refetchable(queryName: "newBookingDialog_availableLocationRooms_refetchableFragment") {
-        availableRooms(where: { locationId: $locationId, date: $dateToGetAvailableRooms }) @include(if: $locationExists) {
+        availableRooms(where: { organizationId: $organizationId, locationId: $locationId, date: $dateToGetAvailableRooms }) @include(if: $locationExists) {
           uniqueId
           name
           customTags {
@@ -252,13 +265,38 @@ const NewBookingDialog = ({
     rootDataAvailableLocationRoomsRelay,
   );
 
+  const [rootDataAvailableResources, refetchAvailableResources] = useRefetchableFragment<
+    newBookingDialog_availableResources_refetchableFragment,
+    newBookingDialog_availableResources_query$key
+  >(
+    graphql`
+      fragment newBookingDialog_availableResources_query on Query @refetchable(queryName: "newBookingDialog_availableResources_refetchableFragment") {
+        availableResources(where: { organizationId: $organizationId, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources }) {
+          uniqueId
+          name
+          customTags {
+            uniqueId
+            name
+            color
+          }
+          zones {
+            uniqueId
+            name
+            color
+          }
+        }
+      }
+    `,
+    rootDataAvailableResourcesRelay,
+  );
+
   const [commitAddBooking] = useMutation<newBookingDialog_addBookingMutation>(graphql`
     mutation newBookingDialog_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
       addBooking(input: $input) {
         booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
           id
           from
-          to
+          until
           notes
           type
           customer {
@@ -309,6 +347,20 @@ const NewBookingDialog = ({
               color
             }
           }
+          resources {
+            uniqueId
+            name
+            customTags {
+              uniqueId
+              name
+              color
+            }
+            zones {
+              uniqueId
+              name
+              color
+            }
+          }
         }
       }
     }
@@ -329,6 +381,7 @@ const NewBookingDialog = ({
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterDesk = createFilterOptions<DeskDetails>();
   const filterRoom = createFilterOptions<RoomDetails>();
+  const filterResource = createFilterOptions<ResourceDetails>();
   const customers = useMemo<OrganizationMemberDetails[]>(
     () => (rootDataOrganizationMembers.organizationMembers ? rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node) : []),
     [rootDataOrganizationMembers.organizationMembers],
@@ -360,6 +413,19 @@ const NewBookingDialog = ({
           }))
         : [],
     [rootDataAvailableLocationRooms.availableRooms],
+  );
+
+  const resources = useMemo<ResourceDetails[]>(
+    () =>
+      rootDataAvailableResources.availableResources
+        ? rootDataAvailableResources.availableResources.map(({ uniqueId, name, customTags, zones }) => ({
+            uniqueId,
+            name,
+            customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
+            zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
+          }))
+        : [],
+    [rootDataAvailableResources.availableResources],
   );
 
   const handleRefetchOrganizationMembers = useCallback(
@@ -432,12 +498,32 @@ const NewBookingDialog = ({
     [refetchAvailableLocationRooms],
   );
 
+  const handleRefetchAvailableResources = useCallback(
+    (from: Dayjs | Date, locationId?: string) => {
+      startTransition(() => {
+        refetchAvailableResources(
+          {
+            organizationId,
+            locationId,
+            dateFromToGetAvailableResources: from,
+            dateUntilToGetAvailableResources: endOfDay(from).toISOString(),
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchAvailableResources, organizationId],
+  );
+
   useEffect(() => {
     handleRefetchAvailableLocationDesks(from, locationId);
     handleRefetchAvailableLocationRooms(from, locationId);
-  }, [handleRefetchAvailableLocationDesks, handleRefetchAvailableLocationRooms, from, locationId]);
+    handleRefetchAvailableResources(from, locationId);
+  }, [handleRefetchAvailableLocationDesks, handleRefetchAvailableLocationRooms, handleRefetchAvailableResources, from, locationId]);
 
-  const handleAddClick = ({ date, member, notes, team: teamId, location: locationId, desks: deskIds, rooms: roomIds }: BookingDetails) => {
+  const handleAddClick = ({ date, member, notes, team: teamId, location: locationId, desks: deskIds, resources: resourceIds, rooms: roomIds }: BookingDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -445,7 +531,7 @@ const NewBookingDialog = ({
     const id = nanoid();
     const finalDate = date as unknown as Dayjs;
     const from = startOfDay(finalDate).toISOString();
-    const to = endOfDay(finalDate).toISOString();
+    const until = endOfDay(finalDate).toISOString();
     const fromToPrint = toShortDate(startOfDay(finalDate));
     const customerId = member ?? rootData.me?.id;
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
@@ -459,13 +545,14 @@ const NewBookingDialog = ({
           id,
           customerId,
           from,
-          to,
+          until,
           notes,
           organizationId,
           teamId,
           locationId,
           deskIds,
           roomIds,
+          resourceIds,
           type,
         },
       },
@@ -529,7 +616,7 @@ const NewBookingDialog = ({
           booking: {
             id,
             from,
-            to,
+            until,
             notes,
             type,
             customer: {
@@ -560,6 +647,7 @@ const NewBookingDialog = ({
               : null,
             desks: [],
             rooms: [],
+            resources: [],
           },
         },
       },
@@ -609,6 +697,7 @@ const NewBookingDialog = ({
             location: locationId,
             desks: [],
             rooms: [],
+            resources: [],
           }}
           validate={validate}
           render={({ handleSubmit, values }) => {
@@ -777,6 +866,40 @@ const NewBookingDialog = ({
                     {rooms.length === 0 && <BodyIconTypography label="There are currently no available rooms in the chosen location." />}
                   </FormFieldLabel>
                 )}
+
+                <FormFieldLabel label="Resources" useWiderSpace>
+                  {resources.length > 0 && (
+                    <Autocomplete
+                      name="resources"
+                      multiple={true}
+                      required={requiredFields.resources}
+                      options={resources}
+                      getOptionValue={(option) => (option as ResourceDetails).uniqueId}
+                      getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
+                      renderOption={(props, option) => {
+                        const castedOption = option as ResourceDetails;
+
+                        return (
+                          <li {...props}>
+                            <StackRow sx={{ alignItems: 'center' }}>
+                              <BodyIconTypography label={castedOption.name} />
+                              <CustomTags customTags={castedOption.customTags} />
+                              <Zones zones={castedOption.zones} hideIcon />
+                            </StackRow>
+                          </li>
+                        );
+                      }}
+                      disableCloseOnSelect
+                      filterOptions={(options, params) => filterResource(options as ResourceDetails[], params)}
+                      selectOnFocus
+                      clearOnBlur
+                      handleHomeEndKeys
+                    />
+                  )}
+
+                  {resources.length === 0 && !locationId && <BodyIconTypography label="There are currently no available resources." />}
+                  {resources.length === 0 && locationId && <BodyIconTypography label="There are currently no available resources in the chosen location." />}
+                </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />
               </FormStackColumn>

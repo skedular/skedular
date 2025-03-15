@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b940e0a28115ac504dc7b6cddf4c336>>
+ * @generated SignedSource<<d08b925181a7f66fbb4accaf11e20677>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -46,6 +46,20 @@ export type editBooking_query$data = {
       readonly name: string;
       readonly uniqueId: string;
     } | null | undefined;
+    readonly resources: ReadonlyArray<{
+      readonly customTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
+      readonly name: string;
+      readonly uniqueId: string;
+      readonly zones: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
+    }>;
     readonly rooms: ReadonlyArray<{
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -64,8 +78,8 @@ export type editBooking_query$data = {
       readonly name: string;
       readonly uniqueId: string;
     } | null | undefined;
-    readonly to: any;
     readonly type: BookingType;
+    readonly until: any;
   } | null | undefined;
   readonly locations: {
     readonly __id: string;
@@ -261,7 +275,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "to",
+          "name": "until",
           "storageKey": null
         },
         {
@@ -368,6 +382,16 @@ return {
           "plural": true,
           "selections": (v5/*: any*/),
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingResourceDetails",
+          "kind": "LinkedField",
+          "name": "resources",
+          "plural": true,
+          "selections": (v5/*: any*/),
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -378,6 +402,6 @@ return {
 };
 })();
 
-(node as any).hash = "009c229988f36eaeeb0d8eb83604c256";
+(node as any).hash = "d656752b7788d7f8c5c5da74a8aba66a";
 
 export default node;

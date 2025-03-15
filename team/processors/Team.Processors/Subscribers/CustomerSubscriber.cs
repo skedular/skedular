@@ -61,26 +61,13 @@ public class CustomerSubscriber(
 
     private async Task HandleCustomerUpsertedEventAsync(
         Customer customer,
-        Shared.Database.Entities.Customer? existingCustomer,
+        Shared.Database.Entities.Customer existingCustomer,
         CancellationToken cancellationToken)
     {
-        if (existingCustomer is null)
-        {
-            var identities = mapper.MapToEntity(customer.Identities, null).ToList();
-            existingCustomer = mapper.MapToEntity(customer, identities);
-
-            identities.ForEach(identity => identity.Customer = existingCustomer);
-            repositoryFactory.IdentityRepository.AddRange(identities);
-            existingCustomer.Identities = identities;
-            existingCustomer = repositoryFactory.CustomerRepository.Add(existingCustomer);
-        }
-        else
-        {
-            _ = RebuildIdentities(customer, existingCustomer);
-            existingCustomer = repositoryFactory.CustomerRepository.Update(
-                mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities)
-            );
-        }
+        _ = RebuildIdentities(customer, existingCustomer);
+        existingCustomer = repositoryFactory.CustomerRepository.Update(
+            mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities)
+        );
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -108,10 +95,8 @@ public class CustomerSubscriber(
         var itemsToRemove = existingCustomer.Identities.Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
         var updatedItems = existingCustomer.Identities
             .Where(identity => customer.Identities.Any(item => item.Id == identity.Id))
-            .Select(identity => repositoryFactory.IdentityRepository.Update(mapper.MergeToEntity(
-                customer.Identities.First(item => item.Id == identity.Id),
-                identity,
-                existingCustomer)))
+            .Select(identity => repositoryFactory.IdentityRepository.Update(
+                mapper.MergeToEntity(customer.Identities.First(item => item.Id == identity.Id), identity, existingCustomer)))
             .ToList();
         var addedItems = customer.Identities
             .Where(identity => existingCustomer.Identities.All(item => item.Id != identity.Id))

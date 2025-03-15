@@ -31,6 +31,7 @@ internal static class CustomerExtensions
             .ThenInclude(query => query.Organization)
             .Include(query => query.PreferredOrganizationTags.Where(tag => !includeActiveItemsOnly || !tag.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization)
+            .Include(query => query.PreferredResources.Where(desk => !includeActiveItemsOnly || (!desk.DeletedAt.HasValue && !desk.Inactive)))
             .Include(query => query.PreferredDesks.Where(desk => !includeActiveItemsOnly || (!desk.DeletedAt.HasValue && !desk.Deactivated)))
             .Include(query => query.PreferredRooms.Where(room => !includeActiveItemsOnly || (!room.DeletedAt.HasValue && !room.Deactivated)))
             .ThenInclude(query => query.Location)

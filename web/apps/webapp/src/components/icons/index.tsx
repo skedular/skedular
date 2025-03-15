@@ -154,6 +154,15 @@ export const CustomTagIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Prop
     </TooltipIcon>
   );
 
+export const ResourceIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
+  excludeTooltip ? (
+    <EventSeat fontSize={fontSize} sx={sx} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'Resource'}>
+      <EventSeat fontSize={fontSize} sx={sx} color={color} />
+    </TooltipIcon>
+  );
+
 export const DeskIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
     <EventSeat fontSize={fontSize} sx={sx} color={color} />

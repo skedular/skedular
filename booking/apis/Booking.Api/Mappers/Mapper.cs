@@ -14,6 +14,7 @@ using Identity = Booking.Shared.Models.Identity;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using Team = Booking.Shared.Database.Entities.Team;
+using Resource = Booking.Shared.Models.Resource;
 
 namespace Booking.Api.Mappers;
 
@@ -60,6 +61,9 @@ public interface IMapper
     Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src);
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
+    IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src);
+    IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src);
+    IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> MapToGrpcResponse(IEnumerable<Resource> src);
 }
 
 public class Mapper : IMapper
@@ -73,7 +77,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             From = src.From,
-            To = src.To,
+            Until = src.To,
             Notes = src.Notes,
             Type = src.Type.ToBookingType(),
             Customer = MapTo(src.Customer)!,
@@ -116,14 +120,15 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             From = src.From,
-            To = src.To,
+            Until = src.Until,
             Notes = src.Notes,
             Type = src.Type,
             Customer = MapTo(src.Customer),
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
-            Desks = MapTo(src.Desks).ToArray(),
-            Rooms = MapTo(src.Rooms).ToArray(),
+            Desks = MapTo(src.Desks),
+            Rooms = MapTo(src.Rooms),
+            Resources = MapTo(src.Resources),
             Team = MapTo(src.Team)
         };
 
@@ -132,7 +137,7 @@ public class Mapper : IMapper
         {
             Id = src.Id.ToSafeString(),
             From = src.From,
-            To = src.To,
+            Until = src.Until,
             Notes = src.Notes,
             Type = src.Type,
             Customer = new Customer { Id = src.CustomerId },
@@ -148,7 +153,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             From = src.From,
-            To = src.To,
+            Until = src.Until,
             Notes = src.Notes,
             Type = src.Type,
             Customer = new Customer { Id = src.CustomerId },
@@ -167,7 +172,15 @@ public class Mapper : IMapper
         Team? team,
         ICollection<Desk> desks,
         ICollection<Room> rooms) =>
-        MergeTo(src, new Shared.Database.Entities.Booking(), customer, organization, location, team, desks, rooms);
+        MergeTo(
+            src,
+            new Shared.Database.Entities.Booking(),
+            customer,
+            organization,
+            location,
+            team,
+            desks,
+            rooms);
 
     public Shared.Database.Entities.Booking MergeTo(
         Shared.Models.Booking src,
@@ -181,7 +194,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.From = src.From;
-        dest.To = src.To;
+        dest.To = src.Until;
         dest.Notes = src.Notes;
         dest.Type = src.Type.ToBookingType();
         dest.Customer = customer;
@@ -202,7 +215,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             From = src.From.ToTimestamp(),
-            To = src.To.ToTimestamp(),
+            To = src.Until.ToTimestamp(),
             Notes = src.Notes.ToSafeString(),
             Customer = MapToGrpcResponse(src.Customer),
             Type = src.Type switch
@@ -234,7 +247,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             From = src.From.ToDateTimeOffset(),
-            To = src.To.ToDateTimeOffset(),
+            Until = src.Until.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
@@ -250,12 +263,8 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = src.CustomerId },
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
-                ? null
-                : new Shared.Models.Organization { Id = src.OrganizationId },
-            Location = string.IsNullOrWhiteSpace(src.LocationId)
-                ? null
-                : new Shared.Models.Location { Id = src.LocationId },
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
+            Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
             Desks = src.DeskIds.Select(item => new Shared.Models.Desk { Id = item }).ToList(),
             Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList()
@@ -266,7 +275,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             From = src.From.ToDateTimeOffset(),
-            To = src.To.ToDateTimeOffset(),
+            Until = src.Until.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
@@ -294,7 +303,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             From = src.From.ToDateTimeOffset(),
-            To = src.To.ToDateTimeOffset(),
+            Until = src.Until.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
             Type = src.Type switch
             {
@@ -348,6 +357,12 @@ public class Mapper : IMapper
 
     public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+
+    public IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src) => src.Select(MapTo);
+    public IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src) => src.Select(item =>MapTo(item, []));
+
+    public IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> MapToGrpcResponse(IEnumerable<Resource> src) =>
+        src.Select(MapToGrpcResponse);
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
@@ -505,8 +520,8 @@ public class Mapper : IMapper
         {
             UniqueId = src.Id,
             Name = src.Name.ToSafeString(),
-            CustomTags = MapToCustomTags(src.OrganizationTags).ToArray(),
-            Zones = MapToZones(src.OrganizationTags).ToArray(),
+            CustomTags = MapToCustomTags(src.OrganizationTags),
+            Zones = MapToZones(src.OrganizationTags),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
@@ -518,8 +533,8 @@ public class Mapper : IMapper
         {
             UniqueId = src.Id,
             Name = src.Name.ToSafeString(),
-            CustomTags = MapToCustomTags(src.OrganizationTags).ToArray(),
-            Zones = MapToZones(src.OrganizationTags).ToArray(),
+            CustomTags = MapToCustomTags(src.OrganizationTags),
+            Zones = MapToZones(src.OrganizationTags),
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
@@ -599,4 +614,56 @@ public class Mapper : IMapper
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name, Type = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
+
+    private static Resource MapTo(Shared.Database.Entities.Resource src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            EventRaisedAt = src.EventRaisedAt,
+            Name = src.Name,
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
+            OrganizationTags = MapTo(src.OrganizationTags).ToList()
+        };
+
+    private static BookingResourceDetails MapTo(Resource src, IEnumerable<Customer> customers) =>
+        new()
+        {
+            UniqueId = src.Id,
+            Name = src.Name.ToSafeString(),
+            CustomTags = MapToCustomTags(src.OrganizationTags),
+            Zones = MapToZones(src.OrganizationTags),
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color.ToSafeString(),
+            Location = MapTo(src.Location),
+            Customers = MapTo(customers)
+        };
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource MapToGrpcResponse(Resource src)
+    {
+        var room = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+            Location = src.Location is null
+                ? null
+                : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Location.Id, Name = src.Location.Name.ToSafeString() }
+        };
+
+        room.OrganizationCustomTags.AddRange(MapToGrpcResponseCustomTags(src.OrganizationTags));
+        room.OrganizationZones.AddRange(MapToGrpcResponseZones(src.OrganizationTags));
+
+        return room;
+    }
+
+    private static IEnumerable<BookingCustomerDetails> MapTo(IEnumerable<Customer> src) => src.Select(MapTo);
+    
+    private static IEnumerable<BookingResourceDetails> MapTo(IEnumerable<(Resource, List<Customer>)> src) =>
+        src.Select(item => MapTo(item.Item1, item.Item2));
 }

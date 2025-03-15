@@ -6,10 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Jobs.Jobs;
 
-public class GenerateResourceBookingSlotJob(
-    IServiceProvider serviceProvider,
-    TimeProvider timeProvider,
-    ILogger<GenerateResourceBookingSlotJob> logger)
+public class GenerateResourceBookingSlotJob(IServiceProvider serviceProvider, ILogger<GenerateResourceBookingSlotJob> logger)
     : BackgroundService
 {
     private readonly string _jobName = typeof(GenerateResourceBookingSlotJob).FullName!;
@@ -24,7 +21,8 @@ public class GenerateResourceBookingSlotJob(
                 var bookingInternalPublisher = scope.ServiceProvider.GetRequiredService<IBookingInternalPublisher>();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
                 var resourceIds = await repositoryFactory.ResourceRepository.Query(
-                        new Specification<Resource> { Criteria = query => !query.DeletedAt.HasValue }).Select(item => item.Id)
+                        new Specification<Resource> { Criteria = query => !query.DeletedAt.HasValue })
+                    .Select(item => item.Id)
                     .ToListAsync(cancellationToken);
 
                 await bookingInternalPublisher.PublishGenerateResourceBookingSlotAsync(resourceIds, cancellationToken);

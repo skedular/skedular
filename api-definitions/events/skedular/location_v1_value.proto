@@ -66,7 +66,7 @@ message Resource {
   bool requireBookingApproval = 4;
   repeated string tagIds = 5;
   string color = 6;
-  bool isOpeningHoursOverriden = 7;
+  bool isAvailableHoursOverridden = 7;
   OpeningHours availableHours = 8;
 }
 

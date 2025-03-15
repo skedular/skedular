@@ -152,7 +152,7 @@ public class OrganizationService(
                 Id = randomHelper.Generate(),
                 Name = "Desk",
                 Type = OrganizationTagTypeConstants.Desk,
-                Color = null,
+                Color = "#87CEEB",
                 Organization = organizationEntity
             });
 
@@ -162,7 +162,7 @@ public class OrganizationService(
                 Id = randomHelper.Generate(),
                 Name = "Room",
                 Type = OrganizationTagTypeConstants.Room,
-                Color = null,
+                Color = "#98FB98",
                 Organization = organizationEntity
             });
 

@@ -25,6 +25,7 @@ public class BookingGrpcService(
     IBookingService bookingService,
     IDeskService deskService,
     IRoomService roomService,
+    IResourceService resourceService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ILocationAuthorizationService locationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
@@ -315,5 +316,24 @@ public class BookingGrpcService(
         availableRooms.Rooms.AddRange(mapper.MapToGrpcResponse(rooms));
 
         return availableRooms;
+    }
+
+    public override async Task<AvailableResources> GetAvailableResources(GetAvailableResourcesInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
+
+        var resources = await resourceService.GetAvailableResourcesAsync(
+            request.OrganizationId,
+            request.LocationId,
+            request.From.ToDateTimeOffset(),
+            request.Until.ToDateTimeOffset(),
+            request.CustomTagIds,
+            request.ZoneIds,
+            context.CancellationToken);
+
+        var availableResources = new AvailableResources();
+        availableResources.Resources.AddRange(mapper.MapToGrpcResponse(resources));
+
+        return availableResources;
     }
 }

@@ -130,7 +130,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
             node {
               id
               from
-              to
+              until
               notes
               customer {
                 uniqueId
@@ -164,6 +164,21 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
                 }
               }
               rooms {
+                uniqueId
+                name
+                color
+                customTags {
+                  uniqueId
+                  name
+                  color
+                }
+                zones {
+                  uniqueId
+                  name
+                  color
+                }
+              }
+              resources {
                 uniqueId
                 name
                 color

@@ -5,7 +5,7 @@ namespace Slack.Shared.Models;
 public class Booking : ModelBaseWithDeleted
 {
     public DateTimeOffset From { get; set; }
-    public DateTimeOffset To { get; set; }
+    public DateTimeOffset Until { get; set; }
     public string? Notes { get; set; }
 
     public Customer Customer { get; set; }

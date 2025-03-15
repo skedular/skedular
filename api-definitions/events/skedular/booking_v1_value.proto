@@ -32,21 +32,14 @@ message Booking {
   string customerId = 3;
   string organizationId = 4;
   google.protobuf.Timestamp from = 5;
-  google.protobuf.Timestamp to = 6;
+  google.protobuf.Timestamp until = 6;
   string notes = 7;
   string locationId = 8;
   repeated string deskIds = 9;
   repeated string roomIds = 10;
-  string teamId = 11;
-  repeated DeskBookingDetail deskBookingDetails = 12;
-  repeated RoomBookingDetail roomBookingDetails = 13;
-  BookingType type = 14;
-}
-
-enum BookingStatus {
-  AwaitAcceptance = 0;
-  Accepted = 1;
-  Declined = 2;
+  repeated Resource resources = 11;
+  string teamId = 12;
+  BookingType type = 13;
 }
 
 enum BookingType
@@ -62,14 +55,7 @@ enum BookingType
     NonWorkingDay = 8;
 }
 
-message DeskBookingDetail {
+message Resource {
   string id = 1;
-  string deskId = 2;
-  BookingStatus status = 3;
-}
-
-message RoomBookingDetail {
-  string id = 1;
-  string roomId = 2;
-  BookingStatus status = 3;
+  repeated string customerIds = 2;
 }

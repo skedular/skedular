@@ -24,8 +24,7 @@ public class CustomerSubscriber(
                     var existingCustomer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customer.Id, cancellationToken);
                     if (existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Customer event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Customer event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -40,8 +39,7 @@ public class CustomerSubscriber(
                     var existingCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(customer.Id, cancellationToken);
                     if (existingCustomer is not null && existingCustomer.EventRaisedAt > customer.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Customer event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Customer event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -61,33 +59,18 @@ public class CustomerSubscriber(
 
     private async Task HandleCustomerUpsertedEventAsync(
         Customer customer,
-        Shared.Database.Entities.Customer? existingCustomer,
+        Shared.Database.Entities.Customer existingCustomer,
         CancellationToken cancellationToken)
     {
-        if (existingCustomer is null)
-        {
-            var identities = mapper.MapToEntity(customer.Identities, null).ToList();
-            existingCustomer = mapper.MapToEntity(customer, identities);
-
-            identities.ForEach(identity => identity.Customer = existingCustomer);
-            repositoryFactory.IdentityRepository.AddRange(identities);
-            existingCustomer.Identities = identities;
-            _ = repositoryFactory.CustomerRepository.Add(existingCustomer);
-        }
-        else
-        {
-            _ = RebuildIdentities(customer, existingCustomer);
-            repositoryFactory.CustomerRepository.Update(
-                mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities)
-            );
-        }
+        _ = RebuildIdentities(customer, existingCustomer);
+        repositoryFactory.CustomerRepository.Update(
+            mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities)
+        );
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleCustomerDeletedEventAsync(
-        Shared.Database.Entities.Customer existingCustomer,
-        CancellationToken cancellationToken)
+    private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.CustomerRepository.Remove(existingCustomer);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -97,8 +80,7 @@ public class CustomerSubscriber(
         Customer customer,
         Shared.Database.Entities.Customer existingCustomer)
     {
-        var itemsToRemove = existingCustomer.Identities
-            .Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
+        var itemsToRemove = existingCustomer.Identities.Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
         var updatedItems = existingCustomer.Identities
             .Where(identity => customer.Identities.Any(item => item.Id == identity.Id))
             .Select(identity => repositoryFactory.IdentityRepository.Update(mapper.MergeToEntity(
@@ -108,8 +90,7 @@ public class CustomerSubscriber(
             .ToList();
         var addedItems = customer.Identities
             .Where(identity => existingCustomer.Identities.All(item => item.Id != identity.Id))
-            .Select(identity =>
-                repositoryFactory.IdentityRepository.Add(mapper.MapToEntity(identity, existingCustomer)))
+            .Select(identity => repositoryFactory.IdentityRepository.Add(mapper.MapToEntity(identity, existingCustomer)))
             .ToList();
 
         repositoryFactory.IdentityRepository.RemoveRange(itemsToRemove);

@@ -197,6 +197,7 @@ type Mutation {
   activateResources(input: ActivateResourcesInput!): ResourcesPayload @cost(weight: "10")
   deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload @cost(weight: "10")
   updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload @cost(weight: "10")
+  updateLocationResourceAvailableHours(input: UpdateLocationResourceAvailableHoursInput!): ResourcePayload @cost(weight: "10")
 }
 
 type OpeningHours {
@@ -254,7 +255,8 @@ type ResourceDetails {
   color: String
   customTags: [Location_OrganizationTagDetails!]!
   zones: [Location_OrganizationTagDetails!]!
-  isOpeningHoursOverriden: Boolean!
+  resourceType: Location_OrganizationTagDetails!
+  isAvailableHoursOverridden: Boolean!
   availableHours: OpeningHours
   id: ID!
 }
@@ -580,6 +582,13 @@ input UpdateLocationOpeningHoursInput {
   clientMutationId: String
   id: String!
   weekOpeningHours: WeekOpeningHoursInput!
+}
+
+input UpdateLocationResourceAvailableHoursInput {
+  clientMutationId: String
+  id: String!
+  overrideAvailableHours: Boolean!
+  availableHours: WeekOpeningHoursInput
 }
 
 input UpdateResourceInput {

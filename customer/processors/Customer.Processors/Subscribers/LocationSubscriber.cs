@@ -73,7 +73,7 @@ public class LocationSubscriber(
 
     private async Task HandleLocationUpsertedEventAsync(
         Shared.Models.Location location,
-        Location? existingLocation,
+        Location existingLocation,
         CancellationToken cancellationToken)
     {
         var organization = location.Organization is null
@@ -84,9 +84,7 @@ public class LocationSubscriber(
                 true,
                 cancellationToken);
 
-        existingLocation = existingLocation is null
-            ? repositoryFactory.LocationRepository.Add(mapper.MapToEntity(location, organization))
-            : repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
+        existingLocation = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
 
         existingLocation = await RebuildResourcesAsync(location, existingLocation, cancellationToken);
         existingLocation = await RebuildDesksAsync(location, existingLocation, cancellationToken);

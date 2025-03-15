@@ -33,8 +33,8 @@ public class AddTeamInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
-    [GraphQLName("customerIds")] public string[] CustomerIds { get; set; } = [];
-    [GraphQLName("organizationMemberIds")] public string[] OrganizationMemberIds { get; set; } = [];
+    [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];
+    [GraphQLName("organizationMemberIds")] public IEnumerable<string> OrganizationMemberIds { get; set; } = [];
 }
 
 [GraphQLName("CancelInvitationToJoinTeamInput")]
@@ -77,7 +77,7 @@ public class InviteCustomersToJoinTeamInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("teamId")] public required string TeamId { get; set; }
-    [GraphQLName("emails")] public string[] Emails { get; set; } = [];
+    [GraphQLName("emails")] public IEnumerable<string> Emails { get; set; } = [];
 }
 
 [GraphQLName("InviteCustomersToJoinTeamPayload")]
@@ -126,7 +126,7 @@ public class TeamDetails : Node
 {
     [GraphQLName("name")] public required string Name { get; set; }
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("members")] public TeamMemberDetails[] Members { get; set; } = [];
+    [GraphQLName("members")] public IEnumerable<TeamMemberDetails> Members { get; set; } = [];
     [GraphQLName("organization")] public TeamOrganizationDetails? Organization { get; set; }
     [GraphQLName("primaryLocation")] public TeamLocationDetails? PrimaryLocation { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
@@ -218,7 +218,7 @@ public class TeamWhereInput
 {
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("primaryLocationIds")] public string[]? PrimaryLocationIds { get; set; }
+    [GraphQLName("primaryLocationIds")] public IEnumerable<string>? PrimaryLocationIds { get; set; }
 }
 
 [GraphQLName("UpdateTeamInput")]
@@ -243,8 +243,8 @@ public class UpdateTeamAndTeamMembersInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
-    [GraphQLName("customerIds")] public string[] CustomerIds { get; set; } = [];
-    [GraphQLName("organizationMemberIds")] public string[] OrganizationMemberIds { get; set; } = [];
+    [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];
+    [GraphQLName("organizationMemberIds")] public IEnumerable<string> OrganizationMemberIds { get; set; } = [];
 }
 
 [GraphQLName("UpdateTeamMembersInput")]
@@ -252,8 +252,8 @@ public class UpdateTeamMembersInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("customerIds")] public string[] CustomerIds { get; set; } = [];
-    [GraphQLName("organizationMemberIds")] public string[] OrganizationMemberIds { get; set; } = [];
+    [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];
+    [GraphQLName("organizationMemberIds")] public IEnumerable<string> OrganizationMemberIds { get; set; } = [];
 }
 
 [GraphQLName("TeamLocationDetails")]
@@ -267,7 +267,7 @@ public class TeamLocationDetails
 public class ChangeTeamMembersStatusInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required string[] Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
     [GraphQLName("status")] public TeamMemberStatus Status { get; set; }
 }
 
@@ -275,14 +275,14 @@ public class ChangeTeamMembersStatusInput
 public class TeamMembersDetailsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("members")] public TeamMemberDetails[] Members { get; set; } = [];
+    [GraphQLName("members")] public IEnumerable<TeamMemberDetails> Members { get; set; } = [];
 }
 
 [GraphQLName("RemoveTeamMembersInput")]
 public class RemoveTeamMembersInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required string[] Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("AddTeamMemberInput")]
@@ -300,5 +300,5 @@ public class CustomerTeamWhereInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("customerId")] public string CustomerId { get; set; } = string.Empty;
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("primaryLocationIds")] public string[]? PrimaryLocationIds { get; set; }
+    [GraphQLName("primaryLocationIds")] public IEnumerable<string>? PrimaryLocationIds { get; set; }
 }

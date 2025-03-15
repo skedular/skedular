@@ -113,7 +113,7 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<ICollection<BookingDeskDetails>?> AvailableDesksAsync(
+    public async Task<IEnumerable<BookingDeskDetails>?> AvailableDesksAsync(
         AvailableDesksWhereInput where,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IDeskService deskService,
@@ -133,11 +133,11 @@ public class Query(IMapper mapper)
             where.ZoneIds.ToSafeCollection(),
             where.CombineCustomTagsZones ?? false,
             cancellationToken);
-        return mapper.MapTo(desks).ToArray();
+        return mapper.MapTo(desks);
     }
 
     [UseResolverScope]
-    public async Task<ICollection<BookingRoomDetails>?> AvailableRoomsAsync(
+    public async Task<IEnumerable<BookingRoomDetails>?> AvailableRoomsAsync(
         AvailableRoomsWhereInput where,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IRoomService roomService,
@@ -157,7 +157,7 @@ public class Query(IMapper mapper)
             where.ZoneIds.ToSafeCollection(),
             where.CombineCustomTagsZones ?? false,
             cancellationToken);
-        return mapper.MapTo(rooms).ToArray();
+        return mapper.MapTo(rooms);
     }
 
     [UseResolverScope]
@@ -309,5 +309,49 @@ public class Query(IMapper mapper)
             cancellationToken);
 
         return new OrganizationAvailableRooms { RoomsCount = roomsCount, AvailableRoomsCount = availableRoomsCount };
+    }
+
+    [UseResolverScope]
+    public async Task<IEnumerable<BookingResourceDetails>?> AvailableResourcesAsync(
+        AvailableResourcesWhereInput where,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IResourceService resourceService,
+        CancellationToken cancellationToken)
+    {
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        var resources = await resourceService.GetAvailableResourcesAsync(
+            where.OrganizationId,
+            where.LocationId,
+            where.From,
+            where.Until,
+            where.CustomTagIds.ToSafeCollection(),
+            where.ZoneIds.ToSafeCollection(),
+            cancellationToken);
+        return mapper.MapTo(resources);
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationAvailableResources?> OrganizationResourcesAvailabilityAsync(
+        OrganizationAvailableResourcesWhereInput where,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IResourceService resourceService,
+        CancellationToken cancellationToken)
+    {
+        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        var (resourcesCount, availableResourcesCount) = await resourceService.GetOrganizationResourceAvailabilityAsync(
+            where.OrganizationId,
+            where.From,
+            where.Until,
+            cancellationToken);
+
+        return new OrganizationAvailableResources { ResourcesCount = resourcesCount, AvailableResourcesCount = availableResourcesCount };
     }
 }

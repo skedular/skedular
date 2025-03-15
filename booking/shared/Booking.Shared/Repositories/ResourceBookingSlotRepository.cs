@@ -33,7 +33,8 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
         DbContext.ResourceBookingSlot.UpdateRange(resourceBookingSlots);
     }
 
-    public async Task<ICollection<ResourceBookingSlot>> GetByResourceIdAsync(string resourceId, DateTimeOffset from, CancellationToken cancellationToken) =>
+    public async Task<ICollection<ResourceBookingSlot>> GetByResourceIdAsync(string resourceId, DateTimeOffset from,
+        CancellationToken cancellationToken) =>
         await DbContext.ResourceBookingSlot
             .Where(query => query.Resource.Id == resourceId && query.Start >= from)
             .Include(query => query.Resource)

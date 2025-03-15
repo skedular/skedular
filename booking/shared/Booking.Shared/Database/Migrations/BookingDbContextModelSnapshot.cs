@@ -571,7 +571,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<bool?>("IsOpeningHoursOverriden")
+                    b.Property<bool?>("IsAvailableHoursOverridden")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
@@ -603,7 +603,7 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasIndex("Inactive");
 
-                    b.HasIndex("IsOpeningHoursOverriden");
+                    b.HasIndex("IsAvailableHoursOverridden");
 
                     b.HasIndex("LocationId");
 
@@ -827,6 +827,21 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("DesksId");
 
                     b.ToTable("BookingDesk");
+                });
+
+            modelBuilder.Entity("BookingResourceBookingSlot", b =>
+                {
+                    b.Property<string>("BookingsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ResourceBookingSlotsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("BookingsId", "ResourceBookingSlotsId");
+
+                    b.HasIndex("ResourceBookingSlotsId");
+
+                    b.ToTable("BookingResourceBookingSlot");
                 });
 
             modelBuilder.Entity("BookingRoom", b =>
@@ -1223,6 +1238,21 @@ namespace Booking.Shared.Database.Migrations
                     b.HasOne("Booking.Shared.Database.Entities.Desk", null)
                         .WithMany()
                         .HasForeignKey("DesksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookingResourceBookingSlot", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Booking", null)
+                        .WithMany()
+                        .HasForeignKey("BookingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.ResourceBookingSlot", null)
+                        .WithMany()
+                        .HasForeignKey("ResourceBookingSlotsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

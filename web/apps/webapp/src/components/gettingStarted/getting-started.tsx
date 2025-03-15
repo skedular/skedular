@@ -162,7 +162,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
 
             <Grid>
               <StackColumn sx={{ width: 250 }}>
-                <SmallIconTypography label="Add desks and zones for your locations and teams." />
+                <SmallIconTypography label="Add desks for your locations and teams." />
                 <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleAddDesksClicked}>
                   <LeadIconTypography
                     label="Add Desks"

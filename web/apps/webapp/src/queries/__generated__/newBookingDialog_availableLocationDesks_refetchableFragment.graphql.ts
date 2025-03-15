@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c0920486f2faeb09a5aca6d378a98b1a>>
+ * @generated SignedSource<<f3e35b187a1d05c0ba5b353c4567aae9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type newBookingDialog_availableLocationDesks_refetchableFragment$variable
   dateToGetAvailableDesks: any;
   locationExists: boolean;
   locationId?: string | null | undefined;
+  organizationId?: string | null | undefined;
 };
 export type newBookingDialog_availableLocationDesks_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_availableLocationDesks_query">;
@@ -39,6 +40,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "locationId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationId"
   }
 ],
 v1 = {
@@ -107,6 +113,11 @@ return {
                     "kind": "Variable",
                     "name": "locationId",
                     "variableName": "locationId"
+                  },
+                  {
+                    "kind": "Variable",
+                    "name": "organizationId",
+                    "variableName": "organizationId"
                   }
                 ],
                 "kind": "ObjectValue",
@@ -148,16 +159,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "39a6a3aa7f713fa0c0150c00faddf764",
+    "cacheID": "05e698d092211ae5e92dbde2297f021b",
     "id": null,
     "metadata": {},
     "name": "newBookingDialog_availableLocationDesks_refetchableFragment",
     "operationKind": "query",
-    "text": "query newBookingDialog_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $locationExists: Boolean!\n  $locationId: String\n) {\n  ...newBookingDialog_availableLocationDesks_query\n}\n\nfragment newBookingDialog_availableLocationDesks_query on Query {\n  availableDesks(where: {locationId: $locationId, date: $dateToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
+    "text": "query newBookingDialog_availableLocationDesks_refetchableFragment(\n  $dateToGetAvailableDesks: DateTime!\n  $locationExists: Boolean!\n  $locationId: String\n  $organizationId: String\n) {\n  ...newBookingDialog_availableLocationDesks_query\n}\n\nfragment newBookingDialog_availableLocationDesks_query on Query {\n  availableDesks(where: {organizationId: $organizationId, locationId: $locationId, date: $dateToGetAvailableDesks}) @include(if: $locationExists) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "26a853db786700a95a8387d18ac67e24";
+(node as any).hash = "20ab04677b649cc9829e9fb56519fbb3";
 
 export default node;

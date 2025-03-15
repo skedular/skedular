@@ -100,7 +100,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             From = src.From.ToDateTimeOffset(),
-            To = src.To.ToDateTimeOffset(),
+            Until = src.To.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
             Customer = MapTo(src.Customer),
             Organization = MapTo(src.Organization),

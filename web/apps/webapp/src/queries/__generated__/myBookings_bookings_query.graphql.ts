@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4de869fe26c540e39f838308e0197fc0>>
+ * @generated SignedSource<<e0e2de8ea449e00e12955fa4385dafdd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -45,6 +45,21 @@ export type myBookings_bookings_query$data = {
           readonly uniqueId: string;
         } | null | undefined;
         readonly notes: string | null | undefined;
+        readonly resources: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly customTags: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly name: string | null | undefined;
+            readonly uniqueId: string;
+          }>;
+          readonly name: string;
+          readonly uniqueId: string;
+          readonly zones: ReadonlyArray<{
+            readonly color: string | null | undefined;
+            readonly name: string | null | undefined;
+            readonly uniqueId: string;
+          }>;
+        }>;
         readonly rooms: ReadonlyArray<{
           readonly color: string | null | undefined;
           readonly customTags: ReadonlyArray<{
@@ -64,7 +79,7 @@ export type myBookings_bookings_query$data = {
           readonly name: string;
           readonly uniqueId: string;
         } | null | undefined;
-        readonly to: any;
+        readonly until: any;
         readonly " $fragmentSpreads": FragmentRefs<"myBookingCard_BookingDetails">;
       };
     }>;
@@ -296,7 +311,7 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "to",
+                  "name": "until",
                   "storageKey": null
                 },
                 {
@@ -388,6 +403,16 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "BookingResourceDetails",
+                  "kind": "LinkedField",
+                  "name": "resources",
+                  "plural": true,
+                  "selections": (v6/*: any*/),
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "myBookingCard_BookingDetails"
@@ -458,6 +483,6 @@ return {
 };
 })();
 
-(node as any).hash = "f74b2ce222ed1aa4e2c3ed27f8de537c";
+(node as any).hash = "524d9e992b94bca9b21f2d819e4696c0";
 
 export default node;

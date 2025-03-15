@@ -132,7 +132,7 @@ const LocationPageWithRelay = () => {
   }
 
   useEffect(() => {
-    const date = startOfDay().toISOString();
+    const startDate = startOfDay().toISOString();
 
     loadQuery(
       {
@@ -146,9 +146,9 @@ const LocationPageWithRelay = () => {
         ],
         locationId: '',
         locationExists: false,
-        dateToGetAvailableDesks: date,
+        dateToGetAvailableDesks: startDate,
         deskIdsToIncludeToGetAvailableDesks: [],
-        dateToGetAvailableRooms: date,
+        dateToGetAvailableRooms: startDate,
         roomIdsToIncludeToGetAvailableRooms: [],
         customerId: '',
         customerExists: false,

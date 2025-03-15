@@ -3,7 +3,6 @@ using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Exceptions;
-using ArgumentException = System.ArgumentException;
 
 namespace Booking.Api.Services;
 
@@ -19,10 +18,7 @@ public interface IRoomService
         bool combineCustomTagsZones,
         CancellationToken cancellationToken);
 
-    Task<(int, int)> GetOrganizationRoomsAvailabilityAsync(
-        string organizationId,
-        DateTimeOffset date,
-        CancellationToken cancellationToken);
+    Task<(int, int)> GetOrganizationRoomsAvailabilityAsync(string organizationId, DateTimeOffset date, CancellationToken cancellationToken);
 }
 
 public class RoomService(
@@ -64,7 +60,7 @@ public class RoomService(
 
         if (!string.IsNullOrWhiteSpace(locationId))
         {
-            var location = await repositoryFactory.LocationRepository.GetByIdAndExcludeDeactivatedDesksAndRoomsAsync(
+            var location = await repositoryFactory.LocationRepository.GetByIdAndExcludeInactiveDesksRoomsResourcesAsync(
                 locationId,
                 false,
                 false,
@@ -132,7 +128,7 @@ public class RoomService(
 
         foreach (var location in locations)
         {
-            var availableRooms = await repositoryFactory.RoomRepository.GetAvailableRoomsAsync(
+            var rooms = await repositoryFactory.RoomRepository.GetAvailableRoomsAsync(
                 organizationId,
                 location.Id,
                 date,
@@ -141,7 +137,7 @@ public class RoomService(
                 [],
                 false,
                 cancellationToken);
-            availableRoomsCount += availableRooms.Count;
+            availableRoomsCount += rooms.Count;
         }
 
         return (roomsCount, availableRoomsCount);

@@ -59,24 +59,11 @@ public class CustomerSubscriber(
 
     private async Task HandleCustomerUpsertedEventAsync(
         Customer customer,
-        Shared.Database.Entities.Customer? existingCustomer,
+        Shared.Database.Entities.Customer existingCustomer,
         CancellationToken cancellationToken)
     {
-        if (existingCustomer is null)
-        {
-            var identities = mapper.MapToEntity(customer.Identities, null).ToList();
-            existingCustomer = mapper.MapToEntity(customer, identities);
-
-            identities.ForEach(identity => identity.Customer = existingCustomer);
-            repositoryFactory.IdentityRepository.AddRange(identities);
-            existingCustomer.Identities = identities;
-            _ = repositoryFactory.CustomerRepository.Add(existingCustomer);
-        }
-        else
-        {
-            _ = RebuildIdentities(customer, existingCustomer);
-            repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
-        }
+        _ = RebuildIdentities(customer, existingCustomer);
+        repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

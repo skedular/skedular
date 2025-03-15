@@ -104,7 +104,7 @@ public class Mutation(IMapper mapper)
     {
         var organizationMembers =
             await organizationMemberService.ChangeStatusAsync(
-                input.Ids,
+                input.Ids.ToList(),
                 input.Status,
                 cancellationToken);
         return new TeamMembersDetailsPayload
@@ -119,7 +119,7 @@ public class Mutation(IMapper mapper)
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
-        var organizationMembers = await teamMemberService.RemoveAsync(input.Ids, cancellationToken);
+        var organizationMembers = await teamMemberService.RemoveAsync(input.Ids.ToList(), cancellationToken);
         return new TeamMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
@@ -132,7 +132,7 @@ public class Mutation(IMapper mapper)
         [Service] ITeamInvitationService teamInvitationService,
         CancellationToken cancellationToken)
     {
-        await teamInvitationService.InviteMembersByEmailsAsync(input.TeamId, input.Emails, cancellationToken);
+        await teamInvitationService.InviteMembersByEmailsAsync(input.TeamId, input.Emails.ToList(), cancellationToken);
         return new InviteCustomersToJoinTeamPayload { ClientMutationId = input.ClientMutationId };
     }
 

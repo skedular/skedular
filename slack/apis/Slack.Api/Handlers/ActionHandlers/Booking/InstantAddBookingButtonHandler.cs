@@ -90,7 +90,7 @@ public class InstantAddBookingButtonHandler(
                 {
                     Id = randomHelper.Generate(),
                     From = context.From.ToTimestamp(),
-                    To = context.To.ToTimestamp(),
+                    Until = context.To.ToTimestamp(),
                     Type = BookingType.WorkingFromOffice,
                     CustomerId = customerId,
                     OrganizationId = workspace.Organization.Id,
@@ -141,7 +141,7 @@ public class InstantAddBookingButtonHandler(
             {
                 Id = randomHelper.Generate(),
                 From = context.From.ToTimestamp(),
-                To = context.To.ToTimestamp(),
+                Until = context.To.ToTimestamp(),
                 Type = BookingType.WorkingFromOffice,
                 CustomerId = customerId,
                 OrganizationId = workspace.Organization.Id,

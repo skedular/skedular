@@ -27,8 +27,7 @@ public class BookingSubscriber(
             case Type.BookingUpserted:
                 {
                     var booking = mapper.MapTo(@event);
-                    var existingBooking =
-                        await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
+                    var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
                     if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
@@ -44,8 +43,7 @@ public class BookingSubscriber(
             case Type.BookingDeleted:
                 {
                     var booking = mapper.MapTo(@event);
-                    var existingBooking =
-                        await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
+                    var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
                     if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");

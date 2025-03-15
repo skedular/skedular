@@ -16,31 +16,49 @@ import { AddDeskButton } from '@/components/desk/addDesk';
 import { BulkAddDeskButton } from '@/components/desk/bulkAddDesk';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
-import { getOrganizationBookingsBaseLink, getOrganizationLocationDeskBaseLink, getOrganizationLocationRoomBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
+import {
+  getOrganizationBookingsBaseLink,
+  getOrganizationLocationDeskBaseLink,
+  getOrganizationLocationResourceBaseLink,
+  getOrganizationLocationRoomBaseLink,
+  getOrganizationLocationsBaseLink,
+} from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { CustomTagSelector } from '@/components/organization/customTagSelector/';
+import { ZoneSelector } from '@/components/organization/zoneSelector';
+import { Resource } from '@/components/resource';
+import { AddResourceButton } from '@/components/resource/addResource';
+import { ResourceType } from '@/components/resourceType';
 import { Room } from '@/components/room';
 import AddRoomButton from '@/components/room/addRoom/add-room-button';
 import { Search } from '@/components/search';
-import { WeekOpeningHoursDetails, WeekOpeningHoursForm } from '@/components/weekOpeningHoursForm';
+import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { organizationLocation_activateDesksMutation } from '@/queries/__generated__/organizationLocation_activateDesksMutation.graphql';
+import type { organizationLocation_activateResourcesMutation } from '@/queries/__generated__/organizationLocation_activateResourcesMutation.graphql';
 import type { organizationLocation_activateRoomsMutation } from '@/queries/__generated__/organizationLocation_activateRoomsMutation.graphql';
 import type { organizationLocation_addCustomerPreferredDeskMutation } from '@/queries/__generated__/organizationLocation_addCustomerPreferredDeskMutation.graphql';
+import type { organizationLocation_addCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocation_addCustomerPreferredResourceMutation.graphql';
 import type { organizationLocation_addCustomerPreferredRoomMutation } from '@/queries/__generated__/organizationLocation_addCustomerPreferredRoomMutation.graphql';
 import type { organizationLocation_deactivateDesksMutation } from '@/queries/__generated__/organizationLocation_deactivateDesksMutation.graphql';
+import type { organizationLocation_deactivateResourcesMutation } from '@/queries/__generated__/organizationLocation_deactivateResourcesMutation.graphql';
 import type { organizationLocation_deactivateRoomsMutation } from '@/queries/__generated__/organizationLocation_deactivateRoomsMutation.graphql';
 import type { organizationLocation_deleteDesksMutation } from '@/queries/__generated__/organizationLocation_deleteDesksMutation.graphql';
 import type { organizationLocation_deleteLocationMutation } from '@/queries/__generated__/organizationLocation_deleteLocationMutation.graphql';
+import type { organizationLocation_deleteResourcesMutation } from '@/queries/__generated__/organizationLocation_deleteResourcesMutation.graphql';
 import type { organizationLocation_deleteRoomsMutation } from '@/queries/__generated__/organizationLocation_deleteRoomsMutation.graphql';
 import type { organizationLocation_desks_query$key } from '@/queries/__generated__/organizationLocation_desks_query.graphql';
 import type { organizationLocation_desks_refetchableFragment } from '@/queries/__generated__/organizationLocation_desks_refetchableFragment.graphql';
 import type { organizationLocation_query$key } from '@/queries/__generated__/organizationLocation_query.graphql';
 import type { organizationLocation_removeCustomerPreferredDeskMutation } from '@/queries/__generated__/organizationLocation_removeCustomerPreferredDeskMutation.graphql';
+import type { organizationLocation_removeCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocation_removeCustomerPreferredResourceMutation.graphql';
 import type { organizationLocation_removeCustomerPreferredRoomMutation } from '@/queries/__generated__/organizationLocation_removeCustomerPreferredRoomMutation.graphql';
+import type { organizationLocation_resources_query$key } from '@/queries/__generated__/organizationLocation_resources_query.graphql';
+import type { organizationLocation_resources_refetchableFragment } from '@/queries/__generated__/organizationLocation_resources_refetchableFragment.graphql';
 import type { organizationLocation_rooms_query$key } from '@/queries/__generated__/organizationLocation_rooms_query.graphql';
 import type { organizationLocation_rooms_refetchableFragment } from '@/queries/__generated__/organizationLocation_rooms_refetchableFragment.graphql';
 import type { organizationLocation_updateLocationMutation } from '@/queries/__generated__/organizationLocation_updateLocationMutation.graphql';
@@ -60,12 +78,11 @@ import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
-import CustomTagSelector from '../customTagSelector/custom-tag-selector';
-import ZoneSelector from '../zoneSelector/zone-selector';
 import OrganizationLocationLeftSideNavigationMenuContent from './organization-location-left-side-navigation-menu-content';
 
 type Props = {
   rootDataRelay: organizationLocation_query$key;
+  rootDataResourcesRelay: organizationLocation_resources_query$key;
   rootDataDesksRelay: organizationLocation_desks_query$key;
   rootDataRoomsRelay: organizationLocation_rooms_query$key;
   onReloadRequired: () => void;
@@ -78,6 +95,18 @@ type LocationDetails = {
   about: string | null;
   timezone: string;
   physicalAddress: string;
+};
+
+type ResourceTypeDetails = {
+  id: string;
+  name: string | null | undefined;
+  color: string | null | undefined;
+};
+
+type ResourceDetails = {
+  id: string;
+  name: string | null | undefined;
+  color: string | null | undefined;
 };
 
 type DeskDetails = {
@@ -97,11 +126,21 @@ type CustomTagDetails = {
   name: string | null | undefined;
   color: string | null | undefined;
 };
-Room;
+
 type ZoneDetails = {
   id: string;
   name: string | null | undefined;
   color: string | null | undefined;
+};
+
+type ResourceRowType = {
+  id: string;
+  resource: ResourceDetails;
+  resourceType: ResourceTypeDetails;
+  customTags: CustomTagDetails[];
+  zones: ZoneDetails[];
+  status: boolean;
+  preferred: boolean;
 };
 
 type DeskRowType = {
@@ -129,12 +168,15 @@ const locationSchema = object({
   physicalAddress: string().nullable(),
 });
 
-const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRoomsRelay, onReloadRequired, organizationId, locationId }: Props) => {
+const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataDesksRelay, rootDataRoomsRelay, onReloadRequired, organizationId, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
       fragment organizationLocation_query on Query {
         me {
           id
+          preferredResources {
+            uniqueId
+          }
           preferredDesks {
             uniqueId
           }
@@ -198,12 +240,54 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
           }
         }
         openingHoursMinutesStep
-        ...weekOpeningHoursForm_query
+        ...weekOpeningHours_query
         ...customTagSelector_allCustomTags_query
         ...zoneSelector_allZones_query
       }
     `,
     rootDataRelay,
+  );
+
+  const [rootDataResources, refetchResources] = useRefetchableFragment<organizationLocation_resources_refetchableFragment, organizationLocation_resources_query$key>(
+    graphql`
+      fragment organizationLocation_resources_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
+      @refetchable(queryName: "organizationLocation_resources_refetchableFragment") {
+        resources(
+          first: $count
+          after: $cursor
+          where: { locationId: $locationId, nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds }
+        ) @connection(key: "organizationLocation_resources") {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              name
+              inactive
+              requireBookingApproval
+              color
+              customTags {
+                uniqueId
+                name
+                color
+              }
+              zones {
+                uniqueId
+                name
+                color
+              }
+              resourceType {
+                uniqueId
+                name
+                color
+              }
+            }
+          }
+        }
+      }
+    `,
+    rootDataResourcesRelay,
   );
 
   const [rootDataDesks, refetchDesks] = useRefetchableFragment<organizationLocation_desks_refetchableFragment, organizationLocation_desks_query$key>(
@@ -330,6 +414,100 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
                 until
               }
             }
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteResources] = useMutation<organizationLocation_deleteResourcesMutation>(graphql`
+    mutation organizationLocation_deleteResourcesMutation($connectionIds: [ID!]!, $input: DeleteResourcesInput!) {
+      deleteResources(input: $input) {
+        resources {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitActivateResources] = useMutation<organizationLocation_activateResourcesMutation>(graphql`
+    mutation organizationLocation_activateResourcesMutation($input: ActivateResourcesInput!) {
+      activateResources(input: $input) {
+        resources {
+          id
+          name
+          inactive
+          requireBookingApproval
+          color
+          customTags {
+            uniqueId
+            name
+            color
+          }
+          zones {
+            uniqueId
+            name
+            color
+          }
+          resourceType {
+            uniqueId
+            name
+            color
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitDeactivateResources] = useMutation<organizationLocation_deactivateResourcesMutation>(graphql`
+    mutation organizationLocation_deactivateResourcesMutation($input: DeactivateResourcesInput!) {
+      deactivateResources(input: $input) {
+        resources {
+          id
+          name
+          inactive
+          requireBookingApproval
+          color
+          customTags {
+            uniqueId
+            name
+            color
+          }
+          zones {
+            uniqueId
+            name
+            color
+          }
+          resourceType {
+            uniqueId
+            name
+            color
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitAddCustomerPreferredResource] = useMutation<organizationLocation_addCustomerPreferredResourceMutation>(graphql`
+    mutation organizationLocation_addCustomerPreferredResourceMutation($input: AddCustomerPreferredResourceInput!) {
+      addCustomerPreferredResource(input: $input) {
+        customer {
+          id
+          preferredResources {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitRemoveCustomerPreferredResource] = useMutation<organizationLocation_removeCustomerPreferredResourceMutation>(graphql`
+    mutation organizationLocation_removeCustomerPreferredResourceMutation($input: RemoveCustomerPreferredResourceInput!) {
+      removeCustomerPreferredResource(input: $input) {
+        customer {
+          id
+          preferredResources {
+            uniqueId
           }
         }
       }
@@ -586,6 +764,26 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredLocationDetailsFields = makeRequired(locationSchema);
 
+  const [resourceNameSearchText, setResourceNameSearchText] = useState<string>('');
+  const [resourceCustomTagIds, setResourceCustomTagIds] = useState<string[]>([]);
+  const [resourceZoneIds, setResourceZoneIds] = useState<string[]>([]);
+  const [selectedResourceId, setSelectedResourceId] = useState<null | string>(null);
+  const [seledctedResources, setSeledctedResources] = useState<GridRowSelectionModel>([]);
+  const [resourceMoreActionsAnchorEl, setResourceMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const resourceMoreActionsMenuOpen = Boolean(resourceMoreActionsAnchorEl);
+  const [preferredResources, setPreferredResources] = useState(rootData.me?.preferredResources.map(({ uniqueId }) => uniqueId) ?? []);
+
+  const resourceMoreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditResource],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateResource],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateResource],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteResource],
+  ];
+
+  const resourcesConnectionIds = useMemo(() => (rootDataResources.resources ? [rootDataResources.resources.__id] : []), [rootDataResources.resources]);
+  const resources = useMemo(() => (rootDataResources.resources ? rootDataResources.resources.edges.map(({ node }) => node) : []), [rootDataResources.resources]);
+  const resourceDetails = useMemo(() => resources.find((item) => item.id === selectedResourceId), [selectedResourceId, resources]);
+
   const [deskNameSearchText, setDeskNameSearchText] = useState<string>('');
   const [deskCustomTagIds, setDeskCustomTagIds] = useState<string[]>([]);
   const [deskZoneIds, setDeskZoneIds] = useState<string[]>([]);
@@ -594,6 +792,17 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
   const [deskMoreActionsAnchorEl, setDeskMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const deskMoreActionsMenuOpen = Boolean(deskMoreActionsAnchorEl);
   const [preferredDesks, setPreferredDesks] = useState(rootData.me?.preferredDesks.map(({ uniqueId }) => uniqueId) ?? []);
+
+  const deskMoreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditDesk],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateDesk],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateDesk],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteDesk],
+  ];
+
+  const desksConnectionIds = useMemo(() => (rootDataDesks.desks ? [rootDataDesks.desks.__id] : []), [rootDataDesks.desks]);
+  const desks = useMemo(() => (rootDataDesks.desks ? rootDataDesks.desks.edges.map(({ node }) => node) : []), [rootDataDesks.desks]);
+  const deskDetails = useMemo(() => desks.find((item) => item.id === selectedDeskId), [selectedDeskId, desks]);
 
   const [roomNameSearchText, setRoomNameSearchText] = useState<string>('');
   const [roomCustomTagIds, setRoomCustomTagIds] = useState<string[]>([]);
@@ -604,13 +813,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
   const roomMoreActionsMenuOpen = Boolean(roomMoreActionsAnchorEl);
   const [preferredRooms, setPreferredRooms] = useState(rootData.me?.preferredRooms.map(({ uniqueId }) => uniqueId) ?? []);
 
-  const deskMoreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditDesk],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateDesk],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateDesk],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteDesk],
-  ];
-
   const roomMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditRoom],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateRoom],
@@ -618,24 +820,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteRoom],
   ];
 
-  const desksConnectionIds = useMemo(() => (rootDataDesks.desks ? [rootDataDesks.desks.__id] : []), [rootDataDesks.desks]);
-  const desks = useMemo(() => {
-    if (!rootDataDesks.desks) {
-      return [];
-    }
-
-    return rootDataDesks.desks.edges.map(({ node }) => node);
-  }, [rootDataDesks.desks]);
-  const deskDetails = useMemo(() => desks.find((item) => item.id === selectedDeskId), [selectedDeskId, desks]);
-
   const roomsConnectionIds = useMemo(() => (rootDataRooms.rooms ? [rootDataRooms.rooms.__id] : []), [rootDataRooms.rooms]);
-  const rooms = useMemo(() => {
-    if (!rootDataRooms.rooms) {
-      return [];
-    }
-
-    return rootDataRooms.rooms.edges.map(({ node }) => node);
-  }, [rootDataRooms.rooms]);
+  const rooms = useMemo(() => (rootDataRooms.rooms ? rootDataRooms.rooms.edges.map(({ node }) => node) : []), [rootDataRooms.rooms]);
   const roomDetails = useMemo(() => rooms.find((item) => item.id === selectedRoomId), [selectedRoomId, rooms]);
 
   useEffect(() => {
@@ -655,6 +841,24 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
       behavior: 'smooth',
     });
   }, [section]);
+
+  const handleRefetchResources = useCallback(
+    (resourceNameSearchText: string, resourceCustomTagIds: string[], resourceZoneIds: string[]) => {
+      startTransition(() => {
+        refetchResources(
+          {
+            resourceNameSearchText,
+            resourceCustomTagIds,
+            resourceZoneIds,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchResources],
+  );
 
   const handleRefetchDesks = useCallback(
     (deskNameSearchText: string, deskCustomTagIds: string[], deskZoneIds: string[]) => {
@@ -754,6 +958,373 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
 
   const handleCloseClick = () => {
     router.push(getOrganizationLocationsBaseLink(organizationId));
+  };
+
+  const handleResourceNameSearchTextChange = (str: string) => {
+    setResourceNameSearchText(str);
+
+    handleRefetchResources(str, resourceZoneIds, resourceCustomTagIds);
+  };
+
+  const handleResourceCustomTagChanged = (id?: string) => {
+    const newIds = id ? [id] : [];
+    setResourceCustomTagIds(newIds);
+
+    handleRefetchResources(resourceNameSearchText, newIds, resourceZoneIds);
+  };
+
+  const handleResourceZoneTypeChanged = (id?: string) => {
+    const newIds = id ? [id] : [];
+    setResourceZoneIds(newIds);
+
+    handleRefetchResources(resourceNameSearchText, resourceCustomTagIds, newIds);
+  };
+
+  const handleSelectedResourcesChanged = (newRowSelectionModel: GridRowSelectionModel) => {
+    setSeledctedResources(newRowSelectionModel);
+  };
+
+  const handleResourceMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setResourceMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditResource:
+        if (resourceDetails) {
+          router.push(getOrganizationLocationResourceBaseLink(organizationId, locationId, resourceDetails.id));
+          return;
+        }
+
+        break;
+
+      case MoreActionsMenuOptionType.DeactivateResource:
+        handleDeactivateResourceClick();
+        break;
+
+      case MoreActionsMenuOptionType.ActivateResource:
+        handleActivateResourceClick();
+        break;
+
+      case MoreActionsMenuOptionType.DeleteResource:
+        handleRemoveResourceClick();
+        break;
+    }
+  };
+
+  const handleDeactivateResourcesClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Deactivating resources...'} />, infoNotificationOptions);
+
+    commitDeactivateResources({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedResources.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate resources. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Resources deactivated.'} />,
+        });
+        setSeledctedResources([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate resources. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateResourcesClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Activating resources...'} />, infoNotificationOptions);
+
+    commitActivateResources({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedResources.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate resources. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Resources activated.'} />,
+        });
+        setSeledctedResources([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate resources. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveResourcesClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Removing resources...'} />, infoNotificationOptions);
+
+    commitDeleteResources({
+      variables: {
+        connectionIds: resourcesConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedResources.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove resources. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Resources removed.'} />,
+        });
+        setSeledctedResources([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove resources. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleDeactivateResourceClick = () => {
+    if (!resourceDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Deactivating resource...'} />, infoNotificationOptions);
+
+    commitDeactivateResources({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [resourceDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate resource. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Resource deactivated.'} />,
+        });
+        setSeledctedResources([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate resource. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateResourceClick = () => {
+    if (!resourceDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Activating resource...'} />, infoNotificationOptions);
+
+    commitActivateResources({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [resourceDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate resource. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Resource activated.'} />,
+        });
+        setSeledctedResources([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate resource. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveResourceClick = () => {
+    if (!resourceDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={'Removing resource...'} />, infoNotificationOptions);
+
+    commitDeleteResources({
+      variables: {
+        connectionIds: resourcesConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: [resourceDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove resource. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Resource removed.'} />,
+        });
+        setSeledctedResources([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove resource. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleSetAsPreferredResourceClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const resourceDetails = resources.find((item) => item.id === id);
+    if (!resourceDetails) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Setting resource '${resourceDetails.name}' as your preferred resource...`} />, infoNotificationOptions);
+
+    commitAddCustomerPreferredResource({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          resourceId: resourceDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to set resource '${resourceDetails.name}' as your preferred resource. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Resource '${resourceDetails.name}' has been set as the preferred resource.`} />,
+        });
+
+        setPreferredResources(preferredResources.concat([resourceDetails.id]));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to set resource '${resourceDetails.name}' as your preferred resource. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveAsPreferredResourceClicked = (id: string) => {
+    if (!rootData.me) {
+      return;
+    }
+
+    const resourceDetails = resources.find((item) => item.id === id);
+    if (!resourceDetails) {
+      return;
+    }
+    if (!rootData.me) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Removing resource '${resourceDetails.name}' as your preferred resource...`} />, infoNotificationOptions);
+
+    commitRemoveCustomerPreferredResource({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          resourceId: resourceDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove the resource '${resourceDetails.name}' as your preferred resource. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Resource '${resourceDetails.name}' has been removed as your preferred resource.`} />,
+        });
+
+        setPreferredResources(preferredResources.filter((item) => item !== resourceDetails.id));
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove the resource '${resourceDetails.name}' as your preferred resource. Error: ${error.message}.`} />,
+        });
+      },
+    });
   };
 
   const handleDeskNameSearchTextChange = (str: string) => {
@@ -1580,7 +2151,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
             about: location.about,
             timezone: location.timezone,
             physicalAddress: location.physicalAddress,
-            openingHours: location.openingHours,
+            openingHours: {
+              weekOpeningHours,
+            },
           },
         },
       },
@@ -1590,6 +2163,115 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
   if (!rootData.location) {
     return <></>;
   }
+
+  const resourceRows: ResourceRowType[] = resources.map((resource) => ({
+    id: resource.id,
+    resource,
+    resourceType: { id: resource.resourceType.uniqueId, name: resource.resourceType.name, color: resource.resourceType.color },
+    customTags: resource.customTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
+    zones: resource.zones.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
+    status: !resource.inactive,
+    preferred: preferredResources.includes(resource.id),
+  }));
+
+  const resourceColumns: GridColDef<(typeof resourceRows)[number]>[] = [
+    {
+      field: 'resource',
+      headerName: 'Name',
+      editable: false,
+      renderCell: (params) => <Resource resource={params.value} />,
+      display: 'flex',
+      minWidth: 200,
+    },
+    {
+      field: 'resourceType',
+      headerName: 'Type',
+      editable: false,
+      renderCell: (params) => <ResourceType resourceType={params.value} />,
+      display: 'flex',
+      minWidth: 50,
+    },
+    {
+      field: 'customTags',
+      headerName: 'Tags',
+      editable: false,
+      renderCell: (params) => <CustomTags customTags={params.value} hideIcon />,
+      display: 'flex',
+      minWidth: 250,
+    },
+    {
+      field: 'zones',
+      headerName: 'Zones',
+      editable: false,
+      renderCell: (params) => <Zones zones={params.value} hideIcon />,
+      display: 'flex',
+      minWidth: 250,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      editable: false,
+      renderCell: (params) => (
+        <StackRow>
+          {params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="Active" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
+            </StackRow>
+          )}
+          {!params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="Inactive" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
+            </StackRow>
+          )}
+        </StackRow>
+      ),
+      display: 'flex',
+    },
+    {
+      field: 'preferred',
+      headerName: 'Preferred?',
+      editable: false,
+      renderCell: (params) => {
+        const id = params.id as string;
+        if (params.value) {
+          return (
+            <IconButton onClick={() => handleRemoveAsPreferredResourceClicked(id)}>
+              <PreferredIcon />
+            </IconButton>
+          );
+        }
+
+        return (
+          <IconButton onClick={() => handleSetAsPreferredResourceClicked(id)}>
+            <NotPreferredIcon />
+          </IconButton>
+        );
+      },
+      display: 'flex',
+    },
+    {
+      field: 'moreActions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setSelectedResourceId(params.id as string);
+              setResourceMoreActionsAnchorEl(event.currentTarget);
+            }}
+          >
+            <EllipseMenuIcon />
+          </IconButton>
+        </Box>
+      ),
+      flex: 1,
+    },
+  ];
 
   const deskRows: DeskRowType[] = desks.map((desk) => ({
     id: desk.id,
@@ -1875,7 +2557,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
               <Divider />
             </StackColumn>
 
-            <WeekOpeningHoursForm
+            <WeekOpeningHours
               rootDataRelay={rootData}
               defaultValue={{
                 monday: location.openingHours.weekOpeningHours.monday,
@@ -1888,6 +2570,105 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
               }}
               onWeekOpeningHoursDetailUpdateClick={handleLocationOpeningHoursUpdateClick}
             />
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['manage-resources'] = divElement;
+              }}
+            >
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Manage Resources" />
+                  <BodyIconTypography label="Manage your location resources details" />
+                </Grid>
+
+                <Grid>
+                  <AddResourceButton onReloadRequired={onReloadRequired} organizationId={organizationId} locationId={locationId} connectionIds={desksConnectionIds} />
+                </Grid>
+              </GridContainer>
+              <Divider />
+            </StackColumn>
+
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+              <ZoneSelector rootDataRelay={rootData} onChange={handleResourceZoneTypeChanged} />
+              <CustomTagSelector rootDataRelay={rootData} onChange={handleResourceCustomTagChanged} />
+              <PushToRight />
+              <Search size="small" placeholder="Search for resources" defaultValue={resourceNameSearchText} onChange={handleResourceNameSearchTextChange} />
+            </GridContainer>
+
+            {seledctedResources.length > 0 && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                <Box
+                  sx={{
+                    backgroundColor: 'white',
+                    padding: defaultGridActionPadding,
+                    border: 1,
+                    borderColor: (theme) => theme.palette.divider,
+                    borderRadius: 2,
+                    flexGrow: 1,
+                  }}
+                >
+                  <StackRow sx={{ alignItems: 'center' }}>
+                    <SmallIconTypography label={`${seledctedResources.length} records selected`} />
+                    <PushToRight />
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateResourcesClick} sx={defaultButtonStyle}>
+                      Deactivate Resource
+                    </Button>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateResourcesClick} sx={defaultButtonStyle}>
+                      Activate Resource
+                    </Button>
+                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveResourcesClick} sx={{ textTransform: 'none' }}>
+                      Remove Resource
+                    </Button>
+                  </StackRow>
+                </Box>
+              </StackRow>
+            )}
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedResources}
+                onRowSelectionModelChange={handleSelectedResourcesChanged}
+                rows={resourceRows}
+                columns={resourceColumns}
+                hideFooterPagination={resourceRows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: resourceRows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No resource found' }}
+              />
+            </StackRow>
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['manage-location'] = divElement;
+              }}
+            >
+              <SectionIconTypography label="Manage" />
+              <BodyIconTypography label="Remove your location" />
+              <Divider />
+            </StackColumn>
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+              <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationClicked} sx={{ textTransform: 'none' }}>
+                Remove Location
+              </Button>
+            </StackRow>
 
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
@@ -2074,6 +2855,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataDesksRelay, rootDataRooms
         </Box>
       </Box>
 
+      <MoreActionsMenu
+        anchorEl={resourceMoreActionsAnchorEl}
+        open={resourceMoreActionsMenuOpen}
+        onMenuItemClick={handleResourceMoreActionsMenuItemClick}
+        options={resourceMoreActionsOption}
+      />
       <MoreActionsMenu anchorEl={deskMoreActionsAnchorEl} open={deskMoreActionsMenuOpen} onMenuItemClick={handleDeskMoreActionsMenuItemClick} options={deskMoreActionsOption} />
       <MoreActionsMenu anchorEl={roomMoreActionsAnchorEl} open={roomMoreActionsMenuOpen} onMenuItemClick={handleRoomMoreActionsMenuItemClick} options={roomMoreActionsOption} />
     </>

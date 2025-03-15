@@ -23,8 +23,7 @@ public class BookingSubscriber(
                     var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
                     if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Booking event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -39,8 +38,7 @@ public class BookingSubscriber(
                     var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
                     if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Booking event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }

@@ -162,7 +162,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             From = booking.From.ToDateTimeOffset(),
-            To = booking.To.ToDateTimeOffset(),
+            Until = booking.Until.ToDateTimeOffset(),
             Location = new Shared.Models.Location { Id = booking.LocationId },
             Desks = booking.DeskIds.Select(item => new Desk { Id = item }).ToList(),
             Rooms = booking.RoomIds.Select(item => new Room { Id = item }).ToList()
@@ -228,7 +228,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.From = src.From;
-        dest.To = src.To;
+        dest.To = src.Until;
         dest.Location = location;
         dest.Desks = desks;
         dest.Rooms = rooms;
@@ -359,7 +359,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            IsOpeningHoursOverriden = src.IsOpeningHoursOverriden ?? false,
+            IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
             Location = location
         };

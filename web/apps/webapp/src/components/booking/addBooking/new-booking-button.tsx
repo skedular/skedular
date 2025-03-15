@@ -4,7 +4,7 @@ import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { coal } from '@/libs/theme';
-import { startOfDay } from '@/libs/utils';
+import { endOfDay, startOfDay } from '@/libs/utils';
 import type { newBookingButton_rootQuery } from '@/queries/__generated__/newBookingButton_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/system';
@@ -38,6 +38,8 @@ const RootQuery = graphql`
     $locationExists: Boolean!
     $dateToGetAvailableDesks: DateTime!
     $dateToGetAvailableRooms: DateTime!
+    $dateFromToGetAvailableResources: DateTime!
+    $dateUntilToGetAvailableResources: DateTime!
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $customerId: String!
     $customerExists: Boolean!
@@ -49,6 +51,7 @@ const RootQuery = graphql`
     ...newBookingDialog_customerTeams_query
     ...newBookingDialog_availableLocationDesks_query
     ...newBookingDialog_availableLocationRooms_query
+    ...newBookingDialog_availableResources_query
   }
 `;
 
@@ -107,6 +110,7 @@ const NewBookingButton = ({
         rootDataOrganizationMembersRelay={rootData}
         rootDataAvailableLocationDesksRelay={rootData}
         rootDataAvailableLocationRoomsRelay={rootData}
+        rootDataAvailableResourcesRelay={rootData}
         connectionIds={connectionIds ?? []}
         isDialogOpen={isDialogOpen}
         onAddClicked={handleAddClicked}
@@ -153,15 +157,18 @@ const NewBookingButtonWithRelay = ({
   const [queryReference, loadQuery] = useQueryLoader<newBookingButton_rootQuery>(RootQuery);
 
   useEffect(() => {
-    const date = startOfDay().toISOString();
+    const startDate = startOfDay().toISOString();
+    const endDate = endOfDay(startOfDay()).toISOString();
 
     loadQuery(
       {
         organizationId,
         locationId: defaultLocationId ?? '',
         locationExists: false,
-        dateToGetAvailableDesks: date,
-        dateToGetAvailableRooms: date,
+        dateToGetAvailableDesks: startDate,
+        dateToGetAvailableRooms: startDate,
+        dateFromToGetAvailableResources: startDate,
+        dateUntilToGetAvailableResources: endDate,
         customerId: '',
         customerExists: false,
         teamsSortingValues: [

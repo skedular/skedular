@@ -91,15 +91,10 @@ public class Query(IMapper mapper)
         string? organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationService locationService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        return mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, cancellationToken));
-    }
+        CancellationToken cancellationToken) =>
+        await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
+            ? mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, cancellationToken))
+            : null;
 
     [UseResolverScope]
     public async Task<LocationMemberConnection?> LocationMembersAsync(
@@ -181,11 +176,8 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<DeskDetails?> DeskAsync(string id, [Service] IDeskService deskService, CancellationToken cancellationToken)
-    {
-        var desk = await deskService.GetByIdAsync(id, cancellationToken);
-        return mapper.MapTo(desk);
-    }
+    public async Task<DeskDetails?> DeskAsync(string id, [Service] IDeskService deskService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await deskService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public async Task<LocationAnalytics?> LocationAnalyticsAsync(
@@ -273,11 +265,8 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<RoomDetails?> RoomAsync(string id, [Service] IRoomService roomService, CancellationToken cancellationToken)
-    {
-        var room = await roomService.GetByIdAsync(id, cancellationToken);
-        return mapper.MapTo(room);
-    }
+    public async Task<RoomDetails?> RoomAsync(string id, [Service] IRoomService roomService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await roomService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public async Task<ResourceConnection?> ResourcesAsync(
@@ -320,9 +309,6 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<ResourceDetails?> ResourceAsync(string id, [Service] IResourceService resourceService, CancellationToken cancellationToken)
-    {
-        var resource = await resourceService.GetByIdAsync(id, cancellationToken);
-        return mapper.MapTo(resource);
-    }
+    public async Task<ResourceDetails?> ResourceAsync(string id, [Service] IResourceService resourceService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await resourceService.GetByIdAsync(id, cancellationToken));
 }

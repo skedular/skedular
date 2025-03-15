@@ -14,5 +14,4 @@ public static class Extensions
         services
             .AddHostedService<LocationDailyDeskCountRecorderJob>()
             .AddHostedService<LocationDailyRoomCountRecorderJob>();
-//            .AddHostedService<DeskRoomToResourceSyncJob>();
 }

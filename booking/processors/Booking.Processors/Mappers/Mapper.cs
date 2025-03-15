@@ -82,6 +82,7 @@ public interface IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
         ICollection<Shared.Database.Entities.Team> preferredTeams,
+        ICollection<Resource> preferredResources,
         ICollection<Desk> preferredDesks,
         ICollection<Room> preferredRooms,
         ICollection<OrganizationTag> preferredOrganizationTags);
@@ -93,6 +94,7 @@ public interface IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
         ICollection<Shared.Database.Entities.Team> preferredTeams,
+        ICollection<Resource> preferredResources,
         ICollection<Desk> preferredDesks,
         ICollection<Room> preferredRooms,
         ICollection<OrganizationTag> preferredOrganizationTags);
@@ -136,6 +138,8 @@ public class Mapper : IMapper
             {
                 Id = item.Id, Organization = string.IsNullOrWhiteSpace(item.OrganizationId) ? null : new Organization { Id = item.OrganizationId }
             }).ToList(),
+            PreferredResources = customer.PreferredResources.Select(item =>
+                new Shared.Models.Resource { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
             PreferredDesks = customer.PreferredDesks.Select(item =>
                 new Shared.Models.Desk { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
             PreferredRooms = customer.PreferredRooms.Select(item =>
@@ -258,6 +262,7 @@ public class Mapper : IMapper
             Inactive = item.Inactive,
             RequireBookingApproval = item.RequireBookingApproval,
             Color = item.Color,
+            IsAvailableHoursOverridden = item.IsAvailableHoursOverridden,
             AvailableHours = item.AvailableHours is null ? null : MapTo(item.AvailableHours),
             OrganizationTags = organizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
             Location = location
@@ -451,6 +456,7 @@ public class Mapper : IMapper
         dest.Inactive = src.Inactive;
         dest.RequireBookingApproval = src.RequireBookingApproval;
         dest.Color = src.Color;
+        dest.IsAvailableHoursOverridden = src.IsAvailableHoursOverridden;
         dest.AvailableHours = src.AvailableHours;
         dest.Location = location;
         dest.OrganizationTags = organizationTags;
@@ -510,6 +516,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
         ICollection<Shared.Database.Entities.Team> preferredTeams,
+        ICollection<Resource> preferredResources,
         ICollection<Desk> preferredDesks,
         ICollection<Room> preferredRooms,
         ICollection<OrganizationTag> preferredOrganizationTags) =>
@@ -519,6 +526,7 @@ public class Mapper : IMapper
             defaultOrganization,
             preferredLocations,
             preferredTeams,
+            preferredResources,
             preferredDesks,
             preferredRooms,
             preferredOrganizationTags);
@@ -530,6 +538,7 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
         ICollection<Shared.Database.Entities.Team> preferredTeams,
+        ICollection<Resource> preferredResources,
         ICollection<Desk> preferredDesks,
         ICollection<Room> preferredRooms,
         ICollection<OrganizationTag> preferredOrganizationTags)
@@ -549,6 +558,7 @@ public class Mapper : IMapper
         dest.Identities = identities;
         dest.DefaultOrganization = defaultOrganization;
         dest.PreferredLocations = preferredLocations;
+        dest.PreferredResources = preferredResources;
         dest.PreferredDesks = preferredDesks;
         dest.PreferredRooms = preferredRooms;
         dest.PreferredTeams = preferredTeams;

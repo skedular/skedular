@@ -857,7 +857,7 @@ namespace Location.Shared.Database.Migrations
                     b.Property<bool>("Inactive")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("IsOpeningHoursOverriden")
+                    b.Property<bool?>("IsAvailableHoursOverridden")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
@@ -889,7 +889,7 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasIndex("Inactive");
 
-                    b.HasIndex("IsOpeningHoursOverriden");
+                    b.HasIndex("IsAvailableHoursOverridden");
 
                     b.HasIndex("LocationId");
 

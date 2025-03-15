@@ -1,8 +1,9 @@
 import { BodyIconTypography } from '@/components/commons';
-import { DeskIcon, EditIcon, OpeningHoursIcon, RoomIcon } from '@/components/icons';
+import { DeskIcon, EditIcon, OpeningHoursIcon, ResourceIcon, RoomIcon } from '@/components/icons';
 import {
   getOrganizationLocationManageDesksBaseLink,
   getOrganizationLocationManageLocationBaseLink,
+  getOrganizationLocationManageResourcesBaseLink,
   getOrganizationLocationManageRoomsBaseLink,
   getOrganizationLocationOpeningHoursBaseLink,
   getOrganizationLocationSetupBaseLink,
@@ -68,6 +69,7 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const setupLink = getOrganizationLocationSetupBaseLink(organizationId, locationId);
   const openingHoursLink = getOrganizationLocationOpeningHoursBaseLink(organizationId, locationId);
+  const manageResourcesLink = getOrganizationLocationManageResourcesBaseLink(organizationId, locationId);
   const manageDesksLink = getOrganizationLocationManageDesksBaseLink(organizationId, locationId);
   const manageRoomsLink = getOrganizationLocationManageRoomsBaseLink(organizationId, locationId);
   const manageLocationLink = getOrganizationLocationManageLocationBaseLink(organizationId, locationId);
@@ -113,6 +115,28 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
                 startElement={!hideIcons && <OpeningHoursIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === openingHoursLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={manageResourcesLink}>
+          <ListItemButton selected={fullPath === manageResourcesLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageResourcesLink) }}>
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <ResourceIcon color="inherit" excludeTooltip />}
+                invertDefaultColor={fullPath === manageResourcesLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Manage Resources"
+                startElement={!hideIcons && <ResourceIcon color="inherit" excludeTooltip />}
+                spacing={3}
+                invertDefaultColor={fullPath === manageResourcesLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

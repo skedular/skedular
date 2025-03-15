@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<37b3a406488f2ab879e997d5815a50b8>>
+ * @generated SignedSource<<fe932aaada9cd3623582d884aa9e4a6e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,20 +10,20 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type weekOpeningHoursForm_query$data = {
+export type weekOpeningHours_query$data = {
   readonly openingHoursMinutesStep: number;
-  readonly " $fragmentType": "weekOpeningHoursForm_query";
+  readonly " $fragmentType": "weekOpeningHours_query";
 };
-export type weekOpeningHoursForm_query$key = {
-  readonly " $data"?: weekOpeningHoursForm_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"weekOpeningHoursForm_query">;
+export type weekOpeningHours_query$key = {
+  readonly " $data"?: weekOpeningHours_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"weekOpeningHours_query">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "weekOpeningHoursForm_query",
+  "name": "weekOpeningHours_query",
   "selections": [
     {
       "alias": null,
@@ -37,6 +37,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b3328dd902243136cb2bafaeab117922";
+(node as any).hash = "6acd92c93544bbc76455b92dab2b54ee";
 
 export default node;

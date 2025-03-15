@@ -8,4 +8,5 @@ public class ResourceBookingSlot : ModelBase
     public bool Available { get; set; }
     public Resource Resource { get; set; }
     public ICollection<Customer> Customers { get; set; }
+    public ICollection<Booking> Bookings { get; set; } = [];
 }
