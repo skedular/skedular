@@ -192,9 +192,7 @@ public class OrganizationMemberService(
             mapper.MapTo(organizations.Single(organization => organization.Id == item.Organization.Id)))).ToList();
     }
 
-    public async Task<ICollection<OrganizationMember>> RemoveAsync(
-        ICollection<string> ids,
-        CancellationToken cancellationToken)
+    public async Task<ICollection<OrganizationMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var distinctOrganizationMemberIds = ids.Distinct().ToList();

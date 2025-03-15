@@ -24,4 +24,6 @@ public static class LinqExtensions
             action(item);
         }
     }
+
+    public static ICollection<T> ToSafeCollection<T>(this IEnumerable<T>? list) => list is null ? [] : list.ToList();
 }

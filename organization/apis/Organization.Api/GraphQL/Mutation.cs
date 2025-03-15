@@ -75,7 +75,7 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
-        var organizationMembers = await organizationMemberService.ChangeStatusAsync(input.Ids, input.Status, cancellationToken);
+        var organizationMembers = await organizationMemberService.ChangeStatusAsync(input.Ids.ToList(), input.Status, cancellationToken);
         return new OrganizationMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
@@ -88,7 +88,7 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
-        var organizationMembers = await organizationMemberService.RemoveAsync(input.Ids, cancellationToken);
+        var organizationMembers = await organizationMemberService.RemoveAsync(input.Ids.ToList(), cancellationToken);
         return new OrganizationMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
@@ -101,7 +101,7 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationInvitationService organizationInvitationService,
         CancellationToken cancellationToken)
     {
-        await organizationInvitationService.InviteMembersByEmailsAsync(input.OrganizationId, input.Emails, cancellationToken);
+        await organizationInvitationService.InviteMembersByEmailsAsync(input.OrganizationId, input.Emails.ToList(), cancellationToken);
         return new InviteCustomersToJoinOrganizationPayload { ClientMutationId = input.ClientMutationId };
     }
 
@@ -181,7 +181,7 @@ public class Mutation(IMapper mapper)
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
     {
-        var tags = await tagService.DeleteAsync(input.Ids, cancellationToken);
+        var tags = await tagService.DeleteAsync(input.Ids.ToList(), cancellationToken);
         return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray()! };
     }
 
@@ -218,7 +218,7 @@ public class Mutation(IMapper mapper)
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
     {
-        var tags = await tagService.DeleteAsync(input.Ids, cancellationToken);
-        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray()! };
+        var tags = await tagService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
     }
 }

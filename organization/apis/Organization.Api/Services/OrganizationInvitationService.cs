@@ -15,11 +15,7 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationInvitationService
 {
-    Task InviteMembersByEmailsAsync(
-        string organizationId,
-        ICollection<string> emails,
-        CancellationToken cancellationToken);
-
+    Task InviteMembersByEmailsAsync(string organizationId, ICollection<string> emails, CancellationToken cancellationToken);
     Task AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
@@ -35,10 +31,7 @@ public class OrganizationInvitationService(
     INotificationOutboxPublisher notificationOutboxPublisher,
     IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationInvitationService
 {
-    public async Task InviteMembersByEmailsAsync(
-        string organizationId,
-        ICollection<string> emails,
-        CancellationToken cancellationToken)
+    public async Task InviteMembersByEmailsAsync(string organizationId, ICollection<string> emails, CancellationToken cancellationToken)
     {
         if (emails.Count == 0)
         {

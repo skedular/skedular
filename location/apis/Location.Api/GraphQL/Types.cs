@@ -68,7 +68,7 @@ public class InviteCustomersToJoinLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("locationId")] public required string LocationId { get; set; }
-    [GraphQLName("emails")] public ICollection<string> Emails { get; set; } = [];
+    [GraphQLName("emails")] public IEnumerable<string> Emails { get; set; } = [];
 }
 
 [GraphQLName("InviteCustomersToJoinLocationPayload")]
@@ -83,12 +83,12 @@ public class LocationAnalytics
     [GraphQLName("name")] public required string Name { get; set; }
 
     [GraphQLName("desksOccupancyPercentage")]
-    public ICollection<DesksOccupancyPercentage> DesksOccupancyPercentage { get; set; } = [];
+    public IEnumerable<DesksOccupancyPercentage> DesksOccupancyPercentage { get; set; } = [];
 
     [GraphQLName("roomsOccupancyPercentage")]
-    public ICollection<RoomsOccupancyPercentage> RoomsOccupancyPercentage { get; set; } = [];
+    public IEnumerable<RoomsOccupancyPercentage> RoomsOccupancyPercentage { get; set; } = [];
 
-    [GraphQLName("dailyBookingsTotals")] public ICollection<LocationDailyBookingsTotal> DailyBookingsTotals { get; set; } = [];
+    [GraphQLName("dailyBookingsTotals")] public IEnumerable<LocationDailyBookingsTotal> DailyBookingsTotals { get; set; } = [];
 }
 
 [GraphQLName("LocationConnection")]
@@ -133,12 +133,13 @@ public class LocationDetails : Node
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
-    [GraphQLName("resources")] public ICollection<ResourceDetails> Resources { get; set; } = [];
-    [GraphQLName("desks")] public ICollection<DeskDetails> Desks { get; set; } = [];
-    [GraphQLName("rooms")] public ICollection<RoomDetails> Rooms { get; set; } = [];
+    [GraphQLName("resources")] public IEnumerable<ResourceDetails> Resources { get; set; } = [];
+    [GraphQLName("desks")] public IEnumerable<DeskDetails> Desks { get; set; } = [];
+    [GraphQLName("rooms")] public IEnumerable<RoomDetails> Rooms { get; set; } = [];
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
-    [GraphQLName("customTags")] public ICollection<OrganizationTagDetails> CustomTags { get; set; } = [];
-    [GraphQLName("zones")] public ICollection<OrganizationTagDetails> Zones { get; set; } = [];
+    [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
+    [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
+    [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -215,10 +216,10 @@ public class OrganizationTagDetails
 public class LocationWhereInput
 {
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
-    [GraphQLName("locationIds")] public ICollection<string>? LocationIds { get; set; } = [];
+    [GraphQLName("locationIds")] public IEnumerable<string>? LocationIds { get; set; } = [];
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("zoneIds")] public ICollection<string>? ZoneIds { get; set; }
-    [GraphQLName("customTagIds")] public ICollection<string>? CustomTagIds { get; set; }
+    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
+    [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
 }
 
 [GraphQLName("RejectInvitationToJoinLocationInput")]
@@ -266,8 +267,8 @@ public class AddDeskInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("locationId")] public required string LocationId { get; set; }
-    [GraphQLName("customTagIds")] public ICollection<string> CustomTagIds { get; set; } = [];
-    [GraphQLName("zoneIds")] public ICollection<string> ZoneIds { get; set; } = [];
+    [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
+    [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
     [GraphQLName("color")] public string? Color { get; set; }
 }
 
@@ -284,8 +285,8 @@ public class UpdateDeskInput
 
     [GraphQLName("color")] public string? Color { get; set; }
 
-    [GraphQLName("customTagIds")] public ICollection<string> CustomTagIds { get; set; } = [];
-    [GraphQLName("zoneIds")] public ICollection<string> ZoneIds { get; set; } = [];
+    [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
+    [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
 }
 
 [GraphQLName("DeleteDeskInput")]
@@ -299,28 +300,28 @@ public class DeleteDeskInput
 public class ActivateDesksInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required ICollection<string> Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("DeactivateDesksInput")]
 public class DeactivateDesksInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required ICollection<string> Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("DeleteDesksInput")]
 public class DeleteDesksInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required ICollection<string> Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("DesksPayload")]
 public class DesksPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("desks")] public ICollection<DeskDetails> Desks { get; set; } = [];
+    [GraphQLName("desks")] public IEnumerable<DeskDetails> Desks { get; set; } = [];
 }
 
 [GraphQLName("BulkAddDeskInput")]
@@ -331,8 +332,8 @@ public class BulkAddDeskInput
     [GraphQLName("namePrefix")] public string? NamePrefix { get; set; }
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("count")] public int Count { get; set; }
-    [GraphQLName("customTagIds")] public ICollection<string> CustomTagIds { get; set; } = [];
-    [GraphQLName("zoneIds")] public ICollection<string> ZoneIds { get; set; } = [];
+    [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
+    [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
     [GraphQLName("deactivated")] public bool Deactivated { get; set; }
     [GraphQLName("color")] public string? Color { get; set; }
 
@@ -344,7 +345,7 @@ public class BulkAddDeskInput
 public class BulkDeskPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("desks")] public ICollection<DeskDetails> Desks { get; set; } = [];
+    [GraphQLName("desks")] public IEnumerable<DeskDetails> Desks { get; set; } = [];
 }
 
 [GraphQLName("DeskConnection")]
@@ -360,8 +361,8 @@ public class DeskDetails : Node
     public bool RequireBookingApproval { get; set; }
 
     [GraphQLName("color")] public string? Color { get; set; }
-    [GraphQLName("customTags")] public ICollection<OrganizationTagDetails> CustomTags { get; set; } = [];
-    [GraphQLName("zones")] public ICollection<OrganizationTagDetails> Zones { get; set; } = [];
+    [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
+    [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -387,8 +388,8 @@ public class DeskWhereInput
 {
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("zoneIds")] public ICollection<string>? ZoneIds { get; set; }
-    [GraphQLName("customTagIds")] public ICollection<string>? CustomTagIds { get; set; }
+    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
+    [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
 }
 
 [GraphQLName("DesksOccupancyPercentage")]
@@ -405,8 +406,8 @@ public class AddRoomInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("locationId")] public required string LocationId { get; set; }
-    [GraphQLName("customTagIds")] public ICollection<string> CustomTagIds { get; set; } = [];
-    [GraphQLName("zoneIds")] public ICollection<string> ZoneIds { get; set; } = [];
+    [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
+    [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
     [GraphQLName("color")] public string? Color { get; set; }
 }
 
@@ -423,8 +424,8 @@ public class UpdateRoomInput
 
     [GraphQLName("color")] public string? Color { get; set; }
 
-    [GraphQLName("customTagIds")] public ICollection<string> CustomTagIds { get; set; } = [];
-    [GraphQLName("zoneIds")] public ICollection<string> ZoneIds { get; set; } = [];
+    [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
+    [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
 }
 
 [GraphQLName("DeleteRoomInput")]
@@ -438,28 +439,28 @@ public class DeleteRoomInput
 public class ActivateRoomsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required ICollection<string> Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("DeactivateRoomsInput")]
 public class DeactivateRoomsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required ICollection<string> Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("DeleteRoomsInput")]
 public class DeleteRoomsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required ICollection<string> Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("RoomsPayload")]
 public class RoomsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("rooms")] public ICollection<RoomDetails> Rooms { get; set; } = [];
+    [GraphQLName("rooms")] public IEnumerable<RoomDetails> Rooms { get; set; } = [];
 }
 
 [GraphQLName("RoomConnection")]
@@ -475,8 +476,8 @@ public class RoomDetails : Node
     public bool RequireBookingApproval { get; set; }
 
     [GraphQLName("color")] public string? Color { get; set; }
-    [GraphQLName("customTags")] public ICollection<OrganizationTagDetails> CustomTags { get; set; } = [];
-    [GraphQLName("zones")] public ICollection<OrganizationTagDetails> Zones { get; set; } = [];
+    [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
+    [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -502,8 +503,8 @@ public class RoomWhereInput
 {
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("zoneIds")] public ICollection<string>? ZoneIds { get; set; }
-    [GraphQLName("customTagIds")] public ICollection<string>? CustomTagIds { get; set; }
+    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
+    [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
 }
 
 [GraphQLName("RoomsOccupancyPercentage")]
@@ -520,8 +521,8 @@ public class AddResourceInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("locationId")] public required string LocationId { get; set; }
-    [GraphQLName("customTagIds")] public ICollection<string> CustomTagIds { get; set; } = [];
-    [GraphQLName("zoneIds")] public ICollection<string> ZoneIds { get; set; } = [];
+    [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
+    [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
     [GraphQLName("color")] public string? Color { get; set; }
 
     [GraphQLName("organizationResourceTypeId")]
@@ -541,8 +542,8 @@ public class UpdateResourceInput
 
     [GraphQLName("color")] public string? Color { get; set; }
 
-    [GraphQLName("customTagIds")] public ICollection<string> CustomTagIds { get; set; } = [];
-    [GraphQLName("zoneIds")] public ICollection<string> ZoneIds { get; set; } = [];
+    [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
+    [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
 
     [GraphQLName("organizationResourceTypeId")]
     public required string OrganizationResourceTypeId { get; set; }
@@ -559,28 +560,28 @@ public class DeleteResourceInput
 public class ActivateResourcesInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required ICollection<string> Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("DeactivateResourcesInput")]
 public class DeactivateResourcesInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required ICollection<string> Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("DeleteResourcesInput")]
 public class DeleteResourcesInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required ICollection<string> Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("ResourcesPayload")]
 public class ResourcesPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("resources")] public ICollection<ResourceDetails> Resources { get; set; } = [];
+    [GraphQLName("resources")] public IEnumerable<ResourceDetails> Resources { get; set; } = [];
 }
 
 [GraphQLName("ResourceConnection")]
@@ -596,8 +597,8 @@ public class ResourceDetails : Node
     public bool RequireBookingApproval { get; set; }
 
     [GraphQLName("color")] public string? Color { get; set; }
-    [GraphQLName("customTags")] public ICollection<OrganizationTagDetails> CustomTags { get; set; } = [];
-    [GraphQLName("zones")] public ICollection<OrganizationTagDetails> Zones { get; set; } = [];
+    [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
+    [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
 
     [GraphQLName("isOpeningHoursOverriden")]
     public bool IsOpeningHoursOverriden { get; set; }
@@ -628,8 +629,8 @@ public class ResourceWhereInput
 {
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("zoneIds")] public ICollection<string>? ZoneIds { get; set; }
-    [GraphQLName("customTagIds")] public ICollection<string>? CustomTagIds { get; set; }
+    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
+    [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
 }
 
 [GraphQLName("ResourcesOccupancyPercentage")]
@@ -671,10 +672,10 @@ public class WeekOpeningHours
 public class OpeningHours
 {
     [GraphQLName("weekOpeningHours")] public WeekOpeningHours WeekOpeningHours { get; set; }
-    [GraphQLName("closedDates")] public ICollection<DateTimeOffset> ClosedDates { get; set; }
+    [GraphQLName("closedDates")] public IEnumerable<DateTimeOffset> ClosedDates { get; set; }
 
     [GraphQLName("datesWithVariedOpeningHours")]
-    public ICollection<VariedDateOpeningHours> DatesWithVariedOpeningHours { get; set; }
+    public IEnumerable<VariedDateOpeningHours> DatesWithVariedOpeningHours { get; set; }
 }
 
 [GraphQLName("UpdateLocationOpeningHoursInput")]

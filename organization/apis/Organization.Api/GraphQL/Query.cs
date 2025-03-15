@@ -1,6 +1,7 @@
 using System.Reflection;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
+using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -42,7 +43,7 @@ public class Query(IMapper mapper)
         mapper.MapTo(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken))!;
 
     [UseResolverScope]
-    public OrganizationMemberRole[] OrganizationMemberRoles() =>
+    public IEnumerable<OrganizationMemberRole> OrganizationMemberRoles() =>
     [
         OrganizationMemberRole.Owner,
         OrganizationMemberRole.Administrator,
@@ -50,10 +51,10 @@ public class Query(IMapper mapper)
     ];
 
     [UseResolverScope]
-    public async Task<OrganizationIndustryMainCategoryReferenceDetails[]> OrganizationIndustryMainCategoriesReferencesAsync(
+    public async Task<IEnumerable<OrganizationIndustryMainCategoryReferenceDetails>> OrganizationIndustryMainCategoriesReferencesAsync(
         [Service] IIndustryMainCategoryService industryMainCategoryService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken)).ToArray();
+        mapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> OrganizationAsync(
@@ -69,7 +70,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         OrganizationWhereInput where,
-        OrganizationOrderInput[]? orderBy,
+        IEnumerable<OrganizationOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken)
@@ -82,13 +83,7 @@ public class Query(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await organizationService.GetPaginatedOrganizationsAsync(
             new PaginationInputParam(after, first, before, last),
             new OrganizationSearchCriteria(where.NameContains),
-            orderBy is null
-                ? []
-                : orderBy.Select(item =>
-                {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    return new OrganizationOrder(direction, item.Field);
-                }).ToList(),
+            orderBy.ToSafeCollection().Select(item => new OrganizationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new OrganizationConnection
@@ -100,19 +95,19 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }
 
     [UseResolverScope]
-    public async Task<OrganizationDetails[]> MyOrganizationsAsync(
+    public async Task<IEnumerable<OrganizationDetails>> MyOrganizationsAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
         !await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
             ? []
-            : mapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken)).ToArray();
+            : mapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationMemberConnection?> OrganizationMembersAsync(
@@ -120,7 +115,7 @@ public class Query(IMapper mapper)
         int? first,
         string? before, int? last,
         OrganizationMemberWhereInput where,
-        OrganizationMemberOrderInput[]? orderBy,
+        IEnumerable<OrganizationMemberOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
@@ -135,13 +130,7 @@ public class Query(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
             new PaginationInputParam(after, first, before, last),
             new OrganizationMemberSearchCriteria(where.OrganizationId, where.NameContains, where.CustomerId),
-            orderBy is null
-                ? []
-                : orderBy.Select(item =>
-                {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    return new OrganizationMemberOrder(direction, item.Field);
-                }).ToList(),
+            orderBy.ToSafeCollection().Select(item => new OrganizationMemberOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new OrganizationMemberConnection
@@ -153,7 +142,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -201,7 +190,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         CustomTagOrganizationTagWhereInput where,
-        OrganizationTagOrderInput[]? orderBy,
+        IEnumerable<OrganizationTagOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -223,7 +212,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         ZoneOrganizationTagWhereInput where,
-        OrganizationTagOrderInput[]? orderBy,
+        IEnumerable<OrganizationTagOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
@@ -273,7 +262,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         TagSearchCriteria tagSearchCriteria,
-        OrganizationTagOrderInput[]? orderBy,
+        IEnumerable<OrganizationTagOrderInput>? orderBy,
         ICachedCustomerService cachedCustomerService,
         ITagService tagService,
         CancellationToken cancellationToken)
@@ -286,13 +275,7 @@ public class Query(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(after, first, before, last),
             tagSearchCriteria,
-            orderBy is null
-                ? []
-                : orderBy.Select(item =>
-                {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    return new TagOrder(direction, item.Field);
-                }).ToList(),
+            orderBy.ToSafeCollection().Select(item => new TagOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new OrganizationTagConnection
@@ -304,7 +287,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }

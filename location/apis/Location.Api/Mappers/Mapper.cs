@@ -237,11 +237,16 @@ public class Mapper : IMapper
                 DeskCapacity = src.Desks.Count,
                 RoomCapacity = src.Rooms.Count,
                 Organization = MapTo(src.Organization),
-                Resources = MapTo(src.Resources).ToList(),
-                Desks = MapTo(src.Desks).ToList(),
-                Rooms = MapTo(src.Rooms).ToList(),
-                CustomTags = MapTo(src.CustomTags).ToList(),
-                Zones = MapTo(src.Zones).ToList(),
+                Resources = MapTo(src.Resources),
+                Desks = MapTo(src.Desks),
+                Rooms = MapTo(src.Rooms),
+                CustomTags = MapTo(src.CustomTags),
+                Zones = MapTo(src.Zones),
+                ResourceTypes = src.Organization is null
+                    ? []
+                    : src.Organization.Tags
+                        .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
+                        .Select(MapTo),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress)
             };
 
@@ -383,8 +388,8 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)).ToList(),
-            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)).ToList()
+            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
+            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone))
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.DeskEdge MapToGrpcResponse(Edge<Shared.Models.Desk> src) =>
@@ -400,8 +405,8 @@ public class Mapper : IMapper
             Deactivated = src.Deactivated,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
-            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)).ToList(),
-            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)).ToList()
+            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
+            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone))
         };
 
     public ResourceEdge MapTo(Edge<Shared.Models.Resource> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
@@ -451,8 +456,8 @@ public class Mapper : IMapper
             Color = src.Color,
             IsOpeningHoursOverriden = src.IsOpeningHoursOverriden,
             AvailableHours = src.AvailableHours is null ? null : MapTo(src.AvailableHours),
-            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)).ToList(),
-            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)).ToList()
+            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
+            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone))
         };
 
     public IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location) =>
@@ -498,14 +503,11 @@ public class Mapper : IMapper
         {
             Name = name,
             DesksOccupancyPercentage = locationDesksOccupancyPercentage
-                .Select(item => new DesksOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
-                .ToList(),
+                .Select(item => new DesksOccupancyPercentage { Date = item.Date, Percentage = item.Percentage }),
             DailyBookingsTotals = locationDailyBookingsTotal
-                .Select(item => new GraphQL.LocationDailyBookingsTotal { Date = item.Date, Total = item.Total })
-                .ToList(),
+                .Select(item => new GraphQL.LocationDailyBookingsTotal { Date = item.Date, Total = item.Total }),
             RoomsOccupancyPercentage = locationRoomsOccupancyPercentage
                 .Select(item => new RoomsOccupancyPercentage { Date = item.Date, Percentage = item.Percentage })
-                .ToList()
         };
 
     public Shared.Models.Location MapTo(AddLocationInput src)
@@ -947,7 +949,8 @@ public class Mapper : IMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
                 LogoUrl = src.LogoUrl,
-                Offering = src.Offering
+                Offering = src.Offering,
+                Tags = MapTo(src.Tags).ToList()
             };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
@@ -1110,7 +1113,7 @@ public class Mapper : IMapper
                 Location = location
             };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours? MapToGrpcResponse(OpeningHours? src)
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours MapToGrpcResponse(OpeningHours? src)
     {
         if (src is null)
         {
@@ -1132,7 +1135,7 @@ public class Mapper : IMapper
         var openingHours =
             new global::Api.Shared.Services.Grpc.Skedular.Location.V1.OpeningHours { WeekOpeningHours = MapToGrpcResponse(src.WeekOpeningHours) };
         openingHours.ClosedDates.AddRange(src.ClosedDates.Select(item => item.ToTimestamp()));
-        openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.ToList().Select(item => new VariedDateOpeningHours
+        openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.Select(item => new VariedDateOpeningHours
         {
             Date = item.Key.ToTimestamp(), OpeningHoursDetails = MapToGrpcResponse(item.Value)
         }));
@@ -1189,10 +1192,10 @@ public class Mapper : IMapper
         {
             WeekOpeningHours = MapTo(src.WeekOpeningHours),
             ClosedDates = src.ClosedDates,
-            DatesWithVariedOpeningHours = src.DatesWithVariedOpeningHours.ToList().Select(item => new GraphQL.VariedDateOpeningHours
+            DatesWithVariedOpeningHours = src.DatesWithVariedOpeningHours.Select(item => new GraphQL.VariedDateOpeningHours
             {
                 Date = item.Key, OpeningHoursDetails = MapTo(item.Value)
-            }).ToList()
+            })
         };
     }
 

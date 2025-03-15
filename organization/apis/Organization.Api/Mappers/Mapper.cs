@@ -274,12 +274,12 @@ public class Mapper : IMapper
                         Code = item.ToOfferingCode(),
                         Name = offering.Name,
                         UnitPrice = offering.UnitPrice,
-                        FeatureSet = MapTo(offering).ToArray(),
-                        UnderPriceLines = offering.UnderPriceLines.ToArray(),
+                        FeatureSet = MapTo(offering),
+                        UnderPriceLines = offering.UnderPriceLines,
                         Free = item.IsFreeOffering(),
                         EarlyBird = item.IsEarlyBirdOffering()
                     };
-                }).ToArray();
+                });
 
         return new OrganizationDetails
         {
@@ -291,7 +291,7 @@ public class Mapper : IMapper
             LogoUrl = src.LogoUrl,
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             TermsOfUse = MapTo(src.TermsOfUse),
-            IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)).ToArray(),
+            IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)),
             AvailableOfferings = availableOfferings,
             ActiveOffering = MapTo(organizationOffering),
             CanModify = src.CanModify,
@@ -302,7 +302,10 @@ public class Mapper : IMapper
             HasTeam = src.HasTeam,
             HasFutureBooking = src.HasFutureBooking,
             IsMyOnboardingDone = src.IsMyOnboardingDone,
-            Members = MapTo(src.OrganizationMembers).ToArray()
+            Members = MapTo(src.OrganizationMembers),
+            ResourceTypes = src.Tags
+                .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
+                .Select(item => MapTo(item)!)
         };
     }
 
@@ -322,11 +325,9 @@ public class Mapper : IMapper
         new()
         {
             MemberAttendancePercentage = organizationMemberAttendancePercentages
-                .Select(item => new GraphQL.OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = item.Percentage })
-                .ToArray(),
+                .Select(item => new GraphQL.OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = item.Percentage }),
             DailyBookingsTotals = organizationDailyBookingsTotals
                 .Select(item => new GraphQL.OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Total })
-                .ToArray()
         };
 
     public Shared.Models.Organization MapTo(AddOrganizationInput src) =>
@@ -702,8 +703,8 @@ public class Mapper : IMapper
             Start = src.Start,
             End = src.End,
             UnitPrice = src.UnitPrice,
-            FeatureSet = MapTo(offering).ToArray(),
-            UnderPriceLines = offering.UnderPriceLines.ToArray(),
+            FeatureSet = MapTo(offering),
+            UnderPriceLines = offering.UnderPriceLines,
             Free = src.Code.IsFreeOffering(),
             EarlyBird = src.Code.IsEarlyBirdOffering()
         };
@@ -715,10 +716,8 @@ public class Mapper : IMapper
     {
         var organizationIndustryMainCategoryReferenceDetails = new OrganizationIndustryMainCategoryReferenceDetails { Id = src.Id, Name = src.Name };
 
-        organizationIndustryMainCategoryReferenceDetails.SubCategories = MapTo(
-                src.IndustrySubCategories,
-                organizationIndustryMainCategoryReferenceDetails)
-            .ToArray();
+        organizationIndustryMainCategoryReferenceDetails.SubCategories =
+            MapTo(src.IndustrySubCategories, organizationIndustryMainCategoryReferenceDetails);
 
         return organizationIndustryMainCategoryReferenceDetails;
     }

@@ -1,8 +1,8 @@
 using System.Reflection;
 using Api.Shared.Services.Models;
+using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
-using Enterprise.Shared.Time;
 using HotChocolate;
 using HotChocolate.Types;
 using Location.Api.Mappers;
@@ -33,7 +33,7 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public LocationMemberRole[] LocationMemberRoles() =>
+    public IEnumerable<LocationMemberRole> LocationMemberRoles() =>
     [
         LocationMemberRole.Owner,
         LocationMemberRole.Administrator,
@@ -51,7 +51,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         LocationWhereInput where,
-        LocationOrderInput[]? orderBy,
+        IEnumerable<LocationOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken)
@@ -65,16 +65,10 @@ public class Query(IMapper mapper)
             new PaginationInputParam(after, first, before, last),
             new LocationSearchCriteria(
                 where.OrganizationId,
-                where.LocationIds ?? [],
+                where.LocationIds.ToSafeCollection(),
                 where.NameContains,
-                (where.ZoneIds ?? []).Concat(where.CustomTagIds ?? []).ToList()),
-            orderBy is null
-                ? []
-                : orderBy.Select(item =>
-                {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    return new LocationOrder(direction, item.Field);
-                }).ToList(),
+                where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection())),
+            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
 
@@ -87,13 +81,13 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }
 
     [UseResolverScope]
-    public async Task<LocationDetails[]?> MyLocationsAsync(
+    public async Task<IEnumerable<LocationDetails>?> MyLocationsAsync(
         string? organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationService locationService,
@@ -104,7 +98,7 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        return mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, cancellationToken)).ToArray();
+        return mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, cancellationToken));
     }
 
     [UseResolverScope]
@@ -114,7 +108,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         LocationMemberWhereInput where,
-        LocationMemberOrderInput[]? orderBy,
+        IEnumerable<LocationMemberOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationMemberService locationMemberService,
         CancellationToken cancellationToken)
@@ -129,13 +123,7 @@ public class Query(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await locationMemberService.GetPaginatedLocationMembersAsync(
             new PaginationInputParam(after, first, before, last),
             new LocationMemberSearchCriteria(where.LocationId, where.NameContains),
-            orderBy is null
-                ? []
-                : orderBy.Select(item =>
-                {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    return new LocationMemberOrder(direction, item.Field);
-                }).ToList(),
+            orderBy.ToSafeCollection().Select(item => new LocationMemberOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new LocationMemberConnection
@@ -147,7 +135,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -159,7 +147,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         DeskWhereInput where,
-        DeskOrderInput[]? orderBy,
+        IEnumerable<DeskOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IDeskService deskService,
         CancellationToken cancellationToken)
@@ -171,14 +159,11 @@ public class Query(IMapper mapper)
 
         var (paginatedInfo, edges, totalCount) = await deskService.GetPaginatedDesksAsync(
             new PaginationInputParam(after, first, before, last),
-            new DeskSearchCriteria(where.LocationId, where.NameContains, (where.CustomTagIds ?? []).Concat(where.ZoneIds ?? []).ToList()),
-            orderBy is null
-                ? []
-                : orderBy.Select(item =>
-                {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    return new DeskOrder(direction, item.Field);
-                }).ToList(),
+            new DeskSearchCriteria(
+                where.LocationId,
+                where.NameContains,
+                where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection())),
+            orderBy.ToSafeCollection().Select(item => new DeskOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new DeskConnection
@@ -190,7 +175,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -219,11 +204,11 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<LocationAnalytics[]> LocationsAnalyticsAsync(
+    public async Task<IEnumerable<LocationAnalytics>> LocationsAnalyticsAsync(
         DateTimeOffset from,
         DateTimeOffset until,
         LocationWhereInput where,
-        LocationOrderInput[]? orderBy,
+        IEnumerable<LocationOrderInput>? orderBy,
         [Service] ILocationAnalyticsService locationAnalyticsService,
         CancellationToken cancellationToken)
     {
@@ -232,16 +217,11 @@ public class Query(IMapper mapper)
             until,
             new LocationSearchCriteria(
                 where.OrganizationId,
-                where.LocationIds ?? [],
+                where.LocationIds.ToSafeCollection(),
                 where.NameContains,
-                (where.CustomTagIds ?? []).Concat(where.ZoneIds ?? []).ToList()),
-            orderBy is null
-                ? []
-                : orderBy.Select(item =>
-                {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    return new LocationOrder(direction, item.Field);
-                }).ToList(), cancellationToken);
+                where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection())),
+            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
+            cancellationToken);
 
         return locationsAnalytics
             .Select(locationAnalytics =>
@@ -249,8 +229,7 @@ public class Query(IMapper mapper)
                     locationAnalytics.Name,
                     locationAnalytics.DesksOccupancyPercentage,
                     locationAnalytics.DailyBookingsTotal,
-                    locationAnalytics.RoomsOccupancyPercentage))
-            .ToArray();
+                    locationAnalytics.RoomsOccupancyPercentage));
     }
 
     [UseResolverScope]
@@ -260,7 +239,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         RoomWhereInput where,
-        RoomOrderInput[]? orderBy,
+        IEnumerable<RoomOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IRoomService roomService,
         CancellationToken cancellationToken)
@@ -272,14 +251,11 @@ public class Query(IMapper mapper)
 
         var (paginatedInfo, edges, totalCount) = await roomService.GetPaginatedRoomsAsync(
             new PaginationInputParam(after, first, before, last),
-            new RoomSearchCriteria(where.LocationId, where.NameContains, (where.CustomTagIds ?? []).Concat(where.ZoneIds ?? []).ToList()),
-            orderBy is null
-                ? []
-                : orderBy.Select(item =>
-                {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    return new RoomOrder(direction, item.Field);
-                }).ToList(),
+            new RoomSearchCriteria(
+                where.LocationId,
+                where.NameContains,
+                where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection())),
+            orderBy.ToSafeCollection().Select(item => new RoomOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new RoomConnection
@@ -291,7 +267,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -310,7 +286,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         ResourceWhereInput where,
-        ResourceOrderInput[]? orderBy,
+        IEnumerable<ResourceOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
@@ -322,14 +298,11 @@ public class Query(IMapper mapper)
 
         var (paginatedInfo, edges, totalCount) = await resourceService.GetPaginatedResourcesAsync(
             new PaginationInputParam(after, first, before, last),
-            new ResourceSearchCriteria(where.LocationId, where.NameContains, (where.CustomTagIds ?? []).Concat(where.ZoneIds ?? []).ToList()),
-            orderBy is null
-                ? []
-                : orderBy.Select(item =>
-                {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    return new ResourceOrder(direction, item.Field);
-                }).ToList(),
+            new ResourceSearchCriteria(
+                where.LocationId,
+                where.NameContains,
+                where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection())),
+            orderBy.ToSafeCollection().Select(item => new ResourceOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
         return new ResourceConnection
@@ -341,7 +314,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }

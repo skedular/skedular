@@ -3,6 +3,7 @@ using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
+using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Sanitization;
@@ -46,7 +47,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         BookingWhereInput where,
-        BookingOrderInput[]? orderBy,
+        IEnumerable<BookingOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken)
@@ -78,17 +79,11 @@ public class Query(IMapper mapper)
                 where.IncludeMineOnly,
                 where.IncludeFutureBookingsOnly,
                 where.CombineOrganizationsLocationsTeams,
-                where.OrganizationIds ?? [],
-                where.LocationIds ?? [],
-                where.TeamIds ?? [],
-                where.CustomerIds ?? []),
-            orderBy is null
-                ? []
-                : orderBy.Select(item =>
-                {
-                    var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                    return new BookingOrder(direction, item.Field);
-                }).ToList(),
+                where.OrganizationIds.ToSafeCollection(),
+                where.LocationIds.ToSafeCollection(),
+                where.TeamIds.ToSafeCollection(),
+                where.CustomerIds.ToSafeCollection()),
+            orderBy.ToSafeCollection().Select(item => new BookingOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
 
@@ -101,33 +96,24 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }
 
     [UseResolverScope]
-    public async Task<BookingDetails[]?> AllBookingsAsync(
+    public async Task<IEnumerable<BookingDetails>?> AllBookingsAsync(
         BookingWhereInput where,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken)
     {
-        var result = await BookingsAsync(
-            null,
-            null,
-            null,
-            null,
-            where,
-            [],
-            cachedCustomerService,
-            bookingService,
-            cancellationToken);
-        return result?.Edges.Select(item => item.Node).ToArray();
+        var result = await BookingsAsync(null, null, null, null, where, [], cachedCustomerService, bookingService, cancellationToken);
+        return result?.Edges.Select(item => item.Node);
     }
 
     [UseResolverScope]
-    public async Task<BookingDeskDetails[]?> AvailableDesksAsync(
+    public async Task<ICollection<BookingDeskDetails>?> AvailableDesksAsync(
         AvailableDesksWhereInput where,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IDeskService deskService,
@@ -142,16 +128,16 @@ public class Query(IMapper mapper)
             where.OrganizationId,
             where.LocationId,
             where.Date,
-            where.DeskIdsToInclude ?? [],
-            where.CustomTagIds ?? [],
-            where.ZoneIds ?? [],
+            where.DeskIdsToInclude.ToSafeCollection(),
+            where.CustomTagIds.ToSafeCollection(),
+            where.ZoneIds.ToSafeCollection(),
             where.CombineCustomTagsZones ?? false,
             cancellationToken);
         return mapper.MapTo(desks).ToArray();
     }
 
     [UseResolverScope]
-    public async Task<BookingRoomDetails[]?> AvailableRoomsAsync(
+    public async Task<ICollection<BookingRoomDetails>?> AvailableRoomsAsync(
         AvailableRoomsWhereInput where,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IRoomService roomService,
@@ -166,9 +152,9 @@ public class Query(IMapper mapper)
             where.OrganizationId,
             where.LocationId,
             where.Date,
-            where.RoomIdsToInclude ?? [],
-            where.CustomTagIds ?? [],
-            where.ZoneIds ?? [],
+            where.RoomIdsToInclude.ToSafeCollection(),
+            where.CustomTagIds.ToSafeCollection(),
+            where.ZoneIds.ToSafeCollection(),
             where.CombineCustomTagsZones ?? false,
             cancellationToken);
         return mapper.MapTo(rooms).ToArray();

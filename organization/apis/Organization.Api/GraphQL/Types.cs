@@ -36,7 +36,7 @@ public class AddOrganizationInput
     [GraphQLName("termsOfUseId")] public string TermsOfUseId { get; set; } = string.Empty;
 
     [GraphQLName("industrySubCategoryIds")]
-    public string[] IndustrySubCategoryIds { get; set; } = [];
+    public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
 }
 
 [GraphQLName("CancelInvitationToJoinOrganizationInput")]
@@ -77,7 +77,7 @@ public class ChangeOrganizationMemberRoleInput
 public class ChangeOrganizationMembersStatusInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required string[] Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
     [GraphQLName("status")] public OrganizationMemberStatus Status { get; set; }
 }
 
@@ -85,7 +85,7 @@ public class ChangeOrganizationMembersStatusInput
 public class RemoveOrganizationMembersInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required string[] Ids { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
 }
 
 [GraphQLName("DeleteOrganizationInput")]
@@ -100,7 +100,7 @@ public class InviteCustomersToJoinOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
-    [GraphQLName("emails")] public string[] Emails { get; set; } = [];
+    [GraphQLName("emails")] public IEnumerable<string> Emails { get; set; } = [];
 }
 
 [GraphQLName("InviteCustomersToJoinOrganizationPayload")]
@@ -113,9 +113,9 @@ public class InviteCustomersToJoinOrganizationPayload
 public class OrganizationAnalytics
 {
     [GraphQLName("memberAttendancePercentage")]
-    public OrganizationMemberAttendancePercentage[] MemberAttendancePercentage { get; set; } = [];
+    public IEnumerable<OrganizationMemberAttendancePercentage> MemberAttendancePercentage { get; set; } = [];
 
-    [GraphQLName("dailyBookingsTotals")] public OrganizationDailyBookingsTotal[] DailyBookingsTotals { get; set; } = [];
+    [GraphQLName("dailyBookingsTotals")] public IEnumerable<OrganizationDailyBookingsTotal> DailyBookingsTotals { get; set; } = [];
 }
 
 [GraphQLName("OrganizationConnection")]
@@ -157,15 +157,11 @@ public class OrganizationDetails : Node
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }
 
-    [GraphQLName("industrySubCategories")] public OrganizationIndustrySubCategoryReferenceDetails[] IndustrySubCategories { get; set; } = [];
+    [GraphQLName("industrySubCategories")]
+    public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> IndustrySubCategories { get; set; } = [];
 
-    [GraphQLName("availableOfferings")] public OrganizationOfferingDetails[] AvailableOfferings { get; set; } = [];
-
+    [GraphQLName("availableOfferings")] public IEnumerable<OrganizationOfferingDetails> AvailableOfferings { get; set; } = [];
     [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; }
-
-    [GraphQLName("hasAttachedPaymentMethod")]
-    public bool HasAttachedPaymentMethod { get; set; }
-
     [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
     [GraphQLName("hasLocation")] public bool HasLocation { get; set; }
     [GraphQLName("hasTeam")] public bool HasTeam { get; set; }
@@ -174,7 +170,12 @@ public class OrganizationDetails : Node
     [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
     [GraphQLName("isMyOnboardingDone")] public bool IsMyOnboardingDone { get; set; }
-    [GraphQLName("members")] public OrganizationMemberDetails[] Members { get; set; } = [];
+    [GraphQLName("members")] public IEnumerable<OrganizationMemberDetails> Members { get; set; } = [];
+    [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
+
+    [GraphQLName("hasAttachedPaymentMethod")]
+    public bool HasAttachedPaymentMethod { get; set; }
+
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -185,9 +186,7 @@ public class OrganizationEdge : Edge<OrganizationDetails>;
 public class OrganizationIndustryMainCategoryReferenceDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-
-    [GraphQLName("subCategories")] public OrganizationIndustrySubCategoryReferenceDetails[] SubCategories { get; set; } = [];
-
+    [GraphQLName("subCategories")] public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> SubCategories { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -233,7 +232,7 @@ public class OrganizationMemberDetailsPayload
 public class OrganizationMembersDetailsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("members")] public OrganizationMemberDetails[] Members { get; set; } = [];
+    [GraphQLName("members")] public IEnumerable<OrganizationMemberDetails> Members { get; set; } = [];
 }
 
 [GraphQLName("OrganizationMemberEdge")]
@@ -304,7 +303,7 @@ public class UpdateOrganizationInput
     [GraphQLName("website")] public string? Website { get; set; }
 
     [GraphQLName("industrySubCategoryIds")]
-    public string[] IndustrySubCategoryIds { get; set; } = [];
+    public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
 }
 
 [GraphQLName("UpdateOrganizationOfferingInput")]
@@ -367,7 +366,7 @@ public class DeleteCustomTagInput
 public class DeleteCustomTagsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required string[] Ids { get; set; } = [];
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; } = [];
 }
 
 [GraphQLName("AddZoneInput")]
@@ -402,7 +401,7 @@ public class DeleteZoneInput
 public class DeleteZonesInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required string[] Ids { get; set; } = [];
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; } = [];
 }
 
 [GraphQLName("OrganizationTagConnection")]
@@ -453,7 +452,7 @@ public class ZoneOrganizationTagWhereInput
 public class OrganizationTagsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("organizationTags")] public OrganizationTagDetails[] OrganizationTags { get; set; } = [];
+    [GraphQLName("organizationTags")] public IEnumerable<OrganizationTagDetails> OrganizationTags { get; set; } = [];
 }
 
 [GraphQLName("OrganizationOfferingDetails")]
@@ -463,8 +462,8 @@ public class OrganizationOfferingDetails
     [GraphQLName("isEnterprise")] public bool IsEnterprise { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
-    [GraphQLName("underPriceLines")] public string[] UnderPriceLines { get; set; } = [];
-    [GraphQLName("featureSet")] public string[] FeatureSet { get; set; } = [];
+    [GraphQLName("underPriceLines")] public IEnumerable<string> UnderPriceLines { get; set; } = [];
+    [GraphQLName("featureSet")] public IEnumerable<string> FeatureSet { get; set; } = [];
     [GraphQLName("free")] public bool Free { get; set; }
     [GraphQLName("earlyBird")] public bool EarlyBird { get; set; }
 }
@@ -478,8 +477,8 @@ public class OrganizationActiveOfferingDetails : Node
     [GraphQLName("start")] public DateTimeOffset Start { get; set; }
     [GraphQLName("end")] public DateTimeOffset End { get; set; }
     [GraphQLName("unitPrice")] public int UnitPrice { get; set; }
-    [GraphQLName("underPriceLines")] public string[] UnderPriceLines { get; set; } = [];
-    [GraphQLName("featureSet")] public string[] FeatureSet { get; set; } = [];
+    [GraphQLName("underPriceLines")] public IEnumerable<string> UnderPriceLines { get; set; } = [];
+    [GraphQLName("featureSet")] public IEnumerable<string> FeatureSet { get; set; } = [];
     [GraphQLName("free")] public bool Free { get; set; }
     [GraphQLName("earlyBird")] public bool EarlyBird { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;

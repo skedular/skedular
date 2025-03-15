@@ -4,13 +4,13 @@ namespace Location.Shared.Models;
 
 public class ResourceSearchCriteria
 {
-    public ResourceSearchCriteria(string locationId, string? nameContains, ICollection<string>? tagIds)
+    public ResourceSearchCriteria(string locationId, string? nameContains, IEnumerable<string> tagIds)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
         LocationId = locationId;
         NameContains = nameContains;
-        TagIds = tagIds ?? [];
+        TagIds = tagIds.ToList();
     }
 
     public string LocationId { get; }

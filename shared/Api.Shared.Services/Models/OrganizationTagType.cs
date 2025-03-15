@@ -14,6 +14,8 @@ public static class OrganizationTagTypeConstants
     public const string Zone = "ZONE";
     public const string Desk = "DESK";
     public const string Room = "ROOM";
+
+    public static readonly ICollection<OrganizationTagType> ResourceTypes = [OrganizationTagType.Desk, OrganizationTagType.Room];
 }
 
 public static class OrganizationTagTypeExtensions

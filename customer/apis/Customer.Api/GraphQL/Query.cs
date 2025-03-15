@@ -2,6 +2,7 @@ using System.Reflection;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Shared.Models;
+using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -29,10 +30,7 @@ public class Query(IMapper mapper)
         mapper.MapTo(await customerService.GetMeAsync(true, cancellationToken));
 
     [UseResolverScope]
-    public async Task<CustomerDetails?> CustomerAsync(
-        string id,
-        [Service] ICustomerService customerService,
-        CancellationToken cancellationToken) =>
+    public async Task<CustomerDetails?> CustomerAsync(string id, [Service] ICustomerService customerService, CancellationToken cancellationToken) =>
         mapper.MapTo(await customerService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
@@ -42,24 +40,17 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         CustomersByPreferredLocationWhereInput where,
-        CustomerOrderInput[]? orderBy,
+        IEnumerable<CustomerOrderInput>? orderBy,
         [Service] ICustomerService customerService,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
 
-        var (paginatedInfo, edges, totalCount) =
-            await customerService.GetPaginatedCustomersAsync(
-                new PaginationInputParam(after, first, before, last),
-                new CustomerSearchCriteria(where.NameContains, where.LocationId),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                        return new CustomerOrder(direction, item.Field);
-                    }).ToList(),
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await customerService.GetPaginatedCustomersAsync(
+            new PaginationInputParam(after, first, before, last),
+            new CustomerSearchCriteria(where.NameContains, where.LocationId),
+            orderBy.ToSafeCollection().Select(item => new CustomerOrder(item.Direction, item.Field)).ToList(),
+            cancellationToken);
 
         return new CustomerConnection
         {
@@ -70,7 +61,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }

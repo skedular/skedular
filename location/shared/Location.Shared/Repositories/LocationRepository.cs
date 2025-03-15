@@ -42,6 +42,8 @@ internal static class LocationExtensions
         bool includeDeletedRooms) =>
         originalQuery
             .Include(query => query.Organization)
+            .ThenInclude(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.Organization)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .Include(query => query.PhysicalAddress)

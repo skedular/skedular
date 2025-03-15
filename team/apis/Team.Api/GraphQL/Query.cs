@@ -1,5 +1,6 @@
 using System.Reflection;
 using Api.Shared.Services.Models;
+using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -32,12 +33,7 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public TeamMemberRole[] TeamMemberRoles() =>
-    [
-        TeamMemberRole.Owner,
-        TeamMemberRole.Administrator,
-        TeamMemberRole.Member
-    ];
+    public TeamMemberRole[] TeamMemberRoles() => [TeamMemberRole.Owner, TeamMemberRole.Administrator, TeamMemberRole.Member];
 
     [UseResolverScope]
     public async Task<TeamDetails?> TeamAsync(
@@ -56,7 +52,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         TeamWhereInput where,
-        TeamOrderInput[]? orderBy,
+        IEnumerable<TeamOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
@@ -66,22 +62,15 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await teamService.GetPaginatedTeamsAsync(
-                new PaginationInputParam(after, first, before, last),
-                new TeamSearchCriteria(
-                    where.OrganizationId,
-                    null,
-                    where.NameContains,
-                    where.PrimaryLocationIds),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                        return new TeamOrder(direction, item.Field);
-                    }).ToList(),
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
+            new PaginationInputParam(after, first, before, last),
+            new TeamSearchCriteria(
+                where.OrganizationId,
+                null,
+                where.NameContains,
+                where.PrimaryLocationIds),
+            orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field)).ToList(),
+            cancellationToken);
 
         return new TeamConnection
         {
@@ -92,7 +81,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -104,7 +93,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         CustomerTeamWhereInput where,
-        TeamOrderInput[]? orderBy,
+        IEnumerable<TeamOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
@@ -114,22 +103,15 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await teamService.GetPaginatedTeamsAsync(
-                new PaginationInputParam(after, first, before, last),
-                new TeamSearchCriteria(
-                    where.OrganizationId,
-                    where.CustomerId,
-                    where.NameContains,
-                    where.PrimaryLocationIds),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                        return new TeamOrder(direction, item.Field);
-                    }).ToList(),
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
+            new PaginationInputParam(after, first, before, last),
+            new TeamSearchCriteria(
+                where.OrganizationId,
+                where.CustomerId,
+                where.NameContains,
+                where.PrimaryLocationIds),
+            orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field)).ToList(),
+            cancellationToken);
 
         return new TeamConnection
         {
@@ -140,7 +122,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }
@@ -168,7 +150,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         TeamMemberWhereInput where,
-        TeamMemberOrderInput[]? orderBy,
+        IEnumerable<TeamMemberOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
@@ -180,18 +162,11 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await teamMemberService.GetPaginatedMembersAsync(
-                new PaginationInputParam(after, first, before, last),
-                new TeamMemberSearchCriteria(where.TeamId, where.NameContains),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                        return new TeamMemberOrder(direction, item.Field);
-                    }).ToList(),
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await teamMemberService.GetPaginatedMembersAsync(
+            new PaginationInputParam(after, first, before, last),
+            new TeamMemberSearchCriteria(where.TeamId, where.NameContains),
+            orderBy.ToSafeCollection().Select(item => new TeamMemberOrder(item.Direction, item.Field)).ToList(),
+            cancellationToken);
 
         return new TeamMemberConnection
         {
@@ -202,7 +177,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }

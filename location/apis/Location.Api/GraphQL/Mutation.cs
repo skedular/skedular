@@ -63,7 +63,7 @@ public class Mutation(IMapper mapper)
             input.RequireBookingApproval,
             input.Color,
             cancellationToken);
-        return new BulkDeskPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToArray() };
+        return new BulkDeskPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -92,8 +92,8 @@ public class Mutation(IMapper mapper)
         [Service] IDeskService deskService,
         CancellationToken cancellationToken)
     {
-        var desks = await deskService.DeleteAsync(input.Ids, cancellationToken);
-        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToList() };
+        var desks = await deskService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -102,8 +102,8 @@ public class Mutation(IMapper mapper)
         [Service] IDeskService deskService,
         CancellationToken cancellationToken)
     {
-        var desks = await deskService.ActivateAsync(input.Ids, cancellationToken);
-        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToList() };
+        var desks = await deskService.ActivateAsync(input.Ids.ToList(), cancellationToken);
+        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -112,8 +112,8 @@ public class Mutation(IMapper mapper)
         [Service] IDeskService deskService,
         CancellationToken cancellationToken)
     {
-        var desks = await deskService.DeactivateAsync(input.Ids, cancellationToken);
-        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo).ToList() };
+        var desks = await deskService.DeactivateAsync(input.Ids.ToList(), cancellationToken);
+        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -132,7 +132,7 @@ public class Mutation(IMapper mapper)
         [Service] ILocationInvitationService locationInvitationService,
         CancellationToken cancellationToken)
     {
-        await locationInvitationService.InviteMembersByEmailsAsync(input.LocationId, input.Emails, cancellationToken);
+        await locationInvitationService.InviteMembersByEmailsAsync(input.LocationId, input.Emails.ToList(), cancellationToken);
         return new InviteCustomersToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
     }
 
@@ -202,8 +202,8 @@ public class Mutation(IMapper mapper)
         [Service] IRoomService roomService,
         CancellationToken cancellationToken)
     {
-        var rooms = await roomService.DeleteAsync(input.Ids, cancellationToken);
-        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo).ToArray() };
+        var rooms = await roomService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -212,8 +212,8 @@ public class Mutation(IMapper mapper)
         [Service] IRoomService roomService,
         CancellationToken cancellationToken)
     {
-        var rooms = await roomService.ActivateAsync(input.Ids, cancellationToken);
-        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo).ToArray() };
+        var rooms = await roomService.ActivateAsync(input.Ids.ToList(), cancellationToken);
+        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -222,39 +222,38 @@ public class Mutation(IMapper mapper)
         [Service] IRoomService roomService,
         CancellationToken cancellationToken)
     {
-        var rooms = await roomService.DeactivateAsync(input.Ids, cancellationToken);
-        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo).ToArray() };
+        var rooms = await roomService.DeactivateAsync(input.Ids.ToList(), cancellationToken);
+        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]
     public async Task<ResourcePayload?> AddResourceAsync(
         AddResourceInput input,
         [Service] IResourceService resourceService,
-        CancellationToken cancellationToken)
-    {
-        var resource = await resourceService.AddAsync(mapper.MapTo(input), false, cancellationToken);
-        return new ResourcePayload { ClientMutationId = input.ClientMutationId, Resource = mapper.MapTo(resource) };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Resource = mapper.MapTo(await resourceService.AddAsync(mapper.MapTo(input), false, cancellationToken))
+        };
 
     [UseResolverScope]
     public async Task<ResourcePayload?> UpdateResourceAsync(
         UpdateResourceInput input,
         [Service] IResourceService resourceService,
-        CancellationToken cancellationToken)
-    {
-        var resource = await resourceService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new ResourcePayload { ClientMutationId = input.ClientMutationId, Resource = mapper.MapTo(resource) };
-    }
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Resource = mapper.MapTo(await resourceService.UpdateAsync(mapper.MapTo(input), cancellationToken))
+        };
 
     [UseResolverScope]
     public async Task<ResourcePayload?> DeleteResourceAsync(
         DeleteResourceInput input,
         [Service] IResourceService resourceService,
-        CancellationToken cancellationToken)
-    {
-        var resource = await resourceService.DeleteAsync(input.Id, cancellationToken);
-        return new ResourcePayload { ClientMutationId = input.ClientMutationId, Resource = mapper.MapTo(resource) };
-    }
+        CancellationToken cancellationToken) =>
+        new() { ClientMutationId = input.ClientMutationId, Resource = mapper.MapTo(await resourceService.DeleteAsync(input.Id, cancellationToken)) };
 
     [UseResolverScope]
     public async Task<ResourcesPayload?> DeleteResourcesAsync(
@@ -262,8 +261,8 @@ public class Mutation(IMapper mapper)
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.DeleteAsync(input.Ids, cancellationToken);
-        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo).ToArray() };
+        var resources = await resourceService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -272,8 +271,8 @@ public class Mutation(IMapper mapper)
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.ActivateAsync(input.Ids, cancellationToken);
-        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo).ToArray() };
+        var resources = await resourceService.ActivateAsync(input.Ids.ToList(), cancellationToken);
+        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]
@@ -282,8 +281,8 @@ public class Mutation(IMapper mapper)
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.DeactivateAsync(input.Ids, cancellationToken);
-        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo).ToArray() };
+        var resources = await resourceService.DeactivateAsync(input.Ids.ToList(), cancellationToken);
+        return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]

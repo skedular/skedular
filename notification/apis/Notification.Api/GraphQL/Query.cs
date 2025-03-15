@@ -1,4 +1,5 @@
 using System.Reflection;
+using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
@@ -46,7 +47,7 @@ public class Query(IMapper mapper)
         string? before,
         int? last,
         MyNotificationWhereInput where,
-        NotificationOrderInput[]? orderBy,
+        IEnumerable<NotificationOrderInput>? orderBy,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] INotificationService notificationService,
         CancellationToken cancellationToken)
@@ -56,18 +57,11 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await notificationService.GetMyPaginatedNotificationsAsync(
-                new PaginationInputParam(after, first, before, last),
-                new NotificationSearchCriteria(where.OrganizationId),
-                orderBy is null
-                    ? []
-                    : orderBy.Select(item =>
-                    {
-                        var direction = item.Direction == OrderDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
-                        return new NotificationOrder(direction, item.Field);
-                    }).ToList(),
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await notificationService.GetMyPaginatedNotificationsAsync(
+            new PaginationInputParam(after, first, before, last),
+            new NotificationSearchCriteria(where.OrganizationId),
+            orderBy.ToSafeCollection().Select(item => new NotificationOrder(item.Direction, item.Field)).ToList(),
+            cancellationToken);
 
         return new NotificationConnection
         {
@@ -78,7 +72,7 @@ public class Query(IMapper mapper)
                 StartCursor = paginatedInfo.StartCursor,
                 EndCursor = paginatedInfo.EndCursor
             },
-            Edges = edges.Select(mapper.MapTo).ToArray(),
+            Edges = edges.Select(mapper.MapTo),
             TotalCount = totalCount
         };
     }
