@@ -13,6 +13,6 @@ public static class Extensions
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services
             .AddHostedService<LocationDailyDeskCountRecorderJob>()
-            .AddHostedService<LocationDailyRoomCountRecorderJob>()
-            .AddHostedService<DeskRoomToResourceSyncJob>();
+            .AddHostedService<LocationDailyRoomCountRecorderJob>();
+//            .AddHostedService<DeskRoomToResourceSyncJob>();
 }
