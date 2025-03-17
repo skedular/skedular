@@ -436,6 +436,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataD
         resources {
           id
           name
+          color
           inactive
           requireBookingApproval
           color
@@ -465,6 +466,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataD
         resources {
           id
           name
+          color
           inactive
           requireBookingApproval
           color

@@ -36,7 +36,8 @@ public interface IMapper
         Location? location,
         Team? team,
         ICollection<Desk> desks,
-        ICollection<Room> rooms);
+        ICollection<Room> rooms,
+        ICollection<Shared.Database.Entities.Resource> resources);
 
     Shared.Database.Entities.Booking MergeTo(
         Shared.Models.Booking src,
@@ -46,7 +47,8 @@ public interface IMapper
         Location? location,
         Team? team,
         ICollection<Desk> desks,
-        ICollection<Room> rooms);
+        ICollection<Room> rooms,
+        ICollection<Shared.Database.Entities.Resource> resources);
 
     IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src, Shared.Models.Location location);
     IEnumerable<Shared.Models.Room> MapTo(IEnumerable<Room> src, Shared.Models.Location location);
@@ -85,6 +87,7 @@ public class Mapper : IMapper
             Location = MapTo(src.Location),
             Desks = MapTo(src.Desks).ToList(),
             Rooms = MapTo(src.Rooms).ToList(),
+            ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             Team = MapTo(src.Team)
         };
 
@@ -132,37 +135,47 @@ public class Mapper : IMapper
             Team = MapTo(src.Team)
         };
 
-    public Shared.Models.Booking MapTo(AddBookingInput src) =>
-        new()
+    public Shared.Models.Booking MapTo(AddBookingInput src)
+    {
+        var customer = new Customer { Id = src.CustomerId };
+
+        return new Shared.Models.Booking
         {
             Id = src.Id.ToSafeString(),
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type,
-            Customer = new Customer { Id = src.CustomerId },
+            Customer = customer,
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
             Desks = src.DeskIds.Select(item => new Shared.Models.Desk { Id = item }).ToList(),
-            Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList()
+            Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList(),
+            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList()
         };
+    }
 
-    public Shared.Models.Booking MapTo(UpdateBookingInput src) =>
-        new()
+    public Shared.Models.Booking MapTo(UpdateBookingInput src)
+    {
+        var customer = new Customer { Id = src.CustomerId };
+
+        return new Shared.Models.Booking
         {
             Id = src.Id,
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type,
-            Customer = new Customer { Id = src.CustomerId },
+            Customer = customer,
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
             Desks = src.DeskIds.Select(item => new Shared.Models.Desk { Id = item }).ToList(),
-            Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList()
+            Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList(),
+            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList()
         };
+    }
 
     public Shared.Database.Entities.Booking MapTo(
         Shared.Models.Booking src,
@@ -171,16 +184,9 @@ public class Mapper : IMapper
         Location? location,
         Team? team,
         ICollection<Desk> desks,
-        ICollection<Room> rooms) =>
-        MergeTo(
-            src,
-            new Shared.Database.Entities.Booking(),
-            customer,
-            organization,
-            location,
-            team,
-            desks,
-            rooms);
+        ICollection<Room> rooms,
+        ICollection<Shared.Database.Entities.Resource> resources) =>
+        MergeTo(src, new Shared.Database.Entities.Booking(), customer, organization, location, team, desks, rooms, resources);
 
     public Shared.Database.Entities.Booking MergeTo(
         Shared.Models.Booking src,
@@ -190,7 +196,8 @@ public class Mapper : IMapper
         Location? location,
         Team? team,
         ICollection<Desk> desks,
-        ICollection<Room> rooms)
+        ICollection<Room> rooms,
+        ICollection<Shared.Database.Entities.Resource> resources)
     {
         dest.Id = src.Id;
         dest.From = src.From;
@@ -203,6 +210,7 @@ public class Mapper : IMapper
         dest.Team = team;
         dest.Desks = desks;
         dest.Rooms = rooms;
+        dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
         return dest;
     }
 
@@ -359,7 +367,7 @@ public class Mapper : IMapper
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     public IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src) => src.Select(MapTo);
-    public IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src) => src.Select(item =>MapTo(item, []));
+    public IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src) => src.Select(item => MapTo(item, []));
 
     public IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> MapToGrpcResponse(IEnumerable<Resource> src) =>
         src.Select(MapToGrpcResponse);
@@ -427,19 +435,13 @@ public class Mapper : IMapper
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? MapToGrpcResponse(Shared.Models.Organization? src) =>
-        src is null
-            ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization { Id = src.Id, Name = src.Name.ToSafeString() };
+        src is null ? null : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location? MapToGrpcResponse(Shared.Models.Location? src) =>
-        src is null
-            ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Id, Name = src.Name.ToSafeString() };
+        src is null ? null : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? MapToGrpcResponse(Shared.Models.Team? src) =>
-        src is null
-            ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team { Id = src.Id, Name = src.Name.ToSafeString() };
+        src is null ? null : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk MapToGrpcResponse(Shared.Models.Desk src)
     {
@@ -663,7 +665,23 @@ public class Mapper : IMapper
     }
 
     private static IEnumerable<BookingCustomerDetails> MapTo(IEnumerable<Customer> src) => src.Select(MapTo);
-    
-    private static IEnumerable<BookingResourceDetails> MapTo(IEnumerable<(Resource, List<Customer>)> src) =>
-        src.Select(item => MapTo(item.Item1, item.Item2));
+
+    private static IEnumerable<BookingResourceDetails> MapTo(IEnumerable<ResourceCustomersPair> src) =>
+        src.Select(item => MapTo(item.Resource, item.Customers));
+
+    private IEnumerable<Customer> MapTo(IEnumerable<Shared.Database.Entities.Customer> src) => src.Select(MapTo);
+
+    private IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Shared.Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
+
+    private ResourceBookingSlot MapTo(Shared.Database.Entities.ResourceBookingSlot src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            Available = src.Available,
+            Start = src.Start,
+            Customers = MapTo(src.Customers).ToList(),
+            Resource = MapTo(src.Resource)
+        };
 }

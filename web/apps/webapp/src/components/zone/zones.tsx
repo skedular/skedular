@@ -11,13 +11,14 @@ type Props = {
   sx?: SxProps<Theme>;
   zones: readonly ZoneDetails[];
   hideIcon?: boolean;
+  hideNAText?: boolean;
 };
 
 const maxItemToDisplay = 2;
 
-const Zones = ({ sx, zones, hideIcon }: Props) => {
+const Zones = ({ sx, zones, hideIcon, hideNAText }: Props) => {
   if (zones.length === 0) {
-    return <SmallIconTypography label="N/A" startElement={!hideIcon && <ZoneIcon />} sx={sx} />;
+    return hideNAText ? <></> : <SmallIconTypography label="N/A" startElement={!hideIcon && <ZoneIcon />} sx={sx} />;
   }
 
   const visibleItems = zones.slice(0, maxItemToDisplay);

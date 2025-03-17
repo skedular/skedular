@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<73bf21acab01451795b9413215bc7140>>
+ * @generated SignedSource<<5cd71ac2457a90896e0e28354dccdf95>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -111,6 +111,7 @@ v4 = [
             "storageKey": null
           },
           (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -125,7 +126,6 @@ v4 = [
             "name": "requireBookingApproval",
             "storageKey": null
           },
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -181,16 +181,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "cc9f48442a7f3ceeb8a42c7b1bcbb29c",
+    "cacheID": "1cdae9d2008780a6abd550011b5c89f9",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_deactivateResourcesMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_deactivateResourcesMutation(\n  $input: DeactivateResourcesInput!\n) {\n  deactivateResources(input: $input) {\n    resources {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_deactivateResourcesMutation(\n  $input: DeactivateResourcesInput!\n) {\n  deactivateResources(input: $input) {\n    resources {\n      id\n      name\n      color\n      inactive\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2f9eec1a172a9128804b2e5a13c06d0f";
+(node as any).hash = "a9b6b6c599cd5cd357a2bd10a9214f78";
 
 export default node;

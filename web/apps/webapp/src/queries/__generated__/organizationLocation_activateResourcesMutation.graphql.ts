@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<234966b8f3fa4bb21fadabc9fb3b1f00>>
+ * @generated SignedSource<<c3ca25aa963079f7a875cd3ed4d1dced>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -111,6 +111,7 @@ v4 = [
             "storageKey": null
           },
           (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -125,7 +126,6 @@ v4 = [
             "name": "requireBookingApproval",
             "storageKey": null
           },
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -181,16 +181,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "7cdc59709164e6dfbf815972cb0111f0",
+    "cacheID": "a46d974be812c52cfb56471908c52049",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_activateResourcesMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_activateResourcesMutation(\n  $input: ActivateResourcesInput!\n) {\n  activateResources(input: $input) {\n    resources {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_activateResourcesMutation(\n  $input: ActivateResourcesInput!\n) {\n  activateResources(input: $input) {\n    resources {\n      id\n      name\n      color\n      inactive\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "67a6664a84abd6f6fd5624a31fc33f23";
+(node as any).hash = "12d79977c0a713482027b62a6a59d811";
 
 export default node;

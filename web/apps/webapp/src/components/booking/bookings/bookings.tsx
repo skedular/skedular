@@ -6,6 +6,7 @@ import { EllipseMenuIcon, JoinIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import Resources from '@/components/resource/resources';
 import { Rooms } from '@/components/room';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
@@ -80,6 +81,12 @@ type RoomDetails = {
   color?: string | null | undefined;
 };
 
+type ResourceDetails = {
+  uniqueId: string;
+  name: string | null | undefined;
+  color?: string | null | undefined;
+};
+
 type TeamDetails = {
   name: string;
 };
@@ -92,6 +99,7 @@ type RowType = {
   team?: TeamDetails | null | undefined;
   desks: ReadonlyArray<DeskDetails>;
   rooms: ReadonlyArray<RoomDetails>;
+  resources: ReadonlyArray<ResourceDetails>;
   customTags: ReadonlyArray<CustomTagDetails>;
   zones: ReadonlyArray<ZoneDetails>;
   canJoinBooking: Boolean;
@@ -194,6 +202,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
               resources {
                 uniqueId
                 name
+                color
                 customTags {
                   uniqueId
                   name
@@ -280,6 +289,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           resources {
             uniqueId
             name
+            color
             customTags {
               uniqueId
               name
@@ -541,6 +551,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
     const customTags = booking.desks
       .flatMap(({ customTags }) => customTags)
       .concat(booking.rooms.flatMap(({ customTags }) => customTags))
+      .concat(booking.resources.flatMap(({ customTags }) => customTags))
       .reduce((acc: CustomTagDetails[], customTag) => {
         if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
           acc.push(customTag);
@@ -551,6 +562,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
     const zones = booking.desks
       .flatMap(({ zones }) => zones)
       .concat(booking.rooms.flatMap(({ zones }) => zones))
+      .concat(booking.resources.flatMap(({ zones }) => zones))
       .reduce((acc: ZoneDetails[], zone) => {
         if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
           acc.push(zone);
@@ -579,6 +591,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       team: booking.team,
       desks: booking.desks,
       rooms: booking.rooms,
+      resources: booking.resources,
       customTags,
       zones,
       date: toShortDateWithAdditionalDayInfo(dayjs(booking.from)),
@@ -632,6 +645,16 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       headerName: 'Rooms',
       editable: false,
       renderCell: (params) => <Rooms rooms={params.value.map((room: RoomDetails) => ({ id: room.uniqueId, name: room.name, color: room.color }))} hideIcon />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'resources',
+      headerName: 'Resources',
+      editable: false,
+      renderCell: (params) => (
+        <Resources resources={params.value.map((resource: ResourceDetails) => ({ id: resource.uniqueId, name: resource.name, color: resource.color }))} hideIcon />
+      ),
       display: 'flex',
       minWidth: 150,
     },

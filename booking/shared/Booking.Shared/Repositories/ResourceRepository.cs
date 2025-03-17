@@ -92,20 +92,20 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                                                                            query.Resource.Location.Organization != null &&
                                                                            query.Resource.Location.Organization.Id == organizationId)) &&
                             (string.IsNullOrWhiteSpace(locationId) ||
-                             (query.Resource.Location != null && query.Resource.Location.Id == organizationId)) &&
+                             (query.Resource.Location != null && query.Resource.Location.Id == locationId)) &&
                             (tagIds.Count == 0 || tagIds.All(tagId => query.Resource.OrganizationTags.Select(tag => tag.Id).Contains(tagId))))
+            .Include(query => query.Bookings)
             .Include(query => query.Resource)
             .ThenInclude(query => query.Location)
             .Include(query => query.Resource)
             .ThenInclude(query => query.OrganizationTags)
             .OrderBy(query => query.Resource.Name)
-            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
         return result
             .GroupBy(slot => slot.Resource.Id)
             .Select(group => new { group.First().Resource, Slots = group.ToList() })
-            .Where(grouped => grouped.Slots.All(slot => slot.Available))
+            .Where(grouped => grouped.Slots.All(slot => slot is { Available: true, Bookings.Count: 0 }))
             .Select(grouped =>
             {
                 grouped.Resource.ResourceBookingSlots = grouped.Slots;

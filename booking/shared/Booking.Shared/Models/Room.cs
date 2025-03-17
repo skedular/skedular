@@ -12,5 +12,5 @@ public class Room : ReplicatedModelBaseWithDeleted
     public Location? Location { get; set; }
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public ICollection<Customer> PreferredByCustomers { get; set; } = [];
-    public ICollection<Booking> Bookings { get; set; }
+    public ICollection<Booking> Bookings { get; set; } = [];
 }

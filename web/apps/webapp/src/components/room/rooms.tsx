@@ -11,13 +11,14 @@ type Props = {
   sx?: SxProps<Theme>;
   rooms: readonly RoomDetails[];
   hideIcon?: boolean;
+  hideNAText?: boolean;
 };
 
 const maxItemToDisplay = 2;
 
-const Rooms = ({ sx, rooms, hideIcon }: Props) => {
+const Rooms = ({ sx, rooms, hideIcon, hideNAText }: Props) => {
   if (rooms.length === 0) {
-    return <SmallIconTypography label="N/A" startElement={!hideIcon && <RoomIcon />} sx={sx} />;
+    return hideNAText ? <></> : <SmallIconTypography label="N/A" startElement={!hideIcon && <RoomIcon />} sx={sx} />;
   }
 
   const visibleItems = rooms.slice(0, maxItemToDisplay);

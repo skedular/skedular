@@ -6,7 +6,7 @@ import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { startOfDay, toShortDateWithAdditionalDayInfo } from '@/libs/utils';
+import { endOfDay, startOfDay, toShortDateWithAdditionalDayInfo } from '@/libs/utils';
 import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -29,6 +29,8 @@ const RootQuery = graphql`
     $dateToGetAvailableDesks: DateTime!
     $deskIdsToIncludeToGetAvailableDesks: [String!]!
     $dateToGetAvailableRooms: DateTime!
+    $dateFromToGetAvailableResources: DateTime!
+    $dateUntilToGetAvailableResources: DateTime!
     $roomIdsToIncludeToGetAvailableRooms: [String!]!
     $customerId: String!
     $customerExists: Boolean!
@@ -43,6 +45,7 @@ const RootQuery = graphql`
     ...editBooking_customerTeams_query
     ...editBooking_availableLocationDesks_query
     ...editBooking_availableLocationRooms_query
+    ...editBooking_availableResources_query
   }
 `;
 
@@ -89,6 +92,7 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, bookin
         rootDataOrganizationMembersRelay={rootData}
         rootDataAvailableLocationDesksRelay={rootData}
         rootDataAvailableLocationRoomsRelay={rootData}
+        rootDataAvailableResourcesRelay={rootData}
         onReloadRequired={onReloadRequired}
         organizationId={organizationId}
       />
@@ -133,6 +137,7 @@ const LocationPageWithRelay = () => {
 
   useEffect(() => {
     const startDate = startOfDay().toISOString();
+    const endDate = endOfDay(startOfDay()).toISOString();
 
     loadQuery(
       {
@@ -150,6 +155,8 @@ const LocationPageWithRelay = () => {
         deskIdsToIncludeToGetAvailableDesks: [],
         dateToGetAvailableRooms: startDate,
         roomIdsToIncludeToGetAvailableRooms: [],
+        dateFromToGetAvailableResources: startDate,
+        dateUntilToGetAvailableResources: endDate,
         customerId: '',
         customerExists: false,
         teamsSortingValues: [

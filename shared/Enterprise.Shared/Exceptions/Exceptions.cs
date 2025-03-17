@@ -61,6 +61,8 @@ public class DeskNotAvailable() : Exception("Desk not available");
 
 public class RoomNotAvailable() : Exception("Room not available");
 
+public class ResourceNotAvailable() : Exception("Resource not available");
+
 public class SlackWorkspaceNotFound() : Exception("Slack workspace not found");
 
 public class SlackWorkspaceMemberTypeNotSupported() : Exception("Slack workspace member type not supported");

@@ -34,11 +34,8 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public async Task<BookingDetails?> BookingAsync(string id, [Service] IBookingService bookingService, CancellationToken cancellationToken)
-    {
-        var booking = await bookingService.GetByIdAsync(id, cancellationToken);
-        return mapper.MapTo(booking);
-    }
+    public async Task<BookingDetails?> BookingAsync(string id, [Service] IBookingService bookingService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public async Task<BookingConnection?> BookingsAsync(
@@ -124,7 +121,7 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var desks = await deskService.GetAvailableDesksAsync(
+        return mapper.MapTo(await deskService.GetAvailableDesksAsync(
             where.OrganizationId,
             where.LocationId,
             where.Date,
@@ -132,8 +129,7 @@ public class Query(IMapper mapper)
             where.CustomTagIds.ToSafeCollection(),
             where.ZoneIds.ToSafeCollection(),
             where.CombineCustomTagsZones ?? false,
-            cancellationToken);
-        return mapper.MapTo(desks);
+            cancellationToken));
     }
 
     [UseResolverScope]
@@ -148,7 +144,7 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var rooms = await roomService.GetAvailableRoomsAsync(
+        return mapper.MapTo(await roomService.GetAvailableRoomsAsync(
             where.OrganizationId,
             where.LocationId,
             where.Date,
@@ -156,8 +152,7 @@ public class Query(IMapper mapper)
             where.CustomTagIds.ToSafeCollection(),
             where.ZoneIds.ToSafeCollection(),
             where.CombineCustomTagsZones ?? false,
-            cancellationToken);
-        return mapper.MapTo(rooms);
+            cancellationToken));
     }
 
     [UseResolverScope]
@@ -323,15 +318,14 @@ public class Query(IMapper mapper)
             return null;
         }
 
-        var resources = await resourceService.GetAvailableResourcesAsync(
+        return mapper.MapTo(await resourceService.GetAvailableResourcesAsync(
             where.OrganizationId,
             where.LocationId,
             where.From,
             where.Until,
             where.CustomTagIds.ToSafeCollection(),
             where.ZoneIds.ToSafeCollection(),
-            cancellationToken);
-        return mapper.MapTo(resources);
+            cancellationToken));
     }
 
     [UseResolverScope]

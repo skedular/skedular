@@ -6,6 +6,7 @@ import { EllipseMenuIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import Resources from '@/components/resource/resources';
 import { Rooms } from '@/components/room';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
@@ -79,6 +80,12 @@ type RoomDetails = {
   color?: string | null | undefined;
 };
 
+type ResourceDetails = {
+  uniqueId: string;
+  name: string | null | undefined;
+  color?: string | null | undefined;
+};
+
 type TeamDetails = {
   name: string;
 };
@@ -89,6 +96,7 @@ type RowType = {
   team?: TeamDetails | null | undefined;
   desks: ReadonlyArray<DeskDetails>;
   rooms: ReadonlyArray<RoomDetails>;
+  resources: ReadonlyArray<ResourceDetails>;
   customTags: ReadonlyArray<CustomTagDetails>;
   zones: ReadonlyArray<ZoneDetails>;
   teammates: ReadonlyArray<CustomerDetails>;
@@ -350,6 +358,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
     const customTags = myBooking.desks
       .flatMap(({ customTags }) => customTags)
       .concat(myBooking.rooms.flatMap(({ customTags }) => customTags))
+      .concat(myBooking.resources.flatMap(({ customTags }) => customTags))
       .reduce((acc: CustomTagDetails[], customTag) => {
         if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
           acc.push(customTag);
@@ -360,6 +369,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
     const zones = myBooking.desks
       .flatMap(({ zones }) => zones)
       .concat(myBooking.rooms.flatMap(({ zones }) => zones))
+      .concat(myBooking.resources.flatMap(({ customTags }) => customTags))
       .reduce((acc: ZoneDetails[], zone) => {
         if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
           acc.push(zone);
@@ -380,6 +390,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       team: myBooking.team,
       desks: myBooking.desks,
       rooms: myBooking.rooms,
+      resources: myBooking.resources,
       customTags,
       zones,
       teammates,
@@ -417,6 +428,16 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       headerName: 'Rooms',
       editable: false,
       renderCell: (params) => <Rooms rooms={params.value.map((room: RoomDetails) => ({ id: room.uniqueId, name: room.name, color: room.color }))} hideIcon />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'resources',
+      headerName: 'Resources',
+      editable: false,
+      renderCell: (params) => (
+        <Resources resources={params.value.map((resource: ResourceDetails) => ({ id: resource.uniqueId, name: resource.name, color: resource.color }))} hideIcon />
+      ),
       display: 'flex',
       minWidth: 150,
     },

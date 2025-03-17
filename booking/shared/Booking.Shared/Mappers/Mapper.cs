@@ -48,12 +48,12 @@ public class Mapper : IMapper
         return booking;
     }
 
-    private static IEnumerable<Resource> MapTo(IEnumerable<(Models.Resource, List<Customer>)> src) =>
+    private static IEnumerable<Resource> MapTo(IEnumerable<ResourceCustomersPair> src) =>
         src.Select(item =>
         {
-            var resource = new Resource { Id = item.Item1.Id };
+            var resource = new Resource { Id = item.Resource.Id };
 
-            resource.CustomerIds.AddRange(item.Item2.Select(customer => customer.Id));
+            resource.CustomerIds.AddRange(item.Customers.Select(customer => customer.Id));
 
             return resource;
         });

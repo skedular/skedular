@@ -11,13 +11,14 @@ type Props = {
   sx?: SxProps<Theme>;
   customTags: readonly CustomTagDetails[];
   hideIcon?: boolean;
+  hideNAText?: boolean;
 };
 
 const maxItemToDisplay = 2;
 
-const CustomTags = ({ sx, customTags, hideIcon }: Props) => {
+const CustomTags = ({ sx, customTags, hideIcon, hideNAText }: Props) => {
   if (customTags.length === 0) {
-    return <SmallIconTypography label="N/A" startElement={!hideIcon && <CustomTagIcon />} sx={sx} />;
+    return hideNAText ? <></> : <SmallIconTypography label="N/A" startElement={!hideIcon && <CustomTagIcon />} sx={sx} />;
   }
 
   const visibleItems = customTags.slice(0, maxItemToDisplay);

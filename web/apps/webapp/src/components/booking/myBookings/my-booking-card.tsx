@@ -6,6 +6,7 @@ import { CalendarIcon, EllipseMenuIcon, LocationIcon, NotesIcon, TeamIcon } from
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import Resources from '@/components/resource/resources';
 import { Rooms } from '@/components/room';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
@@ -222,6 +223,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
   const customTags = bookingDetails.desks
     .flatMap(({ customTags }) => customTags)
     .concat(bookingDetails.rooms.flatMap(({ customTags }) => customTags))
+    .concat(bookingDetails.resources.flatMap(({ customTags }) => customTags))
     .reduce((acc: CustomTagDetails[], customTag) => {
       if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
         acc.push(customTag);
@@ -232,6 +234,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
   const zones = bookingDetails.desks
     .flatMap(({ zones }) => zones)
     .concat(bookingDetails.rooms.flatMap(({ zones }) => zones))
+    .concat(bookingDetails.resources.flatMap(({ zones }) => zones))
     .reduce((acc: ZoneDetails[], zone) => {
       if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
         acc.push(zone);
@@ -269,6 +272,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
           <Desks desks={bookingDetails.desks.map((desk) => ({ id: desk.uniqueId, name: desk.name, color: desk.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <Rooms rooms={bookingDetails.rooms.map((room) => ({ id: room.uniqueId, name: room.name, color: room.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <Divider />
+          <Resources
+            resources={bookingDetails.resources.map((resource) => ({ id: resource.uniqueId, name: resource.name, color: resource.color }))}
+            sx={{ paddingTop: 1, paddingBottom: 1 }}
+          />
           <Divider />
           <CustomTags
             customTags={customTags.map((customTag: CustomTagDetails) => ({ id: customTag.uniqueId, name: customTag.name, color: customTag.color }))}

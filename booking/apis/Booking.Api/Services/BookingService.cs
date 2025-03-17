@@ -15,6 +15,7 @@ using Desk = Booking.Shared.Database.Entities.Desk;
 using Room = Booking.Shared.Database.Entities.Room;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
+using Resource = Booking.Shared.Database.Entities.Resource;
 using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.Services;
@@ -95,6 +96,20 @@ public class BookingService(
         var organization = await GetOrganizationAndValidatePermissionsAsync(booking, customer, false, cancellationToken);
         var location = await GetLocationAndValidatePermissionsAsync(booking, customer, false, cancellationToken);
         var team = await GetTeamAndValidatePermissionsAsync(booking, customer, false, cancellationToken);
+
+        var customerIds = booking.Resources.SelectMany(item => item.Customers).Select(item => item.Id).Distinct().ToList();
+        var customerEntities = await repositoryFactory.CustomerRepository.Query(
+                new Specification<Customer> { Criteria = query => !query.DeletedAt.HasValue && customerIds.Contains(query.Id) })
+            .ToListAsync(cancellationToken);
+        if (customerEntities.Count != customerIds.Count)
+        {
+            throw new CustomerNotFound();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
+        var resources = await GetResourcesAsync(booking.From, booking.Until, resourceIds, cancellationToken);
         (var desks, location) = await GetDesksAndSetLocationIfRequiredAsync(booking, location, ignoreDeskAvailability, cancellationToken);
         (var rooms, location) = await GetRoomsAndSetLocationIfRequiredAsync(booking, location, ignoreRoomAvailability, cancellationToken);
         if (customer is null || customer.Id != booking.Customer.Id)
@@ -112,9 +127,29 @@ public class BookingService(
             cancellationToken);
         organization = PopulateRequiredFields(organization, location, team);
 
-        var bookingEntity = mapper.MapTo(booking, customerEntity!, organization, location, team, desks, rooms);
+        foreach (var resource in resources)
+        {
+            var matchingResource = booking.Resources.FirstOrDefault(item => item.Resource.Id == resource.Id);
+            if (matchingResource is null)
+            {
+                continue;
+            }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+            var matchingCustomerEntities = customerEntities.Where(item => matchingResource.Customers.Select(x => x.Id).Contains(item.Id)).ToList();
+
+            foreach (var slot in resource.ResourceBookingSlots)
+            {
+                foreach (var matchingCustomerEntity in matchingCustomerEntities
+                             .Where(matchingCustomerEntity => !slot.Customers.Select(item => item.Id).Contains(matchingCustomerEntity.Id)))
+                {
+                    slot.Customers.Add(matchingCustomerEntity);
+                }
+            }
+
+            repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
+        }
+
+        var bookingEntity = mapper.MapTo(booking, customerEntity!, organization, location, team, desks, rooms, resources);
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
@@ -124,6 +159,31 @@ public class BookingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return booking;
+    }
+
+    public async Task<Shared.Models.Booking> UpdateAsync(
+        Shared.Models.Booking booking,
+        bool ignoreDeskAvailability,
+        bool ignoreRoomAvailability,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
+
+        var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
+        if (existingBooking is null)
+        {
+            throw new BookingNotFound();
+        }
+
+        return await UpdateInternalAsync(
+            booking,
+            existingBooking,
+            customer,
+            customerEntity,
+            ignoreDeskAvailability,
+            ignoreRoomAvailability,
+            cancellationToken);
     }
 
     public async Task<Shared.Models.Booking> DeleteAsync(string bookingId, CancellationToken cancellationToken)
@@ -401,45 +461,19 @@ public class BookingService(
         return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
     }
 
-    public async Task<Shared.Models.Booking> UpdateAsync(
-        Shared.Models.Booking booking,
-        bool ignoreDeskAvailability,
-        bool ignoreRoomAvailability,
-        CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
-
-        var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
-        if (existingBooking is null)
-        {
-            throw new BookingNotFound();
-        }
-
-        return await UpdateInternalAsync(
-            booking,
-            existingBooking,
-            customer,
-            customerEntity,
-            ignoreDeskAvailability,
-            ignoreRoomAvailability,
-            cancellationToken);
-    }
-
     private async Task<(List<Desk> desks, Location? location)> GetDesksAndSetLocationIfRequiredAsync(
         Shared.Models.Booking booking,
         Location? location,
         bool ignoreDeskAvailability,
         CancellationToken cancellationToken)
     {
-        var desks = new List<Desk>();
         if (booking.Desks.Count == 0)
         {
-            return (desks, location);
+            return ([], location);
         }
 
         var deskIds = booking.Desks.Select(item => item.Id).ToList();
-        desks = await repositoryFactory.DeskRepository.Query(
+        var desks = await repositoryFactory.DeskRepository.Query(
                 new Specification<Desk>
                     {
                         Criteria = query => !query.DeletedAt.HasValue &&
@@ -498,14 +532,13 @@ public class BookingService(
         bool ignoreRoomAvailability,
         CancellationToken cancellationToken)
     {
-        var rooms = new List<Room>();
         if (booking.Rooms.Count == 0)
         {
-            return (rooms, location);
+            return ([], location);
         }
 
         var roomIds = booking.Rooms.Select(item => item.Id).ToList();
-        rooms = await repositoryFactory.RoomRepository.Query(
+        var rooms = await repositoryFactory.RoomRepository.Query(
                 new Specification<Room>
                     {
                         Criteria = query => !query.DeletedAt.HasValue &&
@@ -831,6 +864,33 @@ public class BookingService(
         var organization = await GetOrganizationAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
         var location = await GetLocationAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
         var team = await GetTeamAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
+
+        var customerIds = booking.Resources.SelectMany(item => item.Customers).Select(item => item.Id).Distinct().ToList();
+        var customerEntities = await repositoryFactory.CustomerRepository.Query(
+                new Specification<Customer> { Criteria = query => !query.DeletedAt.HasValue && customerIds.Contains(query.Id) })
+            .ToListAsync(cancellationToken);
+        if (customerEntities.Count != customerIds.Count)
+        {
+            throw new CustomerNotFound();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        /********************************************************************************************************************/
+        // TODO: 20250317 : Morteza: For now first remove all existing resource as part of the transaction to make later resource availability simpler
+        foreach (var slot in existingBooking.ResourceBookingSlots)
+        {
+            slot.Customers.Clear();
+        }
+
+        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(existingBooking.ResourceBookingSlots);
+        existingBooking.ResourceBookingSlots.Clear();
+        repositoryFactory.BookingRepository.Update(existingBooking);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        /********************************************************************************************************************/
+
+        var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
+        var resources = await GetResourcesAsync(booking.From, booking.Until, resourceIds, cancellationToken);
         (var desks, location) = await GetDesksAndSetLocationIfRequiredAsync(booking, location, ignoreDeskAvailability, cancellationToken);
         (var rooms, location) = await GetRoomsAndSetLocationIfRequiredAsync(booking, location, ignoreRoomAvailability, cancellationToken);
 
@@ -841,9 +901,29 @@ public class BookingService(
 
         organization = PopulateRequiredFields(organization, location, team);
 
-        var bookingEntity = mapper.MergeTo(booking, existingBooking, customerEntity!, organization, location, team, desks, rooms);
+        foreach (var resource in resources)
+        {
+            var matchingResource = booking.Resources.FirstOrDefault(item => item.Resource.Id == resource.Id);
+            if (matchingResource is null)
+            {
+                continue;
+            }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+            var matchingCustomerEntities = customerEntities.Where(item => matchingResource.Customers.Select(x => x.Id).Contains(item.Id)).ToList();
+
+            foreach (var slot in resource.ResourceBookingSlots)
+            {
+                foreach (var matchingCustomerEntity in matchingCustomerEntities
+                             .Where(matchingCustomerEntity => !slot.Customers.Select(item => item.Id).Contains(matchingCustomerEntity.Id)))
+                {
+                    slot.Customers.Add(matchingCustomerEntity);
+                }
+            }
+
+            repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
+        }
+
+        var bookingEntity = mapper.MergeTo(booking, existingBooking, customerEntity!, organization, location, team, desks, rooms, resources);
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
@@ -1103,4 +1183,29 @@ public class BookingService(
             null when team?.Organization is not null => team.Organization,
             _ => organization
         };
+
+    private async Task<ICollection<Resource>> GetResourcesAsync(
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ICollection<string> resourceIds,
+        CancellationToken cancellationToken)
+    {
+        if (resourceIds.Count == 0)
+        {
+            return [];
+        }
+
+        var availableResources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
+            null,
+            null,
+            from,
+            until,
+            resourceIds,
+            [],
+            cancellationToken);
+
+        return availableResources.Count != resourceIds.Count || !availableResources.All(item => resourceIds.Contains(item.Id))
+            ? throw new ResourceNotAvailable()
+            : availableResources;
+    }
 }

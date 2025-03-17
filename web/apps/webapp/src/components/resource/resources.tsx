@@ -9,19 +9,20 @@ import Resource from './resource';
 
 type Props = {
   sx?: SxProps<Theme>;
-  Resources: readonly ResourceDetails[];
+  resources: readonly ResourceDetails[];
   hideIcon?: boolean;
+  hideNAText?: boolean;
 };
 
 const maxItemToDisplay = 2;
 
-const Resources = ({ sx, Resources, hideIcon }: Props) => {
+const Resources = ({ sx, resources, hideIcon, hideNAText }: Props) => {
   if (Resources.length === 0) {
-    return <SmallIconTypography label="N/A" startElement={!hideIcon && <ResourceIcon />} sx={sx} />;
+    return hideNAText ? <></> : <SmallIconTypography label="N/A" startElement={!hideIcon && <ResourceIcon />} sx={sx} />;
   }
 
-  const visibleItems = Resources.slice(0, maxItemToDisplay);
-  const extraItems = Resources.slice(maxItemToDisplay);
+  const visibleItems = resources.slice(0, maxItemToDisplay);
+  const extraItems = resources.slice(maxItemToDisplay);
 
   return (
     <StackRow sx={sx}>

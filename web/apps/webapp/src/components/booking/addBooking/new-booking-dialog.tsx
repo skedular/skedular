@@ -350,6 +350,7 @@ const NewBookingDialog = ({
           resources {
             uniqueId
             name
+            color
             customTags {
               uniqueId
               name
@@ -503,7 +504,6 @@ const NewBookingDialog = ({
       startTransition(() => {
         refetchAvailableResources(
           {
-            organizationId,
             locationId,
             dateFromToGetAvailableResources: from,
             dateUntilToGetAvailableResources: endOfDay(from).toISOString(),
@@ -514,7 +514,7 @@ const NewBookingDialog = ({
         );
       });
     },
-    [refetchAvailableResources, organizationId],
+    [refetchAvailableResources],
   );
 
   useEffect(() => {
@@ -814,8 +814,8 @@ const NewBookingDialog = ({
                             <li {...props}>
                               <StackRow sx={{ alignItems: 'center' }}>
                                 <BodyIconTypography label={castedOption.name} />
-                                <CustomTags customTags={castedOption.customTags} />
-                                <Zones zones={castedOption.zones} hideIcon />
+                                <CustomTags customTags={castedOption.customTags} hideNAText />
+                                <Zones zones={castedOption.zones} hideIcon hideNAText />
                               </StackRow>
                             </li>
                           );
@@ -849,8 +849,8 @@ const NewBookingDialog = ({
                             <li {...props}>
                               <StackRow sx={{ alignItems: 'center' }}>
                                 <BodyIconTypography label={castedOption.name} />
-                                <CustomTags customTags={castedOption.customTags} />
-                                <Zones zones={castedOption.zones} hideIcon />
+                                <CustomTags customTags={castedOption.customTags} hideNAText />
+                                <Zones zones={castedOption.zones} hideIcon hideNAText />
                               </StackRow>
                             </li>
                           );
@@ -883,8 +883,8 @@ const NewBookingDialog = ({
                           <li {...props}>
                             <StackRow sx={{ alignItems: 'center' }}>
                               <BodyIconTypography label={castedOption.name} />
-                              <CustomTags customTags={castedOption.customTags} />
-                              <Zones zones={castedOption.zones} hideIcon />
+                              <CustomTags customTags={castedOption.customTags} hideNAText />
+                              <Zones zones={castedOption.zones} hideIcon hideNAText />
                             </StackRow>
                           </li>
                         );
