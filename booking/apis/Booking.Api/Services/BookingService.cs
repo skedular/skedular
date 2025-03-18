@@ -278,6 +278,9 @@ public class BookingService(
         existingBooking.Rooms = [];
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        RemoveAllSlotsFromBooking(existingBooking);
+
         _ = repositoryFactory.BookingRepository.Update(existingBooking);
         var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
 
@@ -878,14 +881,7 @@ public class BookingService(
 
         /********************************************************************************************************************/
         // TODO: 20250317 : Morteza: For now first remove all existing resource as part of the transaction to make later resource availability simpler
-        foreach (var slot in existingBooking.ResourceBookingSlots)
-        {
-            slot.Customers.Clear();
-        }
-
-        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(existingBooking.ResourceBookingSlots);
-        existingBooking.ResourceBookingSlots.Clear();
-        repositoryFactory.BookingRepository.Update(existingBooking);
+        RemoveAllSlotsFromBooking(existingBooking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         /********************************************************************************************************************/
 
@@ -1207,5 +1203,17 @@ public class BookingService(
         return availableResources.Count != resourceIds.Count || !availableResources.All(item => resourceIds.Contains(item.Id))
             ? throw new ResourceNotAvailable()
             : availableResources;
+    }
+
+    private void RemoveAllSlotsFromBooking(Shared.Database.Entities.Booking booking)
+    {
+        foreach (var slot in booking.ResourceBookingSlots)
+        {
+            slot.Customers.Clear();
+        }
+
+        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(booking.ResourceBookingSlots);
+        booking.ResourceBookingSlots.Clear();
+        repositoryFactory.BookingRepository.Update(booking);
     }
 }

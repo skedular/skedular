@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8a31acbca5ed8deaea0714034642c056>>
+ * @generated SignedSource<<6bd9d6178ce512a5820346abfbc3bbb3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -92,6 +92,7 @@ export type editBooking_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
+  readonly openingHoursMinutesStep: number;
   readonly " $fragmentType": "editBooking_query";
 };
 export type editBooking_query$key = {
@@ -405,6 +406,13 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "openingHoursMinutesStep",
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -412,6 +420,6 @@ return {
 };
 })();
 
-(node as any).hash = "a74ed2eab1f25f2428b0b5cd9f7a421e";
+(node as any).hash = "bbca739a5e1e7c7cd3a275cfea79a6bc";
 
 export default node;

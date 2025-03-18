@@ -4,7 +4,7 @@ import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { coal } from '@/libs/theme';
-import { endOfDay, startOfDay } from '@/libs/utils';
+import { startOfDay } from '@/libs/utils';
 import type { newBookingButton_rootQuery } from '@/queries/__generated__/newBookingButton_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/system';
@@ -157,8 +157,9 @@ const NewBookingButtonWithRelay = ({
   const [queryReference, loadQuery] = useQueryLoader<newBookingButton_rootQuery>(RootQuery);
 
   useEffect(() => {
-    const startDate = startOfDay().toISOString();
-    const endDate = endOfDay(startOfDay()).toISOString();
+    const date = startOfDay();
+    const startDate = date.toISOString();
+    const endDate = date.add(1, 'day').toISOString();
 
     loadQuery(
       {

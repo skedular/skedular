@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ea0b94a3223e29c0c0a209bb6616e62c>>
+ * @generated SignedSource<<f60416a77328aeb4806b738f518433da>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,7 @@ export type newBookingDialog_query$data = {
   readonly me: {
     readonly id: string;
   } | null | undefined;
+  readonly openingHoursMinutesStep: number;
   readonly " $fragmentType": "newBookingDialog_query";
 };
 export type newBookingDialog_query$key = {
@@ -142,6 +143,13 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "openingHoursMinutesStep",
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -149,6 +157,6 @@ return {
 };
 })();
 
-(node as any).hash = "03d78c198e482cd6ec50d4819faa7c64";
+(node as any).hash = "31f92e326a3c9d030fdf21c69d9fa66d";
 
 export default node;

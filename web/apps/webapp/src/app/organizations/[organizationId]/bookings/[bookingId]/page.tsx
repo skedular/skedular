@@ -6,7 +6,7 @@ import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { endOfDay, startOfDay, toShortDateWithAdditionalDayInfo } from '@/libs/utils';
+import { startOfDay, toShortDateWithAdditionalDayInfo } from '@/libs/utils';
 import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -136,8 +136,9 @@ const LocationPageWithRelay = () => {
   }
 
   useEffect(() => {
-    const startDate = startOfDay().toISOString();
-    const endDate = endOfDay(startOfDay()).toISOString();
+    const date = startOfDay();
+    const startDate = date.toISOString();
+    const endDate = date.add(1, 'day').toISOString();
 
     loadQuery(
       {

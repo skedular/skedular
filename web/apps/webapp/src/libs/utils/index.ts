@@ -270,6 +270,19 @@ const toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo = (date: Dayjs): strin
   return dateValue;
 };
 
+const toOpeningHoursFromTime = (time?: string | null | undefined) => (time ? dayjs(`2025-03-12T${time}`) : null);
+const getOpeningHoursFromDateTime = (datetime: Dayjs | null) => {
+  if (!datetime) {
+    return '00:00';
+  }
+
+  const date = dayjs(datetime).utc();
+
+  return `${date.format('HH')}:${date.format('mm')}`;
+};
+
+const isMidnight = (datetime: Dayjs | null) => getOpeningHoursFromDateTime(datetime) === '00:00';
+
 export {
   convertCalendarDayToStartOfDay,
   convertStringToLowercaseExceptFirstLetter,
@@ -281,9 +294,11 @@ export {
   getCustomerAvatarLetters,
   getCustomerFullName,
   getCustomerShortName,
+  getOpeningHoursFromDateTime,
   isInSameMonth,
   isInSameWeek,
   isInSameYear,
+  isMidnight,
   isTodayDate,
   isTomorrowDate,
   isYesterdayDate,
@@ -298,6 +313,7 @@ export {
   toFixed,
   toHourAndMinute,
   toLongDateTime,
+  toOpeningHoursFromTime,
   toShortDate,
   toShortDateTimeInUtc,
   toShortDateWithAdditionalDayInfo,

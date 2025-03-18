@@ -1,11 +1,11 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { autoCloseErrorNotificationOptions, errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { endOfDay, getCustomerFullName, joinErrors, keyboardDebounceTimeout, toShortDate } from '@/libs/utils';
+import { endOfDay, getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { editBooking_availableLocationDesks_query$key } from '@/queries/__generated__/editBooking_availableLocationDesks_query.graphql';
 import type { editBooking_availableLocationDesks_refetchableFragment } from '@/queries/__generated__/editBooking_availableLocationDesks_refetchableFragment.graphql';
 import type { editBooking_availableLocationRooms_query$key } from '@/queries/__generated__/editBooking_availableLocationRooms_query.graphql';
@@ -22,8 +22,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import { Autocomplete, DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
+import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
@@ -31,7 +32,7 @@ import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, usePaginationFragment, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
-import { array, date, object, string } from 'yup';
+import { array, boolean, date, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: editBooking_query$key;
@@ -103,6 +104,7 @@ type ResourceDetails = {
 
 type BookingDetails = {
   date: Date;
+  allDay: boolean;
   member: string;
   notes: string;
   organization: string | undefined;
@@ -115,6 +117,7 @@ type BookingDetails = {
 
 const bookingSchema = object({
   date: date().required(),
+  allDay: boolean(),
   member: string().required(),
   notes: string().notRequired(),
   organization: string().notRequired(),
@@ -216,6 +219,7 @@ const EditBooking = ({
             }
           }
         }
+        openingHoursMinutesStep
       }
     `,
     rootDataRelay,
@@ -435,6 +439,9 @@ const EditBooking = ({
   const validateBookingDetails = makeValidate(bookingSchema);
   const requiredFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(dayjs(rootData.booking?.from));
+  const [allDay, setAllDay] = useState<boolean>(isMidnight(rootData.booking?.from) && isMidnight(rootData.booking?.until));
+  const [timeFrom, setTimeFrom] = useState(toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)));
+  const [timeUntil, setTimeUntil] = useState(toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)));
   const [customerId, setCustomerId] = useState<string | undefined>(rootData.booking?.customer?.uniqueId);
   const [teamId, setTeamId] = useState<string | undefined>(rootData.booking?.team?.uniqueId);
   const [locationId, setLocationId] = useState<string | undefined>(rootData.booking?.location?.uniqueId);
@@ -622,6 +629,7 @@ const EditBooking = ({
 
   const handleBookingDetailUpdateClick = ({
     date,
+    allDay,
     member: memberId,
     notes,
     organization: organizationId,
@@ -637,18 +645,38 @@ const EditBooking = ({
 
     const booking = rootData.booking;
     const start = date as unknown as Dayjs;
-    const from = start.toISOString();
-    const until = endOfDay(start).toISOString();
+    let from = '';
+    let until = '';
+
+    if (allDay) {
+      from = start.toISOString();
+      until = start.add(1, 'day').toISOString();
+    } else {
+      if (!timeFrom || !timeUntil) {
+        themedToast(<NotificationContent content={`Time required when not booking full day.`} />, autoCloseErrorNotificationOptions);
+
+        return;
+      }
+
+      if (timeFrom >= timeUntil) {
+        themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
+
+        return;
+      }
+
+      from = start.add(timeFrom.get('hour'), 'hour').add(timeFrom.get('minute'), 'minute').toISOString();
+      until = start.add(timeUntil.get('hour'), 'hour').add(timeUntil.get('minute'), 'minute').toISOString();
+    }
+
     const shortDateTimeFormatFrom = toShortDate(start);
     const type = booking.type;
-    const shortDateFormatFrom = toShortDate(booking.from);
 
     let bookingDetailsInfo = `for ${getCustomerFullName(booking.customer)}`;
     if (booking.location) {
       bookingDetailsInfo += ` at the "${booking.location!.name}"`;
     }
 
-    bookingDetailsInfo += ` on ${shortDateFormatFrom}`;
+    bookingDetailsInfo += ` on ${toShortDate(booking.from)}`;
 
     const toastId = themedToast(<NotificationContent content={`Updating booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
@@ -787,6 +815,7 @@ const EditBooking = ({
             initialValues={{
               member: customerId,
               date: from,
+              allDay,
               notes: booking.notes,
               team: teamId,
               location: locationId,
@@ -797,6 +826,7 @@ const EditBooking = ({
             validate={validateBookingDetails}
             render={({ handleSubmit, values }) => {
               setFrom(values.date);
+              setAllDay(values.allDay);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -841,8 +871,16 @@ const EditBooking = ({
                       />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Date">
-                      <DatePicker name="date" required={requiredFields.date} />
+                    <FormFieldLabel label="Date/Time">
+                      <StackColumn>
+                        <DatePicker name="date" required={requiredFields.date} />
+
+                        <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
+                        <StackRow>
+                          <TimePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeFrom} onChange={setTimeFrom} />
+                          <TimePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeUntil} onChange={setTimeUntil} />
+                        </StackRow>
+                      </StackColumn>
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Notes">

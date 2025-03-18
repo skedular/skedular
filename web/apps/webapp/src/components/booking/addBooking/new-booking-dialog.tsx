@@ -1,11 +1,12 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
+import StackColumn from '@/components/commons/stack-column';
 import { CustomTags } from '@/components/customTag';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { autoCloseErrorNotificationOptions, errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
-import { endOfDay, getCustomerFullName, joinErrors, keyboardDebounceTimeout, startOfDay, toShortDate } from '@/libs/utils';
+import { endOfDay, getCustomerFullName, joinErrors, keyboardDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
 import type { newBookingDialog_availableLocationDesks_query$key } from '@/queries/__generated__/newBookingDialog_availableLocationDesks_query.graphql';
 import type { newBookingDialog_availableLocationDesks_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableLocationDesks_refetchableFragment.graphql';
@@ -21,15 +22,16 @@ import type { newBookingDialog_query$key } from '@/queries/__generated__/newBook
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { Dayjs } from 'dayjs';
-import { Autocomplete, DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
+import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, usePaginationFragment, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
-import { array, date, object, string } from 'yup';
+import { array, boolean, date, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: newBookingDialog_query$key;
@@ -106,6 +108,7 @@ type ResourceDetails = {
 
 type BookingDetails = {
   date: Date;
+  allDay: boolean;
   member: string;
   notes: string;
   team: string | undefined;
@@ -117,6 +120,7 @@ type BookingDetails = {
 
 const bookingSchema = object({
   date: date().required(),
+  allDay: boolean(),
   member: string().required(),
   notes: string().notRequired(),
   team: string().notRequired(),
@@ -157,6 +161,7 @@ const NewBookingDialog = ({
             }
           }
         }
+        openingHoursMinutesStep
       }
     `,
     rootDataRelay,
@@ -375,6 +380,9 @@ const NewBookingDialog = ({
   const validate = makeValidate(bookingSchema);
   const requiredFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(defaultDate ?? startOfDay());
+  const [allDay, setAllDay] = useState<boolean>(true);
+  const [timeFrom, setTimeFrom] = useState(toOpeningHoursFromTime('00:00'));
+  const [timeUntil, setTimeUntil] = useState(toOpeningHoursFromTime('00:00'));
   const [customerId, setCustomerId] = useState<string | undefined>();
   const [teamId, setTeamId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
@@ -523,16 +531,37 @@ const NewBookingDialog = ({
     handleRefetchAvailableResources(from, locationId);
   }, [handleRefetchAvailableLocationDesks, handleRefetchAvailableLocationRooms, handleRefetchAvailableResources, from, locationId]);
 
-  const handleAddClick = ({ date, member, notes, team: teamId, location: locationId, desks: deskIds, resources: resourceIds, rooms: roomIds }: BookingDetails) => {
+  const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, desks: deskIds, resources: resourceIds, rooms: roomIds }: BookingDetails) => {
     if (!rootData.me) {
       return;
     }
 
     const id = nanoid();
-    const finalDate = date as unknown as Dayjs;
-    const from = startOfDay(finalDate).toISOString();
-    const until = endOfDay(finalDate).toISOString();
-    const fromToPrint = toShortDate(startOfDay(finalDate));
+    const start = date as unknown as Dayjs;
+    let from = '';
+    let until = '';
+
+    if (allDay) {
+      from = start.toISOString();
+      until = start.add(1, 'day').toISOString();
+    } else {
+      if (!timeFrom || !timeUntil) {
+        themedToast(<NotificationContent content={`Time required when not booking full day.`} />, autoCloseErrorNotificationOptions);
+
+        return;
+      }
+
+      if (timeFrom >= timeUntil) {
+        themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
+
+        return;
+      }
+
+      from = start.add(timeFrom.get('hour'), 'hour').add(timeFrom.get('minute'), 'minute').toISOString();
+      until = start.add(timeUntil.get('hour'), 'hour').add(timeUntil.get('minute'), 'minute').toISOString();
+    }
+
+    const fromToPrint = toShortDate(startOfDay(start));
     const customerId = member ?? rootData.me?.id;
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
     const type = 'WorkingFromOffice';
@@ -692,6 +721,7 @@ const NewBookingDialog = ({
           initialValues={{
             member: customerId,
             date: from,
+            allDay,
             notes: '',
             team: teamId,
             location: locationId,
@@ -702,6 +732,7 @@ const NewBookingDialog = ({
           validate={validate}
           render={({ handleSubmit, values }) => {
             setFrom(values.date);
+            setAllDay(values.allDay);
 
             return (
               <FormStackColumn onSubmit={handleSubmit}>
@@ -739,8 +770,14 @@ const NewBookingDialog = ({
                   />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Date" useWiderSpace>
-                  <DatePicker name="date" required={requiredFields.date} />
+                <FormFieldLabel label="Date/Time" useWiderSpace>
+                  <StackColumn>
+                    <DatePicker name="date" required={requiredFields.date} />
+
+                    <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
+                    <TimePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeFrom} onChange={setTimeFrom} />
+                    <TimePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeUntil} onChange={setTimeUntil} />
+                  </StackColumn>
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Notes" useWiderSpace>

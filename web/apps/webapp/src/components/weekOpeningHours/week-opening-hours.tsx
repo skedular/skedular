@@ -3,10 +3,11 @@ import { FormFieldLabel, StackColumn, StackRow } from '@/components/commons';
 import { autoCloseErrorNotificationOptions, NotificationContent } from '@/components/notification';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
+import { getOpeningHoursFromDateTime, toOpeningHoursFromTime } from '@/libs/utils';
 import type { weekOpeningHours_query$key } from '@/queries/__generated__/weekOpeningHours_query.graphql';
 import Button from '@mui/material/Button';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -39,9 +40,6 @@ export type OpeningHoursDetailsInternal = {
   from: Date | Dayjs | null;
   until: Date | Dayjs | null;
 };
-
-const toOpeningHoursFromTime = (time?: string | null | undefined) => (time ? dayjs(`2025-03-12T${time}`) : null);
-const getOpeningHoursFromDateTime = (datetime: Dayjs | null) => (datetime ? `${datetime.format('HH')}:${datetime.format('mm')}` : '00:00');
 
 const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetailUpdateClick }: Props) => {
   const rootData = useFragment<weekOpeningHours_query$key>(
