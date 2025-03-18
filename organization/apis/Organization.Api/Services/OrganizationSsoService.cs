@@ -1,32 +1,56 @@
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Security.Sso.Models;
+using Organization.Api.Mappers;
+using Organization.Api.Services.Authorization;
+using Organization.Shared.Models;
 using Organization.Shared.Repositories;
 
 namespace Organization.Api.Services;
 
 public interface IOrganizationSsoService
 {
-    Task<string> SsoLoginAsync(
-        string organizationId,
-        string redirectUrl,
-        CancellationToken cancellationToken);
-
-    Task ProcessSsoResponseAsync(
-        HttpResponse httpResponse,
-        string rawSamlResponse,
-        CancellationToken cancellationToken);
+    Task<OrganizationSsoSetting> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting,CancellationToken cancellationToken);
+    Task<string> SsoLoginAsync(string organizationId,string redirectUrl,CancellationToken cancellationToken);
+    Task ProcessSsoResponseAsync(HttpResponse httpResponse,string rawSamlResponse,CancellationToken cancellationToken);
 }
 
 public class OrganizationSsoService(
     IRepositoryFactory repositoryFactory,
     ISamlLoginRequestFactory samlLoginRequestFactory,
-    ISamlAssertionConsumerService samlAssertionConsumerService) : IOrganizationSsoService
+    ISamlAssertionConsumerService samlAssertionConsumerService,
+    ICustomerService customerService,
+    IOrganizationAuthorizationService organizationAuthorizationService,
+    IMapper mapper) : IOrganizationSsoService
 {
-    public async Task<string> SsoLoginAsync(
-        string organizationId,
-        string redirectUrl,
-        CancellationToken cancellationToken)
+    public async Task<OrganizationSsoSetting> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(ssoSetting.Organization);
+        ArgumentException.ThrowIfNullOrWhiteSpace(ssoSetting.Organization.Id);
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(ssoSetting.Organization.Id, cancellationToken);
+        if (existingOrganization is null)
+        {
+            throw new OrganizationNotFound();
+        }
+
+        if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
+        {
+            throw new Unauthorized();
+        }
+
+        var ssoSettingsEntity = existingOrganization.OrganizationSsoSettings is null
+            ? repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapToEntity(ssoSetting, existingOrganization))
+            : repositoryFactory.OrganizationSsoSettingRepository.Update(
+                mapper.MergeToEntity(ssoSetting, existingOrganization.OrganizationSsoSettings,existingOrganization));
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        return mapper.MapTo(ssoSettingsEntity);
+    }
+
+    public async Task<string> SsoLoginAsync(string organizationId, string redirectUrl, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
@@ -46,10 +70,7 @@ public class OrganizationSsoService(
             existingOrganizationSsoSetting.LoginUrl);
     }
 
-    public async Task ProcessSsoResponseAsync(
-        HttpResponse httpResponse,
-        string rawSamlResponse,
-        CancellationToken cancellationToken)
+    public async Task ProcessSsoResponseAsync(HttpResponse httpResponse, string rawSamlResponse, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrEmpty(rawSamlResponse);
 

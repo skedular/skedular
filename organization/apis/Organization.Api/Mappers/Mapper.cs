@@ -108,6 +108,17 @@ public interface IMapper
     Tag MapTo(UpdateZoneInput src);
 
     IEnumerable<string> MapTo(Offering offering);
+    OrganizationSsoSetting MapTo(UpdateOrganizationSsoSettingsInput src);
+    OrganizationSsoSettingsDetails MapTo(OrganizationSsoSetting src);
+
+    Shared.Database.Entities.OrganizationSsoSetting MapToEntity(OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
+
+    Shared.Database.Entities.OrganizationSsoSetting MergeToEntity(
+        OrganizationSsoSetting src, 
+        Shared.Database.Entities.OrganizationSsoSetting dest,
+        Shared.Database.Entities.Organization organization);
+
+    OrganizationSsoSetting MapTo(Shared.Database.Entities.OrganizationSsoSetting src);
 }
 
 public class Mapper : IMapper
@@ -582,6 +593,49 @@ public class Mapper : IMapper
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Type = OrganizationTagType.Zone };
 
     public IEnumerable<string> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
+
+    public OrganizationSsoSetting MapTo(UpdateOrganizationSsoSettingsInput src) =>
+        new()
+        {
+            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
+            EntityId = src.EntityId,
+            LoginUrl = src.LoginUrl,
+            AppFederationMetadataUrl = src.AppFederationMetadataUrl,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+        };
+
+    public OrganizationSsoSettingsDetails MapTo(OrganizationSsoSetting src) =>
+        new() { Id = src.Id, EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl };
+
+    public Shared.Database.Entities.OrganizationSsoSetting MapToEntity(
+        OrganizationSsoSetting src,
+        Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new Shared.Database.Entities.OrganizationSsoSetting(), organization);
+
+    public Shared.Database.Entities.OrganizationSsoSetting MergeToEntity(
+        OrganizationSsoSetting src,
+        Shared.Database.Entities.OrganizationSsoSetting dest, 
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EntityId = src.EntityId;
+        dest.LoginUrl = src.LoginUrl;
+        dest.AppFederationMetadataUrl = src.AppFederationMetadataUrl;
+        dest.Organization = organization;
+        return dest;
+    }
+
+    public OrganizationSsoSetting MapTo(Shared.Database.Entities.OrganizationSsoSetting src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            EntityId = src.EntityId,
+            LoginUrl = src.LoginUrl,
+            AppFederationMetadataUrl = src.AppFederationMetadataUrl,
+            Organization = MapTo(src.Organization)
+        };
 
     private IEnumerable<OrganizationMember> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationMember> src,

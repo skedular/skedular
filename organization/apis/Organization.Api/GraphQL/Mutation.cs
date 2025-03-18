@@ -221,4 +221,15 @@ public class Mutation(IMapper mapper)
         var tags = await tagService.DeleteAsync(input.Ids.ToList(), cancellationToken);
         return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
     }
+    
+    [UseResolverScope]
+    public async Task<UpdateOrganizationSsoSettingsPayload?> UpdateOrganizationSsoSettingsAsync(
+        UpdateOrganizationSsoSettingsInput input,
+        [Service] IOrganizationSsoService organizationSsoService,
+        CancellationToken cancellationToken)
+    {
+        var ssoSettings = await organizationSsoService.UpdateSsoSettingsAsync(mapper.MapTo(input), cancellationToken);
+        return new UpdateOrganizationSsoSettingsPayload { ClientMutationId = input.ClientMutationId, SsoSettings = mapper.MapTo(ssoSettings) };
+    }
+
 }

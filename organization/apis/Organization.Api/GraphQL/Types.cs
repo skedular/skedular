@@ -176,6 +176,8 @@ public class OrganizationDetails : Node
     [GraphQLName("hasAttachedPaymentMethod")]
     public bool HasAttachedPaymentMethod { get; set; }
 
+    [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
+
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -481,5 +483,32 @@ public class OrganizationActiveOfferingDetails : Node
     [GraphQLName("featureSet")] public IEnumerable<string> FeatureSet { get; set; } = [];
     [GraphQLName("free")] public bool Free { get; set; }
     [GraphQLName("earlyBird")] public bool EarlyBird { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+}
+
+[GraphQLName("UpdateOrganizationSsoSettingsInput")]
+public class UpdateOrganizationSsoSettingsInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("id")] public string? Id { get; set; }
+    [GraphQLName("entityId")] public required string EntityId { get; set; }
+    [GraphQLName("loginUrl")] public string LoginUrl { get; set; }
+    [GraphQLName("appFederationMetadataUrl")] public required string AppFederationMetadataUrl { get; set; }
+}
+
+[GraphQLName("UpdateOrganizationSsoSettingsPayload")]
+public class UpdateOrganizationSsoSettingsPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails SsoSettings { get; set; }
+}
+
+[GraphQLName("OrganizationSsoSettingsDetails")]
+public class OrganizationSsoSettingsDetails : Node
+{
+    [GraphQLName("entityId")] public required string EntityId { get; set; }
+    [GraphQLName("loginUrl")] public string LoginUrl { get; set; }
+    [GraphQLName("appFederationMetadataUrl")] public required string AppFederationMetadataUrl { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

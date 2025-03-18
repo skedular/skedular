@@ -41,6 +41,7 @@ type Mutation {
   updateZone(input: UpdateZoneInput!): OrganizationTagPayload @cost(weight: "10")
   deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
   deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload @cost(weight: "10")
+  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
 }
 
 type OrganizationActiveOfferingDetails {
@@ -111,6 +112,7 @@ type OrganizationDetails {
   members: [OrganizationMemberDetails!]!
   resourceTypes: [OrganizationTagDetails!]!
   hasAttachedPaymentMethod: Boolean!
+  ssoSettings: OrganizationSsoSettingsDetails
   id: ID!
 }
 
@@ -185,6 +187,13 @@ type OrganizationPayload {
   organization: OrganizationDetails!
 }
 
+type OrganizationSsoSettingsDetails {
+  entityId: String!
+  loginUrl: String!
+  appFederationMetadataUrl: String!
+  id: ID!
+}
+
 type OrganizationTagConnection {
   pageInfo: PageInfo!
   edges: [OrganizationTagEdge!]!
@@ -255,6 +264,11 @@ type RejectInvitationToJoinOrganizationPayload {
 
 type UpdateOrganizationOfferingPayload {
   clientMutationId: String
+}
+
+type UpdateOrganizationSsoSettingsPayload {
+  clientMutationId: String
+  ssoSettings: OrganizationSsoSettingsDetails!
 }
 
 type Version {
@@ -417,6 +431,15 @@ input UpdateOrganizationOfferingInput {
   clientMutationId: String
   id: String!
   offeringCode: String!
+}
+
+input UpdateOrganizationSsoSettingsInput {
+  clientMutationId: String
+  organizationId: String!
+  id: String
+  entityId: String!
+  loginUrl: String!
+  appFederationMetadataUrl: String!
 }
 
 input UpdateZoneInput {

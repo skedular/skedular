@@ -508,6 +508,7 @@ type Mutation {
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
+  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload @cost(weight: "10")
   updateRoom(input: UpdateRoomInput!): RoomPayload @cost(weight: "10")
   updateTeam(input: UpdateTeamInput!): TeamPayload @cost(weight: "10")
@@ -701,6 +702,7 @@ type OrganizationDetails {
   members: [OrganizationMemberDetails!]!
   name: String!
   resourceTypes: [OrganizationTagDetails!]!
+  ssoSettings: OrganizationSsoSettingsDetails
   termsOfUse: OrganizationTermsOfUse
   website: String
 }
@@ -787,6 +789,13 @@ type OrganizationPaymentMethod {
   cardIssuer: String
   cardLastFourDigit: String
   id: ID!
+}
+
+type OrganizationSsoSettingsDetails {
+  appFederationMetadataUrl: String!
+  entityId: String!
+  id: ID!
+  loginUrl: String!
 }
 
 type OrganizationTagConnection {
@@ -1108,6 +1117,11 @@ type TeamPayload {
 
 type UpdateOrganizationOfferingPayload {
   clientMutationId: String
+}
+
+type UpdateOrganizationSsoSettingsPayload {
+  clientMutationId: String
+  ssoSettings: OrganizationSsoSettingsDetails!
 }
 
 type VariedDateOpeningHours {
@@ -1920,6 +1934,15 @@ input UpdateOrganizationOfferingInput {
   clientMutationId: String
   id: String!
   offeringCode: String!
+}
+
+input UpdateOrganizationSsoSettingsInput {
+  appFederationMetadataUrl: String!
+  clientMutationId: String
+  entityId: String!
+  id: String
+  loginUrl: String!
+  organizationId: String!
 }
 
 input UpdateResourceInput {

@@ -7,6 +7,8 @@ namespace Organization.Shared.Repositories;
 
 public interface IOrganizationSsoSettingRepository : IRepository<OrganizationSsoSetting>
 {
+    OrganizationSsoSetting Add(OrganizationSsoSetting organizationSsoSetting);
+    OrganizationSsoSetting Update(OrganizationSsoSetting organizationSsoSetting);
     Task<OrganizationSsoSetting?> GetByOrganizationIdAsync(
         string organizationId,
         CancellationToken cancellationToken);
@@ -16,6 +18,20 @@ public class OrganizationSsoSettingRepository(OrganizationDbContext dbContext, T
     : RepositoryBase<OrganizationDbContext, OrganizationSsoSetting>(dbContext, timeProvider),
         IOrganizationSsoSettingRepository
 {
+    public OrganizationSsoSetting Add(OrganizationSsoSetting organizationSsoSetting)
+    {
+        var now = TimeProvider.GetUtcNow();
+        organizationSsoSetting.CreatedAt = now;
+        return DbContext.OrganizationSsoSetting.Add(organizationSsoSetting).Entity;
+    }
+
+    public OrganizationSsoSetting Update(OrganizationSsoSetting organizationSsoSetting)
+    {
+        var now = TimeProvider.GetUtcNow();
+        organizationSsoSetting.ModifiedAt = now;
+        return DbContext.OrganizationSsoSetting.Update(organizationSsoSetting).Entity;
+    }
+
     public async Task<OrganizationSsoSetting?> GetByOrganizationIdAsync(
         string organizationId,
         CancellationToken cancellationToken) =>
