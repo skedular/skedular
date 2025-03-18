@@ -113,7 +113,7 @@ public interface IMapper
     Shared.Database.Entities.OrganizationSsoSetting MapToEntity(OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.OrganizationSsoSetting MergeToEntity(
-        OrganizationSsoSetting src, 
+        OrganizationSsoSetting src,
         Shared.Database.Entities.OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
 
@@ -608,7 +608,10 @@ public class Mapper : IMapper
     public OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSetting? src) =>
         src is null
             ? null
-            : new() { Id = src.Id, EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl };
+            : new OrganizationSsoSettingsDetails
+            {
+                Id = src.Id, EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl
+            };
 
     public Shared.Database.Entities.OrganizationSsoSetting MapToEntity(
         OrganizationSsoSetting src,
@@ -617,7 +620,7 @@ public class Mapper : IMapper
 
     public Shared.Database.Entities.OrganizationSsoSetting MergeToEntity(
         OrganizationSsoSetting src,
-        Shared.Database.Entities.OrganizationSsoSetting dest, 
+        Shared.Database.Entities.OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;

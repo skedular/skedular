@@ -78,7 +78,7 @@ public class CustomerSubscriber(
             var organization = item.Organization is null
                 ? null
                 : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization!.Id, cancellationToken);
-            preferredLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Id,organization,cancellationToken));
+            preferredLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Id, organization, cancellationToken));
         }
 
         var preferredTeams = new List<Team>();

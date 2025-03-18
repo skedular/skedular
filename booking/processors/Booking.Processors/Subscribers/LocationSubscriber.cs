@@ -105,7 +105,7 @@ public class LocationSubscriber(
         {
             // Regenerate those changed
             await bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlotAsync(
-                resourceIds, 
+                resourceIds,
                 repositoryFactory.UnitOfWork,
                 cancellationToken);
         }

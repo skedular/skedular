@@ -494,7 +494,9 @@ public class UpdateOrganizationSsoSettingsInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("entityId")] public required string EntityId { get; set; }
     [GraphQLName("loginUrl")] public string LoginUrl { get; set; }
-    [GraphQLName("appFederationMetadataUrl")] public required string AppFederationMetadataUrl { get; set; }
+
+    [GraphQLName("appFederationMetadataUrl")]
+    public required string AppFederationMetadataUrl { get; set; }
 }
 
 [GraphQLName("UpdateOrganizationSsoSettingsPayload")]
@@ -509,6 +511,9 @@ public class OrganizationSsoSettingsDetails : Node
 {
     [GraphQLName("entityId")] public required string EntityId { get; set; }
     [GraphQLName("loginUrl")] public string LoginUrl { get; set; }
-    [GraphQLName("appFederationMetadataUrl")] public required string AppFederationMetadataUrl { get; set; }
+
+    [GraphQLName("appFederationMetadataUrl")]
+    public required string AppFederationMetadataUrl { get; set; }
+
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
