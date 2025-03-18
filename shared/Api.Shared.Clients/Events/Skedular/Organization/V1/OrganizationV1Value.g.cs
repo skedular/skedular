@@ -35,46 +35,51 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "b3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvbkgAElIKHGludml0YXRpb25Ub0pv",
             "aW5Pcmdhbml6YXRpb24YAiABKAsyKi5vcmdhbml6YXRpb24uSW52aXRhdGlv",
             "blRvSm9pbk9yZ2FuaXphdGlvbkgAEioKCG9mZmVyaW5nGAMgASgLMhYub3Jn",
-            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCKeAgoMT3JnYW5pemF0",
+            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCLaAgoMT3JnYW5pemF0",
             "aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5w",
             "cm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEo",
             "CRIPCgdsb2dvVXJsGAUgASgJEg8KB3dlYnNpdGUYBiABKAkSMQoHbWVtYmVy",
             "cxgHIAMoCzIgLm9yZ2FuaXphdGlvbi5Pcmdhbml6YXRpb25NZW1iZXISKAoI",
             "T2ZmZXJpbmcYCCABKAsyFi5vcmdhbml6YXRpb24uT2ZmZXJpbmcSFgoOYXp1",
             "cmVUZW5hbnRJZHMYCSADKAkSHwoEdGFncxgKIAMoCzIRLm9yZ2FuaXphdGlv",
-            "bi5UYWcifAoST3JnYW5pemF0aW9uTWVtYmVyEgoKAmlkGAEgASgJEhIKCmN1",
-            "c3RvbWVySWQYAiABKAkSIAoEcm9sZRgDIAEoDjISLm9yZ2FuaXphdGlvbi5S",
-            "b2xlEiQKBnN0YXR1cxgEIAEoDjIULm9yZ2FuaXphdGlvbi5TdGF0dXMi0QEK",
-            "CE9mZmVyaW5nEgoKAmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoFc3RhcnQY",
-            "AyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEo",
-            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1JlbmV3GAUg",
-            "ASgIEhEKCXVuaXRQcmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21lcklkcxgH",
-            "IAMoCRIWCg5vcmdhbml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlvbhIKCgJp",
-            "ZBgBIAEoCSKZAQocSW52aXRhdGlvblRvSm9pbk9yZ2FuaXphdGlvbhIKCgJp",
-            "ZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYu",
-            "VGltZXN0YW1wEhYKDm9yZ2FuaXphdGlvbklkGAMgASgJEhMKC2ludml0ZWRC",
-            "eUlkGAQgASgJEhEKCWludml0ZWVJZBgFIAEoCSJRCgNUYWcSCgoCaWQYASAB",
-            "KAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIMCgR0eXBl",
-            "GAQgASgJEg0KBWNvbG9yGAUgASgJKq0BCgRUeXBlEhgKFE9yZ2FuaXphdGlv",
-            "blVwc2VydGVkEAASFwoTT3JnYW5pemF0aW9uRGVsZXRlZBABEigKJEludml0",
-            "YXRpb25Ub0pvaW5Pcmdhbml6YXRpb25VcHNlcnRlZBACEicKI0ludml0YXRp",
-            "b25Ub0pvaW5Pcmdhbml6YXRpb25EZWxldGVkEAMSHwobT3JnYW5pemF0aW9u",
-            "T2ZmZXJpbmdVcGRhdGVkEAQqMAoEUm9sZRIJCgVPd25lchAAEhEKDUFkbWlu",
-            "aXN0cmF0b3IQARIKCgZNZW1iZXIQAioiCgZTdGF0dXMSCgoGQWN0aXZlEAAS",
-            "DAoISW5hY3RpdmUQAUI7qgI4QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5T",
-            "a2VkdWxhci5Pcmdhbml6YXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
+            "bi5UYWcSOgoLc3NvU2V0dGluZ3MYCyABKAsyJS5vcmdhbml6YXRpb24uT3Jn",
+            "YW5pemF0aW9uU3NvU2V0dGluZ3MifAoST3JnYW5pemF0aW9uTWVtYmVyEgoK",
+            "AmlkGAEgASgJEhIKCmN1c3RvbWVySWQYAiABKAkSIAoEcm9sZRgDIAEoDjIS",
+            "Lm9yZ2FuaXphdGlvbi5Sb2xlEiQKBnN0YXR1cxgEIAEoDjIULm9yZ2FuaXph",
+            "dGlvbi5TdGF0dXMi0QEKCE9mZmVyaW5nEgoKAmlkGAEgASgJEgwKBGNvZGUY",
+            "AiABKAkSKQoFc3RhcnQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
+            "YW1wEicKA2VuZBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAS",
+            "EQoJYXV0b1JlbmV3GAUgASgIEhEKCXVuaXRQcmljZRgGIAEoBRIZChFhY3Rp",
+            "dmVDdXN0b21lcklkcxgHIAMoCRIWCg5vcmdhbml6YXRpb25JZBgIIAEoCSIW",
+            "CghMb2NhdGlvbhIKCgJpZBgBIAEoCSKZAQocSW52aXRhdGlvblRvSm9pbk9y",
+            "Z2FuaXphdGlvbhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5n",
+            "b29nbGUucHJvdG9idWYuVGltZXN0YW1wEhYKDm9yZ2FuaXphdGlvbklkGAMg",
+            "ASgJEhMKC2ludml0ZWRCeUlkGAQgASgJEhEKCWludml0ZWVJZBgFIAEoCSJR",
+            "CgNUYWcSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlv",
+            "bhgDIAEoCRIMCgR0eXBlGAQgASgJEg0KBWNvbG9yGAUgASgJImsKF09yZ2Fu",
+            "aXphdGlvblNzb1NldHRpbmdzEgoKAmlkGAEgASgJEhAKCEVudGl0eUlkGAIg",
+            "ASgJEhAKCExvZ2luVXJsGAMgASgJEiAKGEFwcEZlZGVyYXRpb25NZXRhZGF0",
+            "YVVybBgEIAEoCSqtAQoEVHlwZRIYChRPcmdhbml6YXRpb25VcHNlcnRlZBAA",
+            "EhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQARIoCiRJbnZpdGF0aW9uVG9Kb2lu",
+            "T3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhInCiNJbnZpdGF0aW9uVG9Kb2luT3Jn",
+            "YW5pemF0aW9uRGVsZXRlZBADEh8KG09yZ2FuaXphdGlvbk9mZmVyaW5nVXBk",
+            "YXRlZBAEKjAKBFJvbGUSCQoFT3duZXIQABIRCg1BZG1pbmlzdHJhdG9yEAES",
+            "CgoGTWVtYmVyEAIqIgoGU3RhdHVzEgoKBkFjdGl2ZRAAEgwKCEluYWN0aXZl",
+            "EAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3Jn",
+            "YW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "InvitationToJoinOrganization", "Offering" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember.Parser, new[]{ "Id", "CustomerId", "Role", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "InvitedById", "InviteeId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "Type", "Color" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "Type", "Color" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings.Parser, new[]{ "Id", "EntityId", "LoginUrl", "AppFederationMetadataUrl" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1140,6 +1145,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       offering_ = other.offering_ != null ? other.offering_.Clone() : null;
       azureTenantIds_ = other.azureTenantIds_.Clone();
       tags_ = other.tags_.Clone();
+      ssoSettings_ = other.ssoSettings_ != null ? other.ssoSettings_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1266,6 +1272,18 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       get { return tags_; }
     }
 
+    /// <summary>Field number for the "ssoSettings" field.</summary>
+    public const int SsoSettingsFieldNumber = 11;
+    private global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings ssoSettings_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings SsoSettings {
+      get { return ssoSettings_; }
+      set {
+        ssoSettings_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1291,6 +1309,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (!object.Equals(Offering, other.Offering)) return false;
       if(!azureTenantIds_.Equals(other.azureTenantIds_)) return false;
       if(!tags_.Equals(other.tags_)) return false;
+      if (!object.Equals(SsoSettings, other.SsoSettings)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1308,6 +1327,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (offering_ != null) hash ^= Offering.GetHashCode();
       hash ^= azureTenantIds_.GetHashCode();
       hash ^= tags_.GetHashCode();
+      if (ssoSettings_ != null) hash ^= SsoSettings.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1357,6 +1377,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       azureTenantIds_.WriteTo(output, _repeated_azureTenantIds_codec);
       tags_.WriteTo(output, _repeated_tags_codec);
+      if (ssoSettings_ != null) {
+        output.WriteRawTag(90);
+        output.WriteMessage(SsoSettings);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1398,6 +1422,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       azureTenantIds_.WriteTo(ref output, _repeated_azureTenantIds_codec);
       tags_.WriteTo(ref output, _repeated_tags_codec);
+      if (ssoSettings_ != null) {
+        output.WriteRawTag(90);
+        output.WriteMessage(SsoSettings);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1432,6 +1460,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       size += azureTenantIds_.CalculateSize(_repeated_azureTenantIds_codec);
       size += tags_.CalculateSize(_repeated_tags_codec);
+      if (ssoSettings_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(SsoSettings);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1474,6 +1505,12 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       azureTenantIds_.Add(other.azureTenantIds_);
       tags_.Add(other.tags_);
+      if (other.ssoSettings_ != null) {
+        if (ssoSettings_ == null) {
+          SsoSettings = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings();
+        }
+        SsoSettings.MergeFrom(other.SsoSettings);
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1539,6 +1576,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             tags_.AddEntriesFrom(input, _repeated_tags_codec);
             break;
           }
+          case 90: {
+            if (ssoSettings_ == null) {
+              SsoSettings = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings();
+            }
+            input.ReadMessage(SsoSettings);
+            break;
+          }
         }
       }
     #endif
@@ -1602,6 +1646,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 82: {
             tags_.AddEntriesFrom(ref input, _repeated_tags_codec);
+            break;
+          }
+          case 90: {
+            if (ssoSettings_ == null) {
+              SsoSettings = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings();
+            }
+            input.ReadMessage(SsoSettings);
             break;
           }
         }
@@ -3274,6 +3325,315 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 42: {
             Color = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class OrganizationSsoSettings : pb::IMessage<OrganizationSsoSettings>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<OrganizationSsoSettings> _parser = new pb::MessageParser<OrganizationSsoSettings>(() => new OrganizationSsoSettings());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<OrganizationSsoSettings> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[9]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public OrganizationSsoSettings() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public OrganizationSsoSettings(OrganizationSsoSettings other) : this() {
+      id_ = other.id_;
+      entityId_ = other.entityId_;
+      loginUrl_ = other.loginUrl_;
+      appFederationMetadataUrl_ = other.appFederationMetadataUrl_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public OrganizationSsoSettings Clone() {
+      return new OrganizationSsoSettings(this);
+    }
+
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private string id_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Id {
+      get { return id_; }
+      set {
+        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "EntityId" field.</summary>
+    public const int EntityIdFieldNumber = 2;
+    private string entityId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string EntityId {
+      get { return entityId_; }
+      set {
+        entityId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "LoginUrl" field.</summary>
+    public const int LoginUrlFieldNumber = 3;
+    private string loginUrl_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string LoginUrl {
+      get { return loginUrl_; }
+      set {
+        loginUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "AppFederationMetadataUrl" field.</summary>
+    public const int AppFederationMetadataUrlFieldNumber = 4;
+    private string appFederationMetadataUrl_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AppFederationMetadataUrl {
+      get { return appFederationMetadataUrl_; }
+      set {
+        appFederationMetadataUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as OrganizationSsoSettings);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(OrganizationSsoSettings other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Id != other.Id) return false;
+      if (EntityId != other.EntityId) return false;
+      if (LoginUrl != other.LoginUrl) return false;
+      if (AppFederationMetadataUrl != other.AppFederationMetadataUrl) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
+      if (EntityId.Length != 0) hash ^= EntityId.GetHashCode();
+      if (LoginUrl.Length != 0) hash ^= LoginUrl.GetHashCode();
+      if (AppFederationMetadataUrl.Length != 0) hash ^= AppFederationMetadataUrl.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (EntityId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(EntityId);
+      }
+      if (LoginUrl.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(LoginUrl);
+      }
+      if (AppFederationMetadataUrl.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(AppFederationMetadataUrl);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (EntityId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(EntityId);
+      }
+      if (LoginUrl.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(LoginUrl);
+      }
+      if (AppFederationMetadataUrl.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(AppFederationMetadataUrl);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
+      }
+      if (EntityId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(EntityId);
+      }
+      if (LoginUrl.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(LoginUrl);
+      }
+      if (AppFederationMetadataUrl.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AppFederationMetadataUrl);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(OrganizationSsoSettings other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Id.Length != 0) {
+        Id = other.Id;
+      }
+      if (other.EntityId.Length != 0) {
+        EntityId = other.EntityId;
+      }
+      if (other.LoginUrl.Length != 0) {
+        LoginUrl = other.LoginUrl;
+      }
+      if (other.AppFederationMetadataUrl.Length != 0) {
+        AppFederationMetadataUrl = other.AppFederationMetadataUrl;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            EntityId = input.ReadString();
+            break;
+          }
+          case 26: {
+            LoginUrl = input.ReadString();
+            break;
+          }
+          case 34: {
+            AppFederationMetadataUrl = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            EntityId = input.ReadString();
+            break;
+          }
+          case 26: {
+            LoginUrl = input.ReadString();
+            break;
+          }
+          case 34: {
+            AppFederationMetadataUrl = input.ReadString();
             break;
           }
         }

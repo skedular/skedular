@@ -118,7 +118,7 @@ public interface IMapper
         Shared.Database.Entities.OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
 
-    OrganizationSsoSetting MapTo(Shared.Database.Entities.OrganizationSsoSetting src);
+    OrganizationSsoSetting? MapTo(Shared.Database.Entities.OrganizationSsoSetting? src);
 }
 
 public class Mapper : IMapper
@@ -140,7 +140,8 @@ public class Mapper : IMapper
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
             DailyMemberCountLastRecordedAt = src.DailyMemberCountLastRecordedAt,
             TermsOfUse = MapTo(src.TermsOfUse),
-            IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList()
+            IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList(),
+            OrganizationSsoSettings = MapTo(src.OrganizationSsoSettings)
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
@@ -625,17 +626,18 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationSsoSetting MapTo(Shared.Database.Entities.OrganizationSsoSetting src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            EntityId = src.EntityId,
-            LoginUrl = src.LoginUrl,
-            AppFederationMetadataUrl = src.AppFederationMetadataUrl,
-            Organization = MapTo(src.Organization)
-        };
+    public OrganizationSsoSetting? MapTo(Shared.Database.Entities.OrganizationSsoSetting? src) =>
+        src is null
+            ? null
+            : new OrganizationSsoSetting
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                EntityId = src.EntityId,
+                LoginUrl = src.LoginUrl,
+                AppFederationMetadataUrl = src.AppFederationMetadataUrl
+            };
 
     private IEnumerable<OrganizationMember> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationMember> src,

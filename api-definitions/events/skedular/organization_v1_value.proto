@@ -46,6 +46,7 @@ message Organization {
   Offering Offering = 8;
   repeated string azureTenantIds = 9;
   repeated Tag tags = 10;
+  OrganizationSsoSettings ssoSettings = 11;
 }
 
 enum Role {
@@ -93,4 +94,11 @@ message Tag {
   string description = 3;
   string type = 4;
   string color = 5;
+}
+
+message OrganizationSsoSettings {
+  string id = 1;
+  string EntityId = 2;
+  string LoginUrl = 3;
+  string AppFederationMetadataUrl = 4;
 }

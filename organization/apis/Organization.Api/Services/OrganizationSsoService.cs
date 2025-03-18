@@ -1,18 +1,20 @@
+using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Security.Sso.Models;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
+using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 
 namespace Organization.Api.Services;
 
 public interface IOrganizationSsoService
 {
-    Task<OrganizationSsoSetting> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting,CancellationToken cancellationToken);
-    Task<string> SsoLoginAsync(string organizationId,string redirectUrl,CancellationToken cancellationToken);
-    Task ProcessSsoResponseAsync(HttpResponse httpResponse,string rawSamlResponse,CancellationToken cancellationToken);
+    Task<OrganizationSsoSetting> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting, CancellationToken cancellationToken);
+    Task<string> SsoLoginAsync(string organizationId, string redirectUrl, CancellationToken cancellationToken);
+    Task ProcessSsoResponseAsync(HttpResponse httpResponse, string rawSamlResponse, CancellationToken cancellationToken);
 }
 
 public class OrganizationSsoService(
@@ -21,7 +23,9 @@ public class OrganizationSsoService(
     ISamlAssertionConsumerService samlAssertionConsumerService,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IMapper mapper) : IOrganizationSsoService
+    IMapper mapper,
+    IDbTransactionBuilder transactionBuilder,
+    IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationSsoService
 {
     public async Task<OrganizationSsoSetting> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting, CancellationToken cancellationToken)
     {
@@ -40,14 +44,22 @@ public class OrganizationSsoService(
             throw new Unauthorized();
         }
 
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
         var ssoSettingsEntity = existingOrganization.OrganizationSsoSettings is null
             ? repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapToEntity(ssoSetting, existingOrganization))
             : repositoryFactory.OrganizationSsoSettingRepository.Update(
-                mapper.MergeToEntity(ssoSetting, existingOrganization.OrganizationSsoSettings,existingOrganization));
+                mapper.MergeToEntity(ssoSetting, existingOrganization.OrganizationSsoSettings, existingOrganization));
+
+        await organizationOutboxPublisher.PublishOrganizationAsync(
+            [mapper.MapTo(existingOrganization)],
+            repositoryFactory.UnitOfWork,
+            cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
 
-        return mapper.MapTo(ssoSettingsEntity);
+        return mapper.MapTo(ssoSettingsEntity)!;
     }
 
     public async Task<string> SsoLoginAsync(string organizationId, string redirectUrl, CancellationToken cancellationToken)

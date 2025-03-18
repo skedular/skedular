@@ -20,9 +20,7 @@ public class Mapper : IMapper
 {
     public Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src)
     {
-        var organizationOffering = src.OrganizationOfferings
-            .Where(item => !item.DeletedAt.HasValue)
-            .OrderByDescending(item => item.End).First();
+        var organizationOffering = src.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue).OrderByDescending(item => item.End).First();
         var organization = new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization
         {
             Id = src.Id,
@@ -39,7 +37,8 @@ public class Mapper : IMapper
                 End = organizationOffering.End.ToTimestamp(),
                 AutoRenew = organizationOffering.AutoRenew,
                 UnitPrice = organizationOffering.UnitPrice
-            }
+            },
+            SsoSettings = MapTo(src.OrganizationSsoSettings)
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
@@ -86,4 +85,15 @@ public class Mapper : IMapper
             InvitedById = src.CreatedBy.Id,
             InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
         };
+
+    private static OrganizationSsoSettings? MapTo(OrganizationSsoSetting? src) =>
+        src is null
+            ? null
+            : new OrganizationSsoSettings
+            {
+                Id = src.Id,
+                EntityId = src.EntityId.ToSafeString(),
+                LoginUrl = src.LoginUrl.ToSafeString(),
+                AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString()
+            };
 }
