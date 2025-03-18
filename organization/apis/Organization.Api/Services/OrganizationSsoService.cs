@@ -67,9 +67,7 @@ public class OrganizationSsoService(
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var existingOrganizationSsoSetting =
-            await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(
-                organizationId,
-                cancellationToken);
+            await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(organizationId, cancellationToken);
         if (existingOrganizationSsoSetting is null)
         {
             throw new OrganizationSsoIsNotYetSetup();
@@ -88,8 +86,7 @@ public class OrganizationSsoService(
 
         var decodedSaml = samlAssertionConsumerService.VerifyAndDecodeSamlResponse(rawSamlResponse);
         var response = samlAssertionConsumerService.ExtractSamlResponse(decodedSaml);
-        var existingOrganizationSsoSetting =
-            await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(
+        var existingOrganizationSsoSetting = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(
                 ExtractSamlOriginalId(response.InResponseTo),
                 cancellationToken);
         if (existingOrganizationSsoSetting is null)

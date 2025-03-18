@@ -229,7 +229,7 @@ public class Mutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var ssoSettings = await organizationSsoService.UpdateSsoSettingsAsync(mapper.MapTo(input), cancellationToken);
-        return new UpdateOrganizationSsoSettingsPayload { ClientMutationId = input.ClientMutationId, SsoSettings = mapper.MapTo(ssoSettings) };
+        return new UpdateOrganizationSsoSettingsPayload { ClientMutationId = input.ClientMutationId, SsoSettings = mapper.MapTo(ssoSettings)! };
     }
 
 }

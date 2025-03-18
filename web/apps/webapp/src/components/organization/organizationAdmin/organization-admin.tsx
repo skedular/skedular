@@ -44,6 +44,7 @@ import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '
 import type { organizationAdmin_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationAdmin_setOrganizationBillingInfoMutation.graphql';
 import type { organizationAdmin_updateOrganizationMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_updateOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
+import type { organizationAdmin_updateOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationSsoSettingsMutation.graphql';
 import type { organizationAdmin_zones_query$key } from '@/queries/__generated__/organizationAdmin_zones_query.graphql';
 import type { organizationAdmin_zones_refetchableFragment } from '@/queries/__generated__/organizationAdmin_zones_refetchableFragment.graphql';
 import Box from '@mui/material/Box';
@@ -116,6 +117,18 @@ const organizationBillingSchema = object({
   billingCountry: string().nullable(),
 });
 
+type OrganziationSsoSettingsDetails = {
+  entityId: string;
+  loginUrl: string;
+  appFederationMetadataUrl: string;
+};
+
+const organziationSsoSettingsSchema = object({
+  entityId: string().required('Entity ID is required'),
+  loginUrl: string().url('Login Url must be a valid Url').required('Login Url is required'),
+  appFederationMetadataUrl: string().url('App Federation Metadata Url must be a valid Url').required('App Federation Metadata Url is required'),
+});
+
 type ZoneRowType = {
   id: string;
   name: string;
@@ -181,6 +194,12 @@ const OrganizationAdmin = ({
             featureSet
             underPriceLines
             free
+          }
+          ssoSettings {
+            id
+            entityId
+            loginUrl
+            appFederationMetadataUrl
           }
         }
         organizationIndustryMainCategoriesReferences {
@@ -389,6 +408,19 @@ const OrganizationAdmin = ({
     }
   `);
 
+  const [commitUpdateOrganizationSsoSettings] = useMutation<organizationAdmin_updateOrganizationSsoSettingsMutation>(graphql`
+    mutation organizationAdmin_updateOrganizationSsoSettingsMutation($input: UpdateOrganizationSsoSettingsInput!) @raw_response_type {
+      updateOrganizationSsoSettings(input: $input) {
+        ssoSettings {
+          id
+          entityId
+          loginUrl
+          appFederationMetadataUrl
+        }
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -400,6 +432,8 @@ const OrganizationAdmin = ({
   const requiredOrganizationDetailsFields = makeRequired(organizationSchema);
   const validateOrganizationBilling = makeValidate(organizationBillingSchema);
   const requiredOrganizationBillingFields = makeRequired(organizationBillingSchema);
+  const validateOrganizationSsoSettings = makeValidate(organziationSsoSettingsSchema);
+  const requiredOrganizationSsoSettingsFields = makeRequired(organziationSsoSettingsSchema);
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
@@ -433,6 +467,7 @@ const OrganizationAdmin = ({
   );
 
   const [customTagNameSearchText, setCustomTagNameSearchText] = useState<string>('');
+
   const [seledctedCustomTags, setSeledctedCustomTags] = useState<GridRowSelectionModel>([]);
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<null | string>(null);
   const [customTagMoreActionsAnchorEl, setCustomTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
@@ -614,6 +649,60 @@ const OrganizationAdmin = ({
             province: billingProvince,
             zipcode: billingZipcode,
             country: billingCountry,
+          },
+        },
+      },
+    });
+  };
+
+  const handleOrganizationSsoSettingsDetailUpdateClick = ({ entityId, loginUrl, appFederationMetadataUrl }: OrganziationSsoSettingsDetails) => {
+    const organization = rootData.organization;
+    if (!organization) {
+      return;
+    }
+
+    const ssoSettingsId = organization.ssoSettings ? organization.ssoSettings.id : nanoid();
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' SSO settings...`} />, infoNotificationOptions);
+
+    commitUpdateOrganizationSsoSettings({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: ssoSettingsId,
+          organizationId: organization.id,
+          entityId,
+          loginUrl,
+          appFederationMetadataUrl,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${name} SSO settings details updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateOrganizationSsoSettings: {
+          ssoSettings: {
+            id: ssoSettingsId,
+            entityId,
+            loginUrl,
+            appFederationMetadataUrl,
           },
         },
       },
@@ -1371,6 +1460,7 @@ const OrganizationAdmin = ({
   ];
 
   const organization = rootData.organization;
+
   const organizationBillingInfo = rootData.organizationBillingInfo;
   const billingEmail = organizationBillingInfo.email ? organizationBillingInfo.email : '';
   const billingAddressLine1 = organizationBillingInfo.addressLine1 ? organizationBillingInfo.addressLine1 : '';
@@ -1384,6 +1474,10 @@ const OrganizationAdmin = ({
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails && rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
   const activeOffering = rootData.organization ? rootData.organization.activeOffering : null;
   const availableOfferings = rootData.organization && rootData.organization.availableOfferings ? rootData.organization.availableOfferings : [];
+
+  const ssoSettingsEntityId = organization.ssoSettings ? organization.ssoSettings.entityId : '';
+  const ssoSettingsLoginUrl = organization.ssoSettings ? organization.ssoSettings.loginUrl : '';
+  const ssoSettingsappFederationMetadataUrl = organization.ssoSettings ? organization.ssoSettings.appFederationMetadataUrl : '';
 
   return (
     <>
@@ -1556,16 +1650,51 @@ const OrganizationAdmin = ({
               </StackColumn>
             )}
 
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['sso-setup'] = divElement;
+            <Form
+              onSubmit={handleOrganizationSsoSettingsDetailUpdateClick}
+              initialValues={{
+                entityId: ssoSettingsEntityId,
+                loginUrl: ssoSettingsLoginUrl,
+                appFederationMetadataUrl: ssoSettingsappFederationMetadataUrl,
               }}
-            >
-              <SectionIconTypography label="SSO Setup" />
-              <BodyIconTypography label="Edit your organization SSO settings" />
-              <Divider />
-            </StackColumn>
+              validate={validateOrganizationSsoSettings}
+              render={({ handleSubmit }) => (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <StackColumn
+                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                    ref={(divElement) => {
+                      sectionRefs.current['sso-setup'] = divElement;
+                    }}
+                  >
+                    <SectionIconTypography label="SSO Setup" />
+                    <BodyIconTypography label="Edit your organization SSO settings" />
+                    <Divider />
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Entity Id">
+                      <TextField name="entityId" required={requiredOrganizationSsoSettingsFields.entityId} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Login Url">
+                      <TextField name="loginUrl" required={requiredOrganizationSsoSettingsFields.loginUrl} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="App Federation Metadata Url">
+                      <TextField name="appFederationMetadataUrl" required={requiredOrganizationSsoSettingsFields.appFederationMetadataUrl} />
+                    </FormFieldLabel>
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        Update
+                      </Button>
+                    </StackRow>
+                  </StackColumn>
+                </FormStackColumn>
+              )}
+            />
 
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}

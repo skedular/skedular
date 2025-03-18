@@ -109,8 +109,7 @@ public interface IMapper
 
     IEnumerable<string> MapTo(Offering offering);
     OrganizationSsoSetting MapTo(UpdateOrganizationSsoSettingsInput src);
-    OrganizationSsoSettingsDetails MapTo(OrganizationSsoSetting src);
-
+    OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSetting? src);
     Shared.Database.Entities.OrganizationSsoSetting MapToEntity(OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.OrganizationSsoSetting MergeToEntity(
@@ -317,7 +316,8 @@ public class Mapper : IMapper
             Members = MapTo(src.OrganizationMembers),
             ResourceTypes = src.Tags
                 .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
-                .Select(item => MapTo(item)!)
+                .Select(item => MapTo(item)!),
+            SsoSettings = MapTo(src.OrganizationSsoSettings)
         };
     }
 
@@ -605,8 +605,10 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
-    public OrganizationSsoSettingsDetails MapTo(OrganizationSsoSetting src) =>
-        new() { Id = src.Id, EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl };
+    public OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSetting? src) =>
+        src is null
+            ? null
+            : new() { Id = src.Id, EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl };
 
     public Shared.Database.Entities.OrganizationSsoSetting MapToEntity(
         OrganizationSsoSetting src,

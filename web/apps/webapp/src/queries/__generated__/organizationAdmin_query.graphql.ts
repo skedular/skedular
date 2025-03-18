@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b18540160d40838daa7ce0a92974e36>>
+ * @generated SignedSource<<0352f1739bbfaa08e57acb197055beec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -51,6 +51,12 @@ export type organizationAdmin_query$data = {
     }>;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
+    readonly ssoSettings: {
+      readonly appFederationMetadataUrl: string;
+      readonly entityId: string;
+      readonly id: string;
+      readonly loginUrl: string;
+    } | null | undefined;
     readonly website: string | null | undefined;
   } | null | undefined;
   readonly organizationBillingInfo: {
@@ -300,6 +306,39 @@ return {
             (v8/*: any*/)
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationSsoSettingsDetails",
+          "kind": "LinkedField",
+          "name": "ssoSettings",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "entityId",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "loginUrl",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "appFederationMetadataUrl",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -410,6 +449,6 @@ return {
 };
 })();
 
-(node as any).hash = "98901edf6adb727fb363b6b32effb8e7";
+(node as any).hash = "5f5dc8d436901562bc1f72ee28be591f";
 
 export default node;
