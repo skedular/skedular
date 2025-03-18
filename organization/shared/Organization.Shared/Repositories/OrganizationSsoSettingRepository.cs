@@ -9,9 +9,8 @@ public interface IOrganizationSsoSettingRepository : IRepository<OrganizationSso
 {
     OrganizationSsoSetting Add(OrganizationSsoSetting organizationSsoSetting);
     OrganizationSsoSetting Update(OrganizationSsoSetting organizationSsoSetting);
-    Task<OrganizationSsoSetting?> GetByOrganizationIdAsync(
-        string organizationId,
-        CancellationToken cancellationToken);
+    Task<OrganizationSsoSetting?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<OrganizationSsoSetting?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationSsoSettingRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
@@ -32,9 +31,12 @@ public class OrganizationSsoSettingRepository(OrganizationDbContext dbContext, T
         return DbContext.OrganizationSsoSetting.Update(organizationSsoSetting).Entity;
     }
 
-    public async Task<OrganizationSsoSetting?> GetByOrganizationIdAsync(
-        string organizationId,
-        CancellationToken cancellationToken) =>
+    public async Task<OrganizationSsoSetting?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.OrganizationSsoSetting
+            .Include(x => x.Organization)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<OrganizationSsoSetting?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.OrganizationSsoSetting
             .Include(x => x.Organization)
             .FirstOrDefaultAsync(query => query.Organization.Id == organizationId, cancellationToken);

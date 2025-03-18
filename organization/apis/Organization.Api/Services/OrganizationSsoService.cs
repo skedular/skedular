@@ -1,5 +1,6 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
+using Enterprise.Shared.Random;
 using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Security.Sso.Models;
 using Organization.Api.Mappers;
@@ -25,7 +26,8 @@ public class OrganizationSsoService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IMapper mapper,
     IDbTransactionBuilder transactionBuilder,
-    IOrganizationOutboxPublisher organizationOutboxPublisher) : IOrganizationSsoService
+    IOrganizationOutboxPublisher organizationOutboxPublisher,
+    IRandomHelper randomHelper) : IOrganizationSsoService
 {
     public async Task<OrganizationSsoSetting> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting, CancellationToken cancellationToken)
     {
@@ -42,6 +44,20 @@ public class OrganizationSsoService(
         if (!organizationAuthorizationService.CanModify(existingOrganization, customer))
         {
             throw new Unauthorized();
+        }
+
+        if (!string.IsNullOrWhiteSpace(ssoSetting.Id))
+        {
+            var existingOrganizationSsoSettings =
+                await repositoryFactory.OrganizationSsoSettingRepository.GetByIdAsync(ssoSetting.Id, cancellationToken);
+            if (existingOrganizationSsoSettings is not null && existingOrganization.Id != existingOrganizationSsoSettings.Organization.Id)
+            {
+                throw new Unauthorized();
+            }
+        }
+        else
+        {
+            ssoSetting.Id = randomHelper.Generate();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -87,8 +103,8 @@ public class OrganizationSsoService(
         var decodedSaml = samlAssertionConsumerService.VerifyAndDecodeSamlResponse(rawSamlResponse);
         var response = samlAssertionConsumerService.ExtractSamlResponse(decodedSaml);
         var existingOrganizationSsoSetting = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(
-                ExtractSamlOriginalId(response.InResponseTo),
-                cancellationToken);
+            ExtractSamlOriginalId(response.InResponseTo),
+            cancellationToken);
         if (existingOrganizationSsoSetting is null)
         {
             throw new OrganizationSsoIsNotYetSetup();
