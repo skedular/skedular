@@ -440,8 +440,9 @@ const EditBooking = ({
   const requiredFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(dayjs(rootData.booking?.from));
   const [allDay, setAllDay] = useState<boolean>(isMidnight(rootData.booking?.from) && isMidnight(rootData.booking?.until));
-  const [timeFrom, setTimeFrom] = useState(toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)));
-  const [timeUntil, setTimeUntil] = useState(toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)));
+  const [timeFrom, setTimeFrom] = useState<Dayjs | null>(toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)));
+  const [timeUntil, setTimeUntil] = useState<Dayjs | null>(toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)));
+  const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
   const [customerId, setCustomerId] = useState<string | undefined>(rootData.booking?.customer?.uniqueId);
   const [teamId, setTeamId] = useState<string | undefined>(rootData.booking?.team?.uniqueId);
   const [locationId, setLocationId] = useState<string | undefined>(rootData.booking?.location?.uniqueId);
@@ -499,7 +500,7 @@ const EditBooking = ({
   );
 
   const resources = useMemo<ResourceDetails[]>(() => {
-    if (!rootDataAvailableResources.availableResources) {
+    if (!timeRangeValid || !rootDataAvailableResources.availableResources) {
       return [];
     }
 
@@ -524,7 +525,7 @@ const EditBooking = ({
     }
 
     return availableResources;
-  }, [rootDataAvailableResources.availableResources, from, rootData.booking?.from, rootData.booking?.resources]);
+  }, [rootDataAvailableResources.availableResources, from, timeRangeValid, rootData.booking?.from, rootData.booking?.resources]);
 
   const handleRefetchOrganizationMembers = useCallback(
     (peopleNameSearchText: string) => {
@@ -599,13 +600,13 @@ const EditBooking = ({
   );
 
   const handleRefetchAvailableResources = useCallback(
-    (from: Dayjs | Date, locationId?: string) => {
+    ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }, locationId?: string) => {
       startTransition(() => {
         refetchAvailableResources(
           {
             locationId,
-            dateFromToGetAvailableResources: from,
-            dateUntilToGetAvailableResources: endOfDay(from).toISOString(),
+            dateFromToGetAvailableResources: dayjs(from).utc().toISOString(),
+            dateUntilToGetAvailableResources: dayjs(until).utc().toISOString(),
           },
           {
             fetchPolicy: 'store-and-network',
@@ -616,12 +617,62 @@ const EditBooking = ({
     [refetchAvailableResources],
   );
 
+  const getDateRange = useCallback(
+    (allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
+      if (allDay) {
+        return { valid: true, from: date, until: endOfDay(date) };
+      }
+
+      if (!timeFrom || !timeUntil) {
+        themedToast(<NotificationContent content={`Time required when not booking full day.`} />, autoCloseErrorNotificationOptions);
+
+        return { valid: false, from: date, until: endOfDay(date) };
+      }
+
+      const utcDate = dayjs(date).utc();
+      const from = utcDate.add(timeFrom.get('hour'), 'hour').add(timeFrom.get('minute'), 'minute');
+      const until = utcDate.add(timeUntil.get('hour'), 'hour').add(timeUntil.get('minute'), 'minute');
+
+      if (from.isAfter(until)) {
+        themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
+
+        return { valid: false, from: date, until: endOfDay(date) };
+      }
+
+      return {
+        valid: true,
+        from,
+        until,
+      };
+    },
+    [themedToast],
+  );
+
   useEffect(() => handleRefetchTeams(rootData.booking?.customer?.uniqueId), [handleRefetchTeams, rootData.booking?.customer?.uniqueId]);
   useEffect(() => {
     handleRefetchAvailableLocationDesks(defaultDeskIds, from, locationId);
     handleRefetchAvailableLocationRooms(defaultRoomIds, from, locationId);
-    handleRefetchAvailableResources(from, locationId);
-  }, [defaultDeskIds, handleRefetchAvailableLocationDesks, defaultRoomIds, handleRefetchAvailableLocationRooms, handleRefetchAvailableResources, from, locationId]);
+
+    const range = getDateRange(allDay, from, { timeFrom, timeUntil });
+    if (range.valid) {
+      setTimeRangeValid(true);
+      handleRefetchAvailableResources(range, locationId);
+    } else {
+      setTimeRangeValid(false);
+    }
+  }, [
+    defaultDeskIds,
+    handleRefetchAvailableLocationDesks,
+    defaultRoomIds,
+    handleRefetchAvailableLocationRooms,
+    handleRefetchAvailableResources,
+    from,
+    allDay,
+    timeFrom,
+    timeUntil,
+    locationId,
+    getDateRange,
+  ]);
 
   const handleCloseClick = () => {
     router.back();
@@ -658,7 +709,7 @@ const EditBooking = ({
         return;
       }
 
-      if (timeFrom >= timeUntil) {
+      if (timeFrom.isSame(timeUntil) || timeFrom.isAfter(timeUntil)) {
         themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
 
         return;
@@ -791,7 +842,14 @@ const EditBooking = ({
         : [];
 
     handleRefetchAvailableLocationRooms(roomIds, from, locationId);
-    handleRefetchAvailableResources(from, locationId);
+
+    const range = getDateRange(allDay, from, { timeFrom, timeUntil });
+    if (range.valid) {
+      setTimeRangeValid(true);
+      handleRefetchAvailableResources(range, locationId);
+    } else {
+      setTimeRangeValid(false);
+    }
   };
 
   const handlePeopleNameSearchTextChange = (str: string) => {

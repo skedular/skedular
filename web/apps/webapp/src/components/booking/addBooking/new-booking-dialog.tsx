@@ -23,7 +23,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
@@ -381,8 +381,9 @@ const NewBookingDialog = ({
   const requiredFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(defaultDate ?? startOfDay());
   const [allDay, setAllDay] = useState<boolean>(true);
-  const [timeFrom, setTimeFrom] = useState(toOpeningHoursFromTime('00:00'));
-  const [timeUntil, setTimeUntil] = useState(toOpeningHoursFromTime('00:00'));
+  const [timeFrom, setTimeFrom] = useState<Dayjs | null>(toOpeningHoursFromTime('00:00'));
+  const [timeUntil, setTimeUntil] = useState<Dayjs | null>(toOpeningHoursFromTime('00:00'));
+  const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
   const [customerId, setCustomerId] = useState<string | undefined>();
   const [teamId, setTeamId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
@@ -430,7 +431,7 @@ const NewBookingDialog = ({
 
   const resources = useMemo<ResourceDetails[]>(
     () =>
-      rootDataAvailableResources.availableResources
+      timeRangeValid && rootDataAvailableResources.availableResources
         ? rootDataAvailableResources.availableResources.map(({ uniqueId, name, customTags, zones }) => ({
             uniqueId,
             name,
@@ -438,7 +439,7 @@ const NewBookingDialog = ({
             zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
           }))
         : [],
-    [rootDataAvailableResources.availableResources],
+    [rootDataAvailableResources.availableResources, timeRangeValid],
   );
 
   const handleRefetchOrganizationMembers = useCallback(
@@ -512,13 +513,13 @@ const NewBookingDialog = ({
   );
 
   const handleRefetchAvailableResources = useCallback(
-    (from: Dayjs | Date, locationId?: string) => {
+    ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }, locationId?: string) => {
       startTransition(() => {
         refetchAvailableResources(
           {
             locationId,
-            dateFromToGetAvailableResources: from,
-            dateUntilToGetAvailableResources: endOfDay(from).toISOString(),
+            dateFromToGetAvailableResources: dayjs(from).utc().toISOString(),
+            dateUntilToGetAvailableResources: dayjs(until).utc().toISOString(),
           },
           {
             fetchPolicy: 'store-and-network',
@@ -529,11 +530,49 @@ const NewBookingDialog = ({
     [refetchAvailableResources],
   );
 
+  const getDateRange = useCallback(
+    (allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
+      if (allDay) {
+        return { valid: true, from: date, until: endOfDay(date) };
+      }
+
+      if (!timeFrom || !timeUntil) {
+        themedToast(<NotificationContent content={`Time required when not booking full day.`} />, autoCloseErrorNotificationOptions);
+
+        return { valid: false, from: date, until: endOfDay(date) };
+      }
+
+      const utcDate = dayjs(date).utc();
+      const from = utcDate.add(timeFrom.get('hour'), 'hour').add(timeFrom.get('minute'), 'minute');
+      const until = utcDate.add(timeUntil.get('hour'), 'hour').add(timeUntil.get('minute'), 'minute');
+
+      if (from.isAfter(until)) {
+        themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
+
+        return { valid: false, from: date, until: endOfDay(date) };
+      }
+
+      return {
+        valid: true,
+        from,
+        until,
+      };
+    },
+    [themedToast],
+  );
+
   useEffect(() => {
     handleRefetchAvailableLocationDesks(from, locationId);
     handleRefetchAvailableLocationRooms(from, locationId);
-    handleRefetchAvailableResources(from, locationId);
-  }, [handleRefetchAvailableLocationDesks, handleRefetchAvailableLocationRooms, handleRefetchAvailableResources, from, locationId]);
+
+    const range = getDateRange(allDay, from, { timeFrom, timeUntil });
+    if (range.valid) {
+      setTimeRangeValid(true);
+      handleRefetchAvailableResources(range, locationId);
+    } else {
+      setTimeRangeValid(false);
+    }
+  }, [handleRefetchAvailableLocationDesks, handleRefetchAvailableLocationRooms, handleRefetchAvailableResources, from, allDay, timeFrom, timeUntil, locationId, getDateRange]);
 
   const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, desks: deskIds, resources: resourceIds, rooms: roomIds }: BookingDetails) => {
     if (!rootData.me) {
@@ -555,7 +594,7 @@ const NewBookingDialog = ({
         return;
       }
 
-      if (timeFrom >= timeUntil) {
+      if (timeFrom.isSame(timeUntil) || timeFrom.isAfter(timeUntil)) {
         themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
 
         return;
@@ -704,7 +743,14 @@ const NewBookingDialog = ({
     setLocationId(locationId);
     handleRefetchAvailableLocationDesks(from, locationId);
     handleRefetchAvailableLocationRooms(from, locationId);
-    handleRefetchAvailableResources(from, locationId);
+
+    const range = getDateRange(allDay, from, { timeFrom, timeUntil });
+    if (range.valid) {
+      setTimeRangeValid(true);
+      handleRefetchAvailableResources(range, locationId);
+    } else {
+      setTimeRangeValid(false);
+    }
   };
 
   const handlePeopleNameSearchTextChange = (str: string) => {
