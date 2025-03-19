@@ -10,9 +10,9 @@
 
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1"/>
-        <PackageReference Include="DotLiquid" Version="2.3.107"/>
+        <PackageReference Include="DotLiquid" Version="2.3.142"/>
 
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.2">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.61">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
