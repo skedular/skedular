@@ -256,18 +256,23 @@ const toShortDateWithAdditionalDayInfo = (date: Dayjs): string => {
   return dateValue;
 };
 
-const toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo = (date: Dayjs): string => {
-  let dateValue = '';
+const dateRangeToShortDateWithAdditionalDayInfo = (from: Dayjs, until: Dayjs): string => {
+  const utcFrom = from.utc();
+  const utcUntil = until.utc();
 
-  if (isTodayDate(date)) {
-    dateValue = `Today, ${toShortDateWithDayAndMonthOnly(date)}`;
-  } else if (isTomorrowDate(date)) {
-    dateValue = `Tomorrow, ${toShortDateWithDayAndMonthOnly(date)}`;
+  if (isMidnight(utcFrom) && isMidnight(utcUntil)) {
+    if (utcFrom.add(1, 'day').isSame(utcUntil)) {
+      return `${toShortDateWithAdditionalDayInfo(utcFrom)} All Day`;
+    } else {
+      return `${toShortDateWithAdditionalDayInfo(utcFrom)} - ${toShortDateWithAdditionalDayInfo(utcUntil)} All Day`;
+    }
   } else {
-    dateValue = toShortDateWithDayAndMonthOnly(date);
+    if (utcFrom.isSame(utcUntil, 'day')) {
+      return `${toShortDateWithAdditionalDayInfo(utcFrom)} ${utcFrom.format('hh:mm a')} - ${utcUntil.format('hh:mm a')}`;
+    } else {
+      return `${toShortDateWithAdditionalDayInfo(utcFrom)} ${utcFrom.format('hh:mm a')} - ${toShortDateWithAdditionalDayInfo(utcUntil)} ${utcUntil.format('hh:mm a')}`;
+    }
   }
-
-  return dateValue;
 };
 
 const toOpeningHoursFromTime = (time?: string | null | undefined) => (time ? dayjs(`2025-03-12T${time}`) : null);
@@ -286,6 +291,7 @@ const isMidnight = (datetime: Dayjs | null) => getOpeningHoursFromDateTime(datet
 export {
   convertCalendarDayToStartOfDay,
   convertStringToLowercaseExceptFirstLetter,
+  dateRangeToShortDateWithAdditionalDayInfo,
   decodeBase64,
   encodeBase64,
   endOfDay,
@@ -318,7 +324,6 @@ export {
   toShortDateTimeInUtc,
   toShortDateWithAdditionalDayInfo,
   toShortDateWithDayAndMonthOnly,
-  toShortDateWithDayAndMonthOnlyWithAdditionalDayInfo,
   toShortDateWithoutWeekDay,
   toShortWeekDay,
 };

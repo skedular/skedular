@@ -11,7 +11,7 @@ import { Rooms } from '@/components/room';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@/libs/utils';
+import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { myBookings_bookings_query$key } from '@/queries/__generated__/myBookings_bookings_query.graphql';
 import type { myBookings_bookings_refetchableFragment } from '@/queries/__generated__/myBookings_bookings_refetchableFragment.graphql';
 import type { myBookings_deleteBookingMutation } from '@/queries/__generated__/myBookings_deleteBookingMutation.graphql';
@@ -394,7 +394,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       customTags,
       zones,
       teammates,
-      date: toShortDateWithAdditionalDayInfo(dayjs(myBooking.from)),
+      date: dateRangeToShortDateWithAdditionalDayInfo(dayjs(myBooking.from), dayjs(myBooking.until)),
     };
   });
 
@@ -406,6 +406,15 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       renderCell: (params) => <SmallIconTypography label={params.value?.name ?? 'N/A'} />,
       display: 'flex',
       minWidth: 200,
+    },
+    {
+      field: 'date',
+      headerName: 'Date',
+      editable: false,
+      sortable: true,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 220,
     },
     {
       field: 'team',
@@ -470,15 +479,6 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       ),
       display: 'flex',
       minWidth: 200,
-    },
-    {
-      field: 'date',
-      headerName: 'Date',
-      editable: false,
-      sortable: true,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 220,
     },
     {
       field: 'moreActions',

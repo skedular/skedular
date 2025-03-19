@@ -11,7 +11,7 @@ import { Rooms } from '@/components/room';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
-import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@/libs/utils';
+import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/myBookingCard_BookingDetails.graphql';
 import type { myBookingCard_deleteBookingMutation } from '@/queries/__generated__/myBookingCard_deleteBookingMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -219,7 +219,6 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
     });
   };
 
-  const date = dayjs(bookingDetails.from);
   const customTags = bookingDetails.desks
     .flatMap(({ customTags }) => customTags)
     .concat(bookingDetails.rooms.flatMap(({ customTags }) => customTags))
@@ -245,7 +244,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
 
   return (
     <>
-      <Card sx={{ width: { xs: '100%', sm: 315 } }}>
+      <Card sx={{ width: { xs: '100%', sm: 380 } }}>
         <CardHeader
           title={
             <Link component={NextLink} href={getOrganizationBookingBaseLink(organizationId, bookingDetails.id)}>
@@ -265,7 +264,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationId, otherTeammates, co
           }
         />
         <CardContent>
-          <SmallIconTypography startElement={<CalendarIcon />} label={toShortDateWithAdditionalDayInfo(date)} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <SmallIconTypography
+            startElement={<CalendarIcon />}
+            label={dateRangeToShortDateWithAdditionalDayInfo(dayjs(bookingDetails.from), dayjs(bookingDetails.until))}
+            sx={{ paddingTop: 1, paddingBottom: 1 }}
+          />
           <Divider />
           <SmallIconTypography startElement={<TeamIcon />} label={bookingDetails.team ? bookingDetails.team.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />

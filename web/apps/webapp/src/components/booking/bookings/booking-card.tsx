@@ -11,7 +11,7 @@ import { Rooms } from '@/components/room';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
-import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@/libs/utils';
+import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { bookingCard_addBookingMutation } from '@/queries/__generated__/bookingCard_addBookingMutation.graphql';
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
 import type { bookingCard_deleteBookingMutation } from '@/queries/__generated__/bookingCard_deleteBookingMutation.graphql';
@@ -422,7 +422,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
     });
   };
 
-  const date = dayjs(bookingDetails.from);
   const customTags = bookingDetails.desks
     .flatMap(({ customTags }) => customTags)
     .concat(bookingDetails.rooms.flatMap(({ customTags }) => customTags))
@@ -479,7 +478,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           }
         />
         <CardContent>
-          <SmallIconTypography startElement={<CalendarIcon />} label={toShortDateWithAdditionalDayInfo(date)} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+          <SmallIconTypography
+            startElement={<CalendarIcon />}
+            label={dateRangeToShortDateWithAdditionalDayInfo(dayjs(bookingDetails.from), dayjs(bookingDetails.until))}
+            sx={{ paddingTop: 1, paddingBottom: 1 }}
+          />
           <Divider />
           <SmallIconTypography
             label={getCustomerFullName(bookingDetails.customer)}

@@ -11,7 +11,7 @@ import { Rooms } from '@/components/room';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, joinErrors, toShortDate, toShortDateWithAdditionalDayInfo } from '@/libs/utils';
+import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { bookings_addBookingMutation } from '@/queries/__generated__/bookings_addBookingMutation.graphql';
 import type { bookings_bookings_query$key } from '@/queries/__generated__/bookings_bookings_query.graphql';
 import type { bookings_bookings_refetchableFragment } from '@/queries/__generated__/bookings_bookings_refetchableFragment.graphql';
@@ -594,7 +594,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       resources: booking.resources,
       customTags,
       zones,
-      date: toShortDateWithAdditionalDayInfo(dayjs(booking.from)),
+      date: dateRangeToShortDateWithAdditionalDayInfo(dayjs(booking.from), dayjs(booking.until)),
       canJoinBooking,
     };
   });
@@ -615,6 +615,15 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       renderCell: (params) => <SmallIconTypography label={getCustomerFullName(params.value)} />,
       display: 'flex',
       minWidth: 200,
+    },
+    {
+      field: 'date',
+      headerName: 'Date',
+      editable: false,
+      sortable: true,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 220,
     },
     {
       field: 'location',
@@ -673,15 +682,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
       renderCell: (params) => <Zones zones={params.value.map((zone: ZoneDetails) => ({ id: zone.uniqueId, name: zone.name, color: zone.color }))} hideIcon />,
       display: 'flex',
       minWidth: 150,
-    },
-    {
-      field: 'date',
-      headerName: 'Date',
-      editable: false,
-      sortable: true,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 220,
     },
     {
       field: 'canJoinBooking',
