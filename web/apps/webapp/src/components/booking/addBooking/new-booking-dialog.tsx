@@ -386,6 +386,10 @@ const NewBookingDialog = ({
   const [customerId, setCustomerId] = useState<string | undefined>();
   const [teamId, setTeamId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
+  const [notes, setNotes] = useState<string>('');
+  const [deskIds, setDeskIds] = useState<string[]>([]);
+  const [roomIds, setRoomIds] = useState<string[]>([]);
+  const [resourceIds, setResourceIds] = useState<string[]>([]);
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterDesk = createFilterOptions<DeskDetails>();
@@ -685,6 +689,7 @@ const NewBookingDialog = ({
 
   const handleMemberChange = (option: OrganizationMemberDetails | null) => {
     const customerId = option?.customer.uniqueId;
+
     setCustomerId(customerId);
     handleRefetchTeams(customerId);
   };
@@ -695,9 +700,11 @@ const NewBookingDialog = ({
 
   const handleLocationChange = (option: LocationDetails | null) => {
     const locationId = option?.id;
+
     setLocationId(locationId);
     handleRefetchAvailableLocationDesks(from, locationId);
     handleRefetchAvailableLocationRooms(from, locationId);
+    handleRefetchAvailableResources(from, locationId);
   };
 
   const handlePeopleNameSearchTextChange = (str: string) => {
@@ -722,17 +729,21 @@ const NewBookingDialog = ({
             member: customerId,
             date: from,
             allDay,
-            notes: '',
+            notes,
             team: teamId,
             location: locationId,
-            desks: [],
-            rooms: [],
-            resources: [],
+            desks: deskIds,
+            rooms: roomIds,
+            resources: resourceIds,
           }}
           validate={validate}
           render={({ handleSubmit, values }) => {
             setFrom(values.date);
             setAllDay(values.allDay);
+            setNotes(values.notes);
+            setDeskIds(values.desks);
+            setRoomIds(values.rooms);
+            setResourceIds(values.resources);
 
             return (
               <FormStackColumn onSubmit={handleSubmit}>
@@ -857,7 +868,6 @@ const NewBookingDialog = ({
                             </li>
                           );
                         }}
-                        disableCloseOnSelect
                         filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
                         selectOnFocus
                         clearOnBlur
@@ -892,7 +902,6 @@ const NewBookingDialog = ({
                             </li>
                           );
                         }}
-                        disableCloseOnSelect
                         filterOptions={(options, params) => filterRoom(options as RoomDetails[], params)}
                         selectOnFocus
                         clearOnBlur
@@ -926,7 +935,6 @@ const NewBookingDialog = ({
                           </li>
                         );
                       }}
-                      disableCloseOnSelect
                       filterOptions={(options, params) => filterResource(options as ResourceDetails[], params)}
                       selectOnFocus
                       clearOnBlur

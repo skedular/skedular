@@ -775,6 +775,7 @@ const EditBooking = ({
     }
 
     const locationId = option?.id;
+
     setLocationId(locationId);
 
     const deskIds =
@@ -790,6 +791,7 @@ const EditBooking = ({
         : [];
 
     handleRefetchAvailableLocationRooms(roomIds, from, locationId);
+    handleRefetchAvailableResources(from, locationId);
   };
 
   const handlePeopleNameSearchTextChange = (str: string) => {
@@ -960,7 +962,6 @@ const EditBooking = ({
                                 </li>
                               );
                             }}
-                            disableCloseOnSelect
                             filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
                             selectOnFocus
                             clearOnBlur
@@ -995,7 +996,6 @@ const EditBooking = ({
                                 </li>
                               );
                             }}
-                            disableCloseOnSelect
                             filterOptions={(options, params) => filterRoom(options as RoomDetails[], params)}
                             selectOnFocus
                             clearOnBlur
@@ -1029,7 +1029,6 @@ const EditBooking = ({
                               </li>
                             );
                           }}
-                          disableCloseOnSelect
                           filterOptions={(options, params) => filterResource(options as ResourceDetails[], params)}
                           selectOnFocus
                           clearOnBlur
