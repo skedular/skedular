@@ -50,8 +50,6 @@ public interface IMapper
         ICollection<Room> rooms,
         ICollection<Shared.Database.Entities.Resource> resources);
 
-    IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src, Shared.Models.Location location);
-    IEnumerable<Shared.Models.Room> MapTo(IEnumerable<Room> src, Shared.Models.Location location);
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
     Shared.Models.Booking MapTo(Admin_AddInput src);
@@ -214,9 +212,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src, Shared.Models.Location location) => src.Select(item => MapTo(item, location));
-    public IEnumerable<Shared.Models.Room> MapTo(IEnumerable<Room> src, Shared.Models.Location location) => src.Select(item => MapTo(item, location));
-
     public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src)
     {
         var booking = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking
@@ -246,40 +241,16 @@ public class Mapper : IMapper
 
         booking.Desks.AddRange(MapToGrpcResponse(src.Desks));
         booking.Rooms.AddRange(MapToGrpcResponse(src.Rooms));
+        booking.Resources.AddRange(MapToGrpcResponse(src.Resources));
 
         return booking;
     }
 
-    public Shared.Models.Booking MapTo(AddInput src) =>
-        new()
-        {
-            Id = src.Id,
-            From = src.From.ToDateTimeOffset(),
-            Until = src.Until.ToDateTimeOffset(),
-            Notes = src.Notes.ToSafeString(),
-            Type = src.Type switch
-            {
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => BookingType.WorkingFromHome,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => BookingType.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => BookingType.SickLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => BookingType.AnnualLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => BookingType.WellBeingLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => BookingType.ClientOffices,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => BookingType.Vacation,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => BookingType.TravelingForWork,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Customer = new Customer { Id = src.CustomerId },
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
-            Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
-            Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
-            Desks = src.DeskIds.Select(item => new Shared.Models.Desk { Id = item }).ToList(),
-            Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList()
-        };
+    public Shared.Models.Booking MapTo(AddInput src)
+    {
+        var customer = new Customer { Id = src.CustomerId };
 
-    public Shared.Models.Booking MapTo(Admin_AddInput src) =>
-        new()
+        return new Shared.Models.Booking
         {
             Id = src.Id,
             From = src.From.ToDateTimeOffset(),
@@ -303,8 +274,43 @@ public class Mapper : IMapper
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
             Desks = src.DeskIds.Select(item => new Shared.Models.Desk { Id = item }).ToList(),
-            Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList()
+            Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList(),
+            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList()
         };
+    }
+
+    public Shared.Models.Booking MapTo(Admin_AddInput src)
+    {
+        var customer = new Customer { Id = src.CustomerId };
+
+        return new Shared.Models.Booking
+        {
+            Id = src.Id,
+            From = src.From.ToDateTimeOffset(),
+            Until = src.Until.ToDateTimeOffset(),
+            Notes = src.Notes.ToSafeString(),
+            Type = src.Type switch
+            {
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => BookingType.WorkingFromHome,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => BookingType.WorkingFromOffice,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => BookingType.SickLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => BookingType.AnnualLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => BookingType.WellBeingLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => BookingType.ClientOffices,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => BookingType.Vacation,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => BookingType.TravelingForWork,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Customer = customer,
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
+            Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
+            Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
+            Desks = src.DeskIds.Select(item => new Shared.Models.Desk { Id = item }).ToList(),
+            Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList(),
+            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList()
+        };
+    }
 
     public Shared.Models.Booking MapTo(UpdateInput src) =>
         new()
@@ -370,40 +376,15 @@ public class Mapper : IMapper
     public IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src) => src.Select(item => MapTo(item, []));
 
     public IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> MapToGrpcResponse(IEnumerable<Resource> src) =>
-        src.Select(MapToGrpcResponse);
+        src.Select(item => MapToGrpcResponse(item, []));
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
         new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
 
-    private static Shared.Models.Desk MapTo(Desk src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            Location = location
-        };
-
-    private static Shared.Models.Room MapTo(Room src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            Location = location
-        };
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer> MapToGrpcResponse(IEnumerable<Customer> src) =>
+        src.Select(MapToGrpcResponse);
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer MapToGrpcResponse(Customer src)
     {
@@ -646,9 +627,9 @@ public class Mapper : IMapper
             Customers = MapTo(customers)
         };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource MapToGrpcResponse(Resource src)
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource MapToGrpcResponse(Resource src, IEnumerable<Customer> customers)
     {
-        var room = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource
+        var resource = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
@@ -658,10 +639,11 @@ public class Mapper : IMapper
                 : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Location.Id, Name = src.Location.Name.ToSafeString() }
         };
 
-        room.OrganizationCustomTags.AddRange(MapToGrpcResponseCustomTags(src.OrganizationTags));
-        room.OrganizationZones.AddRange(MapToGrpcResponseZones(src.OrganizationTags));
+        resource.OrganizationCustomTags.AddRange(MapToGrpcResponseCustomTags(src.OrganizationTags));
+        resource.OrganizationZones.AddRange(MapToGrpcResponseZones(src.OrganizationTags));
+        resource.Customers.Add(MapToGrpcResponse(customers));
 
-        return room;
+        return resource;
     }
 
     private static IEnumerable<BookingCustomerDetails> MapTo(IEnumerable<Customer> src) => src.Select(MapTo);
@@ -669,7 +651,7 @@ public class Mapper : IMapper
     private static IEnumerable<BookingResourceDetails> MapTo(IEnumerable<ResourceCustomersPair> src) =>
         src.Select(item => MapTo(item.Resource, item.Customers));
 
-    private IEnumerable<Customer> MapTo(IEnumerable<Shared.Database.Entities.Customer> src) => src.Select(MapTo);
+    private IEnumerable<Customer> MapTo(IEnumerable<Shared.Database.Entities.Customer> src) => src.Select(MapTo)!;
 
     private IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Shared.Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
 
@@ -684,4 +666,8 @@ public class Mapper : IMapper
             Customers = MapTo(src.Customers).ToList(),
             Resource = MapTo(src.Resource)
         };
+
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource>
+        MapToGrpcResponse(IEnumerable<ResourceCustomersPair> src) =>
+        src.Select(item => MapToGrpcResponse(item.Resource, item.Customers));
 }

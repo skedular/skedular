@@ -138,7 +138,8 @@ message Booking {
     Team team = 8;
     repeated Desk desks = 9;
     repeated Room rooms = 10;
-    BookingType type = 11;
+    repeated Resource resources = 11;
+    BookingType type = 12;
 }
 
 message Customer {
@@ -265,9 +266,10 @@ message Admin_AddInput {
     string teamId = 8;
     repeated string deskIds = 9;
     repeated string roomIds = 10;
-    bool ignoreDeskAvailability = 11;
-    bool ignoreRoomAvailability = 12;
-    BookingType type = 13;
+    repeated string resourceIds = 11;
+    bool ignoreDeskAvailability = 12;
+    bool ignoreRoomAvailability = 13;
+    BookingType type = 14;
 }
 
 message AddInput {
@@ -281,7 +283,8 @@ message AddInput {
     string teamId = 8;
     repeated string deskIds = 9;
     repeated string roomIds = 10;
-    BookingType type = 11;
+    repeated string resourceIds = 11;
+    BookingType type = 12;
 }
 
 message UpdateInput {
@@ -295,7 +298,8 @@ message UpdateInput {
     string teamId = 8;
     repeated string deskIds = 9;
     repeated string roomIds = 10;
-    BookingType type = 11;
+    repeated string resourceIds = 11;
+    BookingType type = 12;
 }
 
 message DeleteInput {
@@ -337,6 +341,7 @@ message Resource {
     repeated OrganizationCustomTag organizationCustomTags = 4;
     repeated OrganizationZone organizationZones = 5;
     string color = 6;
+    repeated Customer customers = 7;
 }
 
 message GetAvailableResourcesInput {
