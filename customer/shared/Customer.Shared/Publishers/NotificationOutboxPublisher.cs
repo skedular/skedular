@@ -52,6 +52,7 @@ public class NotificationOutboxPublisher(
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)
     {
+        var emails = GetEmails(customerFeedback.Customer);
         var channel = customerFeedback.Channel switch
         {
             FeedbackChannelType.Web => "Web",
@@ -63,7 +64,9 @@ public class NotificationOutboxPublisher(
         var data = new NewCustomerFeedbackData
         {
             Subject = $"You received new feedback from {customerFeedback.Customer.GetCustomerName()} through {channel} channel",
-            FeedbackContent = string.IsNullOrWhiteSpace(customerFeedback.Content) ? string.Empty : customerFeedback.Content
+            FeedbackContent = string.IsNullOrWhiteSpace(customerFeedback.Content)
+                ? $"Email(s): {emails}"
+                : $"Email(s): {emails}{Environment.NewLine}{customerFeedback.Content}"
         };
 
         var templateData = JsonSerializer.Serialize(data);
@@ -102,10 +105,7 @@ public class NotificationOutboxPublisher(
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)
     {
-        var emails = customer.Identities
-            .Aggregate(string.Empty, (acc, identity) => $"{acc}, {identity.Email}")
-            .Trim(',')
-            .Trim();
+        var emails = GetEmails(customer);
         var data = new NewCustomerJoinedData
         {
             Subject = "New customer has joined Skedular",
@@ -142,4 +142,10 @@ public class NotificationOutboxPublisher(
 
         await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
     }
+
+    private static string GetEmails(Models.Customer customer) =>
+        customer.Identities
+            .Aggregate(string.Empty, (acc, identity) => $"{acc}, {identity.Email}")
+            .Trim(',')
+            .Trim();
 }

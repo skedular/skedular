@@ -22,6 +22,7 @@ public interface IResourceRepository : IRepository<Resource>
         DateTimeOffset until,
         ICollection<string> resourceIds,
         ICollection<string> tagIds,
+        ICollection<string> tagTypes,
         CancellationToken cancellationToken);
 }
 
@@ -81,9 +82,10 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         DateTimeOffset until,
         ICollection<string> resourceIds,
         ICollection<string> tagIds,
+        ICollection<string> tagTypes,
         CancellationToken cancellationToken)
     {
-        var result = await DbContext.ResourceBookingSlot
+        var slots = await DbContext.ResourceBookingSlot
             .Where(query => !query.Resource.DeletedAt.HasValue &&
                             !query.Resource.Inactive &&
                             (resourceIds.Count == 0 || resourceIds.Contains(query.Resource.Id)) &&
@@ -93,7 +95,9 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                                                                            query.Resource.Location.Organization.Id == organizationId)) &&
                             (string.IsNullOrWhiteSpace(locationId) ||
                              (query.Resource.Location != null && query.Resource.Location.Id == locationId)) &&
-                            (tagIds.Count == 0 || tagIds.All(tagId => query.Resource.OrganizationTags.Select(tag => tag.Id).Contains(tagId))))
+                            (tagIds.Count == 0 || tagIds.All(tagId => query.Resource.OrganizationTags.Select(tag => tag.Id).Contains(tagId))) &&
+                            (tagTypes.Count == 0 ||
+                             tagTypes.All(tagType => query.Resource.OrganizationTags.Select(tag => tag.Type).Contains(tagType))))
             .Include(query => query.Bookings)
             .Include(query => query.Resource)
             .ThenInclude(query => query.Location)
@@ -102,7 +106,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .OrderBy(query => query.Resource.Name)
             .ToListAsync(cancellationToken);
 
-        return result
+        return slots
             .GroupBy(slot => slot.Resource.Id)
             .Select(group => new { group.First().Resource, Slots = group.ToList() })
             .Where(grouped => grouped.Slots.All(slot => slot is { Available: true, Bookings.Count: 0 }))

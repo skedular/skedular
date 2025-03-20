@@ -117,7 +117,16 @@ public class BookingService(
             (_, customerEntity) = await customerService.GetCustomerAsync(booking.Customer.Id, cancellationToken);
         }
 
-        (organization, location, team, desks) = await TryToSetDefaultValuesAsync(
+        (organization, location, team, resources) = await TryToSetDefaultValuesAsync(
+            booking,
+            customerEntity!,
+            organization,
+            location,
+            team,
+            resources,
+            cancellationToken);
+
+        (organization, location, team, desks) = await TryToSetDefaultRoomAndDeskValuesAsync(
             booking,
             customerEntity!,
             organization,
@@ -125,6 +134,7 @@ public class BookingService(
             team,
             desks,
             cancellationToken);
+
         organization = PopulateRequiredFields(organization, location, team);
 
         foreach (var resource in resources)
@@ -931,7 +941,7 @@ public class BookingService(
         return booking;
     }
 
-    private async Task<(Organization?, Location?, Team?, List<Desk>)> TryToSetDefaultValuesAsync(
+    private async Task<(Organization?, Location?, Team?, List<Desk>)> TryToSetDefaultRoomAndDeskValuesAsync(
         Shared.Models.Booking booking,
         Customer customer,
         Organization? organization,
@@ -949,9 +959,7 @@ public class BookingService(
             return (organization, location, team, desks);
         }
 
-        if (booking.Organization is not null &&
-            booking.Location is null &&
-            booking.Team is null)
+        if (booking.Organization is not null && booking.Location is null && booking.Team is null)
         {
             location = customer.PreferredLocations
                 .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
@@ -966,9 +974,7 @@ public class BookingService(
                 team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
             }
         }
-        else if (booking.Organization is not null &&
-                 booking.Location is not null &&
-                 booking.Team is null)
+        else if (booking.Organization is not null && booking.Location is not null && booking.Team is null)
         {
             team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
             if (team is not null)
@@ -976,12 +982,10 @@ public class BookingService(
                 team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
             }
         }
-        else if (booking.Organization is not null &&
-                 booking.Location is null &&
-                 booking.Team is not null)
+        else if (booking.Organization is not null && booking.Location is null && booking.Team is not null)
         {
-            location = customer.PreferredLocations.FirstOrDefault(
-                item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            location = customer.PreferredLocations
+                .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
             if (location is not null)
             {
                 location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
@@ -1044,10 +1048,7 @@ public class BookingService(
 
         if (location is not null)
         {
-            desks = desks
-                .Where(item => item.Location is { DeletedAt: null } && item.Location.Id == location.Id)
-                .ToList();
-
+            desks = desks.Where(item => item.Location is { DeletedAt: null } && item.Location.Id == location.Id).ToList();
             if (desks.Count == 0)
             {
                 var bookings = await repositoryFactory.BookingRepository.Query(
@@ -1085,6 +1086,163 @@ public class BookingService(
         }
 
         return (organization, location, team, desks);
+    }
+
+    private async Task<(Organization?, Location?, Team?, ICollection<Resource>)> TryToSetDefaultValuesAsync(
+        Shared.Models.Booking booking,
+        Customer customer,
+        Organization? organization,
+        Location? location,
+        Team? team,
+        ICollection<Resource> resources,
+        CancellationToken cancellationToken)
+    {
+        if (booking.Organization is not null && booking.Location is not null && booking.Team is not null && booking.Resources.Count != 0)
+        {
+            // Only use default values if given booking has no attachment to any of the resources available through default values
+            return (organization, location, team, resources);
+        }
+
+        if (booking.Organization is not null && booking.Location is null && booking.Team is null)
+        {
+            location = customer.PreferredLocations
+                .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            if (location is not null)
+            {
+                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
+            }
+
+            team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            if (team is not null)
+            {
+                team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
+            }
+        }
+        else if (booking.Organization is not null && booking.Location is not null && booking.Team is null)
+        {
+            team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            if (team is not null)
+            {
+                team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
+            }
+        }
+        else if (booking.Organization is not null && booking.Location is null && booking.Team is not null)
+        {
+            location = customer.PreferredLocations.FirstOrDefault(
+                item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            if (location is not null)
+            {
+                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
+            }
+        }
+        else if (booking.Organization is null && (booking.Location is not null || booking.Team is not null))
+        {
+        }
+        else if (booking.Organization is not null && booking.Location is not null && booking.Team is not null)
+        {
+        }
+        else
+        {
+            if (customer.DefaultOrganization is null)
+            {
+                team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null) ?? customer.PreferredTeams.FirstOrDefault();
+                if (team is null)
+                {
+                    location = customer.PreferredLocations.FirstOrDefault(item => item.Organization is not null) ??
+                               customer.PreferredLocations.FirstOrDefault();
+                    if (location is not null)
+                    {
+                        location =
+                            await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
+                    }
+                }
+
+                if (team is not null)
+                {
+                    organization = team.Organization;
+                }
+                else if (location is not null)
+                {
+                    organization = location.Organization;
+                }
+            }
+            else
+            {
+                organization = customer.DefaultOrganization;
+                location = customer.PreferredLocations
+                    .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
+                if (location is not null)
+                {
+                    location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
+                }
+
+                team = customer.PreferredTeams.FirstOrDefault(
+                    item => item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
+                if (team is not null)
+                {
+                    team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
+                }
+            }
+        }
+
+        if (location is not null)
+        {
+            resources = resources.Where(item => item.Location is { DeletedAt: null } && item.Location.Id == location.Id).ToList();
+            if (resources.Count != 0)
+            {
+                return (organization, location, team, resources);
+            }
+
+            var availableResources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
+                organization?.Id,
+                location.Id,
+                booking.From,
+                booking.Until,
+                [],
+                [],
+                [OrganizationTagTypeConstants.Desk],
+                cancellationToken);
+
+            var resource = availableResources
+                .FirstOrDefault(item => customer.PreferredResources.Select(preferredResource => preferredResource.Id).Contains(item.Id));
+            if (resource is null)
+            {
+                var preferredZones = customer.PreferredOrganizationTags
+                    .Where(tag => tag.Type == OrganizationTagTypeConstants.Zone)
+                    .Select(tag => tag.Id)
+                    .ToList();
+                resource = availableResources.FirstOrDefault(item => item.OrganizationTags.Any(tag => preferredZones.Contains(tag.Id)));
+                if (resource is null)
+                {
+                    var preferredTags = customer.PreferredOrganizationTags
+                        .Where(tag => tag.Type == OrganizationTagTypeConstants.Custom)
+                        .Select(tag => tag.Id)
+                        .ToList();
+                    resource = availableResources.FirstOrDefault(item => item.OrganizationTags.Any(tag => preferredTags.Contains(tag.Id)));
+                    if (resource is null)
+                    {
+                        if (availableResources.Count != 0)
+                        {
+                            resources = [availableResources.First()];
+                        }
+                    }
+                    else
+                    {
+                        resources = [resource];
+                    }
+                }
+                else
+                {
+                    resources = [resource];
+                }
+            }
+            else
+            {
+                resources = [resource];
+            }
+        }
+
+        return (organization, location, team, resources);
     }
 
     private static Desk? GetFirstAvailableDeskUsingPreferredDesks(
@@ -1183,7 +1341,7 @@ public class BookingService(
     private async Task<ICollection<Resource>> GetResourcesAsync(
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<string> resourceIds,
+        List<string> resourceIds,
         CancellationToken cancellationToken)
     {
         if (resourceIds.Count == 0)
@@ -1197,6 +1355,7 @@ public class BookingService(
             from,
             until,
             resourceIds,
+            [],
             [],
             cancellationToken);
 

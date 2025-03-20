@@ -87,6 +87,7 @@ public class ResourceService(
             until,
             [],
             customTagIds.Concat(zoneIds).ToList(),
+            [],
             cancellationToken);
 
         return mapper.MapTo(resources).Select(item =>
@@ -135,6 +136,7 @@ public class ResourceService(
                 location.Id,
                 from,
                 until,
+                [],
                 [],
                 [],
                 cancellationToken);

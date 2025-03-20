@@ -56,7 +56,6 @@ const SingleChoicesResourceType = ({ rootDataRelay, name, required }: Props) => 
           </li>
         );
       }}
-      disableCloseOnSelect
       filterOptions={(options, params) => filter(options as ResourceTypeDetails[], params)}
       selectOnFocus
       clearOnBlur
