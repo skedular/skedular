@@ -275,7 +275,19 @@ const dateRangeToShortDateWithAdditionalDayInfo = (from: Dayjs, until: Dayjs): s
   }
 };
 
-const toOpeningHoursFromTime = (time?: string | null | undefined) => (time ? dayjs(`2025-03-12T${time}`) : null);
+const toOpeningHoursFromTime = (time?: string | null | undefined) => {
+  if (!time) {
+    return null;
+  }
+
+  var splittedTime = time.split(':');
+  if (splittedTime.length < 2) {
+    return null;
+  }
+
+  return dayjs().utc().startOf('day').set('hour', parseInt(splittedTime[0])).set('minute', parseInt(splittedTime[1]));
+};
+
 const getOpeningHoursFromDateTime = (datetime: Dayjs | null) => {
   if (!datetime) {
     return '00:00';

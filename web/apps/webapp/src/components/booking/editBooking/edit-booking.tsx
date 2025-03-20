@@ -5,7 +5,7 @@ import { autoCloseErrorNotificationOptions, errorNotificationOptions, infoNotifi
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { endOfDay, getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
+import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { editBooking_availableLocationDesks_query$key } from '@/queries/__generated__/editBooking_availableLocationDesks_query.graphql';
 import type { editBooking_availableLocationDesks_refetchableFragment } from '@/queries/__generated__/editBooking_availableLocationDesks_refetchableFragment.graphql';
 import type { editBooking_availableLocationRooms_query$key } from '@/queries/__generated__/editBooking_availableLocationRooms_query.graphql';
@@ -116,9 +116,9 @@ type BookingDetails = {
 };
 
 const bookingSchema = object({
-  date: date().required(),
+  date: date().required('Date/Time is required'),
   allDay: boolean(),
-  member: string().required(),
+  member: string().required('User is required'),
   notes: string().notRequired(),
   organization: string().notRequired(),
   team: string().notRequired(),
@@ -619,14 +619,21 @@ const EditBooking = ({
 
   const getDateRange = useCallback(
     (allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
+      const allDayFrom = dayjs(date).utc();
+      const allDayUntil = dayjs(date).utc().add(1, 'day');
+
       if (allDay) {
-        return { valid: true, from: date, until: endOfDay(date) };
+        return { valid: true, from: allDayFrom, until: allDayUntil };
       }
 
       if (!timeFrom || !timeUntil) {
         themedToast(<NotificationContent content={`Time required when not booking full day.`} />, autoCloseErrorNotificationOptions);
 
-        return { valid: false, from: date, until: endOfDay(date) };
+        return { valid: false, from: allDayFrom, until: allDayUntil };
+      }
+
+      if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
+        return { valid: true, from: allDayFrom, until: allDayUntil };
       }
 
       const utcDate = dayjs(date).utc();
@@ -636,7 +643,7 @@ const EditBooking = ({
       if (from.isAfter(until)) {
         themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
 
-        return { valid: false, from: date, until: endOfDay(date) };
+        return { valid: false, from: allDayFrom, until: allDayUntil };
       }
 
       return {
@@ -696,29 +703,13 @@ const EditBooking = ({
 
     const booking = rootData.booking;
     const start = date as unknown as Dayjs;
-    let from = '';
-    let until = '';
-
-    if (allDay) {
-      from = start.toISOString();
-      until = start.add(1, 'day').toISOString();
-    } else {
-      if (!timeFrom || !timeUntil) {
-        themedToast(<NotificationContent content={`Time required when not booking full day.`} />, autoCloseErrorNotificationOptions);
-
-        return;
-      }
-
-      if (timeFrom.isSame(timeUntil) || timeFrom.isAfter(timeUntil)) {
-        themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
-
-        return;
-      }
-
-      from = start.add(timeFrom.get('hour'), 'hour').add(timeFrom.get('minute'), 'minute').toISOString();
-      until = start.add(timeUntil.get('hour'), 'hour').add(timeUntil.get('minute'), 'minute').toISOString();
+    const dateRange = getDateRange(allDay, start, { timeFrom, timeUntil });
+    if (!dateRange.valid) {
+      return;
     }
 
+    const from = dateRange.from.toISOString();
+    const until = dateRange.until.toISOString();
     const shortDateTimeFormatFrom = toShortDate(start);
     const type = booking.type;
 
@@ -727,7 +718,7 @@ const EditBooking = ({
       bookingDetailsInfo += ` at the "${booking.location!.name}"`;
     }
 
-    bookingDetailsInfo += ` on ${toShortDate(booking.from)}`;
+    bookingDetailsInfo += ` on ${toShortDate(dateRange.from)}`;
 
     const toastId = themedToast(<NotificationContent content={`Updating booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
