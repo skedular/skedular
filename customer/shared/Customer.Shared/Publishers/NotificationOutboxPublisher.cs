@@ -16,15 +16,8 @@ namespace Customer.Shared.Publishers;
 
 public interface INotificationOutboxPublisher
 {
-    Task PublishNewCustomerFeedbackSubmittedAsync(
-        CustomerFeedback customerFeedback,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
-
-    Task PublishNewCustomerJoinedSubmittedAsync(
-        Models.Customer customer,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    Task PublishNewCustomerFeedbackSubmittedAsync(CustomerFeedback customerFeedback, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    Task PublishNewCustomerJoinedSubmittedAsync(Models.Customer customer, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 }
 
 public class NewCustomerFeedbackData
@@ -100,11 +93,13 @@ public class NotificationOutboxPublisher(
         await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
     }
 
-    public async Task PublishNewCustomerJoinedSubmittedAsync(
-        Models.Customer customer,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public async Task PublishNewCustomerJoinedSubmittedAsync(Models.Customer customer, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
     {
+        if (!emailConfiguration.EnableNewCustomerJoinedThroughWebEmail)
+        {
+            return;
+        }
+
         var emails = GetEmails(customer);
         var data = new NewCustomerJoinedData
         {
@@ -130,15 +125,15 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId = emailConfiguration.NewCustomerJoinedThroughWebSubmittedEmailTemplateName,
+                        TemplateId = emailConfiguration.NewCustomerJoinedThroughWebEmailTemplateName,
                         TemplateData = templateData,
-                        Sender = emailConfiguration.NewCustomerJoinedThroughWebSubmittedEmailSender
+                        Sender = emailConfiguration.NewCustomerJoinedThroughWebEmailSender
                     }
                 }
             }
         };
 
-        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewCustomerJoinedThroughWebSubmittedEmailReceivers);
+        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewCustomerJoinedThroughWebEmailReceivers);
 
         await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
     }

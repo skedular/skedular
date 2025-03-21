@@ -175,6 +175,8 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__EnableNewCustomerJoinedThroughWebEmail: true
+      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
       OpenTelemetry__ZipkinEnabled: false
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
@@ -262,6 +264,8 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__EnableNewCustomerJoinedThroughWebEmail: true
+      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
       OpenTelemetry__ZipkinEnabled: false
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
@@ -349,6 +353,8 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__EnableNewCustomerJoinedThroughWebEmail: true
+      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
       OpenTelemetry__ZipkinEnabled: false
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
@@ -460,6 +466,8 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__EnableNewCustomerJoinedThroughWebEmail: true
+      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
       OpenTelemetry__ZipkinEnabled: false
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
@@ -547,6 +555,8 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__EnableNewCustomerJoinedThroughWebEmail: true
+      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
       OpenTelemetry__ZipkinEnabled: false
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false
@@ -634,6 +644,8 @@ services:
       Email__InviteToJoinTeamNewCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__InviteToJoinTeamExistingCustomerEmailSender: "Skedular <no-reply@skedular.app>"
       Email__NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__EnableNewCustomerJoinedThroughWebEmail: true
+      Email__EnableNewSlackWorkspaceJoinedThroughWebEmail: true
       OpenTelemetry__ZipkinEnabled: false
       OpenTelemetry__JaegerEnabled: false
       OpenTelemetry__OtlpEnabled: false

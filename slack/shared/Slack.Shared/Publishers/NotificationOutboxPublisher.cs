@@ -16,10 +16,7 @@ namespace Slack.Shared.Publishers;
 
 public interface INotificationOutboxPublisher
 {
-    Task PublishNewSlackWorkspaceJoinedSubmittedAsync(
-        Workspace workspace,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    Task PublishNewSlackWorkspaceJoinedSubmittedAsync(Workspace workspace, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 }
 
 public class NewSlackWorkspaceJoinedData
@@ -36,11 +33,13 @@ public class NotificationOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : INotificationOutboxPublisher
 {
-    public async Task PublishNewSlackWorkspaceJoinedSubmittedAsync(
-        Workspace workspace,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public async Task PublishNewSlackWorkspaceJoinedSubmittedAsync(Workspace workspace, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
     {
+        if (!emailConfiguration.EnableNewSlackWorkspaceJoinedThroughWebEmail)
+        {
+            return;
+        }
+
         var data = new NewSlackWorkspaceJoinedData
         {
             Subject = "New slack workspace has joined Skedular",
@@ -65,15 +64,15 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId = emailConfiguration.NewSlackWorkspaceJoinedThroughWebSubmittedEmailTemplateName,
+                        TemplateId = emailConfiguration.NewSlackWorkspaceJoinedThroughWebEmailTemplateName,
                         TemplateData = templateData,
-                        Sender = emailConfiguration.NewSlackWorkspaceJoinedThroughWebSubmittedEmailSender
+                        Sender = emailConfiguration.NewSlackWorkspaceJoinedThroughWebEmailSender
                     }
                 }
             }
         };
 
-        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewSlackWorkspaceJoinedThroughWebSubmittedEmailReceivers);
+        @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewSlackWorkspaceJoinedThroughWebEmailReceivers);
 
         await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
     }
