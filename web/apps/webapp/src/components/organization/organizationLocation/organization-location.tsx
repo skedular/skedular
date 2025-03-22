@@ -2658,23 +2658,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataD
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
               ref={(divElement) => {
-                sectionRefs.current['manage-location'] = divElement;
-              }}
-            >
-              <SectionIconTypography label="Manage" />
-              <BodyIconTypography label="Remove your location" />
-              <Divider />
-            </StackColumn>
-
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-              <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationClicked} sx={{ textTransform: 'none' }}>
-                Remove Location
-              </Button>
-            </StackRow>
-
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
                 sectionRefs.current['manage-desks'] = divElement;
               }}
             >

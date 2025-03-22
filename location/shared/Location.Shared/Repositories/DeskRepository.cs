@@ -13,6 +13,7 @@ namespace Location.Shared.Repositories;
 
 public interface IDeskRepository : IRepository<Desk>
 {
+    Task<ICollection<Desk>> GetAllAsync(CancellationToken cancellationToken);
     Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Desk Add(Desk desk);
@@ -79,13 +80,17 @@ internal static class DeskExtensions
 public class DeskRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Desk>(dbContext, timeProvider), IDeskRepository
 {
+    public async Task<ICollection<Desk>> GetAllAsync(CancellationToken cancellationToken) =>
+        await DbContext.Desk
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
+
     public async Task<Desk?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Desk
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Desk>>
-        GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<ICollection<Desk>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Desk
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects()

@@ -9,6 +9,7 @@ namespace Customer.Shared.Repositories;
 public interface IDeskRepository : IRepository<Desk>
 {
     Task<Desk> UpsertNakedAsync(string id, Location location, CancellationToken cancellationToken);
+    Task<ICollection<Desk>> GetAllAsync(bool includePreferredByCustomer, CancellationToken cancellationToken);
     Task<Desk?> GetByIdAsync(string id, bool includePreferredByCustomer, CancellationToken cancellationToken);
     Desk Add(Desk desk);
     Desk Update(Desk desk);
@@ -25,6 +26,16 @@ public class DeskRepository(CustomerDbContext dbContext, TimeProvider timeProvid
 
         return (await GetByIdAsync(id, false, cancellationToken))!;
     }
+
+    public async Task<ICollection<Desk>> GetAllAsync(bool includePreferredByCustomer, CancellationToken cancellationToken) =>
+        includePreferredByCustomer
+            ? await DbContext.Desk
+                .Include(query => query.PreferredByCustomers)
+                .Include(query => query.Location)
+                .ToListAsync(cancellationToken)
+            : await DbContext.Desk
+                .Include(query => query.Location)
+                .ToListAsync(cancellationToken);
 
     public Desk Add(Desk desk)
     {

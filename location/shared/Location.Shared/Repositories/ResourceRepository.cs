@@ -13,6 +13,7 @@ namespace Location.Shared.Repositories;
 
 public interface IResourceRepository : IRepository<Resource>
 {
+    Task<ICollection<Resource>> GetAllAsync(string locationId, CancellationToken cancellationToken);
     Task<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Resource Add(Resource resource);
@@ -79,6 +80,12 @@ internal static class ResourceExtensions
 public class ResourceRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Resource>(dbContext, timeProvider), IResourceRepository
 {
+    public async Task<ICollection<Resource>> GetAllAsync(string locationId, CancellationToken cancellationToken) =>
+        await DbContext.Resource
+            .Where(query => !query.Location.DeletedAt.HasValue && query.Location.Id == locationId)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
+
     public async Task<Resource?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Resource
             .AddDependentObjects()

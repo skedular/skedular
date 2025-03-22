@@ -10,6 +10,7 @@ namespace Booking.Shared.Repositories;
 public interface IDeskRepository : IRepository<Desk>
 {
     Task<Desk> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken);
+    Task<ICollection<Desk>> GetAllAsync(bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Task<Desk?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Desk Add(Desk desk);
     Desk Update(Desk desk);
@@ -37,6 +38,18 @@ public class DeskRepository(BookingDbContext dbContext, TimeProvider timeProvide
 
         return (await GetByIdAsync(id, false, cancellationToken))!;
     }
+
+    public async Task<ICollection<Desk>> GetAllAsync(bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
+        includeAllRelatedEntities
+            ? await DbContext.Desk
+                .Include(query => query.PreferredByCustomers)
+                .Include(query => query.Location)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .ToListAsync(cancellationToken)
+            : await DbContext.Desk
+                .Include(query => query.Location)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .ToListAsync(cancellationToken);
 
     public Desk Add(Desk desk)
     {

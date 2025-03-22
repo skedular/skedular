@@ -10,6 +10,7 @@ namespace Booking.Shared.Repositories;
 public interface IRoomRepository : IRepository<Room>
 {
     Task<Room> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken);
+    Task<ICollection<Room>> GetAllAsync(bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Task<Room?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Room Add(Room room);
     Room Update(Room room);
@@ -37,6 +38,18 @@ public class RoomRepository(BookingDbContext dbContext, TimeProvider timeProvide
 
         return (await GetByIdAsync(id, false, cancellationToken))!;
     }
+
+    public async Task<ICollection<Room>> GetAllAsync(bool includeAllRelatedEntities, CancellationToken cancellationToken) =>
+        includeAllRelatedEntities
+            ? await DbContext.Room
+                .Include(query => query.PreferredByCustomers)
+                .Include(query => query.Location)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .ToListAsync(cancellationToken)
+            : await DbContext.Room
+                .Include(query => query.Location)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .ToListAsync(cancellationToken);
 
     public Room Add(Room room)
     {

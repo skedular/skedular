@@ -13,6 +13,7 @@ namespace Location.Shared.Repositories;
 
 public interface IRoomRepository : IRepository<Room>
 {
+    Task<ICollection<Room>> GetAllAsync(CancellationToken cancellationToken);
     Task<Room?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Room>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Room Add(Room room);
@@ -79,13 +80,17 @@ internal static class RoomExtensions
 public class RoomRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Room>(dbContext, timeProvider), IRoomRepository
 {
+    public async Task<ICollection<Room>> GetAllAsync(CancellationToken cancellationToken) =>
+        await DbContext.Room
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
+
     public async Task<Room?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Room
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Room>>
-        GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+    public async Task<ICollection<Room>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Room
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects()

@@ -9,6 +9,7 @@ namespace Customer.Shared.Repositories;
 public interface IRoomRepository : IRepository<Room>
 {
     Task<Room> UpsertNakedAsync(string id, Location location, CancellationToken cancellationToken);
+    Task<ICollection<Room>> GetAllAsync(bool includePreferredByCustomer, CancellationToken cancellationToken);
     Task<Room?> GetByIdAsync(string id, bool includePreferredByCustomer, CancellationToken cancellationToken);
     Room Add(Room room);
     Room Update(Room room);
@@ -25,6 +26,16 @@ public class RoomRepository(CustomerDbContext dbContext, TimeProvider timeProvid
 
         return (await GetByIdAsync(id, false, cancellationToken))!;
     }
+
+    public async Task<ICollection<Room>> GetAllAsync(bool includePreferredByCustomer, CancellationToken cancellationToken) =>
+        includePreferredByCustomer
+            ? await DbContext.Room
+                .Include(query => query.PreferredByCustomers)
+                .Include(query => query.Location)
+                .ToListAsync(cancellationToken)
+            : await DbContext.Room
+                .Include(query => query.Location)
+                .ToListAsync(cancellationToken);
 
     public Room Add(Room room)
     {
