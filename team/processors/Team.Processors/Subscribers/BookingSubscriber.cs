@@ -56,10 +56,7 @@ public class BookingSubscriber(
         return EventSubscriberResults.Success;
     }
 
-    private async Task HandleBookingUpsertedEventAsync(
-        Shared.Models.Booking booking,
-        Booking? existingBooking,
-        CancellationToken cancellationToken)
+    private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking? existingBooking, CancellationToken cancellationToken)
     {
         if (existingBooking is not null && string.IsNullOrWhiteSpace(booking.Team.Id))
         {
@@ -81,8 +78,7 @@ public class BookingSubscriber(
 
         _ = existingBooking is null
             ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, team))
-            : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking,
-                team));
+            : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, team));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

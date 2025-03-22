@@ -41,7 +41,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         /// republish all bookings
         /// </summary>
         /// <returns>the status of republishing all bookings</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("booking/api/v1/republishAll")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("booking/api/v1/republish-all")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAll(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }

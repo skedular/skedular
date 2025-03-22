@@ -175,8 +175,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "booking/api/v1/republishAll"
-                    urlBuilder_.Append("booking/api/v1/republishAll");
+                    // Operation Path: "booking/api/v1/republish-all"
+                    urlBuilder_.Append("booking/api/v1/republish-all");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

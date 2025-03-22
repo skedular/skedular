@@ -29,12 +29,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /booking/api/v1/republishAll:
+  /booking/api/v1/republish-all:
     put:
       tags:
         - booking
       summary: republish all bookings
       operationId: republishAll
+
       responses:
         "200":
           description: the status of republishing all bookings

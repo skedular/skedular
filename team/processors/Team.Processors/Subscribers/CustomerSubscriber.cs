@@ -71,10 +71,7 @@ public class CustomerSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        var emails = existingCustomer.Identities
-            .Where(item => !string.IsNullOrWhiteSpace(item.Email))
-            .Select(item => item.Email!)
-            .ToList();
+        var emails = existingCustomer.Identities.Where(item => !string.IsNullOrWhiteSpace(item.Email)).Select(item => item.Email!).ToList();
         var joinInvitations = await repositoryFactory.JoinInvitationRepository.GetPendingByEmailAsync(emails, cancellationToken);
         if (joinInvitations.Count == 0)
         {

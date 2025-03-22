@@ -1,15 +1,15 @@
-using Api.Shared.Services.OpenApi.Skedular.Team.V1;
+using Api.Shared.Services.OpenApi.Skedular.Booking.V1;
 using Booking.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Controllers;
 
 [ApiController]
-public class TeamController(IWorkaroundService workaroundService) : TeamControllerBase
+public class TeamController(IWorkaroundService workaroundService) : BookingControllerBase
 {
-    public override async Task<IActionResult> Republish(string teamId, CancellationToken cancellationToken = default)
+    public override async Task<IActionResult> Republish(string bookingId, CancellationToken cancellationToken = default)
     {
-        await workaroundService.RepublishBookingAsync(teamId, cancellationToken);
+        await workaroundService.RepublishBookingAsync(bookingId, cancellationToken);
 
         return Ok();
     }

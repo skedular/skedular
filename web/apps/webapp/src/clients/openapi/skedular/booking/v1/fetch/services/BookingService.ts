@@ -34,7 +34,7 @@ export class BookingService {
     public republishAll(): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/booking/api/v1/republishAll',
+            url: '/booking/api/v1/republish-all',
         });
     }
 }

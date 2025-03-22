@@ -6,15 +6,15 @@ namespace Booking.Api.Services;
 
 public interface IWorkaroundService
 {
-    Task RepublishBookingAsync(string teamId, CancellationToken cancellationToken);
+    Task RepublishBookingAsync(string bookingId, CancellationToken cancellationToken);
     Task RepublishAllBookingsAsync(CancellationToken cancellationToken);
 }
 
 public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper mapper, IBookingPublisher bookingPublisher) : IWorkaroundService
 {
-    public async Task RepublishBookingAsync(string teamId, CancellationToken cancellationToken)
+    public async Task RepublishBookingAsync(string bookingId, CancellationToken cancellationToken)
     {
-        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(teamId, cancellationToken);
+        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);
         if (booking is null)
         {
             return;
