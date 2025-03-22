@@ -10,10 +10,7 @@ public interface IWorkaroundService
     Task RepublishAllTeamsAsync(CancellationToken cancellationToken);
 }
 
-public class WorkaroundService(
-    IRepositoryFactory repositoryFactory,
-    IMapper mapper,
-    ITeamPublisher teamPublisher) : IWorkaroundService
+public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper mapper, ITeamPublisher teamPublisher) : IWorkaroundService
 {
     public async Task RepublishTeamAsync(string teamId, CancellationToken cancellationToken)
     {
@@ -23,7 +20,7 @@ public class WorkaroundService(
             return;
         }
 
-        await teamPublisher.PublishTeamAsync([mapper.MapTo(team)!], cancellationToken);
+        await teamPublisher.PublishTeamAsync([mapper.MapTo(team)], cancellationToken);
     }
 
     public async Task RepublishAllTeamsAsync(CancellationToken cancellationToken)

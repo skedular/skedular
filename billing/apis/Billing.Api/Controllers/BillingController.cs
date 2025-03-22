@@ -7,17 +7,14 @@ namespace Billing.Api.Controllers;
 [ApiController]
 public class BillingController(IWorkaroundService workaroundService) : BillingControllerBase
 {
-    public override async Task<IActionResult> RepublishOrganizationBillingInfo(
-        string organizationId,
-        CancellationToken cancellationToken = default)
+    public override async Task<IActionResult> RepublishOrganizationBillingInfo(string organizationId, CancellationToken cancellationToken = default)
     {
         await workaroundService.RepublishOrganizationBillingInfoAsync(organizationId, cancellationToken);
 
         return Ok();
     }
 
-    public override async Task<IActionResult> RepublishAllOrganizationsBillingInfo(
-        CancellationToken cancellationToken = default)
+    public override async Task<IActionResult> RepublishAllOrganizationsBillingInfo(CancellationToken cancellationToken = default)
     {
         await workaroundService.RepublishAllOrganizationsBillingInfoAsync(cancellationToken);
 

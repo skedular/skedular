@@ -10,21 +10,17 @@ public interface IWorkaroundService
     Task RepublishAllLocationsAsync(CancellationToken cancellationToken);
 }
 
-public class WorkaroundService(
-    IRepositoryFactory repositoryFactory,
-    IMapper mapper,
-    ILocationPublisher locationPublisher) : IWorkaroundService
+public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper mapper, ILocationPublisher locationPublisher) : IWorkaroundService
 {
     public async Task RepublishLocationAsync(string locationId, CancellationToken cancellationToken)
     {
-        var location =
-            await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
         if (location is null)
         {
             return;
         }
 
-        await locationPublisher.PublishLocationAsync([mapper.MapTo(location)!], cancellationToken);
+        await locationPublisher.PublishLocationAsync([mapper.MapTo(location)], cancellationToken);
     }
 
     public async Task RepublishAllLocationsAsync(CancellationToken cancellationToken)

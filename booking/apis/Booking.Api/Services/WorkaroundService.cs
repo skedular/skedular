@@ -10,26 +10,22 @@ public interface IWorkaroundService
     Task RepublishAllBookingsAsync(CancellationToken cancellationToken);
 }
 
-public class WorkaroundService(
-    IRepositoryFactory repositoryFactory,
-    IMapper mapper,
-    IBookingPublisher bookingPublisher) : IWorkaroundService
+public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper mapper, IBookingPublisher bookingPublisher) : IWorkaroundService
 {
     public async Task RepublishBookingAsync(string teamId, CancellationToken cancellationToken)
     {
-        var team =
-            await repositoryFactory.BookingRepository.GetByIdAsync(teamId, cancellationToken);
-        if (team is null)
+        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(teamId, cancellationToken);
+        if (booking is null)
         {
             return;
         }
 
-        await bookingPublisher.PublishBookingAsync([mapper.MapTo(team)!], cancellationToken);
+        await bookingPublisher.PublishBookingAsync([mapper.MapTo(booking)], cancellationToken);
     }
 
     public async Task RepublishAllBookingsAsync(CancellationToken cancellationToken)
     {
-        var teams = await repositoryFactory.BookingRepository.GetAllAsync(cancellationToken);
-        await bookingPublisher.PublishBookingAsync(teams.Select(mapper.MapTo), cancellationToken);
+        var bookings = await repositoryFactory.BookingRepository.GetAllAsync(cancellationToken);
+        await bookingPublisher.PublishBookingAsync(bookings.Select(mapper.MapTo), cancellationToken);
     }
 }

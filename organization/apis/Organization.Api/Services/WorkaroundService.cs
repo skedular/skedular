@@ -10,10 +10,8 @@ public interface IWorkaroundService
     Task RepublishAllOrganizationsAsync(CancellationToken cancellationToken);
 }
 
-public class WorkaroundService(
-    IRepositoryFactory repositoryFactory,
-    IMapper mapper,
-    IOrganizationPublisher organizationPublisher) : IWorkaroundService
+public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper mapper, IOrganizationPublisher organizationPublisher)
+    : IWorkaroundService
 {
     public async Task RepublishOrganizationAsync(string organizationId, CancellationToken cancellationToken)
     {
@@ -23,7 +21,7 @@ public class WorkaroundService(
             return;
         }
 
-        await organizationPublisher.PublishOrganizationAsync([mapper.MapTo(organization)!], cancellationToken);
+        await organizationPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], cancellationToken);
     }
 
     public async Task RepublishAllOrganizationsAsync(CancellationToken cancellationToken)

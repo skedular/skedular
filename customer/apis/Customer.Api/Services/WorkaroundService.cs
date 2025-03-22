@@ -10,10 +10,7 @@ public interface IWorkaroundService
     Task RepublishAllCustomersAsync(CancellationToken cancellationToken);
 }
 
-public class WorkaroundService(
-    IRepositoryFactory repositoryFactory,
-    IMapper mapper,
-    ICustomerPublisher customerPublisher) : IWorkaroundService
+public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper mapper, ICustomerPublisher customerPublisher) : IWorkaroundService
 {
     public async Task RepublishCustomerAsync(string customerId, CancellationToken cancellationToken)
     {

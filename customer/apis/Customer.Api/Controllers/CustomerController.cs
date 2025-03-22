@@ -7,9 +7,7 @@ namespace Customer.Api.Controllers;
 [ApiController]
 public class CustomerController(IWorkaroundService workaroundService) : CustomerControllerBase
 {
-    public override async Task<IActionResult> Republish(
-        string customerId,
-        CancellationToken cancellationToken = default)
+    public override async Task<IActionResult> Republish(string customerId, CancellationToken cancellationToken = default)
     {
         await workaroundService.RepublishCustomerAsync(customerId, cancellationToken);
 
