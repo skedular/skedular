@@ -14,10 +14,7 @@ namespace Team.Shared.Publishers;
 
 public interface ITeamOutboxPublisher
 {
-    Task PublishTeamAsync(
-        IEnumerable<Models.Team> teams,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    Task PublishTeamAsync(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 
     Task PublishInvitesToJoinTeamNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
@@ -32,12 +29,11 @@ public class TeamOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : ITeamOutboxPublisher
 {
-    public async Task PublishTeamAsync(
-        IEnumerable<Models.Team> teams,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(teams.Select(team =>
-            publisher.PublishAsync(
+    public async Task PublishTeamAsync(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    {
+        foreach (var team in teams)
+        {
+            await publisher.PublishAsync(
                 new Key { TeamId = team.Id },
                 new Event
                 {
@@ -47,14 +43,20 @@ public class TeamOutboxPublisher(
                         team.IsNotDeleted() ? Type.TeamUpserted : Type.TeamDeleted,
                         context.GetCorrelationId()),
                     Data = new Data { Team = mapper.MapTo(team) }
-                }, unitOfWork, cancellationToken)));
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 
     public async Task PublishInvitesToJoinTeamNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(joinInvitations.Select(
-            joinInvitation => publisher.PublishAsync(
+        CancellationToken cancellationToken)
+    {
+        foreach (var joinInvitation in joinInvitations)
+        {
+            await publisher.PublishAsync(
                 new Key { TeamId = joinInvitation.Id },
                 new Event
                 {
@@ -68,5 +70,7 @@ public class TeamOutboxPublisher(
                     Data = new Data { InvitationToJoinTeam = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,
-                cancellationToken)));
+                cancellationToken);
+        }
+    }
 }

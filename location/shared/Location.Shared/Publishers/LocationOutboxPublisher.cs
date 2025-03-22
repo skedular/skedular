@@ -29,9 +29,11 @@ public class LocationOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : ILocationOutboxPublisher
 {
-    public async Task PublishLocationAsync(IEnumerable<Models.Location> locations, IUnitOfWork unitOfWork, CancellationToken cancellationToken) =>
-        await Task.WhenAll(locations.Select(location =>
-            publisher.PublishAsync(
+    public async Task PublishLocationAsync(IEnumerable<Models.Location> locations, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    {
+        foreach (var location in locations)
+        {
+            await publisher.PublishAsync(
                 new Key { LocationId = location.Id },
                 new Event
                 {
@@ -41,14 +43,20 @@ public class LocationOutboxPublisher(
                         location.IsNotDeleted() ? Type.LocationUpserted : Type.LocationDeleted,
                         context.GetCorrelationId()),
                     Data = new Data { Location = mapper.MapTo(location) }
-                }, unitOfWork, cancellationToken)));
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 
     public async Task PublishInvitesToJoinLocationNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(joinInvitations.Select(
-            joinInvitation => publisher.PublishAsync(
+        CancellationToken cancellationToken)
+    {
+        foreach (var joinInvitation in joinInvitations)
+        {
+            await publisher.PublishAsync(
                 new Key { LocationId = joinInvitation.Id },
                 new Event
                 {
@@ -62,5 +70,7 @@ public class LocationOutboxPublisher(
                     Data = new Data { InvitationToJoinLocation = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,
-                cancellationToken)));
+                cancellationToken);
+        }
+    }
 }

@@ -32,40 +32,46 @@ public class BillingOutboxPublisher(
     public async Task PublishBillingOrganizationsOfferingsAsync(
         IEnumerable<OrganizationOffering> organizationOfferings,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(organizationOfferings.Select(async organizationOffering =>
+        CancellationToken cancellationToken)
+    {
+        foreach (var organizationOffering in organizationOfferings)
         {
-            var key = new Key { OrganizationOfferingId = organizationOffering.Id };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.BillingOrganizationOfferingUpserted,
-                    context.GetCorrelationId()),
-                Data = new Data { OrganizationOfferingBilling = mapper.MapTo(organizationOffering) }
-            };
-
-            await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
-        }));
+            await publisher.PublishAsync(
+                new Key { OrganizationOfferingId = organizationOffering.Id },
+                new Event
+                {
+                    Metadata = Event.NewMetadata(
+                        applicationConfiguration.DomainSource,
+                        applicationConfiguration.AppSource,
+                        Type.BillingOrganizationOfferingUpserted,
+                        context.GetCorrelationId()),
+                    Data = new Data { OrganizationOfferingBilling = mapper.MapTo(organizationOffering) }
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 
     public async Task PublishOrganizationsBillingInfoAsync(
         IEnumerable<Organization> organizations,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(organizations.Select(async organization =>
+        CancellationToken cancellationToken)
+    {
+        foreach (var organization in organizations)
         {
-            var key = new Key { OrganizationId = organization.Id };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.OrganizationBillingInfoUpdated,
-                    context.GetCorrelationId()),
-                Data = new Data { OrganizationBillingInfo = mapper.MapTo(organization) }
-            };
-
-            await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
-        }));
+            await publisher.PublishAsync(
+                new Key { OrganizationId = organization.Id },
+                new Event
+                {
+                    Metadata = Event.NewMetadata(
+                        applicationConfiguration.DomainSource,
+                        applicationConfiguration.AppSource,
+                        Type.OrganizationBillingInfoUpdated,
+                        context.GetCorrelationId()),
+                    Data = new Data { OrganizationBillingInfo = mapper.MapTo(organization) }
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 }

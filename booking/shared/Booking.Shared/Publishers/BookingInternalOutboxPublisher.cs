@@ -22,20 +22,23 @@ public class BookingInternalOutboxPublisher(
     public async Task PublishGenerateResourceBookingSlotAsync(
         IEnumerable<string> resourceIds,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(resourceIds.Select(async resourceId =>
+        CancellationToken cancellationToken)
+    {
+        foreach (var resourceId in resourceIds)
         {
-            var key = new Key { ResourceId = resourceId };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.GenerateResourceBookingSlot,
-                    context.GetCorrelationId()),
-                ResourceId = resourceId
-            };
-
-            await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
-        }));
+            await publisher.PublishAsync(
+                new Key { ResourceId = resourceId },
+                new Event
+                {
+                    Metadata = Event.NewMetadata(
+                        applicationConfiguration.DomainSource,
+                        applicationConfiguration.AppSource,
+                        Type.GenerateResourceBookingSlot,
+                        context.GetCorrelationId()),
+                    ResourceId = resourceId
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 }

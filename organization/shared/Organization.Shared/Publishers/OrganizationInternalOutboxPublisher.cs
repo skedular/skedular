@@ -10,10 +10,7 @@ namespace Organization.Shared.Publishers;
 
 public interface IOrganizationInternalOutboxPublisher
 {
-    Task PublishRefreshAzureTenantMembersAsync(
-        IEnumerable<string> azureTenantIds,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    Task PublishRefreshAzureTenantMembersAsync(IEnumerable<string> azureTenantIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 }
 
 public class OrganizationInternalOutboxPublisher(
@@ -25,20 +22,23 @@ public class OrganizationInternalOutboxPublisher(
     public async Task PublishRefreshAzureTenantMembersAsync(
         IEnumerable<string> azureTenantIds,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(azureTenantIds.Select(async azureTenantId =>
+        CancellationToken cancellationToken)
+    {
+        foreach (var azureTenantId in azureTenantIds)
         {
-            var key = new Key { AzureTenantId = azureTenantId };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.RefreshAzureTenantMembers,
-                    context.GetCorrelationId()),
-                AzureTenantId = azureTenantId
-            };
-
-            await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
-        }));
+            await publisher.PublishAsync(
+                new Key { AzureTenantId = azureTenantId },
+                new Event
+                {
+                    Metadata = Event.NewMetadata(
+                        applicationConfiguration.DomainSource,
+                        applicationConfiguration.AppSource,
+                        Type.RefreshAzureTenantMembers,
+                        context.GetCorrelationId()),
+                    AzureTenantId = azureTenantId
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 }

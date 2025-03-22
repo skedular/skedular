@@ -10,20 +10,9 @@ namespace Slack.Shared.Publishers;
 
 public interface ISlackInternalOutboxPublisher
 {
-    Task PublishRefreshWorkspaceAsync(
-        IEnumerable<string> workspaceIds,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
-
-    Task PublishRefreshWorkspaceMembersAsync(
-        IEnumerable<string> workspaceIds,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
-
-    Task PublishRefreshWorkspaceChannelsAsync(
-        IEnumerable<string> workspaceIds,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    Task PublishRefreshWorkspaceAsync(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    Task PublishRefreshWorkspaceMembersAsync(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    Task PublishRefreshWorkspaceChannelsAsync(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 }
 
 public class SlackInternalOutboxPublisher(
@@ -35,60 +24,66 @@ public class SlackInternalOutboxPublisher(
     public async Task PublishRefreshWorkspaceMembersAsync(
         IEnumerable<string> workspaceIds,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(workspaceIds.Select(async workspaceId =>
+        CancellationToken cancellationToken)
+    {
+        foreach (var workspaceId in workspaceIds)
         {
-            var key = new Key { WorkspaceId = workspaceId };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.RefreshWorkspaceMembers,
-                    context.GetCorrelationId()),
-                WorkspaceId = workspaceId
-            };
-
-            await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
-        }));
+            await publisher.PublishAsync(
+                new Key { WorkspaceId = workspaceId },
+                new Event
+                {
+                    Metadata = Event.NewMetadata(
+                        applicationConfiguration.DomainSource,
+                        applicationConfiguration.AppSource,
+                        Type.RefreshWorkspaceMembers,
+                        context.GetCorrelationId()),
+                    WorkspaceId = workspaceId
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 
     public async Task PublishRefreshWorkspaceChannelsAsync(
         IEnumerable<string> workspaceIds,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(workspaceIds.Select(async workspaceId =>
+        CancellationToken cancellationToken)
+    {
+        foreach (var workspaceId in workspaceIds)
         {
-            var key = new Key { WorkspaceId = workspaceId };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.RefreshWorkspaceChannels,
-                    context.GetCorrelationId()),
-                WorkspaceId = workspaceId
-            };
+            await publisher.PublishAsync(
+                new Key { WorkspaceId = workspaceId },
+                new Event
+                {
+                    Metadata = Event.NewMetadata(
+                        applicationConfiguration.DomainSource,
+                        applicationConfiguration.AppSource,
+                        Type.RefreshWorkspaceChannels,
+                        context.GetCorrelationId()),
+                    WorkspaceId = workspaceId
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 
-            await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
-        }));
-
-    public async Task PublishRefreshWorkspaceAsync(
-        IEnumerable<string> workspaceIds,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(workspaceIds.Select(async workspaceId =>
+    public async Task PublishRefreshWorkspaceAsync(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    {
+        foreach (var workspaceId in workspaceIds)
         {
-            var key = new Key { WorkspaceId = workspaceId };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.RefreshWorkspace,
-                    context.GetCorrelationId()),
-                WorkspaceId = workspaceId
-            };
-
-            await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
-        }));
+            await publisher.PublishAsync(
+                new Key { WorkspaceId = workspaceId },
+                new Event
+                {
+                    Metadata = Event.NewMetadata(
+                        applicationConfiguration.DomainSource,
+                        applicationConfiguration.AppSource,
+                        Type.RefreshWorkspace,
+                        context.GetCorrelationId()),
+                    WorkspaceId = workspaceId
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 }

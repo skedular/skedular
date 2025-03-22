@@ -23,9 +23,11 @@ public class BookingOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IBookingOutboxPublisher
 {
-    public async Task PublishBookingAsync(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork, CancellationToken cancellationToken) =>
-        await Task.WhenAll(bookings.Select(booking =>
-            publisher.PublishAsync(
+    public async Task PublishBookingAsync(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    {
+        foreach (var booking in bookings)
+        {
+            await publisher.PublishAsync(
                 new Key { BookingId = booking.Id },
                 new Event
                 {
@@ -35,5 +37,9 @@ public class BookingOutboxPublisher(
                         booking.IsNotDeleted() ? Type.BookingUpserted : Type.BookingDeleted,
                         context.GetCorrelationId()),
                     Data = new Data { Booking = mapper.MapTo(booking) }
-                }, unitOfWork, cancellationToken)));
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 }

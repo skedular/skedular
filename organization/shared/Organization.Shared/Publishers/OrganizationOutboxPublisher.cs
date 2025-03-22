@@ -32,9 +32,11 @@ public class OrganizationOutboxPublisher(
     public async Task PublishOrganizationAsync(
         IEnumerable<Models.Organization> organizations,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(organizations.Select(organization =>
-            publisher.PublishAsync(
+        CancellationToken cancellationToken)
+    {
+        foreach (var organization in organizations)
+        {
+            await publisher.PublishAsync(
                 new Key { OrganizationId = organization.Id },
                 new Event
                 {
@@ -44,14 +46,20 @@ public class OrganizationOutboxPublisher(
                         organization.IsNotDeleted() ? Type.OrganizationUpserted : Type.OrganizationDeleted,
                         context.GetCorrelationId()),
                     Data = new Data { Organization = mapper.MapTo(organization) }
-                }, unitOfWork, cancellationToken)));
+                },
+                unitOfWork,
+                cancellationToken);
+        }
+    }
 
     public async Task PublishInvitesToJoinOrganizationNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(joinInvitations.Select(
-            joinInvitation => publisher.PublishAsync(
+        CancellationToken cancellationToken)
+    {
+        foreach (var joinInvitation in joinInvitations)
+        {
+            await publisher.PublishAsync(
                 new Key { OrganizationId = joinInvitation.Id },
                 new Event
                 {
@@ -65,5 +73,7 @@ public class OrganizationOutboxPublisher(
                     Data = new Data { InvitationToJoinOrganization = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,
-                cancellationToken)));
+                cancellationToken);
+        }
+    }
 }

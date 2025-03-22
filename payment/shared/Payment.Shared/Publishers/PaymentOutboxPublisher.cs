@@ -28,25 +28,22 @@ public class PaymentOutboxPublisher(
         string organizationId,
         bool hasAttachedPaymentMethod,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
-    {
-        var key = new Key { OrganizationId = organizationId };
-        var @event = new Event
-        {
-            Metadata = Event.NewMetadata(
-                applicationConfiguration.DomainSource,
-                applicationConfiguration.AppSource,
-                Type.OrganizationPaymentMethodsUpdated,
-                context.GetCorrelationId()),
-            Data = new Data
+        CancellationToken cancellationToken) =>
+        await publisher.PublishAsync(new Key { OrganizationId = organizationId }, new Event
             {
-                OrganizationPaymentMethod = new OrganizationPaymentMethod
+                Metadata = Event.NewMetadata(
+                    applicationConfiguration.DomainSource,
+                    applicationConfiguration.AppSource,
+                    Type.OrganizationPaymentMethodsUpdated,
+                    context.GetCorrelationId()),
+                Data = new Data
                 {
-                    OrganizationId = organizationId, HasAttachedPaymentMethod = hasAttachedPaymentMethod
+                    OrganizationPaymentMethod = new OrganizationPaymentMethod
+                    {
+                        OrganizationId = organizationId, HasAttachedPaymentMethod = hasAttachedPaymentMethod
+                    }
                 }
-            }
-        };
-
-        await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
-    }
+            },
+            unitOfWork,
+            cancellationToken);
 }
