@@ -760,7 +760,7 @@ public class HomePage(
                 {
                     var to = from.EndOfDay();
                     actionId = $"{BookingActionTypes.InstantAddBooking}{idx}";
-                    buttonText = $"{to.ToShortDateWithoutYear()} {Icons.New}".ToPlainTextWithIcon(Icons.Calendar);
+                    buttonText = $"{from.ToShortDateWithoutYear()} {Icons.New}".ToPlainTextWithIcon(Icons.Calendar);
                     value = new InstantAddBookingContext(pageContext, from, to, InitiationSource.App, customer.Id, null, null).Serialize();
                 }
                 else
