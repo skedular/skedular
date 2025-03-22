@@ -42,12 +42,12 @@ public class DeskRoomToResourceSyncJob(
                     {
                         foreach (var desk in location.Desks)
                         {
-                            var desks = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
-                            ArgumentNullException.ThrowIfNull(desks);
+                            var deskDetails = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, cancellationToken);
+                            ArgumentNullException.ThrowIfNull(deskDetails);
 
-                            if (desks.OrganizationTags.All(item => item.Id != deskTag.Id))
+                            if (deskDetails.OrganizationTags.All(item => item.Id != deskTag.Id))
                             {
-                                desks.OrganizationTags = desks.OrganizationTags.Concat([deskTag]).ToList();
+                                deskDetails.OrganizationTags = deskDetails.OrganizationTags.Concat([deskTag]).ToList();
                             }
 
                             var existingResource = existingResources.FirstOrDefault(item => item.Name == desk.Name);
@@ -65,7 +65,7 @@ public class DeskRoomToResourceSyncJob(
                                     Color = desk.Color,
                                     IsAvailableHoursOverridden = false,
                                     Location = location,
-                                    OrganizationTags = desks.OrganizationTags
+                                    OrganizationTags = deskDetails.OrganizationTags
                                 };
 
                                 repositoryFactory.ResourceRepository.Add(resource);
@@ -80,7 +80,7 @@ public class DeskRoomToResourceSyncJob(
                                 existingResource.RequireBookingApproval = desk.RequireBookingApproval;
                                 existingResource.Color = desk.Color;
                                 existingResource.Location = location;
-                                existingResource.OrganizationTags = desks.OrganizationTags;
+                                existingResource.OrganizationTags = deskDetails.OrganizationTags;
 
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }
@@ -92,12 +92,12 @@ public class DeskRoomToResourceSyncJob(
                     {
                         foreach (var room in location.Rooms)
                         {
-                            var rooms = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, cancellationToken);
-                            ArgumentNullException.ThrowIfNull(rooms);
+                            var roomDetails = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, cancellationToken);
+                            ArgumentNullException.ThrowIfNull(roomDetails);
 
-                            if (rooms.OrganizationTags.All(item => item.Id != roomTag.Id))
+                            if (roomDetails.OrganizationTags.All(item => item.Id != roomTag.Id))
                             {
-                                rooms.OrganizationTags = rooms.OrganizationTags.Concat([roomTag]).ToList();
+                                roomDetails.OrganizationTags = roomDetails.OrganizationTags.Concat([roomTag]).ToList();
                             }
 
                             var existingResource = existingResources.FirstOrDefault(item => item.Name == room.Name);
@@ -115,7 +115,7 @@ public class DeskRoomToResourceSyncJob(
                                     Color = room.Color,
                                     IsAvailableHoursOverridden = false,
                                     Location = location,
-                                    OrganizationTags = rooms.OrganizationTags
+                                    OrganizationTags = roomDetails.OrganizationTags
                                 };
 
                                 repositoryFactory.ResourceRepository.Add(resource);
@@ -130,7 +130,7 @@ public class DeskRoomToResourceSyncJob(
                                 existingResource.RequireBookingApproval = room.RequireBookingApproval;
                                 existingResource.Color = room.Color;
                                 existingResource.Location = location;
-                                existingResource.OrganizationTags = rooms.OrganizationTags;
+                                existingResource.OrganizationTags = roomDetails.OrganizationTags;
 
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }

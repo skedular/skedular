@@ -1,3 +1,5 @@
+using Customer.Jobs.Jobs;
+
 namespace Customer.Jobs;
 
 public static class Extensions
@@ -9,5 +11,6 @@ public static class Extensions
         services;
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services;
+        services
+            .AddHostedService<DeskRoomToResourceSyncJob>();
 }

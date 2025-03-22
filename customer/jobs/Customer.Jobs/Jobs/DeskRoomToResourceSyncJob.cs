@@ -1,5 +1,4 @@
 using Api.Shared.Services.Models;
-using Customer.Shared.Database.Entities;
 using Customer.Shared.Repositories;
 
 namespace Customer.Jobs.Jobs;
@@ -32,32 +31,17 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
 
                     ArgumentNullException.ThrowIfNull(organization);
 
+                    var existingResources = await repositoryFactory.ResourceRepository.GetAllAsync(location.Id, true, cancellationToken);
                     var deskTag = organization.Tags.SingleOrDefault(item => item.Type == OrganizationTagTypeConstants.Desk);
                     if (deskTag is not null)
                     {
                         foreach (var desk in location.Desks)
                         {
-                            var deskWithBookings = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, true, cancellationToken);
-                            ArgumentNullException.ThrowIfNull(deskWithBookings);
+                            var deskDetails = await repositoryFactory.DeskRepository.GetByIdAsync(desk.Id, true, cancellationToken);
+                            ArgumentNullException.ThrowIfNull(deskDetails);
 
-                            var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(desk.Id, true, cancellationToken);
-                            if (existingResource is null)
-                            {
-                                var resource = new Resource
-                                {
-                                    Id = desk.Id,
-                                    CreatedAt = desk.CreatedAt,
-                                    ModifiedAt = desk.ModifiedAt,
-                                    DeletedAt = desk.DeletedAt,
-                                    EventRaisedAt = desk.EventRaisedAt,
-                                    Name = desk.Name,
-                                    Location = location,
-                                    PreferredByCustomers = deskWithBookings.PreferredByCustomers
-                                };
-
-                                repositoryFactory.ResourceRepository.Add(resource);
-                            }
-                            else
+                            var existingResource = existingResources.FirstOrDefault(item => item.Name == desk.Name);
+                            if (existingResource is not null)
                             {
                                 existingResource.CreatedAt = desk.CreatedAt;
                                 existingResource.ModifiedAt = desk.ModifiedAt;
@@ -65,7 +49,7 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
                                 existingResource.EventRaisedAt = desk.EventRaisedAt;
                                 existingResource.Name = desk.Name;
                                 existingResource.Location = location;
-                                existingResource.PreferredByCustomers = deskWithBookings.PreferredByCustomers;
+                                existingResource.PreferredByCustomers = deskDetails.PreferredByCustomers;
 
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }
@@ -77,27 +61,11 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
                     {
                         foreach (var room in location.Rooms)
                         {
-                            var roomWithBookings = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, true, cancellationToken);
-                            ArgumentNullException.ThrowIfNull(roomWithBookings);
+                            var roomDetails = await repositoryFactory.RoomRepository.GetByIdAsync(room.Id, true, cancellationToken);
+                            ArgumentNullException.ThrowIfNull(roomDetails);
 
-                            var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(room.Id, true, cancellationToken);
-                            if (existingResource is null)
-                            {
-                                var resource = new Resource
-                                {
-                                    Id = room.Id,
-                                    CreatedAt = room.CreatedAt,
-                                    ModifiedAt = room.ModifiedAt,
-                                    DeletedAt = room.DeletedAt,
-                                    EventRaisedAt = room.EventRaisedAt,
-                                    Name = room.Name,
-                                    Location = location,
-                                    PreferredByCustomers = roomWithBookings.PreferredByCustomers
-                                };
-
-                                repositoryFactory.ResourceRepository.Add(resource);
-                            }
-                            else
+                            var existingResource = existingResources.FirstOrDefault(item => item.Name == room.Name);
+                            if (existingResource is not null)
                             {
                                 existingResource.CreatedAt = room.CreatedAt;
                                 existingResource.ModifiedAt = room.ModifiedAt;
@@ -105,7 +73,7 @@ public class DeskRoomToResourceSyncJob(IServiceProvider serviceProvider, ILogger
                                 existingResource.EventRaisedAt = room.EventRaisedAt;
                                 existingResource.Name = room.Name;
                                 existingResource.Location = location;
-                                existingResource.PreferredByCustomers = roomWithBookings.PreferredByCustomers;
+                                existingResource.PreferredByCustomers = roomDetails.PreferredByCustomers;
 
                                 repositoryFactory.ResourceRepository.Update(existingResource);
                             }
