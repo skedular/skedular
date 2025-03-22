@@ -10,7 +10,7 @@ using Type = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;
 
-public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, IResourceBookingSlotHelper resourceBookingSlotHelper)
+public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, IResourceBookingSlotHelperService resourceBookingSlotHelperService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -41,11 +41,11 @@ public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, IRe
 
         var existingResourceBookingSlots = await repositoryFactory.ResourceBookingSlotRepository.GetByResourceIdAsync(
             resourceId,
-            resourceBookingSlotHelper.GetStartPeriod(),
+            resourceBookingSlotHelperService.GetStartPeriod(),
             cancellationToken);
 
         var savingNeeded = false;
-        var allSlots = resourceBookingSlotHelper.CreateAllAvailableSlots(resource);
+        var allSlots = resourceBookingSlotHelperService.CreateAllAvailableSlots(resource);
         var slotsToAdd = allSlots.Where(item => existingResourceBookingSlots.All(slot => slot.Start != item.Start)).ToList();
 
         foreach (var slot in slotsToAdd)

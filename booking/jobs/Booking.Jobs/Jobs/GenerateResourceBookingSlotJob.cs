@@ -1,8 +1,4 @@
-using Booking.Shared.Database.Entities;
-using Booking.Shared.Publishers;
-using Booking.Shared.Repositories;
-using Enterprise.Shared.Database;
-using Microsoft.EntityFrameworkCore;
+using Booking.Shared.Services;
 
 namespace Booking.Jobs.Jobs;
 
@@ -18,16 +14,10 @@ public class GenerateResourceBookingSlotJob(IServiceProvider serviceProvider, IL
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
-                var bookingInternalPublisher = scope.ServiceProvider.GetRequiredService<IBookingInternalPublisher>();
-                var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
-                var resourceIds = await repositoryFactory.ResourceRepository.Query(
-                        new Specification<Resource> { Criteria = query => !query.DeletedAt.HasValue })
-                    .Select(item => item.Id)
-                    .ToListAsync(cancellationToken);
+                var resourceBookingSlotsHelperService = scope.ServiceProvider.GetRequiredService<IResourceBookingSlotsHelperService>();
+                await resourceBookingSlotsHelperService.GenerateAllAsync(cancellationToken);
 
-                await bookingInternalPublisher.PublishGenerateResourceBookingSlotAsync(resourceIds, cancellationToken);
-
-                await Task.Delay(TimeSpan.FromHours(6), cancellationToken);
+                await Task.Delay(TimeSpan.FromDays(1), cancellationToken);
             }
             catch (OperationCanceledException)
             {

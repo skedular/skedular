@@ -4,20 +4,20 @@ using Enterprise.Shared.Time;
 
 namespace Booking.Shared.Services;
 
-public interface IResourceBookingSlotHelper
+public interface IResourceBookingSlotHelperService
 {
     DateTimeOffset GetStartPeriod();
     ICollection<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource);
 }
 
-public class ResourceBookingSlotHelper(IRandomHelper randomHelper, TimeProvider timeProvider) : IResourceBookingSlotHelper
+public class ResourceBookingSlotHelperService(IRandomHelper randomHelper, TimeProvider timeProvider) : IResourceBookingSlotHelperService
 {
-    public DateTimeOffset GetStartPeriod() => timeProvider.GetUtcNow().StartOfDay();
+    public DateTimeOffset GetStartPeriod() => timeProvider.GetUtcNow().StartOfDay().AddDays(-7);
 
     public ICollection<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource)
     {
         var startPeriod = GetStartPeriod();
-        var endPeriod = startPeriod.AddMonths(6);
+        var endPeriod = startPeriod.AddDays(7).AddYears(1);
         var count = (endPeriod - startPeriod).TotalMinutes / 15;
 
         return Enumerable
