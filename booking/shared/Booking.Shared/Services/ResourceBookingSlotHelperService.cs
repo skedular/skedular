@@ -12,12 +12,12 @@ public interface IResourceBookingSlotHelperService
 
 public class ResourceBookingSlotHelperService(IRandomHelper randomHelper, TimeProvider timeProvider) : IResourceBookingSlotHelperService
 {
-    public DateTimeOffset GetStartPeriod() => timeProvider.GetUtcNow().StartOfDay().AddDays(-7);
+    public DateTimeOffset GetStartPeriod() => timeProvider.GetUtcNow().StartOfDay().AddYears(-1);
 
     public ICollection<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource)
     {
         var startPeriod = GetStartPeriod();
-        var endPeriod = startPeriod.AddDays(7).AddYears(1);
+        var endPeriod = startPeriod.AddYears(1).AddYears(1);
         var count = (endPeriod - startPeriod).TotalMinutes / 15;
 
         return Enumerable
