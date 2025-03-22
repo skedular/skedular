@@ -14,9 +14,9 @@ public static class Icons
     public const string Team = ":busts_in_silhouette:";
     public const string Zone = ":world_map:";
     public const string Zones = ":world_map:";
-    public const string Desk = ":desktop_computer:";
-    public const string Desks = ":desktop_computer:";
-    public const string CustomTags = ":desktop_computer:";
+    public const string Resource = ":desktop_computer:";
+    public const string Resources = ":desktop_computer:";
+    public const string CustomTags = ":pushpin:";
     public const string Back = ":back:";
     public const string New = ":heavy_plus_sign:";
     public const string Edit = ":pencil2:";
@@ -67,10 +67,7 @@ public static class IconExtensions
     public static Markdown ToMarkdown(this string? text, int? maxLength = Commons.MaxOptionTextLength) =>
         new(maxLength is null ? text.Truncate(Commons.MaxOptionTextLength) : text.Truncate(maxLength.Value));
 
-    public static PlainText ToOptionPlainTextWithIcon(
-        this string? text,
-        string icon,
-        IconPosition iconPosition = IconPosition.Start) =>
+    public static PlainText ToOptionPlainTextWithIcon(this string? text, string icon, IconPosition iconPosition = IconPosition.Start) =>
         text.ToPlainTextWithIcon(icon, Commons.MaxOptionTextLength, iconPosition);
 
     public static PlainText ToPlainTextWithIcon(
@@ -80,10 +77,7 @@ public static class IconExtensions
         IconPosition iconPosition = IconPosition.Start) =>
         new(text.ToTextWithIcon(icon, maxLength, iconPosition));
 
-    public static Markdown ToOptionMarkdownWithIcon(
-        this string? text,
-        string icon,
-        IconPosition iconPosition = IconPosition.Start) =>
+    public static Markdown ToOptionMarkdownWithIcon(this string? text, string icon, IconPosition iconPosition = IconPosition.Start) =>
         text.ToMarkdownWithIcon(icon, Commons.MaxOptionTextLength, iconPosition);
 
     public static Markdown ToMarkdownWithIcon(
@@ -92,17 +86,10 @@ public static class IconExtensions
         IconPosition iconPosition = IconPosition.Start) =>
         new(text.ToTextWithIcon(icon, maxLength, iconPosition));
 
-    public static string ToOptionTextWithIcon(
-        this string? text,
-        string icon,
-        IconPosition iconPosition = IconPosition.Start) =>
+    public static string ToOptionTextWithIcon(this string? text, string icon, IconPosition iconPosition = IconPosition.Start) =>
         text.ToTextWithIcon(icon, Commons.MaxOptionTextLength, iconPosition);
 
-    public static string ToTextWithIcon(
-        this string? text,
-        string icon,
-        int? maxLength = null,
-        IconPosition iconPosition = IconPosition.Start)
+    public static string ToTextWithIcon(this string? text, string icon, int? maxLength = null, IconPosition iconPosition = IconPosition.Start)
     {
         var str = iconPosition == IconPosition.Start ? $"{icon} {text}" : $"{text} {icon}";
         return maxLength is null ? str : str.Truncate(maxLength.Value);

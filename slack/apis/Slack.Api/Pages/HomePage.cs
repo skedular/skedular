@@ -359,7 +359,7 @@ public class HomePage(
             case IncludeMyBookingsOnly:
                 var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
                 var selectedOption = action.SelectedOptions.FirstOrDefault();
-                context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext(workspaceMember.Timezone);
+                context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext();
                 context.PageContext.HomePage.IncludeMyBookingsOnly = selectedOption is not null &&
                                                                      selectedOption.Value ==
                                                                      IncludeMyBookingsOnly;
@@ -469,7 +469,7 @@ public class HomePage(
         await RenderWithContextAsync(
             workspace,
             workspaceMember,
-            new CommonPageContext(new PageContext { HomePage = homePageContextService.GetDefaultHomePageContext(workspaceMember.Timezone) }),
+            new CommonPageContext(new PageContext { HomePage = homePageContextService.GetDefaultHomePageContext() }),
             hash,
             cancellationToken);
 
@@ -585,7 +585,7 @@ public class HomePage(
         commonPageContext.PageContext.HomePage.Pagination.CurrentLast = last;
 
         var from = commonPageContext.PageContext.HomePage.SelectedDate.StartOfWeek(workspaceMember.ToDayOfWeek());
-        var until = from.AddDays(6);
+        var until = from.AddDays(7);
         var response = await Task.WhenAll(
             GetPaginatedBookingsAsync(
                 workspace,
@@ -607,7 +607,6 @@ public class HomePage(
         var asyncBlocks = await Task.WhenAll(
             settingsComponents.GetPreferredLocationOnboardingDoneAsync(workspaceMember, commonPageContext.PageContext, cancellationToken),
             settingsComponents.GetPreferredZoneOnboardingDoneAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
-            settingsComponents.GetPreferredDeskOnboardingDoneAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
             GetBookingCalendarSettingBlocksAsync(workspaceMember, myBookings, commonPageContext.PageContext, cancellationToken),
             bookingComponents.GetBookingCardsAsync(
                 workspace,
@@ -622,12 +621,11 @@ public class HomePage(
         [
             asyncBlocks[0],
             asyncBlocks[1],
-            asyncBlocks[2],
             GetTitle(),
             GetToolbar(commonPageContext.PageContext),
-            asyncBlocks[3],
+            asyncBlocks[2],
             GetBookingsSearchCriteriaAndPaginationBlocks(bookingConnection, commonPageContext.PageContext),
-            asyncBlocks[4]
+            asyncBlocks[3]
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -865,9 +863,8 @@ public class HomePage(
     {
         var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
 
-        context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext(workspaceMember.Timezone);
-        context.PageContext.HomePage.SelectedDate = action.SelectedDate?.ToDateTimeOffset() ??
-                                                    timeProvider.GetUtcNow().StartOfDay(workspaceMember.Timezone.ToTimezoneInfo());
+        context.PageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext();
+        context.PageContext.HomePage.SelectedDate = action.SelectedDate?.ToDateTimeOffset() ?? timeProvider.GetUtcNow().StartOfDay();
 
         await RenderWithContextAsync(workspace, workspaceMember, context, request.View.Hash, cancellationToken);
     }

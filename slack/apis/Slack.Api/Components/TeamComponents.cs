@@ -63,10 +63,7 @@ public class TeamComponents(ICustomerService customerService, IOrganizationServi
         return blocks.SkipLast(1).ToList();
     }
 
-    private static List<Block> GetTeamCard(
-        Team team,
-        Customer customer,
-        PageContext pageContext)
+    private static List<Block> GetTeamCard(Team team, Customer customer, PageContext pageContext)
     {
         pageContext = pageContext.Clone();
 

@@ -18,8 +18,6 @@ service CustomerService {
     rpc Get (GetInput) returns (Customer);
     rpc DismissPreferredLocationOnboardingSetup (DismissPreferredLocationOnboardingSetupInput) returns (Customer);
     rpc DismissSetupPreferredZones (DismissSetupPreferredZonesInput) returns (Customer);
-    rpc DismissSetupPreferredDesks (DismissSetupPreferredDesksInput) returns (Customer);
-    rpc DismissSetupPreferredRooms (DismissSetupPreferredRoomsInput) returns (Customer);
     rpc SubmitFeedback (SubmitFeedbackInput) returns (Feedback);
     rpc SetDefaultOrganization (SetDefaultOrganizationInput) returns (Customer);
     rpc AddPreferredLocation (AddPreferredLocationInput) returns (Customer);
@@ -27,10 +25,6 @@ service CustomerService {
     rpc ClearDefaultOrganization (ClearDefaultOrganizationInput) returns (Customer);
     rpc RemovePreferredLocation (RemovePreferredLocationInput) returns (Customer);
     rpc RemovePreferredTeam (RemovePreferredTeamInput) returns (Customer);
-    rpc AddPreferredDesk (AddPreferredDeskInput) returns (Customer);
-    rpc RemovePreferredDesk (RemovePreferredDeskInput) returns (Customer);
-    rpc AddPreferredRoom (AddPreferredRoomInput) returns (Customer);
-    rpc RemovePreferredRoom (RemovePreferredRoomInput) returns (Customer);
     rpc AddPreferredOrganizationTag (AddPreferredOrganizationTagInput) returns (Customer);
     rpc RemovePreferredOrganizationTag (RemovePreferredOrganizationTagInput) returns (Customer);
     rpc AddPreferredResource (AddPreferredResourceInput) returns (Customer);
@@ -96,16 +90,12 @@ message Admin_AddInput {
     bool isDefaultOrganizationOnboardingDone = 21;
     bool isPreferredLocationOnboardingDone = 22;
     bool isPreferredZoneOnboardingDone = 23;
-    bool isPreferredDeskOnboardingDone = 24;
-    bool isPreferredRoomOnboardingDone = 25;
-    Organization defaultOrganization = 26;
-    repeated Location preferredLocations = 27;
-    repeated Resource preferredResources = 28;
-    repeated Desk preferredDesks = 29;
-    repeated Room preferredRooms = 30;
-    repeated Team preferredTeams = 31;
-    repeated OrganizationTag preferredOrganizationTags = 32;
-    string phoneNumber = 33;
+    Organization defaultOrganization = 24;
+    repeated Location preferredLocations = 25;
+    repeated Resource preferredResources = 26;
+    repeated Team preferredTeams = 27;
+    repeated OrganizationTag preferredOrganizationTags = 28;
+    string phoneNumber = 29;
 }
 
 message Customer {
@@ -132,16 +122,12 @@ message Customer {
     bool isDefaultOrganizationOnboardingDone = 21;
     bool isPreferredLocationOnboardingDone = 22;
     bool isPreferredZoneOnboardingDone = 23;
-    bool isPreferredDeskOnboardingDone = 24;
-    bool isPreferredRoomOnboardingDone = 25;
-    Organization defaultOrganization = 26;
-    repeated Location preferredLocations = 27;
-    repeated Resource preferredResources = 28;
-    repeated Desk preferredDesks = 29;
-    repeated Room preferredRooms = 30;
-    repeated Team preferredTeams = 31;
-    repeated OrganizationTag preferredOrganizationTags = 32;
-    string phoneNumber = 33;
+    Organization defaultOrganization = 24;
+    repeated Location preferredLocations = 25;
+    repeated Resource preferredResources = 26;
+    repeated Team preferredTeams = 27;
+    repeated OrganizationTag preferredOrganizationTags = 28;
+    string phoneNumber = 29;
 }
 
 message Identity {
@@ -159,18 +145,6 @@ message Location {
     string id = 1;
     string name = 2;
     Organization organization = 3;
-}
-
-message Desk {
-    string id = 1;
-    string name = 2;
-    Location location = 3;
-}
-
-message Room {
-    string id = 1;
-    string name = 2;
-    Location location = 3;
 }
 
 message Team {
@@ -214,12 +188,6 @@ message DismissPreferredLocationOnboardingSetupInput {
 message DismissSetupPreferredZonesInput {
 }
 
-message DismissSetupPreferredDesksInput {
-}
-
-message DismissSetupPreferredRoomsInput {
-}
-
 enum FeedbackChannel {
     Web = 0;
     Slack = 1;
@@ -257,22 +225,6 @@ message RemovePreferredLocationInput {
 
 message RemovePreferredTeamInput {
     string teamId = 1;
-}
-
-message AddPreferredDeskInput {
-    string deskId = 1;
-}
-
-message RemovePreferredDeskInput {
-    string deskId = 1;
-}
-
-message AddPreferredRoomInput {
-    string roomId = 1;
-}
-
-message RemovePreferredRoomInput {
-    string roomId = 1;
 }
 
 message OrganizationTag {

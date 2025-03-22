@@ -23,8 +23,6 @@ public class CustomerGrpcService(
     ICustomerFeedbackService customerFeedbackService,
     ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
     ICustomerResourceSettingsService customerResourceSettingsService,
-    ICustomerDeskSettingsService customerDeskSettingsService,
-    ICustomerRoomSettingsService customerRoomSettingsService,
     IMapper mapper,
     IGrpcAuthenticator grpcAuthenticator) : CustomerService.CustomerServiceBase
 {
@@ -162,22 +160,6 @@ public class CustomerGrpcService(
         return mapper.MapToGrpcResponse(await customerSettingsService.CompletePreferredZoneOnboardingAsync(context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        DismissSetupPreferredDesks(DismissSetupPreferredDesksInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await customerSettingsService.CompletePreferredDeskOnboardingAsync(context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        DismissSetupPreferredRooms(DismissSetupPreferredRoomsInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await customerSettingsService.CompletePreferredRoomOnboardingAsync(context.CancellationToken));
-    }
-
     public override async Task<Feedback> SubmitFeedback(SubmitFeedbackInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
@@ -263,45 +245,6 @@ public class CustomerGrpcService(
 
         return mapper.MapToGrpcResponse(
             await customerTeamSettingsService.RemoveCustomerPreferredTeamAsync(request.TeamId, null, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer>
-        AddPreferredDesk(AddPreferredDeskInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerDeskSettingsService.AddCustomerPreferredDeskAsync(request.DeskId, null, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemovePreferredDesk(
-        RemovePreferredDeskInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerDeskSettingsService.RemoveCustomerPreferredDeskAsync(request.DeskId, null, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddPreferredRoom(
-        AddPreferredRoomInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerRoomSettingsService.AddCustomerPreferredRoomAsync(request.RoomId, null, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemovePreferredRoom(
-        RemovePreferredRoomInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerRoomSettingsService.RemoveCustomerPreferredRoomAsync(request.RoomId, null, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddPreferredOrganizationTag(

@@ -18,8 +18,6 @@ service BookingService {
     rpc Add (AddInput) returns (Booking);
     rpc Update (UpdateInput) returns (Booking);
     rpc Delete (DeleteInput) returns (Booking);
-    rpc GetAvailableDesks (GetAvailableDesksInput) returns (AvailableDesks);
-    rpc GetAvailableRooms (GetAvailableRoomsInput) returns (AvailableRooms);
     rpc GetAvailableResources (GetAvailableResourcesInput) returns (AvailableResources);
 }
 
@@ -136,10 +134,8 @@ message Booking {
     Organization organization = 6;
     Location location = 7;
     Team team = 8;
-    repeated Desk desks = 9;
-    repeated Room rooms = 10;
-    repeated Resource resources = 11;
-    BookingType type = 12;
+    repeated Resource resources = 9;
+    BookingType type = 10;
 }
 
 message Customer {
@@ -189,24 +185,6 @@ message OrganizationZone {
     string id = 1;
     string name = 2;
     string color = 3;
-}
-
-message Desk {
-    string id = 1;
-    string name = 2;
-    Location location = 3;
-    repeated OrganizationCustomTag organizationCustomTags = 4;
-    repeated OrganizationZone organizationZones = 5;
-    string color = 6;
-}
-
-message Room {
-    string id = 1;
-    string name = 2;
-    Location location = 3;
-    repeated OrganizationCustomTag organizationCustomTags = 4;
-    repeated OrganizationZone organizationZones = 5;
-    string color = 6;
 }
 
 message GetOrganizationPermissionsInput {
@@ -264,12 +242,10 @@ message Admin_AddInput {
     string organizationId = 6;
     string locationId = 7;
     string teamId = 8;
-    repeated string deskIds = 9;
-    repeated string roomIds = 10;
-    repeated string resourceIds = 11;
-    bool ignoreDeskAvailability = 12;
-    bool ignoreRoomAvailability = 13;
-    BookingType type = 14;
+    repeated string resourceIds = 9;
+    bool ignoreDeskAvailability = 10;
+    bool ignoreRoomAvailability = 11;
+    BookingType type = 12;
 }
 
 message AddInput {
@@ -281,10 +257,8 @@ message AddInput {
     string organizationId = 6;
     string locationId = 7;
     string teamId = 8;
-    repeated string deskIds = 9;
-    repeated string roomIds = 10;
-    repeated string resourceIds = 11;
-    BookingType type = 12;
+    repeated string resourceIds = 9;
+    BookingType type = 10;
 }
 
 message UpdateInput {
@@ -296,42 +270,12 @@ message UpdateInput {
     string organizationId = 6;
     string locationId = 7;
     string teamId = 8;
-    repeated string deskIds = 9;
-    repeated string roomIds = 10;
-    repeated string resourceIds = 11;
-    BookingType type = 12;
+    repeated string resourceIds = 9;
+    BookingType type = 10;
 }
 
 message DeleteInput {
     string id = 1;
-}
-
-message GetAvailableDesksInput {
-    string organizationId = 1;
-    string locationId = 2;
-    google.protobuf.Timestamp date = 3;
-    repeated string deskIdsToInclude = 4;
-    repeated string CustomTagIds = 5;
-    repeated string ZoneIds = 6;
-    bool combineCustomTagsZones = 7;
-}
-
-message AvailableDesks {
-    repeated Desk desks = 1;
-}
-
-message GetAvailableRoomsInput {
-    string organizationId = 1;
-    string locationId = 2;
-    google.protobuf.Timestamp date = 3;
-    repeated string roomIdsToInclude = 4;
-    repeated string CustomTagIds = 5;
-    repeated string ZoneIds = 6;
-    bool combineCustomTagsZones = 7;
-}
-
-message AvailableRooms {
-    repeated Room rooms = 1;
 }
 
 message Resource {
@@ -342,6 +286,7 @@ message Resource {
     repeated OrganizationZone organizationZones = 5;
     string color = 6;
     repeated Customer customers = 7;
+    ResourceType resourceType = 8;
 }
 
 message GetAvailableResourcesInput {
@@ -351,8 +296,15 @@ message GetAvailableResourcesInput {
     google.protobuf.Timestamp until = 4;
     repeated string CustomTagIds = 5;
     repeated string ZoneIds = 6;
+    repeated string resourceIdsToInclude = 7;
 }
 
 message AvailableResources {
     repeated Resource resources = 1;
+}
+
+message ResourceType {
+    string id = 1;
+    string name = 2;
+    string color = 3;
 }

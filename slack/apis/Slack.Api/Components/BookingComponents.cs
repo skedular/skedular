@@ -138,7 +138,7 @@ public class BookingComponents(
             blocks.Add(new SectionBlock { Text = booking.Team.Name.ToSafeString().ToPlainTextWithIcon(Icons.Team) });
         }
 
-        blocks.AddRange(bookingComponents.GetDesksLines(booking));
+        blocks.AddRange(bookingComponents.GetResourcesLines(booking));
 
         if (!includeActionButtons)
         {

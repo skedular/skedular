@@ -10,9 +10,9 @@ using Slack.Shared.Repositories;
 using SlackNet.Interaction;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 
-namespace Slack.Api.Handlers.ActionHandlers.Desk;
+namespace Slack.Api.Handlers.ActionHandlers.Resource;
 
-public class RemoveDeskButtonHandler(
+public class RemoveResourceButtonHandler(
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
     IRepositoryFactory repositoryFactory,
@@ -37,24 +37,19 @@ public class RemoveDeskButtonHandler(
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
-        var context = RemoveDeskContext.Deserialize(viewSubmission.View.PrivateMetadata);
+        var context = RemoveResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var permissions = await locationService.GetPermissionsAsync(context.LocationId, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
             throw new Unauthorized();
         }
 
-        await locationServiceClient.RemoveDeskAsync(
-            new RemoveDeskInput { Id = context.DeskId },
+        await locationServiceClient.RemoveResourceAsync(
+            new RemoveResourceInput { Id = context.ResourceId },
             locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
-        await pageNavigator.BackAsync(
-            workspace,
-            workspaceMember,
-            new CommonPageContext(context.PageContext),
-            viewSubmission.Hash,
-            cancellationToken);
+        await pageNavigator.BackAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), viewSubmission.Hash, cancellationToken);
 
         return ViewSubmissionResponse.Null;
     }

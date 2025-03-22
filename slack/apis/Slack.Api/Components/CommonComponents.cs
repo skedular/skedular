@@ -15,7 +15,7 @@ public interface ICommonComponents
 public class CommonComponents(IHomePageContextService homePageContextService) : ICommonComponents
 {
     public ICollection<IActionElement> GetHomeAndBackButtons(PageContext pageContext, string timezone) =>
-        GetHomeButtons(pageContext, timezone).Concat(GetBackButton(pageContext)).ToList();
+        GetHomeButtons(pageContext).Concat(GetBackButton(pageContext)).ToList();
 
     public ICollection<IActionElement> GetFeedbackButton(PageContext pageContext)
     {
@@ -38,16 +38,13 @@ public class CommonComponents(IHomePageContextService homePageContextService) : 
         pageContext = pageContext.Clone();
         var context = new CommonPageContext(pageContext).Serialize();
 
-        return
-        [
-            new Button { ActionId = CommonActionTypes.Back, Text = "Back".ToPlainTextWithIcon(Icons.Back), Value = context }
-        ];
+        return [new Button { ActionId = CommonActionTypes.Back, Text = "Back".ToPlainTextWithIcon(Icons.Back), Value = context }];
     }
 
-    private ICollection<IActionElement> GetHomeButtons(PageContext pageContext, string timezone)
+    private ICollection<IActionElement> GetHomeButtons(PageContext pageContext)
     {
         pageContext = pageContext.PushCurrentPageToVisitedPagesAndClone();
-        pageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext(timezone);
+        pageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext();
         var context = new CommonPageContext(pageContext).Serialize();
 
         return [new Button { ActionId = HomeActionTypes.Home, Text = Icons.Home, Value = context }];

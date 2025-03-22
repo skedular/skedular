@@ -23,8 +23,6 @@ public class BookingGrpcService(
     BookingConfiguration bookingConfiguration,
     IGrpcAuthenticator grpcAuthenticator,
     IBookingService bookingService,
-    IDeskService deskService,
-    IRoomService roomService,
     IResourceService resourceService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ILocationAuthorizationService locationAuthorizationService,
@@ -278,46 +276,6 @@ public class BookingGrpcService(
         return mapper.MapToGrpcResponse(await bookingService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<AvailableDesks> GetAvailableDesks(GetAvailableDesksInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
-
-        var desks = await deskService.GetAvailableDesksAsync(
-            request.OrganizationId,
-            request.LocationId,
-            request.Date.ToDateTimeOffset(),
-            request.DeskIdsToInclude,
-            request.CustomTagIds,
-            request.ZoneIds,
-            request.CombineCustomTagsZones,
-            context.CancellationToken);
-
-        var availableDesks = new AvailableDesks();
-        availableDesks.Desks.AddRange(mapper.MapToGrpcResponse(desks));
-
-        return availableDesks;
-    }
-
-    public override async Task<AvailableRooms> GetAvailableRooms(GetAvailableRoomsInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
-
-        var rooms = await roomService.GetAvailableRoomsAsync(
-            request.OrganizationId,
-            request.LocationId,
-            request.Date.ToDateTimeOffset(),
-            request.RoomIdsToInclude,
-            request.CustomTagIds,
-            request.ZoneIds,
-            request.CombineCustomTagsZones,
-            context.CancellationToken);
-
-        var availableRooms = new AvailableRooms();
-        availableRooms.Rooms.AddRange(mapper.MapToGrpcResponse(rooms));
-
-        return availableRooms;
-    }
-
     public override async Task<AvailableResources> GetAvailableResources(GetAvailableResourcesInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
@@ -329,6 +287,7 @@ public class BookingGrpcService(
             request.Until.ToDateTimeOffset(),
             request.CustomTagIds,
             request.ZoneIds,
+            request.ResourceIdsToInclude,
             context.CancellationToken);
 
         var availableResources = new AvailableResources();

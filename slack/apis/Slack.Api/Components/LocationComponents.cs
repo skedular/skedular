@@ -22,8 +22,7 @@ public interface ILocationComponents
         CancellationToken cancellationToken);
 }
 
-public class LocationComponents(ICustomerService customerService, IOrganizationService organizationService)
-    : ILocationComponents
+public class LocationComponents(ICustomerService customerService, IOrganizationService organizationService) : ILocationComponents
 {
     public async Task<ICollection<IActionElement>> GetAddLocationButtonAsync(
         Workspace workspace,
@@ -63,22 +62,18 @@ public class LocationComponents(ICustomerService customerService, IOrganizationS
         return blocks.SkipLast(1).ToList();
     }
 
-    private static List<Block> GetLocationCard(
-        Location location,
-        Customer customer,
-        PageContext pageContext)
+    private static List<Block> GetLocationCard(Location location, Customer customer, PageContext pageContext)
     {
         pageContext = pageContext.Clone();
 
-        var dailyUpdateChannel =
-            location.DailyUpdateChannel is null ? string.Empty : location.DailyUpdateChannel.Name.ToSafeString();
-        var deskCapacity = location.Desks.Count == 0 ? "No desk available" : location.Desks.Count.ToString();
+        var dailyUpdateChannel = location.DailyUpdateChannel is null ? string.Empty : location.DailyUpdateChannel.Name.ToSafeString();
+        var resourceCapacity = location.Resources.Count == 0 ? "No resource exists" : location.Resources.Count.ToString();
         var blocks = new List<Block>
         {
             new SectionBlock { Text = $"*Name*: {location.Name.ToSafeString()}".ToMarkdown() },
             new SectionBlock { Text = $"*About*: {location.About.ToSafeString()}".ToMarkdown() },
             new SectionBlock { Text = $"*Timezone*: {location.Timezone.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*Desk capacity*: {deskCapacity}".ToMarkdown() },
+            new SectionBlock { Text = $"*Resource capacity*: {resourceCapacity}".ToMarkdown() },
             new SectionBlock { Text = $"*Daily update channel*: {dailyUpdateChannel}".ToMarkdown() }
         };
 
@@ -112,7 +107,7 @@ public class LocationComponents(ICustomerService customerService, IOrganizationS
                 new Option { Value = $"{BookingActionTypes.Bookings}{location.Id}", Text = "Bookings".ToOptionPlainTextWithIcon(Icons.Bookings) },
                 new Option { Value = $"{ZoneActionTypes.Zones}{location.Id}", Text = "Zones".ToOptionPlainTextWithIcon(Icons.Zones) },
                 new Option { Value = $"{CustomTagActionTypes.CustomTags}{location.Id}", Text = "Tags".ToOptionPlainTextWithIcon(Icons.CustomTags) },
-                new Option { Value = $"{DeskActionTypes.Desks}{location.Id}", Text = "Desks".ToOptionPlainTextWithIcon(Icons.Desks) }
+                new Option { Value = $"{ResourceActionTypes.Resources}{location.Id}", Text = "Resources".ToOptionPlainTextWithIcon(Icons.Resources) }
             ]
         };
 

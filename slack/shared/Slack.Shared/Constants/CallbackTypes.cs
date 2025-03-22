@@ -38,12 +38,11 @@ public class ZoneCallbackTypes
     public const string RemoveZone = "RemoveZone";
 }
 
-public class DeskCallbackTypes
+public class ResourceCallbackTypes
 {
-    public const string AddDesk = "AddDesk";
-    public const string BulkAddDesks = "BulkAddDesks";
-    public const string EditDesk = "EditDesk";
-    public const string RemoveDesk = "RemoveDesk";
+    public const string AddResource = "AddResource";
+    public const string EditResource = "EditResource";
+    public const string RemoveResource = "RemoveResource";
 }
 
 public class CustomTagCallbackTypes

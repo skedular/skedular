@@ -65,10 +65,7 @@ public class AddBookingButtonHandler(
         {
             BlockId = DateKey,
             Label = "Date".ToPlainText(),
-            Element = new DatePicker
-            {
-                ActionId = DateKey, InitialDate = (context.From ?? timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc)).ToDateTime()
-            },
+            Element = new DatePicker { ActionId = DateKey, InitialDate = (context.From ?? timeProvider.GetUtcNow().StartOfDay()).ToDateTime() },
             Optional = false
         };
 
@@ -334,8 +331,8 @@ public class AddBookingButtonHandler(
     {
         if (context.LocationId is null)
         {
-            var preferredLocation = customer.PreferredLocations.FirstOrDefault(item =>
-                item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
+            var preferredLocation = customer.PreferredLocations
+                .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
 
             return
             [
@@ -356,8 +353,7 @@ public class AddBookingButtonHandler(
             ];
         }
 
-        var locationToAddToBooking =
-            await locationService.GetLocationAsync(context.LocationId, workspaceMember, cancellationToken);
+        var locationToAddToBooking = await locationService.GetLocationAsync(context.LocationId, workspaceMember, cancellationToken);
         ArgumentNullException.ThrowIfNull(locationToAddToBooking);
 
         return

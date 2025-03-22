@@ -3,7 +3,7 @@ using Enterprise.Shared.Models;
 
 namespace Slack.Shared.Models;
 
-public class TeamMember : ReplicatedModelBaseWithDeleted
+public class TeamMember : ModelBase
 {
     public TeamMemberRole? Role { get; set; }
     public TeamMemberStatus Status { get; set; }

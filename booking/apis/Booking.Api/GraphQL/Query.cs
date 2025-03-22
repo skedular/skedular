@@ -325,6 +325,7 @@ public class Query(IMapper mapper)
             where.Until,
             where.CustomTagIds.ToSafeCollection(),
             where.ZoneIds.ToSafeCollection(),
+            where.ResourceIdsToInclude.ToSafeCollection(),
             cancellationToken));
     }
 

@@ -10,16 +10,12 @@ using Location.Api.Services;
 using Location.Api.Services.Authorization;
 using Location.Shared.Configurations;
 using Location.Shared.Models;
-using Desk = Api.Shared.Services.Grpc.Skedular.Location.V1.Desk;
-using DeskOrderField = Api.Shared.Services.Grpc.Skedular.Location.V1.DeskOrderField;
 using LocationOrderField = Location.Shared.Models.LocationOrderField;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
 using PageInfo = Api.Shared.Services.Grpc.Skedular.Location.V1.PageInfo;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
 using Version = Api.Shared.Services.Grpc.Skedular.Location.V1.Version;
-using Room = Api.Shared.Services.Grpc.Skedular.Location.V1.Room;
-using RoomOrderField = Api.Shared.Services.Grpc.Skedular.Location.V1.RoomOrderField;
 using Resource = Api.Shared.Services.Grpc.Skedular.Location.V1.Resource;
 using ResourceOrderField = Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceOrderField;
 
@@ -30,8 +26,6 @@ public class LocationGrpcService(
     IGrpcAuthenticator grpcAuthenticator,
     ILocationService locationService,
     IResourceService resourceService,
-    IDeskService deskService,
-    IRoomService roomService,
     ILocationAuthorizationService locationAuthorizationService,
     IMapper mapper) : LocationService.LocationServiceBase
 {
@@ -197,167 +191,6 @@ public class LocationGrpcService(
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(await locationService.DeleteAsync(request.Id, context.CancellationToken));
-    }
-
-    public override async Task<DeskConnection> GetPaginatedDesks(GetPaginatedDesksInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        var (paginatedInfo, edges, totalCount) = await deskService.GetPaginatedDesksAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
-            new DeskSearchCriteria(request.Where.LocationId, request.Where.NameContains, request.Where.TagIds),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
-                {
-                    DeskOrderField.DeskName => Shared.Models.DeskOrderField.Name,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-                return new DeskOrder(direction, field);
-            }).ToList(),
-            context.CancellationToken);
-
-        var connection = new DeskConnection
-        {
-            PageInfo = new PageInfo
-            {
-                HasNextPage = paginatedInfo.HasNextPage,
-                HasPreviousPage = paginatedInfo.HasPreviousPage,
-                StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
-            },
-            TotalCount = totalCount
-        };
-
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
-        return connection;
-    }
-
-    public override async Task<Desk> GetDesk(GetDeskInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await deskService.GetByIdAsync(request.Id, context.CancellationToken));
-    }
-
-    public override async Task<Desk> AddDesk(AddDeskInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await deskService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
-    }
-
-    public override async Task<BulkAddDesksResponse> BulkAddDesks(BulkAddDesksInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        var bulkAddDesksResponse = new BulkAddDesksResponse();
-
-        var desks = await deskService.BulkAddAsync(
-            request.LocationId,
-            request.NamePrefix,
-            request.Count,
-            request.TagIds,
-            request.Deactivated,
-            request.RequireBookingApproval,
-            request.Color,
-            context.CancellationToken);
-
-        bulkAddDesksResponse.Desks.AddRange(desks.Select(mapper.MapToGrpcResponse));
-
-        return bulkAddDesksResponse;
-    }
-
-    public override async Task<Desk> UpdateDesk(UpdateDeskInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await deskService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
-    }
-
-    public override async Task<Desk> RemoveDesk(RemoveDeskInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await deskService.DeleteAsync(request.Id, context.CancellationToken));
-    }
-
-    public override async Task<RoomConnection> GetPaginatedRooms(GetPaginatedRoomsInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        var (paginatedInfo, edges, totalCount) = await roomService.GetPaginatedRoomsAsync(
-            new PaginationInputParam(
-                request.After,
-                request.First.FromNullInt(),
-                request.Before,
-                request.Last.FromNullInt()),
-            new RoomSearchCriteria(request.Where.LocationId, request.Where.NameContains, request.Where.TagIds),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
-                {
-                    RoomOrderField.RoomName => Shared.Models.RoomOrderField.Name,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-                return new RoomOrder(direction, field);
-            }).ToList(),
-            context.CancellationToken);
-
-        var connection = new RoomConnection
-        {
-            PageInfo = new PageInfo
-            {
-                HasNextPage = paginatedInfo.HasNextPage,
-                HasPreviousPage = paginatedInfo.HasPreviousPage,
-                StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
-            },
-            TotalCount = totalCount
-        };
-
-        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
-        return connection;
-    }
-
-    public override async Task<Room> GetRoom(GetRoomInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await roomService.GetByIdAsync(request.Id, context.CancellationToken));
-    }
-
-    public override async Task<Room> AddRoom(AddRoomInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await roomService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
-    }
-
-    public override async Task<Room> UpdateRoom(UpdateRoomInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await roomService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
-    }
-
-    public override async Task<Room> RemoveRoom(RemoveRoomInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await roomService.DeleteAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<ResourceConnection> GetPaginatedResources(GetPaginatedResourcesInput request, ServerCallContext context)

@@ -313,7 +313,6 @@ public class Mapper : IMapper
             IsDefaultOrganizationOnboardingDone = true,
             IsPreferredLocationOnboardingDone = true,
             IsPreferredZoneOnboardingDone = false,
-            IsPreferredDeskOnboardingDone = false,
             DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 

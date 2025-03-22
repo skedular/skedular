@@ -55,10 +55,7 @@ public class SettingsPage(
     private const string AutomaticallyUpdateProfileStatus = "AutomaticallyUpdateProfileStatus";
     private const string UpdateOrganizationSlackUpdateChannel = "UpdateOrganizationSlackUpdateChannel";
 
-    public async Task HandleAsync(
-        ChannelSelectAction action,
-        BlockActionRequest request,
-        CancellationToken cancellationToken)
+    public async Task HandleAsync(ChannelSelectAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
         var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
         if (workspaceEntity is null)

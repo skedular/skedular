@@ -8,4 +8,5 @@ public class OptionLoaderKeys
     public const string OrganizationMemberAndCustomerPairKey = "OrganizationMemberAndCustomerPair";
     public const string OrganizationLocationKey = "OrganizationLocation";
     public const string OrganizationTeamKey = "OrganizationTeam";
+    public const string OrganizationResourceTypeKey = "OrganizationResourceType";
 }

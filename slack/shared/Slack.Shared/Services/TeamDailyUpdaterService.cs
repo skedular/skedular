@@ -114,7 +114,7 @@ public class TeamDailyUpdaterService(
                         customer.Identities.Select(item => item.Id).ToList(),
                         customer).ToMarkdownWithIcon(Icons.People)
                 });
-                blocks.AddRange(bookingComponents.GetDesksLines(booking));
+                blocks.AddRange(bookingComponents.GetResourcesLines(booking));
             }
 
             if (bookingConnection.TotalCount > TeamBookingsPageSize)

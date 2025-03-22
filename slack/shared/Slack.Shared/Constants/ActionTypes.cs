@@ -56,24 +56,23 @@ public static class ZoneActionTypes
     public const string EditZone = "EditZone";
     public const string RemoveZone = "RemoveZone";
     public const string ActionsMenu = "Zone_ActionsMenu";
-    public const string Name = "ZoneName";
-    public const string Description = "ZoneDescription";
+    public const string Name = "Zone_Name";
+    public const string Description = "Zone_Description";
 }
 
-public static class DeskActionTypes
+public static class ResourceActionTypes
 {
-    public const string Desks = "Desks";
-    public const string DismissSetupPreferredDesks = "DismissSetupPreferredDesks";
-    public const string AddDesk = "AddDesk";
-    public const string BulkAddDesks = "BulkAddDesks";
-    public const string SetPreferredDesk = "SetPreferredDesk";
-    public const string RemovePreferredDesk = "RemovePreferredDesk";
-    public const string EditDesk = "EditDesk";
-    public const string RemoveDesk = "RemoveDesk";
-    public const string ActionsMenu = "Desk_ActionsMenu";
-    public const string Name = "ZoneName";
-    public const string Deactivated = "ZoneDeactivated";
-    public const string RequireBookingApproval = "ZoneRequireBookingApproval";
+    public const string Resources = "Resources";
+    public const string AddResource = "AddResource";
+    public const string SetPreferredResource = "SetPreferredResource";
+    public const string RemovePreferredResource = "RemovePreferredResource";
+    public const string EditResource = "EditResource";
+    public const string RemoveResource = "RemoveResource";
+    public const string ActionsMenu = "Resource_ActionsMenu";
+    public const string Name = "Resource_Name";
+    public const string Inactive = "Resource_Inactive";
+    public const string RequireBookingApproval = "Resource_RequireBookingApproval";
+    public const string ResourceType = "Resource_ResourceType";
 }
 
 public static class BookingActionTypes
@@ -112,6 +111,6 @@ public static class CustomTagActionTypes
     public const string EditCustomTag = "EditCustomTag";
     public const string RemoveCustomTag = "RemoveCustomTag";
     public const string ActionsMenu = "CustomTag_ActionsMenu";
-    public const string Name = "CustomTagName";
-    public const string Description = "CustomTagDescription";
+    public const string Name = "CustomTag_Name";
+    public const string Description = "CustomTag_Description";
 }

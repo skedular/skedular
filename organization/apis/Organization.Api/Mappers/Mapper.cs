@@ -407,6 +407,9 @@ public class Mapper : IMapper
             HasFutureBooking = src.HasFutureBooking
         };
 
+        organization.Tags.AddRange(MapToGrpcResponse(src.Tags));
+        organization.ResourceTypes.AddRange(MapToGrpcResponseResourceType(src.Tags));
+
         organization.Offering.ActiveCustomerIds.AddRange(
             organizationOffering.OrganizationOfferingActiveMembers.Select(item => item.OrganizationMember.Customer.Id));
 
@@ -643,6 +646,27 @@ public class Mapper : IMapper
                 LoginUrl = src.LoginUrl,
                 AppFederationMetadataUrl = src.AppFederationMetadataUrl
             };
+
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
+        src.Select(MapToGrpcResponse);
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag MapToGrpcResponse(Tag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    private static IEnumerable<ResourceType> MapToGrpcResponseResourceType(IEnumerable<Tag> src) =>
+        src
+            .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
+            .Select(MapToGrpcResponseResourceType);
+
+    private static ResourceType MapToGrpcResponseResourceType(Tag src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+            TagType = src.Type.ToOrganizationTagType()
+        };
 
     private IEnumerable<OrganizationMember> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationMember> src,

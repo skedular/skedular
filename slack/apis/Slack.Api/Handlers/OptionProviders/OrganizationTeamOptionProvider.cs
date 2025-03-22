@@ -47,7 +47,8 @@ public class OrganizationTeamOptionProvider(
         {
             Options = memberConnection.Edges
                 .Select(item => mapper.MapTo(item.Node))
-                .Select(item => new Option { Text = item.Name.ToOptionText(), Value = item.Id }).ToList()
+                .Select(item => new Option { Text = item.Name.ToOptionText(), Value = item.Id })
+                .ToList()
         };
     }
 }

@@ -7,14 +7,13 @@ using Location = Slack.Shared.Models.Location;
 using Team = Slack.Shared.Models.Team;
 using Organization = Slack.Shared.Models.Organization;
 using Customer = Slack.Shared.Models.Customer;
-using Desk = Slack.Shared.Models.Desk;
-using Room = Slack.Shared.Models.Room;
 using OrganizationCustomTag = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag;
 using Identity = Slack.Shared.Models.Identity;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
+using Resource = Slack.Shared.Models.Resource;
 using WorkspaceChannel = Slack.Shared.Database.Entities.WorkspaceChannel;
 
 namespace Slack.Shared.Mappers;
@@ -105,8 +104,7 @@ public class Mapper : IMapper
             Customer = MapTo(src.Customer),
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
-            Desks = MapTo(src.Desks).ToList(),
-            Rooms = MapTo(src.Rooms).ToList(),
+            Resources = MapTo(src.Resources).ToList(),
             Team = MapTo(src.Team)
         };
 
@@ -195,8 +193,6 @@ public class Mapper : IMapper
             IsDefaultOrganizationOnboardingDone = true,
             IsPreferredLocationOnboardingDone = true,
             IsPreferredZoneOnboardingDone = false,
-            IsPreferredDeskOnboardingDone = false,
-            IsPreferredRoomOnboardingDone = false,
             DefaultOrganization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 
@@ -314,27 +310,15 @@ public class Mapper : IMapper
             ? null
             : new Location { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static IEnumerable<Desk> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk> src) => src.Select(MapTo);
+    private static IEnumerable<Resource> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> src) => src.Select(MapTo);
 
-    private static Desk MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk src) =>
+    private static Resource MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource src) =>
         new()
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Color = src.Color.ToSafeString(),
-            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
-            OrganizationZones = MapTo(src.OrganizationZones).ToList(),
-            Location = string.IsNullOrWhiteSpace(src.Location?.Id) ? null : new Location { Id = src.Id, Name = src.Name }
-        };
-
-    private static IEnumerable<Room> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Booking.V1.Room> src) => src.Select(MapTo);
-
-    private static Room MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Room src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Color = src.Color.ToSafeString(),
+            ResourceType = MapTo(src.ResourceType),
             OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList(),
             Location = string.IsNullOrWhiteSpace(src.Location?.Id) ? null : new Location { Id = src.Id, Name = src.Name }
@@ -351,4 +335,7 @@ public class Mapper : IMapper
 
     private static Team? MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? src) =>
         string.IsNullOrWhiteSpace(src?.Id) ? null : new Team { Id = src.Id, Name = src.Name.ToSafeString() };
+
+    private static ResourceType MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.ResourceType src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 }

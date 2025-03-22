@@ -1,4 +1,3 @@
-using Enterprise.Shared.Time;
 using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
@@ -19,18 +18,9 @@ public interface ISettingsComponents
         WorkspaceMember workspaceMember,
         PageContext pageContext,
         CancellationToken cancellationToken);
-
-    Task<ICollection<Block>> GetPreferredDeskOnboardingDoneAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        PageContext pageContext,
-        CancellationToken cancellationToken);
 }
 
-public class SettingsComponents(
-    ICustomerService customerService,
-    ILocationService locationService,
-    TimeProvider timeProvider) : ISettingsComponents
+public class SettingsComponents(ICustomerService customerService, ILocationService locationService) : ISettingsComponents
 {
     public async Task<ICollection<Block>> GetPreferredLocationOnboardingDoneAsync(
         WorkspaceMember workspaceMember,
@@ -87,9 +77,7 @@ public class SettingsComponents(
         }
 
         var locations = await locationService.GetLocationsAsync(workspace, workspaceMember, cancellationToken);
-        var locationsWithZones = locations
-            .Where(item => item.Desks.Any(desk => desk.OrganizationZones.Count != 0))
-            .ToList();
+        var locationsWithZones = locations.Where(item => item.Resources.Any(desk => desk.OrganizationZones.Count != 0)).ToList();
         if (locationsWithZones.Count == 0)
         {
             return [];
@@ -113,57 +101,6 @@ public class SettingsComponents(
                     new Button
                     {
                         ActionId = ZoneActionTypes.DismissSetupPreferredZones,
-                        Text = "Dismiss".ToPlainTextWithIcon(Icons.Cancel),
-                        Value = new CommonPageContext(pageContext).Serialize()
-                    }
-                ]
-            }
-        ];
-    }
-
-    public async Task<ICollection<Block>> GetPreferredDeskOnboardingDoneAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        PageContext pageContext,
-        CancellationToken cancellationToken)
-    {
-        pageContext = pageContext.PushCurrentPageToVisitedPagesAndClone();
-        var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        ArgumentNullException.ThrowIfNull(customer);
-        if (customer.IsPreferredDeskOnboardingDone.HasValue && customer.IsPreferredDeskOnboardingDone.Value)
-        {
-            return [];
-        }
-
-        var locations = await locationService.GetLocationsAsync(workspace, workspaceMember, cancellationToken);
-        var locationsWithDesks = locations
-            .Where(item => item.Desks.Count != 0)
-            .ToList();
-        if (locationsWithDesks.Count == 0)
-        {
-            return [];
-        }
-
-        var locationId = locationsWithDesks.First().Id;
-        var startOfToday = timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc);
-        pageContext.DesksPage = new DesksPage(new PaginationContext(), locationId, startOfToday);
-
-        return
-        [
-            new SectionBlock { Text = "*Setting preferred desks makes make a bookings easier. Setup one now?*".ToMarkdown() },
-            new ActionsBlock
-            {
-                Elements =
-                [
-                    new Button
-                    {
-                        ActionId = DeskActionTypes.Desks,
-                        Text = "Setup".ToPlainTextWithIcon(Icons.Settings),
-                        Value = new CommonPageContext(pageContext).Serialize()
-                    },
-                    new Button
-                    {
-                        ActionId = DeskActionTypes.DismissSetupPreferredDesks,
                         Text = "Dismiss".ToPlainTextWithIcon(Icons.Cancel),
                         Value = new CommonPageContext(pageContext).Serialize()
                     }

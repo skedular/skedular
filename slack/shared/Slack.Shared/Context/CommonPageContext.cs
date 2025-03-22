@@ -252,55 +252,55 @@ public class RemoveZoneContext(PageContext pageContext, string locationId, strin
     }
 }
 
-public class EditDeskContext(PageContext pageContext, string locationId, string deskId)
+public class EditResourceContext(PageContext pageContext, string locationId, string resourceId)
 {
     public PageContext PageContext { get; } = pageContext;
     public string LocationId { get; set; } = locationId;
-    public string DeskId { get; set; } = deskId;
+    public string ResourceId { get; set; } = resourceId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static EditDeskContext Deserialize(string value)
+    public static EditResourceContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<EditDeskContext>(value);
+        var context = JsonSerializer.Deserialize<EditResourceContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
 }
 
-public record RemovePreferredDeskContext(PageContext PageContext, string DeskId)
+public record RemovePreferredResourceContext(PageContext PageContext, string ResourceId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemovePreferredDeskContext Deserialize(string value)
+    public static RemovePreferredResourceContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<RemovePreferredDeskContext>(value);
+        var context = JsonSerializer.Deserialize<RemovePreferredResourceContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
 }
 
-public record SetPreferredDeskContext(PageContext PageContext, string DeskId)
+public record SetPreferredResourceContext(PageContext PageContext, string ResourceId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static SetPreferredDeskContext Deserialize(string value)
+    public static SetPreferredResourceContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<SetPreferredDeskContext>(value);
+        var context = JsonSerializer.Deserialize<SetPreferredResourceContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
 }
 
-public class RemoveDeskContext(PageContext pageContext, string locationId, string deskId)
+public class RemoveResourceContext(PageContext pageContext, string locationId, string resourceId)
 {
     public PageContext PageContext { get; } = pageContext;
-    public string DeskId { get; set; } = deskId;
+    public string ResourceId { get; set; } = resourceId;
     public string LocationId { get; set; } = locationId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemoveDeskContext Deserialize(string value)
+    public static RemoveResourceContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<RemoveDeskContext>(value);
+        var context = JsonSerializer.Deserialize<RemoveResourceContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -318,25 +318,13 @@ public record AddZoneContext(PageContext PageContext)
     }
 }
 
-public record AddDeskContext(PageContext PageContext, string LocationId)
+public record AddResourceContext(PageContext PageContext, string LocationId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static AddDeskContext Deserialize(string value)
+    public static AddResourceContext Deserialize(string value)
     {
-        var context = JsonSerializer.Deserialize<AddDeskContext>(value);
-        ArgumentNullException.ThrowIfNull(context);
-        return context;
-    }
-}
-
-public record BulkAddDesksContext(PageContext PageContext, string LocationId)
-{
-    public string Serialize() => JsonSerializer.Serialize(this);
-
-    public static BulkAddDesksContext Deserialize(string value)
-    {
-        var context = JsonSerializer.Deserialize<BulkAddDesksContext>(value);
+        var context = JsonSerializer.Deserialize<AddResourceContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }

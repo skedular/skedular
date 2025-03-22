@@ -9,9 +9,9 @@ using Slack.Api.Handlers.ActionHandlers.Billing;
 using Slack.Api.Handlers.ActionHandlers.Booking;
 using Slack.Api.Handlers.ActionHandlers.Commons;
 using Slack.Api.Handlers.ActionHandlers.CustomTag;
-using Slack.Api.Handlers.ActionHandlers.Desk;
 using Slack.Api.Handlers.ActionHandlers.Feedback;
 using Slack.Api.Handlers.ActionHandlers.Location;
+using Slack.Api.Handlers.ActionHandlers.Resource;
 using Slack.Api.Handlers.ActionHandlers.Team;
 using Slack.Api.Handlers.ActionHandlers.Zone;
 using Slack.Api.Handlers.OptionProviders;
@@ -65,7 +65,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                     CustomTagsPage.RegisterHandlers(options);
                     TeamsPage.RegisterHandlers(options);
                     ZonesPage.RegisterHandlers(options);
-                    DesksPage.RegisterHandlers(options);
+                    ResourcesPage.RegisterHandlers(options);
                     SettingsPage.RegisterHandlers(options);
                     BillingPage.RegisterHandlers(options);
 
@@ -76,12 +76,12 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                         .RegisterBlockOptionProvider<OrganizationMemberAndCustomerPairOptionProvider>(
                             OptionLoaderKeys.OrganizationMemberAndCustomerPairKey)
                         .RegisterBlockOptionProvider<OrganizationLocationOptionProvider>(OptionLoaderKeys.OrganizationLocationKey)
-                        .RegisterBlockOptionProvider<OrganizationTeamOptionProvider>(OptionLoaderKeys.OrganizationTeamKey);
+                        .RegisterBlockOptionProvider<OrganizationTeamOptionProvider>(OptionLoaderKeys.OrganizationTeamKey)
+                        .RegisterBlockOptionProvider<OrganizationResourceTypeOptionProvider>(OptionLoaderKeys.OrganizationResourceTypeKey);
 
                     options
                         .RegisterBlockActionHandler<ButtonAction, DismissSetupPreferredLocationButtonHandler>(
                             LocationActionTypes.DismissSetupPreferredLocation)
-                        .RegisterBlockActionHandler<ButtonAction, DismissSetupPreferredDesksButtonHandler>(DeskActionTypes.DismissSetupPreferredDesks)
                         .RegisterBlockActionHandler<ButtonAction,
                             DismissSetupPreferredZonesButtonHandler>(ZoneActionTypes.DismissSetupPreferredZones);
 
@@ -127,12 +127,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                         .RegisterViewSubmissionHandler<RemoveZoneButtonHandler>(ZoneCallbackTypes.RemoveZone);
 
                     options
-                        .RegisterBlockActionHandler<ButtonAction, AddDeskButtonHandler>(DeskActionTypes.AddDesk)
-                        .RegisterViewSubmissionHandler<AddDeskButtonHandler>(DeskCallbackTypes.AddDesk)
-                        .RegisterBlockActionHandler<ButtonAction, BulkAddDesksButtonHandler>(DeskActionTypes.BulkAddDesks)
-                        .RegisterViewSubmissionHandler<BulkAddDesksButtonHandler>(DeskCallbackTypes.BulkAddDesks)
-                        .RegisterViewSubmissionHandler<EditDeskButtonHandler>(DeskCallbackTypes.EditDesk)
-                        .RegisterViewSubmissionHandler<RemoveDeskButtonHandler>(DeskCallbackTypes.RemoveDesk);
+                        .RegisterBlockActionHandler<ButtonAction, AddResourceButtonHandler>(ResourceActionTypes.AddResource)
+                        .RegisterViewSubmissionHandler<AddResourceButtonHandler>(ResourceCallbackTypes.AddResource)
+                        .RegisterViewSubmissionHandler<EditResourceButtonHandler>(ResourceCallbackTypes.EditResource)
+                        .RegisterViewSubmissionHandler<RemoveResourceButtonHandler>(ResourceCallbackTypes.RemoveResource);
 
                     Enumerable.Range(0, 31).ForEach(idx => options
                         .RegisterBlockActionHandler<ButtonAction, InstantAddBookingButtonHandler>($"{BookingActionTypes.InstantAddBooking}{idx}"));

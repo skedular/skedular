@@ -23,19 +23,6 @@ service LocationService {
     rpc AddResource (AddResourceInput) returns (Resource);
     rpc UpdateResource (UpdateResourceInput) returns (Resource);
     rpc RemoveResource (RemoveResourceInput) returns (Resource);
-
-    rpc GetPaginatedDesks (GetPaginatedDesksInput) returns (DeskConnection);
-    rpc GetDesk (GetDeskInput) returns (Desk);
-    rpc AddDesk (AddDeskInput) returns (Desk);
-    rpc BulkAddDesks (BulkAddDesksInput) returns (BulkAddDesksResponse);
-    rpc UpdateDesk (UpdateDeskInput) returns (Desk);
-    rpc RemoveDesk (RemoveDeskInput) returns (Desk);
-
-    rpc GetPaginatedRooms (GetPaginatedRoomsInput) returns (RoomConnection);
-    rpc GetRoom (GetRoomInput) returns (Room);
-    rpc AddRoom (AddRoomInput) returns (Room);
-    rpc UpdateRoom (UpdateRoomInput) returns (Room);
-    rpc RemoveRoom (RemoveRoomInput) returns (Room);
 }
 
 message VersionInput {
@@ -120,14 +107,12 @@ message Location {
     string organizationId = 4;
     string timezone = 5;
     repeated Resource resources = 6;
-    repeated Desk desks = 7;
-    repeated Room rooms = 8;
-    bool hasFutureBooking = 9;
-    Permissions permissions = 10;
-    repeated LocationMember members = 11;
-    repeated OrganizationCustomTag customTags = 12;
-    repeated OrganizationZone zones = 13;
-    OpeningHours openingHours = 14;
+    bool hasFutureBooking = 7;
+    Permissions permissions = 8;
+    repeated LocationMember members = 9;
+    repeated OrganizationCustomTag customTags = 10;
+    repeated OrganizationZone zones = 11;
+    OpeningHours openingHours = 12;
 }
 
 message Admin_GetInput {
@@ -219,6 +204,13 @@ message RemoveInput {
     string id = 1;
 }
 
+message ResourceType {
+    string id = 1;
+    string name = 2;
+    string tagType = 3;
+    string color = 4;
+}
+
 message Resource {
     string id = 1;
     string name = 2;
@@ -229,6 +221,7 @@ message Resource {
     string color = 7;
     bool isAvailableHoursOverridden = 8;
     OpeningHours availableHours = 9;
+    ResourceType resourceType = 10;
 }
 
 message ResourceConnection {
@@ -290,165 +283,6 @@ message UpdateResourceInput {
 }
 
 message RemoveResourceInput {
-    string id = 1;
-}
-
-message Desk {
-    string id = 1;
-    string name = 2;
-    bool deactivated = 3;
-    bool requireBookingApproval = 4;
-    repeated OrganizationCustomTag organizationCustomTags = 5;
-    repeated OrganizationZone organizationZones = 6;
-    string color = 7;
-}
-
-message DeskConnection {
-    PageInfo pageInfo = 1;
-    repeated DeskEdge edges = 2;
-    int32 totalCount = 3;
-}
-
-message DeskEdge {
-    Desk node = 1;
-    string cursor = 2;
-}
-
-message GetPaginatedDesksInput {
-    string after = 1;
-    int32 first = 2;
-    string before = 3;
-    int32 last = 4;
-    DeskWhereInput where = 5;
-    repeated DeskOrderInput orderBy = 6;
-}
-
-message DeskWhereInput {
-    string locationId = 1;
-    string nameContains = 2;
-    repeated string tagIds = 3;
-}
-
-message DeskOrderInput {
-    OrderDirection direction = 1;
-    DeskOrderField field = 2;
-}
-
-enum DeskOrderField {
-    DeskName = 0;
-}
-
-message GetDeskInput {
-    string id = 1;
-}
-
-message BulkAddDesksInput {
-    string id = 1;
-    string locationId = 2;
-    string namePrefix = 3;
-    int32 count = 4;
-    bool deactivated = 5;
-    bool requireBookingApproval = 6;
-    repeated string tagIds = 7;
-    string color = 8;
-}
-
-message BulkAddDesksResponse {
-    repeated Desk desks = 1;
-}
-
-message AddDeskInput {
-    string id = 1;
-    string locationId = 2;
-    string name = 3;
-    bool deactivated = 4;
-    bool requireBookingApproval = 5;
-    repeated string tagIds = 6;
-    string color = 7;
-}
-
-message UpdateDeskInput {
-    string id = 1;
-    string name = 2;
-    bool deactivated = 3;
-    bool requireBookingApproval = 4;
-    repeated string tagIds = 5;
-    string color = 6;
-}
-
-message RemoveDeskInput {
-    string id = 1;
-}
-
-message Room {
-    string id = 1;
-    string name = 2;
-    bool deactivated = 3;
-    bool requireBookingApproval = 4;
-    repeated OrganizationCustomTag organizationCustomTags = 5;
-    repeated OrganizationZone organizationZones = 6;
-    string color = 7;
-}
-
-message RoomConnection {
-    PageInfo pageInfo = 1;
-    repeated RoomEdge edges = 2;
-    int32 totalCount = 3;
-}
-
-message RoomEdge {
-    Room node = 1;
-    string cursor = 2;
-}
-
-message GetPaginatedRoomsInput {
-    string after = 1;
-    int32 first = 2;
-    string before = 3;
-    int32 last = 4;
-    RoomWhereInput where = 5;
-    repeated RoomOrderInput orderBy = 6;
-}
-
-message RoomWhereInput {
-    string locationId = 1;
-    string nameContains = 2;
-    repeated string tagIds = 3;
-}
-
-message RoomOrderInput {
-    OrderDirection direction = 1;
-    RoomOrderField field = 2;
-}
-
-enum RoomOrderField {
-    RoomName = 0;
-}
-
-message GetRoomInput {
-    string id = 1;
-}
-
-message AddRoomInput {
-    string id = 1;
-    string locationId = 2;
-    string name = 3;
-    bool deactivated = 4;
-    bool requireBookingApproval = 5;
-    repeated string tagIds = 6;
-    string color = 7;
-}
-
-message UpdateRoomInput {
-    string id = 1;
-    string name = 2;
-    bool deactivated = 3;
-    bool requireBookingApproval = 4;
-    repeated string tagIds = 5;
-    string color = 6;
-}
-
-message RemoveRoomInput {
     string id = 1;
 }
 

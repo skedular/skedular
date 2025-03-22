@@ -36,11 +36,10 @@ public record ZonesPage(PaginationContext Pagination);
 
 public record CustomTagsPage(PaginationContext Pagination);
 
-public class DesksPage(PaginationContext pagination, string locationId, DateTimeOffset selectedDate)
+public class ResourcesPage(PaginationContext pagination, string locationId)
 {
     public PaginationContext Pagination { get; set; } = pagination;
     public string LocationId { get; set; } = locationId;
-    public DateTimeOffset SelectedDate { get; set; } = selectedDate;
 }
 
 public class BookingsPage(PaginationContext pagination, DateRange bookingsDateRange, bool includeMyBookingsOnly)
@@ -65,7 +64,7 @@ public class PageContext
     public TeamsPage? TeamsPage { get; set; }
     public CustomTagsPage? CustomTagsPage { get; set; }
     public ZonesPage? ZonesPage { get; set; }
-    public DesksPage? DesksPage { get; set; }
+    public ResourcesPage? ResourcesPage { get; set; }
     public BookingsPage? BookingsPage { get; set; }
     public SettingsPage? SettingsPage { get; set; }
     public BillingPage? BillingPage { get; set; }

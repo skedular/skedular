@@ -23,7 +23,6 @@ using GetInput = Api.Shared.Services.Grpc.Skedular.Booking.V1.GetInput;
 using Icons = Slack.Shared.Constants.Icons;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using Option = SlackNet.Blocks.Option;
-using OptionGroup = SlackNet.Blocks.OptionGroup;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
@@ -42,8 +41,8 @@ public class EditBookingButtonHandler(
     IPageNavigator pageNavigator)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
-    private const string LocationsDesksKey = "LocationsDesks";
-    private const string NotesKey = "BookingNotes";
+    private const string ResourcesKey = "Resources";
+    private const string NotesKey = "Notes";
 
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
@@ -117,10 +116,10 @@ public class EditBookingButtonHandler(
         };
 
         var blocks = new List<Block> { bookingDate, organizationMember };
-        var locationDesks = await GetLocationDeskOptionsAsync(request, workspace, booking, cancellationToken);
-        if (locationDesks is not null)
+        var locationResources = await GetResourceOptionsAsync(request, workspace, booking, cancellationToken);
+        if (locationResources is not null)
         {
-            blocks.Add(locationDesks);
+            blocks.Add(locationResources);
         }
 
         blocks.Add(team);
@@ -201,11 +200,11 @@ public class EditBookingButtonHandler(
             throw new InvalidOperationException("organizationMember block is missing");
         }
 
-        if (values.TryGetValue(LocationsDesksKey, out var locationDesksBlock))
+        if (values.TryGetValue(ResourcesKey, out var locationResourcesBlock))
         {
-            if (locationDesksBlock.TryGetValue(LocationsDesksKey, out var locationDesks))
+            if (locationResourcesBlock.TryGetValue(ResourcesKey, out var locationResources))
             {
-                if (locationDesks is StaticMultiSelectValue value)
+                if (locationResources is StaticMultiSelectValue value)
                 {
                     var getPaginatedLocationsInput = new GetPaginatedLocationsInput
                     {
@@ -214,39 +213,16 @@ public class EditBookingButtonHandler(
                     getPaginatedLocationsInput.OrderBy.AddRange([
                         new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
                     ]);
-                    var getLocationsResponse = await locationServiceClient.GetPaginatedLocationsAsync(
-                        getPaginatedLocationsInput,
-                        locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                        cancellationToken: cancellationToken);
-                    var locationIds = getLocationsResponse.Edges.Select(item => item.Node.Id).ToList();
-                    var selectedLocationIds =
-                        value.SelectedOptions.Where(item => locationIds.Contains(item.Value)).ToList();
-
-                    if (selectedLocationIds.Count == 0)
-                    {
-                        booking.Location = null;
-                    }
-                    else if (selectedLocationIds.Count == 1)
-                    {
-                        booking.Location = new Shared.Models.Location { Id = selectedLocationIds.First().Value };
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("multiple locations not supported for booking");
-                    }
-
-                    booking.Desks = value.SelectedOptions.Where(item => !locationIds.Contains(item.Value))
-                        .Select(item => new Shared.Models.Desk { Id = item.Value })
-                        .ToList();
+                    booking.Resources = value.SelectedOptions.Select(item => new Shared.Models.Resource { Id = item.Value }).ToList();
                 }
                 else
                 {
-                    throw new InvalidOperationException("locationDesks must be StaticMultiSelectValue");
+                    throw new InvalidOperationException("locationResources must be StaticMultiSelectValue");
                 }
             }
             else
             {
-                throw new InvalidOperationException("locationDesks block is missing");
+                throw new InvalidOperationException("locationResources block is missing");
             }
         }
 
@@ -306,80 +282,57 @@ public class EditBookingButtonHandler(
             bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
-        await pageNavigator.BackAsync(
-            workspace,
-            workspaceMember,
-            new CommonPageContext(context.PageContext),
-            viewSubmission.Hash, cancellationToken);
+        await pageNavigator.BackAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), viewSubmission.Hash, cancellationToken);
 
         return ViewSubmissionResponse.Null;
     }
 
     public Task HandleClose(ViewClosed viewClosed) => Task.CompletedTask;
 
-    private async Task<InputBlock?> GetLocationDeskOptionsAsync(
+    private async Task<InputBlock?> GetResourceOptionsAsync(
         BlockActionRequest request,
         Workspace workspace,
         Shared.Models.Booking booking,
         CancellationToken cancellationToken)
     {
-        var getAvailableDesksInput = new GetAvailableDesksInput
+        var getAvailableResourcesInput = new GetAvailableResourcesInput
         {
-            OrganizationId = workspace.Organization.Id, Date = booking.From.ToDate().ToTimestamp()
+            OrganizationId = workspace.Organization.Id, From = booking.From.ToDate().ToTimestamp(), Until = booking.Until.ToDate().ToTimestamp()
         };
 
-        getAvailableDesksInput.DeskIdsToInclude.AddRange(booking.Desks.Select(item => item.Id));
+        getAvailableResourcesInput.ResourceIdsToInclude.AddRange(booking.Resources.Select(item => item.Id));
 
-        var availableDesks = (await bookingServiceClient.GetAvailableDesksAsync(
-                getAvailableDesksInput,
+        var availableResources = (await bookingServiceClient.GetAvailableResourcesAsync(
+                getAvailableResourcesInput,
                 bookingConfiguration.ApiKey.CreateMetadata(request.User.Id),
-                cancellationToken: cancellationToken)).Desks
+                cancellationToken: cancellationToken)).Resources
             .Where(item => item.Location is not null)
             .ToList();
 
-        var locations = availableDesks
-            .Select(item => item.Location)
-            .GroupBy(item => item.Id)
-            .Select(item => item.First())
-            .ToList();
+        var resourcesOptions = availableResources.Select(item =>
+        {
+            var zones = item.OrganizationZones.Where(locationTag => !string.IsNullOrWhiteSpace(locationTag.Name)).ToList();
+            var optionText = zones.Count == 0
+                ? item.Name.ToOptionTextWithIcon(Icons.Resource)
+                : $"{item.Name.ToTextWithIcon(Icons.Resource)} {string.Join(",", zones.Select(zone => zone.Name)).ToTextWithIcon(Icons.Zones)}"
+                    .ToOptionText();
 
-        if (locations.Count == 0)
+            return new Option { Text = optionText, Value = item.Id };
+        }).ToList();
+
+        if (resourcesOptions.Count == 0)
         {
             return null;
         }
 
-        var locationGroupedWithDesksOptions = locations.Select(item =>
-        {
-            var locationWithoutDesk = new Option { Text = "No desk selected".ToOptionText(), Value = item.Id };
-            var locationWithDesks = availableDesks
-                .Where(desk => desk.Location is not null && desk.Location.Id == item.Id)
-                .Select(desk =>
-                {
-                    var zones = desk.OrganizationZones.Where(locationTag => !string.IsNullOrWhiteSpace(locationTag.Name)).ToList();
-                    var optionText = zones.Count == 0
-                        ? desk.Name.ToOptionTextWithIcon(Icons.Desk)
-                        : $"{desk.Name.ToTextWithIcon(Icons.Desk)} {string.Join(",", zones.Select(zone => zone.Name)).ToTextWithIcon(Icons.Zones)}"
-                            .ToOptionText();
-
-                    return new Option { Text = optionText, Value = desk.Id };
-                })
-                .ToList();
-
-            return new OptionGroup { Label = item.Name, Options = new List<Option> { locationWithoutDesk }.Concat(locationWithDesks).ToList() };
-        }).ToList();
-
-        var deskIds = booking.Desks.Select(item => item.Id).ToList();
+        var resourceIds = booking.Resources.Select(item => item.Id).ToList();
         var menu = new StaticMultiSelectMenu
         {
-            ActionId = LocationsDesksKey,
-            OptionGroups = locationGroupedWithDesksOptions,
-            InitialOptions = locationGroupedWithDesksOptions
-                .Where(item => item.Options.Any(option => deskIds.Contains(option.Value)))
-                .SelectMany(item => item.Options)
-                .Where(item => deskIds.Contains(item.Value))
-                .ToList()
+            ActionId = ResourcesKey,
+            Options = resourcesOptions,
+            InitialOptions = resourcesOptions.Where(item => resourceIds.Contains(item.Value)).ToList()
         };
 
-        return new InputBlock { BlockId = LocationsDesksKey, Label = "Location/Desks".ToPlainText(), Element = menu, Optional = true };
+        return new InputBlock { BlockId = ResourcesKey, Label = "Resources".ToPlainText(), Element = menu, Optional = true };
     }
 }

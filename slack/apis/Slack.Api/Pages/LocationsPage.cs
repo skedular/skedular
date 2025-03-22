@@ -52,7 +52,7 @@ public class LocationsPage(
     IBookingsPage bookingsPage,
     IZonesPage zonesPage,
     ICustomTagsPage customTagsPage,
-    IDesksPage desksPage,
+    IResourcesPage resourcesPage,
     ILocationComponents locationComponents,
     ILocationService locationService,
     IBookingService bookingService,
@@ -256,14 +256,14 @@ public class LocationsPage(
                 request.View.Hash,
                 cancellationToken);
         }
-        else if (action.SelectedOption.Value.StartsWith(DeskActionTypes.Desks))
+        else if (action.SelectedOption.Value.StartsWith(ResourceActionTypes.Resources))
         {
-            var locationId = action.SelectedOption.Value[DeskActionTypes.Desks.Length..];
+            var locationId = action.SelectedOption.Value[ResourceActionTypes.Resources.Length..];
             var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
-            context.PageContext.DesksPage = desksPageContextService.GetDefaultDesksPageContext(locationId);
+            context.PageContext.ResourcesPage = desksPageContextService.GetDefaultDesksPageContext(locationId);
             context.PageContext.PushCurrentPageToVisitedPages();
 
-            await desksPage.RenderWithContextAsync(
+            await resourcesPage.RenderWithContextAsync(
                 workspace,
                 workspaceMember,
                 new CommonPageContext(context.PageContext),

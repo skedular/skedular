@@ -31,7 +31,7 @@ public class PageNavigator(
     ITeamsPage teamsPage,
     ICustomTagsPage customTagsPage,
     IZonesPage zonesPage,
-    IDesksPage desksPage,
+    IResourcesPage resourcesPage,
     ISettingsPage settingsPage,
     IBillingPage billingPage,
     IWorkspaceMemberService workspaceMemberService,
@@ -156,7 +156,7 @@ public class PageNavigator(
                 break;
 
             case PageType.Desks:
-                await desksPage.RenderWithContextAsync(
+                await resourcesPage.RenderWithContextAsync(
                     workspace,
                     workspaceMember,
                     new CommonPageContext(context.PageContext),

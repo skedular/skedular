@@ -13,9 +13,9 @@ using SlackNet.Blocks;
 using SlackNet.Interaction;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 
-namespace Slack.Api.Handlers.ActionHandlers.Desk;
+namespace Slack.Api.Handlers.ActionHandlers.Resource;
 
-public class EditDeskButtonHandler(
+public class EditResourceButtonHandler(
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
     IRepositoryFactory repositoryFactory,
@@ -40,7 +40,7 @@ public class EditDeskButtonHandler(
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
-        var context = EditDeskContext.Deserialize(viewSubmission.View.PrivateMetadata);
+        var context = EditResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var permissions = await locationService.GetPermissionsAsync(context.LocationId, workspaceMember, cancellationToken);
         if (!permissions.CanModify)
         {
@@ -48,16 +48,40 @@ public class EditDeskButtonHandler(
         }
 
         var values = viewSubmission.View.State.Values;
-        var updateDeskInput = new UpdateDeskInput { Id = context.DeskId };
+        var updateInput = new UpdateResourceInput { Id = context.ResourceId };
 
-        if (values.TryGetValue(DeskActionTypes.Name, out var nameBlock))
+        if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var locationBlock))
         {
-            if (nameBlock.TryGetValue(DeskActionTypes.Name, out var name))
+            if (locationBlock.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var location))
+            {
+                if (location is ExternalSelectValue value)
+                {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
+                    updateInput.TagIds.Add(value.SelectedOption?.Value);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Resource Type must be ExternalSelectValue");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Resource Type block is missing");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException("Resource Type block is missing");
+        }
+
+        if (values.TryGetValue(ResourceActionTypes.Name, out var nameBlock))
+        {
+            if (nameBlock.TryGetValue(ResourceActionTypes.Name, out var name))
             {
                 if (name is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    updateDeskInput.Name = value.Value.ToSafeString();
+                    updateInput.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -74,36 +98,36 @@ public class EditDeskButtonHandler(
             throw new InvalidOperationException("name block is missing");
         }
 
-        if (values.TryGetValue(DeskActionTypes.Deactivated, out var deactivatedBlock))
+        if (values.TryGetValue(ResourceActionTypes.Inactive, out var deactivatedBlock))
         {
-            if (deactivatedBlock.TryGetValue(DeskActionTypes.Deactivated, out var deactivated))
+            if (deactivatedBlock.TryGetValue(ResourceActionTypes.Inactive, out var deactivated))
             {
                 if (deactivated is CheckboxGroupValue value)
                 {
-                    updateDeskInput.Deactivated = value.SelectedOptions.Any(item => item.Value == DeskActionTypes.Deactivated);
+                    updateInput.Inactive = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.Inactive);
                 }
                 else
                 {
-                    throw new InvalidOperationException("deactivated must be CheckboxGroupValue");
+                    throw new InvalidOperationException("inactive must be CheckboxGroupValue");
                 }
             }
             else
             {
-                throw new InvalidOperationException("deactivated block is missing");
+                throw new InvalidOperationException("inactive block is missing");
             }
         }
         else
         {
-            throw new InvalidOperationException("deactivated block is missing");
+            throw new InvalidOperationException("inactive block is missing");
         }
 
-        if (values.TryGetValue(DeskActionTypes.RequireBookingApproval, out var requireBookingApprovalBlock))
+        if (values.TryGetValue(ResourceActionTypes.RequireBookingApproval, out var requireBookingApprovalBlock))
         {
-            if (requireBookingApprovalBlock.TryGetValue(DeskActionTypes.RequireBookingApproval, out var requireBookingApproval))
+            if (requireBookingApprovalBlock.TryGetValue(ResourceActionTypes.RequireBookingApproval, out var requireBookingApproval))
             {
                 if (requireBookingApproval is CheckboxGroupValue value)
                 {
-                    updateDeskInput.RequireBookingApproval = value.SelectedOptions.Any(item => item.Value == DeskActionTypes.RequireBookingApproval);
+                    updateInput.RequireBookingApproval = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.RequireBookingApproval);
                 }
                 else
                 {
@@ -126,7 +150,7 @@ public class EditDeskButtonHandler(
             {
                 if (customTags is StaticMultiSelectValue value)
                 {
-                    updateDeskInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    updateInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {
@@ -145,7 +169,7 @@ public class EditDeskButtonHandler(
             {
                 if (zones is StaticMultiSelectValue value)
                 {
-                    updateDeskInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    updateInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {
@@ -158,17 +182,12 @@ public class EditDeskButtonHandler(
             }
         }
 
-        await locationServiceClient.UpdateDeskAsync(
-            updateDeskInput,
+        await locationServiceClient.UpdateResourceAsync(
+            updateInput,
             locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 
-        await pageNavigator.BackAsync(
-            workspace,
-            workspaceMember,
-            new CommonPageContext(context.PageContext),
-            viewSubmission.Hash,
-            cancellationToken);
+        await pageNavigator.BackAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), viewSubmission.Hash, cancellationToken);
 
         return ViewSubmissionResponse.Null;
     }

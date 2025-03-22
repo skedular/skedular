@@ -297,8 +297,6 @@ public class Mapper(IContext context) : IMapper
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
             IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
-            IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
-            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
             DefaultOrganization =
                 string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id) ? null : new Organization { Id = src.DefaultOrganization.Id },
             PreferredLocations = src.PreferredLocations.Select(item =>
@@ -317,12 +315,6 @@ public class Mapper(IContext context) : IMapper
                 .ToList(),
             PreferredResources = src.PreferredResources
                 .Select(item => new Shared.Models.Resource { Id = item.Id, Location = new Location { Id = item.Location.Id } })
-                .ToList(),
-            PreferredDesks = src.PreferredDesks
-                .Select(item => new Desk { Id = item.Id, Location = new Location { Id = item.Location.Id } })
-                .ToList(),
-            PreferredRooms = src.PreferredRooms
-                .Select(item => new Room { Id = item.Id, Location = new Location { Id = item.Location.Id } })
                 .ToList(),
             PreferredOrganizationTags = src.PreferredOrganizationTags
                 .Select(item => new OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
@@ -356,8 +348,6 @@ public class Mapper(IContext context) : IMapper
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
             IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone ?? false,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
-            IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false,
-            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone ?? false,
             DefaultOrganization =
                 string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id)
                     ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
@@ -404,22 +394,6 @@ public class Mapper(IContext context) : IMapper
                 }
 
                 return resource;
-            }));
-
-        customer.PreferredDesks.AddRange(src.PreferredDesks.Select(
-            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Desk
-            {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id }
-            }));
-
-        customer.PreferredRooms.AddRange(src.PreferredRooms.Select(
-            item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Room
-            {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id }
             }));
 
         customer.PreferredOrganizationTags.AddRange(src.PreferredOrganizationTags.Select(

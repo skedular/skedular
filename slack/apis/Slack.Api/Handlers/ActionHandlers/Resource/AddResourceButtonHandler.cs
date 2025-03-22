@@ -16,14 +16,14 @@ using Slack.Shared.Repositories;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using OrderDirection = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
+using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Option = SlackNet.Blocks.Option;
+using OrderDirection = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection;
 
-namespace Slack.Api.Handlers.ActionHandlers.Desk;
+namespace Slack.Api.Handlers.ActionHandlers.Resource;
 
-public class BulkAddDesksButtonHandler(
+public class AddResourceButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfiguration slackConfiguration,
     LocationConfiguration locationConfiguration,
@@ -38,9 +38,6 @@ public class BulkAddDesksButtonHandler(
     IPageNavigator pageNavigator)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
-    private const string NamePrefixKey = "NamePrefix";
-    private const string CountKey = "Count";
-
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
         var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken);
@@ -59,45 +56,53 @@ public class BulkAddDesksButtonHandler(
         var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
         ArgumentNullException.ThrowIfNull(customer);
 
-        var prefix = new InputBlock
+        var resourceType = new InputBlock
         {
-            BlockId = NamePrefixKey, Label = "Prefix".ToPlainText(), Element = new PlainTextInput { ActionId = NamePrefixKey }, Optional = false
+            BlockId = OptionLoaderKeys.OrganizationResourceTypeKey,
+            Label = "Resource Type".ToPlainText(),
+            Element =
+                new ExternalSelectMenu { ActionId = OptionLoaderKeys.OrganizationResourceTypeKey, InitialOption = null, MinQueryLength = 0 },
+            Optional = false
         };
 
-        var count = new InputBlock
+        var name = new InputBlock
         {
-            BlockId = CountKey, Label = "Count".ToPlainText(), Element = new NumberInput { ActionId = CountKey, MinInteger = 1 }, Optional = false
+            BlockId = ResourceActionTypes.Name,
+            Label = "Name".ToPlainText(),
+            Element = new PlainTextInput { ActionId = ResourceActionTypes.Name },
+            Optional = false
         };
 
         var deactivated = new InputBlock
         {
-            BlockId = DeskActionTypes.Deactivated,
+            BlockId = ResourceActionTypes.Inactive,
             Label = "Activation Status".ToPlainText(),
             Element =
                 new CheckboxGroup
                 {
-                    ActionId = DeskActionTypes.Deactivated,
-                    Options = new List<Option> { new() { Text = "Deactivated".ToPlainText(), Value = DeskActionTypes.Deactivated } }
+                    ActionId = ResourceActionTypes.Inactive,
+                    Options = new List<Option> { new() { Text = "Inactive".ToPlainText(), Value = ResourceActionTypes.Inactive } }
                 },
             Optional = true
         };
 
         var requireBookingApproval = new InputBlock
         {
-            BlockId = DeskActionTypes.RequireBookingApproval,
+            BlockId = ResourceActionTypes.RequireBookingApproval,
             Label = "Booking Approval Status".ToPlainText(),
-            Element = new CheckboxGroup
-            {
-                ActionId = DeskActionTypes.RequireBookingApproval,
-                Options = new List<Option>
+            Element =
+                new CheckboxGroup
                 {
-                    new() { Text = "Require Booking Approval".ToPlainText(), Value = DeskActionTypes.RequireBookingApproval }
-                }
-            },
+                    ActionId = ResourceActionTypes.RequireBookingApproval,
+                    Options = new List<Option>
+                    {
+                        new() { Text = "Require Booking Approval".ToPlainText(), Value = ResourceActionTypes.RequireBookingApproval }
+                    }
+                },
             Optional = true
         };
 
-        var blocks = new List<Block> { prefix, count, deactivated, requireBookingApproval };
+        var blocks = new List<Block> { resourceType, name, deactivated, requireBookingApproval };
 
         var customTagConnection = await GetCustomTagsAsync(workspace, workspaceMember, cancellationToken);
         if (customTagConnection.Edges.Count != 0)
@@ -146,8 +151,8 @@ public class BulkAddDesksButtonHandler(
             request.TriggerId,
             new ModalViewDefinition
             {
-                CallbackId = DeskCallbackTypes.BulkAddDesks,
-                Title = "Bulk Add Desks",
+                CallbackId = ResourceCallbackTypes.AddResource,
+                Title = "Add Resource",
                 Close = "Cancel",
                 Submit = "Add",
                 Blocks = blocks,
@@ -171,7 +176,6 @@ public class BulkAddDesksButtonHandler(
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
         var cancellationToken = CancellationToken.None;
-
         var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(viewSubmission.Team.Id, cancellationToken);
         if (workspaceEntity is null)
         {
@@ -185,105 +189,85 @@ public class BulkAddDesksButtonHandler(
 
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
-        var context = BulkAddDesksContext.Deserialize(viewSubmission.View.PrivateMetadata);
+        var context = AddResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var deskId = randomHelper.Generate();
-        var bulkAddDesksInput = new BulkAddDesksInput { Id = deskId, LocationId = context.LocationId };
+        var addInput = new AddResourceInput { Id = deskId, LocationId = context.LocationId };
 
-        if (values.TryGetValue(NamePrefixKey, out var prefixBlock))
+        if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var locationBlock))
         {
-            if (prefixBlock.TryGetValue(NamePrefixKey, out var prefix))
+            if (locationBlock.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var location))
             {
-                if (prefix is PlainTextInputValue value)
+                if (location is ExternalSelectValue value)
                 {
-                    ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    bulkAddDesksInput.NamePrefix = value.Value.ToSafeString();
+                    ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
+                    addInput.TagIds.Add(value.SelectedOption?.Value);
                 }
                 else
                 {
-                    throw new InvalidOperationException("prefix must be PlainTextInputValue");
+                    throw new InvalidOperationException("Resource Type must be ExternalSelectValue");
                 }
             }
             else
             {
-                throw new InvalidOperationException("prefix block is missing");
+                throw new InvalidOperationException("Resource Type block is missing");
             }
         }
         else
         {
-            throw new InvalidOperationException("prefix block is missing");
+            throw new InvalidOperationException("Resource Type block is missing");
         }
 
-        if (values.TryGetValue(CountKey, out var countBlock))
+        if (values.TryGetValue(ResourceActionTypes.Name, out var nameBlock))
         {
-            if (countBlock.TryGetValue(CountKey, out var count))
+            if (nameBlock.TryGetValue(ResourceActionTypes.Name, out var name))
             {
-                if (count is NumberInputValue value)
+                if (name is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-
-                    if (int.TryParse(value.Value, out var deskCount))
-                    {
-                        if (deskCount <= 0)
-                        {
-                            throw new InvalidOperationException("count must be greater than zero");
-                        }
-
-                        bulkAddDesksInput.Count = deskCount;
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("count value cannot be parsed");
-                    }
+                    addInput.Name = value.Value.ToSafeString();
                 }
                 else
                 {
-                    throw new InvalidOperationException("count must be NumberInputValue");
+                    throw new InvalidOperationException("name must be PlainTextInputValue");
                 }
             }
             else
             {
-                throw new InvalidOperationException("count block is missing");
+                throw new InvalidOperationException("name block is missing");
             }
         }
-        else
-        {
-            throw new InvalidOperationException("count block is missing");
-        }
 
-        if (values.TryGetValue(DeskActionTypes.Deactivated, out var deactivatedBlock))
+        if (values.TryGetValue(ResourceActionTypes.Inactive, out var deactivatedBlock))
         {
-            if (deactivatedBlock.TryGetValue(DeskActionTypes.Deactivated, out var deactivated))
+            if (deactivatedBlock.TryGetValue(ResourceActionTypes.Inactive, out var deactivated))
             {
                 if (deactivated is CheckboxGroupValue value)
                 {
-                    bulkAddDesksInput.Deactivated =
-                        value.SelectedOptions.Any(item => item.Value == DeskActionTypes.Deactivated);
+                    addInput.Inactive = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.Inactive);
                 }
                 else
                 {
-                    throw new InvalidOperationException("deactivated must be CheckboxGroupValue");
+                    throw new InvalidOperationException("Inactive must be CheckboxGroupValue");
                 }
             }
             else
             {
-                throw new InvalidOperationException("deactivated block is missing");
+                throw new InvalidOperationException("inactive block is missing");
             }
         }
         else
         {
-            throw new InvalidOperationException("deactivated block is missing");
+            throw new InvalidOperationException("inactive block is missing");
         }
 
-        if (values.TryGetValue(DeskActionTypes.RequireBookingApproval, out var requireBookingApprovalBlock))
+        if (values.TryGetValue(ResourceActionTypes.RequireBookingApproval, out var requireBookingApprovalBlock))
         {
-            if (requireBookingApprovalBlock.TryGetValue(DeskActionTypes.RequireBookingApproval,
-                    out var requireBookingApproval))
+            if (requireBookingApprovalBlock.TryGetValue(ResourceActionTypes.RequireBookingApproval, out var requireBookingApproval))
             {
                 if (requireBookingApproval is CheckboxGroupValue value)
                 {
-                    bulkAddDesksInput.RequireBookingApproval =
-                        value.SelectedOptions.Any(item => item.Value == DeskActionTypes.RequireBookingApproval);
+                    addInput.RequireBookingApproval = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.RequireBookingApproval);
                 }
                 else
                 {
@@ -306,7 +290,7 @@ public class BulkAddDesksButtonHandler(
             {
                 if (customTags is StaticMultiSelectValue value)
                 {
-                    bulkAddDesksInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    addInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {
@@ -318,6 +302,10 @@ public class BulkAddDesksButtonHandler(
                 throw new InvalidOperationException("customTags block is missing");
             }
         }
+        else
+        {
+            throw new InvalidOperationException("customTags block is missing");
+        }
 
         if (values.TryGetValue(ZoneActionTypes.Zones, out var zonesBlock))
         {
@@ -325,7 +313,7 @@ public class BulkAddDesksButtonHandler(
             {
                 if (zones is StaticMultiSelectValue value)
                 {
-                    bulkAddDesksInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    addInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
                 }
                 else
                 {
@@ -337,9 +325,13 @@ public class BulkAddDesksButtonHandler(
                 throw new InvalidOperationException("zones block is missing");
             }
         }
+        else
+        {
+            throw new InvalidOperationException("zones block is missing");
+        }
 
-        await locationServiceClient.BulkAddDesksAsync(
-            bulkAddDesksInput,
+        await locationServiceClient.AddResourceAsync(
+            addInput,
             locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
             cancellationToken: cancellationToken);
 

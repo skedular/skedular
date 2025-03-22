@@ -8,7 +8,6 @@ using SettingsPage = Slack.Api.Pages.SettingsPage;
 using LocationsPage = Slack.Api.Pages.LocationsPage;
 using TeamsPage = Slack.Api.Pages.TeamsPage;
 using ZonesPage = Slack.Api.Pages.ZonesPage;
-using DesksPage = Slack.Api.Pages.DesksPage;
 using BillingPage = Slack.Api.Pages.BillingPage;
 
 namespace Slack.Api;
@@ -45,7 +44,7 @@ public static class Extensions
             .AddScoped<ILocationComponents, LocationComponents>()
             .AddScoped<ICustomTagComponents, CustomTagComponents>()
             .AddScoped<IZoneComponents, ZoneComponents>()
-            .AddScoped<IDeskComponents, DeskComponents>()
+            .AddScoped<IResourceComponents, ResourceComponents>()
             .AddScoped<ITeamComponents, TeamComponents>()
             .AddScoped<ISettingsComponents, SettingsComponents>()
             .AddScoped<IHomePage, HomePage>()
@@ -54,7 +53,7 @@ public static class Extensions
             .AddScoped<ICustomTagsPage, CustomTagsPage>()
             .AddScoped<ITeamsPage, TeamsPage>()
             .AddScoped<IZonesPage, ZonesPage>()
-            .AddScoped<IDesksPage, DesksPage>()
+            .AddScoped<IResourcesPage, ResourcesPage>()
             .AddScoped<ISettingsPage, SettingsPage>()
             .AddScoped<IBillingPage, BillingPage>();
 

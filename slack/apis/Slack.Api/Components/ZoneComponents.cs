@@ -66,12 +66,7 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationServi
         return blocks.SkipLast(1).ToList();
     }
 
-    private static List<Block> GetZoneCard(
-        OrganizationZone zone,
-        Customer customer,
-        bool canModify,
-        bool canDelete,
-        PageContext pageContext)
+    private static List<Block> GetZoneCard(OrganizationZone zone, Customer customer, bool canModify, bool canDelete, PageContext pageContext)
     {
         pageContext = pageContext.Clone();
 

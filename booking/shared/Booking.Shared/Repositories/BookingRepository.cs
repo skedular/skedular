@@ -59,7 +59,7 @@ internal static class BookingExtensions
 
         if (searchCriteria.IncludeFutureBookingsOnly is not null && searchCriteria.IncludeFutureBookingsOnly.Value)
         {
-            query = query.Where(item => item.From >= timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc));
+            query = query.Where(item => item.From >= timeProvider.GetUtcNow().StartOfDay());
         }
 
         if (searchCriteria.FromGT is not null)

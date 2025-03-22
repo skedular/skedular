@@ -84,6 +84,7 @@ message Organization {
     bool hasAttachedPaymentMethod = 11;
     bool hasFutureBooking = 12;
     repeated Tag tags = 13;
+    repeated ResourceType resourceTypes = 14;
 }
 
 message IndustrySubCategory {
@@ -345,4 +346,12 @@ message UpdateZoneInput {
 
 message RemoveZoneInput {
     string id = 1;
+}
+
+message ResourceType {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string tagType = 4;
+    string color = 5;
 }

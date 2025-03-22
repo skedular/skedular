@@ -11,6 +11,7 @@ public interface IResourceRepository : IRepository<Resource>
     Task<Resource> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken);
     Task<ICollection<Resource>> GetAllAsync(string locationId, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Task<Resource?> GetByIdAsync(string id, bool includeAllRelatedEntities, CancellationToken cancellationToken);
+    Task<ICollection<Resource>> GetByIdsAsync(ICollection<string> ids, bool includeAllRelatedEntities, CancellationToken cancellationToken);
     Resource Add(Resource resource);
     Resource Update(Resource resource);
     void RemoveRange(ICollection<Resource> resources);
@@ -47,6 +48,23 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                 .ToListAsync(cancellationToken)
             : await DbContext.Resource
                 .Where(query => query.Location != null && !query.Location.DeletedAt.HasValue && query.Location.Id == locationId)
+                .Include(query => query.Location)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<Resource>> GetByIdsAsync(
+        ICollection<string> ids, 
+        bool includeAllRelatedEntities,
+        CancellationToken cancellationToken) => 
+        includeAllRelatedEntities
+            ? await DbContext.Resource
+                .Where(query => ids.Contains(query.Id))
+                .Include(query => query.PreferredByCustomers)
+                .Include(query => query.Location)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .ToListAsync(cancellationToken)
+            : await DbContext.Resource
+                .Where(query => ids.Contains(query.Id))
                 .Include(query => query.Location)
                 .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
                 .ToListAsync(cancellationToken);
@@ -90,7 +108,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .Include(query => query.OrganizationTags)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
+   public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
         string? organizationId,
         string? locationId,
         DateTimeOffset from,
@@ -115,21 +133,28 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                              tagTypes.All(tagType => query.Resource.OrganizationTags.Select(tag => tag.Type).Contains(tagType))))
             .Include(query => query.Bookings)
             .Include(query => query.Resource)
-            .ThenInclude(query => query.Location)
-            .Include(query => query.Resource)
-            .ThenInclude(query => query.OrganizationTags)
-            .OrderBy(query => query.Resource.Name)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        return slots
+        var availableResourceIds = slots
             .GroupBy(slot => slot.Resource.Id)
             .Select(group => new { group.First().Resource, Slots = group.ToList() })
             .Where(grouped => grouped.Slots.All(slot => slot is { Available: true, Bookings.Count: 0 }))
-            .Select(grouped =>
-            {
-                grouped.Resource.ResourceBookingSlots = grouped.Slots;
-                return grouped.Resource;
-            })
+            .GroupBy(slot => slot.Resource.Id)
+            .Select(item => item.Key)
             .ToList();
+        
+        var resources = await DbContext.Resource
+            .Where(query => availableResourceIds.Contains(query.Id))
+            .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(query => query.Start))
+            .ThenInclude(query => query.Bookings)
+            .ThenInclude(query => query.Location)
+            .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(query => query.Start))
+            .ThenInclude(query => query.Customers)
+            .Include(query => query.OrganizationTags)
+            .OrderBy(query => query.Name)
+            .ToListAsync(cancellationToken);
+
+        return resources;
     }
 }

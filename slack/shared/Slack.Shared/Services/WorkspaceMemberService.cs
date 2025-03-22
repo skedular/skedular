@@ -166,7 +166,7 @@ public class WorkspaceMemberService(
             userProfile.StatusEmoji = string.IsNullOrWhiteSpace(userProfile.StatusEmoji)
                 ? Icons.Office
                 : userProfile.StatusEmoji;
-            userProfile.StatusExpiration = now.StartOfDay(customerEntity.GetTimezone()).EndOfDay().ToUnixTimeSeconds();
+            userProfile.StatusExpiration = now.StartOfDay().EndOfDay().ToUnixTimeSeconds();
             await slackApiClient.UserProfile.Set(userProfile, workspaceMemberEntity.Id, cancellationToken);
         }
 

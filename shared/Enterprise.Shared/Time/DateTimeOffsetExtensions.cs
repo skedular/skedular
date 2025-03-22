@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Enterprise.Shared.Time;
 
 public static class DateTimeOffsetExtensions
@@ -8,23 +10,16 @@ public static class DateTimeOffsetExtensions
 
     public static DateTimeOffset StartOfDay(this DateTimeOffset value) => value.ToDate();
 
-    public static DateTimeOffset EndOfDay(this DateTimeOffset value) => value.StartOfDay().AddDays(1).AddTicks(-1);
+    public static DateTimeOffset EndOfDay(this DateTimeOffset value) => value.StartOfDay().AddDays(1);
 
     public static DateTimeOffset EndOfYesterday(this DateTimeOffset value) => value.StartOfDay().AddTicks(-1);
 
     public static DateTimeOffset Tomorrow(this DateTimeOffset value) => value.AddDays(1);
 
-    public static DateTimeOffset ToDate(this DateTimeOffset dateTimeOffset) =>
-        dateTimeOffset.ToDate(dateTimeOffset.Offset);
+    public static DateTimeOffset ToDate(this DateTimeOffset dateTimeOffset) => dateTimeOffset.ToDate(dateTimeOffset.Offset);
 
     public static DateTimeOffset ToDate(this DateTimeOffset dateTimeOffset, TimeSpan offset) =>
         new(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, 0, 0, 0, offset);
-
-    public static DateTimeOffset StartOfDay(this DateTimeOffset dateTimeOffset, TimeZoneInfo timeZoneInfo)
-    {
-        var converted = TimeZoneInfo.ConvertTime(dateTimeOffset, timeZoneInfo);
-        return new DateTimeOffset(converted.Year, converted.Month, converted.Day, 0, 0, 0, converted.Offset);
-    }
 
     public static DateTimeOffset StartOfWeek(this DateTimeOffset dateTimeOffset, DayOfWeek startOfWeek = DayOfWeek.Monday)
     {

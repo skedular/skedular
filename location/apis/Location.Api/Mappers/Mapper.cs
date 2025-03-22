@@ -112,24 +112,16 @@ public interface IMapper
     Shared.Models.Location MapTo(AddInput src);
     Shared.Models.Location MapTo(UpdateInput src);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource MapToGrpcResponse(Shared.Models.Resource src);
-    global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk MapToGrpcResponse(Shared.Models.Desk src);
-    Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddDeskInput src);
-    Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateDeskInput src);
     DeskEdge MapTo(Edge<Shared.Models.Desk> src);
     IEnumerable<Edge<Shared.Models.Desk>> MapTo(IEnumerable<Edge<Desk>> src, Shared.Models.Location location);
-    global::Api.Shared.Services.Grpc.Skedular.Location.V1.DeskEdge MapToGrpcResponse(Edge<Shared.Models.Desk> src);
     LocationEdge MapTo(Edge<Shared.Models.Location> src);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src);
     LocationMemberEdge MapTo(Edge<LocationMember> src);
     IEnumerable<Edge<LocationMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.LocationMember>> src, Shared.Models.Location location);
     Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Location location);
     Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Location location);
-    global::Api.Shared.Services.Grpc.Skedular.Location.V1.Room MapToGrpcResponse(Shared.Models.Room src);
-    Shared.Models.Room MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddRoomInput src);
-    Shared.Models.Room MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateRoomInput src);
     RoomEdge MapTo(Edge<Shared.Models.Room> src);
     IEnumerable<Edge<Shared.Models.Room>> MapTo(IEnumerable<Edge<Room>> src, Shared.Models.Location location);
-    global::Api.Shared.Services.Grpc.Skedular.Location.V1.RoomEdge MapToGrpcResponse(Edge<Shared.Models.Room> src);
     IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location);
     Shared.Models.Resource MapTo(AddResourceInput src);
     Shared.Models.Resource MapTo(UpdateResourceInput src);
@@ -392,9 +384,6 @@ public class Mapper : IMapper
             Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone))
         };
 
-    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.DeskEdge MapToGrpcResponse(Edge<Shared.Models.Desk> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
-
     public RoomEdge MapTo(Edge<Shared.Models.Room> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
     public RoomDetails MapTo(Shared.Models.Room src) =>
@@ -465,9 +454,6 @@ public class Mapper : IMapper
 
     public IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
-
-    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.RoomEdge MapToGrpcResponse(Edge<Shared.Models.Room> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
     public LocationEdge MapTo(Edge<Shared.Models.Location> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
 
@@ -663,8 +649,6 @@ public class Mapper : IMapper
         };
 
         location.Resources.AddRange(MapToGrpcResponse(src.Resources));
-        location.Desks.AddRange(MapToGrpcResponse(src.Desks));
-        location.Rooms.AddRange(MapToGrpcResponse(src.Rooms));
         location.CustomTags.AddRange(MapToGrpcResponseOrganizationCustomTags(src.CustomTags));
         location.Zones.AddRange(MapToGrpcResponseOrganizationZones(src.Zones));
 
@@ -733,7 +717,9 @@ public class Mapper : IMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
-            AvailableHours = src.AvailableHours is null ? null : MapToGrpcResponse(src.AvailableHours)
+            AvailableHours = src.AvailableHours is null ? null : MapToGrpcResponse(src.AvailableHours),
+            ResourceType = MapToGrpcResponse(src.Tags.First(item =>
+                OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))
         };
 
         resource.OrganizationCustomTags.AddRange(
@@ -742,47 +728,6 @@ public class Mapper : IMapper
 
         return resource;
     }
-
-    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk MapToGrpcResponse(Shared.Models.Desk src)
-    {
-        var desk = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString()
-        };
-
-        desk.OrganizationCustomTags.AddRange(
-            MapToGrpcResponseOrganizationCustomTags(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)));
-        desk.OrganizationZones.AddRange(MapToGrpcResponseOrganizationZones(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)));
-
-        return desk;
-    }
-
-    public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddDeskInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString(),
-            Location = new Shared.Models.Location { Id = src.LocationId },
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
-        };
-
-    public Shared.Models.Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateDeskInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString(),
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
-        };
 
     public IEnumerable<Edge<Shared.Models.Desk>> MapTo(IEnumerable<Edge<Desk>> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
@@ -800,47 +745,6 @@ public class Mapper : IMapper
             Color = src.Color,
             Location = location,
             Tags = MapTo(src.OrganizationTags, location.Organization).ToList()
-        };
-
-    public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Room MapToGrpcResponse(Shared.Models.Room src)
-    {
-        var room = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.Room
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString()
-        };
-
-        room.OrganizationCustomTags.AddRange(
-            MapToGrpcResponseOrganizationCustomTags(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)));
-        room.OrganizationZones.AddRange(MapToGrpcResponseOrganizationZones(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)));
-
-        return room;
-    }
-
-    public Shared.Models.Room MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AddRoomInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString(),
-            Location = new Shared.Models.Location { Id = src.LocationId },
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
-        };
-
-    public Shared.Models.Room MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.UpdateRoomInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString(),
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public IEnumerable<Edge<Shared.Models.Room>> MapTo(IEnumerable<Edge<Room>> src, Shared.Models.Location location) =>
@@ -910,12 +814,6 @@ public class Mapper : IMapper
         src.Select(MapToGrpcResponseOrganizationZone);
 
     private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> MapToGrpcResponse(IEnumerable<Shared.Models.Resource> src) =>
-        src.Select(MapToGrpcResponse);
-
-    private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk> MapToGrpcResponse(IEnumerable<Shared.Models.Desk> src) =>
-        src.Select(MapToGrpcResponse);
-
-    private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Room> MapToGrpcResponse(IEnumerable<Shared.Models.Room> src) =>
         src.Select(MapToGrpcResponse);
 
     private static LocationOrganizationDetails? MapTo(Shared.Models.Organization? src) =>
@@ -1242,4 +1140,7 @@ public class Mapper : IMapper
     {
         Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty
     };
+
+    private static ResourceType MapToGrpcResponse(OrganizationTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString(), TagType = src.Type.ToNullableOrganizationTagType() };
 }

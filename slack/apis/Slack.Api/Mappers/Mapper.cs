@@ -11,8 +11,6 @@ using SlackNet.WebApi;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
 using Booking = Slack.Shared.Models.Booking;
 using Customer = Slack.Shared.Models.Customer;
-using Desk = Slack.Shared.Models.Desk;
-using Room = Slack.Shared.Models.Room;
 using Identity = Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity;
 using Location = Slack.Shared.Database.Entities.Location;
 using LocationPermissions = Slack.Shared.Models.LocationPermissions;
@@ -24,6 +22,8 @@ using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.
 using OrganizationPermissions = Slack.Shared.Models.OrganizationPermissions;
 using OrganizationTag = Slack.Shared.Models.OrganizationTag;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
+using Resource = Slack.Shared.Models.Resource;
+using ResourceType = Slack.Shared.Models.ResourceType;
 using Team = Slack.Shared.Models.Team;
 using TeamMemberStatus = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus;
 using TeamPermissions = Slack.Shared.Models.TeamPermissions;
@@ -61,8 +61,7 @@ public interface IMapper
     WorkspaceChannel MapTo(Conversation src, Workspace workspace);
     Shared.Models.WorkspaceChannel? MapTo(WorkspaceChannel? src);
     Customer MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer src);
-    Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk src);
-    Room MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Room src);
+    Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src);
     Workspace MapToEntity(Shared.Models.Workspace src, Organization organization);
     Shared.Models.Workspace MapTo(Admin_AddWorkspaceInput src);
     global::Api.Shared.Services.Grpc.Skedular.Slack.V1.Workspace MapTo(Shared.Models.Workspace src);
@@ -137,8 +136,6 @@ public class Mapper : IMapper
             IsDefaultOrganizationOnboardingDone = false,
             IsPreferredLocationOnboardingDone = false,
             IsPreferredZoneOnboardingDone = false,
-            IsPreferredDeskOnboardingDone = false,
-            IsPreferredRoomOnboardingDone = false,
             DefaultOrganization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
         };
 
@@ -179,9 +176,7 @@ public class Mapper : IMapper
             IsLocationOnboardingDone = src.IsLocationOnboardingDone,
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
             IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
-            IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
-            IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
-            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone
+            IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone
         };
 
         customer.Identities = src.Identities.Select(item => new Shared.Models.Identity
@@ -210,12 +205,7 @@ public class Mapper : IMapper
                     : new Shared.Models.Organization { Id = item.Organization.Id }
             }).ToList();
 
-        customer.PreferredDesks = src.PreferredDesks.Select(item => new Desk
-        {
-            Id = item.Id, Name = item.Name.ToSafeString(), Location = new Shared.Models.Location { Id = item.Location.Id }
-        }).ToList();
-
-        customer.PreferredRooms = src.PreferredRooms.Select(item => new Room
+        customer.PreferredResource = src.PreferredResources.Select(item => new Resource
         {
             Id = item.Id, Name = item.Name.ToSafeString(), Location = new Shared.Models.Location { Id = item.Location.Id }
         }).ToList();
@@ -340,8 +330,7 @@ public class Mapper : IMapper
             TeamId = string.IsNullOrWhiteSpace(src.Team?.Id) ? string.Empty : src.Team?.Id
         };
 
-        updateInput.DeskIds.AddRange(src.Desks.Select(item => item.Id));
-        updateInput.RoomIds.AddRange(src.Rooms.Select(item => item.Id));
+        updateInput.ResourceIds.AddRange(src.Resources.Select(item => item.Id));
 
         return updateInput;
     }
@@ -501,8 +490,7 @@ public class Mapper : IMapper
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
-            Desks = MapTo(src.Desks).ToList(),
-            Rooms = MapTo(src.Rooms).ToList(),
+            Resources = MapTo(src.Resources).ToList(),
             Permissions = new LocationPermissions
             {
                 CanView = src.Permissions.CanView,
@@ -525,30 +513,18 @@ public class Mapper : IMapper
             Customer = MapTo(src.Customer),
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
-            Desks = MapTo(src.Desks).ToList(),
-            Rooms = MapTo(src.Rooms).ToList(),
+            Resources = MapTo(src.Resources).ToList(),
             Team = MapTo(src.Team)
         };
 
-    public Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk src) =>
+    public Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src) =>
         new()
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
-            Deactivated = src.Deactivated,
+            Inactive = src.Inactive,
             Color = src.Color.ToSafeString(),
-            RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
-            OrganizationZones = MapTo(src.OrganizationZones).ToList()
-        };
-
-    public Room MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.Room src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Deactivated = src.Deactivated,
-            Color = src.Color.ToSafeString(),
+            ResourceType = MapTo(src.ResourceType),
             RequireBookingApproval = src.RequireBookingApproval,
             OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList()
@@ -689,29 +665,15 @@ public class Mapper : IMapper
     private static Team? MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? src) =>
         string.IsNullOrWhiteSpace(src?.Id) ? null : new Team { Id = src.Id, Name = src.Name.ToSafeString() };
 
-    private static IEnumerable<Desk> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk> src) => src.Select(MapTo);
+    private static IEnumerable<Resource> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> src) => src.Select(MapTo);
 
-    private static Desk MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Desk src) =>
+    private static Resource MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource src) =>
         new()
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Color = src.Color.ToSafeString(),
-            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
-            OrganizationZones = MapTo(src.OrganizationZones).ToList(),
-            Location = string.IsNullOrWhiteSpace(src.Location?.Id)
-                ? null
-                : new Shared.Models.Location { Id = src.Id, Name = src.Name }
-        };
-
-    private static IEnumerable<Room> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Room> src) => src.Select(MapTo);
-
-    private static Room MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Room src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Color = src.Color.ToSafeString(),
+            ResourceType = MapTo(src.ResourceType),
             OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList(),
             Location = string.IsNullOrWhiteSpace(src.Location?.Id)
@@ -743,9 +705,7 @@ public class Mapper : IMapper
     private static Shared.Models.Identity MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
-    private IEnumerable<Desk> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Desk> src) => src.Select(MapTo);
-
-    private IEnumerable<Room> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Room> src) => src.Select(MapTo);
+    private IEnumerable<Resource> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> src) => src.Select(MapTo);
 
     private IEnumerable<Shared.Models.WorkspaceMember> MapTo(IEnumerable<WorkspaceMember> src,
         Shared.Models.Workspace workspace) => src.Select(item => MapTo(item, workspace));
@@ -827,8 +787,7 @@ public class Mapper : IMapper
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static IEnumerable<OrganizationCustomTag> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag> src) =>
-        src.Select(MapTo);
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag> src) => src.Select(MapTo);
 
     private static OrganizationCustomTag MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString() };
@@ -837,5 +796,11 @@ public class Mapper : IMapper
         src.Select(MapTo);
 
     private static OrganizationZone MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    private static ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceType src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString(), Type = src.TagType.ToNullableOrganizationTagType() };
+
+    private static ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.ResourceType src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 }

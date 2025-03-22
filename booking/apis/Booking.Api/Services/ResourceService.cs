@@ -15,6 +15,7 @@ public interface IResourceService
         DateTimeOffset until,
         ICollection<string> customTagIds,
         ICollection<string> zoneIds,
+        ICollection<string> resourceIdsToInclude,
         CancellationToken cancellationToken);
 
     Task<(int, int)> GetOrganizationResourceAvailabilityAsync(
@@ -38,6 +39,7 @@ public class ResourceService(
         DateTimeOffset until,
         ICollection<string> customTagIds,
         ICollection<string> zoneIds,
+        ICollection<string> resourceIdsToInclude,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(organizationId) && string.IsNullOrWhiteSpace(locationId))
@@ -90,9 +92,15 @@ public class ResourceService(
             [],
             cancellationToken);
 
+        var resourcesToInclude = await repositoryFactory.ResourceRepository.GetByIdsAsync(
+            resourceIdsToInclude.Where(item => resources.All(resource => resource.Id != item)).ToList(),
+            false,
+            cancellationToken);
+
+        resources = resources.Concat(resourcesToInclude).ToList();
         return mapper.MapTo(resources).Select(item =>
         {
-            item.Location = mapper.MapTo(resources.Single(room => room.Id == item.Id).Location);
+            item.Location = mapper.MapTo(resources.Single(resource => resource.Id == item.Id).Location);
 
             return item;
         }).ToList();

@@ -361,8 +361,8 @@ public class BookingsPage(
         commonPageContext.PageContext.BookingsPage.Pagination.CurrentLast = last;
 
         var bookingsDateRange = commonPageContext.PageContext.BookingsPage.BookingsDateRange;
-        var from = bookingsDateRange.From?.StartOfDay(TimeZoneInfo.Utc) ?? timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc);
-        var until = bookingsDateRange.To?.EndOfDay() ?? from.AddMonths(1).StartOfDay(TimeZoneInfo.Utc);
+        var from = bookingsDateRange.From?.StartOfDay() ?? timeProvider.GetUtcNow().StartOfDay();
+        var until = bookingsDateRange.To?.EndOfDay() ?? from.AddMonths(1).StartOfDay();
         var response = await Task.WhenAll(GetPaginatedBookingsAsync(
                 workspace,
                 workspaceMember,
@@ -621,8 +621,7 @@ public class BookingsPage(
         var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
 
         context.PageContext.BookingsPage ??= bookingsPageContextService.GetDefaultBookingsPageContext();
-        context.PageContext.BookingsPage.BookingsDateRange.From = action.SelectedDate?.ToDateTimeOffset() ??
-                                                                  timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc);
+        context.PageContext.BookingsPage.BookingsDateRange.From = action.SelectedDate?.ToDateTimeOffset() ?? timeProvider.GetUtcNow().StartOfDay();
 
         await RenderWithContextAsync(
             workspace,
@@ -642,8 +641,7 @@ public class BookingsPage(
         var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
 
         context.PageContext.BookingsPage ??= bookingsPageContextService.GetDefaultBookingsPageContext();
-        context.PageContext.BookingsPage.BookingsDateRange.To = action.SelectedDate?.ToDateTimeOffset() ??
-                                                                timeProvider.GetUtcNow().StartOfDay(TimeZoneInfo.Utc);
+        context.PageContext.BookingsPage.BookingsDateRange.To = action.SelectedDate?.ToDateTimeOffset() ?? timeProvider.GetUtcNow().StartOfDay();
 
         await RenderWithContextAsync(
             workspace,

@@ -1,20 +1,17 @@
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Grpc;
-using Slack.Api.Mappers;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
-using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 
 namespace Slack.Api.Handlers.OptionProviders;
 
-public class OrganizationMemberOptionProvider(
+public class OrganizationResourceTypeOptionProvider(
     OrganizationConfiguration organizationConfiguration,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper,
     OrganizationService.OrganizationServiceClient organizationServiceClient)
     : IBlockOptionProvider
 {
@@ -27,28 +24,16 @@ public class OrganizationMemberOptionProvider(
             throw new SlackWorkspaceNotFound();
         }
 
-        var getPaginatedMembersInput = new GetPaginatedMembersInput
-        {
-            First = 100,
-            After = string.Empty,
-            Last = -1,
-            Before = string.Empty,
-            Where = new MemberWhereInput { OrganizationId = workspaceEntity.Organization.Id, NameContains = request.Value }
-        };
+        var getInput = new GetInput { Id = workspaceEntity.Organization.Id };
 
-        getPaginatedMembersInput.OrderBy.Add(new MemberOrderInput { Direction = OrderDirection.Ascending, Field = MemberOrderField.Name });
-
-        var memberConnection = await organizationServiceClient.GetPaginatedMembersAsync(
-            getPaginatedMembersInput,
+        var organization = await organizationServiceClient.GetAsync(
+            getInput,
             organizationConfiguration.ApiKey.CreateMetadata(request.User.Id),
             cancellationToken: cancellationToken);
 
         return new BlockOptionsResponse
         {
-            Options = memberConnection.Edges
-                .Select(item => mapper.MapTo(item.Node))
-                .Select(item => new Option { Text = item.Customer.GetCustomerName().ToOptionText(), Value = item.Customer.Id })
-                .ToList()
+            Options = organization.ResourceTypes.Select(item => new Option { Text = item.Name.ToOptionText(), Value = item.Id }).ToList()
         };
     }
 }
