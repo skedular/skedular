@@ -29,27 +29,28 @@ format: ## Format the source
 	@./scripts/format.sh
 	@goimports -w $(GOFILES)
 
-.PHONY: services-restart
+.PHONY: services-all-restart
 services-all-restart:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d
 
-.PHONY: services-start
+.PHONY: services-all-start
 services-all-start:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d
 
-.PHONY: services-stop
+.PHONY: services-all-stop
 services-all-stop:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down
 
-.PHONY: services-terminate
+.PHONY: services-all-terminate
 services-all-terminate:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down -v
 
+.PHONY: services-restart
 services-restart:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env build
