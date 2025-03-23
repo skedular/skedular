@@ -29,4 +29,11 @@ public class BookingController(IWorkaroundService workaroundService, IResourceBo
 
         return Ok();
     }
+
+    public override async Task<IActionResult> RepublishResourcesSlots(string resourceId, CancellationToken cancellationToken = default)
+    {
+        await resourceBookingSlotsHelperService.GenerateAsync(resourceId, cancellationToken);
+
+        return Ok();
+    }
 }

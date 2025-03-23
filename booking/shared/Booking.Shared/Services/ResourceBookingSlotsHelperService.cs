@@ -8,12 +8,16 @@ namespace Booking.Shared.Services;
 
 public interface IResourceBookingSlotsHelperService
 {
+    Task GenerateAsync(string resourceId, CancellationToken cancellationToken);
     Task GenerateAllAsync(CancellationToken cancellationToken);
 }
 
 public class ResourceBookingSlotsHelperService(IBookingInternalPublisher bookingInternalPublisher, IRepositoryFactory repositoryFactory)
     : IResourceBookingSlotsHelperService
 {
+    public async Task GenerateAsync(string resourceId, CancellationToken cancellationToken) =>
+        await bookingInternalPublisher.PublishGenerateResourceBookingSlotAsync([resourceId], cancellationToken);
+
     public async Task GenerateAllAsync(CancellationToken cancellationToken)
     {
         var resourceIds = await repositoryFactory.ResourceRepository.Query(
