@@ -46,7 +46,9 @@ public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, IRe
 
         var savingNeeded = false;
         var allSlots = resourceBookingSlotHelperService.CreateAllAvailableSlots(resource);
-        var slotsToAdd = allSlots.Where(item => existingResourceBookingSlots.All(slot => slot.Start != item.Start)).ToList();
+        var allSlotsDictionary = allSlots.ToDictionary(item => item.Start, item => item);
+        var existingResourceBookingSlotsDictionary = existingResourceBookingSlots.ToDictionary(item => item.Start, item => item);
+        var slotsToAdd = allSlots.Where(item => !existingResourceBookingSlotsDictionary.ContainsKey(item.Start)).ToList();
 
         foreach (var slot in slotsToAdd)
         {
@@ -75,7 +77,7 @@ public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, IRe
             savingNeeded = true;
         }
 
-        var slotsToUpdate = existingResourceBookingSlots.Where(item => allSlots.Any(slot => slot.Start == item.Start)).ToList();
+        var slotsToUpdate = existingResourceBookingSlots.Where(item => allSlotsDictionary.ContainsKey(item.Start)).ToList();
         foreach (var slot in slotsToUpdate)
         {
             var updateNeeded = false;
