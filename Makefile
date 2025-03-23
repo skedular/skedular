@@ -29,6 +29,16 @@ format: ## Format the source
 	@./scripts/format.sh
 	@goimports -w $(GOFILES)
 
+.PHONY: images-pull
+images-pull:
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
+
+.PHONY: dep-restart
+dep-restart:
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env down dozzle postgres redis kafka1 kowl
+	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env up --build -d dozzle postgres redis kafka1 kowl
+
 .PHONY: services-all-restart
 services-all-restart:
 	docker compose -p unityhubio -f docker-compose-production.yml --env-file .env pull
