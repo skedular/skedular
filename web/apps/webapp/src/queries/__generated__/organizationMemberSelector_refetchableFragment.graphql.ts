@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0e42f4dc1ed22074a1e7216a6780b338>>
+ * @generated SignedSource<<262c918dde760f73da07aef59e9e22bf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,7 +40,7 @@ var v0 = [
     "name": "bookingPeopleNameSearchText"
   },
   {
-    "defaultValue": 20,
+    "defaultValue": null,
     "kind": "LocalArgument",
     "name": "count"
   },
@@ -304,16 +304,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "efb0a08a3b688aba61d0fead3bdca970",
+    "cacheID": "45baecd8946d364816a3c62a381093e9",
     "id": null,
     "metadata": {},
     "name": "organizationMemberSelector_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMemberSelector_refetchableFragment(\n  $bookingPeopleNameSearchText: String\n  $count: Int = 20\n  $cursor: String\n  $organizationExists: Boolean!\n  $organizationId: String!\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMemberSelector_query_1G22uz\n}\n\nfragment organizationMemberSelector_query_1G22uz on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMemberSelector_refetchableFragment(\n  $bookingPeopleNameSearchText: String\n  $count: Int = null\n  $cursor: String\n  $organizationExists: Boolean!\n  $organizationId: String!\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMemberSelector_query_1G22uz\n}\n\nfragment organizationMemberSelector_query_1G22uz on Query {\n  organizationMemberSelectorPaginatedOrganizationMembers: organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) @include(if: $organizationExists) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f1df4aef90751109db3eba2400283144";
+(node as any).hash = "8d513cad2eae59fd54ed3640960bfbf9";
 
 export default node;

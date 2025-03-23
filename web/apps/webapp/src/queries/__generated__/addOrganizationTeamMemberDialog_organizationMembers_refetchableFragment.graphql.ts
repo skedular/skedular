@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ef5cd6d3539cfc8e03e423256f5e2efa>>
+ * @generated SignedSource<<86ba4455496b78b812d8c86d073ba86a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,7 +39,7 @@ var v0 = [
     "name": "addTeamMemberDialogOrganizationMembersSortingValues"
   },
   {
-    "defaultValue": 20,
+    "defaultValue": null,
     "kind": "LocalArgument",
     "name": "count"
   },
@@ -291,16 +291,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "67d0543fd09c3ba26588e31f8ce1b9f1",
+    "cacheID": "76d5b9370c6b80a46d59498fa0860713",
     "id": null,
     "metadata": {},
     "name": "addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment(\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $count: Int = 20\n  $cursor: String\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query_1G22uz\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment(\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $peopleNameSearchText: String\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query_1G22uz\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query_1G22uz on Query {\n  organizationMembers(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0a3a4000f0322508aed1bc3ec6aaeaf8";
+(node as any).hash = "800ec3cdd70e1d2a7c658def2ee6def3";
 
 export default node;

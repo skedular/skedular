@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5ec8216dcc15d04b4df82a3649c6a982>>
+ * @generated SignedSource<<05b06e36798590853d01e6cd6ad6f643>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -46,11 +46,6 @@ v2 = {
   "name": "peopleNameSearchText"
 },
 v3 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 20
-  },
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -269,12 +264,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cf132895d8eb33b8f8037df4be1c7085",
+    "cacheID": "132e59e4c1dd3dbecb575fdedecb23b3",
     "id": null,
     "metadata": {},
     "name": "addOrganizationTeamMemberButton_rootQuery",
     "operationKind": "query",
-    "text": "query addOrganizationTeamMemberButton_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query on Query {\n  organizationMembers(first: 20, where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query addOrganizationTeamMemberButton_rootQuery(\n  $organizationId: String!\n  $peopleNameSearchText: String\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query on Query {\n  organizationMembers(where: {organizationId: $organizationId, nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

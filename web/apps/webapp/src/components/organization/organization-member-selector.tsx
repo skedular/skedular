@@ -5,7 +5,7 @@ import type { organizationMemberSelector_query$key } from '@/queries/__generated
 import type { organizationMemberSelector_refetchableFragment } from '@/queries/__generated__/organizationMemberSelector_refetchableFragment.graphql';
 import { Autocomplete } from 'mui-rff';
 import { memo, useCallback, useMemo, useState, useTransition } from 'react';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { graphql, useRefetchableFragment } from 'react-relay';
 import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
@@ -33,15 +33,10 @@ type OrganizationMemberDetails = {
 };
 
 const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, required, readOnly, multiple, useMemberId }: Props) => {
-  const {
-    data: rootData,
-    loadNext,
-    isLoadingNext,
-    refetch,
-  } = usePaginationFragment<organizationMemberSelector_refetchableFragment, organizationMemberSelector_query$key>(
+  const [rootData, refetch] = useRefetchableFragment<organizationMemberSelector_refetchableFragment, organizationMemberSelector_query$key>(
     graphql`
       fragment organizationMemberSelector_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationMemberSelector_refetchableFragment") {
         organizationMemberSelectorPaginatedOrganizationMembers: organizationMembers(
           first: $count
@@ -82,7 +77,6 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
       startTransition(() => {
         refetch(
           {
-            count: 20,
             bookingPeopleNameSearchText,
             organizationExists: !!organizationId,
           },

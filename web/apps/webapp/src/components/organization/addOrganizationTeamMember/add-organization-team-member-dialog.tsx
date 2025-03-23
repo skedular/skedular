@@ -13,7 +13,7 @@ import { Autocomplete, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, useMutation, usePaginationFragment } from 'react-relay';
+import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { object, string } from 'yup';
@@ -50,13 +50,13 @@ const schema = object({
 });
 
 const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId, isDialogOpen, onAddClicked, onCancel }: Props) => {
-  const { data: rootData, refetch } = usePaginationFragment<
+  const [rootData, refetch] = useRefetchableFragment<
     addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment,
     addOrganizationTeamMemberDialog_organizationMembers_query$key
   >(
     graphql`
       fragment addOrganizationTeamMemberDialog_organizationMembers_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment") {
         organizationMembers(
           first: $count
@@ -123,7 +123,6 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
       startTransition(() => {
         refetch(
           {
-            count: 20,
             peopleNameSearchText,
           },
           {

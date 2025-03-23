@@ -28,7 +28,7 @@ import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextFie
 import { nanoid } from 'nanoid';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, useFragment, useMutation, usePaginationFragment, useRefetchableFragment } from 'react-relay';
+import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { array, boolean, date, object, string } from 'yup';
@@ -167,13 +167,13 @@ const NewBookingDialog = ({
     rootDataRelay,
   );
 
-  const { data: rootDataOrganizationMembers, refetch: refetchOrganizationMembers } = usePaginationFragment<
+  const [rootDataOrganizationMembers, refetchOrganizationMembers] = useRefetchableFragment<
     newBookingDialog_organizationMembers_refetchableFragment,
     newBookingDialog_organizationMembers_query$key
   >(
     graphql`
       fragment newBookingDialog_organizationMembers_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 20 })
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "newBookingDialog_organizationMembers_refetchableFragment") {
         organizationMembers(
           first: $count
@@ -447,7 +447,6 @@ const NewBookingDialog = ({
       startTransition(() => {
         refetchOrganizationMembers(
           {
-            count: 20,
             peopleNameSearchText,
           },
           {
