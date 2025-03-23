@@ -11,6 +11,8 @@ public class ResourceBookingSlot : EntityBase
     public DateTimeOffset Start { get; set; }
     public bool Available { get; set; }
 
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string ResourceId { get; set; }
     public virtual Resource Resource { get; set; }
     public virtual ICollection<Customer> Customers { get; set; } = [];
     public virtual ICollection<Booking> Bookings { get; set; } = [];
@@ -23,10 +25,11 @@ public class ResourceBookingSlotConfiguration : IEntityTypeConfiguration<Resourc
     {
         builder.ConfigureEntityBase();
 
-        builder.HasOne(item => item.Resource).WithMany(item => item.ResourceBookingSlots);
+        builder.HasOne(item => item.Resource).WithMany(item => item.ResourceBookingSlots).HasForeignKey(item => item.ResourceId);
         builder.HasMany(item => item.Customers).WithMany(item => item.ResourceBookingSlots);
 
         builder.HasIndex(item => item.Start);
         builder.HasIndex(item => item.Available);
+        builder.HasIndex(item => new { item.Start, item.ResourceId }).IsUnique();
     }
 }
