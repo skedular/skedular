@@ -89,8 +89,6 @@ public class LocationSubscriber(
         existingLocation = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
 
         (existingLocation, var resourceIds) = await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
-        existingLocation = await RebuildDesksAsync(location, existingLocation, organization, cancellationToken);
-        existingLocation = await RebuildRoomsAsync(location, existingLocation, organization, cancellationToken);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
 
         if (locationOpeningHoursChanged)
@@ -187,114 +185,6 @@ public class LocationSubscriber(
         resourceIdsToRegenerateBookingSlots.AddRange(addedItems.Select(item => item.Id));
 
         return (existingLocation, resourceIdsToRegenerateBookingSlots.Distinct().ToList());
-    }
-
-    private async Task<Location> RebuildDesksAsync(
-        Shared.Models.Location location,
-        Location existingLocation,
-        Organization? organization,
-        CancellationToken cancellationToken)
-    {
-        var organizationTags = new List<OrganizationTag>();
-        if (organization is not null)
-        {
-            var organizationTagIds = location.Desks.SelectMany(item => item.OrganizationTags.Select(tag => tag.Id)).Distinct().ToList();
-            foreach (var tagId in organizationTagIds)
-            {
-                organizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(tagId, organization, cancellationToken));
-            }
-        }
-
-        var desks = await repositoryFactory.DeskRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
-        var itemsToRemove = desks.Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
-        var updatedItems = desks
-            .Where(desk => location.Desks.Any(item => item.Id == desk.Id))
-            .Select(desk =>
-            {
-                var filteredOrganizationTags = organizationTags
-                    .Where(tag =>
-                        location.Desks.First(item => item.Id == desk.Id).OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
-                    .ToList();
-
-                var updatedDesk = mapper.MergeToEntity(
-                    location.Desks.First(item => item.Id == desk.Id),
-                    desk,
-                    existingLocation,
-                    filteredOrganizationTags);
-                updatedDesk.DeletedAt = null;
-                return repositoryFactory.DeskRepository.Update(updatedDesk);
-            })
-            .ToList();
-        var addedItems = location.Desks
-            .Where(desk => desks.All(item => item.Id != desk.Id))
-            .Select(desk =>
-            {
-                var filteredOrganizationTags = organizationTags
-                    .Where(tag => desk.OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
-                    .ToList();
-
-                return repositoryFactory.DeskRepository.Add(mapper.MapToEntity(desk, existingLocation, filteredOrganizationTags));
-            })
-            .ToList();
-
-        repositoryFactory.DeskRepository.RemoveRange(itemsToRemove);
-        existingLocation.Desks = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
-
-        return existingLocation;
-    }
-
-    private async Task<Location> RebuildRoomsAsync(
-        Shared.Models.Location location,
-        Location existingLocation,
-        Organization? organization,
-        CancellationToken cancellationToken)
-    {
-        var organizationTags = new List<OrganizationTag>();
-        if (organization is not null)
-        {
-            var organizationTagIds = location.Rooms.SelectMany(item => item.OrganizationTags.Select(tag => tag.Id)).Distinct().ToList();
-            foreach (var tagId in organizationTagIds)
-            {
-                organizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(tagId, organization, cancellationToken));
-            }
-        }
-
-        var rooms = await repositoryFactory.RoomRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
-        var itemsToRemove = rooms.Where(room => location.Rooms.All(item => item.Id != room.Id)).ToList();
-        var updatedItems = rooms
-            .Where(room => location.Rooms.Any(item => item.Id == room.Id))
-            .Select(room =>
-            {
-                var filteredOrganizationTags = organizationTags
-                    .Where(tag =>
-                        location.Rooms.First(item => item.Id == room.Id).OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
-                    .ToList();
-
-                var updatedRoom = mapper.MergeToEntity(
-                    location.Rooms.First(item => item.Id == room.Id),
-                    room,
-                    existingLocation,
-                    filteredOrganizationTags);
-                updatedRoom.DeletedAt = null;
-                return repositoryFactory.RoomRepository.Update(updatedRoom);
-            })
-            .ToList();
-        var addedItems = location.Rooms
-            .Where(room => rooms.All(item => item.Id != room.Id))
-            .Select(room =>
-            {
-                var filteredOrganizationTags = organizationTags
-                    .Where(tag => room.OrganizationTags.Any(organizationTag => organizationTag.Id == tag.Id))
-                    .ToList();
-
-                return repositoryFactory.RoomRepository.Add(mapper.MapToEntity(room, existingLocation, filteredOrganizationTags));
-            })
-            .ToList();
-
-        repositoryFactory.RoomRepository.RemoveRange(itemsToRemove);
-        existingLocation.Rooms = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
-
-        return existingLocation;
     }
 
     private async Task<Location> RebuildLocationMembersAsync(

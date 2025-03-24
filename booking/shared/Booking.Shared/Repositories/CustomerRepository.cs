@@ -32,8 +32,6 @@ internal static class CustomerExtensions
             .Include(query => query.PreferredOrganizationTags.Where(tag => !includeActiveItemsOnly || !tag.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization)
             .Include(query => query.PreferredResources.Where(desk => !includeActiveItemsOnly || (!desk.DeletedAt.HasValue && !desk.Inactive)))
-            .Include(query => query.PreferredDesks.Where(desk => !includeActiveItemsOnly || (!desk.DeletedAt.HasValue && !desk.Deactivated)))
-            .Include(query => query.PreferredRooms.Where(room => !includeActiveItemsOnly || (!room.DeletedAt.HasValue && !room.Deactivated)))
             .ThenInclude(query => query.Location)
             .ThenInclude(query => query.Organization)
             .Include(query => query.PreferredTeams.Where(team => !includeActiveItemsOnly || !team.DeletedAt.HasValue))
@@ -43,21 +41,6 @@ internal static class CustomerExtensions
 public class CustomerRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, Customer>(dbContext, timeProvider), ICustomerRepository
 {
-    private static readonly Func<BookingDbContext, string, bool, CancellationToken, Task<Customer?>>
-        s_getByEmailQueryAsync =
-            EF.CompileAsyncQuery<BookingDbContext, string, bool, CancellationToken, Customer?>((
-                    dbContext,
-                    email,
-                    includeActiveItemsOnly,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects(includeActiveItemsOnly)
-                    .FirstOrDefault(query =>
-                        !query.DeletedAt.HasValue &&
-                        query.Identities.Any(identity =>
-                            identity.Email != null &&
-                            EF.Functions.ILike(identity.Email, email))));
-
     public async Task<Customer> UpsertNakedAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken)
     {
         await base.UpsertNakedAsync(id, cancellationToken);
@@ -80,7 +63,7 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                 cancellationToken);
 
     public async Task<Customer?> GetByEmailAsync(string email, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
-        await dbContext.Customer
+        await DbContext.Customer
             .AddDependentObjects(includeActiveItemsOnly)
             .FirstOrDefaultAsync(query =>
                     !query.DeletedAt.HasValue &&

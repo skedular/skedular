@@ -19,7 +19,7 @@ namespace Team.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -98,7 +98,7 @@ namespace Team.Shared.Database.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
-                    b.Property<DateTimeOffset>("To")
+                    b.Property<DateTimeOffset>("Until")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<uint>("Version")
@@ -115,7 +115,7 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.HasIndex("To");
+                    b.HasIndex("Until");
 
                     b.ToTable("Booking");
                 });
@@ -487,6 +487,7 @@ namespace Team.Shared.Database.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<string>("OrganizationId")
+                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("PrimaryLocationId")
@@ -660,7 +661,9 @@ namespace Team.Shared.Database.Migrations
                 {
                     b.HasOne("Team.Shared.Database.Entities.Organization", "Organization")
                         .WithMany("Teams")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Team.Shared.Database.Entities.Location", "PrimaryLocation")
                         .WithMany("PrimaryLocationForTeams")

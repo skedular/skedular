@@ -756,10 +756,10 @@ public class HomePage(
                 PlainText buttonText;
                 if (matchingBookings.Count == 0)
                 {
-                    var to = from.EndOfDay();
+                    var until = from.EndOfDay();
                     actionId = $"{BookingActionTypes.InstantAddBooking}{idx}";
                     buttonText = $"{from.ToShortDateWithoutYear()} {Icons.New}".ToPlainTextWithIcon(Icons.Calendar);
-                    value = new InstantAddBookingContext(pageContext, from, to, InitiationSource.App, customer.Id, null, null).Serialize();
+                    value = new InstantAddBookingContext(pageContext, from, until, InitiationSource.App, customer.Id, null, null).Serialize();
                 }
                 else
                 {

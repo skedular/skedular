@@ -36,8 +36,7 @@ public class LocationOpeningHoursService(
             throw new LocationNotFound();
         }
 
-        if (existingLocation.Organization is not null &&
-            !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
+        if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
         }

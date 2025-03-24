@@ -68,8 +68,7 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationBillingInfo MapToGrpcResponse(
-        Organization src) =>
+    public global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationBillingInfo MapToGrpcResponse(Organization src) =>
         new()
         {
             Email = src.BillingContactEmail.ToSafeString(),
@@ -94,9 +93,8 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private IEnumerable<OrganizationMember> MapTo(
-        IEnumerable<Shared.Database.Entities.OrganizationMember> src,
-        Organization organization) => src.Select(item => MapTo(item, organization));
+    private IEnumerable<OrganizationMember> MapTo(IEnumerable<Shared.Database.Entities.OrganizationMember> src, Organization organization) =>
+        src.Select(item => MapTo(item, organization));
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
@@ -106,9 +104,7 @@ public class Mapper : IMapper
             ? null
             : new Identity { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt };
 
-    private static IEnumerable<OrganizationOffering> MapTo(
-        IEnumerable<Shared.Database.Entities.OrganizationOffering> src,
-        Organization organization)
+    private static IEnumerable<OrganizationOffering> MapTo(IEnumerable<Shared.Database.Entities.OrganizationOffering> src, Organization organization)
         => src.Select(item => MapTo(item, organization));
 
     private static OrganizationOffering MapTo(

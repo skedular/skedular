@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<96d35438fa7948ef53408a80ae9acf43>>
+ * @generated SignedSource<<0e1f79150f0cedcc10d2a3d0d6ced6b8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,7 +32,7 @@ export type organization_rootQuery$data = {
     readonly organization: {
       readonly name: string;
       readonly uniqueId: string;
-    } | null | undefined;
+    };
   }> | null | undefined;
   readonly myTeams: ReadonlyArray<{
     readonly id: string;
@@ -40,7 +40,7 @@ export type organization_rootQuery$data = {
     readonly organization: {
       readonly name: string;
       readonly uniqueId: string;
-    } | null | undefined;
+    };
   }> | null | undefined;
   readonly organization: {
     readonly id: string;

@@ -81,7 +81,7 @@ type TeamDetails {
   name: String!
   about: String
   members: [TeamMemberDetails!]!
-  organization: TeamOrganizationDetails
+  organization: TeamOrganizationDetails!
   primaryLocation: TeamLocationDetails
   timezone: String
   hasFutureBooking: Boolean!
@@ -168,7 +168,7 @@ input AddTeamInput {
   id: String
   name: String!
   about: String
-  organizationId: String
+  organizationId: String!
   primaryLocationId: String
   timezone: String
   customerIds: [String!]!
@@ -258,7 +258,7 @@ input UpdateTeamAndTeamMembersInput {
   id: String!
   name: String!
   about: String
-  organizationId: String
+  organizationId: String!
   primaryLocationId: String
   timezone: String
   customerIds: [String!]!
@@ -270,7 +270,7 @@ input UpdateTeamInput {
   id: String!
   name: String!
   about: String
-  organizationId: String
+  organizationId: String!
   primaryLocationId: String
   timezone: String
 }

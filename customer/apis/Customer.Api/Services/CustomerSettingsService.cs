@@ -8,8 +8,6 @@ public interface ICustomerSettingsService
     Task<Shared.Models.Customer> CompleteDefaultOrganizationOnboardingAsync(CancellationToken cancellationToken);
     Task<Shared.Models.Customer> CompletePreferredLocationOnboardingAsync(CancellationToken cancellationToken);
     Task<Shared.Models.Customer> CompletePreferredZoneOnboardingAsync(CancellationToken cancellationToken);
-    Task<Shared.Models.Customer> CompletePreferredDeskOnboardingAsync(CancellationToken cancellationToken);
-    Task<Shared.Models.Customer> CompletePreferredRoomOnboardingAsync(CancellationToken cancellationToken);
 }
 
 public class CustomerSettingsService(ICustomerHelperService customerHelperService) : ICustomerSettingsService
@@ -53,20 +51,6 @@ public class CustomerSettingsService(ICustomerHelperService customerHelperServic
     {
         var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
         customer.IsPreferredZoneOnboardingDone = true;
-        return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
-    }
-
-    public async Task<Shared.Models.Customer> CompletePreferredDeskOnboardingAsync(CancellationToken cancellationToken)
-    {
-        var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
-        customer.IsPreferredDeskOnboardingDone = true;
-        return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
-    }
-
-    public async Task<Shared.Models.Customer> CompletePreferredRoomOnboardingAsync(CancellationToken cancellationToken)
-    {
-        var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
-        customer.IsPreferredRoomOnboardingDone = true;
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 }

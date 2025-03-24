@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c147b8decda35a998c448ec2caa6aba4>>
+ * @generated SignedSource<<d1184b98d50d8546ac6e0a3c1a6e053f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,7 @@ export type teamCard_TeamDetails$data = {
   readonly name: string;
   readonly organization: {
     readonly uniqueId: string;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "teamCard_TeamDetails";
 };
 export type teamCard_TeamDetails$key = {

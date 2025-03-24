@@ -26,8 +26,6 @@ internal static class LocationExtensions
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Resources)
-            .Include(query => query.Desks)
-            .Include(query => query.Rooms)
             .Include(query => query.Organization)
             .Include(query => query.PreferredByCustomers);
 }

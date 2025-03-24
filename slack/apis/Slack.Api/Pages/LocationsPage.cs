@@ -56,7 +56,7 @@ public class LocationsPage(
     ILocationComponents locationComponents,
     ILocationService locationService,
     IBookingService bookingService,
-    IDesksPageContextService desksPageContextService,
+    IResourcesPageContextService resourcesPageContextService,
     IMapper mapper,
     IBookingsPageContextService bookingsPageContextService) :
     ILocationsPage,
@@ -260,7 +260,7 @@ public class LocationsPage(
         {
             var locationId = action.SelectedOption.Value[ResourceActionTypes.Resources.Length..];
             var context = CommonPageContext.Deserialize(request.View.PrivateMetadata);
-            context.PageContext.ResourcesPage = desksPageContextService.GetDefaultDesksPageContext(locationId);
+            context.PageContext.ResourcesPage = resourcesPageContextService.GetDefaultDesksPageContext(locationId);
             context.PageContext.PushCurrentPageToVisitedPages();
 
             await resourcesPage.RenderWithContextAsync(

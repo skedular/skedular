@@ -59,8 +59,7 @@ public class ResourceService(
             throw new LocationNotFound();
         }
 
-        if (existingLocation.Organization is not null &&
-            !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
+        if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -107,9 +106,7 @@ public class ResourceService(
             throw new LocationNotFound();
         }
 
-        if (customer is not null &&
-            existingLocation.Organization is not null &&
-            !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
+        if (customer is not null && !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -133,16 +130,14 @@ public class ResourceService(
             throw new ResourceWithSameNameExist();
         }
 
-        var organizationTags = existingLocation.Organization is null
-            ? []
-            : await repositoryFactory.OrganizationTagRepository.Query(
-                new Specification<OrganizationTag>
-                {
-                    Criteria = query => !query.DeletedAt.HasValue &&
-                                        resource.Tags.Select(item => item.Id).Contains(query.Id) &&
-                                        query.Organization.Id == existingLocation.Organization.Id &&
-                                        !query.Organization.DeletedAt.HasValue
-                }).ToListAsync(cancellationToken);
+        var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
+            new Specification<OrganizationTag>
+            {
+                Criteria = query => !query.DeletedAt.HasValue &&
+                                    resource.Tags.Select(item => item.Id).Contains(query.Id) &&
+                                    query.Organization.Id == existingLocation.Organization.Id &&
+                                    !query.Organization.DeletedAt.HasValue
+            }).ToListAsync(cancellationToken);
 
         var resourceTypeTag = organizationTags
             .Where(item => !string.IsNullOrWhiteSpace(item.Type))
@@ -204,8 +199,7 @@ public class ResourceService(
             throw new LocationNotFound();
         }
 
-        if (existingLocation.Organization is not null &&
-            !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
+        if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -240,9 +234,7 @@ public class ResourceService(
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
-        if (existingLocations
-            .Where(item => item.Organization is not null)
-            .Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
+        if (existingLocations.Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer)))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -287,8 +279,7 @@ public class ResourceService(
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
         if (existingLocations
-            .Where(item => item.Organization is not null)
-            .Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
+            .Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer)))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -337,8 +328,7 @@ public class ResourceService(
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
         if (existingLocations
-            .Where(item => item.Organization is not null)
-            .Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization!, customer)))
+            .Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer)))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -414,9 +404,7 @@ public class ResourceService(
             throw new LocationNotFound();
         }
 
-        if (customer is not null &&
-            existingLocation.Organization is not null &&
-            !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
+        if (customer is not null && !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -443,16 +431,14 @@ public class ResourceService(
             throw new ResourceWithSameNameExist();
         }
 
-        var organizationTags = existingLocation.Organization is null
-            ? []
-            : await repositoryFactory.OrganizationTagRepository.Query(
-                new Specification<OrganizationTag>
-                {
-                    Criteria = query => !query.DeletedAt.HasValue &&
-                                        tags.Select(item => item.Id).Contains(query.Id) &&
-                                        query.Organization.Id == existingLocation.Organization.Id &&
-                                        !query.Organization.DeletedAt.HasValue
-                }).ToListAsync(cancellationToken);
+        var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
+            new Specification<OrganizationTag>
+            {
+                Criteria = query => !query.DeletedAt.HasValue &&
+                                    tags.Select(item => item.Id).Contains(query.Id) &&
+                                    query.Organization.Id == existingLocation.Organization.Id &&
+                                    !query.Organization.DeletedAt.HasValue
+            }).ToListAsync(cancellationToken);
 
         var resourceTypeTag = organizationTags
             .Where(item => !string.IsNullOrWhiteSpace(item.Type))

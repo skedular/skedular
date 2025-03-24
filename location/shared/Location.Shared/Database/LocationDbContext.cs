@@ -16,8 +16,6 @@ public class LocationDbContext(
     public DbSet<Customer> Customer { get; set; }
     public DbSet<DailyDeskCountRecording> DailyDeskCountRecording { get; set; }
     public DbSet<DailyRoomCountRecording> DailyRoomCountRecording { get; set; }
-    public DbSet<Desk> Desk { get; set; }
-    public DbSet<Room> Room { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<JoinInvitation> JoinInvitation { get; set; }
     public DbSet<Entities.Location> Location { get; set; }

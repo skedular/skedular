@@ -45,6 +45,8 @@ public class LocationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.OrganizationId);
+
         return mapper.MapToGrpcResponse(await locationService.AddAsync(mapper.MapTo(request), true, context.CancellationToken));
     }
 
@@ -176,12 +178,16 @@ public class LocationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.OrganizationId);
+
         return mapper.MapToGrpcResponse(await locationService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location> Update(UpdateInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.OrganizationId);
 
         return mapper.MapToGrpcResponse(await locationService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
     }

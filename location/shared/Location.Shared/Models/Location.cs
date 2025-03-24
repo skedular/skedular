@@ -14,10 +14,8 @@ public class Location : ModelBaseWithDeleted
 
     public Address? PhysicalAddress { get; set; }
 
-    public Organization? Organization { get; set; }
+    public Organization Organization { get; set; }
     public ICollection<Resource> Resources { get; set; } = [];
-    public ICollection<Desk> Desks { get; set; } = [];
-    public ICollection<Room> Rooms { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<LocationMember> LocationMembers { get; set; } = [];
     public ICollection<JoinInvitation> JoinInvitations { get; set; } = [];

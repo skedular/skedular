@@ -9,9 +9,7 @@ using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using CustomerOrder = Customer.Shared.Models.CustomerOrder;
-using Desk = Customer.Shared.Database.Entities.Desk;
 using Identity = Customer.Shared.Models.Identity;
-using Room = Customer.Shared.Database.Entities.Room;
 using Location = Customer.Shared.Database.Entities.Location;
 using OrganizationTag = Customer.Shared.Database.Entities.OrganizationTag;
 using Resource = Customer.Shared.Database.Entities.Resource;
@@ -199,20 +197,6 @@ public class CustomerService(
             preferredResources.Add(await repositoryFactory.ResourceRepository.UpsertNakedAsync(resource.Id, location, cancellationToken));
         }
 
-        var preferredDesks = new List<Desk>();
-        foreach (var desk in customer.PreferredDesks)
-        {
-            var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(desk.Location.Id, null, cancellationToken);
-            preferredDesks.Add(await repositoryFactory.DeskRepository.UpsertNakedAsync(desk.Id, location, cancellationToken));
-        }
-
-        var preferredRooms = new List<Room>();
-        foreach (var room in customer.PreferredRooms)
-        {
-            var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(room.Location.Id, null, cancellationToken);
-            preferredRooms.Add(await repositoryFactory.RoomRepository.UpsertNakedAsync(room.Id, location, cancellationToken));
-        }
-
         var preferredOrganizationTags = new List<OrganizationTag>();
         foreach (var organizationTag in customer.PreferredOrganizationTags)
         {
@@ -238,8 +222,6 @@ public class CustomerService(
                 preferredLocations,
                 preferredTeams,
                 preferredResources,
-                preferredDesks,
-                preferredRooms,
                 preferredOrganizationTags);
 
             identities.ForEach(identity => identity.Customer = existingCustomer);

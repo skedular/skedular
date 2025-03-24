@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7d04db20f965a14902c4767a45298b22>>
+ * @generated SignedSource<<4e7c5455cf74fbf0bc1a85910b25601d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type locationBookingInsight_query$data = {
     readonly name: string;
     readonly organization: {
       readonly uniqueId: string;
-    } | null | undefined;
+    };
   } | null | undefined;
   readonly " $fragmentType": "locationBookingInsight_query";
 };

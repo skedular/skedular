@@ -18,7 +18,7 @@ namespace Customer.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -63,13 +63,7 @@ namespace Customer.Shared.Database.Migrations
                     b.Property<bool?>("IsOrganizationOnboardingDone")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("IsPreferredDeskOnboardingDone")
-                        .HasColumnType("boolean");
-
                     b.Property<bool?>("IsPreferredLocationOnboardingDone")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool?>("IsPreferredRoomOnboardingDone")
                         .HasColumnType("boolean");
 
                     b.Property<bool?>("IsPreferredZoneOnboardingDone")
@@ -206,49 +200,6 @@ namespace Customer.Shared.Database.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("CustomerFeedback");
-                });
-
-            modelBuilder.Entity("Customer.Shared.Database.Entities.Desk", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LocationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Desk");
                 });
 
             modelBuilder.Entity("Customer.Shared.Database.Entities.Identity", b =>
@@ -578,49 +529,6 @@ namespace Customer.Shared.Database.Migrations
                     b.ToTable("Resource");
                 });
 
-            modelBuilder.Entity("Customer.Shared.Database.Entities.Room", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LocationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Room");
-                });
-
             modelBuilder.Entity("Customer.Shared.Database.Entities.Team", b =>
                 {
                     b.Property<string>("Id")
@@ -727,21 +635,6 @@ namespace Customer.Shared.Database.Migrations
                     b.ToTable("TeamMember");
                 });
 
-            modelBuilder.Entity("CustomerDesk", b =>
-                {
-                    b.Property<string>("PreferredByCustomersId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PreferredDesksId")
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("PreferredByCustomersId", "PreferredDesksId");
-
-                    b.HasIndex("PreferredDesksId");
-
-                    b.ToTable("CustomerDesk");
-                });
-
             modelBuilder.Entity("CustomerLocation", b =>
                 {
                     b.Property<string>("PreferredByCustomersId")
@@ -785,21 +678,6 @@ namespace Customer.Shared.Database.Migrations
                     b.HasIndex("PreferredResourcesId");
 
                     b.ToTable("CustomerResource");
-                });
-
-            modelBuilder.Entity("CustomerRoom", b =>
-                {
-                    b.Property<string>("PreferredByCustomersId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PreferredRoomsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("PreferredByCustomersId", "PreferredRoomsId");
-
-                    b.HasIndex("PreferredRoomsId");
-
-                    b.ToTable("CustomerRoom");
                 });
 
             modelBuilder.Entity("CustomerTeam", b =>
@@ -882,17 +760,6 @@ namespace Customer.Shared.Database.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("Customer.Shared.Database.Entities.Desk", b =>
-                {
-                    b.HasOne("Customer.Shared.Database.Entities.Location", "Location")
-                        .WithMany("Desks")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("Customer.Shared.Database.Entities.Identity", b =>
                 {
                     b.HasOne("Customer.Shared.Database.Entities.Customer", "Customer")
@@ -971,17 +838,6 @@ namespace Customer.Shared.Database.Migrations
                     b.Navigation("Location");
                 });
 
-            modelBuilder.Entity("Customer.Shared.Database.Entities.Room", b =>
-                {
-                    b.HasOne("Customer.Shared.Database.Entities.Location", "Location")
-                        .WithMany("Rooms")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("Customer.Shared.Database.Entities.Team", b =>
                 {
                     b.HasOne("Customer.Shared.Database.Entities.Organization", "Organization")
@@ -1014,21 +870,6 @@ namespace Customer.Shared.Database.Migrations
                     b.Navigation("OrganizationMember");
 
                     b.Navigation("Team");
-                });
-
-            modelBuilder.Entity("CustomerDesk", b =>
-                {
-                    b.HasOne("Customer.Shared.Database.Entities.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("PreferredByCustomersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Customer.Shared.Database.Entities.Desk", null)
-                        .WithMany()
-                        .HasForeignKey("PreferredDesksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("CustomerLocation", b =>
@@ -1076,21 +917,6 @@ namespace Customer.Shared.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CustomerRoom", b =>
-                {
-                    b.HasOne("Customer.Shared.Database.Entities.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("PreferredByCustomersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Customer.Shared.Database.Entities.Room", null)
-                        .WithMany()
-                        .HasForeignKey("PreferredRoomsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CustomerTeam", b =>
                 {
                     b.HasOne("Customer.Shared.Database.Entities.Customer", null)
@@ -1121,13 +947,9 @@ namespace Customer.Shared.Database.Migrations
 
             modelBuilder.Entity("Customer.Shared.Database.Entities.Location", b =>
                 {
-                    b.Navigation("Desks");
-
                     b.Navigation("LocationMembers");
 
                     b.Navigation("Resources");
-
-                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("Customer.Shared.Database.Entities.Organization", b =>

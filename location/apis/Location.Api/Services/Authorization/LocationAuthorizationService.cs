@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using Enterprise.Shared.Exceptions;
 using Location.Shared.Models;
 using Location.Shared.Repositories;
@@ -22,86 +21,25 @@ public class LocationAuthorizationService(
     IOrganizationAuthorizationService organizationAuthorizationService)
     : ILocationAuthorizationService
 {
-    public bool CanView(Shared.Database.Entities.Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-                or LocationMemberRoleConstants.Member
-            };
-        }
+    public bool CanView(Shared.Database.Entities.Location location, Customer customer) =>
+        organizationAuthorizationService.CanView(location.Organization, customer);
 
-        return organizationAuthorizationService.CanView(location.Organization, customer);
-    }
+    public bool CanModify(Shared.Database.Entities.Location location, Customer customer) =>
+        organizationAuthorizationService.CanModify(location.Organization, customer);
 
-    public bool CanModify(Shared.Database.Entities.Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-            };
-        }
+    public bool CanDelete(Shared.Database.Entities.Location location, Customer customer) =>
+        organizationAuthorizationService.CanDelete(location.Organization, customer);
 
-        return organizationAuthorizationService.CanModify(location.Organization, customer);
-    }
-
-    public bool CanDelete(Shared.Database.Entities.Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner
-            };
-        }
-
-        return organizationAuthorizationService.CanDelete(location.Organization, customer);
-    }
-
-    public bool CanInvitePeople(Shared.Database.Entities.Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-            };
-        }
-
-        return organizationAuthorizationService.CanInvitePeople(location.Organization, customer);
-    }
+    public bool CanInvitePeople(Shared.Database.Entities.Location location, Customer customer) =>
+        organizationAuthorizationService.CanInvitePeople(location.Organization, customer);
 
     public bool CanCancelPeopleExistingInvitations(
         Shared.Database.Entities.Location location,
-        Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-            };
-        }
+        Customer customer) =>
+        organizationAuthorizationService.CanCancelPeopleExistingInvitations(location.Organization, customer);
 
-        return organizationAuthorizationService.CanCancelPeopleExistingInvitations(location.Organization, customer);
-    }
-
-    public bool CanViewAnalytics(Shared.Database.Entities.Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-            };
-        }
-
-        return organizationAuthorizationService.CanViewAnalytics(location.Organization, customer);
-    }
+    public bool CanViewAnalytics(Shared.Database.Entities.Location location, Customer customer) =>
+        organizationAuthorizationService.CanViewAnalytics(location.Organization, customer);
 
     public async Task<Permissions> GetPermissionsAsync(string locationId, CancellationToken cancellationToken)
     {

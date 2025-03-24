@@ -14,8 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Address = Location.Shared.Database.Entities.Address;
 using Booking = Location.Shared.Database.Entities.Booking;
 using Customer = Location.Shared.Models.Customer;
-using LocationMember = Location.Shared.Database.Entities.LocationMember;
-using Organization = Location.Shared.Database.Entities.Organization;
 
 namespace Location.Api.Services;
 
@@ -53,29 +51,27 @@ public class LocationService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var (customer, customerEntity) = await customerService.GetNullableAsync(cancellationToken);
-        Organization? organization = null;
-        if (location.Organization is not null)
+        var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(location.Organization.Id);
+
+        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
+        if (!ignoreAuthorizationCheck)
         {
-            organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
-
-            if (!ignoreAuthorizationCheck)
+            if (customer is null)
             {
-                if (customer is null)
-                {
-                    throw new CustomerNotFound();
-                }
+                throw new CustomerNotFound();
+            }
 
-                if (!organizationAuthorizationService.CanModify(organization, customer))
-                {
-                    throw new Unauthorized();
-                }
+            if (!organizationAuthorizationService.CanModify(organization, customer))
+            {
+                throw new Unauthorized();
+            }
 
-                if (!organizationOfferingService.CanCreateLocation(organization) ||
-                    !organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
-                {
-                    throw new NoMoreInteractionAllowed();
-                }
+            if (!organizationOfferingService.CanCreateLocation(organization) ||
+                !organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
+            {
+                throw new NoMoreInteractionAllowed();
             }
         }
 
@@ -101,21 +97,6 @@ public class LocationService(
 
         var locationEntity = mapper.MapTo(location, organization);
         var physicalAddress = location.PhysicalAddress is null ? null : mapper.MapTo(location.PhysicalAddress, locationEntity);
-        if (string.IsNullOrWhiteSpace(location.Organization?.Id))
-        {
-            var locationMembers = new List<LocationMember>();
-            if (customerEntity is not null)
-            {
-                locationMembers.Add(new LocationMember
-                {
-                    Id = randomHelper.Generate(), Role = LocationMemberRoleConstants.Owner, Customer = customerEntity, Location = locationEntity
-                });
-            }
-
-            locationEntity.LocationMembers = locationMembers;
-            repositoryFactory.LocationMemberRepository.AddRange(locationMembers);
-        }
-
         if (physicalAddress is not null)
         {
             physicalAddress.Id = randomHelper.Generate();
@@ -144,8 +125,7 @@ public class LocationService(
             throw new LocationNotFound();
         }
 
-        if (existingLocation.Organization is not null &&
-            !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
+        if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -164,8 +144,7 @@ public class LocationService(
             throw new LocationNotFound();
         }
 
-        if (existingLocation.Organization is not null &&
-            !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
+        if (!organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -234,7 +213,7 @@ public class LocationService(
             var enrichedLocation = await EnrichLocationAsync(customer, edge.Node, cancellationToken);
 
             searchCriteria.TagIds.ForEach(id =>
-                enrichedLocation.Desks = enrichedLocation.Desks.Where(desk => desk.Tags.Select(tag => tag.Id).Contains(id)).ToList());
+                enrichedLocation.Resources = enrichedLocation.Resources.Where(desk => desk.Tags.Select(tag => tag.Id).Contains(id)).ToList());
 
             mappedLocations.Add(new Edge<Shared.Models.Location>(edge.Cursor, enrichedLocation));
         }
@@ -325,7 +304,7 @@ public class LocationService(
 
         var mappedLocation = mapper.MapTo(locationEdge);
 
-        mappedLocation.CustomTags = mappedLocation.Desks
+        mappedLocation.CustomTags = mappedLocation.Resources
             .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag => new OrganizationTag
             {
                 Id = customTag.Id, Name = customTag.Name, Type = OrganizationTagType.Custom, Color = customTag.Color
@@ -334,7 +313,7 @@ public class LocationService(
             .Select(group => group.First())
             .ToList();
 
-        mappedLocation.Zones = mappedLocation.Desks
+        mappedLocation.Zones = mappedLocation.Resources
             .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone).Select(zone => new OrganizationTag
             {
                 Id = zone.Id, Name = zone.Name, Type = OrganizationTagType.Zone, Color = zone.Color

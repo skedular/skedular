@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0d18f04f5eb2e0b4649f65f219ed5f57>>
+ * @generated SignedSource<<71bc964f0adf00be7bf610787d3c2a72>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type AddLocationInput = {
   clientMutationId?: string | null | undefined;
   id?: string | null | undefined;
   name: string;
-  organizationId?: string | null | undefined;
+  organizationId: string;
   physicalAddress?: LocationAddressDetailsInput | null | undefined;
   timezone?: string | null | undefined;
 };

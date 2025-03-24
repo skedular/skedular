@@ -30,7 +30,7 @@ public class AddTeamInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public required string Name { get; set; }
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];
@@ -127,7 +127,7 @@ public class TeamDetails : Node
     [GraphQLName("name")] public required string Name { get; set; }
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("members")] public IEnumerable<TeamMemberDetails> Members { get; set; } = [];
-    [GraphQLName("organization")] public TeamOrganizationDetails? Organization { get; set; }
+    [GraphQLName("organization")] public TeamOrganizationDetails Organization { get; set; }
     [GraphQLName("primaryLocation")] public TeamLocationDetails? PrimaryLocation { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
@@ -228,7 +228,7 @@ public class UpdateTeamInput
     [GraphQLName("id")] public required string Id { get; set; }
     [GraphQLName("name")] public required string Name { get; set; }
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
 }
@@ -240,7 +240,7 @@ public class UpdateTeamAndTeamMembersInput
     [GraphQLName("id")] public required string Id { get; set; }
     [GraphQLName("name")] public required string Name { get; set; }
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];

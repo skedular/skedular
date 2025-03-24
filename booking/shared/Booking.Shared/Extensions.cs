@@ -32,8 +32,6 @@ public static class Extensions
             .AddScoped<IResourceRepository, ResourceRepository>()
             .AddScoped<IResourceBookingSlotRepository, ResourceBookingSlotRepository>()
             .AddScoped<ILocationMemberRepository, LocationMemberRepository>()
-            .AddScoped<IDeskRepository, DeskRepository>()
-            .AddScoped<IRoomRepository, RoomRepository>()
             .AddScoped<ITeamRepository, TeamRepository>()
             .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>();

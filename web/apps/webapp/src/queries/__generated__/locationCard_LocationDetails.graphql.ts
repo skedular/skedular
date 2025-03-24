@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc7a318a066d6fb198f119d7ef1f83e0>>
+ * @generated SignedSource<<7b1be45eafe322fb7fe86657d40f4bf7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,7 @@ export type locationCard_LocationDetails$data = {
   readonly name: string;
   readonly organization: {
     readonly uniqueId: string;
-  } | null | undefined;
+  };
   readonly physicalAddress: {
     readonly formattedAddress: string | null | undefined;
   } | null | undefined;

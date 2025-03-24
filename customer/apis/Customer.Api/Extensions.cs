@@ -20,8 +20,6 @@ public static class Extensions
             .AddScoped<ICustomerLocationSettingsService, CustomerLocationSettingsService>()
             .AddScoped<ICustomerTeamSettingsService, CustomerTeamSettingsService>()
             .AddScoped<ICustomerResourceSettingsService, CustomerResourceSettingsService>()
-            .AddScoped<ICustomerDeskSettingsService, CustomerDeskSettingsService>()
-            .AddScoped<ICustomerRoomSettingsService, CustomerRoomSettingsService>()
             .AddScoped<ICustomerFeedbackService, CustomerFeedbackService>()
             .AddScoped<ICustomerDetailsService, CustomerDetailsService>()
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()

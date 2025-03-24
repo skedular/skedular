@@ -34,10 +34,6 @@ internal static class BookingExtensions
             .ThenInclude(query => query.Identities)
             .Include(query => query.Organization)
             .Include(query => query.Location)
-            .Include(query => query.Desks.Where(desk => !desk.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.Rooms.Where(room => !room.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .ThenInclude(query => query.Organization)
             .Include(query => query.Team)
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
@@ -84,22 +80,22 @@ internal static class BookingExtensions
 
         if (searchCriteria.ToGT is not null)
         {
-            query = query.Where(item => item.To > searchCriteria.ToGT);
+            query = query.Where(item => item.Until > searchCriteria.ToGT);
         }
 
         if (searchCriteria.ToGTE is not null)
         {
-            query = query.Where(item => item.To >= searchCriteria.ToGTE);
+            query = query.Where(item => item.Until >= searchCriteria.ToGTE);
         }
 
         if (searchCriteria.ToLT is not null)
         {
-            query = query.Where(item => item.To < searchCriteria.ToLT);
+            query = query.Where(item => item.Until < searchCriteria.ToLT);
         }
 
         if (searchCriteria.ToLTE is not null)
         {
-            query = query.Where(item => item.To <= searchCriteria.ToLTE);
+            query = query.Where(item => item.Until <= searchCriteria.ToLTE);
         }
 
         if (searchCriteria.CustomerIds.Count != 0)
@@ -191,8 +187,8 @@ internal static class BookingExtensions
                 ? originalQuery.OrderBy(x => x.From)
                 : originalQuery.OrderByDescending(x => x.From),
             BookingOrderField.To => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.To)
-                : originalQuery.OrderByDescending(x => x.To),
+                ? originalQuery.OrderBy(x => x.Until)
+                : originalQuery.OrderByDescending(x => x.Until),
             BookingOrderField.Notes => orderByField.Direction == OrderDirection.Ascending
                 ? originalQuery.OrderBy(x => x.Notes)
                 : originalQuery.OrderByDescending(x => x.Notes),
@@ -228,8 +224,8 @@ internal static class BookingExtensions
                     ? query.ThenBy(x => x.From)
                     : query.ThenByDescending(x => x.From),
                 BookingOrderField.To => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.To)
-                    : query.ThenByDescending(x => x.To),
+                    ? query.ThenBy(x => x.Until)
+                    : query.ThenByDescending(x => x.Until),
                 BookingOrderField.Notes => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Notes)
                     : query.ThenByDescending(x => x.Notes),

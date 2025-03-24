@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c3303f1a9aaf3270160987450c195088>>
+ * @generated SignedSource<<7364b9454649553b26065028895ef09d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,7 +32,7 @@ export type organizationLocations_locations_availableOrganizationResources_query
         readonly name: string;
         readonly organization: {
           readonly uniqueId: string;
-        } | null | undefined;
+        };
         readonly physicalAddress: {
           readonly formattedAddress: string | null | undefined;
         } | null | undefined;

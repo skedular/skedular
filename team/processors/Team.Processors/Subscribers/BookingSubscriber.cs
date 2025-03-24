@@ -1,4 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
+using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Team.Processors.Mappers;
 using Team.Shared.Repositories;
@@ -74,7 +75,10 @@ public class BookingSubscriber(
         }
 
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(booking.Team.Id, cancellationToken);
-        ArgumentNullException.ThrowIfNull(team);
+        if (team is null)
+        {
+            throw new TeamNotFound();
+        }
 
         _ = existingBooking is null
             ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, team))

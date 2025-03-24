@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using Enterprise.Shared.Exceptions;
 using Team.Shared.Models;
 using Team.Shared.Repositories;
@@ -21,78 +20,20 @@ public class TeamAuthorizationService(
     IOrganizationAuthorizationService organizationAuthorizationService)
     : ITeamAuthorizationService
 {
-    public bool CanView(Shared.Database.Entities.Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-                or TeamMemberRoleConstants.Member
-            };
-        }
+    public bool CanView(Shared.Database.Entities.Team team, Customer customer) =>
+        organizationAuthorizationService.CanView(team.Organization, customer);
 
-        return organizationAuthorizationService.CanView(team.Organization, customer);
-    }
+    public bool CanModify(Shared.Database.Entities.Team team, Customer customer) =>
+        organizationAuthorizationService.CanModify(team.Organization, customer);
 
-    public bool CanModify(Shared.Database.Entities.Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-            };
-        }
+    public bool CanDelete(Shared.Database.Entities.Team team, Customer customer) =>
+        organizationAuthorizationService.CanDelete(team.Organization, customer);
 
-        return organizationAuthorizationService.CanModify(team.Organization, customer);
-    }
+    public bool CanInvitePeople(Shared.Database.Entities.Team team, Customer customer) =>
+        organizationAuthorizationService.CanInvitePeople(team.Organization, customer);
 
-    public bool CanDelete(Shared.Database.Entities.Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner
-            };
-        }
-
-        return organizationAuthorizationService.CanDelete(team.Organization, customer);
-    }
-
-    public bool CanInvitePeople(Shared.Database.Entities.Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-            };
-        }
-
-        return organizationAuthorizationService.CanInvitePeople(team.Organization, customer);
-    }
-
-    public bool CanCancelPeopleExistingInvitations(
-        Shared.Database.Entities.Team team,
-        Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-            };
-        }
-
-        return organizationAuthorizationService.CanCancelPeopleExistingInvitations(team.Organization, customer);
-    }
+    public bool CanCancelPeopleExistingInvitations(Shared.Database.Entities.Team team, Customer customer) =>
+        organizationAuthorizationService.CanCancelPeopleExistingInvitations(team.Organization, customer);
 
     public async Task<Permissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {

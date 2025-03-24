@@ -24,19 +24,9 @@ type OrganizationBillingInfoPayload {
   organizationBillingInfo: OrganizationBillingInfo!
 }
 
-type OrganizationCurrentOfferingChargesDetails {
-  offeringName: String!
-  start: DateTime!
-  end: DateTime!
-  totalNumberOfActiveCustomers: Int!
-  unitPrice: Int!
-  totalCost: Int!
-}
-
 type Query {
   billingVersion: Version!
   billingCustomerRecordSynced: Boolean! @cost(weight: "10")
-  organizationCurrentOfferingCharges(organizationId: String!): [OrganizationCurrentOfferingChargesDetails!] @cost(weight: "10")
   organizationBillingInfo(organizationId: String!): OrganizationBillingInfo @cost(weight: "10")
 }
 
@@ -62,9 +52,3 @@ input SetOrganizationBillingInfoInput {
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
-
-"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
-directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
-
-"The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")

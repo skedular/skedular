@@ -49,7 +49,7 @@ public class OrganizationAnalyticsService(
             .Query(new Specification<Booking>
             {
                 Criteria = query =>
-                    !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.From >= from && query.To <= until.AddDays(1)
+                    !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.From >= from && query.Until <= until.AddDays(1)
             }).AsNoTracking().ToListAsync(cancellationToken);
 
         var dailyMemberCounts = await repositoryFactory.DailyMemberCountRecordingRepository

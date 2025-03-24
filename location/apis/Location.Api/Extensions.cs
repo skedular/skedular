@@ -21,8 +21,6 @@ public static class Extensions
             .AddScoped<IResourceAvailableHoursService, ResourceAvailableHoursService>()
             .AddScoped<ILocationMemberService, LocationMemberService>()
             .AddScoped<IResourceService, ResourceService>()
-            .AddScoped<IDeskService, DeskService>()
-            .AddScoped<IRoomService, RoomService>()
             .AddScoped<ILocationAnalyticsService, LocationAnalyticsService>()
             .AddScoped<ILocationInvitationService, LocationInvitationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();

@@ -9,20 +9,6 @@ using HotChocolate.Types.Relay;
 
 namespace Customer.Api.GraphQL;
 
-[GraphQLName("AddCustomerPreferredDeskInput")]
-public class AddCustomerPreferredDeskInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("deskId")] public required string DeskId { get; set; }
-}
-
-[GraphQLName("AddCustomerPreferredRoomInput")]
-public class AddCustomerPreferredRoomInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("roomId")] public required string RoomId { get; set; }
-}
-
 [GraphQLName("AddCustomerPreferredLocationInput")]
 public class AddCustomerPreferredLocationInput
 {
@@ -74,18 +60,6 @@ public class CompleteOrganizationOnboardingInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("CompletePreferredDeskOnboardingInput")]
-public class CompletePreferredDeskOnboardingInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-}
-
-[GraphQLName("CompletePreferredRoomOnboardingInput")]
-public class CompletePreferredRoomOnboardingInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-}
-
 [GraphQLName("CompletePreferredZoneOnboardingInput")]
 public class CompletePreferredZoneOnboardingInput
 {
@@ -100,20 +74,6 @@ public class CompleteTeamOnboardingInput
 
 [GraphQLName("CustomerConnection")]
 public class CustomerConnection : Connection<CustomerEdge>;
-
-[GraphQLName("CustomerDeskDetails")]
-public class CustomerDeskDetails
-{
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
-    [GraphQLName("name")] public string? Name { get; set; }
-}
-
-[GraphQLName("CustomerRoomDetails")]
-public class CustomerRoomDetails
-{
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
-    [GraphQLName("name")] public string? Name { get; set; }
-}
 
 [GraphQLName("CustomerDetails")]
 public class CustomerDetails : Node
@@ -155,22 +115,13 @@ public class CustomerDetails : Node
     [GraphQLName("isPreferredZoneOnboardingDone")]
     public bool IsPreferredZoneOnboardingDone { get; set; }
 
-    [GraphQLName("isPreferredDeskOnboardingDone")]
-    public bool IsPreferredDeskOnboardingDone { get; set; }
-
-    [GraphQLName("isPreferredRoomOnboardingDone")]
-    public bool IsPreferredRoomOnboardingDone { get; set; }
-
     [GraphQLName("defaultOrganization")] public CustomerOrganizationDetails? DefaultOrganization { get; set; }
     [GraphQLName("preferredLocations")] public CustomerLocationDetails[] PreferredLocations { get; set; } = [];
     [GraphQLName("preferredTeams")] public CustomerTeamDetails[] PreferredTeams { get; set; } = [];
     [GraphQLName("preferredZones")] public CustomerOrganizationTagDetails[] PreferredZones { get; set; } = [];
     [GraphQLName("preferredCustomTags")] public CustomerOrganizationTagDetails[] PreferredCustomTags { get; set; } = [];
-
     [GraphQLName("preferredResources")] public CustomerResourceDetails[] PreferredResources { get; set; } = [];
 
-    [GraphQLName("preferredDesks")] public CustomerDeskDetails[] PreferredDesks { get; set; } = [];
-    [GraphQLName("preferredRooms")] public CustomerRoomDetails[] PreferredRooms { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -236,20 +187,6 @@ public class CustomersByPreferredLocationWhereInput
 {
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-}
-
-[GraphQLName("RemoveCustomerPreferredDeskInput")]
-public class RemoveCustomerPreferredDeskInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("deskId")] public required string DeskId { get; set; }
-}
-
-[GraphQLName("RemoveCustomerPreferredRoomInput")]
-public class RemoveCustomerPreferredRoomInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("roomId")] public required string RoomId { get; set; }
 }
 
 [GraphQLName("RemoveCustomerPreferredLocationInput")]

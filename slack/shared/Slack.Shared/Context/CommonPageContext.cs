@@ -34,7 +34,7 @@ public record AddBookingContext(
 public class InstantAddBookingContext(
     PageContext pageContext,
     DateTimeOffset from,
-    DateTimeOffset to,
+    DateTimeOffset until,
     InitiationSource initiationSource,
     string? customerId,
     string? locationId,
@@ -42,7 +42,7 @@ public class InstantAddBookingContext(
 {
     public PageContext PageContext { get; set; } = pageContext;
     public DateTimeOffset From { get; set; } = from;
-    public DateTimeOffset To { get; set; } = to;
+    public DateTimeOffset Until { get; set; } = until;
     public InitiationSource InitiationSource { get; set; } = initiationSource;
     public string? CustomerId { get; set; } = customerId;
     public string? LocationId { get; set; } = locationId;

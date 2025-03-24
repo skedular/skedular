@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Location.Processors.Mappers;
 using Location.Shared.Database.Entities;
@@ -76,40 +77,32 @@ public class BookingSubscriber(
             return;
         }
 
-        var desks = new List<Desk>();
-        if (booking.Desks.Count != 0)
+        var resources = new List<Resource>();
+        if (booking.Resources.Count != 0)
         {
-            var deskIds = booking.Desks.Select(item => item.Id).ToList();
-            desks = await repositoryFactory.DeskRepository.Query(new Specification<Desk>
+            var deskIds = booking.Resources.Select(item => item.Id).ToList();
+            resources = await repositoryFactory.ResourceRepository.Query(new Specification<Resource>
             {
                 Criteria = query => !query.DeletedAt.HasValue && deskIds.Contains(query.Id)
             }).ToListAsync(cancellationToken);
         }
 
-        var rooms = new List<Room>();
-        if (booking.Rooms.Count != 0)
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, cancellationToken);
+        if (location is null)
         {
-            var roomIds = booking.Rooms.Select(item => item.Id).ToList();
-            rooms = await repositoryFactory.RoomRepository.Query(new Specification<Room>
-            {
-                Criteria = query => !query.DeletedAt.HasValue && roomIds.Contains(query.Id)
-            }).ToListAsync(cancellationToken);
+            throw new LocationNotFound();
         }
 
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, cancellationToken);
-        ArgumentNullException.ThrowIfNull(location);
-
         _ = existingBooking is null
-            ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, location, desks, rooms))
-            : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, location, desks, rooms));
+            ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, location, resources))
+            : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, location, resources));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleBookingDeletedEventAsync(Booking existingBooking, CancellationToken cancellationToken)
     {
-        existingBooking.Desks = [];
-        existingBooking.Rooms = [];
+        existingBooking.Resources = [];
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
         _ = repositoryFactory.BookingRepository.Remove(existingBooking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

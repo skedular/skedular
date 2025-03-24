@@ -4,8 +4,7 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Location.Shared.Models;
 using Customer = Location.Shared.Models.Customer;
-using Desk = Location.Shared.Models.Desk;
-using Room = Location.Shared.Models.Room;
+using Resource = Location.Shared.Models.Resource;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Location.Shared.Database.Entities.Identity;
 using LocationMember = Location.Shared.Database.Entities.LocationMember;
@@ -30,15 +29,13 @@ public interface IMapper
     Shared.Database.Entities.Booking MapToEntity(
         Booking src,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.Desk> desks,
-        ICollection<Shared.Database.Entities.Room> rooms);
+        ICollection<Shared.Database.Entities.Resource> resources);
 
     Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.Desk> desks,
-        ICollection<Shared.Database.Entities.Room> rooms);
+        ICollection<Shared.Database.Entities.Resource> resources);
 
     IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src);
     Shared.Database.Entities.Organization MapToEntity(Organization src);
@@ -212,24 +209,21 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Booking MapToEntity(
         Booking src,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.Desk> desks,
-        ICollection<Shared.Database.Entities.Room> rooms) =>
-        MergeToEntity(src, new Shared.Database.Entities.Booking(), location, desks, rooms);
+        ICollection<Shared.Database.Entities.Resource> resources) =>
+        MergeToEntity(src, new Shared.Database.Entities.Booking(), location, resources);
 
     public Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.Desk> desks,
-        ICollection<Shared.Database.Entities.Room> rooms)
+        ICollection<Shared.Database.Entities.Resource> resources)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.From = src.From;
-        dest.To = src.Until;
+        dest.Until = src.Until;
         dest.Location = location;
-        dest.Desks = desks;
-        dest.Rooms = rooms;
+        dest.Resources = resources;
         return dest;
     }
 
@@ -299,19 +293,12 @@ public class Mapper : IMapper
 
         location.LocationMembers = MapTo(src.LocationMembers, location).ToList();
         location.Resources = MapTo(src.Resources, location).ToList();
-        location.Desks = MapTo(src.Desks, location).ToList();
-        location.Rooms = MapTo(src.Rooms, location).ToList();
 
         return location;
     }
 
-    private static Organization? MapTo(Shared.Database.Entities.Organization? src)
+    private static Organization MapTo(Shared.Database.Entities.Organization src)
     {
-        if (src is null)
-        {
-            return null;
-        }
-
         var organization = new Organization
         {
             Id = src.Id,
@@ -359,40 +346,6 @@ public class Mapper : IMapper
             Color = src.Color,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
-            Location = location
-        };
-
-    private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk> src, Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
-
-    private static Desk MapTo(Shared.Database.Entities.Desk src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            Location = location
-        };
-
-    private static IEnumerable<Room> MapTo(IEnumerable<Shared.Database.Entities.Room> src, Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
-
-    private static Room MapTo(Shared.Database.Entities.Room src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
             Location = location
         };
 

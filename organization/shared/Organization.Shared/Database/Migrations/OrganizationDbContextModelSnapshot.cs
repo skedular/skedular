@@ -290,7 +290,7 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
-                    b.Property<DateTimeOffset>("To")
+                    b.Property<DateTimeOffset>("Until")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<uint>("Version")
@@ -307,7 +307,7 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.HasIndex("To");
+                    b.HasIndex("Until");
 
                     b.ToTable("Booking");
                 });

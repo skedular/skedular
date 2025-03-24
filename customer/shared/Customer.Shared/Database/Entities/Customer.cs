@@ -32,16 +32,12 @@ public class Customer : EntityBaseWithDeleted
     public bool? IsDefaultOrganizationOnboardingDone { get; set; }
     public bool? IsPreferredLocationOnboardingDone { get; set; }
     public bool? IsPreferredZoneOnboardingDone { get; set; }
-    public bool? IsPreferredDeskOnboardingDone { get; set; }
-    public bool? IsPreferredRoomOnboardingDone { get; set; }
 
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<CustomerFeedback> CustomerFeedbacks { get; set; } = [];
     public virtual Organization? DefaultOrganization { get; set; }
     public virtual ICollection<Location> PreferredLocations { get; set; } = [];
     public virtual ICollection<Resource> PreferredResources { get; set; } = [];
-    public virtual ICollection<Desk> PreferredDesks { get; set; } = [];
-    public virtual ICollection<Room> PreferredRooms { get; set; } = [];
     public virtual ICollection<Team> PreferredTeams { get; set; } = [];
     public virtual ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
@@ -76,8 +72,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasOne(item => item.DefaultOrganization).WithMany(item => item.DefaultedByCustomers);
         builder.HasMany(item => item.PreferredLocations).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredResources).WithMany(item => item.PreferredByCustomers);
-        builder.HasMany(item => item.PreferredDesks).WithMany(item => item.PreferredByCustomers);
-        builder.HasMany(item => item.PreferredRooms).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredTeams).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredOrganizationTags).WithMany(item => item.PreferredByCustomers);
 

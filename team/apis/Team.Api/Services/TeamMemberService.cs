@@ -217,19 +217,15 @@ public class TeamMemberService(
             throw new Unauthorized();
         }
 
-        Organization? organization = null;
-        if (existingTeam.Organization is not null)
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);
+        if (organization is null)
         {
-            organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                existingTeam.Organization.Id,
-                false,
-                cancellationToken);
-            ArgumentNullException.ThrowIfNull(organization);
-            if (!ignoreAuthorizationCheck &&
-                !organizationOfferingService.IsMoreInteractionAllowed(organization, customer!))
-            {
-                throw new NoMoreInteractionAllowed();
-            }
+            throw new OrganizationNotFound();
+        }
+
+        if (!ignoreAuthorizationCheck && !organizationOfferingService.IsMoreInteractionAllowed(organization, customer!))
+        {
+            throw new NoMoreInteractionAllowed();
         }
 
         var rebuiltTeamMembers = await BuildMembersAsync(members, existingTeam, customer, organization, cancellationToken);
@@ -342,18 +338,15 @@ public class TeamMemberService(
             throw new Unauthorized();
         }
 
-        if (existingTeam.Organization is not null)
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);
+        if (organization is null)
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                existingTeam.Organization.Id,
-                false,
-                cancellationToken);
-            ArgumentNullException.ThrowIfNull(organization);
+            throw new OrganizationNotFound();
+        }
 
-            if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
-            {
-                throw new NoMoreInteractionAllowed();
-            }
+        if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
+        {
+            throw new NoMoreInteractionAllowed();
         }
 
         var teamMemberToRemove = existingTeam.TeamMembers.FirstOrDefault(item => item.Id == id);
@@ -436,39 +429,23 @@ public class TeamMemberService(
             throw new Unauthorized();
         }
 
-        Organization? organization = null;
-        if (existingTeam.Organization is not null)
-        {
-            organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                existingTeam.Organization.Id,
-                false,
-                cancellationToken);
-            ArgumentNullException.ThrowIfNull(organization);
-            if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
-            {
-                throw new NoMoreInteractionAllowed();
-            }
-        }
-
-        Shared.Database.Entities.TeamMember? existingTeamMember;
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);
         if (organization is null)
         {
-            ArgumentNullException.ThrowIfNull(member.Customer);
-
-            existingTeamMember = await repositoryFactory.TeamMemberRepository.GetByTeamIdAndCustomerIdAsync(
-                existingTeam.Id,
-                member.Customer.Id,
-                cancellationToken);
+            throw new OrganizationNotFound();
         }
-        else
+
+        if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
         {
-            ArgumentNullException.ThrowIfNull(member.OrganizationMember);
-
-            existingTeamMember = await repositoryFactory.TeamMemberRepository.GetByTeamIdAndOrganizationMemberIdAsync(
-                existingTeam.Id,
-                member.OrganizationMember.Id,
-                cancellationToken);
+            throw new NoMoreInteractionAllowed();
         }
+
+        ArgumentNullException.ThrowIfNull(member.OrganizationMember);
+
+        var existingTeamMember = await repositoryFactory.TeamMemberRepository.GetByTeamIdAndOrganizationMemberIdAsync(
+            existingTeam.Id,
+            member.OrganizationMember.Id,
+            cancellationToken);
 
         if (existingTeamMember is not null)
         {
@@ -495,46 +472,24 @@ public class TeamMemberService(
 
         var now = timeProvider.GetUtcNow();
 
-        Shared.Database.Entities.TeamMember teamMember;
-        if (organization is null)
+        var organizationMemberToAdd = organization.OrganizationMembers
+            .FirstOrDefault(item => item.Id == member.OrganizationMember!.Id);
+
+        if (organizationMemberToAdd is null)
         {
-            var customerToAdd =
-                await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
-            if (customerToAdd is null)
-            {
-                throw new CustomerNotFound();
-            }
-
-            teamMember = new Shared.Database.Entities.TeamMember
-            {
-                Id = randomHelper.Generate(),
-                CreatedAt = now,
-                Role = TeamMemberRoleConstants.Member,
-                Customer = customerToAdd,
-                Team = existingTeam
-            };
+            throw new OrganizationMemberNotFound();
         }
-        else
+
+        var teamMember = new Shared.Database.Entities.TeamMember
         {
-            var organizationMemberToAdd = organization.OrganizationMembers
-                .FirstOrDefault(item => item.Id == member.OrganizationMember!.Id);
-
-            if (organizationMemberToAdd is null)
-            {
-                throw new OrganizationMemberNotFound();
-            }
-
-            teamMember = new Shared.Database.Entities.TeamMember
-            {
-                Id = randomHelper.Generate(),
-                CreatedAt = now,
-                Role = TeamMemberRoleConstants.Member,
-                Customer = organizationMemberToAdd.Customer,
-                Team = existingTeam,
-                OrganizationMember = organizationMemberToAdd,
-                Status = TeamMemberStatusConstants.Active
-            };
-        }
+            Id = randomHelper.Generate(),
+            CreatedAt = now,
+            Role = TeamMemberRoleConstants.Member,
+            Customer = organizationMemberToAdd.Customer,
+            Team = existingTeam,
+            OrganizationMember = organizationMemberToAdd,
+            Status = TeamMemberStatusConstants.Active
+        };
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 

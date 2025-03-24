@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
@@ -125,10 +126,7 @@ public class BookingSubscriber(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleBookingUpsertedEventAsync(
-        Shared.Models.Booking booking,
-        Booking? existingBooking,
-        CancellationToken cancellationToken)
+    private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking? existingBooking, CancellationToken cancellationToken)
     {
         if (existingBooking is not null && string.IsNullOrWhiteSpace(booking.Organization.Id))
         {
@@ -145,14 +143,15 @@ public class BookingSubscriber(
             return;
         }
 
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.Organization.Id, cancellationToken);
-        ArgumentNullException.ThrowIfNull(organization);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.Organization.Id, cancellationToken);
+        if (organization is null)
+        {
+            throw new OrganizationNotFound();
+        }
 
         _ = existingBooking is null
             ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, organization))
-            : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking,
-                organization));
+            : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, organization));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

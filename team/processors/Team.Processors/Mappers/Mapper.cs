@@ -260,7 +260,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.From = src.From;
-        dest.To = src.Until;
+        dest.Until = src.Until;
         dest.Team = team;
         return dest;
     }
@@ -322,13 +322,8 @@ public class Mapper : IMapper
         return team;
     }
 
-    private static Organization? MapTo(Shared.Database.Entities.Organization? src)
+    private static Organization MapTo(Shared.Database.Entities.Organization src)
     {
-        if (src is null)
-        {
-            return null;
-        }
-
         var organization = new Organization
         {
             Id = src.Id,

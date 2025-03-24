@@ -36,9 +36,7 @@ public class TeamGrpcService(
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Admin_Get(
-        Admin_GetInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Admin_Get(Admin_GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
@@ -51,9 +49,7 @@ public class TeamGrpcService(
         return mapper.MapToGrpcResponse(team);
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Get(
-        GetInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Get(GetInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
@@ -66,9 +62,7 @@ public class TeamGrpcService(
         return mapper.MapToGrpcResponse(team);
     }
 
-    public override async Task<TeamConnection> GetPaginatedTeams(
-        GetPaginatedTeamsInput request,
-        ServerCallContext context)
+    public override async Task<TeamConnection> GetPaginatedTeams(GetPaginatedTeamsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
@@ -131,14 +125,13 @@ public class TeamGrpcService(
         };
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Admin_Add(
-        Admin_AddInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Admin_Add(Admin_AddInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await teamService.AddAsync(mapper.MapTo(request), true, context.CancellationToken));
+        ArgumentException.ThrowIfNullOrEmpty(request.OrganizationId);
+
+        return mapper.MapToGrpcResponse(await teamService.AddAsync(mapper.MapTo(request), true, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Admin_UpdateMembers(
@@ -148,35 +141,30 @@ public class TeamGrpcService(
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(
-            await teamMemberService.UpdateMembersAsync(
-                request.Id,
-                mapper.MapTo(request),
-                true,
-                context.CancellationToken));
+            await teamMemberService.UpdateMembersAsync(request.Id, mapper.MapTo(request), true, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Add(
-        AddInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Add(AddInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await teamService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+        ArgumentException.ThrowIfNullOrEmpty(request.OrganizationId);
+
+        return mapper.MapToGrpcResponse(await teamService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Update(
-        UpdateInput request,
-        ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Update(UpdateInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await teamService.UpdateAsync(mapper.MapTo(request), true, context.CancellationToken));
+        ArgumentException.ThrowIfNullOrEmpty(request.OrganizationId);
+
+        return mapper.MapToGrpcResponse(await teamService.UpdateAsync(mapper.MapTo(request), true, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team> Remove(
-        RemoveInput request, ServerCallContext context)
+        RemoveInput request,
+        ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
 

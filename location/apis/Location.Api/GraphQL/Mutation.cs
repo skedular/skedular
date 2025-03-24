@@ -12,23 +12,31 @@ public class Mutation(IMapper mapper)
     public async Task<LocationPayload?> AddLocationAsync(
         AddLocationInput input,
         [Service] ILocationService locationService,
-        CancellationToken cancellationToken) =>
-        new()
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(input.OrganizationId);
+
+        return new LocationPayload
         {
             ClientMutationId = input.ClientMutationId,
             Location = mapper.MapTo(await locationService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
         };
+    }
 
     [UseResolverScope]
     public async Task<LocationPayload?> UpdateLocationAsync(
         UpdateLocationInput input,
         [Service] ILocationService locationService,
-        CancellationToken cancellationToken) =>
-        new()
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(input.OrganizationId);
+
+        return new LocationPayload
         {
             ClientMutationId = input.ClientMutationId,
             Location = mapper.MapTo(await locationService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
         };
+    }
 
     [UseResolverScope]
     public async Task<LocationPayload?> DeleteLocationAsync(

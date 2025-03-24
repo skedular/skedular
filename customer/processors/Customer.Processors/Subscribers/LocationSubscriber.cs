@@ -78,17 +78,11 @@ public class LocationSubscriber(
     {
         var organization = location.Organization is null
             ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                location.Organization.Id,
-                true,
-                true,
-                cancellationToken);
+            : await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, true, true, cancellationToken);
 
         existingLocation = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
 
         existingLocation = await RebuildResourcesAsync(location, existingLocation, cancellationToken);
-        existingLocation = await RebuildDesksAsync(location, existingLocation, cancellationToken);
-        existingLocation = await RebuildRoomsAsync(location, existingLocation, cancellationToken);
         _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -134,62 +128,12 @@ public class LocationSubscriber(
         return existingLocation;
     }
 
-    private async Task<Location> RebuildDesksAsync(Shared.Models.Location location, Location existingLocation, CancellationToken cancellationToken)
-    {
-        var desks = await repositoryFactory.DeskRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
-        var itemsToRemove = desks.Where(desk => location.Desks.All(item => item.Id != desk.Id)).ToList();
-        var updatedItems = desks
-            .Where(desk => location.Desks.Any(item => item.Id == desk.Id))
-            .Select(desk =>
-            {
-                var updatedDesk = mapper.MergeToEntity(location.Desks.First(item => item.Id == desk.Id), desk, existingLocation);
-                updatedDesk.DeletedAt = null;
-                return repositoryFactory.DeskRepository.Update(updatedDesk);
-            })
-            .ToList();
-        var addedItems = location.Desks
-            .Where(desk => desks.All(item => item.Id != desk.Id))
-            .Select(desk => repositoryFactory.DeskRepository.Add(mapper.MapToEntity(desk, existingLocation)))
-            .ToList();
-
-        repositoryFactory.DeskRepository.RemoveRange(itemsToRemove);
-        existingLocation.Desks = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
-
-        return existingLocation;
-    }
-
-    private async Task<Location> RebuildRoomsAsync(Shared.Models.Location location, Location existingLocation, CancellationToken cancellationToken)
-    {
-        var rooms = await repositoryFactory.RoomRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
-        var itemsToRemove = rooms.Where(room => location.Rooms.All(item => item.Id != room.Id)).ToList();
-        var updatedItems = rooms
-            .Where(room => location.Rooms.Any(item => item.Id == room.Id))
-            .Select(room =>
-            {
-                var updatedRoom = mapper.MergeToEntity(location.Rooms.First(item => item.Id == room.Id), room, existingLocation);
-                updatedRoom.DeletedAt = null;
-                return repositoryFactory.RoomRepository.Update(updatedRoom);
-            })
-            .ToList();
-        var addedItems = location.Rooms
-            .Where(room => rooms.All(item => item.Id != room.Id))
-            .Select(room => repositoryFactory.RoomRepository.Add(mapper.MapToEntity(room, existingLocation)))
-            .ToList();
-
-        repositoryFactory.RoomRepository.RemoveRange(itemsToRemove);
-        existingLocation.Rooms = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
-
-        return existingLocation;
-    }
-
     private async Task<Location> RebuildLocationMembersAsync(
         Shared.Models.Location location,
         Location existingLocation,
         CancellationToken cancellationToken)
     {
-        var locationMembers = await repositoryFactory.LocationMemberRepository.GetByLocationIdAsync(
-            existingLocation.Id,
-            cancellationToken);
+        var locationMembers = await repositoryFactory.LocationMemberRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
         var itemsToRemove = locationMembers
             .Where(locationMember => location.LocationMembers.All(item => item.Id != locationMember.Id))
             .ToList();
@@ -210,14 +154,12 @@ public class LocationSubscriber(
         }
 
         var addedItems = new List<LocationMember>();
-        foreach (var locationMember in location.LocationMembers
-                     .Where(locationMember => locationMembers.All(item => item.Id != locationMember.Id)))
+        foreach (var locationMember in location.LocationMembers.Where(locationMember => locationMembers.All(item => item.Id != locationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(locationMember.Customer.Id, cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
 
-            addedItems.Add(
-                repositoryFactory.LocationMemberRepository.Add(mapper.MapToEntity(locationMember, existingLocation, customer)));
+            addedItems.Add(repositoryFactory.LocationMemberRepository.Add(mapper.MapToEntity(locationMember, existingLocation, customer)));
         }
 
         repositoryFactory.LocationMemberRepository.RemoveRange(itemsToRemove);
@@ -248,27 +190,16 @@ public class LocationSubscriber(
             var newLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
 
             var existingResourceIds = customer.PreferredResources.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredResources = customer.PreferredResources.Where(item => item.Location.Id != existingLocation.Id).ToList();
+            customer.PreferredResources = customer.PreferredResources
+                .Where(item => item.Location is not null && item.Location.Id != existingLocation.Id).ToList();
             var newResourceIds = customer.PreferredResources.Select(item => item.Id).Distinct().ToList();
-
-            var existingDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredDesks = customer.PreferredDesks.Where(item => item.Location.Id != existingLocation.Id).ToList();
-            var newDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
-
-            var existingRoomIds = customer.PreferredRooms.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredRooms = customer.PreferredRooms.Where(item => item.Location.Id != existingLocation.Id).ToList();
-            var newRoomIds = customer.PreferredRooms.Select(item => item.Id).Distinct().ToList();
 
             customer = repositoryFactory.CustomerRepository.Update(customer);
 
             if (newLocationIds.Count != existingLocationIds.Count ||
                 newLocationIds.Except(existingLocationIds).Any() ||
                 newResourceIds.Count != existingResourceIds.Count ||
-                newResourceIds.Except(existingResourceIds).Any() ||
-                newDeskIds.Count != existingDeskIds.Count ||
-                newDeskIds.Except(existingDeskIds).Any() ||
-                newRoomIds.Count != existingRoomIds.Count ||
-                newRoomIds.Except(existingRoomIds).Any())
+                newResourceIds.Except(existingResourceIds).Any())
             {
                 await customerPublisher.PublishCustomerAsync([mapper.MapTo(customer)!], cancellationToken);
             }
@@ -284,9 +215,8 @@ public class LocationSubscriber(
             ArgumentNullException.ThrowIfNull(customer);
 
             customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != location.Id).ToList();
-            customer.PreferredResources = customer.PreferredResources.Where(item => item.Location.Id != location.Id).ToList();
-            customer.PreferredDesks = customer.PreferredDesks.Where(item => item.Location.Id != location.Id).ToList();
-            customer.PreferredRooms = customer.PreferredRooms.Where(item => item.Location.Id != location.Id).ToList();
+            customer.PreferredResources =
+                customer.PreferredResources.Where(item => item.Location is not null && item.Location.Id != location.Id).ToList();
             _ = repositoryFactory.CustomerRepository.Update(customer);
         }
     }

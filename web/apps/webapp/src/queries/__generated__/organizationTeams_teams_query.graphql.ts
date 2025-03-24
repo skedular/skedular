@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cd81eee3281a399b99974315ceb1038f>>
+ * @generated SignedSource<<96962ecfd20736a2fcdbb8f452957f77>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,7 +35,7 @@ export type organizationTeams_teams_query$data = {
         readonly name: string;
         readonly organization: {
           readonly uniqueId: string;
-        } | null | undefined;
+        };
         readonly " $fragmentSpreads": FragmentRefs<"teamCard_TeamDetails">;
       };
     }>;

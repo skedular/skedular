@@ -1,7 +1,5 @@
 using Api.Shared.Services.Models;
 using Customer.Shared.Database.Entities;
-using Desk = Customer.Shared.Models.Desk;
-using Room = Customer.Shared.Models.Room;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Identity = Customer.Shared.Models.Identity;
 using Location = Customer.Shared.Models.Location;
@@ -33,10 +31,6 @@ public interface IMapper
 
     Resource MapToEntity(Shared.Models.Resource src, Shared.Database.Entities.Location location);
     Resource MergeToEntity(Shared.Models.Resource src, Resource dest, Shared.Database.Entities.Location location);
-    Shared.Database.Entities.Desk MapToEntity(Desk src, Shared.Database.Entities.Location location);
-    Shared.Database.Entities.Desk MergeToEntity(Desk src, Shared.Database.Entities.Desk dest, Shared.Database.Entities.Location location);
-    Shared.Database.Entities.Room MapToEntity(Room src, Shared.Database.Entities.Location location);
-    Shared.Database.Entities.Room MergeToEntity(Room src, Shared.Database.Entities.Room dest, Shared.Database.Entities.Location location);
     Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization? organization);
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization? organization);
 
@@ -267,14 +261,10 @@ public class Mapper : IMapper
                 IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
                 IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
                 IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
-                IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
-                IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
                 Identities = MapTo(src.Identities).ToList(),
                 DefaultOrganization = MapTo(src.DefaultOrganization),
                 PreferredLocations = MapTo(src.PreferredLocations).ToList(),
                 PreferredResources = MapTo(src.PreferredResources).ToList(),
-                PreferredDesks = MapTo(src.PreferredDesks).ToList(),
-                PreferredRooms = MapTo(src.PreferredRooms).ToList(),
                 PreferredTeams = MapTo(src.PreferredTeams).ToList(),
                 PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
             };
@@ -310,30 +300,6 @@ public class Mapper : IMapper
         MergeToEntity(src, new Resource(), location);
 
     public Resource MergeToEntity(Shared.Models.Resource src, Resource dest, Shared.Database.Entities.Location location)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
-        dest.Location = location;
-        return dest;
-    }
-
-    public Shared.Database.Entities.Desk MapToEntity(Desk src, Shared.Database.Entities.Location location) =>
-        MergeToEntity(src, new Shared.Database.Entities.Desk(), location);
-
-    public Shared.Database.Entities.Desk MergeToEntity(Desk src, Shared.Database.Entities.Desk dest, Shared.Database.Entities.Location location)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
-        dest.Location = location;
-        return dest;
-    }
-
-    public Shared.Database.Entities.Room MapToEntity(Room src, Shared.Database.Entities.Location location) =>
-        MergeToEntity(src, new Shared.Database.Entities.Room(), location);
-
-    public Shared.Database.Entities.Room MergeToEntity(Room src, Shared.Database.Entities.Room dest, Shared.Database.Entities.Location location)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -440,7 +406,7 @@ public class Mapper : IMapper
     }
 
     private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location?>? src) =>
-        (src is null ? [] : src.Where(item => item is not null).Select(item => MapTo(item, true, true)))!;
+        (src is null ? [] : src.Where(item => item is not null).Select(item => MapTo(item, true)))!;
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
@@ -471,7 +437,7 @@ public class Mapper : IMapper
                 LogoUrl = src.LogoUrl
             };
 
-    private static Location? MapTo(Shared.Database.Entities.Location? src, bool includeDesks, bool includeRooms) =>
+    private static Location? MapTo(Shared.Database.Entities.Location? src, bool includeResources) =>
         src is null
             ? null
             : new Location
@@ -483,8 +449,7 @@ public class Mapper : IMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
                 Organization = MapTo(src.Organization),
-                Desks = includeDesks ? MapTo(src.Desks).ToList() : [],
-                Rooms = includeRooms ? MapTo(src.Rooms).ToList() : []
+                Resources = includeResources ? MapTo(src.Resources).ToList() : []
             };
 
     private static IEnumerable<Shared.Models.Resource> MapTo(IEnumerable<Resource?>? src) =>
@@ -501,41 +466,7 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Location = MapTo(src.Location, false, false)!
-            };
-
-    private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk?>? src) =>
-        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
-
-    private static Desk? MapTo(Shared.Database.Entities.Desk? src) =>
-        src is null
-            ? null
-            : new Desk
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
-                Location = MapTo(src.Location, false, false)!
-            };
-
-    private static IEnumerable<Room> MapTo(IEnumerable<Shared.Database.Entities.Room?>? src) =>
-        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
-
-    private static Room? MapTo(Shared.Database.Entities.Room? src) =>
-        src is null
-            ? null
-            : new Room
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
-                Location = MapTo(src.Location, false, false)!
+                Location = MapTo(src.Location, false)!
             };
 
     private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team?>? src) =>

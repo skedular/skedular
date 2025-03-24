@@ -18,26 +18,11 @@ namespace Team.Api.Services;
 
 public interface ITeamService
 {
-    Task<Shared.Models.Team> AddAsync(
-        Shared.Models.Team team,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken);
-
-    Task<Shared.Models.Team> UpdateAsync(
-        Shared.Models.Team team,
-        bool updateTeamMembers,
-        CancellationToken cancellationToken);
-
+    Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
+    Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken);
     Task<Shared.Models.Team> DeleteAsync(string teamId, CancellationToken cancellationToken);
-
-    Task<Shared.Models.Team?> GetByIdAsync(
-        string teamId,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken);
-
-    Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
-        string? organizationId,
-        CancellationToken cancellationToken);
+    Task<Shared.Models.Team?> GetByIdAsync(string teamId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
+    Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(string? organizationId, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int )> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
@@ -60,24 +45,14 @@ public class TeamService(
     TimeProvider timeProvider,
     ITeamMemberService teamMemberService) : ITeamService
 {
-    public async Task<Shared.Models.Team> AddAsync(
-        Shared.Models.Team team,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
 
         Location? primaryLocation = null;
         if (team.PrimaryLocation is not null)
         {
-            if (team.Organization is null)
-            {
-                throw new TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup();
-            }
-
-            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(
-                team.PrimaryLocation.Id,
-                cancellationToken);
+            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(team.PrimaryLocation.Id, cancellationToken);
             if (primaryLocation is null)
             {
                 throw new LocationNotFound();
@@ -85,7 +60,7 @@ public class TeamService(
 
             if (primaryLocation.Organization is null)
             {
-                throw new TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup();
+                throw new OrganizationNotFound();
             }
 
             if (primaryLocation.Organization.Id != team.Organization.Id)
@@ -94,30 +69,23 @@ public class TeamService(
             }
         }
 
-        Organization? organization = null;
-        if (team.Organization is not null)
+        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
+        if (!ignoreAuthorizationCheck)
         {
-            organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                team.Organization.Id,
-                cancellationToken);
-
-            if (!ignoreAuthorizationCheck)
+            if (customer is null)
             {
-                if (customer is null)
-                {
-                    throw new CustomerNotFound();
-                }
+                throw new CustomerNotFound();
+            }
 
-                if (!organizationAuthorizationService.CanModify(organization, customer))
-                {
-                    throw new Unauthorized();
-                }
+            if (!organizationAuthorizationService.CanModify(organization, customer))
+            {
+                throw new Unauthorized();
+            }
 
-                if (!organizationOfferingService.CanCreateTeam(organization) ||
-                    !organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
-                {
-                    throw new NoMoreInteractionAllowed();
-                }
+            if (!organizationOfferingService.CanCreateTeam(organization) ||
+                !organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
+            {
+                throw new NoMoreInteractionAllowed();
             }
         }
 
@@ -170,10 +138,7 @@ public class TeamService(
         return team;
     }
 
-    public async Task<Shared.Models.Team> UpdateAsync(
-        Shared.Models.Team team,
-        bool updateTeamMembers,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(team.Id);
 
@@ -187,14 +152,7 @@ public class TeamService(
         Location? primaryLocation = null;
         if (team.PrimaryLocation is not null)
         {
-            if (team.Organization is null)
-            {
-                throw new TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup();
-            }
-
-            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(
-                team.PrimaryLocation.Id,
-                cancellationToken);
+            primaryLocation = await repositoryFactory.LocationRepository.GetByIdAsync(team.PrimaryLocation.Id, cancellationToken);
             if (primaryLocation is null)
             {
                 throw new LocationNotFound();
@@ -202,7 +160,7 @@ public class TeamService(
 
             if (primaryLocation.Organization is null)
             {
-                throw new TeamPrimaryLocationLinkingOnlyAllowedInOrganizationSetup();
+                throw new OrganizationNotFound();
             }
 
             if (primaryLocation.Organization.Id != team.Organization.Id)
@@ -211,26 +169,21 @@ public class TeamService(
             }
         }
 
-        Organization? organization = null;
-        if (existingTeam.Organization is not null)
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(existingTeam.Organization.Id, false, cancellationToken);
+        if (organization is null)
         {
-            organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                existingTeam.Organization.Id,
-                false,
-                cancellationToken);
-            ArgumentNullException.ThrowIfNull(organization);
-            if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
-            {
-                throw new NoMoreInteractionAllowed();
-            }
+            throw new OrganizationNotFound();
+        }
+
+        if (!organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
+        {
+            throw new NoMoreInteractionAllowed();
         }
 
         return await UpdateInternalAsync(team, existingTeam, customer, organization, primaryLocation, updateTeamMembers, cancellationToken);
     }
 
-    public async Task<Shared.Models.Team> DeleteAsync(
-        string teamId,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Team> DeleteAsync(string teamId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
@@ -241,8 +194,7 @@ public class TeamService(
             throw new TeamNotFound();
         }
 
-        if (existingTeam.Organization is not null &&
-            !organizationOfferingService.IsMoreInteractionAllowed(existingTeam.Organization, customer))
+        if (!organizationOfferingService.IsMoreInteractionAllowed(existingTeam.Organization, customer))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -262,10 +214,7 @@ public class TeamService(
         return deletedTeam;
     }
 
-    public async Task<Shared.Models.Team?> GetByIdAsync(
-        string teamId,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Team?> GetByIdAsync(string teamId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(teamId))
         {
@@ -360,9 +309,7 @@ public class TeamService(
         return (paginatedInfo, mappedTeams, totalCount);
     }
 
-    public async Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
-        string? organizationId,
-        CancellationToken cancellationToken)
+    public async Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(string? organizationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
 
@@ -383,10 +330,7 @@ public class TeamService(
             }
         }
 
-        var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(
-            customer.Id,
-            organizationId,
-            cancellationToken);
+        var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customer.Id, organizationId, cancellationToken);
         return teams.Select(mapper.MapTo).ToList();
     }
 
@@ -413,9 +357,7 @@ public class TeamService(
                 cancellationToken)
             : [];
         var teamMembers = updateTeamMembers
-            ? await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(
-                existingTeam.Id,
-                cancellationToken)
+            ? await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(existingTeam.Id, cancellationToken)
             : null;
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -448,9 +390,7 @@ public class TeamService(
         return team;
     }
 
-    private async Task<Shared.Models.Team> EnrichTeamAsync(
-        Customer? customer,
-        Shared.Database.Entities.Team team,
+    private async Task<Shared.Models.Team> EnrichTeamAsync(Customer? customer, Shared.Database.Entities.Team team,
         CancellationToken cancellationToken)
     {
         if (customer is not null && !teamAuthorizationService.CanView(team, customer))

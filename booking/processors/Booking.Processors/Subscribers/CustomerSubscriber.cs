@@ -4,8 +4,6 @@ using Booking.Processors.Mappers;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using Customer = Booking.Shared.Models.Customer;
-using Desk = Booking.Shared.Database.Entities.Desk;
-using Room = Booking.Shared.Database.Entities.Room;
 using Location = Booking.Shared.Database.Entities.Location;
 using OrganizationTag = Booking.Shared.Database.Entities.OrganizationTag;
 using Resource = Booking.Shared.Database.Entities.Resource;
@@ -90,26 +88,6 @@ public class CustomerSubscriber(
             preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(item.Id, organization, cancellationToken));
         }
 
-        var preferredDesks = new List<Desk>();
-        foreach (var item in customer.PreferredDesks)
-        {
-            if (item.Location is not null)
-            {
-                var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Location.Id, null, cancellationToken);
-                preferredDesks.Add(await repositoryFactory.DeskRepository.UpsertNakedAsync(item.Id, location, cancellationToken));
-            }
-        }
-
-        var preferredRooms = new List<Room>();
-        foreach (var item in customer.PreferredRooms)
-        {
-            if (item.Location is not null)
-            {
-                var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Location.Id, null, cancellationToken);
-                preferredRooms.Add(await repositoryFactory.RoomRepository.UpsertNakedAsync(item.Id, location, cancellationToken));
-            }
-        }
-
         var preferredResources = new List<Resource>();
         foreach (var item in customer.PreferredResources)
         {
@@ -138,8 +116,6 @@ public class CustomerSubscriber(
                 preferredLocations,
                 preferredTeams,
                 preferredResources,
-                preferredDesks,
-                preferredRooms,
                 preferredOrganizationTags)
         );
 

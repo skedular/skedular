@@ -27,8 +27,6 @@ public static class Extensions
             .AddScoped<IDailyDeskCountRecordingRepository, DailyDeskCountRecordingRepository>()
             .AddScoped<IDailyRoomCountRecordingRepository, DailyRoomCountRecordingRepository>()
             .AddScoped<IResourceRepository, ResourceRepository>()
-            .AddScoped<IDeskRepository, DeskRepository>()
-            .AddScoped<IRoomRepository, RoomRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
             .AddScoped<IJoinInvitationRepository, JoinInvitationRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<abfd908b5137ea571268aaef3ba11ef9>>
+ * @generated SignedSource<<3bf2fb1fc7b1ac1268f8e7261057d0ca>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type locationDeskOccupancyInsight_query$data = {
     readonly name: string;
     readonly organization: {
       readonly uniqueId: string;
-    } | null | undefined;
+    };
   } | null | undefined;
   readonly " $fragmentType": "locationDeskOccupancyInsight_query";
 };

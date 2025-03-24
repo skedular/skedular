@@ -251,7 +251,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.From = src.From;
-        dest.To = src.Until;
+        dest.Until = src.Until;
         dest.Organization = organization;
         return dest;
     }
@@ -511,7 +511,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             From = src.From,
-            Until = src.To,
+            Until = src.Until,
             Organization = organization
         };
 

@@ -176,10 +176,11 @@ public class PaymentService(
 
     private async Task PublishOrganizationPaymentMethodStateAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-            organizationId,
-            cancellationToken);
-        ArgumentNullException.ThrowIfNull(organization);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        if (organization is null)
+        {
+            throw new OrganizationNotFound();
+        }
 
         var hasAttachedPaymentMethod = organization.OrganizationStripePaymentMethods.Any(item =>
             !item.DeletedAt.HasValue && item.Status == OrganizationStripePaymentMethodStatus.Confirmed);

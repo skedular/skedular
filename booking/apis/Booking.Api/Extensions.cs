@@ -18,8 +18,6 @@ public static class Extensions
             .AddScoped<IBookingService, BookingService>()
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
-            .AddScoped<IDeskService, DeskService>()
-            .AddScoped<IRoomService, RoomService>()
             .AddScoped<IResourceService, ResourceService>()
             .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
             .AddScoped<ICachedLocationService, CachedLocationService>()

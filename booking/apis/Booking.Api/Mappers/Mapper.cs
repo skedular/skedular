@@ -8,8 +8,6 @@ using Google.Protobuf.WellKnownTypes;
 using BookingEdge = Booking.Api.GraphQL.BookingEdge;
 using BookingType = Api.Shared.Services.Models.BookingType;
 using Customer = Booking.Shared.Models.Customer;
-using Desk = Booking.Shared.Database.Entities.Desk;
-using Room = Booking.Shared.Database.Entities.Room;
 using Identity = Booking.Shared.Models.Identity;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
@@ -33,8 +31,6 @@ public interface IMapper
         Organization? organization,
         Location? location,
         Team? team,
-        ICollection<Desk> desks,
-        ICollection<Room> rooms,
         ICollection<Shared.Database.Entities.Resource> resources);
 
     Shared.Database.Entities.Booking MergeTo(
@@ -44,16 +40,12 @@ public interface IMapper
         Organization? organization,
         Location? location,
         Team? team,
-        ICollection<Desk> desks,
-        ICollection<Room> rooms,
         ICollection<Shared.Database.Entities.Resource> resources);
 
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
     Shared.Models.Booking MapTo(Admin_AddInput src);
     Shared.Models.Booking MapTo(UpdateInput src);
-    IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src);
-    IEnumerable<Shared.Models.Room> MapTo(IEnumerable<Room> src);
     Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src);
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
@@ -73,14 +65,12 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             From = src.From,
-            Until = src.To,
+            Until = src.Until,
             Notes = src.Notes,
             Type = src.Type.ToBookingType(),
             Customer = MapTo(src.Customer)!,
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
-            Desks = MapTo(src.Desks).ToList(),
-            Rooms = MapTo(src.Rooms).ToList(),
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             Team = MapTo(src.Team)
         };
@@ -142,8 +132,6 @@ public class Mapper : IMapper
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
-            Desks = [],
-            Rooms = [],
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList()
         };
     }
@@ -163,8 +151,6 @@ public class Mapper : IMapper
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
-            Desks = [],
-            Rooms = [],
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList()
         };
     }
@@ -175,10 +161,8 @@ public class Mapper : IMapper
         Organization? organization,
         Location? location,
         Team? team,
-        ICollection<Desk> desks,
-        ICollection<Room> rooms,
         ICollection<Shared.Database.Entities.Resource> resources) =>
-        MergeTo(src, new Shared.Database.Entities.Booking(), customer, organization, location, team, desks, rooms, resources);
+        MergeTo(src, new Shared.Database.Entities.Booking(), customer, organization, location, team, resources);
 
     public Shared.Database.Entities.Booking MergeTo(
         Shared.Models.Booking src,
@@ -187,21 +171,17 @@ public class Mapper : IMapper
         Organization? organization,
         Location? location,
         Team? team,
-        ICollection<Desk> desks,
-        ICollection<Room> rooms,
         ICollection<Shared.Database.Entities.Resource> resources)
     {
         dest.Id = src.Id;
         dest.From = src.From;
-        dest.To = src.Until;
+        dest.Until = src.Until;
         dest.Notes = src.Notes;
         dest.Type = src.Type.ToBookingType();
         dest.Customer = customer;
         dest.Organization = organization;
         dest.Location = location;
         dest.Team = team;
-        dest.Desks = desks;
-        dest.Rooms = rooms;
         dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
         return dest;
     }
@@ -344,8 +324,6 @@ public class Mapper : IMapper
                 Name = src.Name
             };
 
-    public IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src) => src.Select(MapTo);
-    public IEnumerable<Shared.Models.Room> MapTo(IEnumerable<Room> src) => src.Select(MapTo);
     public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src) => new(src.Cursor, MapTo(src.Node));
     public BookingEdge MapTo(Edge<Shared.Models.Booking> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
@@ -467,36 +445,6 @@ public class Mapper : IMapper
                 LogoUrl = src.LogoUrl,
                 Offering = src.Offering
             };
-
-    private static Shared.Models.Desk MapTo(Desk src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Name = src.Name,
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            OrganizationTags = MapTo(src.OrganizationTags).ToList()
-        };
-
-    private static Shared.Models.Room MapTo(Room src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Name = src.Name,
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            OrganizationTags = MapTo(src.OrganizationTags).ToList()
-        };
 
     private static Shared.Models.Team? MapTo(Team? src) =>
         src is null

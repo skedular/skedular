@@ -62,7 +62,7 @@ public class InstantAddBookingButtonHandler(
                 First = 1,
                 Before = string.Empty,
                 Last = -1,
-                Where = new BookingWhereInput { FromGTE = context.From.ToTimestamp(), FromLTE = context.To.ToTimestamp(), IncludeMineOnly = true }
+                Where = new BookingWhereInput { FromGTE = context.From.ToTimestamp(), FromLTE = context.Until.ToTimestamp(), IncludeMineOnly = true }
             };
             getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
             if (!string.IsNullOrWhiteSpace(context.LocationId))
@@ -90,7 +90,7 @@ public class InstantAddBookingButtonHandler(
                 {
                     Id = randomHelper.Generate(),
                     From = context.From.ToTimestamp(),
-                    Until = context.To.ToTimestamp(),
+                    Until = context.Until.ToTimestamp(),
                     Type = BookingType.WorkingFromOffice,
                     CustomerId = customerId,
                     OrganizationId = workspace.Organization.Id,
@@ -141,7 +141,7 @@ public class InstantAddBookingButtonHandler(
             {
                 Id = randomHelper.Generate(),
                 From = context.From.ToTimestamp(),
-                Until = context.To.ToTimestamp(),
+                Until = context.Until.ToTimestamp(),
                 Type = BookingType.WorkingFromOffice,
                 CustomerId = customerId,
                 OrganizationId = workspace.Organization.Id,

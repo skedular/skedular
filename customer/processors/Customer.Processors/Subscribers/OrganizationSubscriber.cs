@@ -131,12 +131,10 @@ public class OrganizationSubscriber(
                 cancellationToken);
             ArgumentNullException.ThrowIfNull(customer);
             addedItems.Add(
-                repositoryFactory.OrganizationMemberRepository.Add(
-                    mapper.MapToEntity(organizationMember, existingOrganization, customer)));
+                repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(organizationMember, existingOrganization, customer)));
         }
 
-        await UpdateOrganizationMembersDefaultOrganizationAsync(organization.Id, itemsToRemove,
-            cancellationToken);
+        await UpdateOrganizationMembersDefaultOrganizationAsync(organization.Id, itemsToRemove, cancellationToken);
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);
         existingOrganization.OrganizationMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
@@ -183,12 +181,6 @@ public class OrganizationSubscriber(
                 .ToList();
             var newResourceIds = customer.PreferredResources.Select(item => item.Id).Distinct().ToList();
 
-            var existingDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredDesks = customer.PreferredDesks
-                .Where(desk => desk.Location.Organization is null || desk.Location.Organization.Id != organizationId)
-                .ToList();
-            var newDeskIds = customer.PreferredDesks.Select(item => item.Id).Distinct().ToList();
-
             var existingTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
             customer.PreferredTeams = customer.PreferredTeams
                 .Where(team => team.Organization is null || team.Organization.Id != organizationId)
@@ -202,8 +194,6 @@ public class OrganizationSubscriber(
                 newLocationIds.Except(existingLocationIds).Any() ||
                 newResourceIds.Count != existingResourceIds.Count ||
                 newResourceIds.Except(existingResourceIds).Any() ||
-                newDeskIds.Count != existingDeskIds.Count ||
-                newDeskIds.Except(existingDeskIds).Any() ||
                 newTeamIds.Count != existingTeamIds.Count ||
                 newTeamIds.Except(existingTeamIds).Any())
             {

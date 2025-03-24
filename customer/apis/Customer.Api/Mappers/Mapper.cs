@@ -6,8 +6,6 @@ using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Models;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
-using Desk = Customer.Shared.Models.Desk;
-using Room = Customer.Shared.Models.Room;
 using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
 using Organization = Customer.Shared.Models.Organization;
@@ -34,8 +32,6 @@ public interface IMapper
         ICollection<Shared.Database.Entities.Location> preferredLocations,
         ICollection<Shared.Database.Entities.Team> preferredTeams,
         ICollection<Resource> preferredResources,
-        ICollection<Shared.Database.Entities.Desk> preferredDesks,
-        ICollection<Shared.Database.Entities.Room> preferredRooms,
         ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags);
 
     IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src);
@@ -88,15 +84,11 @@ public class Mapper(IContext context) : IMapper
             IsDefaultOrganizationOnboardingDone = false,
             IsPreferredLocationOnboardingDone = false,
             IsPreferredZoneOnboardingDone = false,
-            IsPreferredDeskOnboardingDone = false,
-            IsPreferredRoomOnboardingDone = false,
             DefaultOrganization = null,
             PreferredLocations = [],
             PreferredTeams = [],
             PreferredOrganizationTags = [],
-            PreferredResources = [],
-            PreferredDesks = [],
-            PreferredRooms = []
+            PreferredResources = []
         };
 
     public Identity MapToIdentity() =>
@@ -135,8 +127,6 @@ public class Mapper(IContext context) : IMapper
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
             IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone ?? false,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
-            IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false,
-            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone ?? false,
             DefaultOrganization = src.DefaultOrganization is null
                 ? null
                 : new CustomerOrganizationDetails
@@ -168,8 +158,6 @@ public class Mapper(IContext context) : IMapper
             PreferredResources = src.PreferredResources
                 .Select(item => new CustomerResourceDetails { UniqueId = item.Id, Name = item.Name })
                 .ToArray(),
-            PreferredDesks = src.PreferredDesks.Select(item => new CustomerDeskDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
-            PreferredRooms = src.PreferredRooms.Select(item => new CustomerRoomDetails { UniqueId = item.Id, Name = item.Name }).ToArray(),
             PreferredTeams = src.PreferredTeams.Select(item => new CustomerTeamDetails
             {
                 UniqueId = item.Id,
@@ -222,14 +210,10 @@ public class Mapper(IContext context) : IMapper
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
             IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
-            IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
-            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
             Identities = MapTo(src.Identities).ToList(),
             DefaultOrganization = MapTo(src.DefaultOrganization),
             PreferredLocations = MapTo(src.PreferredLocations).ToList(),
             PreferredResources = MapTo(src.PreferredResources).ToList(),
-            PreferredDesks = MapTo(src.PreferredDesks).ToList(),
-            PreferredRooms = MapTo(src.PreferredRooms).ToList(),
             PreferredTeams = MapTo(src.PreferredTeams).ToList(),
             PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
         };
@@ -451,8 +435,6 @@ public class Mapper(IContext context) : IMapper
             ICollection<Shared.Database.Entities.Location> preferredLocations,
             ICollection<Shared.Database.Entities.Team> preferredTeams,
             ICollection<Resource> preferredResources,
-            ICollection<Shared.Database.Entities.Desk> preferredDesks,
-            ICollection<Shared.Database.Entities.Room> preferredRooms,
             ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags) =>
         new()
         {
@@ -479,15 +461,11 @@ public class Mapper(IContext context) : IMapper
             IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone,
             IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone,
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone,
-            IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone,
-            IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone,
             Identities = identities,
             DefaultOrganization = defaultOrganization,
             PreferredLocations = preferredLocations,
             PreferredTeams = preferredTeams,
             PreferredResources = preferredResources,
-            PreferredDesks = preferredDesks,
-            PreferredRooms = preferredRooms,
             PreferredOrganizationTags = preferredOrganizationTags
         };
 
@@ -537,8 +515,7 @@ public class Mapper(IContext context) : IMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
                 Organization = MapTo(src.Organization),
-                Desks = MapTo(src.Desks).ToList(),
-                Rooms = MapTo(src.Rooms).ToList()
+                Resources = MapTo(src.Resources).ToList()
             };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag?>? src) =>
@@ -577,40 +554,6 @@ public class Mapper(IContext context) : IMapper
                 Location = src.Location is null ? null : new Location { Id = src.Location.Id }
             };
 
-    private static IEnumerable<Desk> MapTo(IEnumerable<Shared.Database.Entities.Desk?>? src) =>
-        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
-
-    private static Desk? MapTo(Shared.Database.Entities.Desk? src) =>
-        src is null
-            ? null
-            : new Desk
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
-                Location = new Location { Id = src.Location.Id }
-            };
-
-    private static IEnumerable<Room> MapTo(IEnumerable<Shared.Database.Entities.Room?>? src) =>
-        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
-
-    private static Room? MapTo(Shared.Database.Entities.Room? src) =>
-        src is null
-            ? null
-            : new Room
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
-                Location = new Location { Id = src.Location.Id }
-            };
-
     private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
 
@@ -628,7 +571,7 @@ public class Mapper(IContext context) : IMapper
                 Organization = MapTo(src.Organization)
             };
 
-    private static IEnumerable<CustomerIdentity> MapTo(IEnumerable<Shared.Models.Identity> src) => src.Select(MapTo)!;
+    private static IEnumerable<CustomerIdentity> MapTo(IEnumerable<Shared.Models.Identity> src) => src.Select(MapTo);
 
     private static CustomerIdentity MapTo(Shared.Models.Identity src) =>
         new() { Id = src.Id, Email = src.Email, Verified = src.EmailVerified ?? false };

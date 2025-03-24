@@ -402,7 +402,7 @@ public class ResourcesPage(
         [
             GetTitle(),
             asyncBlocks[0],
-            GetDesksSearchCriteriaAndPaginationBlocks(resourceConnection, commonPageContext.PageContext),
+            GetResourcessSearchCriteriaAndPaginationBlocks(resourceConnection, commonPageContext.PageContext),
             asyncBlocks[1]
         ];
 
@@ -482,7 +482,7 @@ public class ResourcesPage(
             cancellationToken: cancellationToken);
     }
 
-    private static List<Block> GetDesksSearchCriteriaAndPaginationBlocks(ResourceConnection resourceConnection, PageContext pageContext)
+    private static List<Block> GetResourcessSearchCriteriaAndPaginationBlocks(ResourceConnection resourceConnection, PageContext pageContext)
     {
         if (resourceConnection.Edges.Count == 0)
         {

@@ -1,4 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.LocationInternal.V1.Key;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Enterprise.Shared.Random;
@@ -53,7 +54,11 @@ public class LocationInternalSubscriber(
 
         _ = repositoryFactory.DailyDeskCountRecordingRepository.Add(new DailyDeskCountRecording
         {
-            Id = randomHelper.Generate(), Count = location.Desks.Count(item => item.DeletedAt is null), Date = startOfToday, Location = location
+            Id = randomHelper.Generate(),
+            Count = location.Resources
+                .Count(item => item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.Desk) && item.DeletedAt is null),
+            Date = startOfToday,
+            Location = location
         });
 
         location.DailyDeskCountLastRecordedAt = timeProvider.GetUtcNow();
@@ -82,7 +87,11 @@ public class LocationInternalSubscriber(
 
         _ = repositoryFactory.DailyRoomCountRecordingRepository.Add(new DailyRoomCountRecording
         {
-            Id = randomHelper.Generate(), Count = location.Rooms.Count(item => item.DeletedAt is null), Date = startOfToday, Location = location
+            Id = randomHelper.Generate(), 
+            Count = location.Resources
+                .Count(item => item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.Room) && item.DeletedAt is null),
+            Date = startOfToday,
+            Location = location
         });
 
         location.DailyRoomCountLastRecordedAt = timeProvider.GetUtcNow();

@@ -9,7 +9,7 @@ namespace Team.Shared.Database.Entities;
 public class Booking : ReplicatedEntityBaseWithDeleted
 {
     public DateTimeOffset From { get; set; }
-    public DateTimeOffset To { get; set; }
+    public DateTimeOffset Until { get; set; }
 
     public virtual Team Team { get; set; }
 }
@@ -24,6 +24,6 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasOne(item => item.Team).WithMany(item => item.Bookings);
 
         builder.HasIndex(item => item.From);
-        builder.HasIndex(item => item.To);
+        builder.HasIndex(item => item.Until);
     }
 }

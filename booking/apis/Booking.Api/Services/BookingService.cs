@@ -11,7 +11,6 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
 using Customer = Booking.Shared.Database.Entities.Customer;
-using Desk = Booking.Shared.Database.Entities.Desk;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using Resource = Booking.Shared.Database.Entities.Resource;
@@ -127,7 +126,7 @@ public class BookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
-        var bookingEntity = mapper.MapTo(booking, customerEntity!, organization, location, team, [], [], resources);
+        var bookingEntity = mapper.MapTo(booking, customerEntity!, organization, location, team, resources);
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
@@ -749,7 +748,7 @@ public class BookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
-        var bookingEntity = mapper.MergeTo(booking, existingBooking, customerEntity!, organization, location, team, [], [], resources);
+        var bookingEntity = mapper.MergeTo(booking, existingBooking, customerEntity!, organization, location, team, resources);
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
         booking = mapper.MapTo(bookingEntity);

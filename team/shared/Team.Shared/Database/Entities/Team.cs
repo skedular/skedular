@@ -13,7 +13,7 @@ public class Team : EntityBaseWithDeleted
     public string? About { get; set; }
     public string? Timezone { get; set; }
 
-    public virtual Organization? Organization { get; set; }
+    public virtual Organization Organization { get; set; }
     public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
     public virtual ICollection<JoinInvitation> JoinInvitations { get; set; } = [];

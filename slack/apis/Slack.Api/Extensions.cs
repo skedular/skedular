@@ -23,7 +23,7 @@ public static class Extensions
             .AddScoped<IBookingsPageContextService, BookingsPageContextService>()
             .AddScoped<ILocationsPageContextService, LocationsPageContextService>()
             .AddScoped<ITeamsPageContextService, TeamsPageContextService>()
-            .AddScoped<IDesksPageContextService, DesksPageContextService>()
+            .AddScoped<IResourcesPageContextService, ResourcesPageContextService>()
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<IOrganizationService, OrganizationService>()

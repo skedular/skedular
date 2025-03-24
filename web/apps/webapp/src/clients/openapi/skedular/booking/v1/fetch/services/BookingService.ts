@@ -49,4 +49,22 @@ export class BookingService {
             url: '/booking/api/v1/republish-all-resources-slots',
         });
     }
+    /**
+     * republish resource slots
+     * @param resourceId
+     * @returns any the status of republishing resources slots
+     * @returns Error unexpected error
+     * @throws ApiError
+     */
+    public republishResourcesSlots(
+        resourceId: string,
+    ): CancelablePromise<any | Error> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/booking/api/v1/resources-slots/{resourceId}/republish',
+            path: {
+                'resourceId': resourceId,
+            },
+        });
+    }
 }

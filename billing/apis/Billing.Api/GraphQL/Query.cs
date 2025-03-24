@@ -27,12 +27,6 @@ public class Query(IMapper mapper)
         CancellationToken cancellationToken) => await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public Task<OrganizationCurrentOfferingChargesDetails[]?> OrganizationCurrentOfferingChargesAsync(
-        string organizationId,
-        CancellationToken cancellationToken) =>
-        throw new NotImplementedException();
-
-    [UseResolverScope]
     public async Task<OrganizationBillingInfo?> OrganizationBillingInfoAsync(
         string organizationId,
         [Service] ICachedCustomerService cachedCustomerService,

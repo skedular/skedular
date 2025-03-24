@@ -67,7 +67,7 @@ type LocationDailyBookingsTotal {
 type LocationDetails {
   name: String!
   about: String
-  organization: LocationOrganizationDetails
+  organization: LocationOrganizationDetails!
   timezone: String
   openingHours: OpeningHours!
   deskCapacity: Int!
@@ -263,7 +263,7 @@ input AddLocationInput {
   id: String
   name: String!
   about: String
-  organizationId: String
+  organizationId: String!
   timezone: String
   physicalAddress: LocationAddressDetailsInput
 }
@@ -379,7 +379,7 @@ input UpdateLocationInput {
   id: String!
   name: String!
   about: String
-  organizationId: String
+  organizationId: String!
   timezone: String
   physicalAddress: LocationAddressDetailsInput
 }
