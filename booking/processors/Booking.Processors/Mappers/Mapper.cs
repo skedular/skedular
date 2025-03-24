@@ -24,15 +24,15 @@ public interface IMapper
     Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
-    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization? organization);
+    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization? organization);
+        Shared.Database.Entities.Organization organization);
 
-    Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization? organization);
-    Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization? organization);
+    Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization organization);
+    Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization organization);
     OrganizationMember MapToEntity(Shared.Models.OrganizationMember src, Shared.Database.Entities.Organization organization, Customer customer);
 
     OrganizationMember MergeToEntity(
@@ -124,16 +124,14 @@ public class Mapper : IMapper
             DefaultOrganization = string.IsNullOrWhiteSpace(customer.PreferredOrganizationId)
                 ? null
                 : new Organization { Id = customer.PreferredOrganizationId },
-            PreferredLocations = customer.PreferredLocations.Select(item => new Location
-            {
-                Id = item.Id, Organization = string.IsNullOrWhiteSpace(item.OrganizationId) ? null : new Organization { Id = item.OrganizationId }
-            }).ToList(),
+            PreferredLocations =
+                customer.PreferredLocations
+                    .Select(item => new Location { Id = item.Id, Organization = new Organization { Id = item.OrganizationId } }).ToList(),
             PreferredResources = customer.PreferredResources.Select(item =>
                 new Shared.Models.Resource { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
-            PreferredTeams = customer.PreferredTeams.Select(item => new Team
-            {
-                Id = item.Id, Organization = string.IsNullOrWhiteSpace(item.OrganizationId) ? null : new Organization { Id = item.OrganizationId }
-            }).ToList(),
+            PreferredTeams =
+                customer.PreferredTeams.Select(item => new Team { Id = item.Id, Organization = new Organization { Id = item.OrganizationId } })
+                    .ToList(),
             PreferredOrganizationTags = customer.PreferredOrganizationTags.Select(item =>
                 new Shared.Models.OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.OrganizationId } }).ToList()
         };
@@ -212,8 +210,7 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             Name = locationAfterState.Name,
             OpeningHours = MapTo(locationAfterState.OpeningHours),
-            Organization =
-                string.IsNullOrWhiteSpace(locationAfterState.OrganizationId) ? null : new Organization { Id = locationAfterState.OrganizationId }
+            Organization = new Organization { Id = locationAfterState.OrganizationId }
         };
 
         location.LocationMembers = locationAfterState.Members.Select(item => new Shared.Models.LocationMember
@@ -232,11 +229,9 @@ public class Mapper : IMapper
             Location = location
         }).ToList();
 
-        var organizationTags = location.Organization is null
-            ? []
-            : locationAfterState.Resources
-                .SelectMany(item => item.TagIds)
-                .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
+        var organizationTags = locationAfterState.Resources
+            .SelectMany(item => item.TagIds)
+            .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
 
         location.Resources = locationAfterState.Resources.Select(item => new Shared.Models.Resource
         {
@@ -268,7 +263,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = teamAfterState.Name,
-            Organization = string.IsNullOrWhiteSpace(teamAfterState.OrganizationId) ? null : new Organization { Id = teamAfterState.OrganizationId }
+            Organization = new Organization { Id = teamAfterState.OrganizationId }
         };
 
         team.TeamMembers = teamAfterState.Members.Select(item => new Shared.Models.TeamMember
@@ -310,13 +305,13 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization? organization) =>
+    public Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new Shared.Database.Entities.Location(), organization);
 
     public Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization? organization)
+        Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -326,13 +321,13 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization? organization) =>
+    public Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new Shared.Database.Entities.Team(), organization);
 
     public Shared.Database.Entities.Team MergeToEntity(
         Team src,
         Shared.Database.Entities.Team dest,
-        Shared.Database.Entities.Organization? organization)
+        Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;

@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace Enterprise.Shared.Time;
 
 public static class DateTimeOffsetExtensions

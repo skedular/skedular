@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualBasic;
-using Organization.Api.Mappers;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
@@ -32,8 +31,7 @@ public class AzureTenantService(
     AzureEntraConfiguration azureEntraConfiguration,
     IHttpContextAccessor httpContextAccessor,
     IAzureTenantOnboardingService azureTenantOnboardingService,
-    IOrganizationInternalOutboxPublisher organizationInternalOutboxPublisher,
-    IMapper mapper) : IAzureTenantService
+    IOrganizationInternalOutboxPublisher organizationInternalOutboxPublisher) : IAzureTenantService
 {
     private static readonly string[] s_userProfilePermissions = ["User.ReadBasic.All", "ProfilePhoto.Read.All", "email", "offline_access", "openid"];
 

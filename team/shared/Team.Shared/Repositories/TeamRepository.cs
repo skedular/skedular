@@ -77,7 +77,7 @@ internal static class TeamExtensions
 
         if (searchCriteria.PrimaryLocationIds.Count != 0)
         {
-            query = query.Where(item => item.PrimaryLocation != null && searchCriteria.PrimaryLocationIds!.Contains(item.PrimaryLocation.Id));
+            query = query.Where(item => item.PrimaryLocation != null && searchCriteria.PrimaryLocationIds.Contains(item.PrimaryLocation.Id));
         }
 
         return query;

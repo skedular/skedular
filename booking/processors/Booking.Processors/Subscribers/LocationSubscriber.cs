@@ -26,10 +26,10 @@ public class LocationSubscriber(
         {
             case Type.LocationUpserted:
                 {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Location.OrganizationId);
+
                     var location = mapper.MapTo(@event);
-                    var organization = location.Organization is null
-                        ? null
-                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
+                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
                     var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(
                         location.Id,
                         organization,
@@ -42,7 +42,7 @@ public class LocationSubscriber(
                     }
 
                     await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-                    await HandleLocationUpsertedEventAsync(location, existingLocation, cancellationToken);
+                    await HandleLocationUpsertedEventAsync(location, existingLocation, organization, cancellationToken);
                     await transaction.CommitAsync(cancellationToken);
                 }
                 break;
@@ -50,8 +50,7 @@ public class LocationSubscriber(
             case Type.LocationDeleted:
                 {
                     var location = mapper.MapTo(@event);
-                    var existingLocation =
-                        await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, true, true, true, true, cancellationToken);
+                    var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, true, true, cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Location event. Event timestamp is older that what is already processed.");
@@ -79,12 +78,9 @@ public class LocationSubscriber(
     private async Task HandleLocationUpsertedEventAsync(
         Shared.Models.Location location,
         Location existingLocation,
+        Organization organization,
         CancellationToken cancellationToken)
     {
-        var organization = location.Organization is null
-            ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, true, true, cancellationToken);
-
         var locationOpeningHoursChanged = !location.OpeningHours.IsEqual(existingLocation.OpeningHours);
         existingLocation = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
 

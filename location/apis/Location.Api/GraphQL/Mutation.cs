@@ -180,6 +180,6 @@ public class Mutation(IMapper mapper)
                     input.Id,
                     input.OverrideAvailableHours,
                     mapper.MapTo(input.AvailableHours),
-                    cancellationToken))!
+                    cancellationToken))
         };
 }

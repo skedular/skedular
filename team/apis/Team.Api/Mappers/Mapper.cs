@@ -265,7 +265,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
-            OrganizationId = string.IsNullOrWhiteSpace(src.Organization?.Id) ? string.Empty : src.Organization.Id,
+            OrganizationId = string.IsNullOrWhiteSpace(src.Organization.Id) ? string.Empty : src.Organization.Id,
             PrimaryLocation =
                 string.IsNullOrWhiteSpace(src.PrimaryLocation?.Id)
                     ? null
@@ -453,7 +453,7 @@ public class Mapper : IMapper
                 Role = src.Role.ToNullableOrganizationMemberRole(),
                 Status = src.Status.ToOrganizationMemberStatus(),
                 Customer = MapTo(src.Customer)!,
-                Organization = MapTo(src.Organization)!
+                Organization = MapTo(src.Organization)
             };
 
     private static TeamOrganizationMemberDetails? MapTo(OrganizationMember? src) =>

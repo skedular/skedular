@@ -6,7 +6,7 @@ public static class KafkaTopicHelper
 {
     public static KafkaTopicAttribute GetKafkaTopicInfo<TEvent>() where TEvent : IEvent
     {
-        var eventType = typeof(TEvent)!;
+        var eventType = typeof(TEvent);
         var attribute = eventType.GetCustomAttribute<KafkaTopicAttribute>();
         if (attribute is null)
         {

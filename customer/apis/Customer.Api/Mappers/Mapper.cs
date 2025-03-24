@@ -137,13 +137,10 @@ public class Mapper(IContext context) : IMapper
             {
                 UniqueId = item.Id,
                 Name = item.Name,
-                Organization =
-                    item.Organization is null
-                        ? null
-                        : new CustomerOrganizationDetails
-                        {
-                            UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl
-                        }
+                Organization = new CustomerOrganizationDetails
+                {
+                    UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl
+                }
             }).ToArray(),
             PreferredZones =
                 src.PreferredOrganizationTags
@@ -162,13 +159,10 @@ public class Mapper(IContext context) : IMapper
             {
                 UniqueId = item.Id,
                 Name = item.Name,
-                Organization =
-                    item.Organization is null
-                        ? null
-                        : new CustomerOrganizationDetails
-                        {
-                            UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl
-                        }
+                Organization = new CustomerOrganizationDetails
+                {
+                    UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl
+                }
             }).ToArray()
         };
 
@@ -284,18 +278,10 @@ public class Mapper(IContext context) : IMapper
             DefaultOrganization =
                 string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id) ? null : new Organization { Id = src.DefaultOrganization.Id },
             PreferredLocations = src.PreferredLocations.Select(item =>
-                    new Location
-                    {
-                        Id = item.Id,
-                        Organization = string.IsNullOrWhiteSpace(item.Organization?.Id) ? null : new Organization { Id = item.Organization.Id }
-                    })
+                    new Location { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
                 .ToList(),
             PreferredTeams = src.PreferredTeams.Select(item =>
-                    new Team
-                    {
-                        Id = item.Id,
-                        Organization = string.IsNullOrWhiteSpace(item.Organization?.Id) ? null : new Organization { Id = item.Organization.Id }
-                    })
+                    new Team { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
                 .ToList(),
             PreferredResources = src.PreferredResources
                 .Select(item => new Shared.Models.Resource { Id = item.Id, Location = new Location { Id = item.Location.Id } })
@@ -352,9 +338,7 @@ public class Mapper(IContext context) : IMapper
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
-                Organization = string.IsNullOrWhiteSpace(item.Organization?.Id)
-                    ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
-                    : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
+                Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
 
         customer.PreferredTeams.AddRange(src.PreferredTeams.Select(
@@ -362,9 +346,7 @@ public class Mapper(IContext context) : IMapper
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
-                Organization = string.IsNullOrWhiteSpace(item.Organization?.Id)
-                    ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
-                    : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
+                Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
             }));
 
         customer.PreferredResources.AddRange(src.PreferredResources.Select(
@@ -514,7 +496,7 @@ public class Mapper(IContext context) : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Organization = MapTo(src.Organization),
+                Organization = MapTo(src.Organization)!,
                 Resources = MapTo(src.Resources).ToList()
             };
 
@@ -568,7 +550,7 @@ public class Mapper(IContext context) : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Organization = MapTo(src.Organization)
+                Organization = MapTo(src.Organization)!
             };
 
     private static IEnumerable<CustomerIdentity> MapTo(IEnumerable<Shared.Models.Identity> src) => src.Select(MapTo);

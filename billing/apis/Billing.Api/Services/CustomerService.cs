@@ -25,7 +25,7 @@ public class CustomerService(IRepositoryFactory repositoryFactory, IMapper mappe
             throw new CustomerNotFound();
         }
 
-        return (mapper.MapTo(customer)!, customer);
+        return (mapper.MapTo(customer), customer);
     }
 
     public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken)

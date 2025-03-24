@@ -9,9 +9,9 @@ public class TopicSetting<TEvent> where TEvent : IEvent, new()
     {
         var @event = new TEvent();
 
-        Topic = @event!.GetTopicName(prefix);
+        Topic = @event.GetTopicName(prefix);
         RetryTopics = @event.GetRetryTopicSettings(prefix, retryCount, delayBaseSeconds).ToList();
-        DeadLetterTopic = @event!.GetDeadLetterTopicName(prefix);
+        DeadLetterTopic = @event.GetDeadLetterTopicName(prefix);
     }
 
     public string Topic { get; }

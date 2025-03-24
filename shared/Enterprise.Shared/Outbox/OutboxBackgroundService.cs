@@ -33,7 +33,7 @@ public class OutboxBackgroundService<TDbContext>(
                     cancellationToken) =>
                 dbContext.Outbox
                     .TagWith(EntityFrameworkInterceptorTags.ForUpdateSkipLocked)
-                    .Where<Database.Entities.Outbox>(query =>
+                    .Where(query =>
                         query.RetryCount == 0 || query.LastRetry < thresholdRetryTime)
                     .OrderBy(query => query.RetryCount)
                     .FirstOrDefault());

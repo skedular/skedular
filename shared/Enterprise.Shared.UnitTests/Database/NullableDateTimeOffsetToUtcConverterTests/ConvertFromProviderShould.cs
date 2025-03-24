@@ -22,7 +22,7 @@ public class ConvertFromProviderShould
         using (new AssertionScope())
         {
             output.Should().Be(input);
-            output!.Value.Offset.Should().Be(TimeSpan.Zero);
+            output.Value.Offset.Should().Be(TimeSpan.Zero);
         }
     }
 
@@ -42,7 +42,7 @@ public class ConvertFromProviderShould
         using (new AssertionScope())
         {
             output.Should().Be(input);
-            output!.Value.Offset.Should().Be(fromHours);
+            output.Value.Offset.Should().Be(fromHours);
         }
     }
 

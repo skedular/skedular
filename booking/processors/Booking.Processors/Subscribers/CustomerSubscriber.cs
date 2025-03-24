@@ -73,18 +73,14 @@ public class CustomerSubscriber(
         var preferredLocations = new List<Location>();
         foreach (var item in customer.PreferredLocations)
         {
-            var organization = item.Organization is null
-                ? null
-                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization!.Id, cancellationToken);
+            var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization.Id, cancellationToken);
             preferredLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Id, organization, cancellationToken));
         }
 
         var preferredTeams = new List<Team>();
         foreach (var item in customer.PreferredTeams)
         {
-            var organization = item.Organization is null
-                ? null
-                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization!.Id, cancellationToken);
+            var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(item.Organization.Id, cancellationToken);
             preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(item.Id, organization, cancellationToken));
         }
 

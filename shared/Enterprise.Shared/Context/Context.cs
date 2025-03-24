@@ -50,7 +50,6 @@ public interface IContext
 
 public class Context(IHttpContextAccessor httpContextAccessor) : IContext
 {
-    private const string PropertyBagKey = "PropertyBag";
     private const string CorrelationIdKey = "CorrelationId";
     private const string VerifiableTokenKey = "VerifiableToken";
     private const string DesignationKey = "Designation";

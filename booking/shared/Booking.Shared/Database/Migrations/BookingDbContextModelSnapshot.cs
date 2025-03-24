@@ -259,6 +259,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("jsonb");
 
                     b.Property<string>("OrganizationId")
+                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
@@ -619,6 +620,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<string>("OrganizationId")
+                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
@@ -900,7 +902,9 @@ namespace Booking.Shared.Database.Migrations
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
                         .WithMany("Locations")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Organization");
                 });
@@ -978,7 +982,9 @@ namespace Booking.Shared.Database.Migrations
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
                         .WithMany("Teams")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Organization");
                 });

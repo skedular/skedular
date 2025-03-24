@@ -1,6 +1,7 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Customer.Processors.Mappers;
+using Customer.Shared.Database.Entities;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
@@ -24,10 +25,10 @@ public class LocationSubscriber(
         {
             case Type.LocationUpserted:
                 {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Location.OrganizationId);
+
                     var location = mapper.MapTo(@event);
-                    var organization = location.Organization is null
-                        ? null
-                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
+                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
                     var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(
                         location.Id,
                         organization,
@@ -39,7 +40,7 @@ public class LocationSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleLocationUpsertedEventAsync(location, existingLocation, cancellationToken);
+                    await HandleLocationUpsertedEventAsync(location, existingLocation, organization, cancellationToken);
                 }
                 break;
 
@@ -74,12 +75,9 @@ public class LocationSubscriber(
     private async Task HandleLocationUpsertedEventAsync(
         Shared.Models.Location location,
         Location existingLocation,
+        Organization organization,
         CancellationToken cancellationToken)
     {
-        var organization = location.Organization is null
-            ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdAsync(location.Organization.Id, true, true, cancellationToken);
-
         existingLocation = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
 
         existingLocation = await RebuildResourcesAsync(location, existingLocation, cancellationToken);
@@ -98,11 +96,6 @@ public class LocationSubscriber(
     private async Task<Location> RebuildResourcesAsync(Shared.Models.Location location, Location existingLocation,
         CancellationToken cancellationToken)
     {
-        if (existingLocation.Organization is null)
-        {
-            return existingLocation;
-        }
-
         var resources = await repositoryFactory.ResourceRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
         var itemsToRemove = resources.Where(resource => location.Resources.All(item => item.Id != resource.Id)).ToList();
         var updatedItems = resources

@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using Customer.Shared.Database.Entities;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Exceptions;
@@ -9,7 +8,6 @@ public interface ILocationAuthorizationService
 {
     Task<bool> CanAddLocationAsPreferredAsync(Location location, Shared.Database.Entities.Customer customer, CancellationToken cancellationToken);
     Task<bool> CanAddLocationTagAsPreferredAsync(Location location, Shared.Database.Entities.Customer customer, CancellationToken cancellationToken);
-    public bool IsLocationMember(Location location, Shared.Database.Entities.Customer customer);
 }
 
 public class LocationAuthorizationService(
@@ -22,35 +20,6 @@ public class LocationAuthorizationService(
         Shared.Database.Entities.Customer customer,
         CancellationToken cancellationToken)
     {
-        if (location.Organization is null)
-        {
-            return IsLocationMember(location, customer);
-        }
-
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                location.Organization.Id,
-                false,
-                false,
-                cancellationToken);
-        if (organization is null)
-        {
-            throw new OrganizationNotFound();
-        }
-
-        return organizationAuthorizationService.IsOrganizationMember(organization, customer);
-    }
-
-    public async Task<bool> CanAddLocationTagAsPreferredAsync(
-        Location location,
-        Shared.Database.Entities.Customer customer,
-        CancellationToken cancellationToken)
-    {
-        if (location.Organization is null)
-        {
-            return IsLocationMember(location, customer);
-        }
-
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
             location.Organization.Id,
             false,
@@ -64,10 +33,21 @@ public class LocationAuthorizationService(
         return organizationAuthorizationService.IsOrganizationMember(organization, customer);
     }
 
-    public bool IsLocationMember(Location location, Shared.Database.Entities.Customer customer) =>
-        location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+    public async Task<bool> CanAddLocationTagAsPreferredAsync(
+        Location location,
+        Shared.Database.Entities.Customer customer,
+        CancellationToken cancellationToken)
+    {
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+            location.Organization.Id,
+            false,
+            false,
+            cancellationToken);
+        if (organization is null)
         {
-            Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-            or LocationMemberRoleConstants.Member
-        };
+            throw new OrganizationNotFound();
+        }
+
+        return organizationAuthorizationService.IsOrganizationMember(organization, customer);
+    }
 }

@@ -90,7 +90,7 @@ public class CachedCustomerService(
                     throw new CustomerNotFound();
                 }
 
-                return (mapper.MapTo(customer)!, customer);
+                return (mapper.MapTo(customer), customer);
             });
     }
 
@@ -115,7 +115,7 @@ public class CachedCustomerService(
                     throw new CustomerNotFound();
                 }
 
-                return (mapper.MapTo(customer)!, customer);
+                return (mapper.MapTo(customer), customer);
             });
     }
 
@@ -136,9 +136,6 @@ public class CachedCustomerService(
     public void CleanCache(Shared.Database.Entities.Customer customer)
     {
         memoryCache.Remove($"customer-id-{customer.Id}");
-        customer.Identities.ForEach(identity =>
-        {
-            memoryCache.Remove($"customer-verifiabletoken-{identity.Id}");
-        });
+        customer.Identities.ForEach(identity => { memoryCache.Remove($"customer-verifiabletoken-{identity.Id}"); });
     }
 }

@@ -22,17 +22,17 @@ public interface IMapper
     Shared.Models.Customer? MapTo(Shared.Database.Entities.Customer? src);
     Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
-    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization? organization);
+    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization? organization);
+        Shared.Database.Entities.Organization organization);
 
     Resource MapToEntity(Shared.Models.Resource src, Shared.Database.Entities.Location location);
     Resource MergeToEntity(Shared.Models.Resource src, Resource dest, Shared.Database.Entities.Location location);
-    Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization? organization);
-    Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization? organization);
+    Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization organization);
+    Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization organization);
 
     OrganizationMember MapToEntity(
         Shared.Models.OrganizationMember src,
@@ -143,9 +143,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = locationAfterState.Name,
-            Organization = string.IsNullOrWhiteSpace(locationAfterState.OrganizationId)
-                ? null
-                : new Organization { Id = locationAfterState.OrganizationId }
+            Organization = new Organization { Id = locationAfterState.OrganizationId }
         };
 
         location.LocationMembers = locationAfterState.Members.Select(item => new Shared.Models.LocationMember
@@ -189,10 +187,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = teamAfterState.Name,
-            Organization =
-                string.IsNullOrWhiteSpace(teamAfterState.OrganizationId)
-                    ? null
-                    : new Organization { Id = teamAfterState.OrganizationId }
+            Organization = new Organization { Id = teamAfterState.OrganizationId }
         };
 
         team.TeamMembers = teamAfterState.Members.Select(item => new Shared.Models.TeamMember
@@ -281,13 +276,13 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization? organization) =>
+    public Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new Shared.Database.Entities.Location(), organization);
 
     public Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization? organization)
+        Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -308,13 +303,13 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization? organization) =>
+    public Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new Shared.Database.Entities.Team(), organization);
 
     public Shared.Database.Entities.Team MergeToEntity(
         Team src,
         Shared.Database.Entities.Team dest,
-        Shared.Database.Entities.Organization? organization)
+        Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -448,7 +443,7 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Organization = MapTo(src.Organization),
+                Organization = MapTo(src.Organization)!,
                 Resources = includeResources ? MapTo(src.Resources).ToList() : []
             };
 
@@ -483,7 +478,7 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                Organization = MapTo(src.Organization)
+                Organization = MapTo(src.Organization)!
             };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag?>? src) =>

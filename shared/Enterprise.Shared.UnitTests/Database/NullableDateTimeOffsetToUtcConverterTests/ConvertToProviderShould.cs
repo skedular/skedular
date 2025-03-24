@@ -22,7 +22,7 @@ public class ConvertToProviderShould
         using (new AssertionScope())
         {
             output.Should().Be(input);
-            output!.Value.Offset.Should().Be(TimeSpan.Zero);
+            output.Value.Offset.Should().Be(TimeSpan.Zero);
         }
     }
 
@@ -40,7 +40,7 @@ public class ConvertToProviderShould
         using (new AssertionScope())
         {
             output.Should().Be(input);
-            output!.Value.Offset.Should().Be(TimeSpan.Zero);
+            output.Value.Offset.Should().Be(TimeSpan.Zero);
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Booking.Processors.Mappers;
+using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Kafka.Consume;
 using Team = Booking.Shared.Database.Entities.Team;
@@ -20,10 +21,10 @@ public class TeamSubscriber(
         {
             case Type.TeamUpserted:
                 {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Team.OrganizationId);
+
                     var team = mapper.MapTo(@event);
-                    var organization = team.Organization is null
-                        ? null
-                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
+                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
                     var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
@@ -32,7 +33,7 @@ public class TeamSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleTeamUpsertedEventAsync(team, existingTeam, cancellationToken);
+                    await HandleTeamUpsertedEventAsync(team, existingTeam, organization, cancellationToken);
                 }
                 break;
 
@@ -64,16 +65,9 @@ public class TeamSubscriber(
         return EventSubscriberResults.Success;
     }
 
-    private async Task HandleTeamUpsertedEventAsync(Shared.Models.Team team, Team existingTeam, CancellationToken cancellationToken)
+    private async Task HandleTeamUpsertedEventAsync(Shared.Models.Team team, Team existingTeam, Organization organization,
+        CancellationToken cancellationToken)
     {
-        var organization = team.Organization is null
-            ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                team.Organization.Id,
-                true,
-                true,
-                cancellationToken);
-
         existingTeam = repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam, organization));
 
         _ = await RebuildTeamMembersAsync(team, existingTeam, cancellationToken);

@@ -92,9 +92,7 @@ public class OrganizationAuthorizationService(
             or OrganizationMemberRoleConstants.Administrator
         };
 
-    public async Task<OrganizationPermissions> GetPermissionsAsync(
-        string organizationId,
-        CancellationToken cancellationToken)
+    public async Task<OrganizationPermissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 

@@ -11,7 +11,7 @@ public class Team : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
 
-    public virtual Organization? Organization { get; set; }
+    public virtual Organization Organization { get; set; }
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
 }

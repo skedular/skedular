@@ -50,8 +50,7 @@ public class CachedCustomerService(
         return await GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
     }
 
-    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(
-        CancellationToken cancellationToken)
+    public async Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(context.GetVerifiableToken()))
         {
@@ -68,9 +67,7 @@ public class CachedCustomerService(
         }
     }
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetByIdAsync(
-        string id,
-        CancellationToken cancellationToken)
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -86,7 +83,7 @@ public class CachedCustomerService(
                     throw new CustomerNotFound();
                 }
 
-                return (mapper.MapTo(customer)!, customer);
+                return (mapper.MapTo(customer), customer);
             });
     }
 
@@ -111,7 +108,7 @@ public class CachedCustomerService(
                     throw new CustomerNotFound();
                 }
 
-                return (mapper.MapTo(customer)!, customer);
+                return (mapper.MapTo(customer), customer);
             });
     }
 

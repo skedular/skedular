@@ -49,8 +49,8 @@ public class Mapper : IMapper
                 : new OrganizationMember
                 {
                     OrganizationMemberId = item.OrganizationMember.Id,
-                    CustomerId = item.OrganizationMember.Customer!.Id,
-                    OrganizationId = item.OrganizationMember.Organization!.Id
+                    CustomerId = item.OrganizationMember.Customer.Id,
+                    OrganizationId = item.OrganizationMember.Organization.Id
                 }
         }));
 

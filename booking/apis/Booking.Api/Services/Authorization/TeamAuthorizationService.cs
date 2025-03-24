@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Customer = Booking.Shared.Models.Customer;
 using Team = Booking.Shared.Database.Entities.Team;
@@ -23,114 +22,24 @@ public class TeamAuthorizationService(
     ICachedTeamService cachedTeamService)
     : ITeamAuthorizationService
 {
-    public bool CanViewBookings(Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-                or TeamMemberRoleConstants.Member
-            };
-        }
+    public bool CanViewBookings(Team team, Customer customer) => organizationAuthorizationService.CanViewBookings(team.Organization, customer);
 
-        return organizationAuthorizationService.CanViewBookings(team.Organization, customer);
-    }
+    public bool CanAddBooking(Team team, Customer customer) => organizationAuthorizationService.CanAddBooking(team.Organization, customer);
 
-    public bool CanAddBooking(Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-                or TeamMemberRoleConstants.Member
-            };
-        }
+    public bool CanUpdateBooking(Team team, Customer customer) => organizationAuthorizationService.CanUpdateBooking(team.Organization, customer);
 
-        return organizationAuthorizationService.CanAddBooking(team.Organization, customer);
-    }
+    public bool CanDeleteBooking(Team team, Customer customer) => organizationAuthorizationService.CanDeleteBooking(team.Organization, customer);
 
-    public bool CanUpdateBooking(Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-                or TeamMemberRoleConstants.Member
-            };
-        }
+    public bool CanAddBookingOnBehalf(Team team, Customer customer) =>
+        organizationAuthorizationService.CanAddBookingOnBehalf(team.Organization, customer);
 
-        return organizationAuthorizationService.CanUpdateBooking(team.Organization, customer);
-    }
+    public bool CanUpdateBookingOnBehalf(Team team, Customer customer) =>
+        organizationAuthorizationService.CanUpdateBookingOnBehalf(team.Organization, customer);
 
-    public bool CanDeleteBooking(Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-                or TeamMemberRoleConstants.Member
-            };
-        }
+    public bool CanDeleteBookingOnBehalf(Team team, Customer customer) =>
+        organizationAuthorizationService.CanDeleteBookingOnBehalf(team.Organization, customer);
 
-        return organizationAuthorizationService.CanDeleteBooking(team.Organization, customer);
-    }
-
-    public bool CanAddBookingOnBehalf(Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-                or TeamMemberRoleConstants.Member
-            };
-        }
-
-        return organizationAuthorizationService.CanAddBookingOnBehalf(team.Organization, customer);
-    }
-
-    public bool CanUpdateBookingOnBehalf(Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-                or TeamMemberRoleConstants.Member
-            };
-        }
-
-        return organizationAuthorizationService.CanUpdateBookingOnBehalf(team.Organization, customer);
-    }
-
-    public bool CanDeleteBookingOnBehalf(Team team, Customer customer)
-    {
-        if (team.Organization is null)
-        {
-            return team.TeamMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Status: TeamMemberStatusConstants.Active,
-                Role: TeamMemberRoleConstants.Owner or TeamMemberRoleConstants.Administrator
-                or TeamMemberRoleConstants.Member
-            };
-        }
-
-        return organizationAuthorizationService.CanDeleteBookingOnBehalf(team.Organization, customer);
-    }
-
-    public async Task<TeamPermissions> GetPermissionsAsync(
-        string teamId,
-        CancellationToken cancellationToken)
+    public async Task<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 

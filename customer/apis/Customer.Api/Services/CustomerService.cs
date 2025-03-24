@@ -169,10 +169,7 @@ public class CustomerService(
         var preferredLocations = new List<Location>();
         foreach (var location in customer.PreferredLocations)
         {
-            var organization = location.Organization is null
-                ? null
-                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
-
+            var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
             preferredLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(
                 location.Id,
                 organization,
@@ -182,9 +179,7 @@ public class CustomerService(
         var preferredTeams = new List<Team>();
         foreach (var team in customer.PreferredTeams)
         {
-            var organization = team.Organization is null
-                ? null
-                : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
+            var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
             preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken));
         }
 

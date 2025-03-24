@@ -22,12 +22,12 @@ public interface IMapper
     Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
 
     Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities);
-    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization? organization);
+    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization? organization);
+        Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
@@ -178,9 +178,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = location.Name,
-            Organization = string.IsNullOrWhiteSpace(location.OrganizationId)
-                ? null
-                : new Organization { Id = location.OrganizationId }
+            Organization = new Organization { Id = location.OrganizationId }
         };
     }
 
@@ -189,14 +187,13 @@ public class Mapper : IMapper
         ICollection<Identity> identities) =>
         MergeToEntity(src, new Shared.Database.Entities.Customer(), identities);
 
-    public Shared.Database.Entities.Location MapToEntity(Location src,
-        Shared.Database.Entities.Organization? organization) =>
+    public Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization) =>
         MergeToEntity(src, new Shared.Database.Entities.Location(), organization);
 
     public Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization? organization)
+        Shared.Database.Entities.Organization organization)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;

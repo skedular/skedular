@@ -58,7 +58,7 @@ public class StartActivityShould
 
         using (new AssertionScope())
         {
-            activity!.DisplayName.Should().Be(activityName);
+            activity.DisplayName.Should().Be(activityName);
             activity.OperationName.Should().Be(activityName);
 
             activity.ParentId.Should().Be(TraceParent);

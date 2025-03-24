@@ -19,10 +19,10 @@ public class LocationSubscriber(
         {
             case Type.LocationUpserted:
                 {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Location.OrganizationId);
+
                     var location = mapper.MapTo(@event);
-                    var organization = location.Organization is null
-                        ? null
-                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
+                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
                     var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, organization, cancellationToken);
                     if (existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {

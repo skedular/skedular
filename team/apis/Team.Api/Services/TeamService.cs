@@ -158,11 +158,6 @@ public class TeamService(
                 throw new LocationNotFound();
             }
 
-            if (primaryLocation.Organization is null)
-            {
-                throw new OrganizationNotFound();
-            }
-
             if (primaryLocation.Organization.Id != team.Organization.Id)
             {
                 throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();

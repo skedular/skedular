@@ -115,10 +115,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = locationAfterState.Name,
-            Organization =
-                string.IsNullOrWhiteSpace(locationAfterState.OrganizationId)
-                    ? null
-                    : new Organization { Id = locationAfterState.OrganizationId }
+            Organization = new Organization { Id = locationAfterState.OrganizationId }
         };
 
         return location;
@@ -136,10 +133,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = teamAfterState.Name,
-            Organization =
-                string.IsNullOrWhiteSpace(teamAfterState.OrganizationId)
-                    ? null
-                    : new Organization { Id = teamAfterState.OrganizationId }
+            Organization = new Organization { Id = teamAfterState.OrganizationId }
         };
 
         return team;

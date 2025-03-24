@@ -53,9 +53,9 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                 .ToListAsync(cancellationToken);
 
     public async Task<ICollection<Resource>> GetByIdsAsync(
-        ICollection<string> ids, 
+        ICollection<string> ids,
         bool includeAllRelatedEntities,
-        CancellationToken cancellationToken) => 
+        CancellationToken cancellationToken) =>
         includeAllRelatedEntities
             ? await DbContext.Resource
                 .Where(query => ids.Contains(query.Id))
@@ -108,7 +108,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .Include(query => query.OrganizationTags)
             .ToListAsync(cancellationToken);
 
-   public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
+    public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
         string? organizationId,
         string? locationId,
         DateTimeOffset from,
@@ -124,7 +124,6 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                             (resourceIds.Count == 0 || resourceIds.Contains(query.Resource.Id)) &&
                             query.Start >= from && query.Start < until &&
                             (string.IsNullOrWhiteSpace(organizationId) || (query.Resource.Location != null &&
-                                                                           query.Resource.Location.Organization != null &&
                                                                            query.Resource.Location.Organization.Id == organizationId)) &&
                             (string.IsNullOrWhiteSpace(locationId) ||
                              (query.Resource.Location != null && query.Resource.Location.Id == locationId)) &&
@@ -143,7 +142,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .GroupBy(slot => slot.Resource.Id)
             .Select(item => item.Key)
             .ToList();
-        
+
         var resources = await DbContext.Resource
             .Where(query => availableResourceIds.Contains(query.Id))
             .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(query => query.Start))

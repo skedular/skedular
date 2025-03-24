@@ -11,7 +11,7 @@ public class Location : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
 
-    public virtual Organization? Organization { get; set; }
+    public virtual Organization Organization { get; set; }
     public virtual ICollection<Team> PrimaryLocationForTeams { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

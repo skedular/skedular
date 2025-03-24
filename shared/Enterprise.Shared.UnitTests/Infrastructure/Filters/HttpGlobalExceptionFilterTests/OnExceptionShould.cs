@@ -35,7 +35,7 @@ public class OnExceptionShould
         var result = exceptionContext.Result as InternalServerErrorObjectResult;
 
         result.Should().NotBeNull();
-        result!.StatusCode.Should().NotBeNull();
+        result.StatusCode.Should().NotBeNull();
         result.StatusCode.Should().Be(StatusCodes.Status500InternalServerError);
 
         result.Value.Should().NotBeNull();
@@ -43,7 +43,7 @@ public class OnExceptionShould
         var jsonErrorResponse = result.Value as HttpGlobalExceptionFilter.JsonErrorResponse;
 
         jsonErrorResponse.Should().NotBeNull();
-        jsonErrorResponse!.Messages.Should().Contain("An error occurred.");
+        jsonErrorResponse.Messages.Should().Contain("An error occurred.");
         jsonErrorResponse.Messages.Should().Contain($"TraceId: {Activity.Current?.TraceId}");
     }
 

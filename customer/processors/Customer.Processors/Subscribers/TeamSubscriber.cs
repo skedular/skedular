@@ -1,6 +1,7 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Customer.Processors.Mappers;
+using Customer.Shared.Database.Entities;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
@@ -26,10 +27,10 @@ public class TeamSubscriber(
         {
             case Type.TeamUpserted:
                 {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Team.OrganizationId);
+
                     var team = mapper.MapTo(@event);
-                    var organization = team.Organization is null
-                        ? null
-                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
+                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
                     var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(
                         team.Id,
                         organization,
@@ -41,7 +42,7 @@ public class TeamSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleTeamUpsertedEventAsync(team, existingTeam, cancellationToken);
+                    await HandleTeamUpsertedEventAsync(team, existingTeam, organization, cancellationToken);
                 }
                 break;
 
@@ -73,12 +74,12 @@ public class TeamSubscriber(
         return EventSubscriberResults.Success;
     }
 
-    private async Task HandleTeamUpsertedEventAsync(Shared.Models.Team team, Team existingTeam, CancellationToken cancellationToken)
+    private async Task HandleTeamUpsertedEventAsync(
+        Shared.Models.Team team,
+        Team existingTeam,
+        Organization organization,
+        CancellationToken cancellationToken)
     {
-        var organization = team.Organization is null
-            ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, true, true, cancellationToken);
-
         existingTeam = repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam, organization));
 
         _ = await RebuildTeamMembersAsync(team, existingTeam, cancellationToken);
@@ -150,7 +151,7 @@ public class TeamSubscriber(
             if (teamMember.OrganizationMember is not null)
             {
                 var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                    teamMember.OrganizationMember.Organization!.Id,
+                    teamMember.OrganizationMember.Organization.Id,
                     cancellationToken);
 
                 var organizationMemberCustomer = await repositoryFactory.CustomerRepository.GetByIdAsync(

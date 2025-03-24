@@ -22,7 +22,7 @@ public class PactProviderContract
             GetRequestMethod() == HttpMethod.Put ||
             GetRequestMethod() == HttpMethod.Patch)
         {
-            _ = JsonConvert.DeserializeObject(_interaction!["request"]!["body"]!.ToString());
+            _ = JsonConvert.DeserializeObject(_interaction["request"]!["body"]!.ToString());
         }
     }
 

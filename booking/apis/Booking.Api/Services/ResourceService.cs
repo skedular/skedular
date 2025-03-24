@@ -64,10 +64,8 @@ public class ResourceService(
 
         if (!string.IsNullOrWhiteSpace(locationId))
         {
-            var location = await repositoryFactory.LocationRepository.GetByIdAndExcludeInactiveDesksRoomsResourcesAsync(
+            var location = await repositoryFactory.LocationRepository.GetByIdAndExcludeInactiveResourcesAsync(
                 locationId,
-                false,
-                false,
                 false,
                 false,
                 cancellationToken);
@@ -126,14 +124,7 @@ public class ResourceService(
             throw new Unauthorized();
         }
 
-        var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(
-            organizationId,
-            false,
-            false,
-            false,
-            false,
-            cancellationToken);
-
+        var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(organizationId, false, false, cancellationToken);
         var resourceCount = locations.Aggregate(0, (acc, item) => item.Resources.Count + acc);
         var availableResourceCount = 0;
 

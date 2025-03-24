@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Customer = Booking.Shared.Models.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
@@ -24,121 +23,31 @@ public class LocationAuthorizationService(
     ICachedLocationService cachedLocationService)
     : ILocationAuthorizationService
 {
-    public bool CanViewLocationDetails(Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-                or LocationMemberRoleConstants.Member
-            };
-        }
+    public bool CanViewLocationDetails(Location location, Customer customer) =>
+        organizationAuthorizationService.CanViewBookings(location.Organization, customer);
 
-        return organizationAuthorizationService.CanViewBookings(location.Organization, customer);
-    }
+    public bool CanViewBookings(Location location, Customer customer) =>
+        organizationAuthorizationService.CanViewBookings(location.Organization, customer);
 
-    public bool CanViewBookings(Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-                or LocationMemberRoleConstants.Member
-            };
-        }
+    public bool CanAddBooking(Location location, Customer customer) =>
+        organizationAuthorizationService.CanAddBooking(location.Organization, customer);
 
-        return organizationAuthorizationService.CanViewBookings(location.Organization, customer);
-    }
+    public bool CanUpdateBooking(Location location, Customer customer) =>
+        organizationAuthorizationService.CanUpdateBooking(location.Organization, customer);
 
-    public bool CanAddBooking(Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-                or LocationMemberRoleConstants.Member
-            };
-        }
+    public bool CanDeleteBooking(Location location, Customer customer) =>
+        organizationAuthorizationService.CanDeleteBooking(location.Organization, customer);
 
-        return organizationAuthorizationService.CanAddBooking(location.Organization, customer);
-    }
+    public bool CanAddBookingOnBehalf(Location location, Customer customer) =>
+        organizationAuthorizationService.CanAddBookingOnBehalf(location.Organization, customer);
 
-    public bool CanUpdateBooking(Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-                or LocationMemberRoleConstants.Member
-            };
-        }
+    public bool CanUpdateBookingOnBehalf(Location location, Customer customer) =>
+        organizationAuthorizationService.CanUpdateBookingOnBehalf(location.Organization, customer);
 
-        return organizationAuthorizationService.CanUpdateBooking(location.Organization, customer);
-    }
+    public bool CanDeleteBookingOnBehalf(Location location, Customer customer) =>
+        organizationAuthorizationService.CanDeleteBookingOnBehalf(location.Organization, customer);
 
-    public bool CanDeleteBooking(Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-                or LocationMemberRoleConstants.Member
-            };
-        }
-
-        return organizationAuthorizationService.CanDeleteBooking(location.Organization, customer);
-    }
-
-    public bool CanAddBookingOnBehalf(Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-                or LocationMemberRoleConstants.Member
-            };
-        }
-
-        return organizationAuthorizationService.CanAddBookingOnBehalf(location.Organization, customer);
-    }
-
-    public bool CanUpdateBookingOnBehalf(Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-                or LocationMemberRoleConstants.Member
-            };
-        }
-
-        return organizationAuthorizationService.CanUpdateBookingOnBehalf(location.Organization, customer);
-    }
-
-    public bool CanDeleteBookingOnBehalf(Location location, Customer customer)
-    {
-        if (location.Organization is null)
-        {
-            return location.LocationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-            {
-                Role: LocationMemberRoleConstants.Owner or LocationMemberRoleConstants.Administrator
-                or LocationMemberRoleConstants.Member
-            };
-        }
-
-        return organizationAuthorizationService.CanDeleteBookingOnBehalf(location.Organization, customer);
-    }
-
-    public async Task<LocationPermissions> GetPermissionsAsync(
-        string locationId,
-        CancellationToken cancellationToken)
+    public async Task<LocationPermissions> GetPermissionsAsync(string locationId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 

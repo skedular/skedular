@@ -19,17 +19,11 @@ public class TeamSubscriber(
         {
             case Type.TeamUpserted:
                 {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Team.OrganizationId);
+
                     var team = mapper.MapTo(@event);
-                    var organization = team.Organization is null
-                        ? null
-                        : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                            team.Organization.Id,
-                            cancellationToken);
-                    var existingTeam =
-                        await repositoryFactory.TeamRepository.UpsertNakedAsync(
-                            team.Id,
-                            organization,
-                            cancellationToken);
+                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
+                    var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken);
                     if (existingTeam.EventRaisedAt > team.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");

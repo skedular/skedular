@@ -194,7 +194,7 @@ public class BookingService(
         if (existingBooking.Location is not null)
         {
             var location =
-                await repositoryFactory.LocationRepository.GetByIdAsync(existingBooking.Location.Id, false, false, false, false, cancellationToken);
+                await repositoryFactory.LocationRepository.GetByIdAsync(existingBooking.Location.Id, false, false, cancellationToken);
             if (location is null)
             {
                 throw new LocationNotFound();
@@ -336,26 +336,15 @@ public class BookingService(
 
             foreach (var location in locations)
             {
-                if (location.Organization is null)
+                if (organizationIds is null)
                 {
-                    locationIds ??= await GetCustomerLocationIdsAsync(customer, cancellationToken);
-                    if (!locationIds.Contains(location.Id))
-                    {
-                        throw new Unauthorized();
-                    }
+                    var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
+                    organizationIds = organizationCustomerPairs.Keys.ToList();
                 }
-                else
-                {
-                    if (organizationIds is null)
-                    {
-                        var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                        organizationIds = organizationCustomerPairs.Keys.ToList();
-                    }
 
-                    if (!organizationIds.Contains(location.Organization.Id))
-                    {
-                        throw new Unauthorized();
-                    }
+                if (!organizationIds.Contains(location.Organization.Id))
+                {
+                    throw new Unauthorized();
                 }
             }
         }
@@ -369,26 +358,15 @@ public class BookingService(
 
             foreach (var team in teams)
             {
-                if (team.Organization is null)
+                if (organizationIds is null)
                 {
-                    teamIds ??= await GetCustomerTeamIdsAsync(customer, cancellationToken);
-                    if (!teamIds.Contains(team.Id))
-                    {
-                        throw new Unauthorized();
-                    }
+                    var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
+                    organizationIds = organizationCustomerPairs.Keys.ToList();
                 }
-                else
-                {
-                    if (organizationIds is null)
-                    {
-                        var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                        organizationIds = organizationCustomerPairs.Keys.ToList();
-                    }
 
-                    if (!organizationIds.Contains(team.Organization.Id))
-                    {
-                        throw new Unauthorized();
-                    }
+                if (!organizationIds.Contains(team.Organization.Id))
+                {
+                    throw new Unauthorized();
                 }
             }
         }
@@ -504,7 +482,7 @@ public class BookingService(
             return null;
         }
 
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, false, false, false, false, cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, false, false, cancellationToken);
         if (location is null)
         {
             throw new LocationNotFound();
@@ -626,7 +604,7 @@ public class BookingService(
 
     private async Task<List<string>> GetCustomerLocationIdsAsync(Shared.Models.Customer customer, CancellationToken cancellationToken)
     {
-        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdAsync(customer.Id, false, false, false, false, cancellationToken);
+        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdAsync(customer.Id, false, false, cancellationToken);
         return locations.Select(item => item.Id).ToList();
     }
 
@@ -660,8 +638,7 @@ public class BookingService(
 
         if (booking.Location is not null)
         {
-            var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, false, false, false, false,
-                cancellationToken);
+            var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, false, false, cancellationToken);
             if (location is null)
             {
                 throw new OrganizationNotFound();
@@ -777,14 +754,13 @@ public class BookingService(
 
         if (booking.Organization is not null && booking.Location is null && booking.Team is null)
         {
-            location = customer.PreferredLocations
-                .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            location = customer.PreferredLocations.FirstOrDefault(item => item.Organization.Id == booking.Organization.Id);
             if (location is not null)
             {
-                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
+                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, cancellationToken);
             }
 
-            team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            team = customer.PreferredTeams.FirstOrDefault(item => item.Organization.Id == booking.Organization.Id);
             if (team is not null)
             {
                 team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
@@ -792,7 +768,7 @@ public class BookingService(
         }
         else if (booking.Organization is not null && booking.Location is not null && booking.Team is null)
         {
-            team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            team = customer.PreferredTeams.FirstOrDefault(item => item.Organization.Id == booking.Organization.Id);
             if (team is not null)
             {
                 team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
@@ -800,11 +776,10 @@ public class BookingService(
         }
         else if (booking.Organization is not null && booking.Location is null && booking.Team is not null)
         {
-            location = customer.PreferredLocations.FirstOrDefault(
-                item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
+            location = customer.PreferredLocations.FirstOrDefault(item => item.Organization.Id == booking.Organization.Id);
             if (location is not null)
             {
-                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
+                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, cancellationToken);
             }
         }
         else if (booking.Organization is null && (booking.Location is not null || booking.Team is not null))
@@ -817,15 +792,13 @@ public class BookingService(
         {
             if (customer.DefaultOrganization is null)
             {
-                team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null) ?? customer.PreferredTeams.FirstOrDefault();
+                team = customer.PreferredTeams.FirstOrDefault();
                 if (team is null)
                 {
-                    location = customer.PreferredLocations.FirstOrDefault(item => item.Organization is not null) ??
-                               customer.PreferredLocations.FirstOrDefault();
+                    location = customer.PreferredLocations.FirstOrDefault();
                     if (location is not null)
                     {
-                        location =
-                            await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
+                        location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, cancellationToken);
                     }
                 }
 
@@ -841,15 +814,13 @@ public class BookingService(
             else
             {
                 organization = customer.DefaultOrganization;
-                location = customer.PreferredLocations
-                    .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
+                location = customer.PreferredLocations.FirstOrDefault(item => item.Organization.Id == customer.DefaultOrganization.Id);
                 if (location is not null)
                 {
-                    location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
+                    location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, cancellationToken);
                 }
 
-                team = customer.PreferredTeams.FirstOrDefault(
-                    item => item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
+                team = customer.PreferredTeams.FirstOrDefault(item => item.Organization.Id == customer.DefaultOrganization.Id);
                 if (team is not null)
                 {
                     team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);

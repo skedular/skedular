@@ -43,8 +43,7 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Organization)
-            .ThenInclude(query =>
-                query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .Include(query => query.PreferredByCustomers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
@@ -73,12 +72,10 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
     public async Task<ICollection<Team>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.Team
             .Where(query => !query.DeletedAt.HasValue &&
-                            ((query.Organization == null && query.TeamMembers.Any(teamMember =>
-                                 !teamMember.DeletedAt.HasValue && teamMember.Customer.Id == customerId)) ||
-                             (query.Organization != null && !query.Organization.DeletedAt.HasValue &&
-                              query.Organization.OrganizationMembers.Any(
-                                  organizationMember =>
-                                      !organizationMember.DeletedAt.HasValue &&
-                                      organizationMember.Customer.Id == customerId))))
+                            !query.Organization.DeletedAt.HasValue &&
+                            query.Organization.OrganizationMembers.Any(
+                                organizationMember =>
+                                    !organizationMember.DeletedAt.HasValue &&
+                                    organizationMember.Customer.Id == customerId))
             .ToListAsync(cancellationToken);
 }

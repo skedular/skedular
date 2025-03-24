@@ -20,16 +20,11 @@ public class LocationSubscriber(
         {
             case Type.LocationUpserted:
                 {
-                    var location = mapper.MapTo(@event);
-                    if (location.Organization is null)
-                    {
-                        break;
-                    }
+                    ArgumentException.ThrowIfNullOrWhiteSpace(@event.Data.Location.OrganizationId);
 
-                    var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
-                    var existingLocation =
-                        await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, existingOrganization, cancellationToken);
+                    var location = mapper.MapTo(@event);
+                    var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
+                    var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, organization, cancellationToken);
                     if (existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Location event. Event timestamp is older that what is already processed.");
@@ -37,7 +32,7 @@ public class LocationSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleLocationUpsertedEventAsync(location, existingLocation, existingOrganization, cancellationToken);
+                    await HandleLocationUpsertedEventAsync(location, existingLocation, organization, cancellationToken);
                 }
                 break;
 
@@ -72,10 +67,10 @@ public class LocationSubscriber(
     private async Task HandleLocationUpsertedEventAsync(
         Shared.Models.Location location,
         Location existingLocation,
-        Organization existingOrganization,
+        Organization organization,
         CancellationToken cancellationToken)
     {
-        _ = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, existingOrganization));
+        _ = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 

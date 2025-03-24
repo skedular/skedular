@@ -21,7 +21,6 @@ using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingServi
 using Customer = Slack.Shared.Models.Customer;
 using GetInput = Api.Shared.Services.Grpc.Skedular.Booking.V1.GetInput;
 using Icons = Slack.Shared.Constants.Icons;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using Option = SlackNet.Blocks.Option;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 
@@ -31,9 +30,7 @@ public class EditBookingButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfiguration slackConfiguration,
     BookingConfiguration bookingConfiguration,
-    LocationConfiguration locationConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
-    LocationService.LocationServiceClient locationServiceClient,
     IBookingService bookingService,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
