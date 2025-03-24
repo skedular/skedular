@@ -49,7 +49,6 @@ export { default as ArrowUpIcon } from '@mui/icons-material/KeyboardArrowUp';
 export { default as ListViewIcon } from '@mui/icons-material/List';
 export { default as ClosedAllDayIcon } from '@mui/icons-material/Lock';
 export { default as LogoutIcon } from '@mui/icons-material/Logout';
-export { default as RoomIcon } from '@mui/icons-material/MeetingRoom';
 export { default as MenuIcon } from '@mui/icons-material/Menu';
 export { default as HamburgerMenuIcon } from '@mui/icons-material/MenuRounded';
 export { default as MoreItemsIcon } from '@mui/icons-material/MoreHoriz';
@@ -159,15 +158,6 @@ export const ResourceIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props
     <EventSeat fontSize={fontSize} sx={sx} color={color} />
   ) : (
     <TooltipIcon tip={tip ?? 'Resource'}>
-      <EventSeat fontSize={fontSize} sx={sx} color={color} />
-    </TooltipIcon>
-  );
-
-export const DeskIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
-  excludeTooltip ? (
-    <EventSeat fontSize={fontSize} sx={sx} color={color} />
-  ) : (
-    <TooltipIcon tip={tip ?? 'Desk'}>
       <EventSeat fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );

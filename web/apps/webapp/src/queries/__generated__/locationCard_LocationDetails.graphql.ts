@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aac63540e7d8e4676aab802cb1966b16>>
+ * @generated SignedSource<<dc7a318a066d6fb198f119d7ef1f83e0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,9 +18,6 @@ export type locationCard_LocationDetails$data = {
     readonly name: string | null | undefined;
     readonly uniqueId: string;
   }>;
-  readonly desks: ReadonlyArray<{
-    readonly id: string;
-  }>;
   readonly hasFutureBooking: boolean;
   readonly id: string;
   readonly name: string;
@@ -30,6 +27,9 @@ export type locationCard_LocationDetails$data = {
   readonly physicalAddress: {
     readonly formattedAddress: string | null | undefined;
   } | null | undefined;
+  readonly resources: ReadonlyArray<{
+    readonly id: string;
+  }>;
   readonly zones: ReadonlyArray<{
     readonly color: string | null | undefined;
     readonly name: string | null | undefined;
@@ -106,9 +106,9 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "DeskDetails",
+      "concreteType": "ResourceDetails",
       "kind": "LinkedField",
-      "name": "desks",
+      "name": "resources",
       "plural": true,
       "selections": [
         (v0/*: any*/)
@@ -172,6 +172,6 @@ return {
 };
 })();
 
-(node as any).hash = "ff7e3b5eb97d6922e138038b07286f7b";
+(node as any).hash = "884d0eadbea1789841da4ece4d434369";
 
 export default node;

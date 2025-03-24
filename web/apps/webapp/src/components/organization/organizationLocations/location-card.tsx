@@ -1,7 +1,7 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
-import { DeskIcon, EllipseMenuIcon, LocationIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
+import { EllipseMenuIcon, LocationIcon, NotPreferredIcon, PreferredIcon, ResourceIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -42,7 +42,7 @@ type Props = {
   organizationId: string;
   connectionIds: string[];
   sharedWithTeammates: CustomerDetails[];
-  availableDesksCount: number;
+  availableResourcesCount: number;
   availablePercentage: number;
   defaultDate: Dayjs;
 };
@@ -63,7 +63,7 @@ const LocationCard = ({
   onReloadRequired,
   organizationId,
   sharedWithTeammates,
-  availableDesksCount,
+  availableResourcesCount,
   availablePercentage,
   defaultDate,
 }: Props) => {
@@ -96,7 +96,7 @@ const LocationCard = ({
           name
           color
         }
-        desks {
+        resources {
           id
         }
         physicalAddress {
@@ -308,7 +308,7 @@ const LocationCard = ({
     });
   };
 
-  const desksCount = locationDetails.desks.length;
+  const resourcesCount = locationDetails.resources.length;
   const zones = locationDetails.zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }));
 
   return (
@@ -362,9 +362,9 @@ const LocationCard = ({
         />
         <CardContent>
           <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%' }}>
-            <SmallIconTypography label={`${desksCount} Desks`} sx={{ flexGrow: 0, flexShrink: 0 }} startElement={<DeskIcon />} />
+            <SmallIconTypography label={`${resourcesCount} Resources`} sx={{ flexGrow: 0, flexShrink: 0 }} startElement={<ResourceIcon />} />
             <StackColumn sx={{ paddingLeft: 40, alignItems: 'flex-end', width: '100%' }}>
-              <SmallIconTypography label={`${availableDesksCount} Available Today`} />
+              <SmallIconTypography label={`${availableResourcesCount} Available Today`} />
               <LinearProgress value={availablePercentage} variant="determinate" sx={{ width: '100%' }} />
             </StackColumn>
           </StackRow>

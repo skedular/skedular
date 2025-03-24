@@ -25,13 +25,8 @@ const RootQuery = graphql`
     $peopleNameSearchText: String
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $locationId: String!
-    $locationExists: Boolean!
-    $dateToGetAvailableDesks: DateTime!
-    $deskIdsToIncludeToGetAvailableDesks: [String!]!
-    $dateToGetAvailableRooms: DateTime!
     $dateFromToGetAvailableResources: DateTime!
     $dateUntilToGetAvailableResources: DateTime!
-    $roomIdsToIncludeToGetAvailableRooms: [String!]!
     $customerId: String!
     $customerExists: Boolean!
     $teamsSortingValues: [TeamOrderInput!]
@@ -43,8 +38,6 @@ const RootQuery = graphql`
     ...editBooking_query
     ...editBooking_organizationMembers_query
     ...editBooking_customerTeams_query
-    ...editBooking_availableLocationDesks_query
-    ...editBooking_availableLocationRooms_query
     ...editBooking_availableResources_query
   }
 `;
@@ -90,8 +83,6 @@ const LocationPage = ({ queryReference, onReloadRequired, organizationId, bookin
         rootDataRelay={rootData}
         rootDataTeamsRelay={rootData}
         rootDataOrganizationMembersRelay={rootData}
-        rootDataAvailableLocationDesksRelay={rootData}
-        rootDataAvailableLocationRoomsRelay={rootData}
         rootDataAvailableResourcesRelay={rootData}
         onReloadRequired={onReloadRequired}
         organizationId={organizationId}
@@ -151,11 +142,6 @@ const LocationPageWithRelay = () => {
           },
         ],
         locationId: '',
-        locationExists: false,
-        dateToGetAvailableDesks: startDate,
-        deskIdsToIncludeToGetAvailableDesks: [],
-        dateToGetAvailableRooms: startDate,
-        roomIdsToIncludeToGetAvailableRooms: [],
         dateFromToGetAvailableResources: startDate,
         dateUntilToGetAvailableResources: endDate,
         customerId: '',

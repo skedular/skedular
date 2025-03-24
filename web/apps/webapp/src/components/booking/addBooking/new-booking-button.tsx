@@ -35,9 +35,6 @@ const RootQuery = graphql`
     $organizationId: String!
     $peopleNameSearchText: String
     $locationId: String!
-    $locationExists: Boolean!
-    $dateToGetAvailableDesks: DateTime!
-    $dateToGetAvailableRooms: DateTime!
     $dateFromToGetAvailableResources: DateTime!
     $dateUntilToGetAvailableResources: DateTime!
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
@@ -49,8 +46,6 @@ const RootQuery = graphql`
     ...newBookingDialog_query
     ...newBookingDialog_organizationMembers_query
     ...newBookingDialog_customerTeams_query
-    ...newBookingDialog_availableLocationDesks_query
-    ...newBookingDialog_availableLocationRooms_query
     ...newBookingDialog_availableResources_query
   }
 `;
@@ -108,8 +103,6 @@ const NewBookingButton = ({
         rootDataRelay={rootData}
         rootDataTeamsRelay={rootData}
         rootDataOrganizationMembersRelay={rootData}
-        rootDataAvailableLocationDesksRelay={rootData}
-        rootDataAvailableLocationRoomsRelay={rootData}
         rootDataAvailableResourcesRelay={rootData}
         connectionIds={connectionIds ?? []}
         isDialogOpen={isDialogOpen}
@@ -165,9 +158,6 @@ const NewBookingButtonWithRelay = ({
       {
         organizationId,
         locationId: defaultLocationId ?? '',
-        locationExists: false,
-        dateToGetAvailableDesks: startDate,
-        dateToGetAvailableRooms: startDate,
         dateFromToGetAvailableResources: startDate,
         dateUntilToGetAvailableResources: endDate,
         customerId: '',

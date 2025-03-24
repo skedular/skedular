@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f787cfd182c829df8b6c79c21cc11710>>
+ * @generated SignedSource<<c1ebac8a2115d5daa2964b612a79fdb8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,10 +29,11 @@ export type OrganizationMemberOrderInput = {
 export type organizationLocations_rootQuery$variables = {
   customTagIds?: ReadonlyArray<string> | null | undefined;
   customTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
+  fromTodayDate: any;
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
   organizationId: string;
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
-  todayDate: any;
+  untilTodayDate: any;
   zoneIds?: ReadonlyArray<string> | null | undefined;
   zonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
 };
@@ -63,7 +64,7 @@ export type organizationLocations_rootQuery$data = {
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "locationCard_query" | "organizationLocations_locations_availableOrganizationDesks_query" | "zoneSelector_allZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "locationCard_query" | "organizationLocations_locations_availableOrganizationResources_query" | "zoneSelector_allZones_query">;
 };
 export type organizationLocations_rootQuery = {
   response: organizationLocations_rootQuery$data;
@@ -84,51 +85,56 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "locationsSortingValues"
+  "name": "fromTodayDate"
 },
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "locationsSortingValues"
 },
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationMembersSortingValues"
+  "name": "organizationId"
 },
 v5 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "todayDate"
+  "name": "organizationMembersSortingValues"
 },
 v6 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "zoneIds"
+  "name": "untilTodayDate"
 },
 v7 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "zonesSortingValues"
+  "name": "zoneIds"
 },
 v8 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "zonesSortingValues"
+},
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v10 = [
-  (v9/*: any*/)
+v11 = [
+  (v10/*: any*/)
 ],
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "CustomerDetails",
@@ -136,7 +142,7 @@ v11 = {
   "name": "me",
   "plural": false,
   "selections": [
-    (v8/*: any*/),
+    (v9/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -144,39 +150,39 @@ v11 = {
       "kind": "LinkedField",
       "name": "preferredLocations",
       "plural": true,
-      "selections": (v10/*: any*/),
+      "selections": (v11/*: any*/),
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v12 = {
+v13 = {
   "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
 },
-v13 = {
+v14 = {
   "fields": [
-    (v12/*: any*/)
+    (v13/*: any*/)
   ],
   "kind": "ObjectValue",
   "name": "where"
 },
-v14 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v15 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v16 = {
+v17 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -188,7 +194,7 @@ v16 = {
     }
   ]
 },
-v17 = {
+v18 = {
   "alias": null,
   "args": [
     {
@@ -196,14 +202,14 @@ v17 = {
       "name": "orderBy",
       "variableName": "organizationMembersSortingValues"
     },
-    (v13/*: any*/)
+    (v14/*: any*/)
   ],
   "concreteType": "OrganizationMemberConnection",
   "kind": "LinkedField",
   "name": "organizationMembers",
   "plural": false,
   "selections": [
-    (v14/*: any*/),
+    (v15/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -220,7 +226,7 @@ v17 = {
           "name": "node",
           "plural": false,
           "selections": [
-            (v8/*: any*/),
+            (v9/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -229,8 +235,8 @@ v17 = {
               "name": "customer",
               "plural": false,
               "selections": [
-                (v9/*: any*/),
-                (v15/*: any*/),
+                (v10/*: any*/),
+                (v16/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -268,33 +274,33 @@ v17 = {
       ],
       "storageKey": null
     },
-    (v16/*: any*/)
+    (v17/*: any*/)
   ],
   "storageKey": null
 },
-v18 = [
+v19 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "organizationId"
   }
 ],
-v19 = {
+v20 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "canModify",
   "storageKey": null
 },
-v20 = {
+v21 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v21 = [
-  (v14/*: any*/),
+v22 = [
+  (v15/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -311,28 +317,28 @@ v21 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v8/*: any*/),
-          (v15/*: any*/),
-          (v20/*: any*/)
+          (v9/*: any*/),
+          (v16/*: any*/),
+          (v21/*: any*/)
         ],
         "storageKey": null
       }
     ],
     "storageKey": null
   },
-  (v16/*: any*/)
+  (v17/*: any*/)
 ],
-v22 = {
+v23 = {
   "kind": "Variable",
   "name": "customTagIds",
   "variableName": "customTagIds"
 },
-v23 = {
+v24 = {
   "kind": "Variable",
   "name": "zoneIds",
   "variableName": "zoneIds"
 },
-v24 = [
+v25 = [
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -340,18 +346,18 @@ v24 = [
   },
   {
     "fields": [
-      (v22/*: any*/),
-      (v12/*: any*/),
-      (v23/*: any*/)
+      (v23/*: any*/),
+      (v13/*: any*/),
+      (v24/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v25 = [
-  (v9/*: any*/),
-  (v15/*: any*/),
-  (v20/*: any*/)
+v26 = [
+  (v10/*: any*/),
+  (v16/*: any*/),
+  (v21/*: any*/)
 ];
 return {
   "fragment": {
@@ -363,23 +369,24 @@ return {
       (v4/*: any*/),
       (v5/*: any*/),
       (v6/*: any*/),
-      (v7/*: any*/)
+      (v7/*: any*/),
+      (v8/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocations_rootQuery",
     "selections": [
-      (v11/*: any*/),
-      (v17/*: any*/),
+      (v12/*: any*/),
+      (v18/*: any*/),
       {
         "alias": null,
-        "args": (v18/*: any*/),
+        "args": (v19/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v19/*: any*/)
+          (v20/*: any*/)
         ],
         "storageKey": null
       },
@@ -401,7 +408,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "organizationLocations_locations_availableOrganizationDesks_query"
+        "name": "organizationLocations_locations_availableOrganizationResources_query"
       }
     ],
     "type": "Query",
@@ -410,30 +417,31 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v3/*: any*/),
-      (v2/*: any*/),
-      (v7/*: any*/),
-      (v1/*: any*/),
-      (v5/*: any*/),
       (v4/*: any*/),
+      (v3/*: any*/),
+      (v8/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/),
       (v6/*: any*/),
+      (v5/*: any*/),
+      (v7/*: any*/),
       (v0/*: any*/)
     ],
     "kind": "Operation",
     "name": "organizationLocations_rootQuery",
     "selections": [
-      (v11/*: any*/),
-      (v17/*: any*/),
+      (v12/*: any*/),
+      (v18/*: any*/),
       {
         "alias": null,
-        "args": (v18/*: any*/),
+        "args": (v19/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v19/*: any*/),
-          (v8/*: any*/)
+          (v20/*: any*/),
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
@@ -445,13 +453,13 @@ return {
             "name": "orderBy",
             "variableName": "customTagsSortingValues"
           },
-          (v13/*: any*/)
+          (v14/*: any*/)
         ],
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "customTags",
         "plural": false,
-        "selections": (v21/*: any*/),
+        "selections": (v22/*: any*/),
         "storageKey": null
       },
       {
@@ -462,24 +470,24 @@ return {
             "name": "orderBy",
             "variableName": "zonesSortingValues"
           },
-          (v13/*: any*/)
+          (v14/*: any*/)
         ],
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "zones",
         "plural": false,
-        "selections": (v21/*: any*/),
+        "selections": (v22/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v24/*: any*/),
+        "args": (v25/*: any*/),
         "concreteType": "LocationConnection",
         "kind": "LinkedField",
         "name": "locations",
         "plural": false,
         "selections": [
-          (v14/*: any*/),
+          (v15/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -496,8 +504,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/),
-                  (v15/*: any*/),
+                  (v9/*: any*/),
+                  (v16/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -505,7 +513,7 @@ return {
                     "kind": "LinkedField",
                     "name": "customTags",
                     "plural": true,
-                    "selections": (v25/*: any*/),
+                    "selections": (v26/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -515,18 +523,18 @@ return {
                     "kind": "LinkedField",
                     "name": "zones",
                     "plural": true,
-                    "selections": (v25/*: any*/),
+                    "selections": (v26/*: any*/),
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "DeskDetails",
+                    "concreteType": "ResourceDetails",
                     "kind": "LinkedField",
-                    "name": "desks",
+                    "name": "resources",
                     "plural": true,
                     "selections": [
-                      (v8/*: any*/)
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -555,7 +563,7 @@ return {
                     "name": "hasFutureBooking",
                     "storageKey": null
                   },
-                  (v19/*: any*/),
+                  (v20/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -570,7 +578,7 @@ return {
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
-                    "selections": (v10/*: any*/),
+                    "selections": (v11/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -618,13 +626,13 @@ return {
             ],
             "storageKey": null
           },
-          (v16/*: any*/)
+          (v17/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v24/*: any*/),
+        "args": (v25/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -639,32 +647,27 @@ return {
         "args": [
           {
             "fields": [
-              {
-                "kind": "Literal",
-                "name": "combineCustomTagsZones",
-                "value": true
-              },
-              (v22/*: any*/),
+              (v23/*: any*/),
               {
                 "kind": "Variable",
-                "name": "date",
-                "variableName": "todayDate"
+                "name": "from",
+                "variableName": "fromTodayDate"
               },
+              (v13/*: any*/),
               {
-                "kind": "Literal",
-                "name": "deskIdsToInclude",
-                "value": []
+                "kind": "Variable",
+                "name": "until",
+                "variableName": "untilTodayDate"
               },
-              (v12/*: any*/),
-              (v23/*: any*/)
+              (v24/*: any*/)
             ],
             "kind": "ObjectValue",
             "name": "where"
           }
         ],
-        "concreteType": "BookingDeskDetails",
+        "concreteType": "BookingResourceDetails",
         "kind": "LinkedField",
-        "name": "availableDesks",
+        "name": "availableResources",
         "plural": true,
         "selections": [
           {
@@ -674,7 +677,7 @@ return {
             "kind": "LinkedField",
             "name": "location",
             "plural": false,
-            "selections": (v10/*: any*/),
+            "selections": (v11/*: any*/),
             "storageKey": null
           }
         ],
@@ -683,16 +686,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f8801cb4fe51e28fd998188e7264f508",
+    "cacheID": "d1d0613f085de6f5d596976df312d019",
     "id": null,
     "metadata": {},
     "name": "organizationLocations_rootQuery",
     "operationKind": "query",
-    "text": "query organizationLocations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $todayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $zoneIds: [String!]\n  $customTagIds: [String!]\n) {\n  me {\n    id\n    preferredLocations {\n      uniqueId\n    }\n  }\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...locationCard_query\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n  ...organizationLocations_locations_availableOrganizationDesks_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $customTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    uniqueId\n    name\n    color\n  }\n  zones {\n    uniqueId\n    name\n    color\n  }\n  desks {\n    id\n  }\n  physicalAddress {\n    formattedAddress\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueId\n  }\n}\n\nfragment locationCard_query on Query {\n  me {\n    id\n    preferredLocations {\n      uniqueId\n    }\n  }\n}\n\nfragment organizationLocations_locations_availableOrganizationDesks_query on Query {\n  locations(where: {organizationId: $organizationId, zoneIds: $zoneIds, customTagIds: $customTagIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        desks {\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueId\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableDesks(where: {organizationId: $organizationId, date: $todayDate, deskIdsToInclude: [], zoneIds: $zoneIds, customTagIds: $customTagIds, combineCustomTagsZones: true}) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "query organizationLocations_rootQuery(\n  $organizationId: String!\n  $locationsSortingValues: [LocationOrderInput!]\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $fromTodayDate: DateTime!\n  $untilTodayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $zoneIds: [String!]\n  $customTagIds: [String!]\n) {\n  me {\n    id\n    preferredLocations {\n      uniqueId\n    }\n  }\n  organizationMembers(where: {organizationId: $organizationId}, orderBy: $organizationMembersSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        customer {\n          uniqueId\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n      }\n    }\n  }\n  organization(id: $organizationId) {\n    canModify\n    id\n  }\n  ...locationCard_query\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n  ...organizationLocations_locations_availableOrganizationResources_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $customTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    uniqueId\n    name\n    color\n  }\n  zones {\n    uniqueId\n    name\n    color\n  }\n  resources {\n    id\n  }\n  physicalAddress {\n    formattedAddress\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueId\n  }\n}\n\nfragment locationCard_query on Query {\n  me {\n    id\n    preferredLocations {\n      uniqueId\n    }\n  }\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query on Query {\n  locations(where: {organizationId: $organizationId, zoneIds: $zoneIds, customTagIds: $customTagIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        resources {\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueId\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationId: $organizationId, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      uniqueId\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $zonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0f800b315064e03fd390be5f2b92d81e";
+(node as any).hash = "2bac4973ad94e453432ef3b0aa7219f9";
 
 export default node;

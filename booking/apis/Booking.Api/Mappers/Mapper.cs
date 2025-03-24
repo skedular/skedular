@@ -26,8 +26,6 @@ public interface IMapper
     Shared.Models.Booking MapTo(AddBookingInput src);
     Shared.Models.Booking MapTo(UpdateBookingInput src);
     Shared.Models.Location? MapTo(Location? src);
-    IEnumerable<BookingDeskDetails> MapTo(IEnumerable<Shared.Models.Desk> src);
-    IEnumerable<BookingRoomDetails> MapTo(IEnumerable<Shared.Models.Room> src);
 
     Shared.Database.Entities.Booking MapTo(
         Shared.Models.Booking src,
@@ -125,8 +123,6 @@ public class Mapper : IMapper
             Customer = MapTo(src.Customer),
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
-            Desks = MapTo(src.Desks),
-            Rooms = MapTo(src.Rooms),
             Resources = MapTo(src.Resources),
             Team = MapTo(src.Team)
         };
@@ -146,8 +142,8 @@ public class Mapper : IMapper
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
-            Desks = src.DeskIds.Select(item => new Shared.Models.Desk { Id = item }).ToList(),
-            Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList(),
+            Desks = [],
+            Rooms = [],
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList()
         };
     }
@@ -167,8 +163,8 @@ public class Mapper : IMapper
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
-            Desks = src.DeskIds.Select(item => new Shared.Models.Desk { Id = item }).ToList(),
-            Rooms = src.RoomIds.Select(item => new Shared.Models.Room { Id = item }).ToList(),
+            Desks = [],
+            Rooms = [],
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList()
         };
     }
@@ -348,12 +344,7 @@ public class Mapper : IMapper
                 Name = src.Name
             };
 
-    public IEnumerable<BookingDeskDetails> MapTo(IEnumerable<Shared.Models.Desk> src) => src.Select(MapTo);
-
     public IEnumerable<Shared.Models.Desk> MapTo(IEnumerable<Desk> src) => src.Select(MapTo);
-
-    public IEnumerable<BookingRoomDetails> MapTo(IEnumerable<Shared.Models.Room> src) => src.Select(MapTo);
-
     public IEnumerable<Shared.Models.Room> MapTo(IEnumerable<Room> src) => src.Select(MapTo);
     public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src) => new(src.Cursor, MapTo(src.Node));
     public BookingEdge MapTo(Edge<Shared.Models.Booking> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
@@ -450,32 +441,6 @@ public class Mapper : IMapper
 
     private static BookingTeamDetails? MapTo(Shared.Models.Team? src) =>
         src is null ? null : new BookingTeamDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
-
-    private static BookingDeskDetails MapTo(Shared.Models.Desk src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Name = src.Name.ToSafeString(),
-            CustomTags = MapToCustomTags(src.OrganizationTags),
-            Zones = MapToZones(src.OrganizationTags),
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString(),
-            Location = MapTo(src.Location)
-        };
-
-    private static BookingRoomDetails MapTo(Shared.Models.Room src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Name = src.Name.ToSafeString(),
-            CustomTags = MapToCustomTags(src.OrganizationTags),
-            Zones = MapToZones(src.OrganizationTags),
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString(),
-            Location = MapTo(src.Location)
-        };
 
     private static IEnumerable<BookingOrganizationCustomTagDetails> MapToCustomTags(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.Custom).Select(MapToCustomTag);

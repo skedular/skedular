@@ -136,50 +136,6 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<DeskConnection?> DesksAsync(
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        DeskWhereInput where,
-        IEnumerable<DeskOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        var (paginatedInfo, edges, totalCount) = await deskService.GetPaginatedDesksAsync(
-            new PaginationInputParam(after, first, before, last),
-            new DeskSearchCriteria(
-                where.LocationId,
-                where.NameContains,
-                where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection())),
-            orderBy.ToSafeCollection().Select(item => new DeskOrder(item.Direction, item.Field)).ToList(),
-            cancellationToken);
-
-        return new DeskConnection
-        {
-            PageInfo = new PageInfo
-            {
-                HasNextPage = paginatedInfo.HasNextPage,
-                HasPreviousPage = paginatedInfo.HasPreviousPage,
-                StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
-            },
-            Edges = edges.Select(mapper.MapTo),
-            TotalCount = totalCount
-        };
-    }
-
-    [UseResolverScope]
-    public async Task<DeskDetails?> DeskAsync(string id, [Service] IDeskService deskService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await deskService.GetByIdAsync(id, cancellationToken));
-
-    [UseResolverScope]
     public async Task<LocationAnalytics?> LocationAnalyticsAsync(
         string locationId,
         DateTimeOffset from,
@@ -223,50 +179,6 @@ public class Query(IMapper mapper)
                     locationAnalytics.DailyBookingsTotal,
                     locationAnalytics.RoomsOccupancyPercentage));
     }
-
-    [UseResolverScope]
-    public async Task<RoomConnection?> RoomsAsync(
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        RoomWhereInput where,
-        IEnumerable<RoomOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IRoomService roomService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        var (paginatedInfo, edges, totalCount) = await roomService.GetPaginatedRoomsAsync(
-            new PaginationInputParam(after, first, before, last),
-            new RoomSearchCriteria(
-                where.LocationId,
-                where.NameContains,
-                where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection())),
-            orderBy.ToSafeCollection().Select(item => new RoomOrder(item.Direction, item.Field)).ToList(),
-            cancellationToken);
-
-        return new RoomConnection
-        {
-            PageInfo = new PageInfo
-            {
-                HasNextPage = paginatedInfo.HasNextPage,
-                HasPreviousPage = paginatedInfo.HasPreviousPage,
-                StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
-            },
-            Edges = edges.Select(mapper.MapTo),
-            TotalCount = totalCount
-        };
-    }
-
-    [UseResolverScope]
-    public async Task<RoomDetails?> RoomAsync(string id, [Service] IRoomService roomService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await roomService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public async Task<ResourceConnection?> ResourcesAsync(

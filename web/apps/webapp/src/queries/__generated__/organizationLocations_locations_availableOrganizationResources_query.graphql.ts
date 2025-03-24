@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<05d81eb9e34ef139d55a318789eb20ea>>
+ * @generated SignedSource<<c3303f1a9aaf3270160987450c195088>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,8 +10,8 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationLocations_locations_availableOrganizationDesks_query$data = {
-  readonly availableDesks: ReadonlyArray<{
+export type organizationLocations_locations_availableOrganizationResources_query$data = {
+  readonly availableResources: ReadonlyArray<{
     readonly location: {
       readonly uniqueId: string;
     } | null | undefined;
@@ -27,9 +27,6 @@ export type organizationLocations_locations_availableOrganizationDesks_query$dat
           readonly name: string | null | undefined;
           readonly uniqueId: string;
         }>;
-        readonly desks: ReadonlyArray<{
-          readonly id: string;
-        }>;
         readonly hasFutureBooking: boolean;
         readonly id: string;
         readonly name: string;
@@ -39,6 +36,9 @@ export type organizationLocations_locations_availableOrganizationDesks_query$dat
         readonly physicalAddress: {
           readonly formattedAddress: string | null | undefined;
         } | null | undefined;
+        readonly resources: ReadonlyArray<{
+          readonly id: string;
+        }>;
         readonly zones: ReadonlyArray<{
           readonly color: string | null | undefined;
           readonly name: string | null | undefined;
@@ -49,11 +49,11 @@ export type organizationLocations_locations_availableOrganizationDesks_query$dat
     }>;
     readonly totalCount: number | null | undefined;
   } | null | undefined;
-  readonly " $fragmentType": "organizationLocations_locations_availableOrganizationDesks_query";
+  readonly " $fragmentType": "organizationLocations_locations_availableOrganizationResources_query";
 };
-export type organizationLocations_locations_availableOrganizationDesks_query$key = {
-  readonly " $data"?: organizationLocations_locations_availableOrganizationDesks_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationLocations_locations_availableOrganizationDesks_query">;
+export type organizationLocations_locations_availableOrganizationResources_query$key = {
+  readonly " $data"?: organizationLocations_locations_availableOrganizationResources_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationLocations_locations_availableOrganizationResources_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -128,6 +128,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "fromTodayDate"
+    },
+    {
+      "kind": "RootArgument",
       "name": "locationsSortingValues"
     },
     {
@@ -136,7 +140,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "todayDate"
+      "name": "untilTodayDate"
     },
     {
       "kind": "RootArgument",
@@ -163,10 +167,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationLocations_locations_availableOrganizationDesks_refetchableFragment.graphql')
+      "operation": require('./organizationLocations_locations_availableOrganizationResources_refetchableFragment.graphql')
     }
   },
-  "name": "organizationLocations_locations_availableOrganizationDesks_query",
+  "name": "organizationLocations_locations_availableOrganizationResources_query",
   "selections": [
     {
       "alias": "locations",
@@ -239,9 +243,9 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "DeskDetails",
+                  "concreteType": "ResourceDetails",
                   "kind": "LinkedField",
-                  "name": "desks",
+                  "name": "resources",
                   "plural": true,
                   "selections": [
                     (v4/*: any*/)
@@ -367,32 +371,27 @@ return {
       "args": [
         {
           "fields": [
-            {
-              "kind": "Literal",
-              "name": "combineCustomTagsZones",
-              "value": true
-            },
             (v1/*: any*/),
             {
               "kind": "Variable",
-              "name": "date",
-              "variableName": "todayDate"
-            },
-            {
-              "kind": "Literal",
-              "name": "deskIdsToInclude",
-              "value": []
+              "name": "from",
+              "variableName": "fromTodayDate"
             },
             (v2/*: any*/),
+            {
+              "kind": "Variable",
+              "name": "until",
+              "variableName": "untilTodayDate"
+            },
             (v3/*: any*/)
           ],
           "kind": "ObjectValue",
           "name": "where"
         }
       ],
-      "concreteType": "BookingDeskDetails",
+      "concreteType": "BookingResourceDetails",
       "kind": "LinkedField",
-      "name": "availableDesks",
+      "name": "availableResources",
       "plural": true,
       "selections": [
         {
@@ -414,6 +413,6 @@ return {
 };
 })();
 
-(node as any).hash = "82719c04aeb736a9bb2aedddf5c9acc7";
+(node as any).hash = "cc24d0c72e4f01b94436d0a1d7657900";
 
 export default node;

@@ -19,8 +19,8 @@ import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { joinErrors, startOfDay } from '@/libs/utils';
 import type { organizationLocations_addCustomerPreferredLocationMutation } from '@/queries/__generated__/organizationLocations_addCustomerPreferredLocationMutation.graphql';
 import type { organizationLocations_deleteLocationMutation } from '@/queries/__generated__/organizationLocations_deleteLocationMutation.graphql';
-import type { organizationLocations_locations_availableOrganizationDesks_query$key } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationDesks_query.graphql';
-import type { organizationLocations_locations_availableOrganizationDesks_refetchableFragment } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationDesks_refetchableFragment.graphql';
+import type { organizationLocations_locations_availableOrganizationResources_query$key } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationResources_query.graphql';
+import type { organizationLocations_locations_availableOrganizationResources_refetchableFragment } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationResources_refetchableFragment.graphql';
 import type { organizationLocations_removeCustomerPreferredLocationMutation } from '@/queries/__generated__/organizationLocations_removeCustomerPreferredLocationMutation.graphql';
 import type { organizationLocations_rootQuery } from '@/queries/__generated__/organizationLocations_rootQuery.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -54,7 +54,8 @@ const RootQuery = graphql`
     $locationsSortingValues: [LocationOrderInput!]
     $zonesSortingValues: [OrganizationTagOrderInput!]
     $customTagsSortingValues: [OrganizationTagOrderInput!]
-    $todayDate: DateTime!
+    $fromTodayDate: DateTime!
+    $untilTodayDate: DateTime!
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $zoneIds: [String!]
     $customTagIds: [String!]
@@ -88,7 +89,7 @@ const RootQuery = graphql`
     ...locationCard_query
     ...customTagSelector_allCustomTags_query
     ...zoneSelector_allZones_query
-    ...organizationLocations_locations_availableOrganizationDesks_query
+    ...organizationLocations_locations_availableOrganizationResources_query
   }
 `;
 
@@ -96,8 +97,8 @@ type LocationDetails = {
   name: string;
 };
 
-type DesksAvailabilityDetails = {
-  desksCount: number;
+type ResourcesAvailabilityDetails = {
+  resourcesCount: number;
   availablePercentage: number;
 };
 
@@ -119,8 +120,8 @@ type CustomerDetails = {
 type RowType = {
   id: string;
   location: LocationDetails;
-  desksCount: number;
-  desksAvailability: DesksAvailabilityDetails;
+  resourcesCount: number;
+  resourcesAvailability: ResourcesAvailabilityDetails;
   zones: ZoneDetails[];
   teammates: ReadonlyArray<CustomerDetails>;
   preferred: boolean;
@@ -129,13 +130,13 @@ type RowType = {
 const OrganizationLocations = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<organizationLocations_rootQuery>(RootQuery, queryReference);
   const [rootDataRefetchable, refetch] = useRefetchableFragment<
-    organizationLocations_locations_availableOrganizationDesks_refetchableFragment,
-    organizationLocations_locations_availableOrganizationDesks_query$key
+    organizationLocations_locations_availableOrganizationResources_refetchableFragment,
+    organizationLocations_locations_availableOrganizationResources_query$key
   >(
     graphql`
-      fragment organizationLocations_locations_availableOrganizationDesks_query on Query
+      fragment organizationLocations_locations_availableOrganizationResources_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "organizationLocations_locations_availableOrganizationDesks_refetchableFragment") {
+      @refetchable(queryName: "organizationLocations_locations_availableOrganizationResources_refetchableFragment") {
         locations(first: $count, after: $cursor, where: { organizationId: $organizationId, zoneIds: $zoneIds, customTagIds: $customTagIds }, orderBy: $locationsSortingValues)
           @connection(key: "organizationLocations_locations") {
           __id
@@ -154,7 +155,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
                 name
                 color
               }
-              desks {
+              resources {
                 id
               }
               physicalAddress {
@@ -170,9 +171,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
             }
           }
         }
-        availableDesks(
-          where: { organizationId: $organizationId, date: $todayDate, deskIdsToInclude: [], zoneIds: $zoneIds, customTagIds: $customTagIds, combineCustomTagsZones: true }
-        ) {
+        availableResources(where: { organizationId: $organizationId, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds }) {
           location {
             uniqueId
           }
@@ -447,17 +446,19 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
   };
 
   const rows: RowType[] = locations.map((location) => {
-    const desksCount = location.desks.length;
-    const availableDesksCount = rootDataRefetchable.availableDesks ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length : 0;
-    const availablePercentage = (availableDesksCount / desksCount) * 100;
+    const resourcesCount = location.resources.length;
+    const availableResourcesCount = rootDataRefetchable.availableResources
+      ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
+      : 0;
+    const availablePercentage = (availableResourcesCount / resourcesCount) * 100;
     const zones = location.zones.map(({ uniqueId, name, color }) => ({ id: uniqueId, name, color }));
 
     return {
       id: location.id,
       location,
-      desksCount,
-      desksAvailability: {
-        desksCount,
+      resourcesCount,
+      resourcesAvailability: {
+        resourcesCount,
         availablePercentage,
       },
       zones,
@@ -477,20 +478,20 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
       minWidth: 200,
     },
     {
-      field: 'desksCount',
-      headerName: 'Desks Count',
+      field: 'resourcesCount',
+      headerName: 'Resources Count',
       editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value.desksCount} />,
+      renderCell: (params) => <SmallIconTypography label={params.value.resourcesCount} />,
       display: 'flex',
       minWidth: 150,
     },
     {
-      field: 'desksAvailability',
+      field: 'resourcesAvailability',
       headerName: 'Availability',
       editable: false,
       renderCell: (params) => (
         <StackColumn sx={{ alignItems: 'flex-end' }}>
-          <SmallIconTypography label={`${params.value.desksCount} Available Today`} />
+          <SmallIconTypography label={`${params.value.resourcesCount} Available Today`} />
           <LinearProgress value={params.value.availablePercentage} variant="determinate" sx={{ width: '100%' }} />
         </StackColumn>
       ),
@@ -592,7 +593,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
     },
   ];
 
-  if (!rootDataRefetchable.locations || !rootDataRefetchable.availableDesks || !rootData.organizationMembers) {
+  if (!rootDataRefetchable.locations || !rootDataRefetchable.availableResources || !rootData.organizationMembers) {
     return <></>;
   }
 
@@ -614,11 +615,11 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
           {viewMode === 'grid' && (
             <GridContainer>
               {locations.map((location) => {
-                const desksCount = location.desks.length;
-                const availableDesksCount = rootDataRefetchable.availableDesks
-                  ? rootDataRefetchable.availableDesks.filter((desk) => desk.location?.uniqueId === location.id).length
+                const resourcesCount = location.resources.length;
+                const availableResourcesCount = rootDataRefetchable.availableResources
+                  ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
                   : 0;
-                const availablePercentage = (availableDesksCount / desksCount) * 100;
+                const availablePercentage = (availableResourcesCount / resourcesCount) * 100;
 
                 return (
                   <Grid key={location.id}>
@@ -629,7 +630,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
                       organizationId={organizationId}
                       defaultDate={defaultDate}
                       connectionIds={connectionIds}
-                      availableDesksCount={availableDesksCount}
+                      availableResourcesCount={availableResourcesCount}
                       availablePercentage={availablePercentage}
                       sharedWithTeammates={organizationMembers!.map(({ customer }) => customer)}
                     />
@@ -715,7 +716,8 @@ const OrganizationLocationsWithRelay = ({ organizationId }: RelayProps) => {
             field: 'Name',
           },
         ],
-        todayDate: today.toISOString(),
+        fromTodayDate: today.toISOString(),
+        untilTodayDate: today.add(1, 'day').toISOString(),
         organizationMembersSortingValues: [
           {
             direction: 'Ascending',

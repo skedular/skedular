@@ -31,13 +31,9 @@ export const getOrganizationLocationsBaseLink = (id: string) => `${getOrganizati
 export const getOrganizationLocationSetupBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=setup`;
 export const getOrganizationLocationOpeningHoursBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=opening-hours`;
 export const getOrganizationLocationManageResourcesBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=manage-resources`;
-export const getOrganizationLocationManageDesksBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=manage-desks`;
-export const getOrganizationLocationManageRoomsBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=manage-rooms`;
 export const getOrganizationLocationManageLocationBaseLink = (id: string, locationId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}?section=manage-location`;
 export const getOrganizationLocationResourceBaseLink = (id: string, locationId: string, resourceId: string) =>
   `${getOrganizationBaseLink(id)}/locations/${locationId}/resources/${resourceId}`;
-export const getOrganizationLocationDeskBaseLink = (id: string, locationId: string, deskId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}/desks/${deskId}`;
-export const getOrganizationLocationRoomBaseLink = (id: string, locationId: string, roomId: string) => `${getOrganizationBaseLink(id)}/locations/${locationId}/rooms/${roomId}`;
 export const getOrganizationAnalyticsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/analytics?section=organization`;
 export const getOrganizationLocationsAnalyticsLocationsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/analytics?section=locations`;
 export const getOrganizationAdminSetupBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=setup`;

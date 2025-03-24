@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<997d5933b405318f1c2ea3984fa4ac8f>>
+ * @generated SignedSource<<794bdc91f55b3cda79c32730438c4ac1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,21 +16,22 @@ export type LocationOrderInput = {
   direction: OrderDirection;
   field: LocationOrderField;
 };
-export type organizationLocations_locations_availableOrganizationDesks_refetchableFragment$variables = {
+export type organizationLocations_locations_availableOrganizationResources_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   customTagIds?: ReadonlyArray<string> | null | undefined;
+  fromTodayDate: any;
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
   organizationId?: string | null | undefined;
-  todayDate: any;
+  untilTodayDate: any;
   zoneIds?: ReadonlyArray<string> | null | undefined;
 };
-export type organizationLocations_locations_availableOrganizationDesks_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationLocations_locations_availableOrganizationDesks_query">;
+export type organizationLocations_locations_availableOrganizationResources_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationLocations_locations_availableOrganizationResources_query">;
 };
-export type organizationLocations_locations_availableOrganizationDesks_refetchableFragment = {
-  response: organizationLocations_locations_availableOrganizationDesks_refetchableFragment$data;
-  variables: organizationLocations_locations_availableOrganizationDesks_refetchableFragment$variables;
+export type organizationLocations_locations_availableOrganizationResources_refetchableFragment = {
+  response: organizationLocations_locations_availableOrganizationResources_refetchableFragment$data;
+  variables: organizationLocations_locations_availableOrganizationResources_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -53,6 +54,11 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
+    "name": "fromTodayDate"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
     "name": "locationsSortingValues"
   },
   {
@@ -63,7 +69,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "todayDate"
+    "name": "untilTodayDate"
   },
   {
     "defaultValue": null,
@@ -152,7 +158,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationLocations_locations_availableOrganizationDesks_refetchableFragment",
+    "name": "organizationLocations_locations_availableOrganizationResources_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -168,7 +174,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "organizationLocations_locations_availableOrganizationDesks_query"
+        "name": "organizationLocations_locations_availableOrganizationResources_query"
       }
     ],
     "type": "Query",
@@ -178,7 +184,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationLocations_locations_availableOrganizationDesks_refetchableFragment",
+    "name": "organizationLocations_locations_availableOrganizationResources_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -236,9 +242,9 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "DeskDetails",
+                    "concreteType": "ResourceDetails",
                     "kind": "LinkedField",
-                    "name": "desks",
+                    "name": "resources",
                     "plural": true,
                     "selections": [
                       (v5/*: any*/)
@@ -371,32 +377,27 @@ return {
         "args": [
           {
             "fields": [
-              {
-                "kind": "Literal",
-                "name": "combineCustomTagsZones",
-                "value": true
-              },
               (v1/*: any*/),
               {
                 "kind": "Variable",
-                "name": "date",
-                "variableName": "todayDate"
-              },
-              {
-                "kind": "Literal",
-                "name": "deskIdsToInclude",
-                "value": []
+                "name": "from",
+                "variableName": "fromTodayDate"
               },
               (v2/*: any*/),
+              {
+                "kind": "Variable",
+                "name": "until",
+                "variableName": "untilTodayDate"
+              },
               (v3/*: any*/)
             ],
             "kind": "ObjectValue",
             "name": "where"
           }
         ],
-        "concreteType": "BookingDeskDetails",
+        "concreteType": "BookingResourceDetails",
         "kind": "LinkedField",
-        "name": "availableDesks",
+        "name": "availableResources",
         "plural": true,
         "selections": [
           {
@@ -415,16 +416,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "41894b3d5c279ae130e7ed21dc39b33f",
+    "cacheID": "9dc6e4a9fb6d9be6145fa5e719b093bf",
     "id": null,
     "metadata": {},
-    "name": "organizationLocations_locations_availableOrganizationDesks_refetchableFragment",
+    "name": "organizationLocations_locations_availableOrganizationResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationLocations_locations_availableOrganizationDesks_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagIds: [String!]\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String\n  $todayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...organizationLocations_locations_availableOrganizationDesks_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    uniqueId\n    name\n    color\n  }\n  zones {\n    uniqueId\n    name\n    color\n  }\n  desks {\n    id\n  }\n  physicalAddress {\n    formattedAddress\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueId\n  }\n}\n\nfragment organizationLocations_locations_availableOrganizationDesks_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationId: $organizationId, zoneIds: $zoneIds, customTagIds: $customTagIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        desks {\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueId\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableDesks(where: {organizationId: $organizationId, date: $todayDate, deskIdsToInclude: [], zoneIds: $zoneIds, customTagIds: $customTagIds, combineCustomTagsZones: true}) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
+    "text": "query organizationLocations_locations_availableOrganizationResources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagIds: [String!]\n  $fromTodayDate: DateTime!\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationId: String\n  $untilTodayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...organizationLocations_locations_availableOrganizationResources_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    uniqueId\n    name\n    color\n  }\n  zones {\n    uniqueId\n    name\n    color\n  }\n  resources {\n    id\n  }\n  physicalAddress {\n    formattedAddress\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueId\n  }\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationId: $organizationId, zoneIds: $zoneIds, customTagIds: $customTagIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        resources {\n          id\n        }\n        physicalAddress {\n          formattedAddress\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueId\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationId: $organizationId, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      uniqueId\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "82719c04aeb736a9bb2aedddf5c9acc7";
+(node as any).hash = "cc24d0c72e4f01b94436d0a1d7657900";
 
 export default node;

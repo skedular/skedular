@@ -1,10 +1,8 @@
 import { BodyIconTypography } from '@/components/commons';
-import { DeskIcon, EditIcon, OpeningHoursIcon, ResourceIcon, RoomIcon } from '@/components/icons';
+import { EditIcon, OpeningHoursIcon, ResourceIcon } from '@/components/icons';
 import {
-  getOrganizationLocationManageDesksBaseLink,
   getOrganizationLocationManageLocationBaseLink,
   getOrganizationLocationManageResourcesBaseLink,
-  getOrganizationLocationManageRoomsBaseLink,
   getOrganizationLocationOpeningHoursBaseLink,
   getOrganizationLocationSetupBaseLink,
 } from '@/components/links';
@@ -70,8 +68,6 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
   const setupLink = getOrganizationLocationSetupBaseLink(organizationId, locationId);
   const openingHoursLink = getOrganizationLocationOpeningHoursBaseLink(organizationId, locationId);
   const manageResourcesLink = getOrganizationLocationManageResourcesBaseLink(organizationId, locationId);
-  const manageDesksLink = getOrganizationLocationManageDesksBaseLink(organizationId, locationId);
-  const manageRoomsLink = getOrganizationLocationManageRoomsBaseLink(organizationId, locationId);
   const manageLocationLink = getOrganizationLocationManageLocationBaseLink(organizationId, locationId);
 
   return (
@@ -137,47 +133,6 @@ const OrganizationLocationLeftSideNavigationMenuContent = ({ organizationId, loc
                 startElement={!hideIcons && <ResourceIcon color="inherit" excludeTooltip />}
                 spacing={3}
                 invertDefaultColor={fullPath === manageResourcesLink && paletteMode === 'dark'}
-                noWrap
-              />
-            )}
-          </ListItemButton>
-        </Link>
-      </ListItem>
-
-      <ListItem disablePadding>
-        <Link component={NextLink} href={manageDesksLink}>
-          <ListItemButton selected={fullPath === manageDesksLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageDesksLink) }}>
-            {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <DeskIcon color="inherit" excludeTooltip />}
-                invertDefaultColor={fullPath === manageDesksLink && paletteMode === 'dark'}
-              />
-            )}
-            {!collapsed && (
-              <BodyIconTypography
-                label="Manage Desks"
-                startElement={!hideIcons && <DeskIcon color="inherit" excludeTooltip />}
-                spacing={3}
-                invertDefaultColor={fullPath === manageDesksLink && paletteMode === 'dark'}
-                noWrap
-              />
-            )}
-          </ListItemButton>
-        </Link>
-      </ListItem>
-
-      <ListItem disablePadding>
-        <Link component={NextLink} href={manageRoomsLink}>
-          <ListItemButton selected={fullPath === manageRoomsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === manageRoomsLink) }}>
-            {collapsed && (
-              <BodyIconTypography startElement={!hideIcons && <RoomIcon color="inherit" />} invertDefaultColor={fullPath === manageRoomsLink && paletteMode === 'dark'} />
-            )}
-            {!collapsed && (
-              <BodyIconTypography
-                label="Manage Rooms"
-                startElement={!hideIcons && <RoomIcon color="inherit" />}
-                spacing={3}
-                invertDefaultColor={fullPath === manageRoomsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

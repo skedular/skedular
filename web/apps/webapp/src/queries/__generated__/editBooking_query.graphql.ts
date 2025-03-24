@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6bd9d6178ce512a5820346abfbc3bbb3>>
+ * @generated SignedSource<<0b00af936af4fd5e0d4d7ac0ea0e9759>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,20 +21,6 @@ export type editBooking_query$data = {
       readonly photoUrl: string | null | undefined;
       readonly uniqueId: string;
     };
-    readonly desks: ReadonlyArray<{
-      readonly customTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
-      }>;
-      readonly name: string;
-      readonly uniqueId: string;
-      readonly zones: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
-      }>;
-    }>;
     readonly from: any;
     readonly id: string;
     readonly location: {
@@ -48,20 +34,6 @@ export type editBooking_query$data = {
     } | null | undefined;
     readonly resources: ReadonlyArray<{
       readonly color: string | null | undefined;
-      readonly customTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
-      }>;
-      readonly name: string;
-      readonly uniqueId: string;
-      readonly zones: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly name: string | null | undefined;
-        readonly uniqueId: string;
-      }>;
-    }>;
-    readonly rooms: ReadonlyArray<{
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -137,32 +109,6 @@ v5 = [
   (v2/*: any*/),
   (v1/*: any*/),
   (v4/*: any*/)
-],
-v6 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "BookingOrganizationCustomTagDetails",
-  "kind": "LinkedField",
-  "name": "customTags",
-  "plural": true,
-  "selections": (v5/*: any*/),
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "BookingOrganizationZoneDetails",
-  "kind": "LinkedField",
-  "name": "zones",
-  "plural": true,
-  "selections": (v5/*: any*/),
-  "storageKey": null
-},
-v8 = [
-  (v2/*: any*/),
-  (v1/*: any*/),
-  (v6/*: any*/),
-  (v7/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -371,26 +317,6 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingDeskDetails",
-          "kind": "LinkedField",
-          "name": "desks",
-          "plural": true,
-          "selections": (v8/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingRoomDetails",
-          "kind": "LinkedField",
-          "name": "rooms",
-          "plural": true,
-          "selections": (v8/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
           "concreteType": "BookingResourceDetails",
           "kind": "LinkedField",
           "name": "resources",
@@ -399,8 +325,26 @@ return {
             (v2/*: any*/),
             (v1/*: any*/),
             (v4/*: any*/),
-            (v6/*: any*/),
-            (v7/*: any*/)
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "BookingOrganizationCustomTagDetails",
+              "kind": "LinkedField",
+              "name": "customTags",
+              "plural": true,
+              "selections": (v5/*: any*/),
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "BookingOrganizationZoneDetails",
+              "kind": "LinkedField",
+              "name": "zones",
+              "plural": true,
+              "selections": (v5/*: any*/),
+              "storageKey": null
+            }
           ],
           "storageKey": null
         }
@@ -420,6 +364,6 @@ return {
 };
 })();
 
-(node as any).hash = "bbca739a5e1e7c7cd3a275cfea79a6bc";
+(node as any).hash = "671e9b4aa46b7a221c4dd82edee122a1";
 
 export default node;

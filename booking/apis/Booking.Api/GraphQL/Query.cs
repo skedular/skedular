@@ -110,52 +110,6 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<IEnumerable<BookingDeskDetails>?> AvailableDesksAsync(
-        AvailableDesksWhereInput where,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        return mapper.MapTo(await deskService.GetAvailableDesksAsync(
-            where.OrganizationId,
-            where.LocationId,
-            where.Date,
-            where.DeskIdsToInclude.ToSafeCollection(),
-            where.CustomTagIds.ToSafeCollection(),
-            where.ZoneIds.ToSafeCollection(),
-            where.CombineCustomTagsZones ?? false,
-            cancellationToken));
-    }
-
-    [UseResolverScope]
-    public async Task<IEnumerable<BookingRoomDetails>?> AvailableRoomsAsync(
-        AvailableRoomsWhereInput where,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IRoomService roomService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        return mapper.MapTo(await roomService.GetAvailableRoomsAsync(
-            where.OrganizationId,
-            where.LocationId,
-            where.Date,
-            where.RoomIdsToInclude.ToSafeCollection(),
-            where.CustomTagIds.ToSafeCollection(),
-            where.ZoneIds.ToSafeCollection(),
-            where.CombineCustomTagsZones ?? false,
-            cancellationToken));
-    }
-
-    [UseResolverScope]
     public async Task<OrganizationBookingPermissions?> OrganizationBookingPermissionsAsync(
         string organizationId,
         [Service] ICachedCustomerService cachedCustomerService,
@@ -264,46 +218,6 @@ public class Query(IMapper mapper)
             CanUpdateBookingOnBehalf = permissions.CanUpdateBookingOnBehalf,
             CanDeleteBookingOnBehalf = permissions.CanDeleteBookingOnBehalf
         };
-    }
-
-    [UseResolverScope]
-    public async Task<OrganizationAvailableDesks?> OrganizationDesksAvailabilityAsync(
-        OrganizationAvailableDesksWhereInput where,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        var (desksCount, availableDesksCount) = await deskService.GetOrganizationDesksAvailabilityAsync(
-            where.OrganizationId,
-            where.Date,
-            cancellationToken);
-
-        return new OrganizationAvailableDesks { DesksCount = desksCount, AvailableDesksCount = availableDesksCount };
-    }
-
-    [UseResolverScope]
-    public async Task<OrganizationAvailableRooms?> OrganizationRoomsAvailabilityAsync(
-        OrganizationAvailableRoomsWhereInput where,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IRoomService roomService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        var (roomsCount, availableRoomsCount) = await roomService.GetOrganizationRoomsAvailabilityAsync(
-            where.OrganizationId,
-            where.Date,
-            cancellationToken);
-
-        return new OrganizationAvailableRooms { RoomsCount = roomsCount, AvailableRoomsCount = availableRoomsCount };
     }
 
     [UseResolverScope]

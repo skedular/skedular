@@ -1,13 +1,11 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
-import { Desks } from '@/components/desk';
 import { CalendarIcon, EllipseMenuIcon, JoinIcon, LocationIcon, NotesIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Resources } from '@/components/resource';
-import { Rooms } from '@/components/room';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
@@ -94,36 +92,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           uniqueId
           name
         }
-        desks {
-          uniqueId
-          name
-          color
-          customTags {
-            uniqueId
-            name
-            color
-          }
-          zones {
-            uniqueId
-            name
-            color
-          }
-        }
-        rooms {
-          uniqueId
-          name
-          color
-          customTags {
-            uniqueId
-            name
-            color
-          }
-          zones {
-            uniqueId
-            name
-            color
-          }
-        }
         resources {
           uniqueId
           name
@@ -178,34 +146,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           team {
             uniqueId
             name
-          }
-          desks {
-            uniqueId
-            name
-            customTags {
-              uniqueId
-              name
-              color
-            }
-            zones {
-              uniqueId
-              name
-              color
-            }
-          }
-          rooms {
-            uniqueId
-            name
-            customTags {
-              uniqueId
-              name
-              color
-            }
-            zones {
-              uniqueId
-              name
-              color
-            }
           }
           resources {
             uniqueId
@@ -325,8 +265,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           organizationId: bookingDetails.organization?.uniqueId,
           locationId: bookingDetails.location?.uniqueId,
           teamId: bookingDetails.team?.uniqueId,
-          deskIds: [],
-          roomIds: [],
           resourceIds: [],
           type,
         },
@@ -348,21 +286,10 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           message += ` from the "${booking.location!.name}"`;
         }
 
-        if (booking.desks.length > 0) {
-          message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
+        if (booking.resources.length > 0) {
+          message += ` at resource "${booking.resources.map(({ name }) => name).join(', ')}"`;
 
-          const zones = booking.desks.flatMap(({ zones }) => zones);
-          if (zones.length > 0) {
-            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
-
-            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
-          }
-        }
-
-        if (booking.rooms.length > 0) {
-          message += ` at room "${booking.rooms.map(({ name }) => name).join(', ')}"`;
-
-          const zones = booking.rooms.flatMap(({ zones }) => zones);
+          const zones = booking.resources.flatMap(({ zones }) => zones);
           if (zones.length > 0) {
             const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
 
@@ -413,8 +340,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
                   name: bookingDetails.team.name,
                 }
               : null,
-            desks: [],
-            rooms: [],
             resources: [],
           },
         },
@@ -422,10 +347,8 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
     });
   };
 
-  const customTags = bookingDetails.desks
+  const customTags = bookingDetails.resources
     .flatMap(({ customTags }) => customTags)
-    .concat(bookingDetails.rooms.flatMap(({ customTags }) => customTags))
-    .concat(bookingDetails.resources.flatMap(({ customTags }) => customTags))
     .reduce((acc: CustomTagDetails[], customTag) => {
       if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
         acc.push(customTag);
@@ -433,10 +356,8 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
 
       return acc;
     }, []);
-  const zones = bookingDetails.desks
+  const zones = bookingDetails.resources
     .flatMap(({ zones }) => zones)
-    .concat(bookingDetails.rooms.flatMap(({ zones }) => zones))
-    .concat(bookingDetails.resources.flatMap(({ zones }) => zones))
     .reduce((acc: ZoneDetails[], zone) => {
       if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
         acc.push(zone);
@@ -491,10 +412,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           />
           <Divider />
           <SmallIconTypography startElement={<TeamIcon />} label={bookingDetails.team ? bookingDetails.team.name : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
-          <Divider />
-          <Desks desks={bookingDetails.desks.map((desk) => ({ id: desk.uniqueId, name: desk.name, color: desk.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
-          <Divider />
-          <Rooms rooms={bookingDetails.rooms.map((room) => ({ id: room.uniqueId, name: room.name, color: room.color }))} sx={{ paddingTop: 1, paddingBottom: 1 }} />
           <Divider />
           <Resources
             resources={bookingDetails.resources.map((resource) => ({ id: resource.uniqueId, name: resource.name, color: resource.color }))}

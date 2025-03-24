@@ -7,13 +7,10 @@ using Location.Api.GraphQL;
 using Location.Shared.Database.Entities;
 using Booking = Location.Shared.Models.Booking;
 using Customer = Location.Shared.Models.Customer;
-using AddDeskInput = Location.Api.GraphQL.AddDeskInput;
 using DailyDeskCountRecording = Location.Shared.Models.DailyDeskCountRecording;
 using Resource = Location.Shared.Database.Entities.Resource;
 using Desk = Location.Shared.Database.Entities.Desk;
-using DeskEdge = Location.Api.GraphQL.DeskEdge;
 using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOccupancyPercentage;
-using UpdateDeskInput = Location.Api.GraphQL.UpdateDeskInput;
 using Identity = Location.Shared.Models.Identity;
 using JoinInvitation = Location.Shared.Models.JoinInvitation;
 using LocationEdge = Location.Api.GraphQL.LocationEdge;
@@ -22,12 +19,9 @@ using LocationMember = Location.Shared.Models.LocationMember;
 using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationTag = Location.Shared.Models.OrganizationTag;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
-using AddRoomInput = Location.Api.GraphQL.AddRoomInput;
 using DailyRoomCountRecording = Location.Shared.Models.DailyRoomCountRecording;
 using Room = Location.Shared.Database.Entities.Room;
-using RoomEdge = Location.Api.GraphQL.RoomEdge;
 using LocationRoomsOccupancyPercentage = Location.Shared.Models.LocationRoomsOccupancyPercentage;
-using UpdateRoomInput = Location.Api.GraphQL.UpdateRoomInput;
 using AddResourceInput = Location.Api.GraphQL.AddResourceInput;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
@@ -89,8 +83,6 @@ public interface IMapper
     LocationMember MapTo(Shared.Database.Entities.LocationMember src, Shared.Models.Location location);
     LocationMemberDetails MapTo(LocationMember src);
     LocationDetails? MapTo(Shared.Models.Location? src);
-    DeskDetails MapTo(Shared.Models.Desk src);
-    RoomDetails MapTo(Shared.Models.Room src);
     ResourceDetails MapTo(Shared.Models.Resource src);
     IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src);
 
@@ -102,17 +94,12 @@ public interface IMapper
 
     Shared.Models.Location MapTo(AddLocationInput src);
     Shared.Models.Location MapTo(UpdateLocationInput src);
-    Shared.Models.Desk MapTo(AddDeskInput src);
-    Shared.Models.Desk MapTo(UpdateDeskInput src);
-    Shared.Models.Room MapTo(AddRoomInput src);
-    Shared.Models.Room MapTo(UpdateRoomInput src);
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
     Shared.Models.Location MapTo(Admin_AddInput src);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src);
     Shared.Models.Location MapTo(AddInput src);
     Shared.Models.Location MapTo(UpdateInput src);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource MapToGrpcResponse(Shared.Models.Resource src);
-    DeskEdge MapTo(Edge<Shared.Models.Desk> src);
     IEnumerable<Edge<Shared.Models.Desk>> MapTo(IEnumerable<Edge<Desk>> src, Shared.Models.Location location);
     LocationEdge MapTo(Edge<Shared.Models.Location> src);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src);
@@ -120,7 +107,6 @@ public interface IMapper
     IEnumerable<Edge<LocationMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.LocationMember>> src, Shared.Models.Location location);
     Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Location location);
     Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Location location);
-    RoomEdge MapTo(Edge<Shared.Models.Room> src);
     IEnumerable<Edge<Shared.Models.Room>> MapTo(IEnumerable<Edge<Room>> src, Shared.Models.Location location);
     IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location);
     Shared.Models.Resource MapTo(AddResourceInput src);
@@ -230,8 +216,6 @@ public class Mapper : IMapper
                 RoomCapacity = src.Rooms.Count,
                 Organization = MapTo(src.Organization),
                 Resources = MapTo(src.Resources),
-                Desks = MapTo(src.Desks),
-                Rooms = MapTo(src.Rooms),
                 CustomTags = MapTo(src.CustomTags),
                 Zones = MapTo(src.Zones),
                 ResourceTypes = src.Organization is null
@@ -370,34 +354,6 @@ public class Mapper : IMapper
     public LocationMemberDetails MapTo(LocationMember src) =>
         new() { Id = src.Id, Role = src.Role, Customer = MapTo(src.Customer) };
 
-    public DeskEdge MapTo(Edge<Shared.Models.Desk> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
-
-    public DeskDetails MapTo(Shared.Models.Desk src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
-            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone))
-        };
-
-    public RoomEdge MapTo(Edge<Shared.Models.Room> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
-
-    public RoomDetails MapTo(Shared.Models.Room src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
-            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone))
-        };
-
     public ResourceEdge MapTo(Edge<Shared.Models.Resource> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src) =>
@@ -523,52 +479,6 @@ public class Mapper : IMapper
 
         return location;
     }
-
-    public Shared.Models.Desk MapTo(AddDeskInput src) =>
-        new()
-        {
-            Id = src.Id.ToSafeString(),
-            Name = src.Name,
-            Deactivated = false,
-            RequireBookingApproval = false,
-            Color = src.Color,
-            Tags = src.CustomTagIds.Concat(src.ZoneIds).Select(item => new OrganizationTag { Id = item }).ToList(),
-            Location = new Shared.Models.Location { Id = src.LocationId }
-        };
-
-    public Shared.Models.Desk MapTo(UpdateDeskInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            Tags = src.CustomTagIds.Concat(src.ZoneIds).Select(item => new OrganizationTag { Id = item }).ToList()
-        };
-
-    public Shared.Models.Room MapTo(AddRoomInput src) =>
-        new()
-        {
-            Id = src.Id.ToSafeString(),
-            Name = src.Name,
-            Deactivated = false,
-            RequireBookingApproval = false,
-            Color = src.Color,
-            Tags = src.CustomTagIds.Concat(src.ZoneIds).Select(item => new OrganizationTag { Id = item }).ToList(),
-            Location = new Shared.Models.Location { Id = src.LocationId }
-        };
-
-    public Shared.Models.Room MapTo(UpdateRoomInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Deactivated = src.Deactivated,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            Tags = src.CustomTagIds.Concat(src.ZoneIds).Select(item => new OrganizationTag { Id = item }).ToList()
-        };
 
     public Shared.Models.Resource MapTo(AddResourceInput src) =>
         new()
@@ -824,10 +734,6 @@ public class Mapper : IMapper
     private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 
     private IEnumerable<ResourceDetails> MapTo(IEnumerable<Shared.Models.Resource> src) => src.Select(MapTo);
-
-    private IEnumerable<DeskDetails> MapTo(IEnumerable<Shared.Models.Desk> src) => src.Select(MapTo);
-
-    private IEnumerable<RoomDetails> MapTo(IEnumerable<Shared.Models.Room> src) => src.Select(MapTo);
 
     private static LocationCustomerDetails MapTo(Customer src) =>
         new()

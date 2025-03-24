@@ -8,10 +8,6 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { getCustomerFullName, isMidnight, joinErrors, keyboardDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
-import type { newBookingDialog_availableLocationDesks_query$key } from '@/queries/__generated__/newBookingDialog_availableLocationDesks_query.graphql';
-import type { newBookingDialog_availableLocationDesks_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableLocationDesks_refetchableFragment.graphql';
-import type { newBookingDialog_availableLocationRooms_query$key } from '@/queries/__generated__/newBookingDialog_availableLocationRooms_query.graphql';
-import type { newBookingDialog_availableLocationRooms_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableLocationRooms_refetchableFragment.graphql';
 import type { newBookingDialog_availableResources_query$key } from '@/queries/__generated__/newBookingDialog_availableResources_query.graphql';
 import type { newBookingDialog_availableResources_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableResources_refetchableFragment.graphql';
 import type { newBookingDialog_customerTeams_query$key } from '@/queries/__generated__/newBookingDialog_customerTeams_query.graphql';
@@ -37,8 +33,6 @@ type Props = {
   rootDataRelay: newBookingDialog_query$key;
   rootDataOrganizationMembersRelay: newBookingDialog_organizationMembers_query$key;
   rootDataTeamsRelay: newBookingDialog_customerTeams_query$key;
-  rootDataAvailableLocationDesksRelay: newBookingDialog_availableLocationDesks_query$key;
-  rootDataAvailableLocationRoomsRelay: newBookingDialog_availableLocationRooms_query$key;
   rootDataAvailableResourcesRelay: newBookingDialog_availableResources_query$key;
   connectionIds: string[];
   isDialogOpen: boolean;
@@ -85,20 +79,6 @@ type ZoneDetails = {
   color: string | null | undefined;
 };
 
-type DeskDetails = {
-  uniqueId: string;
-  name: string;
-  customTags: CustomTagDetails[];
-  zones: ZoneDetails[];
-};
-
-type RoomDetails = {
-  uniqueId: string;
-  name: string;
-  customTags: CustomTagDetails[];
-  zones: ZoneDetails[];
-};
-
 type ResourceDetails = {
   uniqueId: string;
   name: string;
@@ -113,8 +93,6 @@ type BookingDetails = {
   notes: string;
   team: string | undefined;
   location: string | undefined;
-  desks: string[];
-  rooms: string[];
   resources: string[];
 };
 
@@ -125,8 +103,6 @@ const bookingSchema = object({
   notes: string().notRequired(),
   team: string().notRequired(),
   location: string().notRequired(),
-  desk: array().nullable(),
-  rooms: array().nullable(),
   resources: array().nullable(),
 });
 
@@ -134,8 +110,6 @@ const NewBookingDialog = ({
   rootDataRelay,
   rootDataTeamsRelay,
   rootDataOrganizationMembersRelay,
-  rootDataAvailableLocationDesksRelay,
-  rootDataAvailableLocationRoomsRelay,
   rootDataAvailableResourcesRelay,
   connectionIds,
   isDialogOpen,
@@ -220,56 +194,6 @@ const NewBookingDialog = ({
     rootDataTeamsRelay,
   );
 
-  const [rootDataAvailableLocationDesks, refetchAvailableLocationDesks] = useRefetchableFragment<
-    newBookingDialog_availableLocationDesks_refetchableFragment,
-    newBookingDialog_availableLocationDesks_query$key
-  >(
-    graphql`
-      fragment newBookingDialog_availableLocationDesks_query on Query @refetchable(queryName: "newBookingDialog_availableLocationDesks_refetchableFragment") {
-        availableDesks(where: { organizationId: $organizationId, locationId: $locationId, date: $dateToGetAvailableDesks }) @include(if: $locationExists) {
-          uniqueId
-          name
-          customTags {
-            uniqueId
-            name
-            color
-          }
-          zones {
-            uniqueId
-            name
-            color
-          }
-        }
-      }
-    `,
-    rootDataAvailableLocationDesksRelay,
-  );
-
-  const [rootDataAvailableLocationRooms, refetchAvailableLocationRooms] = useRefetchableFragment<
-    newBookingDialog_availableLocationRooms_refetchableFragment,
-    newBookingDialog_availableLocationRooms_query$key
-  >(
-    graphql`
-      fragment newBookingDialog_availableLocationRooms_query on Query @refetchable(queryName: "newBookingDialog_availableLocationRooms_refetchableFragment") {
-        availableRooms(where: { organizationId: $organizationId, locationId: $locationId, date: $dateToGetAvailableRooms }) @include(if: $locationExists) {
-          uniqueId
-          name
-          customTags {
-            uniqueId
-            name
-            color
-          }
-          zones {
-            uniqueId
-            name
-            color
-          }
-        }
-      }
-    `,
-    rootDataAvailableLocationRoomsRelay,
-  );
-
   const [rootDataAvailableResources, refetchAvailableResources] = useRefetchableFragment<
     newBookingDialog_availableResources_refetchableFragment,
     newBookingDialog_availableResources_query$key
@@ -324,34 +248,6 @@ const NewBookingDialog = ({
             uniqueId
             name
           }
-          desks {
-            uniqueId
-            name
-            customTags {
-              uniqueId
-              name
-              color
-            }
-            zones {
-              uniqueId
-              name
-              color
-            }
-          }
-          rooms {
-            uniqueId
-            name
-            customTags {
-              uniqueId
-              name
-              color
-            }
-            zones {
-              uniqueId
-              name
-              color
-            }
-          }
           resources {
             uniqueId
             name
@@ -388,13 +284,9 @@ const NewBookingDialog = ({
   const [teamId, setTeamId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
   const [notes, setNotes] = useState<string>('');
-  const [deskIds, setDeskIds] = useState<string[]>([]);
-  const [roomIds, setRoomIds] = useState<string[]>([]);
   const [resourceIds, setResourceIds] = useState<string[]>([]);
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
-  const filterDesk = createFilterOptions<DeskDetails>();
-  const filterRoom = createFilterOptions<RoomDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
   const customers = useMemo<OrganizationMemberDetails[]>(
     () => (rootDataOrganizationMembers.organizationMembers ? rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node) : []),
@@ -402,33 +294,6 @@ const NewBookingDialog = ({
   );
   const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
   const locations = useMemo<LocationDetails[]>(() => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
-
-  const desks = useMemo<DeskDetails[]>(
-    () =>
-      rootDataAvailableLocationDesks.availableDesks
-        ? rootDataAvailableLocationDesks.availableDesks.map(({ uniqueId, name, customTags, zones }) => ({
-            uniqueId,
-            name,
-            customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-            zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-          }))
-        : [],
-    [rootDataAvailableLocationDesks.availableDesks],
-  );
-
-  const rooms = useMemo<RoomDetails[]>(
-    () =>
-      rootDataAvailableLocationRooms.availableRooms
-        ? rootDataAvailableLocationRooms.availableRooms.map(({ uniqueId, name, customTags, zones }) => ({
-            uniqueId,
-            name,
-            customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-            zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-          }))
-        : [],
-    [rootDataAvailableLocationRooms.availableRooms],
-  );
-
   const resources = useMemo<ResourceDetails[]>(
     () =>
       timeRangeValid && rootDataAvailableResources.availableResources
@@ -473,42 +338,6 @@ const NewBookingDialog = ({
       });
     },
     [refetchTeams],
-  );
-
-  const handleRefetchAvailableLocationDesks = useCallback(
-    (from: Dayjs | Date, locationId?: string) => {
-      startTransition(() => {
-        refetchAvailableLocationDesks(
-          {
-            locationId: locationId ?? '',
-            locationExists: !!locationId,
-            dateToGetAvailableDesks: from,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [refetchAvailableLocationDesks],
-  );
-
-  const handleRefetchAvailableLocationRooms = useCallback(
-    (from: Dayjs | Date, locationId?: string) => {
-      startTransition(() => {
-        refetchAvailableLocationRooms(
-          {
-            locationId: locationId ?? '',
-            locationExists: !!locationId,
-            dateToGetAvailableRooms: from,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [refetchAvailableLocationRooms],
   );
 
   const handleRefetchAvailableResources = useCallback(
@@ -568,9 +397,6 @@ const NewBookingDialog = ({
   );
 
   useEffect(() => {
-    handleRefetchAvailableLocationDesks(from, locationId);
-    handleRefetchAvailableLocationRooms(from, locationId);
-
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
     if (range.valid) {
       setTimeRangeValid(true);
@@ -578,9 +404,9 @@ const NewBookingDialog = ({
     } else {
       setTimeRangeValid(false);
     }
-  }, [handleRefetchAvailableLocationDesks, handleRefetchAvailableLocationRooms, handleRefetchAvailableResources, from, allDay, timeFrom, timeUntil, locationId, getDateRange]);
+  }, [handleRefetchAvailableResources, from, allDay, timeFrom, timeUntil, locationId, getDateRange]);
 
-  const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, desks: deskIds, resources: resourceIds, rooms: roomIds }: BookingDetails) => {
+  const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, resources: resourceIds }: BookingDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -612,8 +438,6 @@ const NewBookingDialog = ({
           organizationId,
           teamId,
           locationId,
-          deskIds,
-          roomIds,
           resourceIds,
           type,
         },
@@ -635,21 +459,10 @@ const NewBookingDialog = ({
           message += ` from the "${booking.location!.name}"`;
         }
 
-        if (booking.desks.length > 0) {
-          message += ` at desk "${booking.desks.map(({ name }) => name).join(', ')}"`;
+        if (booking.resources.length > 0) {
+          message += ` at resource "${booking.resources.map(({ name }) => name).join(', ')}"`;
 
-          const zones = booking.desks.flatMap(({ zones }) => zones);
-          if (zones.length > 0) {
-            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
-
-            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
-          }
-        }
-
-        if (booking.rooms.length > 0) {
-          message += ` at room "${booking.rooms.map(({ name }) => name).join(', ')}"`;
-
-          const zones = booking.rooms.flatMap(({ zones }) => zones);
+          const zones = booking.resources.flatMap(({ zones }) => zones);
           if (zones.length > 0) {
             const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
 
@@ -707,8 +520,6 @@ const NewBookingDialog = ({
                   name: '',
                 }
               : null,
-            desks: [],
-            rooms: [],
             resources: [],
           },
         },
@@ -731,8 +542,6 @@ const NewBookingDialog = ({
     const locationId = option?.id;
 
     setLocationId(locationId);
-    handleRefetchAvailableLocationDesks(from, locationId);
-    handleRefetchAvailableLocationRooms(from, locationId);
 
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
     if (range.valid) {
@@ -768,8 +577,6 @@ const NewBookingDialog = ({
             notes,
             team: teamId,
             location: locationId,
-            desks: deskIds,
-            rooms: roomIds,
             resources: resourceIds,
           }}
           validate={validate}
@@ -777,8 +584,6 @@ const NewBookingDialog = ({
             setFrom(values.date);
             setAllDay(values.allDay);
             setNotes(values.notes);
-            setDeskIds(values.desks);
-            setRoomIds(values.rooms);
             setResourceIds(values.resources);
 
             return (
@@ -880,74 +685,6 @@ const NewBookingDialog = ({
                     onChange={(_, option) => handleLocationChange(option as LocationDetails)}
                   />
                 </FormFieldLabel>
-
-                {locationId && (
-                  <FormFieldLabel label="Desks" useWiderSpace>
-                    {desks.length > 0 && (
-                      <Autocomplete
-                        name="desks"
-                        multiple={true}
-                        required={requiredFields.desks}
-                        options={desks}
-                        getOptionValue={(option) => (option as DeskDetails).uniqueId}
-                        getOptionLabel={(option: string | DeskDetails) => (option as DeskDetails).name}
-                        renderOption={(props, option) => {
-                          const castedOption = option as DeskDetails;
-
-                          return (
-                            <li {...props}>
-                              <StackRow sx={{ alignItems: 'center' }}>
-                                <BodyIconTypography label={castedOption.name} />
-                                <CustomTags customTags={castedOption.customTags} hideNAText />
-                                <Zones zones={castedOption.zones} hideIcon hideNAText />
-                              </StackRow>
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                      />
-                    )}
-
-                    {desks.length === 0 && <BodyIconTypography label="There are currently no available desks in the chosen location." />}
-                  </FormFieldLabel>
-                )}
-
-                {locationId && (
-                  <FormFieldLabel label="Rooms" useWiderSpace>
-                    {rooms.length > 0 && (
-                      <Autocomplete
-                        name="rooms"
-                        multiple={true}
-                        required={requiredFields.rooms}
-                        options={rooms}
-                        getOptionValue={(option) => (option as RoomDetails).uniqueId}
-                        getOptionLabel={(option: string | RoomDetails) => (option as RoomDetails).name}
-                        renderOption={(props, option) => {
-                          const castedOption = option as RoomDetails;
-
-                          return (
-                            <li {...props}>
-                              <StackRow sx={{ alignItems: 'center' }}>
-                                <BodyIconTypography label={castedOption.name} />
-                                <CustomTags customTags={castedOption.customTags} hideNAText />
-                                <Zones zones={castedOption.zones} hideIcon hideNAText />
-                              </StackRow>
-                            </li>
-                          );
-                        }}
-                        filterOptions={(options, params) => filterRoom(options as RoomDetails[], params)}
-                        selectOnFocus
-                        clearOnBlur
-                        handleHomeEndKeys
-                      />
-                    )}
-
-                    {rooms.length === 0 && <BodyIconTypography label="There are currently no available rooms in the chosen location." />}
-                  </FormFieldLabel>
-                )}
 
                 <FormFieldLabel label="Resources" useWiderSpace>
                   {resources.length > 0 && (

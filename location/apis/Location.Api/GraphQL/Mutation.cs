@@ -38,68 +38,6 @@ public class Mutation(IMapper mapper)
         new() { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(await locationService.DeleteAsync(input.Id, cancellationToken))! };
 
     [UseResolverScope]
-    public async Task<DeskPayload?> AddDeskAsync(AddDeskInput input, [Service] IDeskService deskService, CancellationToken cancellationToken) => new()
-    {
-        ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(await deskService.AddAsync(mapper.MapTo(input), false, cancellationToken))
-    };
-
-    [UseResolverScope]
-    public async Task<BulkDeskPayload?> BulkAddDeskAsync(
-        BulkAddDeskInput input,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
-    {
-        var desks = await deskService.BulkAddAsync(
-            input.LocationId,
-            input.NamePrefix,
-            input.Count,
-            input.CustomTagIds.Concat(input.ZoneIds).ToList(),
-            input.Deactivated,
-            input.RequireBookingApproval,
-            input.Color,
-            cancellationToken);
-        return new BulkDeskPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo) };
-    }
-
-    [UseResolverScope]
-    public async Task<DeskPayload?> UpdateDeskAsync(UpdateDeskInput input, [Service] IDeskService deskService, CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(await deskService.UpdateAsync(mapper.MapTo(input), cancellationToken))
-        };
-
-    [UseResolverScope]
-    public async Task<DeskPayload?> DeleteDeskAsync(DeleteDeskInput input, [Service] IDeskService deskService, CancellationToken cancellationToken) =>
-        new() { ClientMutationId = input.ClientMutationId, Desk = mapper.MapTo(await deskService.DeleteAsync(input.Id, cancellationToken)) };
-
-    [UseResolverScope]
-    public async Task<DesksPayload?> DeleteDesksAsync(DeleteDesksInput input, [Service] IDeskService deskService, CancellationToken cancellationToken)
-    {
-        var desks = await deskService.DeleteAsync(input.Ids.ToList(), cancellationToken);
-        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo) };
-    }
-
-    [UseResolverScope]
-    public async Task<DesksPayload?> ActivateDesksAsync(
-        ActivateDesksInput input,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
-    {
-        var desks = await deskService.ActivateAsync(input.Ids.ToList(), cancellationToken);
-        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo) };
-    }
-
-    [UseResolverScope]
-    public async Task<DesksPayload?> DeactivateDesksAsync(
-        DeactivateDesksInput input,
-        [Service] IDeskService deskService,
-        CancellationToken cancellationToken)
-    {
-        var desks = await deskService.DeactivateAsync(input.Ids.ToList(), cancellationToken);
-        return new DesksPayload { ClientMutationId = input.ClientMutationId, Desks = desks.Select(mapper.MapTo) };
-    }
-
-    [UseResolverScope]
     public async Task<LocationMemberDetailsPayload?> ChangeLocationMemberRoleAsync(
         ChangeLocationMemberRoleInput input,
         [Service] ILocationMemberService locationMemberService,
@@ -148,64 +86,6 @@ public class Mutation(IMapper mapper)
     {
         await locationInvitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken);
         return new CancelInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
-    }
-
-    [UseResolverScope]
-    public async Task<RoomPayload?> AddRoomAsync(
-        AddRoomInput input,
-        [Service] IRoomService roomService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId,
-            Room = mapper.MapTo(await roomService.AddAsync(mapper.MapTo(input), false, cancellationToken))
-        };
-
-    [UseResolverScope]
-    public async Task<RoomPayload?> UpdateRoomAsync(
-        UpdateRoomInput input,
-        [Service] IRoomService roomService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId, Room = mapper.MapTo(await roomService.UpdateAsync(mapper.MapTo(input), cancellationToken))
-        };
-
-    [UseResolverScope]
-    public async Task<RoomPayload?> DeleteRoomAsync(
-        DeleteRoomInput input,
-        [Service] IRoomService roomService,
-        CancellationToken cancellationToken) =>
-        new() { ClientMutationId = input.ClientMutationId, Room = mapper.MapTo(await roomService.DeleteAsync(input.Id, cancellationToken)) };
-
-    [UseResolverScope]
-    public async Task<RoomsPayload?> DeleteRoomsAsync(
-        DeleteRoomsInput input,
-        [Service] IRoomService roomService,
-        CancellationToken cancellationToken)
-    {
-        var rooms = await roomService.DeleteAsync(input.Ids.ToList(), cancellationToken);
-        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo) };
-    }
-
-    [UseResolverScope]
-    public async Task<RoomsPayload?> ActivateRoomsAsync(
-        ActivateRoomsInput input,
-        [Service] IRoomService roomService,
-        CancellationToken cancellationToken)
-    {
-        var rooms = await roomService.ActivateAsync(input.Ids.ToList(), cancellationToken);
-        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo) };
-    }
-
-    [UseResolverScope]
-    public async Task<RoomsPayload?> DeactivateRoomsAsync(
-        DeactivateRoomsInput input,
-        [Service] IRoomService roomService,
-        CancellationToken cancellationToken)
-    {
-        var rooms = await roomService.DeactivateAsync(input.Ids.ToList(), cancellationToken);
-        return new RoomsPayload { ClientMutationId = input.ClientMutationId, Rooms = rooms.Select(mapper.MapTo) };
     }
 
     [UseResolverScope]

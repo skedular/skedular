@@ -12,7 +12,6 @@ using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Desk = Booking.Shared.Database.Entities.Desk;
-using Room = Booking.Shared.Database.Entities.Room;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using Resource = Booking.Shared.Database.Entities.Resource;
@@ -22,19 +21,8 @@ namespace Booking.Api.Services;
 
 public interface IBookingService
 {
-    Task<Shared.Models.Booking> AddAsync(
-        Shared.Models.Booking booking,
-        bool ignoreAuthorizationCheck,
-        bool ignoreDeskAvailability,
-        bool ignoreRoomAvailability,
-        CancellationToken cancellationToken);
-
-    Task<Shared.Models.Booking> UpdateAsync(
-        Shared.Models.Booking booking,
-        bool ignoreDeskAvailability,
-        bool ignoreRoomAvailability,
-        CancellationToken cancellationToken);
-
+    Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
+    Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> DeleteAsync(string bookingId, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> GetByIdAsync(string bookingId, CancellationToken cancellationToken);
 
@@ -62,8 +50,6 @@ public class BookingService(
     public async Task<Shared.Models.Booking> AddAsync(
         Shared.Models.Booking booking,
         bool ignoreAuthorizationCheck,
-        bool ignoreDeskAvailability,
-        bool ignoreRoomAvailability,
         CancellationToken cancellationToken)
     {
         Shared.Models.Customer? customer = null;
@@ -78,14 +64,7 @@ public class BookingService(
             var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
             if (existingBooking is not null)
             {
-                return await UpdateInternalAsync(
-                    booking,
-                    existingBooking,
-                    customer,
-                    customerEntity,
-                    ignoreDeskAvailability,
-                    ignoreRoomAvailability,
-                    cancellationToken);
+                return await UpdateInternalAsync(booking, existingBooking, customer, customerEntity, cancellationToken);
             }
         }
         else
@@ -110,8 +89,6 @@ public class BookingService(
 
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
         var resources = await GetResourcesAsync(booking.From, booking.Until, resourceIds, cancellationToken);
-        (var desks, location) = await GetDesksAndSetLocationIfRequiredAsync(booking, location, ignoreDeskAvailability, cancellationToken);
-        (var rooms, location) = await GetRoomsAndSetLocationIfRequiredAsync(booking, location, ignoreRoomAvailability, cancellationToken);
         if (customer is null || customer.Id != booking.Customer.Id)
         {
             (_, customerEntity) = await customerService.GetCustomerAsync(booking.Customer.Id, cancellationToken);
@@ -124,15 +101,6 @@ public class BookingService(
             location,
             team,
             resources,
-            cancellationToken);
-
-        (organization, location, team, desks) = await TryToSetDefaultRoomAndDeskValuesAsync(
-            booking,
-            customerEntity!,
-            organization,
-            location,
-            team,
-            desks,
             cancellationToken);
 
         organization = PopulateRequiredFields(organization, location, team);
@@ -159,7 +127,7 @@ public class BookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
-        var bookingEntity = mapper.MapTo(booking, customerEntity!, organization, location, team, desks, rooms, resources);
+        var bookingEntity = mapper.MapTo(booking, customerEntity!, organization, location, team, [], [], resources);
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
@@ -171,11 +139,7 @@ public class BookingService(
         return booking;
     }
 
-    public async Task<Shared.Models.Booking> UpdateAsync(
-        Shared.Models.Booking booking,
-        bool ignoreDeskAvailability,
-        bool ignoreRoomAvailability,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
 
@@ -186,14 +150,7 @@ public class BookingService(
             throw new BookingNotFound();
         }
 
-        return await UpdateInternalAsync(
-            booking,
-            existingBooking,
-            customer,
-            customerEntity,
-            ignoreDeskAvailability,
-            ignoreRoomAvailability,
-            cancellationToken);
+        return await UpdateInternalAsync(booking, existingBooking, customer, customerEntity, cancellationToken);
     }
 
     public async Task<Shared.Models.Booking> DeleteAsync(string bookingId, CancellationToken cancellationToken)
@@ -283,9 +240,6 @@ public class BookingService(
                 }
             }
         }
-
-        existingBooking.Desks = [];
-        existingBooking.Rooms = [];
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -472,136 +426,6 @@ public class BookingService(
             cancellationToken);
 
         return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
-    }
-
-    private async Task<(List<Desk> desks, Location? location)> GetDesksAndSetLocationIfRequiredAsync(
-        Shared.Models.Booking booking,
-        Location? location,
-        bool ignoreDeskAvailability,
-        CancellationToken cancellationToken)
-    {
-        if (booking.Desks.Count == 0)
-        {
-            return ([], location);
-        }
-
-        var deskIds = booking.Desks.Select(item => item.Id).ToList();
-        var desks = await repositoryFactory.DeskRepository.Query(
-                new Specification<Desk>
-                    {
-                        Criteria = query => !query.DeletedAt.HasValue &&
-                                            !query.Deactivated &&
-                                            query.Location != null &&
-                                            !query.Location.DeletedAt.HasValue &&
-                                            deskIds.Contains(query.Id)
-                    }
-                    .AddInclude(query => query.Location))
-            .ToListAsync(cancellationToken);
-
-        if ((!ignoreDeskAvailability && desks.Count != booking.Desks.Count) || desks.Any(item => item.Deactivated))
-        {
-            throw new DeskNotAvailable();
-        }
-
-        deskIds = desks.Select(item => item.Id).ToList();
-        var existingBookingWithSameDesksFound = await repositoryFactory.BookingRepository.Query(
-            new Specification<Shared.Database.Entities.Booking>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    query.Id != booking.Id &&
-                                    query.From >= booking.From &&
-                                    query.To <= booking.Until &&
-                                    query.Desks.Any(item => deskIds.Contains(item.Id))
-            }).AnyAsync(cancellationToken);
-        if (!ignoreDeskAvailability && existingBookingWithSameDesksFound)
-        {
-            throw new DeskNotAvailable();
-        }
-
-        var locations = desks.Where(item => item.Location is not null).Select(item => item.Location!.Id).ToHashSet();
-        if (locations.Count > 1)
-        {
-            throw new CrossLocationDeskBookingNotAllowed();
-        }
-
-        if (location is null && locations.Count != 0)
-        {
-            location = desks.Select(item => item.Location).FirstOrDefault(item => item is not null);
-        }
-        else if (location is not null && locations.Count != 0)
-        {
-            if (location.Id != locations.First())
-            {
-                throw new DeskBelongToDifferentLocationBookingNotAllowed();
-            }
-        }
-
-        return (desks, location);
-    }
-
-    private async Task<(List<Room> rooms, Location? location)> GetRoomsAndSetLocationIfRequiredAsync(
-        Shared.Models.Booking booking,
-        Location? location,
-        bool ignoreRoomAvailability,
-        CancellationToken cancellationToken)
-    {
-        if (booking.Rooms.Count == 0)
-        {
-            return ([], location);
-        }
-
-        var roomIds = booking.Rooms.Select(item => item.Id).ToList();
-        var rooms = await repositoryFactory.RoomRepository.Query(
-                new Specification<Room>
-                    {
-                        Criteria = query => !query.DeletedAt.HasValue &&
-                                            !query.Deactivated &&
-                                            query.Location != null &&
-                                            !query.Location.DeletedAt.HasValue &&
-                                            roomIds.Contains(query.Id)
-                    }
-                    .AddInclude(query => query.Location))
-            .ToListAsync(cancellationToken);
-
-        if ((!ignoreRoomAvailability && rooms.Count != booking.Rooms.Count) || rooms.Any(item => item.Deactivated))
-        {
-            throw new RoomNotAvailable();
-        }
-
-        roomIds = rooms.Select(item => item.Id).ToList();
-        var existingBookingWithSameRoomsFound = await repositoryFactory.BookingRepository.Query(
-            new Specification<Shared.Database.Entities.Booking>
-            {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    query.Id != booking.Id &&
-                                    query.From >= booking.From &&
-                                    query.To <= booking.Until &&
-                                    query.Rooms.Any(item => roomIds.Contains(item.Id))
-            }).AnyAsync(cancellationToken);
-        if (!ignoreRoomAvailability && existingBookingWithSameRoomsFound)
-        {
-            throw new RoomNotAvailable();
-        }
-
-        var locations = rooms.Where(item => item.Location is not null).Select(item => item.Location!.Id).ToHashSet();
-        if (locations.Count > 1)
-        {
-            throw new CrossLocationRoomBookingNotAllowed();
-        }
-
-        if (location is null && locations.Count != 0)
-        {
-            location = rooms.Select(item => item.Location).FirstOrDefault(item => item is not null);
-        }
-        else if (location is not null && locations.Count != 0)
-        {
-            if (location.Id != locations.First())
-            {
-                throw new RoomBelongToDifferentLocationBookingNotAllowed();
-            }
-        }
-
-        return (rooms, location);
     }
 
     private async Task<Organization?> GetOrganizationAndValidatePermissionsAsync(
@@ -870,8 +694,6 @@ public class BookingService(
         Shared.Database.Entities.Booking existingBooking,
         Shared.Models.Customer? customer,
         Customer? customerEntity,
-        bool ignoreDeskAvailability,
-        bool ignoreRoomAvailability,
         CancellationToken cancellationToken)
     {
         var organization = await GetOrganizationAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
@@ -897,8 +719,6 @@ public class BookingService(
 
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
         var resources = await GetResourcesAsync(booking.From, booking.Until, resourceIds, cancellationToken);
-        (var desks, location) = await GetDesksAndSetLocationIfRequiredAsync(booking, location, ignoreDeskAvailability, cancellationToken);
-        (var rooms, location) = await GetRoomsAndSetLocationIfRequiredAsync(booking, location, ignoreRoomAvailability, cancellationToken);
 
         if (customer is null || customer.Id != booking.Customer.Id)
         {
@@ -929,7 +749,7 @@ public class BookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
-        var bookingEntity = mapper.MergeTo(booking, existingBooking, customerEntity!, organization, location, team, desks, rooms, resources);
+        var bookingEntity = mapper.MergeTo(booking, existingBooking, customerEntity!, organization, location, team, [], [], resources);
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
@@ -939,153 +759,6 @@ public class BookingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return booking;
-    }
-
-    private async Task<(Organization?, Location?, Team?, List<Desk>)> TryToSetDefaultRoomAndDeskValuesAsync(
-        Shared.Models.Booking booking,
-        Customer customer,
-        Organization? organization,
-        Location? location,
-        Team? team,
-        List<Desk> desks,
-        CancellationToken cancellationToken)
-    {
-        if (booking.Organization is not null &&
-            booking.Location is not null &&
-            booking.Team is not null &&
-            (booking.Desks.Count != 0 || booking.Rooms.Count != 0))
-        {
-            // Only use default values if given booking has no attachment to any of the resources available through default values
-            return (organization, location, team, desks);
-        }
-
-        if (booking.Organization is not null && booking.Location is null && booking.Team is null)
-        {
-            location = customer.PreferredLocations
-                .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
-            if (location is not null)
-            {
-                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
-            }
-
-            team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
-            if (team is not null)
-            {
-                team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
-            }
-        }
-        else if (booking.Organization is not null && booking.Location is not null && booking.Team is null)
-        {
-            team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
-            if (team is not null)
-            {
-                team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
-            }
-        }
-        else if (booking.Organization is not null && booking.Location is null && booking.Team is not null)
-        {
-            location = customer.PreferredLocations
-                .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == booking.Organization.Id);
-            if (location is not null)
-            {
-                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
-            }
-        }
-        else if (booking.Organization is null && (booking.Location is not null || booking.Team is not null))
-        {
-        }
-        else if (booking.Organization is not null && booking.Location is not null && booking.Team is not null)
-        {
-        }
-        else
-        {
-            if (customer.DefaultOrganization is null)
-            {
-                team = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null) ?? customer.PreferredTeams.FirstOrDefault();
-                if (team is null)
-                {
-                    location = customer.PreferredLocations.FirstOrDefault(item => item.Organization is not null) ??
-                               customer.PreferredLocations.FirstOrDefault();
-                    if (location is not null)
-                    {
-                        location =
-                            await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
-                    }
-                }
-
-                if (team is not null)
-                {
-                    organization = team.Organization;
-                }
-                else if (location is not null)
-                {
-                    organization = location.Organization;
-                }
-            }
-            else
-            {
-                organization = customer.DefaultOrganization;
-                location = customer.PreferredLocations
-                    .FirstOrDefault(item => item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
-                if (location is not null)
-                {
-                    location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, false, false, cancellationToken);
-                }
-
-                team = customer.PreferredTeams.FirstOrDefault(
-                    item => item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
-                if (team is not null)
-                {
-                    team = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
-                }
-            }
-        }
-
-        if (organization is null && location is null && team is null && booking.Desks.Count != 0)
-        {
-            desks = [];
-        }
-
-        if (location is not null)
-        {
-            desks = desks.Where(item => item.Location is { DeletedAt: null } && item.Location.Id == location.Id).ToList();
-            if (desks.Count == 0)
-            {
-                var bookings = await repositoryFactory.BookingRepository.Query(
-                        new Specification<Shared.Database.Entities.Booking>
-                            {
-                                Criteria = query => !query.DeletedAt.HasValue && booking.From <= query.From && query.To <= booking.Until
-                            }
-                            .AddInclude(query => query.Desks))
-                    .Where(query => query.Location != null)
-                    .Where(query => query.Location!.Id == location.Id)
-                    .ToListAsync(cancellationToken);
-
-                var desk = GetFirstAvailableDeskUsingPreferredDesks(bookings, customer, location);
-                if (desk is null)
-                {
-                    desk = GetFirstAvailableDeskUsingPreferredOrganizationZones(bookings, customer, location);
-                    if (desk is null)
-                    {
-                        desk = GetFirstAvailableDesk(bookings, location);
-                        if (desk is not null)
-                        {
-                            desks = [desk];
-                        }
-                    }
-                    else
-                    {
-                        desks = [desk];
-                    }
-                }
-                else
-                {
-                    desks = [desk];
-                }
-            }
-        }
-
-        return (organization, location, team, desks);
     }
 
     private async Task<(Organization?, Location?, Team?, ICollection<Resource>)> TryToSetDefaultValuesAsync(
@@ -1243,91 +916,6 @@ public class BookingService(
         }
 
         return (organization, location, team, resources);
-    }
-
-    private static Desk? GetFirstAvailableDeskUsingPreferredDesks(
-        ICollection<Shared.Database.Entities.Booking> bookings,
-        Customer customer,
-        Location location)
-    {
-        var preferredDeskIds = customer.PreferredDesks
-            .Where(item => item.Location != null && item.Location.Id == location.Id)
-            .Select(item => item.Id)
-            .ToList();
-        if (preferredDeskIds.Count == 0)
-        {
-            return null;
-        }
-
-        var allDesks = location.Desks.Where(item => preferredDeskIds.Contains(item.Id)).ToList();
-        if (allDesks.Count == 0)
-        {
-            return null;
-        }
-
-        var bookedDeskIds = bookings.SelectMany(item => item.Desks).Select(item => item.Id).ToHashSet();
-        var allDeskIds = allDesks.Select(item => item.Id).ToList();
-        var locationDesksIds = location.Desks.Select(item => item.Id).ToList();
-        var availableDeskIds = allDeskIds.Except(bookedDeskIds).ToList();
-        if (availableDeskIds.Count == 0)
-        {
-            availableDeskIds = locationDesksIds.Except(bookedDeskIds).ToList();
-        }
-
-        return availableDeskIds.Count == 0 ? null : location.Desks.First(item => item.Id == availableDeskIds.First());
-    }
-
-    private static Desk? GetFirstAvailableDeskUsingPreferredOrganizationZones(
-        ICollection<Shared.Database.Entities.Booking> bookings,
-        Customer customer,
-        Location location)
-    {
-        var preferredZoneIds = customer.PreferredOrganizationTags
-            .Where(item => item.Type == OrganizationTagTypeConstants.Zone)
-            .Select(item => item.Id)
-            .ToList();
-        if (preferredZoneIds.Count == 0)
-        {
-            return null;
-        }
-
-        var allDesks = location.Desks.Where(item => item.OrganizationTags.Any(tag => preferredZoneIds.Contains(tag.Id))).ToList();
-
-        if (allDesks.Count == 0)
-        {
-            return null;
-        }
-
-        var bookedDeskIds = bookings.SelectMany(item => item.Desks).Select(item => item.Id).ToHashSet();
-        var allDeskIds = allDesks.Select(item => item.Id).ToList();
-        var locationDesksIds = location.Desks.Select(item => item.Id).ToList();
-        var availableDeskIds = allDeskIds.Except(bookedDeskIds).ToList();
-        if (availableDeskIds.Count == 0)
-        {
-            availableDeskIds = locationDesksIds.Except(bookedDeskIds).ToList();
-        }
-
-        return availableDeskIds.Count == 0 ? null : location.Desks.First(item => item.Id == availableDeskIds.First());
-    }
-
-    private static Desk? GetFirstAvailableDesk(ICollection<Shared.Database.Entities.Booking> bookings, Location location)
-    {
-        var allDesks = location.Desks.ToList();
-        if (allDesks.Count == 0)
-        {
-            return null;
-        }
-
-        var bookedDeskIds = bookings.SelectMany(item => item.Desks).Select(item => item.Id).ToHashSet();
-        var allDeskIds = allDesks.Select(item => item.Id).ToList();
-        var locationDesksIds = location.Desks.Select(item => item.Id).ToList();
-        var availableDeskIds = allDeskIds.Except(bookedDeskIds).ToList();
-        if (availableDeskIds.Count == 0)
-        {
-            availableDeskIds = locationDesksIds.Except(bookedDeskIds).ToList();
-        }
-
-        return availableDeskIds.Count == 0 ? null : location.Desks.First(item => item.Id == availableDeskIds.First());
     }
 
     private static Organization? PopulateRequiredFields(Organization? organization, Location? location, Team? team) =>

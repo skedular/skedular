@@ -7,49 +7,13 @@ type AcceptInvitationToJoinLocationPayload {
   clientMutationId: String
 }
 
-type BulkDeskPayload {
-  clientMutationId: String
-  desks: [DeskDetails!]!
-}
-
 type CancelInvitationToJoinLocationPayload {
   clientMutationId: String
-}
-
-type DeskConnection {
-  pageInfo: PageInfo!
-  edges: [DeskEdge!]!
-  totalCount: Int
-}
-
-type DeskDetails {
-  name: String!
-  deactivated: Boolean!
-  requireBookingApproval: Boolean!
-  color: String
-  customTags: [Location_OrganizationTagDetails!]!
-  zones: [Location_OrganizationTagDetails!]!
-  id: ID!
-}
-
-type DeskEdge {
-  node: DeskDetails!
-  cursor: String!
-}
-
-type DeskPayload {
-  clientMutationId: String
-  desk: DeskDetails!
 }
 
 type DesksOccupancyPercentage {
   date: DateTime!
   percentage: Float!
-}
-
-type DesksPayload {
-  clientMutationId: String
-  desks: [DeskDetails!]!
 }
 
 type InviteCustomersToJoinLocationPayload {
@@ -114,8 +78,6 @@ type LocationDetails {
   canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
   resources: [ResourceDetails!]!
-  desks: [DeskDetails!]!
-  rooms: [RoomDetails!]!
   physicalAddress: LocationAddressDetails
   customTags: [Location_OrganizationTagDetails!]!
   zones: [Location_OrganizationTagDetails!]!
@@ -172,24 +134,11 @@ type Mutation {
   addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
   updateLocation(input: UpdateLocationInput!): LocationPayload @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
-  addDesk(input: AddDeskInput!): DeskPayload @cost(weight: "10")
-  bulkAddDesk(input: BulkAddDeskInput!): BulkDeskPayload @cost(weight: "10")
-  updateDesk(input: UpdateDeskInput!): DeskPayload @cost(weight: "10")
-  deleteDesk(input: DeleteDeskInput!): DeskPayload @cost(weight: "10")
-  deleteDesks(input: DeleteDesksInput!): DesksPayload @cost(weight: "10")
-  activateDesks(input: ActivateDesksInput!): DesksPayload @cost(weight: "10")
-  deactivateDesks(input: DeactivateDesksInput!): DesksPayload @cost(weight: "10")
   changeLocationMemberRole(input: ChangeLocationMemberRoleInput!): LocationMemberDetailsPayload @cost(weight: "10")
   inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
   acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
   rejectInvitationToJoinLocation(input: RejectInvitationToJoinLocationInput!): RejectInvitationToJoinLocationPayload @cost(weight: "10")
   cancelInvitationToJoinLocation(input: CancelInvitationToJoinLocationInput!): CancelInvitationToJoinLocationPayload @cost(weight: "10")
-  addRoom(input: AddRoomInput!): RoomPayload @cost(weight: "10")
-  updateRoom(input: UpdateRoomInput!): RoomPayload @cost(weight: "10")
-  deleteRoom(input: DeleteRoomInput!): RoomPayload @cost(weight: "10")
-  deleteRooms(input: DeleteRoomsInput!): RoomsPayload @cost(weight: "10")
-  activateRooms(input: ActivateRoomsInput!): RoomsPayload @cost(weight: "10")
-  deactivateRooms(input: DeactivateRoomsInput!): RoomsPayload @cost(weight: "10")
   addResource(input: AddResourceInput!): ResourcePayload @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload @cost(weight: "10")
   deleteResource(input: DeleteResourceInput!): ResourcePayload @cost(weight: "10")
@@ -228,12 +177,8 @@ type Query {
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): LocationConnection @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   locationMembers(after: String first: Int before: String last: Int where: LocationMemberWhereInput! orderBy: [LocationMemberOrderInput!]): LocationMemberConnection @cost(weight: "10")
-  desks(after: String first: Int before: String last: Int where: DeskWhereInput! orderBy: [DeskOrderInput!]): DeskConnection @cost(weight: "10")
-  desk(id: String!): DeskDetails @cost(weight: "10")
   locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput! orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
-  rooms(after: String first: Int before: String last: Int where: RoomWhereInput! orderBy: [RoomOrderInput!]): RoomConnection @cost(weight: "10")
-  room(id: String!): RoomDetails @cost(weight: "10")
   resources(after: String first: Int before: String last: Int where: ResourceWhereInput! orderBy: [ResourceOrderInput!]): ResourceConnection @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
 }
@@ -276,40 +221,9 @@ type ResourcesPayload {
   resources: [ResourceDetails!]!
 }
 
-type RoomConnection {
-  pageInfo: PageInfo!
-  edges: [RoomEdge!]!
-  totalCount: Int
-}
-
-type RoomDetails {
-  name: String!
-  deactivated: Boolean!
-  requireBookingApproval: Boolean!
-  color: String
-  customTags: [Location_OrganizationTagDetails!]!
-  zones: [Location_OrganizationTagDetails!]!
-  id: ID!
-}
-
-type RoomEdge {
-  node: RoomDetails!
-  cursor: String!
-}
-
-type RoomPayload {
-  clientMutationId: String
-  room: RoomDetails!
-}
-
 type RoomsOccupancyPercentage {
   date: DateTime!
   percentage: Float!
-}
-
-type RoomsPayload {
-  clientMutationId: String
-  rooms: [RoomDetails!]!
 }
 
 type VariedDateOpeningHours {
@@ -339,29 +253,9 @@ input AcceptInvitationToJoinLocationInput {
   id: String!
 }
 
-input ActivateDesksInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
 input ActivateResourcesInput {
   clientMutationId: String
   ids: [String!]!
-}
-
-input ActivateRoomsInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
-input AddDeskInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  locationId: String!
-  customTagIds: [String!]!
-  zoneIds: [String!]!
-  color: String
 }
 
 input AddLocationInput {
@@ -385,29 +279,6 @@ input AddResourceInput {
   organizationResourceTypeId: String!
 }
 
-input AddRoomInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  locationId: String!
-  customTagIds: [String!]!
-  zoneIds: [String!]!
-  color: String
-}
-
-input BulkAddDeskInput {
-  clientMutationId: String
-  id: String
-  namePrefix: String
-  locationId: String!
-  count: Int!
-  customTagIds: [String!]!
-  zoneIds: [String!]!
-  deactivated: Boolean!
-  color: String
-  requireBookingApproval: Boolean!
-}
-
 input CancelInvitationToJoinLocationInput {
   clientMutationId: String
   id: String!
@@ -419,27 +290,7 @@ input ChangeLocationMemberRoleInput {
   role: LocationMemberRole!
 }
 
-input DeactivateDesksInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
 input DeactivateResourcesInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
-input DeactivateRoomsInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
-input DeleteDeskInput {
-  clientMutationId: String
-  id: String!
-}
-
-input DeleteDesksInput {
   clientMutationId: String
   ids: [String!]!
 }
@@ -457,28 +308,6 @@ input DeleteResourceInput {
 input DeleteResourcesInput {
   clientMutationId: String
   ids: [String!]!
-}
-
-input DeleteRoomInput {
-  clientMutationId: String
-  id: String!
-}
-
-input DeleteRoomsInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
-input DeskOrderInput {
-  direction: OrderDirection!
-  field: DeskOrderField!
-}
-
-input DeskWhereInput {
-  locationId: String!
-  nameContains: String
-  zoneIds: [String!]
-  customTagIds: [String!]
 }
 
 input InviteCustomersToJoinLocationInput {
@@ -545,29 +374,6 @@ input ResourceWhereInput {
   customTagIds: [String!]
 }
 
-input RoomOrderInput {
-  direction: OrderDirection!
-  field: RoomOrderField!
-}
-
-input RoomWhereInput {
-  locationId: String!
-  nameContains: String
-  zoneIds: [String!]
-  customTagIds: [String!]
-}
-
-input UpdateDeskInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  deactivated: Boolean!
-  requireBookingApproval: Boolean!
-  color: String
-  customTagIds: [String!]!
-  zoneIds: [String!]!
-}
-
 input UpdateLocationInput {
   clientMutationId: String
   id: String!
@@ -603,17 +409,6 @@ input UpdateResourceInput {
   organizationResourceTypeId: String!
 }
 
-input UpdateRoomInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  deactivated: Boolean!
-  requireBookingApproval: Boolean!
-  color: String
-  customTagIds: [String!]!
-  zoneIds: [String!]!
-}
-
 input WeekOpeningHoursInput {
   monday: OpeningHoursDetailsInput!
   tuesday: OpeningHoursDetailsInput!
@@ -622,10 +417,6 @@ input WeekOpeningHoursInput {
   friday: OpeningHoursDetailsInput!
   saturday: OpeningHoursDetailsInput!
   sunday: OpeningHoursDetailsInput!
-}
-
-enum DeskOrderField {
-  Name
 }
 
 enum LocationMemberOrderField {
@@ -654,10 +445,6 @@ enum OrderDirection {
 }
 
 enum ResourceOrderField {
-  Name
-}
-
-enum RoomOrderField {
   Name
 }
 

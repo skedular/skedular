@@ -1,13 +1,11 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { GridContainer, SectionIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
-import { Desks } from '@/components/desk';
 import { EllipseMenuIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import Resources from '@/components/resource/resources';
-import { Rooms } from '@/components/room';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@/libs/theme';
@@ -68,18 +66,6 @@ type ZoneDetails = {
   color?: string | null | undefined;
 };
 
-type DeskDetails = {
-  uniqueId: string;
-  name: string | null | undefined;
-  color?: string | null | undefined;
-};
-
-type RoomDetails = {
-  uniqueId: string;
-  name: string | null | undefined;
-  color?: string | null | undefined;
-};
-
 type ResourceDetails = {
   uniqueId: string;
   name: string | null | undefined;
@@ -94,8 +80,6 @@ type RowType = {
   id: string;
   location?: LocationDetails | null | undefined;
   team?: TeamDetails | null | undefined;
-  desks: ReadonlyArray<DeskDetails>;
-  rooms: ReadonlyArray<RoomDetails>;
   resources: ReadonlyArray<ResourceDetails>;
   customTags: ReadonlyArray<CustomTagDetails>;
   zones: ReadonlyArray<ZoneDetails>;
@@ -155,36 +139,6 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
               team {
                 uniqueId
                 name
-              }
-              desks {
-                uniqueId
-                name
-                color
-                customTags {
-                  uniqueId
-                  name
-                  color
-                }
-                zones {
-                  uniqueId
-                  name
-                  color
-                }
-              }
-              rooms {
-                uniqueId
-                name
-                color
-                customTags {
-                  uniqueId
-                  name
-                  color
-                }
-                zones {
-                  uniqueId
-                  name
-                  color
-                }
               }
               resources {
                 uniqueId
@@ -355,10 +309,8 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
   };
 
   const rows: RowType[] = myBookings.map((myBooking) => {
-    const customTags = myBooking.desks
+    const customTags = myBooking.resources
       .flatMap(({ customTags }) => customTags)
-      .concat(myBooking.rooms.flatMap(({ customTags }) => customTags))
-      .concat(myBooking.resources.flatMap(({ customTags }) => customTags))
       .reduce((acc: CustomTagDetails[], customTag) => {
         if (!acc.some((item) => item.uniqueId === customTag.uniqueId)) {
           acc.push(customTag);
@@ -366,10 +318,8 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
 
         return acc;
       }, []);
-    const zones = myBooking.desks
+    const zones = myBooking.resources
       .flatMap(({ zones }) => zones)
-      .concat(myBooking.rooms.flatMap(({ zones }) => zones))
-      .concat(myBooking.resources.flatMap(({ customTags }) => customTags))
       .reduce((acc: ZoneDetails[], zone) => {
         if (!acc.some((item) => item.uniqueId === zone.uniqueId)) {
           acc.push(zone);
@@ -388,8 +338,6 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       id: myBooking.id,
       location: myBooking.location,
       team: myBooking.team,
-      desks: myBooking.desks,
-      rooms: myBooking.rooms,
       resources: myBooking.resources,
       customTags,
       zones,
@@ -423,22 +371,6 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       renderCell: (params) => <SmallIconTypography label={params.value?.name ?? 'N/A'} />,
       display: 'flex',
       minWidth: 200,
-    },
-    {
-      field: 'desks',
-      headerName: 'Desks',
-      editable: false,
-      renderCell: (params) => <Desks desks={params.value.map((desk: DeskDetails) => ({ id: desk.uniqueId, name: desk.name, color: desk.color }))} hideIcon />,
-      display: 'flex',
-      minWidth: 150,
-    },
-    {
-      field: 'rooms',
-      headerName: 'Rooms',
-      editable: false,
-      renderCell: (params) => <Rooms rooms={params.value.map((room: RoomDetails) => ({ id: room.uniqueId, name: room.name, color: room.color }))} hideIcon />,
-      display: 'flex',
-      minWidth: 150,
     },
     {
       field: 'resources',

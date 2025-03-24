@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ba856cad310070640fcd692c7bd16c51>>
+ * @generated SignedSource<<cf7f8ab79ce8fec4600fd4892893b9c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,13 +68,7 @@ export type organizationLocation_query$data = {
   } | null | undefined;
   readonly me: {
     readonly id: string;
-    readonly preferredDesks: ReadonlyArray<{
-      readonly uniqueId: string;
-    }>;
     readonly preferredResources: ReadonlyArray<{
-      readonly uniqueId: string;
-    }>;
-    readonly preferredRooms: ReadonlyArray<{
       readonly uniqueId: string;
     }>;
   } | null | undefined;
@@ -96,15 +90,6 @@ var v0 = {
   "storageKey": null
 },
 v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "uniqueId",
-    "storageKey": null
-  }
-],
-v2 = [
   {
     "alias": null,
     "args": null,
@@ -161,27 +146,15 @@ return {
           "kind": "LinkedField",
           "name": "preferredResources",
           "plural": true,
-          "selections": (v1/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "CustomerDeskDetails",
-          "kind": "LinkedField",
-          "name": "preferredDesks",
-          "plural": true,
-          "selections": (v1/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "CustomerRoomDetails",
-          "kind": "LinkedField",
-          "name": "preferredRooms",
-          "plural": true,
-          "selections": (v1/*: any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "uniqueId",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -264,7 +237,7 @@ return {
                   "kind": "LinkedField",
                   "name": "monday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -274,7 +247,7 @@ return {
                   "kind": "LinkedField",
                   "name": "tuesday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -284,7 +257,7 @@ return {
                   "kind": "LinkedField",
                   "name": "wednesday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -294,7 +267,7 @@ return {
                   "kind": "LinkedField",
                   "name": "thursday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -304,7 +277,7 @@ return {
                   "kind": "LinkedField",
                   "name": "friday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -314,7 +287,7 @@ return {
                   "kind": "LinkedField",
                   "name": "saturday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -324,7 +297,7 @@ return {
                   "kind": "LinkedField",
                   "name": "sunday",
                   "plural": false,
-                  "selections": (v2/*: any*/),
+                  "selections": (v1/*: any*/),
                   "storageKey": null
                 }
               ],
@@ -364,6 +337,6 @@ return {
 };
 })();
 
-(node as any).hash = "811c94e479b92ed1b8c39adfdb96a719";
+(node as any).hash = "c93b9e2283ae27d250d39f407cfee707";
 
 export default node;

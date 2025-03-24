@@ -243,9 +243,7 @@ message Admin_AddInput {
     string locationId = 7;
     string teamId = 8;
     repeated string resourceIds = 9;
-    bool ignoreDeskAvailability = 10;
-    bool ignoreRoomAvailability = 11;
-    BookingType type = 12;
+    BookingType type = 10;
 }
 
 message AddInput {

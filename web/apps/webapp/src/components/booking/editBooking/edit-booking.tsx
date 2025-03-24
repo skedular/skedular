@@ -6,10 +6,6 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
-import type { editBooking_availableLocationDesks_query$key } from '@/queries/__generated__/editBooking_availableLocationDesks_query.graphql';
-import type { editBooking_availableLocationDesks_refetchableFragment } from '@/queries/__generated__/editBooking_availableLocationDesks_refetchableFragment.graphql';
-import type { editBooking_availableLocationRooms_query$key } from '@/queries/__generated__/editBooking_availableLocationRooms_query.graphql';
-import type { editBooking_availableLocationRooms_refetchableFragment } from '@/queries/__generated__/editBooking_availableLocationRooms_refetchableFragment.graphql';
 import type { editBooking_availableResources_query$key } from '@/queries/__generated__/editBooking_availableResources_query.graphql';
 import type { editBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editBooking_availableResources_refetchableFragment.graphql';
 import type { editBooking_customerTeams_query$key } from '@/queries/__generated__/editBooking_customerTeams_query.graphql';
@@ -38,8 +34,6 @@ type Props = {
   rootDataRelay: editBooking_query$key;
   rootDataOrganizationMembersRelay: editBooking_organizationMembers_query$key;
   rootDataTeamsRelay: editBooking_customerTeams_query$key;
-  rootDataAvailableLocationDesksRelay: editBooking_availableLocationDesks_query$key;
-  rootDataAvailableLocationRoomsRelay: editBooking_availableLocationRooms_query$key;
   rootDataAvailableResourcesRelay: editBooking_availableResources_query$key;
   onReloadRequired?: () => void;
   organizationId: string;
@@ -81,20 +75,6 @@ type ZoneDetails = {
   color: string | null | undefined;
 };
 
-type DeskDetails = {
-  uniqueId: string;
-  name: string;
-  customTags: CustomTagDetails[];
-  zones: ZoneDetails[];
-};
-
-type RoomDetails = {
-  uniqueId: string;
-  name: string;
-  customTags: CustomTagDetails[];
-  zones: ZoneDetails[];
-};
-
 type ResourceDetails = {
   uniqueId: string;
   name: string;
@@ -110,8 +90,6 @@ type BookingDetails = {
   organization: string | undefined;
   team: string | undefined;
   location: string | undefined;
-  desks: string[];
-  rooms: string[];
   resources: string[];
 };
 
@@ -123,19 +101,10 @@ const bookingSchema = object({
   organization: string().notRequired(),
   team: string().notRequired(),
   location: string().notRequired(),
-  desks: array().nullable(),
-  rooms: array().nullable(),
   resources: array().nullable(),
 });
 
-const EditBooking = ({
-  rootDataRelay,
-  rootDataTeamsRelay,
-  rootDataOrganizationMembersRelay,
-  rootDataAvailableLocationDesksRelay,
-  rootDataAvailableLocationRoomsRelay,
-  rootDataAvailableResourcesRelay,
-}: Props) => {
+const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay, rootDataAvailableResourcesRelay }: Props) => {
   const rootData = useFragment<editBooking_query$key>(
     graphql`
       fragment editBooking_query on Query {
@@ -174,34 +143,6 @@ const EditBooking = ({
           team {
             uniqueId
             name
-          }
-          desks {
-            uniqueId
-            name
-            customTags {
-              uniqueId
-              name
-              color
-            }
-            zones {
-              uniqueId
-              name
-              color
-            }
-          }
-          rooms {
-            uniqueId
-            name
-            customTags {
-              uniqueId
-              name
-              color
-            }
-            zones {
-              uniqueId
-              name
-              color
-            }
           }
           resources {
             uniqueId
@@ -278,56 +219,6 @@ const EditBooking = ({
     rootDataTeamsRelay,
   );
 
-  const [rootDataAvailableLocationDesks, refetchAvailableLocationDesks] = useRefetchableFragment<
-    editBooking_availableLocationDesks_refetchableFragment,
-    editBooking_availableLocationDesks_query$key
-  >(
-    graphql`
-      fragment editBooking_availableLocationDesks_query on Query @refetchable(queryName: "editBooking_availableLocationDesks_refetchableFragment") {
-        availableDesks(where: { locationId: $locationId, date: $dateToGetAvailableDesks, deskIdsToInclude: $deskIdsToIncludeToGetAvailableDesks }) @include(if: $locationExists) {
-          uniqueId
-          name
-          customTags {
-            uniqueId
-            name
-            color
-          }
-          zones {
-            uniqueId
-            name
-            color
-          }
-        }
-      }
-    `,
-    rootDataAvailableLocationDesksRelay,
-  );
-
-  const [rootDataAvailableLocationRooms, refetchAvailableLocationRooms] = useRefetchableFragment<
-    editBooking_availableLocationRooms_refetchableFragment,
-    editBooking_availableLocationRooms_query$key
-  >(
-    graphql`
-      fragment editBooking_availableLocationRooms_query on Query @refetchable(queryName: "editBooking_availableLocationRooms_refetchableFragment") {
-        availableRooms(where: { locationId: $locationId, date: $dateToGetAvailableRooms, roomIdsToInclude: $roomIdsToIncludeToGetAvailableRooms }) @include(if: $locationExists) {
-          uniqueId
-          name
-          customTags {
-            uniqueId
-            name
-            color
-          }
-          zones {
-            uniqueId
-            name
-            color
-          }
-        }
-      }
-    `,
-    rootDataAvailableLocationRoomsRelay,
-  );
-
   const [rootDataAvailableResources, refetchAvailableResources] = useRefetchableFragment<
     editBooking_availableResources_refetchableFragment,
     editBooking_availableResources_query$key
@@ -382,34 +273,6 @@ const EditBooking = ({
             uniqueId
             name
           }
-          desks {
-            uniqueId
-            name
-            customTags {
-              uniqueId
-              name
-              color
-            }
-            zones {
-              uniqueId
-              name
-              color
-            }
-          }
-          rooms {
-            uniqueId
-            name
-            customTags {
-              uniqueId
-              name
-              color
-            }
-            zones {
-              uniqueId
-              name
-              color
-            }
-          }
           resources {
             uniqueId
             name
@@ -446,24 +309,8 @@ const EditBooking = ({
   const [customerId, setCustomerId] = useState<string | undefined>(rootData.booking?.customer?.uniqueId);
   const [teamId, setTeamId] = useState<string | undefined>(rootData.booking?.team?.uniqueId);
   const [locationId, setLocationId] = useState<string | undefined>(rootData.booking?.location?.uniqueId);
-  const defaultDeskIds = useMemo<string[]>(
-    () =>
-      rootData.booking?.desks && from.toISOString() === rootData.booking.from && rootData.booking.location?.uniqueId === locationId
-        ? rootData.booking.desks.map(({ uniqueId }) => uniqueId)
-        : [],
-    [rootData.booking?.desks, rootData.booking?.from, from, rootData.booking?.location?.uniqueId, locationId],
-  );
-  const defaultRoomIds = useMemo<string[]>(
-    () =>
-      rootData.booking?.rooms && from.toISOString() === rootData.booking.from && rootData.booking.location?.uniqueId === locationId
-        ? rootData.booking.rooms.map(({ uniqueId }) => uniqueId)
-        : [],
-    [rootData.booking?.rooms, rootData.booking?.from, from, rootData.booking?.location?.uniqueId, locationId],
-  );
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
-  const filterDesk = createFilterOptions<DeskDetails>();
-  const filterRoom = createFilterOptions<RoomDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
 
   const customers = useMemo<OrganizationMemberDetails[]>(
@@ -472,32 +319,6 @@ const EditBooking = ({
   );
   const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
   const locations = useMemo<LocationDetails[]>(() => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
-
-  const desks = useMemo<DeskDetails[]>(
-    () =>
-      rootDataAvailableLocationDesks.availableDesks
-        ? rootDataAvailableLocationDesks.availableDesks.map(({ uniqueId, name, customTags, zones }) => ({
-            uniqueId,
-            name,
-            customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-            zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-          }))
-        : [],
-    [rootDataAvailableLocationDesks.availableDesks],
-  );
-
-  const rooms = useMemo<RoomDetails[]>(
-    () =>
-      rootDataAvailableLocationRooms.availableRooms
-        ? rootDataAvailableLocationRooms.availableRooms.map(({ uniqueId, name, customTags, zones }) => ({
-            uniqueId,
-            name,
-            customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-            zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
-          }))
-        : [],
-    [rootDataAvailableLocationRooms.availableRooms],
-  );
 
   const resources = useMemo<ResourceDetails[]>(() => {
     if (!timeRangeValid || !rootDataAvailableResources.availableResources) {
@@ -560,44 +381,6 @@ const EditBooking = ({
     [refetchTeams],
   );
 
-  const handleRefetchAvailableLocationDesks = useCallback(
-    (deskIds: string[], from: Dayjs | Date, locationId?: string) => {
-      startTransition(() => {
-        refetchAvailableLocationDesks(
-          {
-            locationId: locationId ?? '',
-            locationExists: !!locationId,
-            deskIdsToIncludeToGetAvailableDesks: deskIds,
-            dateToGetAvailableDesks: from,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [refetchAvailableLocationDesks],
-  );
-
-  const handleRefetchAvailableLocationRooms = useCallback(
-    (roomIds: string[], from: Dayjs | Date, locationId?: string) => {
-      startTransition(() => {
-        refetchAvailableLocationRooms(
-          {
-            locationId: locationId ?? '',
-            locationExists: !!locationId,
-            roomIdsToIncludeToGetAvailableRooms: roomIds,
-            dateToGetAvailableRooms: from,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [refetchAvailableLocationRooms],
-  );
-
   const handleRefetchAvailableResources = useCallback(
     ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }, locationId?: string) => {
       startTransition(() => {
@@ -656,9 +439,6 @@ const EditBooking = ({
 
   useEffect(() => handleRefetchTeams(rootData.booking?.customer?.uniqueId), [handleRefetchTeams, rootData.booking?.customer?.uniqueId]);
   useEffect(() => {
-    handleRefetchAvailableLocationDesks(defaultDeskIds, from, locationId);
-    handleRefetchAvailableLocationRooms(defaultRoomIds, from, locationId);
-
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
     if (range.valid) {
       setTimeRangeValid(true);
@@ -666,19 +446,7 @@ const EditBooking = ({
     } else {
       setTimeRangeValid(false);
     }
-  }, [
-    defaultDeskIds,
-    handleRefetchAvailableLocationDesks,
-    defaultRoomIds,
-    handleRefetchAvailableLocationRooms,
-    handleRefetchAvailableResources,
-    from,
-    allDay,
-    timeFrom,
-    timeUntil,
-    locationId,
-    getDateRange,
-  ]);
+  }, [handleRefetchAvailableResources, from, allDay, timeFrom, timeUntil, locationId, getDateRange]);
 
   const handleCloseClick = () => {
     router.back();
@@ -692,8 +460,6 @@ const EditBooking = ({
     organization: organizationId,
     location: locationId,
     team: teamId,
-    desks: deskIds,
-    rooms: roomIds,
     resources: resourceIds,
   }: BookingDetails) => {
     if (!rootData.booking) {
@@ -733,8 +499,6 @@ const EditBooking = ({
           organizationId,
           locationId,
           teamId,
-          deskIds: locationId ? deskIds.filter((deskId) => rootDataAvailableLocationDesks.availableDesks?.find((availableDesk) => availableDesk.uniqueId === deskId)) : [],
-          roomIds: locationId ? roomIds.filter((roomId) => rootDataAvailableLocationRooms.availableRooms?.find((availableRoom) => availableRoom.uniqueId === roomId)) : [],
           resourceIds,
           type,
         },
@@ -782,9 +546,7 @@ const EditBooking = ({
             organization: null,
             location: null,
             team: null,
-            // TODO: 20240112 - Morteza: Below line stores the existing/old desk, but not the updated value for optimistic update, update this line with the updated value in future
-            desks: booking.desks,
-            rooms: booking.rooms,
+            // TODO: 20240112 - Morteza: Below line stores the existing/old resource, but not the updated value for optimistic update, update this line with the updated value in future
             resources: booking.resources,
           },
         },
@@ -818,20 +580,6 @@ const EditBooking = ({
     const locationId = option?.id;
 
     setLocationId(locationId);
-
-    const deskIds =
-      rootData.booking?.desks && from.toISOString() === rootData.booking.from && rootData.booking.location?.uniqueId === locationId
-        ? rootData.booking.desks.map(({ uniqueId }) => uniqueId)
-        : [];
-
-    handleRefetchAvailableLocationDesks(deskIds, from, locationId);
-
-    const roomIds =
-      rootData.booking?.rooms && from.toISOString() === rootData.booking.from && rootData.booking.location?.uniqueId === locationId
-        ? rootData.booking.rooms.map(({ uniqueId }) => uniqueId)
-        : [];
-
-    handleRefetchAvailableLocationRooms(roomIds, from, locationId);
 
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
     if (range.valid) {
@@ -869,8 +617,6 @@ const EditBooking = ({
               notes: booking.notes,
               team: teamId,
               location: locationId,
-              desks: booking.desks ? booking.desks.map(({ uniqueId }) => uniqueId) : [],
-              rooms: booking.rooms ? booking.rooms.map(({ uniqueId }) => uniqueId) : [],
               resources: booking.resources ? booking.resources.map(({ uniqueId }) => uniqueId) : [],
             }}
             validate={validateBookingDetails}
@@ -986,74 +732,6 @@ const EditBooking = ({
                         onChange={(_, option) => handleLocationChange(option as LocationDetails)}
                       />
                     </FormFieldLabel>
-
-                    {locationId && (
-                      <FormFieldLabel label="Desks">
-                        {desks.length > 0 && (
-                          <Autocomplete
-                            name="desks"
-                            multiple={true}
-                            required={requiredFields.desks}
-                            options={desks}
-                            getOptionValue={(option) => (option as DeskDetails).uniqueId}
-                            getOptionLabel={(option: string | DeskDetails) => (option as DeskDetails).name}
-                            renderOption={(props, option) => {
-                              const castedOption = option as DeskDetails;
-
-                              return (
-                                <li {...props}>
-                                  <StackRow sx={{ alignItems: 'center' }}>
-                                    <BodyIconTypography label={castedOption.name} />
-                                    <CustomTags customTags={castedOption.customTags} hideNAText />
-                                    <Zones zones={castedOption.zones} hideIcon hideNAText />
-                                  </StackRow>
-                                </li>
-                              );
-                            }}
-                            filterOptions={(options, params) => filterDesk(options as DeskDetails[], params)}
-                            selectOnFocus
-                            clearOnBlur
-                            handleHomeEndKeys
-                          />
-                        )}
-
-                        {desks.length === 0 && <BodyIconTypography label="There are currently no available desks in the chosen location." />}
-                      </FormFieldLabel>
-                    )}
-
-                    {locationId && (
-                      <FormFieldLabel label="Rooms">
-                        {rooms.length > 0 && (
-                          <Autocomplete
-                            name="rooms"
-                            multiple={true}
-                            required={requiredFields.rooms}
-                            options={rooms}
-                            getOptionValue={(option) => (option as RoomDetails).uniqueId}
-                            getOptionLabel={(option: string | RoomDetails) => (option as RoomDetails).name}
-                            renderOption={(props, option) => {
-                              const castedOption = option as RoomDetails;
-
-                              return (
-                                <li {...props}>
-                                  <StackRow sx={{ alignItems: 'center' }}>
-                                    <BodyIconTypography label={castedOption.name} />
-                                    <CustomTags customTags={castedOption.customTags} hideNAText />
-                                    <Zones zones={castedOption.zones} hideIcon hideNAText />
-                                  </StackRow>
-                                </li>
-                              );
-                            }}
-                            filterOptions={(options, params) => filterRoom(options as RoomDetails[], params)}
-                            selectOnFocus
-                            clearOnBlur
-                            handleHomeEndKeys
-                          />
-                        )}
-
-                        {rooms.length === 0 && <BodyIconTypography label="There are currently no available rooms in the chosen location." />}
-                      </FormFieldLabel>
-                    )}
 
                     <FormFieldLabel label="Resources">
                       {resources.length > 0 && (

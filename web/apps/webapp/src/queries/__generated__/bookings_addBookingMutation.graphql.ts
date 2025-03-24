@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d9d9b8434745cf9e23cb368b9f4d7434>>
+ * @generated SignedSource<<d0b9ee4567e0c0a17ecf4c7becd5a18f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,14 +13,12 @@ export type BookingType = "AnnualLeave" | "ClientOffices" | "NonWorkingDay" | "S
 export type AddBookingInput = {
   clientMutationId?: string | null | undefined;
   customerId: string;
-  deskIds: ReadonlyArray<string>;
   from: any;
   id?: string | null | undefined;
   locationId?: string | null | undefined;
   notes?: string | null | undefined;
   organizationId?: string | null | undefined;
   resourceIds: ReadonlyArray<string>;
-  roomIds: ReadonlyArray<string>;
   teamId?: string | null | undefined;
   type: BookingType;
   until: any;
@@ -40,20 +38,6 @@ export type bookings_addBookingMutation$data = {
         readonly photoUrl: string | null | undefined;
         readonly uniqueId: string;
       };
-      readonly desks: ReadonlyArray<{
-        readonly customTags: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-        readonly name: string;
-        readonly uniqueId: string;
-        readonly zones: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-      }>;
       readonly from: any;
       readonly id: string;
       readonly location: {
@@ -63,20 +47,6 @@ export type bookings_addBookingMutation$data = {
       readonly notes: string | null | undefined;
       readonly resources: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly customTags: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-        readonly name: string;
-        readonly uniqueId: string;
-        readonly zones: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-      }>;
-      readonly rooms: ReadonlyArray<{
         readonly customTags: ReadonlyArray<{
           readonly color: string | null | undefined;
           readonly name: string | null | undefined;
@@ -110,20 +80,6 @@ export type bookings_addBookingMutation$rawResponse = {
         readonly photoUrl: string | null | undefined;
         readonly uniqueId: string;
       };
-      readonly desks: ReadonlyArray<{
-        readonly customTags: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-        readonly name: string;
-        readonly uniqueId: string;
-        readonly zones: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-      }>;
       readonly from: any;
       readonly id: string;
       readonly location: {
@@ -133,20 +89,6 @@ export type bookings_addBookingMutation$rawResponse = {
       readonly notes: string | null | undefined;
       readonly resources: ReadonlyArray<{
         readonly color: string | null | undefined;
-        readonly customTags: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-        readonly name: string;
-        readonly uniqueId: string;
-        readonly zones: ReadonlyArray<{
-          readonly color: string | null | undefined;
-          readonly name: string | null | undefined;
-          readonly uniqueId: string;
-        }>;
-      }>;
-      readonly rooms: ReadonlyArray<{
         readonly customTags: ReadonlyArray<{
           readonly color: string | null | undefined;
           readonly name: string | null | undefined;
@@ -226,32 +168,6 @@ v6 = [
   (v5/*: any*/)
 ],
 v7 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "BookingOrganizationCustomTagDetails",
-  "kind": "LinkedField",
-  "name": "customTags",
-  "plural": true,
-  "selections": (v6/*: any*/),
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "BookingOrganizationZoneDetails",
-  "kind": "LinkedField",
-  "name": "zones",
-  "plural": true,
-  "selections": (v6/*: any*/),
-  "storageKey": null
-},
-v9 = [
-  (v2/*: any*/),
-  (v3/*: any*/),
-  (v7/*: any*/),
-  (v8/*: any*/)
-],
-v10 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingDetails",
@@ -358,26 +274,6 @@ v10 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "BookingDeskDetails",
-      "kind": "LinkedField",
-      "name": "desks",
-      "plural": true,
-      "selections": (v9/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "BookingRoomDetails",
-      "kind": "LinkedField",
-      "name": "rooms",
-      "plural": true,
-      "selections": (v9/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "BookingResourceDetails",
       "kind": "LinkedField",
       "name": "resources",
@@ -386,8 +282,26 @@ v10 = {
         (v2/*: any*/),
         (v3/*: any*/),
         (v5/*: any*/),
-        (v7/*: any*/),
-        (v8/*: any*/)
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingOrganizationCustomTagDetails",
+          "kind": "LinkedField",
+          "name": "customTags",
+          "plural": true,
+          "selections": (v6/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "BookingOrganizationZoneDetails",
+          "kind": "LinkedField",
+          "name": "zones",
+          "plural": true,
+          "selections": (v6/*: any*/),
+          "storageKey": null
+        }
       ],
       "storageKey": null
     }
@@ -409,7 +323,7 @@ return {
         "name": "addBooking",
         "plural": false,
         "selections": [
-          (v10/*: any*/)
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
@@ -431,7 +345,7 @@ return {
         "name": "addBooking",
         "plural": false,
         "selections": [
-          (v10/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -459,16 +373,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7c0a0cedadbb9181830535d4ad162fc1",
+    "cacheID": "6f8705628ceda0ccd091b68dddf0c389",
     "id": null,
     "metadata": {},
     "name": "bookings_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookings_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      desks {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n      rooms {\n        uniqueId\n        name\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookings_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "38c964ea078a7d62ac1bdb320782f90b";
+(node as any).hash = "fcd8ec27ab1921f46133d58cabfe064b";
 
 export default node;

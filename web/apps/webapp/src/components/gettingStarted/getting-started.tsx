@@ -1,9 +1,9 @@
 import { GridContainer, LeadIconTypography, SectionIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
-import { AddDeskDialog } from '@/components/desk/addDesk';
-import { CancelIcon, DeskIcon, InviteMemberIcon, LocationIcon, TeamIcon } from '@/components/icons';
-import { getOrganizationLocationAddLink, getOrganizationLocationManageDesksBaseLink, getOrganizationTeamAddLink, getOrganizationUsersBaseLink } from '@/components/links';
+import { CancelIcon, InviteMemberIcon, LocationIcon, ResourceIcon, TeamIcon } from '@/components/icons';
+import { getOrganizationLocationAddLink, getOrganizationLocationManageResourcesBaseLink, getOrganizationTeamAddLink, getOrganizationUsersBaseLink } from '@/components/links';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/invitePeopleToJoinOrganization';
+import { AddResourceDialog } from '@/components/resource/addResource';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultPadding, emerald } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -51,20 +51,20 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [isInvitePeopleToJoinOrganizationDialogOpen, setIsInvitePeopleToJoinOrganizationDialogOpen] = useState(false);
-  const [isAddDeskDialogOpen, setIsAddDeskDialogOpen] = useState(false);
+  const [isAddResourceDialogOpen, setIsAddResourceDialogOpen] = useState(false);
 
-  const handleAddDesksClicked = () => {
-    setIsAddDeskDialogOpen(true);
+  const handleAddResourcesClicked = () => {
+    setIsAddResourceDialogOpen(true);
   };
 
-  const handleAddDeskClicked = (locationId: string) => {
-    setIsAddDeskDialogOpen(false);
+  const handleAddResourceClicked = (locationId: string) => {
+    setIsAddResourceDialogOpen(false);
 
-    router.push(getOrganizationLocationManageDesksBaseLink(organizationId, locationId));
+    router.push(getOrganizationLocationManageResourcesBaseLink(organizationId, locationId));
   };
 
-  const handleCancelAddDeskClicked = () => {
-    setIsAddDeskDialogOpen(false);
+  const handleCancelAddResourceClicked = () => {
+    setIsAddResourceDialogOpen(false);
   };
 
   const handleInviteTeammatesClicked = () => {
@@ -162,12 +162,12 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
 
             <Grid>
               <StackColumn sx={{ width: 250 }}>
-                <SmallIconTypography label="Add desks for your locations and teams." />
-                <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleAddDesksClicked}>
+                <SmallIconTypography label="Add resources for your locations and teams." />
+                <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }} onClick={handleAddResourcesClicked}>
                   <LeadIconTypography
-                    label="Add Desks"
+                    label="Add Resources"
                     stackMode="column"
-                    startElement={<DeskIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
+                    startElement={<ResourceIcon fontSize="large" excludeTooltip sx={{ color: emerald }} />}
                     sx={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}
                   />
                 </Paper>
@@ -191,13 +191,13 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationId }: Pro
         </Box>
       </Box>
 
-      <AddDeskDialog
+      <AddResourceDialog
         onReloadRequired={onReloadRequired}
         organizationId={organizationId}
         connectionIds={[]}
-        isDialogOpen={isAddDeskDialogOpen}
-        onAddClicked={handleAddDeskClicked}
-        onCancel={handleCancelAddDeskClicked}
+        isDialogOpen={isAddResourceDialogOpen}
+        onAddClicked={handleAddResourceClicked}
+        onCancel={handleCancelAddResourceClicked}
       />
 
       <InvitePeopleToJoinOrganizationDialog

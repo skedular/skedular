@@ -41,19 +41,9 @@ export enum MoreActionsMenuOptionType {
   DeleteResource,
   ActivateResource,
   DeactivateResource,
-  EnableDeskApprovalRequirement,
-  RemoveDeskApprovalRequirement,
-  EditDesk,
-  DeleteDesk,
-  ActivateDesk,
-  DeactivateDesk,
   ViewUserBookings,
   ViewLocationBookings,
   ViewTeamBookings,
-  EditRoom,
-  DeleteRoom,
-  ActivateRoom,
-  DeactivateRoom,
 }
 
 export type MoreActionsMenuItemType = {
@@ -202,32 +192,6 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.DeactivateResource,
     label: 'Dectivate Resource',
   },
-  [MoreActionsMenuOptionType.EnableDeskApprovalRequirement]: {
-    id: MoreActionsMenuOptionType.EnableDeskApprovalRequirement,
-    label: 'Enable desk approval requirement',
-  },
-  [MoreActionsMenuOptionType.RemoveDeskApprovalRequirement]: {
-    id: MoreActionsMenuOptionType.RemoveDeskApprovalRequirement,
-    label: 'Remove desk approval requirement',
-  },
-  [MoreActionsMenuOptionType.EditDesk]: {
-    id: MoreActionsMenuOptionType.EditDesk,
-    label: 'Edit Desk',
-    icon: <EditIcon />,
-  },
-  [MoreActionsMenuOptionType.DeleteDesk]: {
-    id: MoreActionsMenuOptionType.DeleteDesk,
-    label: 'Remove Desk',
-    icon: <DeleteIcon color="warning" />,
-  },
-  [MoreActionsMenuOptionType.ActivateDesk]: {
-    id: MoreActionsMenuOptionType.ActivateDesk,
-    label: 'Activate Desk',
-  },
-  [MoreActionsMenuOptionType.DeactivateDesk]: {
-    id: MoreActionsMenuOptionType.DeactivateDesk,
-    label: 'Dectivate Desk',
-  },
   [MoreActionsMenuOptionType.ViewUserBookings]: {
     id: MoreActionsMenuOptionType.ViewUserBookings,
     label: 'View Bookings',
@@ -242,24 +206,6 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.ViewTeamBookings,
     label: 'View Bookings',
     icon: <BookingIcon />,
-  },
-  [MoreActionsMenuOptionType.EditRoom]: {
-    id: MoreActionsMenuOptionType.EditRoom,
-    label: 'Edit Room',
-    icon: <EditIcon />,
-  },
-  [MoreActionsMenuOptionType.DeleteRoom]: {
-    id: MoreActionsMenuOptionType.DeleteRoom,
-    label: 'Remove Room',
-    icon: <DeleteIcon color="warning" />,
-  },
-  [MoreActionsMenuOptionType.ActivateRoom]: {
-    id: MoreActionsMenuOptionType.ActivateRoom,
-    label: 'Activate Room',
-  },
-  [MoreActionsMenuOptionType.DeactivateRoom]: {
-    id: MoreActionsMenuOptionType.DeactivateRoom,
-    label: 'Dectivate Room',
   },
 };
 
