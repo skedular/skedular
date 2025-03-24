@@ -180,26 +180,6 @@ public class Mapper : IMapper
                 Location = location
             }).ToList();
 
-        location.Desks = locationAfterState.Desks.Select(item =>
-            new Desk
-            {
-                Id = item.Id,
-                DeletedAt = deletedAt,
-                EventRaisedAt = eventRaisedAt,
-                Name = item.Name,
-                Location = location
-            }).ToList();
-
-        location.Rooms = locationAfterState.Rooms.Select(item =>
-            new Room
-            {
-                Id = item.Id,
-                DeletedAt = deletedAt,
-                EventRaisedAt = eventRaisedAt,
-                Name = item.Name,
-                Location = location
-            }).ToList();
-
         return location;
     }
 

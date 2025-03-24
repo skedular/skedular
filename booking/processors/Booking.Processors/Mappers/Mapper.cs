@@ -140,10 +140,6 @@ public class Mapper : IMapper
             }).ToList(),
             PreferredResources = customer.PreferredResources.Select(item =>
                 new Shared.Models.Resource { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
-            PreferredDesks = customer.PreferredDesks.Select(item =>
-                new Shared.Models.Desk { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
-            PreferredRooms = customer.PreferredRooms.Select(item =>
-                new Shared.Models.Room { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
             PreferredTeams = customer.PreferredTeams.Select(item => new Team
             {
                 Id = item.Id, Organization = string.IsNullOrWhiteSpace(item.OrganizationId) ? null : new Organization { Id = item.OrganizationId }
@@ -248,10 +244,8 @@ public class Mapper : IMapper
 
         var organizationTags = location.Organization is null
             ? []
-            : locationAfterState.Desks
+            : locationAfterState.Resources
                 .SelectMany(item => item.TagIds)
-                .Concat(locationAfterState.Rooms.SelectMany(item => item.TagIds))
-                .Concat(locationAfterState.Resources.SelectMany(item => item.TagIds))
                 .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
 
         location.Resources = locationAfterState.Resources.Select(item => new Shared.Models.Resource
@@ -265,32 +259,6 @@ public class Mapper : IMapper
             Color = item.Color,
             IsAvailableHoursOverridden = item.IsAvailableHoursOverridden,
             AvailableHours = item.AvailableHours is null ? null : MapTo(item.AvailableHours),
-            OrganizationTags = organizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
-            Location = location
-        }).ToList();
-
-        location.Desks = locationAfterState.Desks.Select(item => new Shared.Models.Desk
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
-            Deactivated = item.Deactivated,
-            RequireBookingApproval = item.RequireBookingApproval,
-            Color = item.Color,
-            OrganizationTags = organizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
-            Location = location
-        }).ToList();
-
-        location.Rooms = locationAfterState.Rooms.Select(item => new Shared.Models.Room
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
-            Deactivated = item.Deactivated,
-            RequireBookingApproval = item.RequireBookingApproval,
-            Color = item.Color,
             OrganizationTags = organizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
             Location = location
         }).ToList();

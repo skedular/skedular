@@ -163,9 +163,7 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             From = booking.From.ToDateTimeOffset(),
             Until = booking.Until.ToDateTimeOffset(),
-            Location = new Shared.Models.Location { Id = booking.LocationId },
-            Desks = booking.DeskIds.Select(item => new Desk { Id = item }).ToList(),
-            Rooms = booking.RoomIds.Select(item => new Room { Id = item }).ToList()
+            Location = new Shared.Models.Location { Id = booking.LocationId }
         };
     }
 

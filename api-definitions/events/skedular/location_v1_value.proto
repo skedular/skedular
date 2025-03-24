@@ -42,9 +42,7 @@ message Location {
   string organizationId = 6;
   string timezone = 7;
   repeated Resource resources = 8;
-  repeated Desk desks = 9;
-  repeated Room rooms = 10;
-  OpeningHours openingHours = 11;
+  OpeningHours openingHours = 9;
 }
 
 enum Role {
@@ -68,24 +66,6 @@ message Resource {
   string color = 6;
   bool isAvailableHoursOverridden = 7;
   OpeningHours availableHours = 8;
-}
-
-message Desk {
-  string id = 1;
-  string name = 2;
-  bool deactivated = 3;
-  bool requireBookingApproval = 4;
-  repeated string tagIds = 5;
-  string color = 6;
-}
-
-message Room {
-  string id = 1;
-  string name = 2;
-  bool deactivated = 3;
-  bool requireBookingApproval = 4;
-  repeated string tagIds = 5;
-  string color = 6;
 }
 
 message InvitationToJoinLocation {

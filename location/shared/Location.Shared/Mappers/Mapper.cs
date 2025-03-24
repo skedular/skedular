@@ -3,8 +3,6 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Location.Shared.Models;
-using Desk = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk;
-using Room = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room;
 using LocationMember = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
@@ -62,38 +60,6 @@ public class Mapper : IMapper
             resource.TagIds.AddRange(item.Tags.Select(tag => tag.Id));
 
             return resource;
-        }));
-
-        location.Desks.AddRange(src.Desks.Select(item =>
-        {
-            var desk = new Desk
-            {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Deactivated = item.Deactivated,
-                RequireBookingApproval = item.RequireBookingApproval,
-                Color = item.Color.ToSafeString()
-            };
-
-            desk.TagIds.AddRange(item.Tags.Select(tag => tag.Id));
-
-            return desk;
-        }));
-
-        location.Rooms.AddRange(src.Rooms.Select(item =>
-        {
-            var room = new Room
-            {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Deactivated = item.Deactivated,
-                RequireBookingApproval = item.RequireBookingApproval,
-                Color = item.Color.ToSafeString()
-            };
-
-            room.TagIds.AddRange(item.Tags.Select(tag => tag.Id));
-
-            return room;
         }));
 
         return location;

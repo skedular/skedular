@@ -35,11 +35,9 @@ message Booking {
   google.protobuf.Timestamp until = 6;
   string notes = 7;
   string locationId = 8;
-  repeated string deskIds = 9;
-  repeated string roomIds = 10;
-  repeated Resource resources = 11;
-  string teamId = 12;
-  BookingType type = 13;
+  repeated Resource resources = 9;
+  string teamId = 10;
+  BookingType type = 11;
 }
 
 enum BookingType

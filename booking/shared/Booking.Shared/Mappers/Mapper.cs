@@ -40,9 +40,6 @@ public class Mapper : IMapper
             TeamId = src.Team is null ? string.Empty : src.Team.Id
         };
 
-        booking.DeskIds.AddRange(src.Desks.Select(item => item.Id));
-        booking.RoomIds.AddRange(src.Rooms.Select(item => item.Id));
-
         booking.Resources.AddRange(MapTo(src.Resources));
 
         return booking;

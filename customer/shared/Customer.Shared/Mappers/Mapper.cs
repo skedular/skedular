@@ -39,8 +39,6 @@ public class Mapper : IMapper
                 IsDefaultOrganizationOnboardingDone = src.IsDefaultOrganizationOnboardingDone ?? false,
                 IsPreferredLocationOnboardingDone = src.IsPreferredLocationOnboardingDone ?? false,
                 IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
-                IsPreferredDeskOnboardingDone = src.IsPreferredDeskOnboardingDone ?? false,
-                IsPreferredRoomOnboardingDone = src.IsPreferredRoomOnboardingDone ?? false
             },
             PreferredOrganizationId = src.DefaultOrganization is null ? string.Empty : src.DefaultOrganization.Id
         };
@@ -53,8 +51,6 @@ public class Mapper : IMapper
         customer.PreferredResources.AddRange(
             src.PreferredResources.Select(item =>
                 new Resource { Id = item.Id, LocationId = item.Location is null ? string.Empty : item.Location.Id }));
-        customer.PreferredDesks.AddRange(src.PreferredDesks.Select(item => new Desk { Id = item.Id, LocationId = item.Location.Id }));
-        customer.PreferredRooms.AddRange(src.PreferredRooms.Select(item => new Room { Id = item.Id, LocationId = item.Location.Id }));
         customer.PreferredTeams.AddRange(
             src.PreferredTeams.Select(item =>
                 new Team { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })

@@ -33,63 +33,54 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIoEBCgREYXRh",
             "EiYKCGxvY2F0aW9uGAEgASgLMhIubG9jYXRpb24uTG9jYXRpb25IABJGChhp",
             "bnZpdGF0aW9uVG9Kb2luTG9jYXRpb24YAiABKAsyIi5sb2NhdGlvbi5JbnZp",
-            "dGF0aW9uVG9Kb2luTG9jYXRpb25IAEIJCgdwYXlsb2FkIsoCCghMb2NhdGlv",
+            "dGF0aW9uVG9Kb2luTG9jYXRpb25IAEIJCgdwYXlsb2FkIowCCghMb2NhdGlv",
             "bhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsyGi5nb29nbGUucHJv",
             "dG9idWYuVGltZXN0YW1wEgwKBG5hbWUYAyABKAkSDQoFYWJvdXQYBCABKAkS",
             "KQoHbWVtYmVycxgFIAMoCzIYLmxvY2F0aW9uLkxvY2F0aW9uTWVtYmVyEhYK",
             "Dm9yZ2FuaXphdGlvbklkGAYgASgJEhAKCHRpbWV6b25lGAcgASgJEiUKCXJl",
-            "c291cmNlcxgIIAMoCzISLmxvY2F0aW9uLlJlc291cmNlEh0KBWRlc2tzGAkg",
-            "AygLMg4ubG9jYXRpb24uRGVzaxIdCgVyb29tcxgKIAMoCzIOLmxvY2F0aW9u",
-            "LlJvb20SLAoMb3BlbmluZ0hvdXJzGAsgASgLMhYubG9jYXRpb24uT3Blbmlu",
-            "Z0hvdXJzIk4KDkxvY2F0aW9uTWVtYmVyEgoKAmlkGAEgASgJEhwKBHJvbGUY",
-            "AiABKA4yDi5sb2NhdGlvbi5Sb2xlEhIKCmN1c3RvbWVySWQYAyABKAkiyQEK",
-            "CFJlc291cmNlEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEAoIaW5hY3Rp",
-            "dmUYAyABKAgSHgoWcmVxdWlyZUJvb2tpbmdBcHByb3ZhbBgEIAEoCBIOCgZ0",
-            "YWdJZHMYBSADKAkSDQoFY29sb3IYBiABKAkSIgoaaXNBdmFpbGFibGVIb3Vy",
-            "c092ZXJyaWRkZW4YByABKAgSLgoOYXZhaWxhYmxlSG91cnMYCCABKAsyFi5s",
-            "b2NhdGlvbi5PcGVuaW5nSG91cnMidAoERGVzaxIKCgJpZBgBIAEoCRIMCgRu",
-            "YW1lGAIgASgJEhMKC2RlYWN0aXZhdGVkGAMgASgIEh4KFnJlcXVpcmVCb29r",
-            "aW5nQXBwcm92YWwYBCABKAgSDgoGdGFnSWRzGAUgAygJEg0KBWNvbG9yGAYg",
-            "ASgJInQKBFJvb20SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZWFj",
-            "dGl2YXRlZBgDIAEoCBIeChZyZXF1aXJlQm9va2luZ0FwcHJvdmFsGAQgASgI",
-            "Eg4KBnRhZ0lkcxgFIAMoCRINCgVjb2xvchgGIAEoCSKRAQoYSW52aXRhdGlv",
-            "blRvSm9pbkxvY2F0aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEo",
-            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEgoKbG9jYXRpb25JZBgD",
-            "IAEoCRITCgtpbnZpdGVkQnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSABKAki",
-            "vAEKDE9wZW5pbmdIb3VycxI0ChB3ZWVrT3BlbmluZ0hvdXJzGAEgASgLMhou",
-            "bG9jYXRpb24uV2Vla09wZW5pbmdIb3VycxIvCgtjbG9zZWREYXRlcxgCIAMo",
-            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASRQobRGF0ZXNXaXRoVmFy",
-            "aWVkT3BlbmluZ0hvdXJzGAMgAygLMiAubG9jYXRpb24uVmFyaWVkRGF0ZU9w",
-            "ZW5pbmdIb3VycyLjAgoQV2Vla09wZW5pbmdIb3VycxItCgZtb25kYXkYASAB",
-            "KAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEi4KB3R1ZXNkYXkY",
-            "AiABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxzEjAKCXdlZG5l",
-            "c2RheRgDIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMSLwoI",
-            "dGh1cnNkYXkYBCABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNEZXRhaWxz",
-            "Ei0KBmZyaWRheRgFIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0RldGFp",
-            "bHMSLwoIc2F0dXJkYXkYBiABKAsyHS5sb2NhdGlvbi5PcGVuaW5nSG91cnNE",
-            "ZXRhaWxzEi0KBnN1bmRheRgHIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vy",
-            "c0RldGFpbHMifgoWVmFyaWVkRGF0ZU9wZW5pbmdIb3VycxIoCgRkYXRlGAEg",
-            "ASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBI6ChNvcGVuaW5nSG91",
-            "cnNEZXRhaWxzGAIgASgLMh0ubG9jYXRpb24uT3BlbmluZ0hvdXJzRGV0YWls",
-            "cyJWChNPcGVuaW5nSG91cnNEZXRhaWxzEg4KBmNsb3NlZBgBIAEoCBISCgpv",
-            "cGVuQWxsRGF5GAIgASgIEgwKBGZyb20YAyABKAkSDQoFdW50aWwYBCABKAkq",
-            "fAoEVHlwZRIUChBMb2NhdGlvblVwc2VydGVkEAASEwoPTG9jYXRpb25EZWxl",
-            "dGVkEAESJAogSW52aXRhdGlvblRvSm9pbkxvY2F0aW9uVXBzZXJ0ZWQQAhIj",
-            "Ch9JbnZpdGF0aW9uVG9Kb2luTG9jYXRpb25EZWxldGVkEAMqMAoEUm9sZRIJ",
-            "CgVPd25lchAAEhEKDUFkbWluaXN0cmF0b3IQARIKCgZNZW1iZXIQAkI3qgI0",
-            "QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Mb2NhdGlvbi5W",
-            "MS5WYWx1ZWIGcHJvdG8z"));
+            "c291cmNlcxgIIAMoCzISLmxvY2F0aW9uLlJlc291cmNlEiwKDG9wZW5pbmdI",
+            "b3VycxgJIAEoCzIWLmxvY2F0aW9uLk9wZW5pbmdIb3VycyJOCg5Mb2NhdGlv",
+            "bk1lbWJlchIKCgJpZBgBIAEoCRIcCgRyb2xlGAIgASgOMg4ubG9jYXRpb24u",
+            "Um9sZRISCgpjdXN0b21lcklkGAMgASgJIskBCghSZXNvdXJjZRIKCgJpZBgB",
+            "IAEoCRIMCgRuYW1lGAIgASgJEhAKCGluYWN0aXZlGAMgASgIEh4KFnJlcXVp",
+            "cmVCb29raW5nQXBwcm92YWwYBCABKAgSDgoGdGFnSWRzGAUgAygJEg0KBWNv",
+            "bG9yGAYgASgJEiIKGmlzQXZhaWxhYmxlSG91cnNPdmVycmlkZGVuGAcgASgI",
+            "Ei4KDmF2YWlsYWJsZUhvdXJzGAggASgLMhYubG9jYXRpb24uT3BlbmluZ0hv",
+            "dXJzIpEBChhJbnZpdGF0aW9uVG9Kb2luTG9jYXRpb24SCgoCaWQYASABKAkS",
+            "LQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFt",
+            "cBISCgpsb2NhdGlvbklkGAMgASgJEhMKC2ludml0ZWRCeUlkGAQgASgJEhEK",
+            "CWludml0ZWVJZBgFIAEoCSK8AQoMT3BlbmluZ0hvdXJzEjQKEHdlZWtPcGVu",
+            "aW5nSG91cnMYASABKAsyGi5sb2NhdGlvbi5XZWVrT3BlbmluZ0hvdXJzEi8K",
+            "C2Nsb3NlZERhdGVzGAIgAygLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFt",
+            "cBJFChtEYXRlc1dpdGhWYXJpZWRPcGVuaW5nSG91cnMYAyADKAsyIC5sb2Nh",
+            "dGlvbi5WYXJpZWREYXRlT3BlbmluZ0hvdXJzIuMCChBXZWVrT3BlbmluZ0hv",
+            "dXJzEi0KBm1vbmRheRgBIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vyc0Rl",
+            "dGFpbHMSLgoHdHVlc2RheRgCIAEoCzIdLmxvY2F0aW9uLk9wZW5pbmdIb3Vy",
+            "c0RldGFpbHMSMAoJd2VkbmVzZGF5GAMgASgLMh0ubG9jYXRpb24uT3Blbmlu",
+            "Z0hvdXJzRGV0YWlscxIvCgh0aHVyc2RheRgEIAEoCzIdLmxvY2F0aW9uLk9w",
+            "ZW5pbmdIb3Vyc0RldGFpbHMSLQoGZnJpZGF5GAUgASgLMh0ubG9jYXRpb24u",
+            "T3BlbmluZ0hvdXJzRGV0YWlscxIvCghzYXR1cmRheRgGIAEoCzIdLmxvY2F0",
+            "aW9uLk9wZW5pbmdIb3Vyc0RldGFpbHMSLQoGc3VuZGF5GAcgASgLMh0ubG9j",
+            "YXRpb24uT3BlbmluZ0hvdXJzRGV0YWlscyJ+ChZWYXJpZWREYXRlT3Blbmlu",
+            "Z0hvdXJzEigKBGRhdGUYASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
+            "YW1wEjoKE29wZW5pbmdIb3Vyc0RldGFpbHMYAiABKAsyHS5sb2NhdGlvbi5P",
+            "cGVuaW5nSG91cnNEZXRhaWxzIlYKE09wZW5pbmdIb3Vyc0RldGFpbHMSDgoG",
+            "Y2xvc2VkGAEgASgIEhIKCm9wZW5BbGxEYXkYAiABKAgSDAoEZnJvbRgDIAEo",
+            "CRINCgV1bnRpbBgEIAEoCSp8CgRUeXBlEhQKEExvY2F0aW9uVXBzZXJ0ZWQQ",
+            "ABITCg9Mb2NhdGlvbkRlbGV0ZWQQARIkCiBJbnZpdGF0aW9uVG9Kb2luTG9j",
+            "YXRpb25VcHNlcnRlZBACEiMKH0ludml0YXRpb25Ub0pvaW5Mb2NhdGlvbkRl",
+            "bGV0ZWQQAyowCgRSb2xlEgkKBU93bmVyEAASEQoNQWRtaW5pc3RyYXRvchAB",
+            "EgoKBk1lbWJlchACQjeqAjRBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNr",
+            "ZWR1bGFyLkxvY2F0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Data.Parser, new[]{ "Location", "InvitationToJoinLocation" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Resources", "Desks", "Rooms", "OpeningHours" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "Resources", "OpeningHours" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember.Parser, new[]{ "Id", "Role", "CustomerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource.Parser, new[]{ "Id", "Name", "Inactive", "RequireBookingApproval", "TagIds", "Color", "IsAvailableHoursOverridden", "AvailableHours" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "TagIds", "Color" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room.Parser, new[]{ "Id", "Name", "Deactivated", "RequireBookingApproval", "TagIds", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.InvitationToJoinLocation.Parser, new[]{ "Id", "DeletedAt", "LocationId", "InvitedById", "InviteeId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours.Parser, new[]{ "WeekOpeningHours", "ClosedDates", "DatesWithVariedOpeningHours" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours.Parser, new[]{ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" }, null, null, null, null),
@@ -1099,8 +1090,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       organizationId_ = other.organizationId_;
       timezone_ = other.timezone_;
       resources_ = other.resources_.Clone();
-      desks_ = other.desks_.Clone();
-      rooms_ = other.rooms_.Clone();
       openingHours_ = other.openingHours_ != null ? other.openingHours_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1205,30 +1194,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       get { return resources_; }
     }
 
-    /// <summary>Field number for the "desks" field.</summary>
-    public const int DesksFieldNumber = 9;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk> _repeated_desks_codec
-        = pb::FieldCodec.ForMessage(74, global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk> desks_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Desk> Desks {
-      get { return desks_; }
-    }
-
-    /// <summary>Field number for the "rooms" field.</summary>
-    public const int RoomsFieldNumber = 10;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room> _repeated_rooms_codec
-        = pb::FieldCodec.ForMessage(82, global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room> rooms_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Room> Rooms {
-      get { return rooms_; }
-    }
-
     /// <summary>Field number for the "openingHours" field.</summary>
-    public const int OpeningHoursFieldNumber = 11;
+    public const int OpeningHoursFieldNumber = 9;
     private global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours openingHours_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1262,8 +1229,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (OrganizationId != other.OrganizationId) return false;
       if (Timezone != other.Timezone) return false;
       if(!resources_.Equals(other.resources_)) return false;
-      if(!desks_.Equals(other.desks_)) return false;
-      if(!rooms_.Equals(other.rooms_)) return false;
       if (!object.Equals(OpeningHours, other.OpeningHours)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1280,8 +1245,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
       if (Timezone.Length != 0) hash ^= Timezone.GetHashCode();
       hash ^= resources_.GetHashCode();
-      hash ^= desks_.GetHashCode();
-      hash ^= rooms_.GetHashCode();
       if (openingHours_ != null) hash ^= OpeningHours.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1327,10 +1290,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteString(Timezone);
       }
       resources_.WriteTo(output, _repeated_resources_codec);
-      desks_.WriteTo(output, _repeated_desks_codec);
-      rooms_.WriteTo(output, _repeated_rooms_codec);
       if (openingHours_ != null) {
-        output.WriteRawTag(90);
+        output.WriteRawTag(74);
         output.WriteMessage(OpeningHours);
       }
       if (_unknownFields != null) {
@@ -1369,10 +1330,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteString(Timezone);
       }
       resources_.WriteTo(ref output, _repeated_resources_codec);
-      desks_.WriteTo(ref output, _repeated_desks_codec);
-      rooms_.WriteTo(ref output, _repeated_rooms_codec);
       if (openingHours_ != null) {
-        output.WriteRawTag(90);
+        output.WriteRawTag(74);
         output.WriteMessage(OpeningHours);
       }
       if (_unknownFields != null) {
@@ -1405,8 +1364,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Timezone);
       }
       size += resources_.CalculateSize(_repeated_resources_codec);
-      size += desks_.CalculateSize(_repeated_desks_codec);
-      size += rooms_.CalculateSize(_repeated_rooms_codec);
       if (openingHours_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(OpeningHours);
       }
@@ -1445,8 +1402,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         Timezone = other.Timezone;
       }
       resources_.Add(other.resources_);
-      desks_.Add(other.desks_);
-      rooms_.Add(other.rooms_);
       if (other.openingHours_ != null) {
         if (openingHours_ == null) {
           OpeningHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours();
@@ -1508,14 +1463,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 74: {
-            desks_.AddEntriesFrom(input, _repeated_desks_codec);
-            break;
-          }
-          case 82: {
-            rooms_.AddEntriesFrom(input, _repeated_rooms_codec);
-            break;
-          }
-          case 90: {
             if (openingHours_ == null) {
               OpeningHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours();
             }
@@ -1577,14 +1524,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 74: {
-            desks_.AddEntriesFrom(ref input, _repeated_desks_codec);
-            break;
-          }
-          case 82: {
-            rooms_.AddEntriesFrom(ref input, _repeated_rooms_codec);
-            break;
-          }
-          case 90: {
             if (openingHours_ == null) {
               OpeningHours = new global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours();
             }
@@ -2326,750 +2265,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Desk : pb::IMessage<Desk>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<Desk> _parser = new pb::MessageParser<Desk>(() => new Desk());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Desk> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[6]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Desk() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Desk(Desk other) : this() {
-      id_ = other.id_;
-      name_ = other.name_;
-      deactivated_ = other.deactivated_;
-      requireBookingApproval_ = other.requireBookingApproval_;
-      tagIds_ = other.tagIds_.Clone();
-      color_ = other.color_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Desk Clone() {
-      return new Desk(this);
-    }
-
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 1;
-    private string id_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Id {
-      get { return id_; }
-      set {
-        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "name" field.</summary>
-    public const int NameFieldNumber = 2;
-    private string name_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Name {
-      get { return name_; }
-      set {
-        name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "deactivated" field.</summary>
-    public const int DeactivatedFieldNumber = 3;
-    private bool deactivated_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Deactivated {
-      get { return deactivated_; }
-      set {
-        deactivated_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "requireBookingApproval" field.</summary>
-    public const int RequireBookingApprovalFieldNumber = 4;
-    private bool requireBookingApproval_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool RequireBookingApproval {
-      get { return requireBookingApproval_; }
-      set {
-        requireBookingApproval_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "tagIds" field.</summary>
-    public const int TagIdsFieldNumber = 5;
-    private static readonly pb::FieldCodec<string> _repeated_tagIds_codec
-        = pb::FieldCodec.ForString(42);
-    private readonly pbc::RepeatedField<string> tagIds_ = new pbc::RepeatedField<string>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> TagIds {
-      get { return tagIds_; }
-    }
-
-    /// <summary>Field number for the "color" field.</summary>
-    public const int ColorFieldNumber = 6;
-    private string color_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Color {
-      get { return color_; }
-      set {
-        color_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as Desk);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Desk other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Id != other.Id) return false;
-      if (Name != other.Name) return false;
-      if (Deactivated != other.Deactivated) return false;
-      if (RequireBookingApproval != other.RequireBookingApproval) return false;
-      if(!tagIds_.Equals(other.tagIds_)) return false;
-      if (Color != other.Color) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (Name.Length != 0) hash ^= Name.GetHashCode();
-      if (Deactivated != false) hash ^= Deactivated.GetHashCode();
-      if (RequireBookingApproval != false) hash ^= RequireBookingApproval.GetHashCode();
-      hash ^= tagIds_.GetHashCode();
-      if (Color.Length != 0) hash ^= Color.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (Name.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Name);
-      }
-      if (Deactivated != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(Deactivated);
-      }
-      if (RequireBookingApproval != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(RequireBookingApproval);
-      }
-      tagIds_.WriteTo(output, _repeated_tagIds_codec);
-      if (Color.Length != 0) {
-        output.WriteRawTag(50);
-        output.WriteString(Color);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (Name.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Name);
-      }
-      if (Deactivated != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(Deactivated);
-      }
-      if (RequireBookingApproval != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(RequireBookingApproval);
-      }
-      tagIds_.WriteTo(ref output, _repeated_tagIds_codec);
-      if (Color.Length != 0) {
-        output.WriteRawTag(50);
-        output.WriteString(Color);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Id.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (Name.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
-      }
-      if (Deactivated != false) {
-        size += 1 + 1;
-      }
-      if (RequireBookingApproval != false) {
-        size += 1 + 1;
-      }
-      size += tagIds_.CalculateSize(_repeated_tagIds_codec);
-      if (Color.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Color);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Desk other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Id.Length != 0) {
-        Id = other.Id;
-      }
-      if (other.Name.Length != 0) {
-        Name = other.Name;
-      }
-      if (other.Deactivated != false) {
-        Deactivated = other.Deactivated;
-      }
-      if (other.RequireBookingApproval != false) {
-        RequireBookingApproval = other.RequireBookingApproval;
-      }
-      tagIds_.Add(other.tagIds_);
-      if (other.Color.Length != 0) {
-        Color = other.Color;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 18: {
-            Name = input.ReadString();
-            break;
-          }
-          case 24: {
-            Deactivated = input.ReadBool();
-            break;
-          }
-          case 32: {
-            RequireBookingApproval = input.ReadBool();
-            break;
-          }
-          case 42: {
-            tagIds_.AddEntriesFrom(input, _repeated_tagIds_codec);
-            break;
-          }
-          case 50: {
-            Color = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 18: {
-            Name = input.ReadString();
-            break;
-          }
-          case 24: {
-            Deactivated = input.ReadBool();
-            break;
-          }
-          case 32: {
-            RequireBookingApproval = input.ReadBool();
-            break;
-          }
-          case 42: {
-            tagIds_.AddEntriesFrom(ref input, _repeated_tagIds_codec);
-            break;
-          }
-          case 50: {
-            Color = input.ReadString();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Room : pb::IMessage<Room>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<Room> _parser = new pb::MessageParser<Room>(() => new Room());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Room> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[7]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Room() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Room(Room other) : this() {
-      id_ = other.id_;
-      name_ = other.name_;
-      deactivated_ = other.deactivated_;
-      requireBookingApproval_ = other.requireBookingApproval_;
-      tagIds_ = other.tagIds_.Clone();
-      color_ = other.color_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Room Clone() {
-      return new Room(this);
-    }
-
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 1;
-    private string id_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Id {
-      get { return id_; }
-      set {
-        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "name" field.</summary>
-    public const int NameFieldNumber = 2;
-    private string name_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Name {
-      get { return name_; }
-      set {
-        name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "deactivated" field.</summary>
-    public const int DeactivatedFieldNumber = 3;
-    private bool deactivated_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Deactivated {
-      get { return deactivated_; }
-      set {
-        deactivated_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "requireBookingApproval" field.</summary>
-    public const int RequireBookingApprovalFieldNumber = 4;
-    private bool requireBookingApproval_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool RequireBookingApproval {
-      get { return requireBookingApproval_; }
-      set {
-        requireBookingApproval_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "tagIds" field.</summary>
-    public const int TagIdsFieldNumber = 5;
-    private static readonly pb::FieldCodec<string> _repeated_tagIds_codec
-        = pb::FieldCodec.ForString(42);
-    private readonly pbc::RepeatedField<string> tagIds_ = new pbc::RepeatedField<string>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> TagIds {
-      get { return tagIds_; }
-    }
-
-    /// <summary>Field number for the "color" field.</summary>
-    public const int ColorFieldNumber = 6;
-    private string color_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Color {
-      get { return color_; }
-      set {
-        color_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as Room);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Room other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Id != other.Id) return false;
-      if (Name != other.Name) return false;
-      if (Deactivated != other.Deactivated) return false;
-      if (RequireBookingApproval != other.RequireBookingApproval) return false;
-      if(!tagIds_.Equals(other.tagIds_)) return false;
-      if (Color != other.Color) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (Name.Length != 0) hash ^= Name.GetHashCode();
-      if (Deactivated != false) hash ^= Deactivated.GetHashCode();
-      if (RequireBookingApproval != false) hash ^= RequireBookingApproval.GetHashCode();
-      hash ^= tagIds_.GetHashCode();
-      if (Color.Length != 0) hash ^= Color.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (Name.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Name);
-      }
-      if (Deactivated != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(Deactivated);
-      }
-      if (RequireBookingApproval != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(RequireBookingApproval);
-      }
-      tagIds_.WriteTo(output, _repeated_tagIds_codec);
-      if (Color.Length != 0) {
-        output.WriteRawTag(50);
-        output.WriteString(Color);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (Name.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Name);
-      }
-      if (Deactivated != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(Deactivated);
-      }
-      if (RequireBookingApproval != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(RequireBookingApproval);
-      }
-      tagIds_.WriteTo(ref output, _repeated_tagIds_codec);
-      if (Color.Length != 0) {
-        output.WriteRawTag(50);
-        output.WriteString(Color);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Id.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (Name.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
-      }
-      if (Deactivated != false) {
-        size += 1 + 1;
-      }
-      if (RequireBookingApproval != false) {
-        size += 1 + 1;
-      }
-      size += tagIds_.CalculateSize(_repeated_tagIds_codec);
-      if (Color.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Color);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Room other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Id.Length != 0) {
-        Id = other.Id;
-      }
-      if (other.Name.Length != 0) {
-        Name = other.Name;
-      }
-      if (other.Deactivated != false) {
-        Deactivated = other.Deactivated;
-      }
-      if (other.RequireBookingApproval != false) {
-        RequireBookingApproval = other.RequireBookingApproval;
-      }
-      tagIds_.Add(other.tagIds_);
-      if (other.Color.Length != 0) {
-        Color = other.Color;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 18: {
-            Name = input.ReadString();
-            break;
-          }
-          case 24: {
-            Deactivated = input.ReadBool();
-            break;
-          }
-          case 32: {
-            RequireBookingApproval = input.ReadBool();
-            break;
-          }
-          case 42: {
-            tagIds_.AddEntriesFrom(input, _repeated_tagIds_codec);
-            break;
-          }
-          case 50: {
-            Color = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 18: {
-            Name = input.ReadString();
-            break;
-          }
-          case 24: {
-            Deactivated = input.ReadBool();
-            break;
-          }
-          case 32: {
-            RequireBookingApproval = input.ReadBool();
-            break;
-          }
-          case 42: {
-            tagIds_.AddEntriesFrom(ref input, _repeated_tagIds_codec);
-            break;
-          }
-          case 50: {
-            Color = input.ReadString();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class InvitationToJoinLocation : pb::IMessage<InvitationToJoinLocation>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -3084,7 +2279,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3439,7 +2634,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3698,7 +2893,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4181,7 +3376,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4434,7 +3629,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[12]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationV1ValueReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
