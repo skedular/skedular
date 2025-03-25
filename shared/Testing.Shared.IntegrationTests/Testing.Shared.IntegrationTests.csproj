@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="PactNet" Version="5.0.0"/>
+        <PackageReference Include="PactNet" Version="5.0.1"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.3"/>
         <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.3"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>

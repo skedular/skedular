@@ -3,6 +3,9 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
+using HotChocolate.Language;
+using HotChocolate.Types;
+using Payment.Api.GraphQL;
 using Payment.Api.Grpc;
 using Payment.Shared;
 using Payment.Shared.Database;
@@ -23,7 +26,17 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services.AddKafka();
         services.AddRedis(Configuration);
 
-        services.AddGraphql<PaymentDbContext>(Configuration, builder => builder.AddApiTypes());
+        services.AddGraphql<PaymentDbContext>(
+            Configuration,
+            builder =>
+            {
+                // builder.AddApiTypes()
+                builder.AddTypeExtension<Mutation>();
+                builder.AddTypeExtension<Query>();
+                builder.ConfigureSchema(b => b.TryAddRootType(() => new ObjectType(d => d.Name(OperationTypeNames.Query)), OperationType.Query));
+                builder
+                    .ConfigureSchema(b => b.TryAddRootType(() => new ObjectType(d => d.Name(OperationTypeNames.Mutation)), OperationType.Mutation));
+            });
 
         services
             .AddDomainSharedServices()

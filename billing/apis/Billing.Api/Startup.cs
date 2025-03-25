@@ -1,3 +1,4 @@
+using Billing.Api.GraphQL;
 using Billing.Api.Grpc;
 using Billing.Shared;
 using Billing.Shared.Database;
@@ -6,6 +7,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
+using HotChocolate.Language;
+using HotChocolate.Types;
 
 namespace Billing.Api;
 
@@ -23,7 +26,17 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services.AddKafka();
         services.AddRedis(Configuration);
 
-        services.AddGraphql<BillingDbContext>(Configuration, builder => builder.AddApiTypes());
+        services.AddGraphql<BillingDbContext>(
+            Configuration,
+            builder =>
+            {
+                // builder.AddApiTypes()
+                builder.AddTypeExtension<Mutation>();
+                builder.AddTypeExtension<Query>();
+                builder.ConfigureSchema(b => b.TryAddRootType(() => new ObjectType(d => d.Name(OperationTypeNames.Query)), OperationType.Query));
+                builder
+                    .ConfigureSchema(b => b.TryAddRootType(() => new ObjectType(d => d.Name(OperationTypeNames.Mutation)), OperationType.Mutation));
+            });
 
         services
             .AddDomainSharedServices()

@@ -10,7 +10,7 @@
     <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.402.58"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.402.62"/>
         <PackageReference Include="Confluent.Kafka" Version="2.8.0"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.8.0"/>
         <PackageReference Include="CountryData" Version="6.11.0"/>
@@ -26,7 +26,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3"/>
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.3"/>
         <PackageReference Include="Microsoft.Graph" Version="5.74.0"/>
-        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.8.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.8.1"/>
         <PackageReference Include="Nanoid" Version="3.1.0"/>
         <PackageReference Include="NSwag.AspNetCore" Version="14.2.0"/>
         <PackageReference Include="Polly" Version="8.5.2"/>
@@ -48,12 +48,12 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="HotChocolate" Version="15.0.3"/>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="15.0.3"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="15.0.3"/>
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="15.0.3"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.0.3"/>
-        <PackageReference Include="HotChocolate.Diagnostics" Version="15.0.3"/>
+        <PackageReference Include="HotChocolate" Version="15.1.1"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.1"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="15.1.1"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="15.1.1"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.1"/>
+        <PackageReference Include="HotChocolate.Diagnostics" Version="15.1.1"/>
 
         <PackageReference Include="OpenTelemetry.Api" Version="1.11.2"/>
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.11.2"/>
@@ -79,10 +79,10 @@
         <PackageReference Include="Serilog.Enrichers.Span" Version="3.1.0"/>
         <PackageReference Include="Serilog.Expressions" Version="5.0.0"/>
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0"/>
-        <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0"/>
+        <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.1"/>
         <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.7.0"/>
         <PackageReference Include="System.Reactive" Version="6.0.1"/>
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.13.61">
