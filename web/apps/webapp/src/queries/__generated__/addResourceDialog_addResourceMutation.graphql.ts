@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<316959711f0445a3b2d50c64303271aa>>
+ * @generated SignedSource<<4ad9bd9991c185b31583d59554d7c444>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,13 +10,16 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type AddResourceInput = {
+  capacity: number;
   clientMutationId?: string | null | undefined;
   color?: string | null | undefined;
   customTagIds: ReadonlyArray<string>;
   id?: string | null | undefined;
+  inactive: boolean;
   locationId: string;
   name: string;
   organizationResourceTypeId: string;
+  requireBookingApproval: boolean;
   zoneIds: ReadonlyArray<string>;
 };
 export type addResourceDialog_addResourceMutation$variables = {
@@ -26,6 +29,7 @@ export type addResourceDialog_addResourceMutation$variables = {
 export type addResourceDialog_addResourceMutation$data = {
   readonly addResource: {
     readonly resource: {
+      readonly capacity: number;
       readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -52,6 +56,7 @@ export type addResourceDialog_addResourceMutation$data = {
 export type addResourceDialog_addResourceMutation$rawResponse = {
   readonly addResource: {
     readonly resource: {
+      readonly capacity: number;
       readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -160,6 +165,13 @@ v5 = {
     {
       "alias": null,
       "args": null,
+      "kind": "ScalarField",
+      "name": "capacity",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "Location_OrganizationTagDetails",
       "kind": "LinkedField",
       "name": "customTags",
@@ -255,16 +267,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "415d01989103532f6e184144fbe767ce",
+    "cacheID": "59abb1134cbd4f1def207d4e0a233d59",
     "id": null,
     "metadata": {},
     "name": "addResourceDialog_addResourceMutation",
     "operationKind": "mutation",
-    "text": "mutation addResourceDialog_addResourceMutation(\n  $input: AddResourceInput!\n) {\n  addResource(input: $input) {\n    resource {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addResourceDialog_addResourceMutation(\n  $input: AddResourceInput!\n) {\n  addResource(input: $input) {\n    resource {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      capacity\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c3bbc23ff294c3cf8fb6ac72e8ed5cce";
+(node as any).hash = "c450425827162641a09118a01651ee25";
 
 export default node;

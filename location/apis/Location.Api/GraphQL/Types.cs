@@ -278,10 +278,16 @@ public class AddResourceInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("inactive")] public bool Inactive { get; set; }
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
+
+    [GraphQLName("requireBookingApproval")]
+    public bool RequireBookingApproval { get; set; }
+
     [GraphQLName("color")] public string? Color { get; set; }
+    [GraphQLName("capacity")] public int Capacity { get; set; }
 
     [GraphQLName("organizationResourceTypeId")]
     public required string OrganizationResourceTypeId { get; set; }
@@ -299,7 +305,7 @@ public class UpdateResourceInput
     public bool RequireBookingApproval { get; set; }
 
     [GraphQLName("color")] public string? Color { get; set; }
-
+    [GraphQLName("capacity")] public int Capacity { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
 
@@ -355,6 +361,7 @@ public class ResourceDetails : Node
     public bool RequireBookingApproval { get; set; }
 
     [GraphQLName("color")] public string? Color { get; set; }
+    [GraphQLName("capacity")] public int Capacity { get; set; }
     [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
     [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
     [GraphQLName("resourceType")] public OrganizationTagDetails ResourceType { get; set; }

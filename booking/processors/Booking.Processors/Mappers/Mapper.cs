@@ -242,6 +242,7 @@ public class Mapper : IMapper
             Inactive = item.Inactive,
             RequireBookingApproval = item.RequireBookingApproval,
             Color = item.Color,
+            Capacity = item.Capacity,
             IsAvailableHoursOverridden = item.IsAvailableHoursOverridden,
             AvailableHours = item.AvailableHours is null ? null : MapTo(item.AvailableHours),
             OrganizationTags = organizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
@@ -410,6 +411,7 @@ public class Mapper : IMapper
         dest.Inactive = src.Inactive;
         dest.RequireBookingApproval = src.RequireBookingApproval;
         dest.Color = src.Color;
+        dest.Capacity = src.Capacity;
         dest.IsAvailableHoursOverridden = src.IsAvailableHoursOverridden;
         dest.AvailableHours = src.AvailableHours;
         dest.Location = location;

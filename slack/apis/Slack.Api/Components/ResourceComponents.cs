@@ -74,6 +74,7 @@ public class ResourceComponents(ICustomerService customerService, ILocationServi
             new SectionBlock { Text = $"*Type*: {resource.ResourceType.Name.ToSafeString()}".ToMarkdown() },
             new SectionBlock { Text = $"*Name*: {resource.Name.ToSafeString()}".ToMarkdown() },
             new SectionBlock { Text = $"*Inactive*: {resource.Inactive}".ToMarkdown() },
+            new SectionBlock { Text = $"*Capacity*: {resource.Capacity}".ToMarkdown() },
             new SectionBlock { Text = $"*RequireBookingApproval*: {resource.RequireBookingApproval}".ToMarkdown() }
         };
 

@@ -473,6 +473,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Name = src.Name,
+            Capacity = src.Capacity,
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
@@ -489,6 +490,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
+            Capacity = src.Capacity,
             Location = MapTo(src.Location),
             Customers = MapTo(customers)
         };
@@ -500,6 +502,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Color = src.Color.ToSafeString(),
+            Capacity = src.Capacity,
             ResourceType = MapTo(src.OrganizationTags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type))),
             Location = src.Location is null
                 ? null

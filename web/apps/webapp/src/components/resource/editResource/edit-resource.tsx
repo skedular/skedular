@@ -110,6 +110,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
           inactive
           requireBookingApproval
           color
+          capacity
           customTags {
             uniqueId
             name
@@ -191,6 +192,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
           inactive
           requireBookingApproval
           color
+          capacity
           customTags {
             uniqueId
             name
@@ -267,6 +269,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
           inactive
           requireBookingApproval
           color
+          capacity
           customTags {
             uniqueId
             name
@@ -370,6 +373,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
           customTagIds,
           zoneIds,
           color: selectedColor,
+          capacity: resource.capacity,
           organizationResourceTypeId: resourceTypeId,
         },
       },
@@ -406,6 +410,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
             customTags: [],
             zones: [],
             color: selectedColor,
+            capacity: resource.capacity,
             resourceType: {
               uniqueId: resourceTypeId,
               name: '',
@@ -467,6 +472,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
             customTags: resource.customTags,
             zones: resource.zones,
             color: resource.color,
+            capacity: resource.capacity,
             resourceType: resource.resourceType,
             isAvailableHoursOverridden,
             availableHours: isAvailableHoursOverridden ? { weekOpeningHours: weekOpeningHours } : null,

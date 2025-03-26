@@ -229,6 +229,7 @@ public class BookingResourceDetails
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("inactive")] public bool Inactive { get; set; }
     [GraphQLName("color")] public string? Color { get; set; }
+    [GraphQLName("capacity")] public int Capacity { get; set; }
 
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }

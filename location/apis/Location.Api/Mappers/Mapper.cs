@@ -201,6 +201,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
+            Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
             Tags = MapTo(src.OrganizationTags).ToList()
@@ -223,6 +224,7 @@ public class Mapper : IMapper
         dest.Inactive = src.Inactive;
         dest.RequireBookingApproval = src.RequireBookingApproval;
         dest.Color = src.Color;
+        dest.Capacity = src.Capacity;
         dest.IsAvailableHoursOverridden = src.IsAvailableHoursOverridden;
         dest.AvailableHours = src.AvailableHours;
         dest.OrganizationTags = organizationTags;
@@ -259,6 +261,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
+            Capacity = src.Capacity,
             Location = new Shared.Models.Location { Id = src.LocationId },
             Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -271,6 +274,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
+            Capacity = src.Capacity,
             Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
@@ -293,6 +297,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
+            Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
             AvailableHours = src.AvailableHours is null ? null : MapTo(src.AvailableHours),
             CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
@@ -377,9 +382,10 @@ public class Mapper : IMapper
         {
             Id = src.Id.ToSafeString(),
             Name = src.Name,
-            Inactive = false,
-            RequireBookingApproval = false,
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
+            Capacity = src.Capacity,
             Tags = src.CustomTagIds
                 .Concat(src.ZoneIds)
                 .Concat([src.OrganizationResourceTypeId])
@@ -396,6 +402,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
+            Capacity = src.Capacity,
             Tags = src.CustomTagIds
                 .Concat(src.ZoneIds)
                 .Concat([src.OrganizationResourceTypeId])
@@ -488,6 +495,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
+            Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
             Location = location,
@@ -503,6 +511,7 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
+            Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
             AvailableHours = src.AvailableHours is null ? null : MapToGrpcResponse(src.AvailableHours),
             ResourceType = MapToGrpcResponse(src.Tags.First(item =>

@@ -192,7 +192,7 @@ public class AddResourceButtonHandler(
         var context = AddResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var deskId = randomHelper.Generate();
-        var addInput = new AddResourceInput { Id = deskId, LocationId = context.LocationId };
+        var addInput = new AddResourceInput { Id = deskId, LocationId = context.LocationId, Capacity = 1 };
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var locationBlock))
         {

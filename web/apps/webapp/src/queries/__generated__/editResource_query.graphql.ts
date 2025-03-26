@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<125fceb661ca7ab4ffa9b0796aeedcce>>
+ * @generated SignedSource<<d1b47dff5e03018a7b80789e353fa7c9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -106,6 +106,7 @@ export type editResource_query$data = {
         };
       };
     } | null | undefined;
+    readonly capacity: number;
     readonly color: string | null | undefined;
     readonly customTags: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -357,6 +358,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "capacity",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "Location_OrganizationTagDetails",
           "kind": "LinkedField",
           "name": "customTags",
@@ -430,6 +438,6 @@ return {
 };
 })();
 
-(node as any).hash = "68ffd284cf4725f3dd52d1ac4266f857";
+(node as any).hash = "676b3092b20ef4dbcda0513a48dabd28";
 
 export default node;

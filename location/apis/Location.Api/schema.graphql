@@ -198,6 +198,7 @@ type ResourceDetails {
   inactive: Boolean!
   requireBookingApproval: Boolean!
   color: String
+  capacity: Int!
   customTags: [Location_OrganizationTagDetails!]!
   zones: [Location_OrganizationTagDetails!]!
   resourceType: Location_OrganizationTagDetails!
@@ -272,10 +273,13 @@ input AddResourceInput {
   clientMutationId: String
   id: String
   name: String!
+  inactive: Boolean!
   locationId: String!
   customTagIds: [String!]!
   zoneIds: [String!]!
+  requireBookingApproval: Boolean!
   color: String
+  capacity: Int!
   organizationResourceTypeId: String!
 }
 
@@ -404,6 +408,7 @@ input UpdateResourceInput {
   inactive: Boolean!
   requireBookingApproval: Boolean!
   color: String
+  capacity: Int!
   customTagIds: [String!]!
   zoneIds: [String!]!
   organizationResourceTypeId: String!

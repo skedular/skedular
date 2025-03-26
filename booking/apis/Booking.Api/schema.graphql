@@ -74,6 +74,7 @@ type BookingResourceDetails {
   name: String!
   inactive: Boolean!
   color: String
+  capacity: Int!
   requireBookingApproval: Boolean!
   location: BookingLocationDetails
   customTags: [BookingOrganizationCustomTagDetails!]!

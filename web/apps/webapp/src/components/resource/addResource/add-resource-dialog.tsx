@@ -97,6 +97,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
           inactive
           requireBookingApproval
           color
+          capacity
           customTags {
             uniqueId
             name
@@ -143,7 +144,10 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
           name,
           customTagIds,
           zoneIds,
+          inactive: false,
+          requireBookingApproval: false,
           color: selectedColor,
+          capacity: 1,
           organizationResourceTypeId: resourceTypeId,
         },
       },
@@ -180,6 +184,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
             customTags: [],
             zones: [],
             color: selectedColor,
+            capacity: 1,
             resourceType: {
               uniqueId: resourceTypeId,
               name: '',

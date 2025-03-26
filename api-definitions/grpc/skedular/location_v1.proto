@@ -222,6 +222,7 @@ message Resource {
     bool isAvailableHoursOverridden = 8;
     OpeningHours availableHours = 9;
     ResourceType resourceType = 10;
+    int32 capacity = 11;
 }
 
 message ResourceConnection {
@@ -271,6 +272,7 @@ message AddResourceInput {
     bool requireBookingApproval = 5;
     repeated string tagIds = 6;
     string color = 7;
+    int32 capacity = 8;
 }
 
 message UpdateResourceInput {
@@ -280,6 +282,7 @@ message UpdateResourceInput {
     bool requireBookingApproval = 4;
     repeated string tagIds = 5;
     string color = 6;
+    int32 capacity = 7;
 }
 
 message RemoveResourceInput {

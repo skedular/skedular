@@ -48,7 +48,7 @@ public class EditResourceButtonHandler(
         }
 
         var values = viewSubmission.View.State.Values;
-        var updateInput = new UpdateResourceInput { Id = context.ResourceId };
+        var updateInput = new UpdateResourceInput { Id = context.ResourceId, Capacity = 1 };
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var locationBlock))
         {

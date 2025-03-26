@@ -66,6 +66,7 @@ message Resource {
   string color = 6;
   bool isAvailableHoursOverridden = 7;
   OpeningHours availableHours = 8;
+  int32 capacity = 9;
 }
 
 message InvitationToJoinLocation {

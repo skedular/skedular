@@ -8,6 +8,7 @@ public class Resource : ReplicatedModelBase
     public bool Inactive { get; set; }
     public bool RequireBookingApproval { get; set; }
     public string? Color { get; set; }
+    public int Capacity { get; set; }
 
     public ResourceType ResourceType { get; set; }
     public Location? Location { get; set; }

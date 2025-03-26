@@ -14,6 +14,7 @@ public class Resource : EntityBaseWithDeleted
     public bool Inactive { get; set; }
     public bool RequireBookingApproval { get; set; }
     public string? Color { get; set; }
+    public int Capacity { get; set; }
     public bool? IsAvailableHoursOverridden { get; set; }
     public OpeningHours? AvailableHours { get; set; }
 
@@ -31,6 +32,7 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxResourceNameLength);
         builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
+        builder.Property(item => item.Capacity).HasDefaultValue(1);
         builder.Property(item => item.IsAvailableHoursOverridden).HasDefaultValue(false);
         builder.Property(item => item.AvailableHours).HasColumnType("jsonb");
 
@@ -40,6 +42,7 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Inactive);
         builder.HasIndex(item => item.RequireBookingApproval);
+        builder.HasIndex(item => item.Capacity);
         builder.HasIndex(item => item.IsAvailableHoursOverridden);
     }
 }

@@ -318,6 +318,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Color = src.Color.ToSafeString(),
+            Capacity = src.Capacity,
             ResourceType = MapTo(src.ResourceType),
             OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
             OrganizationZones = MapTo(src.OrganizationZones).ToList(),

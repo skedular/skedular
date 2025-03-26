@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fc6bc8c8b3f5236ff036f39521076b4d>>
+ * @generated SignedSource<<3c63c798b9741774814aca2a762958fb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type UpdateResourceInput = {
+  capacity: number;
   clientMutationId?: string | null | undefined;
   color?: string | null | undefined;
   customTagIds: ReadonlyArray<string>;
@@ -72,6 +73,7 @@ export type editResource_updateResourceMutation$data = {
           };
         };
       } | null | undefined;
+      readonly capacity: number;
       readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -145,6 +147,7 @@ export type editResource_updateResourceMutation$rawResponse = {
           };
         };
       } | null | undefined;
+      readonly capacity: number;
       readonly color: string | null | undefined;
       readonly customTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -284,6 +287,13 @@ v5 = [
             "storageKey": null
           },
           (v2/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "capacity",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -438,16 +448,16 @@ return {
     "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "f30261594421e1a9c47dff67631f75c8",
+    "cacheID": "21583a17c36b35f7db05ff2cc53ea7aa",
     "id": null,
     "metadata": {},
     "name": "editResource_updateResourceMutation",
     "operationKind": "mutation",
-    "text": "mutation editResource_updateResourceMutation(\n  $input: UpdateResourceInput!\n) {\n  updateResource(input: $input) {\n    resource {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n      isAvailableHoursOverridden\n      availableHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editResource_updateResourceMutation(\n  $input: UpdateResourceInput!\n) {\n  updateResource(input: $input) {\n    resource {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      capacity\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n      isAvailableHoursOverridden\n      availableHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2973cab74aeeb85f96eaaa93e297ffd8";
+(node as any).hash = "a64d5236804c6104e8e863f41643c559";
 
 export default node;
