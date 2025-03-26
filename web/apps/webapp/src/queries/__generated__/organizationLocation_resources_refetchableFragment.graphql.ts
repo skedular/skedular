@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<33e9fafb3aee82bc8b5bb8ba9329cab1>>
+ * @generated SignedSource<<5b3745c183a036cc7c33c60e18b7d8cb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -212,6 +212,13 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "kind": "ScalarField",
+                    "name": "capacity",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "Location_OrganizationTagDetails",
                     "kind": "LinkedField",
                     "name": "customTags",
@@ -313,16 +320,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0c6c5e432809c4e4681139df312527f3",
+    "cacheID": "e33a0f84c8c858dd29098c2fcff4c422",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_resources_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationLocation_resources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $locationId: String!\n  $resourceCustomTagIds: [String!]\n  $resourceNameSearchText: String\n  $resourceZoneIds: [String!]\n) {\n  ...organizationLocation_resources_query_1G22uz\n}\n\nfragment organizationLocation_resources_query_1G22uz on Query {\n  resources(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        inactive\n        requireBookingApproval\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        resourceType {\n          uniqueId\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationLocation_resources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $locationId: String!\n  $resourceCustomTagIds: [String!]\n  $resourceNameSearchText: String\n  $resourceZoneIds: [String!]\n) {\n  ...organizationLocation_resources_query_1G22uz\n}\n\nfragment organizationLocation_resources_query_1G22uz on Query {\n  resources(first: $count, after: $cursor, where: {locationId: $locationId, nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        inactive\n        requireBookingApproval\n        color\n        capacity\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n        resourceType {\n          uniqueId\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "09abede5a5b709766a829e8127a544e8";
+(node as any).hash = "414db5cf2cbaa5e5a963919651ae8f7c";
 
 export default node;

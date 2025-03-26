@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e3e7a19a481505a6828080b25c4308e7>>
+ * @generated SignedSource<<3d3a56eca9238174bc9856b09e16682a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type organizationLocation_resources_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly capacity: number;
         readonly color: string | null | undefined;
         readonly customTags: ReadonlyArray<{
           readonly color: string | null | undefined;
@@ -213,6 +214,13 @@ return {
                 {
                   "alias": null,
                   "args": null,
+                  "kind": "ScalarField",
+                  "name": "capacity",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
                   "concreteType": "Location_OrganizationTagDetails",
                   "kind": "LinkedField",
                   "name": "customTags",
@@ -306,6 +314,6 @@ return {
 };
 })();
 
-(node as any).hash = "09abede5a5b709766a829e8127a544e8";
+(node as any).hash = "414db5cf2cbaa5e5a963919651ae8f7c";
 
 export default node;

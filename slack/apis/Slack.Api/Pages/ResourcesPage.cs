@@ -612,7 +612,22 @@ public class ResourcesPage(
             Optional = true
         };
 
-        var blocks = new List<Block> { resourceType, name, deactivated, requireBookingApproval };
+        var capacity = new InputBlock
+        {
+            BlockId = ResourceActionTypes.Capacity,
+            Label = "Capacity".ToPlainText(),
+            Element = new PlainTextInput { ActionId = ResourceActionTypes.Capacity, InitialValue = resource.Capacity.ToString() },
+            Optional = false
+        };
+
+        var blocks = new List<Block>
+        {
+            resourceType,
+            name,
+            deactivated,
+            requireBookingApproval,
+            capacity
+        };
 
         var customTagConnection = await GetCustomTagsAsync(workspace, workspaceMember, cancellationToken);
         if (customTagConnection.Edges.Count != 0)

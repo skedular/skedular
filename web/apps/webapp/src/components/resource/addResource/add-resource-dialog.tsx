@@ -28,7 +28,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, object, string } from 'yup';
+import { array, number, object, string } from 'yup';
 
 type Props = {
   queryReference: PreloadedQuery<addResourceDialog_rootQuery, Record<string, unknown>>;
@@ -75,6 +75,7 @@ type ResourceDetails = {
   name: string;
   customTagIds: string[];
   zoneIds: string[];
+  capacity: number;
 };
 
 const ResourceSchema = object({
@@ -83,6 +84,7 @@ const ResourceSchema = object({
   name: string().required('Resource name is required'),
   customTagIds: array().nullable(),
   zoneIds: array().nullable(),
+  capacity: number().required('Capacity is required').min(1, 'Capacity must be greater than 0'),
 });
 
 const AddResourceDialog = ({ queryReference, organizationId, locationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
@@ -130,9 +132,10 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
     setSelectedColor(color);
   };
 
-  const handleAddClick = ({ location: locationId, resourceTypeId, name, customTagIds, zoneIds }: ResourceDetails) => {
+  const handleAddClick = ({ location: locationId, resourceTypeId, name, customTagIds, zoneIds, capacity: capacityStr }: ResourceDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding resource '${name}'...`} />, infoNotificationOptions);
+    const capacity = parseInt(capacityStr.toString(), 10);
 
     commitAddResource({
       variables: {
@@ -147,7 +150,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
           inactive: false,
           requireBookingApproval: false,
           color: selectedColor,
-          capacity: 1,
+          capacity,
           organizationResourceTypeId: resourceTypeId,
         },
       },
@@ -184,7 +187,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
             customTags: [],
             zones: [],
             color: selectedColor,
-            capacity: 1,
+            capacity,
             resourceType: {
               uniqueId: resourceTypeId,
               name: '',
@@ -208,6 +211,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
             name: '',
             customTagIds: [],
             zoneIds: [],
+            capacity: 1,
           }}
           validate={validate}
           render={({ handleSubmit }) => (
@@ -259,6 +263,10 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
 
               <FormFieldLabel label="Color" useWiderSpace>
                 <ColorPicker onChange={handleColorChange} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Capacity" useWiderSpace>
+                <TextField name="capacity" required={requiredFields.capacity} />
               </FormFieldLabel>
 
               <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />

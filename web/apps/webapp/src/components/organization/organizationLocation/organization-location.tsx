@@ -102,6 +102,7 @@ type ResourceRowType = {
   zones: ZoneDetails[];
   status: boolean;
   preferred: boolean;
+  capacity: number;
 };
 
 const locationSchema = object({
@@ -204,6 +205,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
               inactive
               requireBookingApproval
               color
+              capacity
               customTags {
                 uniqueId
                 name
@@ -1065,6 +1067,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     zones: resource.zones.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
     status: !resource.inactive,
     preferred: preferredResources.includes(resource.id),
+    capacity: resource.capacity,
   }));
 
   const resourceColumns: GridColDef<(typeof resourceRows)[number]>[] = [
@@ -1083,6 +1086,14 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
       renderCell: (params) => <ResourceType resourceType={params.value} />,
       display: 'flex',
       minWidth: 50,
+    },
+    {
+      field: 'capacity',
+      headerName: 'Capacity',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
     },
     {
       field: 'customTags',

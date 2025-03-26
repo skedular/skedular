@@ -72,7 +72,7 @@ public static class ResourceActionTypes
     public const string Name = "Resource_Name";
     public const string Inactive = "Resource_Inactive";
     public const string RequireBookingApproval = "Resource_RequireBookingApproval";
-    public const string ResourceType = "Resource_ResourceType";
+    public const string Capacity = "Resource_Capacity";
 }
 
 public static class BookingActionTypes

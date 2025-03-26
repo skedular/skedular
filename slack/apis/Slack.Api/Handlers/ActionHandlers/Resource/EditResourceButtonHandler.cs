@@ -48,7 +48,7 @@ public class EditResourceButtonHandler(
         }
 
         var values = viewSubmission.View.State.Values;
-        var updateInput = new UpdateResourceInput { Id = context.ResourceId, Capacity = 1 };
+        var updateInput = new UpdateResourceInput { Id = context.ResourceId };
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var locationBlock))
         {
@@ -142,6 +142,45 @@ public class EditResourceButtonHandler(
         else
         {
             throw new InvalidOperationException("requireBookingApproval block is missing");
+        }
+
+        if (values.TryGetValue(ResourceActionTypes.Capacity, out var capacityBlock))
+        {
+            if (capacityBlock.TryGetValue(ResourceActionTypes.Capacity, out var capacity))
+            {
+                if (capacity is PlainTextInputValue value)
+                {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
+
+                    if (int.TryParse(value.Value, out var capacityValue))
+                    {
+                        if (capacityValue > 0)
+                        {
+                            updateInput.Capacity = capacityValue;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("capacity must be greater than 0");
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("capacity value must be integer");
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("capacity must be PlainTextInputValue");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("capacity block is missing");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException("capacity block is missing");
         }
 
         if (values.TryGetValue(CustomTagActionTypes.CustomTags, out var customTagsBlock))

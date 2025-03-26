@@ -102,7 +102,22 @@ public class AddResourceButtonHandler(
             Optional = true
         };
 
-        var blocks = new List<Block> { resourceType, name, deactivated, requireBookingApproval };
+        var capacity = new InputBlock
+        {
+            BlockId = ResourceActionTypes.Capacity,
+            Label = "Capacity".ToPlainText(),
+            Element = new PlainTextInput { ActionId = ResourceActionTypes.Capacity, InitialValue = "1" },
+            Optional = false
+        };
+
+        var blocks = new List<Block>
+        {
+            resourceType,
+            name,
+            deactivated,
+            requireBookingApproval,
+            capacity
+        };
 
         var customTagConnection = await GetCustomTagsAsync(workspace, workspaceMember, cancellationToken);
         if (customTagConnection.Edges.Count != 0)
@@ -192,7 +207,7 @@ public class AddResourceButtonHandler(
         var context = AddResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var deskId = randomHelper.Generate();
-        var addInput = new AddResourceInput { Id = deskId, LocationId = context.LocationId, Capacity = 1 };
+        var addInput = new AddResourceInput { Id = deskId, LocationId = context.LocationId };
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var locationBlock))
         {
@@ -284,6 +299,45 @@ public class AddResourceButtonHandler(
             throw new InvalidOperationException("requireBookingApproval block is missing");
         }
 
+        if (values.TryGetValue(ResourceActionTypes.Capacity, out var capacityBlock))
+        {
+            if (capacityBlock.TryGetValue(ResourceActionTypes.Capacity, out var capacity))
+            {
+                if (capacity is PlainTextInputValue value)
+                {
+                    ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
+
+                    if (int.TryParse(value.Value, out var capacityValue))
+                    {
+                        if (capacityValue > 0)
+                        {
+                            addInput.Capacity = capacityValue;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("capacity must be greater than 0");
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("capacity value must be integer");
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("capacity must be PlainTextInputValue");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("capacity block is missing");
+            }
+        }
+        else
+        {
+            throw new InvalidOperationException("capacity block is missing");
+        }
+
         if (values.TryGetValue(CustomTagActionTypes.CustomTags, out var customTagsBlock))
         {
             if (customTagsBlock.TryGetValue(CustomTagActionTypes.CustomTags, out var customTags))
@@ -301,10 +355,6 @@ public class AddResourceButtonHandler(
             {
                 throw new InvalidOperationException("customTags block is missing");
             }
-        }
-        else
-        {
-            throw new InvalidOperationException("customTags block is missing");
         }
 
         if (values.TryGetValue(ZoneActionTypes.Zones, out var zonesBlock))
@@ -324,10 +374,6 @@ public class AddResourceButtonHandler(
             {
                 throw new InvalidOperationException("zones block is missing");
             }
-        }
-        else
-        {
-            throw new InvalidOperationException("zones block is missing");
         }
 
         await locationServiceClient.AddResourceAsync(

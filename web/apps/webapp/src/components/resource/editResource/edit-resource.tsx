@@ -30,7 +30,7 @@ import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, object, string } from 'yup';
+import { array, number, object, string } from 'yup';
 
 type Props = {
   rootDataRelay: editResource_query$key;
@@ -43,6 +43,7 @@ type ResourceDetails = {
   resourceTypeId: string;
   customTagIds: string[];
   zoneIds: string[];
+  capacity: number;
 };
 
 const ResourceSchema = object({
@@ -50,6 +51,7 @@ const ResourceSchema = object({
   name: string().required('Resource name is required'),
   customTagIds: array().nullable(),
   zoneIds: array().nullable(),
+  capacity: number().required('Capacity is required').min(1, 'Capacity must be greater than 0'),
 });
 
 const EditResource = ({ rootDataRelay, organizationId }: Props) => {
@@ -341,7 +343,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateResourceDetails = makeValidate(ResourceSchema);
-  const requiredResourceDetailsFields = makeRequired(ResourceSchema);
+  const requiredFields = makeRequired(ResourceSchema);
   const [selectedColor, setSelectedColor] = useState(rootData.resource?.color);
   const [isAvailableHoursOverridden, setIsAvailableHoursOverridden] = useState(rootData.resource ? rootData.resource.isAvailableHoursOverridden : false);
 
@@ -353,7 +355,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
     router.back();
   };
 
-  const handleResourceDetailUpdateClick = ({ resourceTypeId, name, customTagIds, zoneIds }: ResourceDetails) => {
+  const handleResourceDetailUpdateClick = ({ resourceTypeId, name, customTagIds, zoneIds, capacity: capacityStr }: ResourceDetails) => {
     const resource = rootData.resource;
     if (!resource) {
       return;
@@ -361,6 +363,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
 
     const oldName = resource.name;
     const toastId = themedToast(<NotificationContent content={`Updating zone '${oldName}'...`} />, infoNotificationOptions);
+    const capacity = parseInt(capacityStr.toString(), 10);
 
     commitUpdateResource({
       variables: {
@@ -373,7 +376,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
           customTagIds,
           zoneIds,
           color: selectedColor,
-          capacity: resource.capacity,
+          capacity,
           organizationResourceTypeId: resourceTypeId,
         },
       },
@@ -410,7 +413,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
             customTags: [],
             zones: [],
             color: selectedColor,
-            capacity: resource.capacity,
+            capacity,
             resourceType: {
               uniqueId: resourceTypeId,
               name: '',
@@ -504,6 +507,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
               resourceTypeId: resource.resourceType.uniqueId,
               customTagIds: resource.customTags.map(({ uniqueId }) => uniqueId),
               zoneIds: resource.zones.map(({ uniqueId }) => uniqueId),
+              capacity: resource.capacity,
             }}
             validate={validateResourceDetails}
             render={({ handleSubmit }) => (
@@ -516,23 +520,27 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Resource Type">
-                    <SingleChoicesResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredResourceDetailsFields.resourceTypeId} />
+                    <SingleChoicesResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredResourceDetailsFields.name} helperText="Add your resource name" />
+                    <TextField name="name" required={requiredFields.name} helperText="Add your resource name" />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Tags">
-                    <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredResourceDetailsFields.customTagIds} organizationId={organizationId} />
+                    <MultipleChoicesCustomTags rootDataRelay={rootData} name="customTagIds" required={requiredFields.customTagIds} organizationId={organizationId} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Zones">
-                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredResourceDetailsFields.zoneIds} organizationId={organizationId} />
+                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationId={organizationId} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Color">
                     <ColorPicker onChange={handleColorChange} defaultColor={rootData.resource?.color} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Capacity">
+                    <TextField name="capacity" required={requiredFields.capacity} />
                   </FormFieldLabel>
                 </StackColumn>
 
