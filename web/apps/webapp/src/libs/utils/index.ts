@@ -288,12 +288,12 @@ const toOpeningHoursFromTime = (time?: string | null | undefined) => {
   return dayjs().utc().startOf('day').set('hour', parseInt(splittedTime[0])).set('minute', parseInt(splittedTime[1]));
 };
 
-const getOpeningHoursFromDateTime = (datetime: Dayjs | null) => {
+const getOpeningHoursFromDateTime = (datetime: Dayjs | string | null) => {
   if (!datetime) {
     return '00:00';
   }
 
-  const date = dayjs(datetime).utc();
+  const date = typeof datetime === 'string' ? dayjs(datetime).utc() : datetime.utc();
 
   return `${date.format('HH')}:${date.format('mm')}`;
 };

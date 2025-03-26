@@ -378,8 +378,8 @@ const NewBookingDialog = ({
       }
 
       const utcDate = dayjs(date).utc();
-      const from = utcDate.add(timeFrom.get('hour'), 'hour').add(timeFrom.get('minute'), 'minute');
-      const until = utcDate.add(timeUntil.get('hour'), 'hour').add(timeUntil.get('minute'), 'minute');
+      const from = utcDate.set('hour', timeFrom.get('hour')).set('minute', timeFrom.get('minute'));
+      const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
 
       if (from.isAfter(until)) {
         themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
