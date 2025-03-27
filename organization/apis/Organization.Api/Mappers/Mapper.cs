@@ -550,7 +550,10 @@ public class Mapper : IMapper
     public CustomTag MapToGrpcResponseCustomTag(Tag? src) =>
         src is null
             ? new CustomTag()
-            : new CustomTag { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color };
+            : new CustomTag
+            {
+                Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString()
+            };
 
     public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseCustomTag(src.Node) };
 
@@ -578,7 +581,10 @@ public class Mapper : IMapper
     public Zone MapToGrpcResponseZone(Tag? src) =>
         src is null
             ? new Zone()
-            : new Zone { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color };
+            : new Zone
+            {
+                Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString()
+            };
 
     public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseZone(src.Node) };
 
