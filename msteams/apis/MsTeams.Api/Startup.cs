@@ -3,9 +3,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
-using HotChocolate.Language;
-using HotChocolate.Types;
-using MsTeams.Api.GraphQL;
 using MsTeams.Api.Grpc;
 using MsTeams.Shared;
 using MsTeams.Shared.Database;
@@ -26,14 +23,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services.AddKafka();
         services.AddRedis(Configuration);
 
-        services.AddGraphql<MsTeamsDbContext>(
-            Configuration,
-            builder =>
-            {
-                // builder.AddApiTypes()
-                builder.AddTypeExtension<Query>();
-                builder.ConfigureSchema(b => b.TryAddRootType(() => new ObjectType(d => d.Name(OperationTypeNames.Query)), OperationType.Query));
-            });
+        services.AddGraphql<MsTeamsDbContext>(Configuration, builder => { builder.AddApiTypes(); });
 
         services
             .AddDomainSharedServices()

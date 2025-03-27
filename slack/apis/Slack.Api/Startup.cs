@@ -4,9 +4,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
-using HotChocolate.Language;
-using HotChocolate.Types;
-using Slack.Api.GraphQL;
 using Slack.Api.Grpc;
 using Slack.Api.Handlers.ActionHandlers.Billing;
 using Slack.Api.Handlers.ActionHandlers.Booking;
@@ -46,14 +43,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services.AddKafka();
         services.AddRedis(Configuration);
 
-        services.AddGraphql<SlackDbContext>(
-            Configuration,
-            builder =>
-            {
-                // builder.AddApiTypes()
-                builder.AddTypeExtension<Query>();
-                builder.ConfigureSchema(b => b.TryAddRootType(() => new ObjectType(d => d.Name(OperationTypeNames.Query)), OperationType.Query));
-            });
+        services.AddGraphql<SlackDbContext>(Configuration, builder => { builder.AddApiTypes(); });
 
         services
             .AddDomainSharedServices()
