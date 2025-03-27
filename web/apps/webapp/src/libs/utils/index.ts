@@ -293,7 +293,7 @@ const getOpeningHoursFromDateTime = (datetime: Dayjs | string | null) => {
     return '00:00';
   }
 
-  const date = typeof datetime === 'string' ? dayjs(datetime).utc() : datetime.utc();
+  const date = typeof datetime === 'string' ? dayjs(datetime).utc() : datetime;
 
   return `${date.format('HH')}:${date.format('mm')}`;
 };
