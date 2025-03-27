@@ -1,7 +1,7 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse } from '@/components/organization';
+import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse, SingleChoicesOrganizationType } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
@@ -38,6 +38,7 @@ const RootQuery = graphql`
     }
     ...organizationMultipleChoicesIndustries_query
     ...organizationTermsOfUse_query
+    ...singleChoiceOrganizationType_query
   }
 `;
 
@@ -45,6 +46,7 @@ type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
+  type: string;
   agreedToTermsOfUse: boolean;
   industrySubCategoryIds: string[];
 };
@@ -53,6 +55,7 @@ const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().nullable(),
+  type: string().required('Organization type is required'),
   industrySubCategoryIds: array().nullable(),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
@@ -67,6 +70,10 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           name
           about
           website
+          type {
+            type
+            name
+          }
         }
       }
     }
@@ -83,9 +90,9 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateOrganizationDetails = makeValidate(organizationSchema);
-  const requiredOrganizationDetailsFields = makeRequired(organizationSchema);
+  const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ name, about, website, type, industrySubCategoryIds }: OrganizationDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -97,6 +104,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           name,
           about,
           website,
+          type: type === 'Private' ? 'Private' : 'Marketplace',
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: industrySubCategoryIds ?? [],
@@ -155,6 +163,10 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
             name,
             about,
             website,
+            type: {
+              type: type === 'Private' ? 'Private' : 'Marketplace',
+              name: '',
+            },
           },
         },
       },
@@ -171,6 +183,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               name: '',
               about: null,
               website: null,
+              type: '',
             }}
             validate={validateOrganizationDetails}
             render={({ handleSubmit }) => (
@@ -183,25 +196,25 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredOrganizationDetailsFields.name} />
+                    <TextField name="name" required={requiredFields.name} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="About">
-                    <TextField name="about" required={requiredOrganizationDetailsFields.about} multiline rows={3} />
+                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Website">
-                    <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
+                    <TextField name="website" required={requiredFields.about} helperText="https://" />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="type">
+                    <SingleChoicesOrganizationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Industry">
-                    <OrganizationMultipleChoicesIndustries
-                      rootDataRelay={rootData}
-                      name="industrySubCategoryIds"
-                      required={requiredOrganizationDetailsFields.industrySubCategoryIds}
-                    />
+                    <OrganizationMultipleChoicesIndustries rootDataRelay={rootData} name="industrySubCategoryIds" required={requiredFields.industrySubCategoryIds} />
                   </FormFieldLabel>
-                  <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredOrganizationDetailsFields.agreedToTermsOfUse} />
+                  <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
                 </StackColumn>
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>

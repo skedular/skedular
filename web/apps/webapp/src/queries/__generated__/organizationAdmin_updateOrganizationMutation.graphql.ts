@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8fd185a918eed7be62426eb4d99e5dbe>>
+ * @generated SignedSource<<255a3fb37b72b6243d39eeac8f450bce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,14 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationType = "Marketplace" | "Private" | "%future added value";
 export type UpdateOrganizationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   id: string;
   industrySubCategoryIds: ReadonlyArray<string>;
   name: string;
+  type: OrganizationType;
   website?: string | null | undefined;
 };
 export type organizationAdmin_updateOrganizationMutation$variables = {
@@ -30,6 +32,10 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly name: string;
       }>;
       readonly name: string;
+      readonly type: {
+        readonly name: string;
+        readonly type: OrganizationType;
+      };
       readonly website: string | null | undefined;
     };
   } | null | undefined;
@@ -44,6 +50,10 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly name: string;
       }>;
       readonly name: string;
+      readonly type: {
+        readonly name: string;
+        readonly type: OrganizationType;
+      };
       readonly website: string | null | undefined;
     };
   } | null | undefined;
@@ -118,6 +128,25 @@ v3 = [
           {
             "alias": null,
             "args": null,
+            "concreteType": "OrganizationTypeDetails",
+            "kind": "LinkedField",
+            "name": "type",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "OrganizationIndustrySubCategoryReferenceDetails",
             "kind": "LinkedField",
             "name": "industrySubCategories",
@@ -153,16 +182,16 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "5e5837c9178b75a850800e085cee135c",
+    "cacheID": "dbaff9119ab52a797579ad977132dca0",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      industrySubCategories {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fd8f74768247f8d48dce341ebc94c5e0";
+(node as any).hash = "32d4b5519bf64811e11cc67bda7bf844";
 
 export default node;

@@ -28,6 +28,7 @@ public class Mapper : IMapper
             About = src.About.ToSafeString(),
             Website = src.Website.ToSafeString(),
             LogoUrl = src.LogoUrl.ToSafeString(),
+            Type = src.Type.ToOrganizationType(),
             Offering = new Offering
             {
                 Id = organizationOffering.Id,

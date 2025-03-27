@@ -591,6 +591,7 @@ type OrganizationDetails {
   resourceTypes: [OrganizationTagDetails!]!
   ssoSettings: OrganizationSsoSettingsDetails
   termsOfUse: OrganizationTermsOfUse
+  type: OrganizationTypeDetails!
   website: String
 }
 
@@ -719,6 +720,11 @@ type OrganizationTermsOfUse {
   terms: String!
 }
 
+type OrganizationTypeDetails {
+  name: String!
+  type: OrganizationType!
+}
+
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
@@ -776,6 +782,7 @@ type Query {
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!] @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): OrganizationConnection @cost(weight: "10")
+  organizationTypes: [OrganizationTypeDetails!]!
   organizationVersion: Version!
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
   paymentVersion: Version!
@@ -1075,6 +1082,7 @@ input AddOrganizationInput {
   industrySubCategoryIds: [String!]!
   name: String!
   termsOfUseId: String!
+  type: OrganizationType!
   website: String
 }
 
@@ -1609,6 +1617,7 @@ input UpdateOrganizationInput {
   id: String!
   industrySubCategoryIds: [String!]!
   name: String!
+  type: OrganizationType!
   website: String
 }
 
@@ -1801,6 +1810,11 @@ enum OrganizationTagOrderField {
   Description
   Name
   Type
+}
+
+enum OrganizationType {
+  Marketplace
+  Private
 }
 
 enum ResourceOrderField {

@@ -32,6 +32,7 @@ public class AddOrganizationInput
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("website")] public string? Website { get; set; }
+    [GraphQLName("type")] public OrganizationType Type { get; set; }
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUseId")] public string TermsOfUseId { get; set; } = string.Empty;
 
@@ -154,6 +155,7 @@ public class OrganizationDetails : Node
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
+    [GraphQLName("type")] public OrganizationTypeDetails Type { get; set; }
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }
 
@@ -303,6 +305,7 @@ public class UpdateOrganizationInput
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("website")] public string? Website { get; set; }
+    [GraphQLName("type")] public OrganizationType Type { get; set; }
 
     [GraphQLName("industrySubCategoryIds")]
     public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
@@ -516,4 +519,11 @@ public class OrganizationSsoSettingsDetails : Node
     public required string AppFederationMetadataUrl { get; set; }
 
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+}
+
+[GraphQLName("OrganizationTypeDetails")]
+public class OrganizationTypeDetails
+{
+    [GraphQLName("type")] public OrganizationType Type { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }

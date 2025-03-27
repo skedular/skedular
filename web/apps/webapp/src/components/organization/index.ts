@@ -5,4 +5,5 @@ export { default as OrganizationMultipleChoicesIndustries } from './organization
 export { default as OrganizationPaymentMethodSetupForm } from './organization-payment-method-setup-form';
 export { default as OrganizationSingleChoiceMemberRole } from './organization-single-choice-member-role';
 export { default as OrganizationTermsOfUse } from './organization-terms-of-use';
+export { default as SingleChoicesOrganizationType } from './single-choice-organization-type';
 export { default as SingleChoicesResourceType } from './single-choice-resource-type';

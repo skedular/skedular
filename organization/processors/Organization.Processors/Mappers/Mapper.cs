@@ -269,6 +269,7 @@ public class Mapper : IMapper
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
+            Type = src.Type.ToOrganizationType(),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
             DailyMemberCountLastRecordedAt = src.DailyMemberCountLastRecordedAt,

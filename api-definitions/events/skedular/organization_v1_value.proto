@@ -47,6 +47,7 @@ message Organization {
   repeated string azureTenantIds = 9;
   repeated Tag tags = 10;
   OrganizationSsoSettings ssoSettings = 11;
+  string type = 12;
 }
 
 enum Role {

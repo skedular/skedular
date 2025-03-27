@@ -31,6 +31,13 @@ public class Query(IMapper mapper)
     public int OpeningHoursMinutesStep() => 15;
 
     [UseResolverScope]
+    public IEnumerable<OrganizationTypeDetails> OrganizationTypes() =>
+    [
+        new() { Type = OrganizationType.Private, Name = OrganizationTypeConstants.Private.ToOrganizationTypeName()},
+        new() { Type = OrganizationType.Marketplace, Name = OrganizationTypeConstants.Marketplace.ToOrganizationTypeName() }
+    ];
+
+    [UseResolverScope]
     public async Task<bool> OrganizationCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>

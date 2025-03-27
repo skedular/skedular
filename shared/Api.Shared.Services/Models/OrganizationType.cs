@@ -22,16 +22,6 @@ public static class OrganizationTypeExtensions
             _ => throw new ArgumentOutOfRangeException()
         };
 
-    public static OrganizationType? ToNullableOrganizationType(this string? src) =>
-        string.IsNullOrWhiteSpace(src)
-            ? null
-            : src switch
-            {
-                OrganizationTypeConstants.Private => OrganizationType.Private,
-                OrganizationTypeConstants.Marketplace => OrganizationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
     public static string ToOrganizationType(this OrganizationType src) =>
         src switch
         {
@@ -39,14 +29,20 @@ public static class OrganizationTypeExtensions
             OrganizationType.Marketplace => OrganizationTypeConstants.Marketplace,
             _ => throw new ArgumentOutOfRangeException()
         };
+    
+    public static string ToOrganizationTypeName(this OrganizationType src) =>
+        src switch
+        {
+            OrganizationType.Private => "Private",
+            OrganizationType.Marketplace => "Marketplace",
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
-    public static string ToNullableOrganizationType(this OrganizationType? src) =>
-        src is null
-            ? string.Empty
-            : src switch
-            {
-                OrganizationType.Private => OrganizationTypeConstants.Private,
-                OrganizationType.Marketplace => OrganizationTypeConstants.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
-            };
+    public static string ToOrganizationTypeName(this string src) =>
+        src switch
+        {
+            OrganizationTypeConstants.Private => "Private",
+            OrganizationTypeConstants.Marketplace => "Marketplace",
+            _ => throw new ArgumentOutOfRangeException()
+        };
 }

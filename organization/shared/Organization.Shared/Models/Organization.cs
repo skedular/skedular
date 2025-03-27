@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace Organization.Shared.Models;
@@ -9,6 +10,7 @@ public class Organization : ModelBaseWithDeleted
     public string? Website { get; set; }
     public bool AgreedToTermsOfUse { get; set; }
     public string? LogoUrl { get; set; }
+    public OrganizationType Type { get; set; }
     public bool HasAttachedPaymentMethod { get; set; }
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }

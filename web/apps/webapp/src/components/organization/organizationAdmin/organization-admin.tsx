@@ -19,7 +19,7 @@ import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, NotPreferredIcon, Pref
 import { getOrganizationBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { OrganizationMultipleChoicesIndustries } from '@/components/organization';
+import { OrganizationMultipleChoicesIndustries, SingleChoicesOrganizationType } from '@/components/organization';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
@@ -85,6 +85,7 @@ type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
+  type: string;
   industrySubCategoryIds: string[];
 };
 
@@ -92,6 +93,7 @@ const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().nullable(),
+  type: string().required('Organization type is required'),
   industrySubCategoryIds: array().nullable(),
 });
 
@@ -168,6 +170,10 @@ const OrganizationAdmin = ({
           name
           logoUrl
           about
+          type {
+            type
+            name
+          }
           website
           canModify
           industrySubCategories {
@@ -220,6 +226,7 @@ const OrganizationAdmin = ({
           country
         }
         ...organizationMultipleChoicesIndustries_query
+        ...singleChoiceOrganizationType_query
       }
     `,
     rootDataRelay,
@@ -301,6 +308,10 @@ const OrganizationAdmin = ({
           name
           about
           website
+          type {
+            type
+            name
+          }
           industrySubCategories {
             id
             name
@@ -526,7 +537,7 @@ const OrganizationAdmin = ({
     });
   }, [refetchOrganizationPaymentMethodsDetails]);
 
-  const handleOrganizationDetailUpdateClick = ({ name, about, website, industrySubCategoryIds }: OrganizationDetails) => {
+  const handleOrganizationDetailUpdateClick = ({ name, about, website, type, industrySubCategoryIds }: OrganizationDetails) => {
     if (!rootData.organization) {
       return;
     }
@@ -543,6 +554,7 @@ const OrganizationAdmin = ({
           name,
           about,
           website,
+          type: type === 'Private' ? 'Private' : 'Marketplace',
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
         },
       },
@@ -574,6 +586,10 @@ const OrganizationAdmin = ({
             name,
             about,
             website,
+            type: {
+              type: type === 'Private' ? 'Private' : 'Marketplace',
+              name: '',
+            },
             industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
               .flatMap((mainCategory) => mainCategory.subCategories)
               .filter(({ id }) => selectedIndustrySubCategoryIds.find((selectedIndustrySubCategoryId) => selectedIndustrySubCategoryId === id))
@@ -1491,6 +1507,7 @@ const OrganizationAdmin = ({
                 name: organization.name,
                 about: organization.about,
                 website: organization.website,
+                type: organization.type.type,
                 industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
               }}
               validate={validateOrganizationDetails}
@@ -1518,6 +1535,10 @@ const OrganizationAdmin = ({
 
                     <FormFieldLabel label="Website">
                       <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="type">
+                      <SingleChoicesOrganizationType rootDataRelay={rootData} name="type" required={requiredOrganizationDetailsFields.type} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Industry">

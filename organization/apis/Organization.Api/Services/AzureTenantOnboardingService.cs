@@ -1,4 +1,5 @@
 ﻿using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
@@ -48,6 +49,7 @@ public class AzureTenantOnboardingService(
             Id = randomHelper.Generate(),
             Name = "No name set!!!",
             AgreedToTermsOfUse = true,
+            Type = OrganizationTypeConstants.Private,
             TermsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseEntityAsync(cancellationToken),
             HasAttachedPaymentMethod = false,
             Locations = [location],

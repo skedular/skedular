@@ -1,4 +1,5 @@
 using Api.Shared;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,6 +15,7 @@ public class Organization : EntityBaseWithDeleted
     public string? Website { get; set; }
     public bool AgreedToTermsOfUse { get; set; }
     public string? LogoUrl { get; set; }
+    public string Type { get; set; }
     public bool HasAttachedPaymentMethod { get; set; }
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
@@ -42,6 +44,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Website).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxTagTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);

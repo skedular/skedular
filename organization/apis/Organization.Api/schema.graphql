@@ -96,6 +96,7 @@ type OrganizationDetails {
   about: String
   website: String
   logoUrl: String
+  type: OrganizationTypeDetails!
   agreedToTermsOfUse: Boolean!
   termsOfUse: OrganizationTermsOfUse
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
@@ -228,6 +229,11 @@ type OrganizationTermsOfUse {
   id: ID!
 }
 
+type OrganizationTypeDetails {
+  type: OrganizationType!
+  name: String!
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -238,6 +244,7 @@ type PageInfo {
 type Query {
   organizationVersion: Version!
   openingHoursMinutesStep: Int!
+  organizationTypes: [OrganizationTypeDetails!]!
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
@@ -298,6 +305,7 @@ input AddOrganizationInput {
   name: String!
   about: String
   website: String
+  type: OrganizationType!
   agreedToTermsOfUse: Boolean!
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
@@ -424,6 +432,7 @@ input UpdateOrganizationInput {
   name: String!
   about: String
   website: String
+  type: OrganizationType!
   industrySubCategoryIds: [String!]!
 }
 
@@ -489,6 +498,11 @@ enum OrganizationTagOrderField {
   Name
   Description
   Type
+}
+
+enum OrganizationType {
+  Private
+  Marketplace
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

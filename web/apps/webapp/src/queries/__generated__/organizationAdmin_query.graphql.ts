@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0352f1739bbfaa08e57acb197055beec>>
+ * @generated SignedSource<<01c5f1644e5229e48c1d6b26b736f681>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationType = "Marketplace" | "Private" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
   readonly me: {
@@ -57,6 +58,10 @@ export type organizationAdmin_query$data = {
       readonly id: string;
       readonly loginUrl: string;
     } | null | undefined;
+    readonly type: {
+      readonly name: string;
+      readonly type: OrganizationType;
+    };
     readonly website: string | null | undefined;
   } | null | undefined;
   readonly organizationBillingInfo: {
@@ -76,7 +81,7 @@ export type organizationAdmin_query$data = {
       readonly name: string;
     }>;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query" | "singleChoiceOrganizationType_query">;
   readonly " $fragmentType": "organizationAdmin_query";
 };
 export type organizationAdmin_query$key = {
@@ -218,6 +223,25 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "about",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationTypeDetails",
+          "kind": "LinkedField",
+          "name": "type",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            },
+            (v2/*: any*/)
+          ],
           "storageKey": null
         },
         {
@@ -442,6 +466,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "organizationMultipleChoicesIndustries_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "singleChoiceOrganizationType_query"
     }
   ],
   "type": "Query",
@@ -449,6 +478,6 @@ return {
 };
 })();
 
-(node as any).hash = "5f5dc8d436901562bc1f72ee28be591f";
+(node as any).hash = "e8360e7e88b1ea4b53660786c799c3bd";
 
 export default node;

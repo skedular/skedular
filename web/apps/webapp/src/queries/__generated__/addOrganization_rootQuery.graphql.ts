@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2412fade0cb6632f715897fd69eee611>>
+ * @generated SignedSource<<8e967ca470c1eeb60d41cdd1828ab54f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type addOrganization_rootQuery$data = {
   readonly activeOrganizationTermsOfUse: {
     readonly id: string;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query" | "organizationTermsOfUse_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query" | "organizationTermsOfUse_query" | "singleChoiceOrganizationType_query">;
 };
 export type addOrganization_rootQuery = {
   response: addOrganization_rootQuery$data;
@@ -65,6 +65,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "organizationTermsOfUse_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "singleChoiceOrganizationType_query"
       }
     ],
     "type": "Query",
@@ -120,20 +125,39 @@ return {
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "OrganizationTypeDetails",
+        "kind": "LinkedField",
+        "name": "organizationTypes",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "type",
+            "storageKey": null
+          },
+          (v1/*: any*/)
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "e8267dbbfcde3dd9d620b22774be86f6",
+    "cacheID": "68cfc0a1f732e202890dc92e590f8b22",
     "id": null,
     "metadata": {},
     "name": "addOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query addOrganization_rootQuery {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n"
+    "text": "query addOrganization_rootQuery {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n  ...singleChoiceOrganizationType_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment singleChoiceOrganizationType_query on Query {\n  organizationTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e8d9f63d4f96df780a033664179721dd";
+(node as any).hash = "b65c802713228ded727f9a1d48ef41fc";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<60746c8363e04979f3e13d372ca525c2>>
+ * @generated SignedSource<<503b293020f1abf3856b03114ba90fd6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationType = "Marketplace" | "Private" | "%future added value";
 export type AddOrganizationInput = {
   about?: string | null | undefined;
   agreedToTermsOfUse: boolean;
@@ -17,6 +18,7 @@ export type AddOrganizationInput = {
   industrySubCategoryIds: ReadonlyArray<string>;
   name: string;
   termsOfUseId: string;
+  type: OrganizationType;
   website?: string | null | undefined;
 };
 export type addOrganization_addOrganizationMutation$variables = {
@@ -28,6 +30,10 @@ export type addOrganization_addOrganizationMutation$data = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly name: string;
+      readonly type: {
+        readonly name: string;
+        readonly type: OrganizationType;
+      };
       readonly website: string | null | undefined;
     };
   } | null | undefined;
@@ -38,6 +44,10 @@ export type addOrganization_addOrganizationMutation$rawResponse = {
       readonly about: string | null | undefined;
       readonly id: string;
       readonly name: string;
+      readonly type: {
+        readonly name: string;
+        readonly type: OrganizationType;
+      };
       readonly website: string | null | undefined;
     };
   } | null | undefined;
@@ -56,7 +66,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": [
@@ -86,13 +103,7 @@ v1 = [
             "name": "id",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -105,6 +116,25 @@ v1 = [
             "args": null,
             "kind": "ScalarField",
             "name": "website",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationTypeDetails",
+            "kind": "LinkedField",
+            "name": "type",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v1/*: any*/)
+            ],
             "storageKey": null
           }
         ],
@@ -120,7 +150,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addOrganization_addOrganizationMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -129,19 +159,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addOrganization_addOrganizationMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "1c9dc7e2e2b04bb460b4e2d2b2b47e77",
+    "cacheID": "74acab808b08d5d3e15cab7c60f5acd6",
     "id": null,
     "metadata": {},
     "name": "addOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n    }\n  }\n}\n"
+    "text": "mutation addOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5a6413bdfba5da80b030744650f6fc21";
+(node as any).hash = "a2817023d7a00cdeb5874e963e1e8134";
 
 export default node;

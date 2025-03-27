@@ -135,6 +135,7 @@ public class Mapper : IMapper
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
+            Type = src.Type.ToOrganizationType(),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
             DailyMemberCountLastRecordedAt = src.DailyMemberCountLastRecordedAt,
@@ -197,6 +198,7 @@ public class Mapper : IMapper
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
+            Type = src.Type.ToOrganizationType(),
             TermsOfUse = termsOfUse,
             IndustrySubCategories = industrySubCategories,
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod
@@ -213,6 +215,7 @@ public class Mapper : IMapper
         dest.Website = src.Website;
         dest.AgreedToTermsOfUse = src.AgreedToTermsOfUse;
         dest.LogoUrl = src.LogoUrl;
+        dest.Type = src.Type.ToOrganizationType();
         dest.IndustrySubCategories = industrySubCategories;
         return dest;
     }
@@ -300,6 +303,11 @@ public class Mapper : IMapper
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
+            Type = new OrganizationTypeDetails
+            {
+                Type = src.Type,
+                Name = src.Type.ToOrganizationTypeName(),
+            },
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)),
@@ -349,6 +357,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Website = src.Website,
+            Type = src.Type,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
             TermsOfUse = new Shared.Models.TermsOfUse { Id = src.TermsOfUseId }
@@ -361,20 +370,21 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Website = src.Website,
+            Type = src.Type,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse
         MapToGrpcResponse(Shared.Models.TermsOfUse src) => new() { Id = src.Id, Terms = src.Terms };
 
-    public Shared.Models.Organization MapTo(
-        Admin_AddInput src) =>
+    public Shared.Models.Organization MapTo(Admin_AddInput src) =>
         new()
         {
             Id = src.Id,
             Name = src.Name,
             About = src.About,
             Website = src.Website,
+            Type = src.Type.ToOrganizationType(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             TermsOfUse = string.IsNullOrWhiteSpace(src.TermsOfUseId) ? null : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
             LogoUrl = src.LogoUrl,
@@ -391,6 +401,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Website = src.Website.ToSafeString(),
+            Type = src.Type.ToOrganizationType(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),
             Offering = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Offering
