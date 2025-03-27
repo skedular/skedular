@@ -116,7 +116,8 @@ public class LocationAnalyticsService(
                 new Specification<Booking>
                     {
                         Criteria = query =>
-                            !query.DeletedAt.HasValue && locationIds.Contains(query.Location.Id) && query.From >= from && query.Until <= until.AddDays(1)
+                            !query.DeletedAt.HasValue && locationIds.Contains(query.Location.Id) && query.From >= from &&
+                            query.Until <= until.AddDays(1)
                     }
                     .AddInclude(query => query.Resources)
                     .AddInclude(query => query.Location))
@@ -161,7 +162,8 @@ public class LocationAnalyticsService(
                             item.Date.Year == booking.From.Year &&
                             item.Date.Month == booking.From.Month &&
                             item.Date.Day == booking.From.Day &&
-                            booking.Resources.Count(resource => resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.Desk)) >
+                            booking.Resources.Count(resource =>
+                                resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceDesk)) >
                             0);
 
                     return new LocationDesksOccupancyPercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
@@ -194,7 +196,8 @@ public class LocationAnalyticsService(
                             item.Date.Year == booking.From.Year &&
                             item.Date.Month == booking.From.Month &&
                             item.Date.Day == booking.From.Day &&
-                            booking.Resources.Count(resource => resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.Room)) >
+                            booking.Resources.Count(resource =>
+                                resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceRoom)) >
                             0);
 
                     return new LocationRoomsOccupancyPercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };

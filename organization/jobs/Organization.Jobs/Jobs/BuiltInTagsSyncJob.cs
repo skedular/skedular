@@ -21,28 +21,56 @@ public class BuiltInTagsSyncJob(IServiceProvider serviceProvider, ILogger<BuiltI
 
                 foreach (var organization in organizations)
                 {
-                    if (organization.Tags.All(item => item.Type != OrganizationTagTypeConstants.Desk))
+                    if (organization.Tags.All(item => item.Type != OrganizationTagTypeConstants.ResourceDesk))
                     {
-                        repositoryFactory.TagRepository.Add(new Tag
-                        {
-                            Id = randomHelper.Generate(),
-                            Name = "Desk",
-                            Type = OrganizationTagTypeConstants.Desk,
-                            Color = null,
-                            Organization = organization
-                        });
+                        repositoryFactory.TagRepository.Add(
+                            new Tag
+                            {
+                                Id = randomHelper.Generate(),
+                                Name = "Desk",
+                                Type = OrganizationTagTypeConstants.ResourceDesk,
+                                Color = null,
+                                Organization = organization
+                            });
                     }
 
-                    if (organization.Tags.All(item => item.Type != OrganizationTagTypeConstants.Room))
+                    if (organization.Tags.All(item => item.Type != OrganizationTagTypeConstants.ResourceRoom))
                     {
-                        repositoryFactory.TagRepository.Add(new Tag
-                        {
-                            Id = randomHelper.Generate(),
-                            Name = "Room",
-                            Type = OrganizationTagTypeConstants.Room,
-                            Color = null,
-                            Organization = organization
-                        });
+                        repositoryFactory.TagRepository.Add(
+                            new Tag
+                            {
+                                Id = randomHelper.Generate(),
+                                Name = "Room",
+                                Type = OrganizationTagTypeConstants.ResourceRoom,
+                                Color = null,
+                                Organization = organization
+                            });
+                    }
+
+                    if (organization.Tags.All(item => item.Type != OrganizationTagTypeConstants.ResourceParking))
+                    {
+                        repositoryFactory.TagRepository.Add(
+                            new Tag
+                            {
+                                Id = randomHelper.Generate(),
+                                Name = "Parking",
+                                Type = OrganizationTagTypeConstants.ResourceParking,
+                                Color = null,
+                                Organization = organization
+                            });
+                    }
+
+                    if (organization.Tags.All(item => item.Type != OrganizationTagTypeConstants.ResourceOthers))
+                    {
+                        repositoryFactory.TagRepository.Add(
+                            new Tag
+                            {
+                                Id = randomHelper.Generate(),
+                                Name = "Others",
+                                Type = OrganizationTagTypeConstants.ResourceOthers,
+                                Color = null,
+                                Organization = organization
+                            });
                     }
                 }
 

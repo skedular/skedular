@@ -561,7 +561,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
             Type = OrganizationTagType.Custom,
-            Color = src.Color,
+            Color = src.Color.ToSafeString(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
@@ -589,7 +589,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
             Type = OrganizationTagType.Zone,
-            Color = src.Color,
+            Color = src.Color.ToSafeString(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 

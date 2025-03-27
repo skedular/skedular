@@ -489,7 +489,7 @@ public class Mapper : IMapper
             Zones = MapToZones(src.OrganizationTags),
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString(),
+            Color = src.Color,
             Capacity = src.Capacity,
             Location = MapTo(src.Location),
             Customers = MapTo(customers)

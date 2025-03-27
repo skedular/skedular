@@ -56,7 +56,7 @@ public class LocationInternalSubscriber(
         {
             Id = randomHelper.Generate(),
             Count = location.Resources
-                .Count(item => item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.Desk) && item.DeletedAt is null),
+                .Count(item => item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceDesk) && item.DeletedAt is null),
             Date = startOfToday,
             Location = location
         });
@@ -87,9 +87,9 @@ public class LocationInternalSubscriber(
 
         _ = repositoryFactory.DailyRoomCountRecordingRepository.Add(new DailyRoomCountRecording
         {
-            Id = randomHelper.Generate(), 
+            Id = randomHelper.Generate(),
             Count = location.Resources
-                .Count(item => item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.Room) && item.DeletedAt is null),
+                .Count(item => item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceRoom) && item.DeletedAt is null),
             Date = startOfToday,
             Location = location
         });

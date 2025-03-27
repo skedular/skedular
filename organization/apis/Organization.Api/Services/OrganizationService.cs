@@ -151,7 +151,7 @@ public class OrganizationService(
             {
                 Id = randomHelper.Generate(),
                 Name = "Desk",
-                Type = OrganizationTagTypeConstants.Desk,
+                Type = OrganizationTagTypeConstants.ResourceDesk,
                 Color = "#87CEEB",
                 Organization = organizationEntity
             });
@@ -161,11 +161,31 @@ public class OrganizationService(
             {
                 Id = randomHelper.Generate(),
                 Name = "Room",
-                Type = OrganizationTagTypeConstants.Room,
+                Type = OrganizationTagTypeConstants.ResourceRoom,
                 Color = "#98FB98",
                 Organization = organizationEntity
             });
 
+        repositoryFactory.TagRepository.Add(
+            new Tag
+            {
+                Id = randomHelper.Generate(),
+                Name = "Parking",
+                Type = OrganizationTagTypeConstants.ResourceRoom,
+                Color = "#20B2AA",
+                Organization = organizationEntity
+            });
+
+        repositoryFactory.TagRepository.Add(
+            new Tag
+            {
+                Id = randomHelper.Generate(),
+                Name = "Others",
+                Type = OrganizationTagTypeConstants.ResourceRoom,
+                Color = "#8A2BE2",
+                Organization = organizationEntity
+            });
+        
         repositoryFactory.OrganizationMemberRepository.AddRange(organizationMembers);
         organization = mapper.MapTo(organizationEntity);
 

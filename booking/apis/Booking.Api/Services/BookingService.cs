@@ -843,7 +843,7 @@ public class BookingService(
                 booking.Until,
                 [],
                 [],
-                [OrganizationTagTypeConstants.Desk],
+                [OrganizationTagTypeConstants.ResourceDesk],
                 cancellationToken);
 
             var resource = availableResources

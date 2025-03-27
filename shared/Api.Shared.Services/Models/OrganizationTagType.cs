@@ -4,18 +4,28 @@ public enum OrganizationTagType
 {
     Custom,
     Zone,
-    Desk,
-    Room
+    ResourceDesk,
+    ResourceRoom,
+    ResourceParking,
+    ResourceOthers
 }
 
 public static class OrganizationTagTypeConstants
 {
     public const string Custom = "CUSTOM";
     public const string Zone = "ZONE";
-    public const string Desk = "DESK";
-    public const string Room = "ROOM";
+    public const string ResourceDesk = "RESOURCE_DESK";
+    public const string ResourceRoom = "RESOURCE_ROOM";
+    public const string ResourceParking = "RESOURCE_PARKING";
+    public const string ResourceOthers = "RESOURCE_OTHERS";
 
-    public static readonly ICollection<OrganizationTagType> ResourceTypes = [OrganizationTagType.Desk, OrganizationTagType.Room];
+    public static readonly ICollection<OrganizationTagType> ResourceTypes =
+    [
+        OrganizationTagType.ResourceDesk,
+        OrganizationTagType.ResourceRoom,
+        OrganizationTagType.ResourceParking,
+        OrganizationTagType.ResourceOthers
+    ];
 }
 
 public static class OrganizationTagTypeExtensions
@@ -25,8 +35,10 @@ public static class OrganizationTagTypeExtensions
         {
             OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
             OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
-            OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
-            OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
+            OrganizationTagTypeConstants.ResourceDesk => OrganizationTagType.ResourceDesk,
+            OrganizationTagTypeConstants.ResourceRoom => OrganizationTagType.ResourceRoom,
+            OrganizationTagTypeConstants.ResourceParking => OrganizationTagType.ResourceParking,
+            OrganizationTagTypeConstants.ResourceOthers => OrganizationTagType.ResourceOthers,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -37,8 +49,10 @@ public static class OrganizationTagTypeExtensions
             {
                 OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
-                OrganizationTagTypeConstants.Desk => OrganizationTagType.Desk,
-                OrganizationTagTypeConstants.Room => OrganizationTagType.Room,
+                OrganizationTagTypeConstants.ResourceDesk => OrganizationTagType.ResourceDesk,
+                OrganizationTagTypeConstants.ResourceRoom => OrganizationTagType.ResourceRoom,
+                OrganizationTagTypeConstants.ResourceParking => OrganizationTagType.ResourceParking,
+                OrganizationTagTypeConstants.ResourceOthers => OrganizationTagType.ResourceOthers,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -47,8 +61,10 @@ public static class OrganizationTagTypeExtensions
         {
             OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
             OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
-            OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
-            OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
+            OrganizationTagType.ResourceDesk => OrganizationTagTypeConstants.ResourceDesk,
+            OrganizationTagType.ResourceRoom => OrganizationTagTypeConstants.ResourceRoom,
+            OrganizationTagType.ResourceParking => OrganizationTagTypeConstants.ResourceParking,
+            OrganizationTagType.ResourceOthers => OrganizationTagTypeConstants.ResourceOthers,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -59,8 +75,10 @@ public static class OrganizationTagTypeExtensions
             {
                 OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                 OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
-                OrganizationTagType.Desk => OrganizationTagTypeConstants.Desk,
-                OrganizationTagType.Room => OrganizationTagTypeConstants.Room,
+                OrganizationTagType.ResourceDesk => OrganizationTagTypeConstants.ResourceDesk,
+                OrganizationTagType.ResourceRoom => OrganizationTagTypeConstants.ResourceRoom,
+                OrganizationTagType.ResourceParking => OrganizationTagTypeConstants.ResourceParking,
+                OrganizationTagType.ResourceOthers => OrganizationTagTypeConstants.ResourceOthers,
                 _ => throw new ArgumentOutOfRangeException()
             };
 }
