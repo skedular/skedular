@@ -30,22 +30,27 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
         string metadataUrl,
         CancellationToken cancellationToken)
     {
-        var metadata = await metadataUrl.GetStringAsync(cancellationToken: cancellationToken);
-        var document = XDocument.Parse(metadata);
-        var certNode = document.Descendants().FirstOrDefault(x => x.Name.LocalName == "X509Certificate");
-        if (certNode == null)
+        try
         {
-            throw new SamlMetadataException();
-        }
+            var metadata = await metadataUrl.GetStringAsync(cancellationToken: cancellationToken);
+            var document = XDocument.Parse(metadata);
+            var certNode = document.Descendants().FirstOrDefault(x => x.Name.LocalName == "X509Certificate");
 
-        var certificateRawData = Convert.FromBase64String(certNode.Value);
-        var certificate = X509CertificateLoader.LoadCertificate(certificateRawData);
-        if (certificate == null)
+            if (certNode == null)
+            {
+                throw new SamlMetadataException();
+            }
+
+            var certificateRawData = Convert.FromBase64String(certNode.Value);
+            var certificate = X509CertificateLoader.LoadCertificate(certificateRawData)
+                              ?? throw new InvalidOperationException("Invalid certificate. No private key found.");
+
+            return certificate;
+        }
+        catch (HttpRequestException ex)
         {
-            throw new InvalidOperationException("Invalid certificate. No private key found.");
+            throw new InvalidOperationException($"Failed to fetch metadata from {metadataUrl}", ex);
         }
-
-        return certificate;
     }
 
     public bool ValidateSamlResponseSignature(string samlResponse, X509Certificate2 certificate)
@@ -82,13 +87,25 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
 
     public string VerifyAndDecodeSamlResponse(string samlResponse)
     {
-        if (samlResponse.Contains('%'))
+        try
         {
-            samlResponse = HttpUtility.UrlDecode(samlResponse);
-        }
+            if (string.IsNullOrWhiteSpace(samlResponse))
+            {
+                throw new ArgumentException("SAML response is empty");
+            }
 
-        var samlData = Convert.FromBase64String(samlResponse);
-        return Encoding.UTF8.GetString(samlData);
+            if (samlResponse.Contains('%'))
+            {
+                samlResponse = HttpUtility.UrlDecode(samlResponse);
+            }
+
+            var samlData = Convert.FromBase64String(samlResponse);
+            return Encoding.UTF8.GetString(samlData);
+        }
+        catch (FormatException ex)
+        {
+            throw new InvalidOperationException("Invalid SAML response format", ex);
+        }
     }
 
     // Ref : https://learn.microsoft.com/en-us/entra/identity-platform/single-sign-on-saml-protocol
