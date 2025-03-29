@@ -109,6 +109,25 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
+  /Input:/openapi/skedular/marketplace_v1.yaml \
+  /Namespace:Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1 \
+  /Classname:MarketplaceClient \
+  /Output:/output/Skedular/Marketplace/V1/Marketplace.g.cs \
+  /GenerateClientClasses:true \
+  /OperationGenerationMode:SingleClientFromOperationId \
+  /GenerateClientInterfaces:true \
+  /InjectHttpClient:true \
+  /UseBaseUrl:false \
+  /GenerateOptionalParameters:true \
+  /GenerateJsonMethods:false \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /ParameterDateTimeFormat:"yyyy'-'MM'-'dd'T'HH':'mm':'ssK" \
+  /GenerateDtoTypes:true \
+  /GenerateNullableReferenceTypes:true
+
+RUN nswag \
+  openapi2csclient \
   /Input:/openapi/skedular/msteams_v1.yaml \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.MsTeams.V1 \
   /Classname:MsTeamsClient \

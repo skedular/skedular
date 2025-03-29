@@ -15,6 +15,7 @@ public class ServiceDiscoveryConfigurationRewrite(SubgraphsConfigurations subgra
             nameof(subgraphsConfigurations.Booking) => configuration with { EndpointUri = subgraphsConfigurations.Booking.Uri! },
             nameof(subgraphsConfigurations.Customer) => configuration with { EndpointUri = subgraphsConfigurations.Customer.Uri! },
             nameof(subgraphsConfigurations.Location) => configuration with { EndpointUri = subgraphsConfigurations.Location.Uri! },
+            nameof(subgraphsConfigurations.Marketplace) => configuration with { EndpointUri = subgraphsConfigurations.Marketplace.Uri! },
             nameof(subgraphsConfigurations.MsTeams) => configuration with { EndpointUri = subgraphsConfigurations.MsTeams.Uri! },
             nameof(subgraphsConfigurations.Notification) => configuration with { EndpointUri = subgraphsConfigurations.Notification.Uri! },
             nameof(subgraphsConfigurations.Organization) => configuration with { EndpointUri = subgraphsConfigurations.Organization.Uri! },

@@ -11,7 +11,8 @@ locals {
     "organizationapistaging",
     "paymentapistaging",
     "slackapistaging",
-    "teamapistaging"
+    "teamapistaging",
+    "marketplaceapistaging"
   ]
   dns_records_production = [
     "api",
@@ -24,7 +25,8 @@ locals {
     "organizationapi",
     "paymentapi",
     "slackapi",
-    "teamapi"
+    "teamapi",
+    "marketplaceapi"
   ]
 }
 

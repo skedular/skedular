@@ -21,6 +21,7 @@
         <ProjectReference Include="..\..\booking\processors\Booking.Processors\Booking.Processors.csproj"/>
         <ProjectReference Include="..\..\customer\processors\Customer.Processors\Customer.Processors.csproj"/>
         <ProjectReference Include="..\..\location\processors\Location.Processors\Location.Processors.csproj"/>
+        <ProjectReference Include="..\..\marketplace\processors\Marketplace.Processors\Marketplace.Processors.csproj"/>
         <ProjectReference Include="..\..\msteams\processors\MsTeams.Processors\MsTeams.Processors.csproj"/>
         <ProjectReference Include="..\..\notification\processors\Notification.Processors\Notification.Processors.csproj"/>
         <ProjectReference Include="..\..\organization\processors\Organization.Processors\Organization.Processors.csproj"/>

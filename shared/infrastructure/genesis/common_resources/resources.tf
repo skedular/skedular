@@ -133,3 +133,14 @@ module "msteams" {
   organization_name = module.common.organization_name
   environment       = var.environment
 }
+
+module "marketplace" {
+  source = "../modules/marketplace"
+
+  providers = {
+    aws = aws
+  }
+
+  organization_name = module.common.organization_name
+  environment       = var.environment
+}

@@ -94,6 +94,22 @@ RUN nswag \
 
 RUN nswag \
   openapi2cscontroller \
+  /Input:/openapi/skedular/marketplace_v1.yaml \
+  /Namespace:Api.Shared.Services.OpenApi.Skedular.Marketplace.V1 \
+  /Classname:Marketplace \
+  /Output:/output/Skedular/Marketplace/V1/Marketplace.g.cs \
+  /ControllerBaseClass:Microsoft.AspNetCore.Mvc.Controller \
+  /AdditionalNamespaceUsages:Microsoft.AspNetCore.Mvc \
+  /ControllerStyle:abstract \
+  /HandleReferences:true \
+  /ArrayType:System.Collections.Generic.IList \
+  /DictionaryType:System.Collections.Generic.IDictionary \
+  /UseActionResultType:true \
+  /UseCancellationToken:true \
+  /GenerateNullableReferenceTypes:true
+
+RUN nswag \
+  openapi2cscontroller \
   /Input:/openapi/skedular/msteams_v1.yaml \
   /Namespace:Api.Shared.Services.OpenApi.Skedular.MsTeams.V1 \
   /Classname:MsTeams \

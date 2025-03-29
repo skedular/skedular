@@ -15,4 +15,5 @@ npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/payment_v1.yaml --output ./src/clients/openapi/skedular/payment/v1/fetch --name SkedularBillingClient --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/billing_v1.yaml --output ./src/clients/openapi/skedular/billing/v1/fetch --name SkedularPaymentClient --client fetch --exportSchemas true &
 npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/msteams_v1.yaml --output ./src/clients/openapi/skedular/msteams/v1/fetch --name SkedularMSTeamsClient --client fetch --exportSchemas true &
+npx openapi-typescript-codegen --input ../../../api-definitions/openapi/skedular/marketplace_v1.yaml --output ./src/clients/openapi/skedular/marketplace/v1/fetch --name SkedularMarketplaceClient --client fetch --exportSchemas true &
 wait

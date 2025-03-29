@@ -30,6 +30,10 @@ cd "${BASE_DIR}/msteams/apis/MsTeams.Api"
 dotnet run -- schema export --output schema.graphql
 dotnet fusion subgraph pack
 
+cd "${BASE_DIR}/marketplace/apis/Marketplace.Api"
+dotnet run -- schema export --output schema.graphql
+dotnet fusion subgraph pack
+
 cd "${BASE_DIR}/notification/apis/Notification.Api"
 dotnet run -- schema export --output schema.graphql
 dotnet fusion subgraph pack
@@ -55,6 +59,7 @@ dotnet fusion compose -p gateway.fgp -s ../../../billing/apis/Billing.Api
 dotnet fusion compose -p gateway.fgp -s ../../../booking/apis/Booking.Api
 dotnet fusion compose -p gateway.fgp -s ../../../customer/apis/Customer.Api
 dotnet fusion compose -p gateway.fgp -s ../../../location/apis/Location.Api
+dotnet fusion compose -p gateway.fgp -s ../../../marketplace/apis/Marketplace.Api
 dotnet fusion compose -p gateway.fgp -s ../../../msteams/apis/MsTeams.Api
 dotnet fusion compose -p gateway.fgp -s ../../../notification/apis/Notification.Api
 dotnet fusion compose -p gateway.fgp -s ../../../organization/apis/Organization.Api

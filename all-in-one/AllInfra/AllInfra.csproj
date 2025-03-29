@@ -21,6 +21,7 @@
         <ProjectReference Include="..\..\booking\shared\Booking.Shared\Booking.Shared.csproj"/>
         <ProjectReference Include="..\..\customer\shared\Customer.Shared\Customer.Shared.csproj"/>
         <ProjectReference Include="..\..\location\shared\Location.Shared\Location.Shared.csproj"/>
+        <ProjectReference Include="..\..\marketplace\shared\Marketplace.Shared\Marketplace.Shared.csproj"/>
         <ProjectReference Include="..\..\msteams\shared\MsTeams.Shared\MsTeams.Shared.csproj"/>
         <ProjectReference Include="..\..\notification\shared\Notification.Shared\Notification.Shared.csproj"/>
         <ProjectReference Include="..\..\organization\shared\Organization.Shared\Organization.Shared.csproj"/>

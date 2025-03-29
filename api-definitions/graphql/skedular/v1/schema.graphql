@@ -760,6 +760,8 @@ type Query {
   locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): LocationConnection @cost(weight: "10")
   locationsAnalytics(from: DateTime! orderBy: [LocationOrderInput!] until: DateTime! where: LocationWhereInput!): [LocationAnalytics!]! @cost(weight: "10")
   locationVersion: Version!
+  marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
+  marketplaceVersion: Version!
   me: CustomerDetails @cost(weight: "10")
   msTeamsCustomerRecordSynced: Boolean! @cost(weight: "10")
   msTeamsVersion: Version!

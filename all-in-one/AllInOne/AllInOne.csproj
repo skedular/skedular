@@ -35,6 +35,10 @@
         <ProjectReference Include="..\..\location\processors\Location.Processors\Location.Processors.csproj"/>
         <ProjectReference Include="..\..\location\jobs\Location.Jobs\Location.Jobs.csproj"/>
 
+        <ProjectReference Include="..\..\marketplace\apis\Marketplace.Api\Marketplace.Api.csproj"/>
+        <ProjectReference Include="..\..\marketplace\processors\Marketplace.Processors\Marketplace.Processors.csproj"/>
+        <ProjectReference Include="..\..\marketplace\jobs\Marketplace.Jobs\Marketplace.Jobs.csproj"/>
+
         <ProjectReference Include="..\..\msteams\apis\MsTeams.Api\MsTeams.Api.csproj"/>
         <ProjectReference Include="..\..\msteams\processors\MsTeams.Processors\MsTeams.Processors.csproj"/>
         <ProjectReference Include="..\..\msteams\jobs\MsTeams.Jobs\MsTeams.Jobs.csproj"/>

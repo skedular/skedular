@@ -27,6 +27,7 @@ public class Program : WebHostServiceBase<Program>
             Booking.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Customer.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Location.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
+            Marketplace.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             MsTeams.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Organization.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Notification.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),

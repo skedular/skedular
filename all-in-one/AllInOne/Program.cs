@@ -120,6 +120,7 @@ public class Program : WebHostServiceBase<Program>
         await Booking.Shared.Program.Main(args);
         await Customer.Shared.Program.Main(args);
         await Location.Shared.Program.Main(args);
+        await Marketplace.Shared.Program.Main(args);
         await MsTeams.Shared.Program.Main(args);
         await Notification.Shared.Program.Main(args);
         await Organization.Shared.Program.Main(args);
@@ -140,6 +141,9 @@ public class Program : WebHostServiceBase<Program>
             Location.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Location.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             Location.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
+            Marketplace.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
+            Marketplace.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
+            Marketplace.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             MsTeams.Api.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             MsTeams.Processors.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),
             MsTeams.Jobs.Program.CreateHostBuilder(args).Build().RunAsync(cancellationToken),

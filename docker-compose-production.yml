@@ -118,6 +118,7 @@ services:
       - 40700:10700
       - 40800:10800
       - 40900:10900
+      - 41000:11000
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: staging
@@ -186,7 +187,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10100/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10400/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1 && curl -f http://localhost:10800/health/readiness || exit 1 && curl -f http://localhost:10900/health/readiness || exit 1",
+          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10100/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10400/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1 && curl -f http://localhost:10800/health/readiness || exit 1 && curl -f http://localhost:10900/health/readiness || exit 1 && curl -f http://localhost:11000/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -275,7 +276,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10004/health/readiness || exit 1 && curl -f http://localhost:10104/health/readiness || exit 1 && curl -f http://localhost:10204/health/readiness || exit 1 && curl -f http://localhost:10304/health/readiness || exit 1 && curl -f http://localhost:10404/health/readiness || exit 1 && curl -f http://localhost:10504/health/readiness || exit 1 && curl -f http://localhost:10604/health/readiness || exit 1 && curl -f http://localhost:10704/health/readiness || exit 1 && curl -f http://localhost:10804/health/readiness || exit 1 && curl -f http://localhost:10904/health/readiness || exit 1",
+          "curl -f http://localhost:10004/health/readiness || exit 1 && curl -f http://localhost:10104/health/readiness || exit 1 && curl -f http://localhost:10204/health/readiness || exit 1 && curl -f http://localhost:10304/health/readiness || exit 1 && curl -f http://localhost:10404/health/readiness || exit 1 && curl -f http://localhost:10504/health/readiness || exit 1 && curl -f http://localhost:10604/health/readiness || exit 1 && curl -f http://localhost:10704/health/readiness || exit 1 && curl -f http://localhost:10804/health/readiness || exit 1 && curl -f http://localhost:10904/health/readiness || exit 1 && curl -f http://localhost:11004/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -364,7 +365,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10007/health/readiness || exit 1 && curl -f http://localhost:10107/health/readiness || exit 1 && curl -f http://localhost:10207/health/readiness || exit 1 && curl -f http://localhost:10307/health/readiness || exit 1 && curl -f http://localhost:10407/health/readiness || exit 1 && curl -f http://localhost:10507/health/readiness || exit 1 && curl -f http://localhost:10607/health/readiness || exit 1 && curl -f http://localhost:10707/health/readiness || exit 1 && curl -f http://localhost:10807/health/readiness || exit 1 && curl -f http://localhost:10907/health/readiness || exit 1",
+          "curl -f http://localhost:10007/health/readiness || exit 1 && curl -f http://localhost:10107/health/readiness || exit 1 && curl -f http://localhost:10207/health/readiness || exit 1 && curl -f http://localhost:10307/health/readiness || exit 1 && curl -f http://localhost:10407/health/readiness || exit 1 && curl -f http://localhost:10507/health/readiness || exit 1 && curl -f http://localhost:10607/health/readiness || exit 1 && curl -f http://localhost:10707/health/readiness || exit 1 && curl -f http://localhost:10807/health/readiness || exit 1 && curl -f http://localhost:10907/health/readiness || exit 1 && curl -f http://localhost:11007/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -409,6 +410,7 @@ services:
       - 10700:10700
       - 10800:10800
       - 10900:10900
+      - 11000:11000
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: prod
@@ -477,7 +479,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10100/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10400/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1 && curl -f http://localhost:10800/health/readiness || exit 1 && curl -f http://localhost:10900/health/readiness || exit 1",
+          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f http://localhost:10000/health/readiness || exit 1 && curl -f http://localhost:10100/health/readiness || exit 1 && curl -f http://localhost:10200/health/readiness || exit 1 && curl -f http://localhost:10300/health/readiness || exit 1 && curl -f http://localhost:10400/health/readiness || exit 1 && curl -f http://localhost:10500/health/readiness || exit 1 && curl -f http://localhost:10600/health/readiness || exit 1 && curl -f http://localhost:10700/health/readiness || exit 1 && curl -f http://localhost:10800/health/readiness || exit 1 && curl -f http://localhost:10900/health/readiness || exit 1 && curl -f http://localhost:11000/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -566,7 +568,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10004/health/readiness || exit 1 && curl -f http://localhost:10104/health/readiness || exit 1 && curl -f http://localhost:10204/health/readiness || exit 1 && curl -f http://localhost:10304/health/readiness || exit 1 && curl -f http://localhost:10404/health/readiness || exit 1 && curl -f http://localhost:10504/health/readiness || exit 1 && curl -f http://localhost:10604/health/readiness || exit 1 && curl -f http://localhost:10704/health/readiness || exit 1 && curl -f http://localhost:10804/health/readiness || exit 1 && curl -f http://localhost:10904/health/readiness || exit 1",
+          "curl -f http://localhost:10004/health/readiness || exit 1 && curl -f http://localhost:10104/health/readiness || exit 1 && curl -f http://localhost:10204/health/readiness || exit 1 && curl -f http://localhost:10304/health/readiness || exit 1 && curl -f http://localhost:10404/health/readiness || exit 1 && curl -f http://localhost:10504/health/readiness || exit 1 && curl -f http://localhost:10604/health/readiness || exit 1 && curl -f http://localhost:10704/health/readiness || exit 1 && curl -f http://localhost:10804/health/readiness || exit 1 && curl -f http://localhost:10904/health/readiness || exit 1 && curl -f http://localhost:11004/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s
@@ -655,7 +657,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://localhost:10007/health/readiness || exit 1 && curl -f http://localhost:10107/health/readiness || exit 1 && curl -f http://localhost:10207/health/readiness || exit 1 && curl -f http://localhost:10307/health/readiness || exit 1 && curl -f http://localhost:10407/health/readiness || exit 1 && curl -f http://localhost:10507/health/readiness || exit 1 && curl -f http://localhost:10607/health/readiness || exit 1 && curl -f http://localhost:10707/health/readiness || exit 1 && curl -f http://localhost:10807/health/readiness || exit 1 && curl -f http://localhost:10907/health/readiness || exit 1",
+          "curl -f http://localhost:10007/health/readiness || exit 1 && curl -f http://localhost:10107/health/readiness || exit 1 && curl -f http://localhost:10207/health/readiness || exit 1 && curl -f http://localhost:10307/health/readiness || exit 1 && curl -f http://localhost:10407/health/readiness || exit 1 && curl -f http://localhost:10507/health/readiness || exit 1 && curl -f http://localhost:10607/health/readiness || exit 1 && curl -f http://localhost:10707/health/readiness || exit 1 && curl -f http://localhost:10807/health/readiness || exit 1 && curl -f http://localhost:10907/health/readiness || exit 1 && curl -f http://localhost:11007/health/readiness || exit 1",
         ]
       interval: 30s
       timeout: 5s

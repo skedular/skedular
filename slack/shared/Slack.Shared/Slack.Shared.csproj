@@ -21,6 +21,8 @@
         <Protobuf Include="../../../api-definitions/grpc/skedular/organization_v1.proto" GrpcServices="Client"/>
         <Protobuf Include="../../../api-definitions/grpc/skedular/payment_v1.proto" GrpcServices="Client"/>
         <Protobuf Include="../../../api-definitions/grpc/skedular/team_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/msteams_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/marketplace_v1.proto" GrpcServices="Client"/>
     </ItemGroup>
 
     <ItemGroup>

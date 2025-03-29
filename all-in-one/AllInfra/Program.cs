@@ -120,6 +120,7 @@ public class Program : WebHostServiceBase<Program>
         await Booking.Shared.Program.Main(args);
         await Customer.Shared.Program.Main(args);
         await Location.Shared.Program.Main(args);
+        await Marketplace.Shared.Program.Main(args);
         await MsTeams.Shared.Program.Main(args);
         await Notification.Shared.Program.Main(args);
         await Organization.Shared.Program.Main(args);

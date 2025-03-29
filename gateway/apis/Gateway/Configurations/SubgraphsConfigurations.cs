@@ -8,6 +8,7 @@ public class SubgraphsConfigurations
     public UrlConfig Booking { get; set; } = new();
     public UrlConfig Customer { get; set; } = new();
     public UrlConfig Location { get; set; } = new();
+    public UrlConfig Marketplace { get; set; } = new();
     public UrlConfig MsTeams { get; set; } = new();
     public UrlConfig Notification { get; set; } = new();
     public UrlConfig Organization { get; set; } = new();
