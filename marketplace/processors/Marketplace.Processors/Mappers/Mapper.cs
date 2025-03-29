@@ -112,7 +112,13 @@ public class Mapper : IMapper
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
-        var organization = new Organization { Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt };
+        var organization = new Organization
+        {
+            Id = organizationAfterState.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Type = organizationAfterState.Type.ToOrganizationType()
+        };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
         {
@@ -140,14 +146,13 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Shared.Database.Entities.Organization MapToEntity(Organization src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Organization());
+    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
 
-    public Shared.Database.Entities.Organization MergeToEntity(Organization src,
-        Shared.Database.Entities.Organization dest)
+    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Type = src.Type.ToOrganizationType();
         return dest;
     }
 

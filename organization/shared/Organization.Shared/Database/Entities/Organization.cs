@@ -44,7 +44,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Website).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxTagTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);
@@ -52,6 +52,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.About);
         builder.HasIndex(item => item.Website);
+        builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.HasAttachedPaymentMethod);
         builder.HasIndex(item => item.PaymentMethodEventRaisedAt);
         builder.HasIndex(item => item.DailyMemberCountLastRecordedAt);

@@ -95,8 +95,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Identities = customer.Identities
-                .Select(item =>
-                    new Shared.Models.Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified })
+                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }
@@ -115,9 +114,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<Identity> MapToEntity(
-        IEnumerable<Shared.Models.Identity> src,
-        Shared.Database.Entities.Customer? customer) =>
+    public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Shared.Database.Entities.Customer? customer) =>
         src.Select(identity => MapToEntity(identity, customer));
 
     public Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer) =>
@@ -147,9 +144,7 @@ public class Mapper : IMapper
         var organization = new Organization { Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt };
 
         organization.AzureTenants = organizationAfterState.AzureTenantIds
-            .Select(item =>
-                new Shared.Models.AzureTenant { Id = item, Organization = organization, EventRaisedAt = eventRaisedAt })
-            .ToList();
+            .Select(item => new Shared.Models.AzureTenant { Id = item, Organization = organization, EventRaisedAt = eventRaisedAt }).ToList();
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
         {
@@ -177,11 +172,9 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Shared.Database.Entities.Organization MapToEntity(Organization src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Organization());
+    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
 
-    public Shared.Database.Entities.Organization MergeToEntity(Organization src,
-        Shared.Database.Entities.Organization dest)
+    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -224,8 +217,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Shared.Database.Entities.Location MapToEntity(Location src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Location());
+    public Shared.Database.Entities.Location MapToEntity(Location src) => MergeToEntity(src, new Shared.Database.Entities.Location());
 
     public Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest)
     {

@@ -39,11 +39,7 @@ public static class Constants
     public const int MaxLocationNameLength = 200;
     public const int MaxResourceNameLength = 200;
     public const int MaxDeskNameLength = 200;
-    public const int MaxRoomNameLength = 200;
 
-    public const int MaxResourceTypeNameLength = 300;
-    public const int MaxResourceTypeDescriptionLength = 1000;
-    public const int MaxResourceTypeSystemTypeLength = 50;
     public const int MaxTagNameLength = 100;
     public const int MaxTagDescriptionLength = 1000;
     public const int MaxTagTypeLength = 50;
@@ -98,4 +94,6 @@ public static class Constants
 
     public const int MaxFeedbackLength = 10240;
     public const int MaxFeedbackChannelLength = 32;
+
+    public const int MaxOrganizationTypeLength = 50;
 }
