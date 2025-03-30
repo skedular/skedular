@@ -27,30 +27,22 @@ public class BillingGrpcService(
         return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
     }
 
-    public override async Task<OrganizationPermissions> GetOrganizationPermissions(
-        GetOrganizationPermissionsInput request,
-        ServerCallContext context)
+    public override async Task<OrganizationPermissions> GetOrganizationPermissions(GetOrganizationPermissionsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(billingConfiguration.ApiKey);
 
-        var permissions =
-            await organizationAuthorizationService.GetPermissionsAsync(
-                request.OrganizationId,
-                context.CancellationToken);
+        var permissions = await organizationAuthorizationService.GetPermissionsAsync(request.OrganizationId, context.CancellationToken);
         return new OrganizationPermissions
         {
             CanViewBillingInfo = permissions.CanViewBillingInfo, CanManageBillingInfo = permissions.CanManageBillingInfo
         };
     }
 
-    public override async Task<OrganizationBillingInfo> GetOrganizationBillingInfo(
-        GetOrganizationBillingInfoInput request,
-        ServerCallContext context)
+    public override async Task<OrganizationBillingInfo> GetOrganizationBillingInfo(GetOrganizationBillingInfoInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(billingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(
-            await organizationBillingService.GetBillingInfoById(request.OrganizationId, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await organizationBillingService.GetBillingInfoById(request.OrganizationId, context.CancellationToken));
     }
 
     public override async Task<OrganizationBillingInfo> SetOrganizationBillingInfo(

@@ -100,9 +100,7 @@ public class Mapper : IMapper
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
 
     private static Identity? MapTo(Shared.Database.Entities.Identity? src) =>
-        src is null
-            ? null
-            : new Identity { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt };
+        src is null ? null : new Identity { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt };
 
     private static IEnumerable<OrganizationOffering> MapTo(IEnumerable<Shared.Database.Entities.OrganizationOffering> src, Organization organization)
         => src.Select(item => MapTo(item, organization));

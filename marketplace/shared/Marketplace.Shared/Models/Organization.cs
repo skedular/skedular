@@ -6,5 +6,6 @@ namespace Marketplace.Shared.Models;
 public class Organization : ReplicatedModelBaseWithDeleted
 {
     public OrganizationType Type { get; set; }
+    public ICollection<OrganizationTag> Tags { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
 }

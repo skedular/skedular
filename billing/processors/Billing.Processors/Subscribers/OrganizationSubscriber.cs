@@ -26,8 +26,7 @@ public class OrganizationSubscriber(
                         organization.Id,
                         true,
                         cancellationToken);
-                    if (existingOrganization is not null &&
-                        existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                    if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
 
@@ -103,8 +102,7 @@ public class OrganizationSubscriber(
             .ToList();
         var updatedItems = new List<OrganizationMember>();
         foreach (var organizationMember in organizationMembers
-                     .Where(organizationMember =>
-                         organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
+                     .Where(organizationMember => organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
                 organizationMember.Customer.Id,
@@ -145,11 +143,9 @@ public class OrganizationSubscriber(
             existingOrganization.Id,
             cancellationToken);
         var itemsToRemove = organizationOfferings
-            .Where(organizationOffering =>
-                organization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id)).ToList();
+            .Where(organizationOffering => organization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id)).ToList();
         var updatedItems = organizationOfferings
-            .Where(organizationOffering =>
-                organization.OrganizationOfferings.Any(item => item.Id == organizationOffering.Id))
+            .Where(organizationOffering => organization.OrganizationOfferings.Any(item => item.Id == organizationOffering.Id))
             .Select(organizationOffering =>
             {
                 var mappedUpdatedOffering = mapper.MergeToEntity(
