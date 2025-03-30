@@ -37,11 +37,19 @@ type Mutation {
   updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload @cost(weight: "10")
+  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
   addZone(input: AddZoneInput!): OrganizationTagPayload @cost(weight: "10")
   updateZone(input: UpdateZoneInput!): OrganizationTagPayload @cost(weight: "10")
   deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
   deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload @cost(weight: "10")
-  updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
+  addProductTag(input: AddProductTagInput!): OrganizationTagPayload @cost(weight: "10")
+  updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload @cost(weight: "10")
+  addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
+  updateLocationTag(input: UpdateLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload @cost(weight: "10")
 }
 
 type OrganizationActiveOfferingDetails {
@@ -258,11 +266,15 @@ type Query {
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
   ssoLoginUrl(organizationId: String! redirectUrl: String!): String! @cost(weight: "10")
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
+  organizationOffering(code: String!): OrganizationOfferingDetails!
   customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+  customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
-  customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  organizationOffering(code: String!): OrganizationOfferingDetails!
+  productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+  productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
+  locationTags(after: String first: Int before: String last: Int where: LocationTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+  locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
 }
 
 type RejectInvitationToJoinOrganizationPayload {
@@ -299,6 +311,15 @@ input AddCustomTagInput {
   organizationId: String!
 }
 
+input AddLocationTagInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  organizationId: String!
+  color: String
+}
+
 input AddOrganizationInput {
   clientMutationId: String
   id: String
@@ -309,6 +330,15 @@ input AddOrganizationInput {
   agreedToTermsOfUse: Boolean!
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
+}
+
+input AddProductTagInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  description: String
+  organizationId: String!
+  color: String
 }
 
 input AddZoneInput {
@@ -362,9 +392,29 @@ input DeleteCustomTagsInput {
   ids: [String!]!
 }
 
+input DeleteLocationTagInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteLocationTagsInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeleteOrganizationInput {
   clientMutationId: String
   id: String!
+}
+
+input DeleteProductTagInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteProductTagsInput {
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeleteZoneInput {
@@ -381,6 +431,11 @@ input InviteCustomersToJoinOrganizationInput {
   clientMutationId: String
   organizationId: String!
   emails: [String!]!
+}
+
+input LocationTagOrganizationTagWhereInput {
+  organizationId: String!
+  nameContains: String
 }
 
 input OrganizationMemberOrderInput {
@@ -408,6 +463,11 @@ input OrganizationWhereInput {
   nameContains: String
 }
 
+input ProductTagOrganizationTagWhereInput {
+  organizationId: String!
+  nameContains: String
+}
+
 input RejectInvitationToJoinOrganizationInput {
   clientMutationId: String
   id: String!
@@ -419,6 +479,14 @@ input RemoveOrganizationMembersInput {
 }
 
 input UpdateCustomTagInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+  color: String
+}
+
+input UpdateLocationTagInput {
   clientMutationId: String
   id: String!
   name: String!
@@ -449,6 +517,14 @@ input UpdateOrganizationSsoSettingsInput {
   entityId: String!
   loginUrl: String!
   appFederationMetadataUrl: String!
+}
+
+input UpdateProductTagInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+  color: String
 }
 
 input UpdateZoneInput {

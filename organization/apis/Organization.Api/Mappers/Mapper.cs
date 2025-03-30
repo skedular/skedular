@@ -118,6 +118,11 @@ public interface IMapper
         Shared.Database.Entities.Organization organization);
 
     OrganizationSsoSetting? MapTo(Shared.Database.Entities.OrganizationSsoSetting? src);
+
+    Tag MapTo(AddProductTagInput src);
+    Tag MapTo(UpdateProductTagInput src);
+    Tag MapTo(AddLocationTagInput src);
+    Tag MapTo(UpdateLocationTagInput src);
 }
 
 public class Mapper : IMapper
@@ -303,11 +308,7 @@ public class Mapper : IMapper
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
-            Type = new OrganizationTypeDetails
-            {
-                Type = src.Type,
-                Name = src.Type.ToOrganizationTypeName(),
-            },
+            Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)),
@@ -663,6 +664,48 @@ public class Mapper : IMapper
                 LoginUrl = src.LoginUrl,
                 AppFederationMetadataUrl = src.AppFederationMetadataUrl
             };
+
+    public Tag MapTo(AddProductTagInput src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            Name = src.Name,
+            Description = src.Description,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Type = OrganizationTagType.Product,
+            Color = src.Color
+        };
+
+    public Tag MapTo(UpdateProductTagInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            Description = src.Description,
+            Type = OrganizationTagType.Product,
+            Color = src.Color
+        };
+
+    public Tag MapTo(AddLocationTagInput src) =>
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            Name = src.Name,
+            Description = src.Description,
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Type = OrganizationTagType.Location,
+            Color = src.Color
+        };
+
+    public Tag MapTo(UpdateLocationTagInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            Description = src.Description,
+            Type = OrganizationTagType.Location,
+            Color = src.Color
+        };
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);

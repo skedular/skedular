@@ -374,41 +374,6 @@ public class DeleteCustomTagsInput
     [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; } = [];
 }
 
-[GraphQLName("AddZoneInput")]
-public class AddZoneInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public string? Id { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("description")] public string? Description { get; set; }
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
-    [GraphQLName("color")] public string? Color { get; set; }
-}
-
-[GraphQLName("UpdateZoneInput")]
-public class UpdateZoneInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("description")] public string? Description { get; set; }
-    [GraphQLName("color")] public string? Color { get; set; }
-}
-
-[GraphQLName("DeleteZoneInput")]
-public class DeleteZoneInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-}
-
-[GraphQLName("DeleteZonesInput")]
-public class DeleteZonesInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; } = [];
-}
-
 [GraphQLName("OrganizationTagConnection")]
 public class OrganizationTagConnection : Connection<OrganizationTagEdge>;
 
@@ -441,13 +406,6 @@ public class OrganizationTagPayload
 
 [GraphQLName("CustomTagOrganizationTagWhereInput")]
 public class CustomTagOrganizationTagWhereInput
-{
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
-    [GraphQLName("nameContains")] public string? NameContains { get; set; }
-}
-
-[GraphQLName("ZoneOrganizationTagWhereInput")]
-public class ZoneOrganizationTagWhereInput
 {
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
@@ -526,4 +484,130 @@ public class OrganizationTypeDetails
 {
     [GraphQLName("type")] public OrganizationType Type { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+}
+
+[GraphQLName("AddZoneInput")]
+public class AddZoneInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string? Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+}
+
+[GraphQLName("UpdateZoneInput")]
+public class UpdateZoneInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+}
+
+[GraphQLName("DeleteZoneInput")]
+public class DeleteZoneInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("DeleteZonesInput")]
+public class DeleteZonesInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; } = [];
+}
+
+[GraphQLName("ZoneOrganizationTagWhereInput")]
+public class ZoneOrganizationTagWhereInput
+{
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("nameContains")] public string? NameContains { get; set; }
+}
+
+[GraphQLName("AddProductTagInput")]
+public class AddProductTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string? Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+}
+
+[GraphQLName("UpdateProductTagInput")]
+public class UpdateProductTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+}
+
+[GraphQLName("DeleteProductTagInput")]
+public class DeleteProductTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("DeleteProductTagsInput")]
+public class DeleteProductTagsInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; } = [];
+}
+
+[GraphQLName("ProductTagOrganizationTagWhereInput")]
+public class ProductTagOrganizationTagWhereInput
+{
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("nameContains")] public string? NameContains { get; set; }
+}
+
+[GraphQLName("AddLocationTagInput")]
+public class AddLocationTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public string? Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+}
+
+[GraphQLName("UpdateLocationTagInput")]
+public class UpdateLocationTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
+}
+
+[GraphQLName("DeleteLocationTagInput")]
+public class DeleteLocationTagInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("DeleteLocationTagsInput")]
+public class DeleteLocationTagsInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; } = [];
+}
+
+[GraphQLName("LocationTagOrganizationTagWhereInput")]
+public class LocationTagOrganizationTagWhereInput
+{
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("nameContains")] public string? NameContains { get; set; }
 }

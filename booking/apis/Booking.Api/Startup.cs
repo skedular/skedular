@@ -32,9 +32,9 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddServices()
             .AddMappers()
             .AddJobs()
+            .AddServices()
             .AddSkedularGrpcServices(Configuration);
     }
 

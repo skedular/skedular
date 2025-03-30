@@ -192,12 +192,26 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagPayload?>
-        AddZoneAsync(AddZoneInput input, [Service] ITagService tagService, CancellationToken cancellationToken) => new()
-    {
-        ClientMutationId = input.ClientMutationId,
-        OrganizationTag = mapper.MapTo(await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
-    };
+    public async Task<UpdateOrganizationSsoSettingsPayload?> UpdateOrganizationSsoSettingsAsync(
+        UpdateOrganizationSsoSettingsInput input,
+        [Service] IOrganizationSsoService organizationSsoService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            SsoSettings = mapper.MapTo(await organizationSsoService.UpdateSsoSettingsAsync(mapper.MapTo(input), cancellationToken))!
+        };
+
+    [UseResolverScope]
+    public async Task<OrganizationTagPayload?> AddZoneAsync(
+        AddZoneInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            OrganizationTag = mapper.MapTo(await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
+        };
 
     [UseResolverScope]
     public async Task<OrganizationTagPayload?> UpdateZoneAsync(
@@ -231,13 +245,86 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<UpdateOrganizationSsoSettingsPayload?> UpdateOrganizationSsoSettingsAsync(
-        UpdateOrganizationSsoSettingsInput input,
-        [Service] IOrganizationSsoService organizationSsoService,
+    public async Task<OrganizationTagPayload?> AddProductTagAsync(
+        AddProductTagInput input,
+        [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            SsoSettings = mapper.MapTo(await organizationSsoService.UpdateSsoSettingsAsync(mapper.MapTo(input), cancellationToken))!
+            OrganizationTag = mapper.MapTo(await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
         };
+
+    [UseResolverScope]
+    public async Task<OrganizationTagPayload?> UpdateProductTagAsync(
+        UpdateProductTagInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            OrganizationTag = mapper.MapTo(await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+        };
+
+    [UseResolverScope]
+    public async Task<OrganizationTagPayload?> DeleteProductTagAsync(
+        DeleteProductTagInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(await tagService.DeleteAsync(input.Id, cancellationToken))!
+        };
+
+    [UseResolverScope]
+    public async Task<OrganizationTagsPayload?> DeleteProductTagsAsync(
+        DeleteProductTagsInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken)
+    {
+        var tags = await tagService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationTagPayload?> AddLocationTagAsync(
+        AddLocationTagInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            OrganizationTag = mapper.MapTo(await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
+        };
+
+    [UseResolverScope]
+    public async Task<OrganizationTagPayload?> UpdateLocationTagAsync(
+        UpdateLocationTagInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            OrganizationTag = mapper.MapTo(await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+        };
+
+    [UseResolverScope]
+    public async Task<OrganizationTagPayload?> DeleteLocationTagAsync(
+        DeleteLocationTagInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(await tagService.DeleteAsync(input.Id, cancellationToken))!
+        };
+
+    [UseResolverScope]
+    public async Task<OrganizationTagsPayload?> DeleteLocationTagsAsync(
+        DeleteLocationTagsInput input,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken)
+    {
+        var tags = await tagService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
+    }
 }

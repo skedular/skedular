@@ -32,7 +32,8 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddJobs();
+            .AddJobs()
+            .AddServices();
     }
 
     public override void Configure(IApplicationBuilder app) =>

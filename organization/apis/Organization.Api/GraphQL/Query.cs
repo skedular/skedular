@@ -33,7 +33,7 @@ public class Query(IMapper mapper)
     [UseResolverScope]
     public IEnumerable<OrganizationTypeDetails> OrganizationTypes() =>
     [
-        new() { Type = OrganizationType.Private, Name = OrganizationTypeConstants.Private.ToOrganizationTypeName()},
+        new() { Type = OrganizationType.Private, Name = OrganizationTypeConstants.Private.ToOrganizationTypeName() },
         new() { Type = OrganizationType.Marketplace, Name = OrganizationTypeConstants.Marketplace.ToOrganizationTypeName() }
     ];
 
@@ -191,6 +191,27 @@ public class Query(IMapper mapper)
         mapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
 
     [UseResolverScope]
+    public OrganizationOfferingDetails OrganizationOffering(string code)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(code);
+
+        var matchedOffering = Offerings.AllOfferings.FirstOrDefault(item => item.ToOfferingCode() == code);
+        var offering = matchedOffering.GetOffering();
+
+        return new OrganizationOfferingDetails
+        {
+            Code = matchedOffering.ToOfferingCode(),
+            IsEnterprise = matchedOffering.IsEnterpriseOffering(),
+            Name = offering.Name,
+            UnitPrice = offering.UnitPrice,
+            FeatureSet = mapper.MapTo(offering).ToArray(),
+            UnderPriceLines = offering.UnderPriceLines.ToArray(),
+            Free = matchedOffering.IsFreeOffering(),
+            EarlyBird = matchedOffering.IsEarlyBirdOffering()
+        };
+    }
+
+    [UseResolverScope]
     public async Task<OrganizationTagConnection?> CustomTagsAsync(
         string? after,
         int? first,
@@ -211,6 +232,10 @@ public class Query(IMapper mapper)
             cachedCustomerService,
             tagService,
             cancellationToken);
+
+    [UseResolverScope]
+    public async Task<OrganizationTagDetails?> CustomTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationTagConnection?> ZonesAsync(
@@ -239,29 +264,56 @@ public class Query(IMapper mapper)
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationTagDetails?> CustomTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
+    public async Task<OrganizationTagConnection?> ProductTagsAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        ProductTagOrganizationTagWhereInput where,
+        IEnumerable<OrganizationTagOrderInput>? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken) =>
+        await OrganizationTagsAsync(
+            after,
+            first,
+            before,
+            last,
+            new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Product, where.NameContains),
+            orderBy,
+            cachedCustomerService,
+            tagService,
+            cancellationToken);
+
+    [UseResolverScope]
+    public async Task<OrganizationTagDetails?> ProductTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public OrganizationOfferingDetails OrganizationOffering(string code)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(code);
+    public async Task<OrganizationTagConnection?> LocationTagsAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        LocationTagOrganizationTagWhereInput where,
+        IEnumerable<OrganizationTagOrderInput>? orderBy,
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] ITagService tagService,
+        CancellationToken cancellationToken) =>
+        await OrganizationTagsAsync(
+            after,
+            first,
+            before,
+            last,
+            new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Location, where.NameContains),
+            orderBy,
+            cachedCustomerService,
+            tagService,
+            cancellationToken);
 
-        var matchedOffering = Offerings.AllOfferings.FirstOrDefault(item => item.ToOfferingCode() == code);
-        var offering = matchedOffering.GetOffering();
-
-        return new OrganizationOfferingDetails
-        {
-            Code = matchedOffering.ToOfferingCode(),
-            IsEnterprise = matchedOffering.IsEnterpriseOffering(),
-            Name = offering.Name,
-            UnitPrice = offering.UnitPrice,
-            FeatureSet = mapper.MapTo(offering).ToArray(),
-            UnderPriceLines = offering.UnderPriceLines.ToArray(),
-            Free = matchedOffering.IsFreeOffering(),
-            EarlyBird = matchedOffering.IsEarlyBirdOffering()
-        };
-    }
+    [UseResolverScope]
+    public async Task<OrganizationTagDetails?> LocationTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     private async Task<OrganizationTagConnection?> OrganizationTagsAsync(
         string? after,

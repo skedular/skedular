@@ -355,8 +355,10 @@ type Mutation {
   addCustomerPreferredTeam(input: AddCustomerPreferredTeamInput!): CustomerPayload @cost(weight: "10")
   addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
+  addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse @cost(weight: "10")
+  addProductTag(input: AddProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   addResource(input: AddResourceInput!): ResourcePayload @cost(weight: "10")
   addTeam(input: AddTeamInput!): TeamPayload @cost(weight: "10")
   addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
@@ -383,7 +385,11 @@ type Mutation {
   deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
+  deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
+  deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload @cost(weight: "10")
+  deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteResource(input: DeleteResourceInput!): ResourcePayload @cost(weight: "10")
   deleteResources(input: DeleteResourcesInput!): ResourcesPayload @cost(weight: "10")
   deleteTeam(input: DeleteTeamInput!): TeamPayload @cost(weight: "10")
@@ -412,10 +418,12 @@ type Mutation {
   updateLocation(input: UpdateLocationInput!): LocationPayload @cost(weight: "10")
   updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload @cost(weight: "10")
   updateLocationResourceAvailableHours(input: UpdateLocationResourceAvailableHoursInput!): ResourcePayload @cost(weight: "10")
+  updateLocationTag(input: UpdateLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
+  updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload @cost(weight: "10")
   updateTeam(input: UpdateTeamInput!): TeamPayload @cost(weight: "10")
   updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload @cost(weight: "10")
@@ -759,6 +767,8 @@ type Query {
   locationMembers(after: String before: String first: Int last: Int orderBy: [LocationMemberOrderInput!] where: LocationMemberWhereInput!): LocationMemberConnection @cost(weight: "10")
   locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): LocationConnection @cost(weight: "10")
   locationsAnalytics(from: DateTime! orderBy: [LocationOrderInput!] until: DateTime! where: LocationWhereInput!): [LocationAnalytics!]! @cost(weight: "10")
+  locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
+  locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput!): OrganizationTagConnection @cost(weight: "10")
   locationVersion: Version!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
   marketplaceVersion: Version!
@@ -789,6 +799,8 @@ type Query {
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
   paymentVersion: Version!
   pendingInvitationsCount: Int! @cost(weight: "10")
+  productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
+  productTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ProductTagOrganizationTagWhereInput!): OrganizationTagConnection @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
   resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput!): ResourceConnection @cost(weight: "10")
   slackCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -1076,6 +1088,15 @@ input AddLocationInput {
   timezone: String
 }
 
+input AddLocationTagInput {
+  clientMutationId: String
+  color: String
+  description: String
+  id: String
+  name: String!
+  organizationId: String!
+}
+
 input AddOrganizationInput {
   about: String
   agreedToTermsOfUse: Boolean!
@@ -1090,6 +1111,15 @@ input AddOrganizationInput {
 
 input AddOrganizationPaymentMethodIntentInput {
   clientMutationId: String
+  organizationId: String!
+}
+
+input AddProductTagInput {
+  clientMutationId: String
+  color: String
+  description: String
+  id: String
+  name: String!
   organizationId: String!
 }
 
@@ -1301,9 +1331,29 @@ input DeleteLocationInput {
   id: String!
 }
 
+input DeleteLocationTagInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteLocationTagsInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeleteOrganizationInput {
   clientMutationId: String
   id: String!
+}
+
+input DeleteProductTagInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteProductTagsInput {
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeleteResourceInput {
@@ -1375,6 +1425,11 @@ input LocationOrderInput {
   field: LocationOrderField!
 }
 
+input LocationTagOrganizationTagWhereInput {
+  nameContains: String
+  organizationId: String!
+}
+
 input LocationWhereInput {
   customTagIds: [String!]
   locationIds: [String!]
@@ -1428,6 +1483,11 @@ input OrganizationTagOrderInput {
 
 input OrganizationWhereInput {
   nameContains: String
+}
+
+input ProductTagOrganizationTagWhereInput {
+  nameContains: String
+  organizationId: String!
 }
 
 input RejectInvitationToJoinLocationInput {
@@ -1601,6 +1661,14 @@ input UpdateLocationResourceAvailableHoursInput {
   overrideAvailableHours: Boolean!
 }
 
+input UpdateLocationTagInput {
+  clientMutationId: String
+  color: String
+  description: String
+  id: String!
+  name: String!
+}
+
 input UpdateMyCustomerDetailsInput {
   clientMutationId: String
   designation: String
@@ -1636,6 +1704,14 @@ input UpdateOrganizationSsoSettingsInput {
   id: String
   loginUrl: String!
   organizationId: String!
+}
+
+input UpdateProductTagInput {
+  clientMutationId: String
+  color: String
+  description: String
+  id: String!
+  name: String!
 }
 
 input UpdateResourceInput {

@@ -48,12 +48,12 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
-            .AddServices()
             .AddMappers()
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
             .AddJobs()
+            .AddServices()
             .AddSlack(
                 Configuration,
                 options =>

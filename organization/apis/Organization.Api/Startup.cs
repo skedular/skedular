@@ -37,8 +37,8 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()
-            .AddServices()
             .AddJobs()
+            .AddServices()
             .AddMappers()
             .AddSkedularGrpcServices(Configuration);
     }

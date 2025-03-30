@@ -52,9 +52,9 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddMappers()
             .AddRepositoryFactory()
             .AddPublishers()
-            .AddServices()
             .AddMappers()
-            .AddJobs();
+            .AddJobs()
+            .AddServices();
     }
 
     public override void Configure(IApplicationBuilder app) =>

@@ -23,14 +23,11 @@ public interface IMapper
     Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
 
-    Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Shared.Database.Entities.Identity> identities);
-
     Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
         Shared.Database.Entities.Customer dest,
         ICollection<Shared.Database.Entities.Identity> identities);
 
-    IEnumerable<Shared.Database.Entities.Identity> MapToEntity(IEnumerable<Identity> src, Shared.Database.Entities.Customer? customer);
     Shared.Database.Entities.Identity MapToEntity(Identity src, Shared.Database.Entities.Customer? customer);
 
     Shared.Database.Entities.Identity MergeToEntity(
@@ -159,9 +156,6 @@ public class Mapper : IMapper
         };
     }
 
-    public Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Shared.Database.Entities.Identity> identities) =>
-        MergeToEntity(src, new Shared.Database.Entities.Customer(), identities);
-
     public Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
         Shared.Database.Entities.Customer dest,
@@ -183,9 +177,6 @@ public class Mapper : IMapper
         dest.Identities = identities;
         return dest;
     }
-
-    public IEnumerable<Shared.Database.Entities.Identity> MapToEntity(IEnumerable<Identity> src, Shared.Database.Entities.Customer? customer) =>
-        src.Select(identity => MapToEntity(identity, customer));
 
     public Shared.Database.Entities.Identity MapToEntity(Identity src, Shared.Database.Entities.Customer? customer) =>
         MergeToEntity(src, new Shared.Database.Entities.Identity(), customer);
