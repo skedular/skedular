@@ -13,11 +13,7 @@ public interface ICachedCustomerService
     Task<(Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
     Task<(Customer?, Shared.Database.Entities.Customer?)> GetNullableAsync(CancellationToken cancellationToken);
     Task<(Customer, Shared.Database.Entities.Customer)> GetByIdAsync(string id, CancellationToken cancellationToken);
-
-    Task<(Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(
-        string verifiableToken,
-        CancellationToken cancellationToken);
-
+    Task<(Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     void CleanCache();
     void CleanCache(string id);
 }

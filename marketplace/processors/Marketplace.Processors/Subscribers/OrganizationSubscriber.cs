@@ -19,9 +19,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
             case Type.OrganizationUpserted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                        organization.Id,
-                        cancellationToken);
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
                     if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
@@ -36,8 +34,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
             case Type.OrganizationDeleted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
                     if (existingOrganization is not null &&
                         existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
@@ -71,6 +68,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
     {
         existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
 
+        existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
         _ = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -113,9 +111,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
         foreach (var organizationMember in organization.OrganizationMembers
                      .Where(organizationMember => organizationMembers.All(item => item.Id != organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                organizationMember.Customer.Id,
-                cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
             addedItems.Add(
                 repositoryFactory.OrganizationMemberRepository.Add(
                     mapper.MapToEntity(organizationMember, existingOrganization, customer)));
@@ -123,6 +119,33 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);
         existingOrganization.OrganizationMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+
+        return existingOrganization;
+    }
+    
+    private Organization RebuildOrganizationTags(Shared.Models.Organization organization, Organization existingOrganization)
+    {
+        var itemsToRemove = existingOrganization.Tags.Where(tag => organization.Tags.All(item => item.Id != tag.Id)).ToList();
+        var updatedItems = existingOrganization.Tags
+            .Where(tag => organization.Tags.Any(item => item.Id == tag.Id))
+            .Select(organizationTag =>
+            {
+                var updatedOrganizationTag = mapper.MergeToEntity(
+                    organization.Tags.First(item => item.Id == organizationTag.Id),
+                    organizationTag,
+                    existingOrganization);
+
+                updatedOrganizationTag.DeletedAt = null;
+                return repositoryFactory.OrganizationTagRepository.Update(updatedOrganizationTag);
+            })
+            .ToList();
+        var addedItems = organization.Tags
+            .Where(tag => existingOrganization.Tags.All(item => item.Id != tag.Id))
+            .Select(organizationTag => repositoryFactory.OrganizationTagRepository.Add(mapper.MapToEntity(organizationTag, existingOrganization)))
+            .ToList();
+
+        repositoryFactory.OrganizationTagRepository.RemoveRange(itemsToRemove);
+        existingOrganization.Tags = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
 
         return existingOrganization;
     }

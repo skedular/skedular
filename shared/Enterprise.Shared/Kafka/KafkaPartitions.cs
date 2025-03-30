@@ -38,7 +38,7 @@ internal static class KafkaPartitions
             }
         }
 
-        builder.SetPartitionsLostHandler((consumer, list) => TopicPartitionOffsetLogHandler(list, "LOST"));
+        builder.SetPartitionsLostHandler((_, list) => TopicPartitionOffsetLogHandler(list, "LOST"));
 
         builder.SetPartitionsAssignedHandler((consumer, list) =>
         {

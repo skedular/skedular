@@ -2,8 +2,7 @@ using Booking.Shared.Services;
 
 namespace Booking.Jobs.Jobs;
 
-public class GenerateResourceBookingSlotJob(IServiceProvider serviceProvider, ILogger<GenerateResourceBookingSlotJob> logger)
-    : BackgroundService
+public class GenerateResourceBookingSlotJob(IServiceProvider serviceProvider, ILogger<GenerateResourceBookingSlotJob> logger) : BackgroundService
 {
     private readonly string _jobName = typeof(GenerateResourceBookingSlotJob).FullName!;
 

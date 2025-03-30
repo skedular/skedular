@@ -13,8 +13,7 @@ internal static class PactConfiguration
     {
     }
 
-    private static void SetPactUriOnInstance<TConfig>(IServiceCollection collection, int port,
-        Action<TConfig, Uri> setter) where TConfig : class
+    private static void SetPactUriOnInstance<TConfig>(IServiceCollection collection, int port, Action<TConfig, Uri> setter) where TConfig : class
     {
         var serviceDescriptors = collection.Where(descriptor => descriptor.ServiceType == typeof(TConfig));
 

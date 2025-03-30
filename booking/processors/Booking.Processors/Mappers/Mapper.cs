@@ -22,16 +22,13 @@ public interface IMapper
     Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
     Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
     Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
-    Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
-    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization organization);
 
-    Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization organization);
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization organization);
     OrganizationMember MapToEntity(Shared.Models.OrganizationMember src, Shared.Database.Entities.Organization organization, Customer customer);
 
@@ -69,15 +66,6 @@ public interface IMapper
         ICollection<OrganizationTag> organizationTags);
 
     IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Customer? customer);
-
-    Customer MapToEntity(
-        Shared.Models.Customer src,
-        ICollection<Identity> identities,
-        Shared.Database.Entities.Organization? defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> preferredLocations,
-        ICollection<Shared.Database.Entities.Team> preferredTeams,
-        ICollection<Resource> preferredResources,
-        ICollection<OrganizationTag> preferredOrganizationTags);
 
     Customer MergeToEntity(
         Shared.Models.Customer src,
@@ -292,8 +280,6 @@ public class Mapper : IMapper
         return team;
     }
 
-    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
-
     public Shared.Database.Entities.Organization MergeToEntity(
         Organization src,
         Shared.Database.Entities.Organization dest)
@@ -305,9 +291,6 @@ public class Mapper : IMapper
         dest.Offering = src.Offering;
         return dest;
     }
-
-    public Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.Location(), organization);
 
     public Shared.Database.Entities.Location MergeToEntity(
         Location src,
@@ -321,9 +304,6 @@ public class Mapper : IMapper
         dest.Organization = organization;
         return dest;
     }
-
-    public Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.Team(), organization);
 
     public Shared.Database.Entities.Team MergeToEntity(
         Team src,
@@ -421,23 +401,6 @@ public class Mapper : IMapper
 
     public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Customer? customer) =>
         src.Select(identity => MapToEntity(identity, customer));
-
-    public Customer MapToEntity(
-        Shared.Models.Customer src,
-        ICollection<Identity> identities,
-        Shared.Database.Entities.Organization? defaultOrganization,
-        ICollection<Shared.Database.Entities.Location> preferredLocations,
-        ICollection<Shared.Database.Entities.Team> preferredTeams,
-        ICollection<Resource> preferredResources,
-        ICollection<OrganizationTag> preferredOrganizationTags) =>
-        MergeToEntity(src,
-            new Customer(),
-            identities,
-            defaultOrganization,
-            preferredLocations,
-            preferredTeams,
-            preferredResources,
-            preferredOrganizationTags);
 
     public Customer MergeToEntity(
         Shared.Models.Customer src,

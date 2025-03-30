@@ -8,12 +8,7 @@ namespace Team.Shared.Repositories;
 public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
-
-    Task<Organization?> GetByIdAsync(
-        string id,
-        bool includeDeletedOrganizationMembers,
-        CancellationToken cancellationToken);
-
+    Task<Organization?> GetByIdAsync(string id, bool includeDeletedOrganizationMembers, CancellationToken cancellationToken);
     Organization Add(Organization team);
     Organization Update(Organization team);
     Organization Remove(Organization team);
@@ -29,10 +24,7 @@ public class OrganizationRepository(TeamDbContext dbContext, TimeProvider timePr
         return (await GetByIdAsync(id, true, cancellationToken))!;
     }
 
-    public async Task<Organization?> GetByIdAsync(
-        string id,
-        bool includeDeletedOrganizationMembers,
-        CancellationToken cancellationToken) =>
+    public async Task<Organization?> GetByIdAsync(string id, bool includeDeletedOrganizationMembers, CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Include(query => query.OrganizationMembers.Where(organizationMember =>
                 includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))

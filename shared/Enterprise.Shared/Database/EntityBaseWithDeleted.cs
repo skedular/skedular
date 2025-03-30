@@ -15,9 +15,8 @@ public class ReplicatedEntityBaseWithDeleted : ReplicatedEntityBase
 
 public static class EntityBaseWithDeletedExtension
 {
-    public static void ConfigureEntityBaseWithDeleted<T>(
-        this EntityTypeBuilder<T> builder,
-        int maxUniqueIdLength = Constants.MaxUniqueIdLength) where T : EntityBaseWithDeleted
+    public static void ConfigureEntityBaseWithDeleted<T>(this EntityTypeBuilder<T> builder, int maxUniqueIdLength = Constants.MaxUniqueIdLength)
+        where T : EntityBaseWithDeleted
     {
         builder.ConfigureEntityBase(maxUniqueIdLength);
 

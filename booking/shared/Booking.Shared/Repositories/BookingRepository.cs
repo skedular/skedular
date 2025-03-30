@@ -121,22 +121,19 @@ internal static class BookingExtensions
             if (searchCriteria.LocationIds.Count != 0)
             {
                 query = query.Where(item =>
-                    item.Location != null && !item.Location.DeletedAt.HasValue &&
-                    searchCriteria.LocationIds.Contains(item.Location.Id));
+                    item.Location != null && !item.Location.DeletedAt.HasValue && searchCriteria.LocationIds.Contains(item.Location.Id));
             }
 
 
             if (searchCriteria.TeamIds.Count != 0)
             {
                 query = query.Where(item =>
-                    item.Team != null && !item.Team.DeletedAt.HasValue &&
-                    searchCriteria.TeamIds.Contains(item.Team.Id));
+                    item.Team != null && !item.Team.DeletedAt.HasValue && searchCriteria.TeamIds.Contains(item.Team.Id));
             }
         }
         else
         {
-            if (searchCriteria.OrganizationIds.Count != 0 || searchCriteria.LocationIds.Count != 0 ||
-                searchCriteria.TeamIds.Count != 0)
+            if (searchCriteria.OrganizationIds.Count != 0 || searchCriteria.LocationIds.Count != 0 || searchCriteria.TeamIds.Count != 0)
             {
                 query = query.Where(item =>
                     (item.Organization != null && !item.Organization.DeletedAt.HasValue &&
@@ -150,9 +147,7 @@ internal static class BookingExtensions
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NotesContains))
         {
-            query = query.Where(item =>
-                item.Notes != null &&
-                EF.Functions.ILike(item.Notes, $"%{searchCriteria.NotesContains}%"));
+            query = query.Where(item => item.Notes != null && EF.Functions.ILike(item.Notes, $"%{searchCriteria.NotesContains}%"));
         }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))

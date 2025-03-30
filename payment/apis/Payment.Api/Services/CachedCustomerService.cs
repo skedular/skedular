@@ -76,7 +76,7 @@ public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper
                     throw new CustomerNotFound();
                 }
 
-                return (mapper.MapTo(customer)!, customer);
+                return (mapper.MapTo(customer), customer);
             });
     }
 

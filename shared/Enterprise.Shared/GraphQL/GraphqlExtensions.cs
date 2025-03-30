@@ -35,26 +35,20 @@ public static class GraphqlExtensions
         return services;
     }
 
-    public static void MapGraphqlEndpoints(
-        this IEndpointRouteBuilder endpoints,
-        IConfiguration configuration)
+    public static void MapGraphqlEndpoints(this IEndpointRouteBuilder endpoints, IConfiguration configuration)
     {
-        var graphqlConfig = configuration.GetSection(GraphqlConfig.Key)
-            .Get<GraphqlConfig>();
-
+        var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
         if (graphqlConfig is null)
         {
             return;
         }
 
         var pathString = graphqlConfig.Path;
-
         if (string.IsNullOrWhiteSpace(pathString))
         {
             return;
         }
 
-        endpoints.MapGraphQL(pathString)
-            .WithOptions(new GraphQLServerOptions { Tool = { Enable = graphqlConfig.ClientEnabled } });
+        endpoints.MapGraphQL(pathString).WithOptions(new GraphQLServerOptions { Tool = { Enable = graphqlConfig.ClientEnabled } });
     }
 }

@@ -56,7 +56,6 @@ public class OrganizationOfferingRepository(OrganizationDbContext dbContext, Tim
 
     public OrganizationOffering Undelete(OrganizationOffering organizationOffering)
     {
-        var now = TimeProvider.GetUtcNow();
         organizationOffering.DeletedAt = null;
         return DbContext.OrganizationOffering.Update(organizationOffering).Entity;
     }

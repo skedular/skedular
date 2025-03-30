@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Marketplace.Shared.Database.Migrations
 {
     [DbContext(typeof(MarketplaceDbContext))]
-    [Migration("20250330010301_AddOrganizationTag")]
+    [Migration("20250330015519_AddOrganizationTag")]
     partial class AddOrganizationTag
     {
         /// <inheritdoc />

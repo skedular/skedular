@@ -11,10 +11,7 @@ public interface ILocationMemberRepository : IRepository<LocationMember>
     LocationMember Add(LocationMember locationMember);
     LocationMember Update(LocationMember locationMember);
     void RemoveRange(ICollection<LocationMember> locationMembers);
-
-    Task<ICollection<LocationMember>> GetByLocationIdAsync(
-        string locationId,
-        CancellationToken cancellationToken);
+    Task<ICollection<LocationMember>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken);
 }
 
 public class LocationMemberRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -41,9 +38,7 @@ public class LocationMemberRepository(BookingDbContext dbContext, TimeProvider t
         return DbContext.LocationMember.Update(locationMember).Entity;
     }
 
-    public async Task<ICollection<LocationMember>> GetByLocationIdAsync(
-        string locationId,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<LocationMember>> GetByLocationIdAsync(string locationId, CancellationToken cancellationToken) =>
         await DbContext.LocationMember
             .Where(query => query.Location.Id == locationId)
             .Include(query => query.Customer)

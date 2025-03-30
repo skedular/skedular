@@ -8,12 +8,7 @@ namespace Booking.Shared.Repositories;
 public interface ITeamRepository : IRepository<Team>
 {
     Task<Team> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
-
-    Task<Team?> GetByIdAsync(
-        string id,
-        bool includeDeletedTeamMembers,
-        CancellationToken cancellationToken);
-
+    Task<Team?> GetByIdAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
     Team Add(Team team);
     Team Update(Team team);
     Team Remove(Team team);
@@ -33,13 +28,9 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
         return (await GetByIdAsync(id, true, cancellationToken))!;
     }
 
-    public async Task<Team?> GetByIdAsync(
-        string id,
-        bool includeDeletedTeamMembers,
-        CancellationToken cancellationToken) =>
+    public async Task<Team?> GetByIdAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken) =>
         await DbContext.Team
-            .Include(query => query.TeamMembers.Where(
-                teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
+            .Include(query => query.TeamMembers.Where(teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Organization)
@@ -73,9 +64,7 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
         await DbContext.Team
             .Where(query => !query.DeletedAt.HasValue &&
                             !query.Organization.DeletedAt.HasValue &&
-                            query.Organization.OrganizationMembers.Any(
-                                organizationMember =>
-                                    !organizationMember.DeletedAt.HasValue &&
-                                    organizationMember.Customer.Id == customerId))
+                            query.Organization.OrganizationMembers.Any(organizationMember => !organizationMember.DeletedAt.HasValue &&
+                                                                                             organizationMember.Customer.Id == customerId))
             .ToListAsync(cancellationToken);
 }

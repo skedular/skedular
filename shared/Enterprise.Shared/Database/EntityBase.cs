@@ -18,9 +18,8 @@ public class ReplicatedEntityBase : EntityBase
 
 public static class EntityBaseExtension
 {
-    public static void ConfigureEntityBase<T>(
-        this EntityTypeBuilder<T> builder,
-        int maxUniqueIdLength = Constants.MaxUniqueIdLength) where T : EntityBase
+    public static void ConfigureEntityBase<T>(this EntityTypeBuilder<T> builder, int maxUniqueIdLength = Constants.MaxUniqueIdLength)
+        where T : EntityBase
     {
         builder.HasKey(item => item.Id);
 
@@ -31,8 +30,7 @@ public static class EntityBaseExtension
 
 public static class ReplicatedEntityBaseExtension
 {
-    public static void ConfigureReplicatedEntityBase<T>(
-        this EntityTypeBuilder<T> builder,
-        int maxUniqueIdLength = Constants.MaxUniqueIdLength) where T : ReplicatedEntityBase =>
+    public static void ConfigureReplicatedEntityBase<T>(this EntityTypeBuilder<T> builder, int maxUniqueIdLength = Constants.MaxUniqueIdLength)
+        where T : ReplicatedEntityBase =>
         builder.ConfigureEntityBase(maxUniqueIdLength);
 }

@@ -91,8 +91,7 @@ public class TeamService(
 
         if (!string.IsNullOrWhiteSpace(team.Id))
         {
-            var existingTeam =
-                await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
+            var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
             if (existingTeam is not null)
             {
                 if (!ignoreAuthorizationCheck && customer is null)
@@ -333,7 +332,7 @@ public class TeamService(
         Shared.Models.Team team,
         Shared.Database.Entities.Team existingTeam,
         Customer? customer,
-        Organization? organization,
+        Organization organization,
         Location? primaryLocation,
         bool updateTeamMembers,
         CancellationToken cancellationToken)
@@ -344,12 +343,7 @@ public class TeamService(
         }
 
         var rebuiltTeamMembers = updateTeamMembers
-            ? await teamMemberService.BuildMembersAsync(
-                team.TeamMembers,
-                existingTeam,
-                customer,
-                organization,
-                cancellationToken)
+            ? await teamMemberService.BuildMembersAsync(team.TeamMembers, existingTeam, customer, organization, cancellationToken)
             : [];
         var teamMembers = updateTeamMembers
             ? await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(existingTeam.Id, cancellationToken)

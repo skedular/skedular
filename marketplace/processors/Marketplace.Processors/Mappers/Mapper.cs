@@ -6,6 +6,7 @@ using Identity = Marketplace.Shared.Database.Entities.Identity;
 using Organization = Marketplace.Shared.Models.Organization;
 using OrganizationMember = Marketplace.Shared.Database.Entities.OrganizationMember;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
+using OrganizationTag = Marketplace.Shared.Models.OrganizationTag;
 
 namespace Marketplace.Processors.Mappers;
 
@@ -13,26 +14,11 @@ public interface IMapper
 {
     Customer MapTo(Event src);
 
-    Shared.Database.Entities.Customer MapToEntity(
-        Customer src,
-        ICollection<Identity> identities);
-
-    Shared.Database.Entities.Customer MergeToEntity(
-        Customer src,
-        Shared.Database.Entities.Customer dest,
-        ICollection<Identity> identities);
-
-    IEnumerable<Identity> MapToEntity(
-        IEnumerable<Shared.Models.Identity> src,
-        Shared.Database.Entities.Customer? customer);
-
+    Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities);
+    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
+    IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Shared.Database.Entities.Customer? customer);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
-
-    Identity MergeToEntity(
-        Shared.Models.Identity src,
-        Identity dest,
-        Shared.Database.Entities.Customer? customer);
-
+    Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
     Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
     Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
@@ -47,6 +33,13 @@ public interface IMapper
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
+
+    Shared.Database.Entities.OrganizationTag MapToEntity(OrganizationTag src, Shared.Database.Entities.Organization organization);
+
+    Shared.Database.Entities.OrganizationTag MergeToEntity(
+        OrganizationTag src,
+        Shared.Database.Entities.OrganizationTag dest,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -63,8 +56,7 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Identities = customer.Identities
-                .Select(item =>
-                    new Shared.Models.Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified })
+                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }
@@ -72,8 +64,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities) =>
         MergeToEntity(src, new Shared.Database.Entities.Customer(), identities);
 
-    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest,
-        ICollection<Identity> identities)
+    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -83,9 +74,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<Identity> MapToEntity(
-        IEnumerable<Shared.Models.Identity> src,
-        Shared.Database.Entities.Customer? customer) =>
+    public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Shared.Database.Entities.Customer? customer) =>
         src.Select(identity => MapToEntity(identity, customer));
 
     public Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer) =>
@@ -174,6 +163,23 @@ public class Mapper : IMapper
         dest.Status = src.Status.ToOrganizationMemberStatus();
         dest.Organization = organization;
         dest.Customer = customer;
+        return dest;
+    }
+
+    public Shared.Database.Entities.OrganizationTag MapToEntity(OrganizationTag src, Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new Shared.Database.Entities.OrganizationTag(), organization);
+
+    public Shared.Database.Entities.OrganizationTag MergeToEntity(
+        OrganizationTag src,
+        Shared.Database.Entities.OrganizationTag dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Type = src.Type.ToNullableOrganizationTagType();
+        dest.Color = src.Color;
+        dest.Organization = organization;
         return dest;
     }
 }

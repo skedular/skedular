@@ -12,10 +12,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer> UpsertNakedAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByIdAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
-    Task<Customer?> GetByEmailAsync(string email, bool includeActiveItemsOnly, CancellationToken cancellationToken);
-    Task<ICollection<Customer>> GetAllAsync(bool includeActiveItemsOnly, CancellationToken cancellationToken);
-    Customer Add(Customer customer);
-    Customer Update(Customer customer);
+    void Update(Customer customer);
     Customer Remove(Customer customer);
 }
 
@@ -62,35 +59,11 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                     query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 
-    public async Task<Customer?> GetByEmailAsync(string email, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
-        await DbContext.Customer
-            .AddDependentObjects(includeActiveItemsOnly)
-            .FirstOrDefaultAsync(query =>
-                    !query.DeletedAt.HasValue &&
-                    query.Identities.Any(identity =>
-                        identity.Email != null &&
-                        EF.Functions.ILike(identity.Email, email)),
-                cancellationToken);
-
-    public async Task<ICollection<Customer>> GetAllAsync(bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
-        await DbContext.Customer
-            .AddDependentObjects(includeActiveItemsOnly)
-            .Where(query => !query.DeletedAt.HasValue)
-            .OrderBy(query => query.Id)
-            .ToListAsync(cancellationToken);
-
-    public Customer Add(Customer customer)
-    {
-        var now = TimeProvider.GetUtcNow();
-        customer.CreatedAt = now;
-        return DbContext.Customer.Add(customer).Entity;
-    }
-
-    public Customer Update(Customer customer)
+    public void Update(Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.ModifiedAt = now;
-        return DbContext.Customer.Update(customer).Entity;
+        DbContext.Customer.Update(customer);
     }
 
     public Customer Remove(Customer customer)

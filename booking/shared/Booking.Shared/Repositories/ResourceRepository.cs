@@ -145,10 +145,10 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
 
         var resources = await DbContext.Resource
             .Where(query => availableResourceIds.Contains(query.Id))
-            .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(query => query.Start))
+            .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(slot => slot.Start))
             .ThenInclude(query => query.Bookings)
             .ThenInclude(query => query.Location)
-            .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(query => query.Start))
+            .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(slot => slot.Start))
             .ThenInclude(query => query.Customers)
             .Include(query => query.OrganizationTags)
             .OrderBy(query => query.Name)
