@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { Theme } from '@mui/material/styles';
 import type { SxProps } from '@mui/system';
 import type { PropsWithChildren } from 'react';

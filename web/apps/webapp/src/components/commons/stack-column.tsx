@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import type { CSSProperties } from '@mui/material/styles/createTypography';
+import type { CSSProperties } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/system';
 import { ResponsiveStyleValue } from '@mui/system';
 import type { ForwardedRef, PropsWithChildren } from 'react';

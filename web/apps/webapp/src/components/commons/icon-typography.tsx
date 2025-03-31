@@ -1,6 +1,6 @@
 import { PaletteModeContext } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
-import type { CSSProperties, Variant } from '@mui/material/styles/createTypography';
+import type { CSSProperties, TypographyVariant } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { SxProps, Theme } from '@mui/system';
 import { ResponsiveStyleValue } from '@mui/system';
@@ -14,7 +14,7 @@ type Props = {
   stackMode?: 'row' | 'column';
   label?: string | null | undefined;
   noWrap?: boolean;
-  variant?: Variant;
+  variant?: TypographyVariant;
   sx?: SxProps<Theme>;
   spacing?: ResponsiveStyleValue<number | string>;
   color?: CSSProperties['color'];

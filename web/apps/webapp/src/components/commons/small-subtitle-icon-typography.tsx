@@ -1,4 +1,4 @@
-import type { CSSProperties } from '@mui/material/styles/createTypography';
+import type { CSSProperties } from '@mui/material/styles';
 import type { ResponsiveStyleValue, SxProps, Theme } from '@mui/system';
 import type { JSX } from 'react';
 import IconTypography from './icon-typography';

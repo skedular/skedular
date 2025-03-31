@@ -16,7 +16,7 @@ import type { myBookings_deleteBookingMutation } from '@/queries/__generated__/m
 import type { myBookings_query$key } from '@/queries/__generated__/myBookings_query.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';

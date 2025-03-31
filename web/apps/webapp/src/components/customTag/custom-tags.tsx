@@ -1,7 +1,7 @@
 import { GridContainer, SmallIconTypography, StackRow } from '@/components/commons';
 import { CustomTagIcon } from '@/components/icons';
 import { Chip, Tooltip } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import type { SxProps, Theme } from '@mui/system';
 import { memo } from 'react';
 import type { CustomTagDetails } from './custom-tag';

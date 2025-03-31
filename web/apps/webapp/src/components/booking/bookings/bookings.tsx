@@ -16,7 +16,7 @@ import type { bookings_bookings_refetchableFragment } from '@/queries/__generate
 import type { bookings_deleteBookingMutation } from '@/queries/__generated__/bookings_deleteBookingMutation.graphql';
 import type { bookings_query$key } from '@/queries/__generated__/bookings_query.graphql';
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';

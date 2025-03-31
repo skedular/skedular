@@ -1,5 +1,5 @@
-import type { GridSpacing } from '@mui/material/Grid2';
-import Grid from '@mui/material/Grid2';
+import type { GridSpacing } from '@mui/material/Grid';
+import Grid from '@mui/material/Grid';
 import { Theme } from '@mui/material/styles';
 import type { ResponsiveStyleValue, SxProps } from '@mui/system';
 import type { PropsWithChildren } from 'react';

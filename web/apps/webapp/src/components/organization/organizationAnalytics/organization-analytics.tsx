@@ -9,7 +9,7 @@ import { defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme'
 import type { organizationAnalytics_query$key } from '@/queries/__generated__/organizationAnalytics_query.graphql';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';

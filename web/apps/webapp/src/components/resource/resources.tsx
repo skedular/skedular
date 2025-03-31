@@ -1,7 +1,7 @@
 import { GridContainer, SmallIconTypography, StackRow } from '@/components/commons';
 import { ResourceIcon } from '@/components/icons';
 import { Chip, Tooltip } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import type { SxProps, Theme } from '@mui/system';
 import { memo } from 'react';
 import type { ResourceDetails } from './resource';

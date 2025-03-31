@@ -1,5 +1,5 @@
+import type { CSSProperties } from '@mui/material/styles';
 import { createTheme as createMuiTheme, PaletteMode, Theme } from '@mui/material/styles';
-import type { CSSProperties } from '@mui/material/styles/createTypography';
 import type { ResponsiveStyleValue, SxProps } from '@mui/system';
 import { gridClasses } from '@mui/x-data-grid';
 import getDesignTokens, { coal } from './theme-primitives';
