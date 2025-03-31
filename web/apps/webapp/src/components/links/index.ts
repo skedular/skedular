@@ -41,6 +41,8 @@ export const getOrganizationAdminBillingAndPaymentBaseLink = (id: string) => `${
 export const getOrganizationAdminSSOBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=sso-setup`;
 export const getOrganizationAdminZonesBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=zones-setup`;
 export const getOrganizationAdminCustomTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=tags-setup`;
+export const getOrganizationAdminProductTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=product-tags-setup`;
+export const getOrganizationAdminLocationTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=location-tags-setup`;
 export const getOrganizationAdminSubscriptionsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=subscriptions`;
 export const getOrganizationAdminManageOrganizationBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=manage-organization`;
 export const getOrganizationTeamAddLink = (id: string) => `${getOrganizationBaseLink(id)}/teams/add`;

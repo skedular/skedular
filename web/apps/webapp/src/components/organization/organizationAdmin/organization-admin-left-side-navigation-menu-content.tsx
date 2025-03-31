@@ -1,9 +1,11 @@
 import { BodyIconTypography } from '@/components/commons';
-import { BillingAndPaymentIcon, CustomTagIcon, EditIcon, SSOIcon, SubscriptionsIcon } from '@/components/icons';
+import { BillingAndPaymentIcon, CustomTagIcon, EditIcon, LocationTagIcon, ProductTagIcon, SSOIcon, SubscriptionsIcon } from '@/components/icons';
 import {
   getOrganizationAdminBillingAndPaymentBaseLink,
   getOrganizationAdminCustomTagsBaseLink,
+  getOrganizationAdminLocationTagsBaseLink,
   getOrganizationAdminManageOrganizationBaseLink,
+  getOrganizationAdminProductTagsBaseLink,
   getOrganizationAdminSetupBaseLink,
   getOrganizationAdminSSOBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
@@ -72,6 +74,8 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
   const ssoLink = getOrganizationAdminSSOBaseLink(organizationId);
   const zonesLink = getOrganizationAdminZonesBaseLink(organizationId);
   const customTagsLink = getOrganizationAdminCustomTagsBaseLink(organizationId);
+  const productTagsLink = getOrganizationAdminProductTagsBaseLink(organizationId);
+  const locationTagsLink = getOrganizationAdminLocationTagsBaseLink(organizationId);
   const subscriptionsLink = getOrganizationAdminSubscriptionsBaseLink(organizationId);
   const manageOrganizationLink = getOrganizationAdminManageOrganizationBaseLink(organizationId);
 
@@ -144,6 +148,25 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
       </ListItem>
 
       <ListItem disablePadding>
+        <Link component={NextLink} href={zonesLink}>
+          <ListItemButton selected={fullPath === zonesLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === zonesLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <CustomTagIcon color="inherit" />} invertDefaultColor={fullPath === zonesLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Zone Setup"
+                startElement={!hideIcons && <CustomTagIcon excludeTooltip color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === zonesLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
         <Link component={NextLink} href={customTagsLink}>
           <ListItemButton selected={fullPath === customTagsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === customTagsLink) }}>
             {collapsed && (
@@ -155,6 +178,44 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationId, collap
                 startElement={!hideIcons && <CustomTagIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === customTagsLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={productTagsLink}>
+          <ListItemButton selected={fullPath === productTagsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === productTagsLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <ProductTagIcon color="inherit" />} invertDefaultColor={fullPath === productTagsLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Product Tag Setup"
+                startElement={!hideIcons && <ProductTagIcon excludeTooltip color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === productTagsLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={locationTagsLink}>
+          <ListItemButton selected={fullPath === locationTagsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === locationTagsLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <LocationTagIcon color="inherit" />} invertDefaultColor={fullPath === locationTagsLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Location Tag Setup"
+                startElement={!hideIcons && <LocationTagIcon excludeTooltip color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === locationTagsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

@@ -3,7 +3,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
 import { joinErrors } from '@/libs/utils';
-import type { addOrganizationCustomTagDialog_addCustomTagMutation } from '@/queries/__generated__/addOrganizationCustomTagDialog_addCustomTagMutation.graphql';
+import type { addOrganizationProductTagDialog_addProductTagMutation } from '@/queries/__generated__/addOrganizationProductTagDialog_addProductTagMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -22,20 +22,20 @@ type Props = {
   onCancel: () => void;
 };
 
-type CustomTagDetails = {
+type ProductTagDetails = {
   name: string;
   description: string;
 };
 
-const customTagSchema = object({
-  name: string().required('Tag name is required'),
+const productTagSchema = object({
+  name: string().required('Product tag name is required'),
   description: string().nullable(),
 });
 
-const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
-  const [commitAddCustomTag] = useMutation<addOrganizationCustomTagDialog_addCustomTagMutation>(graphql`
-    mutation addOrganizationCustomTagDialog_addCustomTagMutation($connectionIds: [ID!]!, $input: AddCustomTagInput!) @raw_response_type {
-      addCustomTag(input: $input) {
+const AddOrganizationProductTagDialog = ({ organizationId, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+  const [commitAddProductTag] = useMutation<addOrganizationProductTagDialog_addProductTagMutation>(graphql`
+    mutation addOrganizationProductTagDialog_addProductTagMutation($connectionIds: [ID!]!, $input: AddProductTagInput!) @raw_response_type {
+      addProductTag(input: $input) {
         organizationTag @appendNode(connections: $connectionIds, edgeTypeName: "OrganizationTagDetails") {
           id
           name
@@ -48,19 +48,19 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validate = makeValidate(customTagSchema);
-  const requiredFields = makeRequired(customTagSchema);
+  const validate = makeValidate(productTagSchema);
+  const requiredFields = makeRequired(productTagSchema);
   const [selectedColor, setSelectedColor] = useState('');
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
   };
 
-  const handleAddClick = ({ name, description }: CustomTagDetails) => {
+  const handleAddClick = ({ name, description }: ProductTagDetails) => {
     const id = nanoid();
-    const toastId = themedToast(<NotificationContent content={`Adding tag '${name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Adding product tag '${name}'...`} />, infoNotificationOptions);
 
-    commitAddCustomTag({
+    commitAddProductTag({
       variables: {
         connectionIds,
         input: {
@@ -76,7 +76,7 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add tag '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add product tag '${name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -84,7 +84,7 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Tag ${name} added.`} />,
+          render: <NotificationContent content={`Product tag ${name} added.`} />,
         });
 
         onAddClicked();
@@ -92,11 +92,11 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add tag '${name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to add product tag '${name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
-        addCustomTag: {
+        addProductTag: {
           organizationTag: {
             id,
             name,
@@ -110,7 +110,7 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
 
   return (
     <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
-      <DefaultDialogTitle title="Add Tag" />
+      <DefaultDialogTitle title="Add Product Tag" />
       <DialogContent sx={{ marginTop: 2 }}>
         <Form
           onSubmit={handleAddClick}
@@ -119,8 +119,8 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
           render={({ handleSubmit }) => {
             return (
               <FormStackColumn onSubmit={handleSubmit}>
-                <LeadIconTypography label="Add tag to this organization" />
-                <SmallIconTypography label="Enter the name of the tag to add to this organization." />
+                <LeadIconTypography label="Add product tag to this organization" />
+                <SmallIconTypography label="Enter the name of the product tag to add to this organization." />
 
                 <FormFieldLabel label="Name" useWiderSpace>
                   <TextField name="name" required={requiredFields.name} />
@@ -144,4 +144,4 @@ const AddOrganizationCustomTagDialog = ({ organizationId, connectionIds, isDialo
   );
 };
 
-export default memo(AddOrganizationCustomTagDialog);
+export default memo(AddOrganizationProductTagDialog);

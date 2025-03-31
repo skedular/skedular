@@ -1,4 +1,5 @@
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
@@ -65,7 +66,14 @@ public class WorkspaceOnboardingService(
             cancellationToken: cancellationToken);
 
         await organizationServiceClient.Admin_AddAsync(
-            new Admin_AddInput { Id = organization.Id, Name = name.ToSafeString(), AgreedToTermsOfUse = true, TermsOfUseId = activeTermsOfUse.Id },
+            new Admin_AddInput
+            {
+                Id = organization.Id,
+                Name = name.ToSafeString(),
+                AgreedToTermsOfUse = true,
+                TermsOfUseId = activeTermsOfUse.Id,
+                Type = OrganizationTypeConstants.Private
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
     }

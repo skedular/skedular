@@ -37,6 +37,10 @@ export enum MoreActionsMenuOptionType {
   DeleteZone,
   EditCustomTag,
   DeleteCustomTag,
+  EditProductTag,
+  DeleteProductTag,
+  EditLocationTag,
+  DeleteLocationTag,
   EditResource,
   DeleteResource,
   ActivateResource,
@@ -172,6 +176,26 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.DeleteCustomTag]: {
     id: MoreActionsMenuOptionType.DeleteCustomTag,
     label: 'Remove Tag',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.EditProductTag]: {
+    id: MoreActionsMenuOptionType.EditProductTag,
+    label: 'Edit Product Tag',
+    icon: <EditIcon />,
+  },
+  [MoreActionsMenuOptionType.DeleteProductTag]: {
+    id: MoreActionsMenuOptionType.DeleteProductTag,
+    label: 'Remove Product Tag',
+    icon: <DeleteIcon color="warning" />,
+  },
+  [MoreActionsMenuOptionType.EditLocationTag]: {
+    id: MoreActionsMenuOptionType.EditLocationTag,
+    label: 'Edit Location Tag',
+    icon: <EditIcon />,
+  },
+  [MoreActionsMenuOptionType.DeleteLocationTag]: {
+    id: MoreActionsMenuOptionType.DeleteLocationTag,
+    label: 'Remove Location Tag',
     icon: <DeleteIcon color="warning" />,
   },
   [MoreActionsMenuOptionType.EditResource]: {

@@ -171,7 +171,7 @@ public class OrganizationService(
             {
                 Id = randomHelper.Generate(),
                 Name = "Parking",
-                Type = OrganizationTagTypeConstants.ResourceRoom,
+                Type = OrganizationTagTypeConstants.ResourceParking,
                 Color = "#20B2AA",
                 Organization = organizationEntity
             });
@@ -181,7 +181,7 @@ public class OrganizationService(
             {
                 Id = randomHelper.Generate(),
                 Name = "Others",
-                Type = OrganizationTagTypeConstants.ResourceRoom,
+                Type = OrganizationTagTypeConstants.ResourceOthers,
                 Color = "#8A2BE2",
                 Organization = organizationEntity
             });

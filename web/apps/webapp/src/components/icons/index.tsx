@@ -278,3 +278,21 @@ export const HomeIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
       <Home fontSize={fontSize} sx={sx} color={color ?? 'action'} />
     </TooltipIcon>
   );
+
+export const ProductTagIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
+  excludeTooltip ? (
+    <LocalOffer fontSize={fontSize} sx={sx} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'Product Tag'}>
+      <LocalOffer fontSize={fontSize} sx={sx} color={color} />
+    </TooltipIcon>
+  );
+
+export const LocationTagIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
+  excludeTooltip ? (
+    <LocalOffer fontSize={fontSize} sx={sx} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'Location Tag'}>
+      <LocalOffer fontSize={fontSize} sx={sx} color={color} />
+    </TooltipIcon>
+  );
