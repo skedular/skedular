@@ -7,9 +7,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace Booking.Shared.Database;
 
-public class BookingDbContext(
-    DbContextOptions<BookingDbContext> options,
-    CustomDbContextOptions customDbContextOptions) : DbContextBase<BookingDbContext>(options, customDbContextOptions)
+public class BookingDbContext(DbContextOptions<BookingDbContext> options, CustomDbContextOptions customDbContextOptions)
+    : DbContextBase<BookingDbContext>(options, customDbContextOptions)
 {
     public DbSet<Entities.Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }

@@ -1,10 +1,88 @@
 ﻿schema {
   query: Query
+  mutation: Mutation
+}
+
+type CurrencyDetails {
+  type: Currency!
+  name: String!
+}
+
+type Marketplace_OrganizationDetails {
+  uniqueId: ID!
+}
+
+type Marketplace_OrganizationTagDetails {
+  uniqueId: ID!
+  name: String
+  tagType: String
+  color: String
+}
+
+type Mutation {
+  addProduct(input: AddProductInput!): ProductPayload @cost(weight: "10")
+  updateProduct(input: UpdateProductInput!): ProductPayload @cost(weight: "10")
+  deleteProduct(input: DeleteProductInput!): ProductPayload @cost(weight: "10")
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type PriceUnitDetails {
+  type: PriceUnit!
+  name: String!
+}
+
+type ProductConnection {
+  pageInfo: PageInfo!
+  edges: [ProductEdge!]!
+  totalCount: Int
+}
+
+type ProductDetails {
+  latestProductVersion: ProductVersionDetails!
+  organization: Marketplace_OrganizationDetails!
+  id: ID!
+}
+
+type ProductEdge {
+  node: ProductDetails!
+  cursor: String!
+}
+
+type ProductPayload {
+  clientMutationId: String
+  product: ProductDetails!
+}
+
+type ProductVersionDetails {
+  name: String!
+  description: String
+  price: String!
+  priceUnit: PriceUnit!
+  currency: Currency!
+  minDurationMinutes: Int
+  maxDurationMinutes: Int
+  bookAllLocationResources: Boolean!
+  recurrenceIntervalDays: Int!
+  forceContinuousSlots: Boolean!
+  maxSpreadDays: Int
+  productTags: [Marketplace_OrganizationTagDetails!]!
+  locationTags: [Marketplace_OrganizationTagDetails!]!
+  id: ID!
 }
 
 type Query {
   marketplaceVersion: Version!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
+  currencies: [CurrencyDetails!]!
+  priceUnits: [PriceUnitDetails!]!
+  product(id: String!): ProductPayload @cost(weight: "10")
+  products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ProductConnection @cost(weight: "10")
 }
 
 type Version {
@@ -12,6 +90,80 @@ type Version {
   minor: Int!
   build: Int!
   revision: Int!
+}
+
+input AddProductInput {
+  clientMutationId: String
+  id: String
+  organizationId: String!
+  name: String!
+  description: String
+  price: String!
+  priceUnit: PriceUnit!
+  currency: Currency!
+  minDurationMinutes: Int
+  maxDurationMinutes: Int
+  bookAllLocationResources: Boolean!
+  recurrenceIntervalDays: Int!
+  forceContinuousSlots: Boolean!
+  maxSpreadDays: Int
+  productTagIds: [String!]!
+  locationTagIds: [String!]!
+}
+
+input DeleteProductInput {
+  clientMutationId: String
+  id: String!
+}
+
+input ProductOrderInput {
+  direction: OrderDirection!
+  field: ProductOrderField!
+}
+
+input ProductWhereInput {
+  organizationId: String
+  productIds: [String!]
+  nameContains: String
+}
+
+input UpdateProductInput {
+  clientMutationId: String
+  id: String!
+  organizationId: String!
+  name: String!
+  description: String
+  price: String!
+  priceUnit: PriceUnit!
+  currency: Currency!
+  minDurationMinutes: Int
+  maxDurationMinutes: Int
+  bookAllLocationResources: Boolean!
+  recurrenceIntervalDays: Int!
+  forceContinuousSlots: Boolean!
+  maxSpreadDays: Int
+  productTagIds: [String!]!
+  locationTagIds: [String!]!
+}
+
+enum Currency {
+  Nzd
+  Usd
+}
+
+enum OrderDirection {
+  Ascending
+  Descending
+}
+
+enum PriceUnit {
+  PerMinute
+  PerHour
+  PerUse
+}
+
+enum ProductOrderField {
+  Name
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

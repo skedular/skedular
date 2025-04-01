@@ -7,9 +7,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace Customer.Shared.Database;
 
-public class CustomerDbContext(
-    DbContextOptions<CustomerDbContext> options,
-    CustomDbContextOptions customDbContextOptions) : DbContextBase<CustomerDbContext>(options, customDbContextOptions)
+public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, CustomDbContextOptions customDbContextOptions)
+    : DbContextBase<CustomerDbContext>(options, customDbContextOptions)
 {
     public DbSet<Entities.Customer> Customer { get; set; }
     public DbSet<CustomerFeedback> CustomerFeedback { get; set; }

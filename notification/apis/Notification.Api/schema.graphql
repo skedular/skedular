@@ -8,9 +8,9 @@ type Notification {
   notificationType: NotificationType!
   invitedBy: NotificationCustomerDetails
   invitee: NotificationCustomerDetails
-  organization: NotificationOrganizationDetails
-  location: NotificationLocationDetails
-  team: NotificationTeamDetails
+  organization: Notification_OrganizationDetails
+  location: Notification_LocationDetails
+  team: Notification_TeamDetails
   id: ID!
 }
 
@@ -41,18 +41,18 @@ type NotificationEdge {
   cursor: String!
 }
 
-type NotificationLocationDetails {
+type Notification_LocationDetails {
   uniqueId: ID!
   name: String!
 }
 
-type NotificationOrganizationDetails {
+type Notification_OrganizationDetails {
   uniqueId: ID!
   name: String!
   logoUrl: String
 }
 
-type NotificationTeamDetails {
+type Notification_TeamDetails {
   uniqueId: ID!
   name: String!
 }

@@ -7,9 +7,8 @@ using Payment.Shared.Database.Entities;
 
 namespace Payment.Shared.Database;
 
-public class PaymentDbContext(
-    DbContextOptions<PaymentDbContext> options,
-    CustomDbContextOptions customDbContextOptions) : DbContextBase<PaymentDbContext>(options, customDbContextOptions)
+public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, CustomDbContextOptions customDbContextOptions)
+    : DbContextBase<PaymentDbContext>(options, customDbContextOptions)
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }

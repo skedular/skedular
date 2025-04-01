@@ -7,9 +7,8 @@ using Slack.Shared.Database.Entities;
 
 namespace Slack.Shared.Database;
 
-public class SlackDbContext(
-    DbContextOptions<SlackDbContext> options,
-    CustomDbContextOptions customDbContextOptions) : DbContextBase<SlackDbContext>(options, customDbContextOptions)
+public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbContextOptions customDbContextOptions)
+    : DbContextBase<SlackDbContext>(options, customDbContextOptions)
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }

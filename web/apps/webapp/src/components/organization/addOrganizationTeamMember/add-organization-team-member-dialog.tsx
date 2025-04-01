@@ -208,7 +208,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
                       const castedOption = (option as OrganizationMemberDetails).customer;
 
                       return (
-                        <li {...props}>
+                        <li {...props} key={castedOption.uniqueId}>
                           <BodyIconTypography
                             label={getCustomerFullName(castedOption)}
                             startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}

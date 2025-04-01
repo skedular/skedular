@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<80035cf337edd8c44905a3e92e74b853>>
+ * @generated SignedSource<<7cefb95db20aac6cfe938c84bf4a1b69>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -306,7 +306,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "BookingOrganizationDetails",
+                    "concreteType": "Booking_OrganizationDetails",
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
@@ -318,7 +318,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "BookingLocationDetails",
+                    "concreteType": "Booking_LocationDetails",
                     "kind": "LinkedField",
                     "name": "location",
                     "plural": false,
@@ -328,7 +328,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "BookingTeamDetails",
+                    "concreteType": "Booking_TeamDetails",
                     "kind": "LinkedField",
                     "name": "team",
                     "plural": false,
@@ -349,7 +349,7 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingOrganizationCustomTagDetails",
+                        "concreteType": "Booking_OrganizationCustomTagDetails",
                         "kind": "LinkedField",
                         "name": "customTags",
                         "plural": true,
@@ -359,7 +359,7 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingOrganizationZoneDetails",
+                        "concreteType": "Booking_OrganizationZoneDetails",
                         "kind": "LinkedField",
                         "name": "zones",
                         "plural": true,

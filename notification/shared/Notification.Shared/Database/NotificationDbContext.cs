@@ -7,9 +7,7 @@ using Notification.Shared.Database.Entities;
 
 namespace Notification.Shared.Database;
 
-public class NotificationDbContext(
-    DbContextOptions<NotificationDbContext> options,
-    CustomDbContextOptions customDbContextOptions)
+public class NotificationDbContext(DbContextOptions<NotificationDbContext> options, CustomDbContextOptions customDbContextOptions)
     : DbContextBase<NotificationDbContext>(options, customDbContextOptions)
 {
     public DbSet<Customer> Customer { get; set; }

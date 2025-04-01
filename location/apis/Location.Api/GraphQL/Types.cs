@@ -123,7 +123,7 @@ public class LocationDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("organization")] public LocationOrganizationDetails Organization { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("openingHours")] public OpeningHours OpeningHours { get; set; }
     [GraphQLName("deskCapacity")] public int DeskCapacity { get; set; }
@@ -186,8 +186,8 @@ public class LocationOrderInput
     [GraphQLName("field")] public LocationOrderField Field { get; set; }
 }
 
-[GraphQLName("LocationOrganizationDetails")]
-public class LocationOrganizationDetails
+[GraphQLName("Location_OrganizationDetails")]
+public class OrganizationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;

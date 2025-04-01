@@ -207,7 +207,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
                     <TextField name="website" required={requiredFields.about} helperText="https://" />
                   </FormFieldLabel>
 
-                  <FormFieldLabel label="type">
+                  <FormFieldLabel label="Type">
                     <SingleChoicesOrganizationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
                   </FormFieldLabel>
 

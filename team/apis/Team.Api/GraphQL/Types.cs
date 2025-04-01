@@ -127,8 +127,8 @@ public class TeamDetails : Node
     [GraphQLName("name")] public required string Name { get; set; }
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("members")] public IEnumerable<TeamMemberDetails> Members { get; set; } = [];
-    [GraphQLName("organization")] public TeamOrganizationDetails Organization { get; set; }
-    [GraphQLName("primaryLocation")] public TeamLocationDetails? PrimaryLocation { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
+    [GraphQLName("primaryLocation")] public LocationDetails? PrimaryLocation { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
     [GraphQLName("canModify")] public bool CanModify { get; set; }
@@ -184,8 +184,8 @@ public class TeamOrderInput
     [GraphQLName("field")] public TeamOrderField Field { get; set; }
 }
 
-[GraphQLName("TeamOrganizationDetails")]
-public class TeamOrganizationDetails
+[GraphQLName("Team_OrganizationDetails")]
+public class OrganizationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
@@ -256,8 +256,8 @@ public class UpdateTeamMembersInput
     [GraphQLName("organizationMemberIds")] public IEnumerable<string> OrganizationMemberIds { get; set; } = [];
 }
 
-[GraphQLName("TeamLocationDetails")]
-public class TeamLocationDetails
+[GraphQLName("Team_LocationDetails")]
+public class LocationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;

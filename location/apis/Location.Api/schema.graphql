@@ -67,7 +67,7 @@ type LocationDailyBookingsTotal {
 type LocationDetails {
   name: String!
   about: String
-  organization: LocationOrganizationDetails!
+  organization: Location_OrganizationDetails!
   timezone: String
   openingHours: OpeningHours!
   deskCapacity: Int!
@@ -112,15 +112,15 @@ type LocationMemberEdge {
   cursor: String!
 }
 
-type LocationOrganizationDetails {
-  uniqueId: ID!
-  name: String!
-  logoUrl: String
-}
-
 type LocationPayload {
   clientMutationId: String
   location: LocationDetails!
+}
+
+type Location_OrganizationDetails {
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
 }
 
 type Location_OrganizationTagDetails {

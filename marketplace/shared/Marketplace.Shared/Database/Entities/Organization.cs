@@ -13,6 +13,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string Type { get; set; }
     public virtual ICollection<OrganizationTag> Tags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public virtual ICollection<Product> Products { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

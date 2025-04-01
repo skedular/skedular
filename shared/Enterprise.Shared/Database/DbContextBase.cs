@@ -5,11 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enterprise.Shared.Database;
 
-public abstract class DbContextBase<TContext>(
-    DbContextOptions<TContext> options,
-    CustomDbContextOptions customDbContextOptions)
-    : DbContext(options), IUnitOfWork, IOutboxStore
-    where TContext : DbContextBase<TContext>
+public abstract class DbContextBase<TContext>(DbContextOptions<TContext> options, CustomDbContextOptions customDbContextOptions)
+    : DbContext(options), IUnitOfWork, IOutboxStore where TContext : DbContextBase<TContext>
 {
     public DbSet<Outbox.Database.Entities.Outbox> Outbox { get; set; }
 

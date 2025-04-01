@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0e1f79150f0cedcc10d2a3d0d6ced6b8>>
+ * @generated SignedSource<<440ca19cf513a51619a769d7771f254d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -145,7 +145,7 @@ v14 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "LocationOrganizationDetails",
+      "concreteType": "Location_OrganizationDetails",
       "kind": "LinkedField",
       "name": "organization",
       "plural": false,
@@ -168,7 +168,7 @@ v15 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "TeamOrganizationDetails",
+      "concreteType": "Team_OrganizationDetails",
       "kind": "LinkedField",
       "name": "organization",
       "plural": false,
@@ -546,7 +546,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "BookingLocationDetails",
+                    "concreteType": "Booking_LocationDetails",
                     "kind": "LinkedField",
                     "name": "location",
                     "plural": false,
@@ -556,7 +556,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "BookingTeamDetails",
+                    "concreteType": "Booking_TeamDetails",
                     "kind": "LinkedField",
                     "name": "team",
                     "plural": false,
@@ -577,7 +577,7 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingOrganizationCustomTagDetails",
+                        "concreteType": "Booking_OrganizationCustomTagDetails",
                         "kind": "LinkedField",
                         "name": "customTags",
                         "plural": true,
@@ -587,7 +587,7 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "BookingOrganizationZoneDetails",
+                        "concreteType": "Booking_OrganizationZoneDetails",
                         "kind": "LinkedField",
                         "name": "zones",
                         "plural": true,

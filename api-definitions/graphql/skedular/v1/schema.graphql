@@ -46,11 +46,11 @@ type BookingDetails {
   customer: BookingCustomerDetails!
   from: DateTime!
   id: ID!
-  location: BookingLocationDetails
+  location: Booking_LocationDetails
   notes: String
-  organization: BookingOrganizationDetails
+  organization: Booking_OrganizationDetails
   resources: [BookingResourceDetails!]!
-  team: BookingTeamDetails
+  team: Booking_TeamDetails
   type: BookingType!
   until: DateTime!
 }
@@ -58,28 +58,6 @@ type BookingDetails {
 type BookingEdge {
   cursor: String!
   node: BookingDetails!
-}
-
-type BookingLocationDetails {
-  name: String!
-  uniqueId: ID!
-}
-
-type BookingOrganizationCustomTagDetails {
-  color: String
-  name: String
-  uniqueId: ID!
-}
-
-type BookingOrganizationDetails {
-  name: String!
-  uniqueId: ID!
-}
-
-type BookingOrganizationZoneDetails {
-  color: String
-  name: String
-  uniqueId: ID!
 }
 
 type BookingPayload {
@@ -91,16 +69,38 @@ type BookingResourceDetails {
   capacity: Int!
   color: String
   customers: [BookingCustomerDetails!]!
-  customTags: [BookingOrganizationCustomTagDetails!]!
+  customTags: [Booking_OrganizationCustomTagDetails!]!
   inactive: Boolean!
-  location: BookingLocationDetails
+  location: Booking_LocationDetails
   name: String!
   requireBookingApproval: Boolean!
   uniqueId: ID!
-  zones: [BookingOrganizationZoneDetails!]!
+  zones: [Booking_OrganizationZoneDetails!]!
 }
 
-type BookingTeamDetails {
+type Booking_LocationDetails {
+  name: String!
+  uniqueId: ID!
+}
+
+type Booking_OrganizationCustomTagDetails {
+  color: String
+  name: String
+  uniqueId: ID!
+}
+
+type Booking_OrganizationDetails {
+  name: String!
+  uniqueId: ID!
+}
+
+type Booking_OrganizationZoneDetails {
+  color: String
+  name: String
+  uniqueId: ID!
+}
+
+type Booking_TeamDetails {
   name: String!
   uniqueId: ID!
 }
@@ -121,6 +121,11 @@ type CancelOrganizationOfferingPayload {
   clientMutationId: String
 }
 
+type CurrencyDetails {
+  name: String!
+  type: Currency!
+}
+
 type CustomerConnection {
   edges: [CustomerEdge!]!
   pageInfo: PageInfo!
@@ -129,7 +134,7 @@ type CustomerConnection {
 
 type CustomerDetails {
   createdAt: DateTime!
-  defaultOrganization: CustomerOrganizationDetails
+  defaultOrganization: Customer_OrganizationDetails
   designation: String
   email: String
   familyName: String
@@ -153,11 +158,11 @@ type CustomerDetails {
   photoUrl48: String
   photoUrl512: String
   photoUrl72: String
-  preferredCustomTags: [CustomerOrganizationTagDetails!]!
-  preferredLocations: [CustomerLocationDetails!]!
+  preferredCustomTags: [Customer_OrganizationTagDetails!]!
+  preferredLocations: [Customer_LocationDetails!]!
   preferredResources: [CustomerResourceDetails!]!
   preferredTeams: [CustomerTeamDetails!]!
-  preferredZones: [CustomerOrganizationTagDetails!]!
+  preferredZones: [Customer_OrganizationTagDetails!]!
   timezone: String
   title: String
 }
@@ -173,24 +178,6 @@ type CustomerEmail {
   verified: Boolean!
 }
 
-type CustomerLocationDetails {
-  name: String
-  organization: CustomerOrganizationDetails
-  uniqueId: ID!
-}
-
-type CustomerOrganizationDetails {
-  logoUrl: String
-  name: String
-  uniqueId: ID!
-}
-
-type CustomerOrganizationTagDetails {
-  color: String
-  name: String
-  uniqueId: ID!
-}
-
 type CustomerPayload {
   clientMutationId: String
   customer: CustomerDetails!
@@ -203,7 +190,25 @@ type CustomerResourceDetails {
 
 type CustomerTeamDetails {
   name: String
-  organization: CustomerOrganizationDetails
+  organization: Customer_OrganizationDetails
+  uniqueId: ID!
+}
+
+type Customer_LocationDetails {
+  name: String
+  organization: Customer_OrganizationDetails
+  uniqueId: ID!
+}
+
+type Customer_OrganizationDetails {
+  logoUrl: String
+  name: String
+  uniqueId: ID!
+}
+
+type Customer_OrganizationTagDetails {
+  color: String
+  name: String
   uniqueId: ID!
 }
 
@@ -289,7 +294,7 @@ type LocationDetails {
   id: ID!
   name: String!
   openingHours: OpeningHours!
-  organization: LocationOrganizationDetails!
+  organization: Location_OrganizationDetails!
   physicalAddress: LocationAddressDetails
   resources: [ResourceDetails!]!
   resourceTypes: [Location_OrganizationTagDetails!]!
@@ -325,18 +330,29 @@ type LocationMemberEdge {
   node: LocationMemberDetails!
 }
 
-type LocationOrganizationDetails {
-  logoUrl: String
-  name: String!
-  uniqueId: ID!
-}
-
 type LocationPayload {
   clientMutationId: String
   location: LocationDetails!
 }
 
+type Location_OrganizationDetails {
+  logoUrl: String
+  name: String!
+  uniqueId: ID!
+}
+
 type Location_OrganizationTagDetails {
+  color: String
+  name: String
+  tagType: String
+  uniqueId: ID!
+}
+
+type Marketplace_OrganizationDetails {
+  uniqueId: ID!
+}
+
+type Marketplace_OrganizationTagDetails {
   color: String
   name: String
   tagType: String
@@ -358,6 +374,7 @@ type Mutation {
   addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse @cost(weight: "10")
+  addProduct(input: AddProductInput!): ProductPayload @cost(weight: "10")
   addProductTag(input: AddProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   addResource(input: AddResourceInput!): ResourcePayload @cost(weight: "10")
   addTeam(input: AddTeamInput!): TeamPayload @cost(weight: "10")
@@ -388,6 +405,7 @@ type Mutation {
   deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
+  deleteProduct(input: DeleteProductInput!): ProductPayload @cost(weight: "10")
   deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteResource(input: DeleteResourceInput!): ResourcePayload @cost(weight: "10")
@@ -423,6 +441,7 @@ type Mutation {
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
+  updateProduct(input: UpdateProductInput!): ProductPayload @cost(weight: "10")
   updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload @cost(weight: "10")
   updateTeam(input: UpdateTeamInput!): TeamPayload @cost(weight: "10")
@@ -436,11 +455,11 @@ type Notification {
   id: ID!
   invitedBy: NotificationCustomerDetails
   invitee: NotificationCustomerDetails
-  location: NotificationLocationDetails
+  location: Notification_LocationDetails
   notificationType: NotificationType!
-  organization: NotificationOrganizationDetails
+  organization: Notification_OrganizationDetails
   sourceId: ID!
-  team: NotificationTeamDetails
+  team: Notification_TeamDetails
 }
 
 type NotificationConnection {
@@ -470,18 +489,18 @@ type NotificationEdge {
   node: Notification!
 }
 
-type NotificationLocationDetails {
+type Notification_LocationDetails {
   name: String!
   uniqueId: ID!
 }
 
-type NotificationOrganizationDetails {
+type Notification_OrganizationDetails {
   logoUrl: String
   name: String!
   uniqueId: ID!
 }
 
-type NotificationTeamDetails {
+type Notification_TeamDetails {
   name: String!
   uniqueId: ID!
 }
@@ -740,6 +759,50 @@ type PageInfo {
   startCursor: String
 }
 
+type PriceUnitDetails {
+  name: String!
+  type: PriceUnit!
+}
+
+type ProductConnection {
+  edges: [ProductEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type ProductDetails {
+  id: ID!
+  latestProductVersion: ProductVersionDetails!
+  organization: Marketplace_OrganizationDetails!
+}
+
+type ProductEdge {
+  cursor: String!
+  node: ProductDetails!
+}
+
+type ProductPayload {
+  clientMutationId: String
+  product: ProductDetails!
+}
+
+type ProductVersionDetails {
+  bookAllLocationResources: Boolean!
+  currency: Currency!
+  description: String
+  forceContinuousSlots: Boolean!
+  id: ID!
+  locationTags: [Marketplace_OrganizationTagDetails!]!
+  maxDurationMinutes: Int
+  maxSpreadDays: Int
+  minDurationMinutes: Int
+  name: String!
+  price: String!
+  priceUnit: PriceUnit!
+  productTags: [Marketplace_OrganizationTagDetails!]!
+  recurrenceIntervalDays: Int!
+}
+
 type Query {
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!] @cost(weight: "10")
@@ -752,6 +815,7 @@ type Query {
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): BookingConnection @cost(weight: "10")
   bookingVersion: Version!
+  currencies: [CurrencyDetails!]!
   customer(id: String!): CustomerDetails @cost(weight: "10")
   customersByPreferredLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByPreferredLocationWhereInput!): CustomerConnection @cost(weight: "10")
   customerTeams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: CustomerTeamWhereInput!): TeamConnection @cost(weight: "10")
@@ -799,6 +863,9 @@ type Query {
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
   paymentVersion: Version!
   pendingInvitationsCount: Int! @cost(weight: "10")
+  priceUnits: [PriceUnitDetails!]!
+  product(id: String!): ProductPayload @cost(weight: "10")
+  products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ProductConnection @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   productTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ProductTagOrganizationTagWhereInput!): OrganizationTagConnection @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
@@ -919,19 +986,14 @@ type TeamDetails {
   id: ID!
   members: [TeamMemberDetails!]!
   name: String!
-  organization: TeamOrganizationDetails!
-  primaryLocation: TeamLocationDetails
+  organization: Team_OrganizationDetails!
+  primaryLocation: Team_LocationDetails
   timezone: String
 }
 
 type TeamEdge {
   cursor: String!
   node: TeamDetails!
-}
-
-type TeamLocationDetails {
-  name: String!
-  uniqueId: ID!
 }
 
 type TeamMemberConnection {
@@ -968,12 +1030,6 @@ type TeamMembersDetailsPayload {
   members: [TeamMemberDetails!]!
 }
 
-type TeamOrganizationDetails {
-  logoUrl: String
-  name: String!
-  uniqueId: ID!
-}
-
 type TeamOrganizationMemberDetails {
   customer: TeamCustomerDetails!
   uniqueId: ID!
@@ -982,6 +1038,17 @@ type TeamOrganizationMemberDetails {
 type TeamPayload {
   clientMutationId: String
   team: TeamDetails!
+}
+
+type Team_LocationDetails {
+  name: String!
+  uniqueId: ID!
+}
+
+type Team_OrganizationDetails {
+  logoUrl: String
+  name: String!
+  uniqueId: ID!
 }
 
 type UpdateOrganizationOfferingPayload {
@@ -1112,6 +1179,25 @@ input AddOrganizationInput {
 input AddOrganizationPaymentMethodIntentInput {
   clientMutationId: String
   organizationId: String!
+}
+
+input AddProductInput {
+  bookAllLocationResources: Boolean!
+  clientMutationId: String
+  currency: Currency!
+  description: String
+  forceContinuousSlots: Boolean!
+  id: String
+  locationTagIds: [String!]!
+  maxDurationMinutes: Int
+  maxSpreadDays: Int
+  minDurationMinutes: Int
+  name: String!
+  organizationId: String!
+  price: String!
+  priceUnit: PriceUnit!
+  productTagIds: [String!]!
+  recurrenceIntervalDays: Int!
 }
 
 input AddProductTagInput {
@@ -1346,6 +1432,11 @@ input DeleteOrganizationInput {
   id: String!
 }
 
+input DeleteProductInput {
+  clientMutationId: String
+  id: String!
+}
+
 input DeleteProductTagInput {
   clientMutationId: String
   id: String!
@@ -1485,9 +1576,20 @@ input OrganizationWhereInput {
   nameContains: String
 }
 
+input ProductOrderInput {
+  direction: OrderDirection!
+  field: ProductOrderField!
+}
+
 input ProductTagOrganizationTagWhereInput {
   nameContains: String
   organizationId: String!
+}
+
+input ProductWhereInput {
+  nameContains: String
+  organizationId: String
+  productIds: [String!]
 }
 
 input RejectInvitationToJoinLocationInput {
@@ -1706,6 +1808,25 @@ input UpdateOrganizationSsoSettingsInput {
   organizationId: String!
 }
 
+input UpdateProductInput {
+  bookAllLocationResources: Boolean!
+  clientMutationId: String
+  currency: Currency!
+  description: String
+  forceContinuousSlots: Boolean!
+  id: String!
+  locationTagIds: [String!]!
+  maxDurationMinutes: Int
+  maxSpreadDays: Int
+  minDurationMinutes: Int
+  name: String!
+  organizationId: String!
+  price: String!
+  priceUnit: PriceUnit!
+  productTagIds: [String!]!
+  recurrenceIntervalDays: Int!
+}
+
 input UpdateProductTagInput {
   clientMutationId: String
   color: String
@@ -1805,6 +1926,11 @@ enum BookingType {
   WorkingFromOffice
 }
 
+enum Currency {
+  Nzd
+  Usd
+}
+
 enum CustomerOrderField {
   Designation
   FamilyName
@@ -1893,6 +2019,16 @@ enum OrganizationTagOrderField {
 enum OrganizationType {
   Marketplace
   Private
+}
+
+enum PriceUnit {
+  PerHour
+  PerMinute
+  PerUse
+}
+
+enum ProductOrderField {
+  Name
 }
 
 enum ResourceOrderField {

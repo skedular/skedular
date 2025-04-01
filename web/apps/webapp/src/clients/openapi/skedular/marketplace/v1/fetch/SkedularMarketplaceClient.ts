@@ -5,8 +5,12 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
+import { MarketplaceService } from './services/MarketplaceService';
+import { ProductService } from './services/ProductService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularMarketplaceClient {
+    public readonly marketplace: MarketplaceService;
+    public readonly product: ProductService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -20,6 +24,8 @@ export class SkedularMarketplaceClient {
             HEADERS: config?.HEADERS,
             ENCODE_PATH: config?.ENCODE_PATH,
         });
+        this.marketplace = new MarketplaceService(this.request);
+        this.product = new ProductService(this.request);
     }
 }
 

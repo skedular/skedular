@@ -30,38 +30,16 @@ type BookingDetails {
   notes: String
   type: BookingType!
   customer: BookingCustomerDetails!
-  organization: BookingOrganizationDetails
-  location: BookingLocationDetails
+  organization: Booking_OrganizationDetails
+  location: Booking_LocationDetails
   resources: [BookingResourceDetails!]!
-  team: BookingTeamDetails
+  team: Booking_TeamDetails
   id: ID!
 }
 
 type BookingEdge {
   node: BookingDetails!
   cursor: String!
-}
-
-type BookingLocationDetails {
-  uniqueId: ID!
-  name: String!
-}
-
-type BookingOrganizationCustomTagDetails {
-  uniqueId: ID!
-  name: String
-  color: String
-}
-
-type BookingOrganizationDetails {
-  uniqueId: ID!
-  name: String!
-}
-
-type BookingOrganizationZoneDetails {
-  uniqueId: ID!
-  name: String
-  color: String
 }
 
 type BookingPayload {
@@ -76,13 +54,35 @@ type BookingResourceDetails {
   color: String
   capacity: Int!
   requireBookingApproval: Boolean!
-  location: BookingLocationDetails
-  customTags: [BookingOrganizationCustomTagDetails!]!
-  zones: [BookingOrganizationZoneDetails!]!
+  location: Booking_LocationDetails
+  customTags: [Booking_OrganizationCustomTagDetails!]!
+  zones: [Booking_OrganizationZoneDetails!]!
   customers: [BookingCustomerDetails!]!
 }
 
-type BookingTeamDetails {
+type Booking_LocationDetails {
+  uniqueId: ID!
+  name: String!
+}
+
+type Booking_OrganizationCustomTagDetails {
+  uniqueId: ID!
+  name: String
+  color: String
+}
+
+type Booking_OrganizationDetails {
+  uniqueId: ID!
+  name: String!
+}
+
+type Booking_OrganizationZoneDetails {
+  uniqueId: ID!
+  name: String
+  color: String
+}
+
+type Booking_TeamDetails {
   uniqueId: ID!
   name: String!
 }

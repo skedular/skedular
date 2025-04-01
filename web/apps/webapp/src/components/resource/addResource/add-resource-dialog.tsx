@@ -232,7 +232,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
                       const castedOption = option as LocationDetails;
 
                       return (
-                        <li {...props}>
+                        <li {...props} key={castedOption.id}>
                           <BodyIconTypography label={castedOption.name} />
                         </li>
                       );

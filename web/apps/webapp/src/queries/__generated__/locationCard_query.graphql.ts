@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<efe065fa46c9c7402a226389813e30e6>>
+ * @generated SignedSource<<01f2266d451c181f0698a2deda945d58>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -48,7 +48,7 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "CustomerLocationDetails",
+          "concreteType": "Customer_LocationDetails",
           "kind": "LinkedField",
           "name": "preferredLocations",
           "plural": true,

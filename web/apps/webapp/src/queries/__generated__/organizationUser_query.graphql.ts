@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a18b13fd464ef0a7c62c66f89478fb1>>
+ * @generated SignedSource<<49e28a4ac15d469f6e1aafd0d06573fc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -307,7 +307,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "TeamOrganizationDetails",
+                  "concreteType": "Team_OrganizationDetails",
                   "kind": "LinkedField",
                   "name": "organization",
                   "plural": false,

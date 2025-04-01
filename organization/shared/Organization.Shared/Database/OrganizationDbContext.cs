@@ -7,9 +7,7 @@ using Organization.Shared.Database.Entities;
 
 namespace Organization.Shared.Database;
 
-public class OrganizationDbContext(
-    DbContextOptions<OrganizationDbContext> options,
-    CustomDbContextOptions customDbContextOptions)
+public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> options, CustomDbContextOptions customDbContextOptions)
     : DbContextBase<OrganizationDbContext>(options, customDbContextOptions)
 {
     public DbSet<AzureInstallStateUserIdLookup> AzureInstallStateUserIdLookup { get; set; }

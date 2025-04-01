@@ -60,7 +60,7 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationId }:
         const castedOption = option as ZoneDetails;
 
         return (
-          <li {...props}>
+          <li {...props} key={castedOption.id}>
             <BodyIconTypography label={castedOption.name} />
           </li>
         );

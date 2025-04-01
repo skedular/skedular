@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<90a5177d620d05e6548ab11c6efd68c7>>
+ * @generated SignedSource<<9ec3f5713d52d4f5b939b88e13d62fa4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -322,7 +322,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "BookingOrganizationDetails",
+                  "concreteType": "Booking_OrganizationDetails",
                   "kind": "LinkedField",
                   "name": "organization",
                   "plural": false,
@@ -334,7 +334,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "BookingLocationDetails",
+                  "concreteType": "Booking_LocationDetails",
                   "kind": "LinkedField",
                   "name": "location",
                   "plural": false,
@@ -344,7 +344,7 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "BookingTeamDetails",
+                  "concreteType": "Booking_TeamDetails",
                   "kind": "LinkedField",
                   "name": "team",
                   "plural": false,
@@ -365,7 +365,7 @@ return {
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "BookingOrganizationCustomTagDetails",
+                      "concreteType": "Booking_OrganizationCustomTagDetails",
                       "kind": "LinkedField",
                       "name": "customTags",
                       "plural": true,
@@ -375,7 +375,7 @@ return {
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "BookingOrganizationZoneDetails",
+                      "concreteType": "Booking_OrganizationZoneDetails",
                       "kind": "LinkedField",
                       "name": "zones",
                       "plural": true,

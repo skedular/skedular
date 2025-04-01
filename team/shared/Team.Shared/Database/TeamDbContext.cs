@@ -7,9 +7,8 @@ using Team.Shared.Database.Entities;
 
 namespace Team.Shared.Database;
 
-public class TeamDbContext(
-    DbContextOptions<TeamDbContext> options,
-    CustomDbContextOptions customDbContextOptions) : DbContextBase<TeamDbContext>(options, customDbContextOptions)
+public class TeamDbContext(DbContextOptions<TeamDbContext> options, CustomDbContextOptions customDbContextOptions)
+    : DbContextBase<TeamDbContext>(options, customDbContextOptions)
 {
     public DbSet<Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }

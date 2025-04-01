@@ -37,7 +37,7 @@ const SingleChoinceTimezone = ({ name, required }: Props) => {
         const castedOption = option as TimezoneDetails;
 
         return (
-          <li {...props}>
+          <li {...props} key={castedOption.id}>
             <BodyIconTypography label={castedOption.label} />
           </li>
         );

@@ -54,33 +54,33 @@ public class BookingDetails : Node
     [GraphQLName("notes")] public string? Notes { get; set; }
     [GraphQLName("type")] public BookingType Type { get; set; }
     [GraphQLName("customer")] public BookingCustomerDetails Customer { get; set; }
-    [GraphQLName("organization")] public BookingOrganizationDetails? Organization { get; set; }
-    [GraphQLName("location")] public BookingLocationDetails? Location { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails? Organization { get; set; }
+    [GraphQLName("location")] public LocationDetails? Location { get; set; }
     [GraphQLName("resources")] public IEnumerable<BookingResourceDetails> Resources { get; set; } = [];
-    [GraphQLName("team")] public BookingTeamDetails? Team { get; set; }
+    [GraphQLName("team")] public TeamDetails? Team { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
 [GraphQLName("BookingEdge")]
 public class BookingEdge : Edge<BookingDetails>;
 
-[GraphQLName("BookingLocationDetails")]
-public class BookingLocationDetails
+[GraphQLName("Booking_LocationDetails")]
+public class LocationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 
-[GraphQLName("BookingOrganizationCustomTagDetails")]
-public class BookingOrganizationCustomTagDetails
+[GraphQLName("Booking_OrganizationCustomTagDetails")]
+public class OrganizationCustomTagDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
     [GraphQLName("color")] public string? Color { get; set; }
 }
 
-[GraphQLName("BookingOrganizationZoneDetails")]
-public class BookingOrganizationZoneDetails
+[GraphQLName("Booking_OrganizationZoneDetails")]
+public class OrganizationZoneDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
@@ -94,8 +94,8 @@ public class BookingOrderInput
     [GraphQLName("field")] public BookingOrderField Field { get; set; }
 }
 
-[GraphQLName("BookingOrganizationDetails")]
-public class BookingOrganizationDetails
+[GraphQLName("Booking_OrganizationDetails")]
+public class OrganizationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
@@ -108,8 +108,8 @@ public class BookingPayload
     [GraphQLName("booking")] public BookingDetails Booking { get; set; }
 }
 
-[GraphQLName("BookingTeamDetails")]
-public class BookingTeamDetails
+[GraphQLName("Booking_TeamDetails")]
+public class TeamDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
@@ -234,9 +234,9 @@ public class BookingResourceDetails
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
 
-    [GraphQLName("location")] public BookingLocationDetails? Location { get; set; }
-    [GraphQLName("customTags")] public IEnumerable<BookingOrganizationCustomTagDetails> CustomTags { get; set; } = [];
-    [GraphQLName("zones")] public IEnumerable<BookingOrganizationZoneDetails> Zones { get; set; } = [];
+    [GraphQLName("location")] public LocationDetails? Location { get; set; }
+    [GraphQLName("customTags")] public IEnumerable<OrganizationCustomTagDetails> CustomTags { get; set; } = [];
+    [GraphQLName("zones")] public IEnumerable<OrganizationZoneDetails> Zones { get; set; } = [];
     [GraphQLName("customers")] public IEnumerable<BookingCustomerDetails> Customers { get; set; } = [];
 }
 

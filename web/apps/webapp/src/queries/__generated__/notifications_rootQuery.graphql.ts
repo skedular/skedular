@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a86b0be4c724285d2af5973a13abd99>>
+ * @generated SignedSource<<a931f310c6eb4578d9c9611a6ba0511b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -178,7 +178,7 @@ v3 = [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "NotificationOrganizationDetails",
+                "concreteType": "Notification_OrganizationDetails",
                 "kind": "LinkedField",
                 "name": "organization",
                 "plural": false,
@@ -188,7 +188,7 @@ v3 = [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "NotificationLocationDetails",
+                "concreteType": "Notification_LocationDetails",
                 "kind": "LinkedField",
                 "name": "location",
                 "plural": false,
@@ -198,7 +198,7 @@ v3 = [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "NotificationTeamDetails",
+                "concreteType": "Notification_TeamDetails",
                 "kind": "LinkedField",
                 "name": "team",
                 "plural": false,

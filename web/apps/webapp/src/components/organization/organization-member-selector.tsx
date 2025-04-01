@@ -113,7 +113,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationId, name, requi
         const castedOption = (option as OrganizationMemberDetails).customer;
 
         return (
-          <li {...props}>
+          <li {...props} key={castedOption.uniqueId}>
             <BodyIconTypography
               label={getCustomerFullName(castedOption)}
               startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}

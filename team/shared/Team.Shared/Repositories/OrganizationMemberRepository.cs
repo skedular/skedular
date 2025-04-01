@@ -8,20 +8,12 @@ namespace Team.Shared.Repositories;
 
 public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 {
-    Task<OrganizationMember> UpsertNakedAsync(
-        string id,
-        Organization organization,
-        Customer customer,
-        CancellationToken cancellationToken);
-
+    Task<OrganizationMember> UpsertNakedAsync(string id, Organization organization, Customer customer, CancellationToken cancellationToken);
     Task<OrganizationMember?> GetByIdAsync(string id, CancellationToken cancellationToken);
     OrganizationMember Add(OrganizationMember organizationMember);
     OrganizationMember Update(OrganizationMember organizationMember);
     void RemoveRange(ICollection<OrganizationMember> organizationMembers);
-
-    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
-        string organizationId,
-        CancellationToken cancellationToken);
+    Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationMemberRepository(TeamDbContext dbContext, TimeProvider timeProvider)
@@ -62,9 +54,7 @@ public class OrganizationMemberRepository(TeamDbContext dbContext, TimeProvider 
         return DbContext.OrganizationMember.Update(organizationMember).Entity;
     }
 
-    public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(
-        string organizationId,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
             .Where(query => query.Organization.Id == organizationId)
             .Include(query => query.Customer)

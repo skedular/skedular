@@ -51,7 +51,7 @@ const SingleChoicesResourceType = ({ rootDataRelay, name, required }: Props) => 
         const castedOption = option as ResourceTypeDetails;
 
         return (
-          <li {...props}>
+          <li {...props} key={castedOption.id}>
             <BodyIconTypography label={castedOption.name} />
           </li>
         );

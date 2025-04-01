@@ -120,7 +120,7 @@ public class Mapper(IContext context) : IMapper
                 .Select(item => item.Email!.ToLowerInvariant())
                 .Distinct()
                 .FirstOrDefault(),
-            Identities = MapTo(src.Identities).ToArray(),
+            Identities = MapTo(src.Identities),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             IsLocationOnboardingDone = src.IsLocationOnboardingDone ?? false,
             IsTeamOnboardingDone = src.IsTeamOnboardingDone ?? false,
@@ -129,41 +129,36 @@ public class Mapper(IContext context) : IMapper
             IsPreferredZoneOnboardingDone = src.IsPreferredZoneOnboardingDone ?? false,
             DefaultOrganization = src.DefaultOrganization is null
                 ? null
-                : new CustomerOrganizationDetails
+                : new OrganizationDetails
                 {
                     UniqueId = src.DefaultOrganization.Id, Name = src.DefaultOrganization.Name, LogoUrl = src.DefaultOrganization.LogoUrl
                 },
-            PreferredLocations = src.PreferredLocations.Select(item => new CustomerLocationDetails
+            PreferredLocations = src.PreferredLocations.Select(item => new LocationDetails
             {
                 UniqueId = item.Id,
                 Name = item.Name,
-                Organization = new CustomerOrganizationDetails
+                Organization = new OrganizationDetails
                 {
                     UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl
                 }
-            }).ToArray(),
-            PreferredZones =
-                src.PreferredOrganizationTags
-                    .Where(item => item.Type == OrganizationTagType.Zone)
-                    .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color })
-                    .ToArray(),
-            PreferredCustomTags =
-                src.PreferredOrganizationTags
-                    .Where(item => item.Type == OrganizationTagType.Custom)
-                    .Select(item => new CustomerOrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color })
-                    .ToArray(),
+            }),
+            PreferredZones = src.PreferredOrganizationTags
+                .Where(item => item.Type == OrganizationTagType.Zone)
+                .Select(item => new OrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color }),
+            PreferredCustomTags = src.PreferredOrganizationTags
+                .Where(item => item.Type == OrganizationTagType.Custom)
+                .Select(item => new OrganizationTagDetails { UniqueId = item.Id, Name = item.Name, Color = item.Color }),
             PreferredResources = src.PreferredResources
-                .Select(item => new CustomerResourceDetails { UniqueId = item.Id, Name = item.Name })
-                .ToArray(),
+                .Select(item => new CustomerResourceDetails { UniqueId = item.Id, Name = item.Name }),
             PreferredTeams = src.PreferredTeams.Select(item => new CustomerTeamDetails
             {
                 UniqueId = item.Id,
                 Name = item.Name,
-                Organization = new CustomerOrganizationDetails
+                Organization = new OrganizationDetails
                 {
                     UniqueId = item.Organization.Id, Name = item.Organization.Name, LogoUrl = item.Organization.LogoUrl
                 }
-            }).ToArray()
+            })
         };
 
     public CustomerPayload MapTo(Shared.Models.Customer src, string? clientMutationId) =>

@@ -585,7 +585,7 @@ public class Mapper : IMapper
     private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> MapToGrpcResponse(IEnumerable<Shared.Models.Resource> src) =>
         src.Select(MapToGrpcResponse);
 
-    private static LocationOrganizationDetails MapTo(Shared.Models.Organization src) =>
+    private static OrganizationDetails MapTo(Shared.Models.Organization src) =>
         new() { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
 
     private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);

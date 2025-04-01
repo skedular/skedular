@@ -600,7 +600,7 @@ const NewBookingDialog = ({
                       const castedOption = (option as OrganizationMemberDetails).customer;
 
                       return (
-                        <li {...props}>
+                        <li {...props} key={castedOption.uniqueId}>
                           <BodyIconTypography
                             label={getCustomerFullName(castedOption)}
                             startElement={<CustomerAvatar name={castedOption} photo={{ url: castedOption.photoUrl }} size="small" />}
@@ -648,7 +648,7 @@ const NewBookingDialog = ({
                       const castedOption = option as TeamDetails;
 
                       return (
-                        <li {...props}>
+                        <li {...props} key={castedOption.id}>
                           <BodyIconTypography label={castedOption.name} />
                         </li>
                       );
@@ -673,7 +673,7 @@ const NewBookingDialog = ({
                       const castedOption = option as LocationDetails;
 
                       return (
-                        <li {...props}>
+                        <li {...props} key={castedOption.id}>
                           <BodyIconTypography label={castedOption.name} />
                         </li>
                       );
@@ -699,7 +699,7 @@ const NewBookingDialog = ({
                         const castedOption = option as ResourceDetails;
 
                         return (
-                          <li {...props}>
+                          <li {...props} key={castedOption.uniqueId}>
                             <StackRow sx={{ alignItems: 'center' }}>
                               <BodyIconTypography label={castedOption.name} />
                               <CustomTags customTags={castedOption.customTags} hideNAText />

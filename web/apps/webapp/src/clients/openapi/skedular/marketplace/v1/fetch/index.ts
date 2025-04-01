@@ -13,3 +13,6 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export type { Error } from './models/Error';
 
 export { $Error } from './schemas/$Error';
+
+export { MarketplaceService } from './services/MarketplaceService';
+export { ProductService } from './services/ProductService';

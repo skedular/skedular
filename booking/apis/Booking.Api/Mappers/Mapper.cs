@@ -411,25 +411,25 @@ public class Mapper : IMapper
             PhotoUrl512 = src.PhotoUrl512
         };
 
-    private static BookingOrganizationDetails? MapTo(Shared.Models.Organization? src) =>
-        src is null ? null : new BookingOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+    private static OrganizationDetails? MapTo(Shared.Models.Organization? src) =>
+        src is null ? null : new OrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
-    private static BookingLocationDetails? MapTo(Shared.Models.Location? src) =>
-        src is null ? null : new BookingLocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+    private static LocationDetails? MapTo(Shared.Models.Location? src) =>
+        src is null ? null : new LocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
-    private static BookingTeamDetails? MapTo(Shared.Models.Team? src) =>
-        src is null ? null : new BookingTeamDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+    private static TeamDetails? MapTo(Shared.Models.Team? src) =>
+        src is null ? null : new TeamDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
-    private static IEnumerable<BookingOrganizationCustomTagDetails> MapToCustomTags(IEnumerable<OrganizationTag> src) =>
+    private static IEnumerable<OrganizationCustomTagDetails> MapToCustomTags(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.Custom).Select(MapToCustomTag);
 
-    private static BookingOrganizationCustomTagDetails MapToCustomTag(OrganizationTag src) =>
+    private static OrganizationCustomTagDetails MapToCustomTag(OrganizationTag src) =>
         new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
 
-    private static IEnumerable<BookingOrganizationZoneDetails> MapToZones(IEnumerable<OrganizationTag> src) =>
+    private static IEnumerable<OrganizationZoneDetails> MapToZones(IEnumerable<OrganizationTag> src) =>
         src.Where(item => item.Type == OrganizationTagType.Zone).Select(MapToZone);
 
-    private static BookingOrganizationZoneDetails MapToZone(OrganizationTag src) => new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
+    private static OrganizationZoneDetails MapToZone(OrganizationTag src) => new() { UniqueId = src.Id, Name = src.Name, Color = src.Color };
 
     private static Shared.Models.Organization? MapTo(Organization? src) =>
         src is null

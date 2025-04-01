@@ -304,6 +304,152 @@ namespace Marketplace.Shared.Database.Migrations
                     b.ToTable("OrganizationTag");
                 });
 
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Product", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.ProductVersion", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("BookAllLocationResources")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<bool>("ForceContinuousSlots")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<int?>("MaxDurationMinutes")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("MaxSpreadDays")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("MinDurationMinutes")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("PricePerMinute")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<string>("PriceUnit")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("RecurrenceIntervalDays")
+                        .HasColumnType("integer");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Currency");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("PricePerMinute");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductVersion");
+                });
+
+            modelBuilder.Entity("OrganizationTagProductVersion", b =>
+                {
+                    b.Property<string>("ProductTagsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ProductTagsId1")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("ProductTagsId", "ProductTagsId1");
+
+                    b.HasIndex("ProductTagsId1");
+
+                    b.ToTable("OrganizationTagProductVersion");
+                });
+
+            modelBuilder.Entity("OrganizationTagProductVersion1", b =>
+                {
+                    b.Property<string>("LocationTagsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("LocationTagsId1")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("LocationTagsId", "LocationTagsId1");
+
+                    b.HasIndex("LocationTagsId1");
+
+                    b.ToTable("OrganizationTagProductVersion1");
+                });
+
             modelBuilder.Entity("Marketplace.Shared.Database.Entities.Identity", b =>
                 {
                     b.HasOne("Marketplace.Shared.Database.Entities.Customer", "Customer")
@@ -345,6 +491,58 @@ namespace Marketplace.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Product", b =>
+                {
+                    b.HasOne("Marketplace.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("Products")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.ProductVersion", b =>
+                {
+                    b.HasOne("Marketplace.Shared.Database.Entities.Product", "Product")
+                        .WithMany("ProductVersions")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("OrganizationTagProductVersion", b =>
+                {
+                    b.HasOne("Marketplace.Shared.Database.Entities.ProductVersion", null)
+                        .WithMany()
+                        .HasForeignKey("ProductTagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Marketplace.Shared.Database.Entities.OrganizationTag", null)
+                        .WithMany()
+                        .HasForeignKey("ProductTagsId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OrganizationTagProductVersion1", b =>
+                {
+                    b.HasOne("Marketplace.Shared.Database.Entities.ProductVersion", null)
+                        .WithMany()
+                        .HasForeignKey("LocationTagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Marketplace.Shared.Database.Entities.OrganizationTag", null)
+                        .WithMany()
+                        .HasForeignKey("LocationTagsId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Marketplace.Shared.Database.Entities.Customer", b =>
                 {
                     b.Navigation("Identities");
@@ -356,7 +554,14 @@ namespace Marketplace.Shared.Database.Migrations
                 {
                     b.Navigation("OrganizationMembers");
 
+                    b.Navigation("Products");
+
                     b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Product", b =>
+                {
+                    b.Navigation("ProductVersions");
                 });
 #pragma warning restore 612, 618
         }

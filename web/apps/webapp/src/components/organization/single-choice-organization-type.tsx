@@ -44,7 +44,7 @@ const SingleChoicesOrganizationType = ({ rootDataRelay, name, required }: Props)
         const castedOption = option as OrganizationTypeDetails;
 
         return (
-          <li {...props}>
+          <li {...props} key={castedOption.type}>
             <BodyIconTypography label={castedOption.name} />
           </li>
         );

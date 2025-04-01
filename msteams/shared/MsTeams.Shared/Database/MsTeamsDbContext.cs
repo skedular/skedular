@@ -7,9 +7,8 @@ using MsTeams.Shared.Database.Entities;
 
 namespace MsTeams.Shared.Database;
 
-public class MsTeamsDbContext(
-    DbContextOptions<MsTeamsDbContext> options,
-    CustomDbContextOptions customDbContextOptions) : DbContextBase<MsTeamsDbContext>(options, customDbContextOptions)
+public class MsTeamsDbContext(DbContextOptions<MsTeamsDbContext> options, CustomDbContextOptions customDbContextOptions)
+    : DbContextBase<MsTeamsDbContext>(options, customDbContextOptions)
 {
     public DbSet<AzureTenant> AzureTenant { get; set; }
     public DbSet<AzureTenantTeam> AzureTenantTeam { get; set; }

@@ -29,7 +29,7 @@ const SingleChoiceCountry = ({ name, required }: Props) => {
         const castedOption = option as CountryDetails;
 
         return (
-          <li {...props}>
+          <li {...props} key={castedOption.name}>
             <BodyIconTypography label={castedOption.name} />
           </li>
         );

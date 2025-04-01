@@ -138,17 +138,17 @@ public class Mapper : IMapper
                 PhotoUrl72 = src.PhotoUrl72,
                 PhotoUrl192 = src.PhotoUrl192,
                 PhotoUrl512 = src.PhotoUrl512,
-                Emails = src.Identities.Select(item => item.Email).Where(item => !string.IsNullOrWhiteSpace(item)).ToArray()!
+                Emails = src.Identities.Select(item => item.Email).Where(item => !string.IsNullOrWhiteSpace(item))!
             };
 
-    private static NotificationOrganizationDetails? MapTo(Organization? src) =>
-        src is null ? null : new NotificationOrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
+    private static OrganizationDetails? MapTo(Organization? src) =>
+        src is null ? null : new OrganizationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString(), LogoUrl = src.LogoUrl };
 
-    private static NotificationLocationDetails? MapTo(Location? src) =>
-        src is null ? null : new NotificationLocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+    private static LocationDetails? MapTo(Location? src) =>
+        src is null ? null : new LocationDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
-    private static NotificationTeamDetails? MapTo(Team? src) =>
-        src is null ? null : new NotificationTeamDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
+    private static TeamDetails? MapTo(Team? src) =>
+        src is null ? null : new TeamDetails { UniqueId = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 

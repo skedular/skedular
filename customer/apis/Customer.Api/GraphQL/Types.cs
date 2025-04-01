@@ -80,7 +80,7 @@ public class CustomerDetails : Node
 {
     [GraphQLName("createdAt")] public DateTimeOffset CreatedAt { get; set; }
     [GraphQLName("email")] public string? Email { get; set; }
-    [GraphQLName("identities")] public CustomerIdentity[] Identities { get; set; } = [];
+    [GraphQLName("identities")] public IEnumerable<CustomerIdentity> Identities { get; set; } = [];
     [GraphQLName("designation")] public string? Designation { get; set; }
     [GraphQLName("title")] public string? Title { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
@@ -115,12 +115,12 @@ public class CustomerDetails : Node
     [GraphQLName("isPreferredZoneOnboardingDone")]
     public bool IsPreferredZoneOnboardingDone { get; set; }
 
-    [GraphQLName("defaultOrganization")] public CustomerOrganizationDetails? DefaultOrganization { get; set; }
-    [GraphQLName("preferredLocations")] public CustomerLocationDetails[] PreferredLocations { get; set; } = [];
-    [GraphQLName("preferredTeams")] public CustomerTeamDetails[] PreferredTeams { get; set; } = [];
-    [GraphQLName("preferredZones")] public CustomerOrganizationTagDetails[] PreferredZones { get; set; } = [];
-    [GraphQLName("preferredCustomTags")] public CustomerOrganizationTagDetails[] PreferredCustomTags { get; set; } = [];
-    [GraphQLName("preferredResources")] public CustomerResourceDetails[] PreferredResources { get; set; } = [];
+    [GraphQLName("defaultOrganization")] public OrganizationDetails? DefaultOrganization { get; set; }
+    [GraphQLName("preferredLocations")] public IEnumerable<LocationDetails> PreferredLocations { get; set; } = [];
+    [GraphQLName("preferredTeams")] public IEnumerable<CustomerTeamDetails> PreferredTeams { get; set; } = [];
+    [GraphQLName("preferredZones")] public IEnumerable<OrganizationTagDetails> PreferredZones { get; set; } = [];
+    [GraphQLName("preferredCustomTags")] public IEnumerable<OrganizationTagDetails> PreferredCustomTags { get; set; } = [];
+    [GraphQLName("preferredResources")] public IEnumerable<CustomerResourceDetails> PreferredResources { get; set; } = [];
 
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
@@ -136,16 +136,16 @@ public class CustomerIdentity : Node
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
-[GraphQLName("CustomerLocationDetails")]
-public class CustomerLocationDetails
+[GraphQLName("Customer_LocationDetails")]
+public class LocationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
-    [GraphQLName("organization")] public CustomerOrganizationDetails? Organization { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails? Organization { get; set; }
 }
 
-[GraphQLName("CustomerOrganizationTagDetails")]
-public class CustomerOrganizationTagDetails
+[GraphQLName("Customer_OrganizationTagDetails")]
+public class OrganizationTagDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
@@ -159,8 +159,8 @@ public class CustomerOrderInput
     [GraphQLName("field")] public CustomerOrderField Field { get; set; }
 }
 
-[GraphQLName("CustomerOrganizationDetails")]
-public class CustomerOrganizationDetails
+[GraphQLName("Customer_OrganizationDetails")]
+public class OrganizationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
@@ -179,7 +179,7 @@ public class CustomerTeamDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string? Name { get; set; }
-    [GraphQLName("organization")] public CustomerOrganizationDetails? Organization { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails? Organization { get; set; }
 }
 
 [GraphQLName("CustomersByPreferredLocationWhereInput")]

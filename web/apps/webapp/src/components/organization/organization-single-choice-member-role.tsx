@@ -37,7 +37,7 @@ const OrganizationSingleChoiceMemberRole = ({ rootDataRelay, name, required }: P
         const castedOption = option as string;
 
         return (
-          <li {...props}>
+          <li {...props} key={castedOption}>
             <BodyIconTypography label={convertStringToLowercaseExceptFirstLetter(castedOption)} />
           </li>
         );

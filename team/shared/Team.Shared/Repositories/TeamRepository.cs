@@ -12,20 +12,12 @@ namespace Team.Shared.Repositories;
 public interface ITeamRepository : IRepository<Database.Entities.Team>
 {
     Task<Database.Entities.Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
-
-    Task<ICollection<Database.Entities.Team>> GetByIdsAsync(
-        ICollection<string> ids,
-        CancellationToken cancellationToken);
-
-    Task<IEnumerable<Database.Entities.Team>> GetByCustomerIdAsync(
-        string customerId,
-        string? organizationId,
-        CancellationToken cancellationToken);
-
+    Task<ICollection<Database.Entities.Team>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<IEnumerable<Database.Entities.Team>> GetByCustomerIdAsync(string customerId, string? organizationId, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Team>> GetAllAsync(CancellationToken cancellationToken);
-    Database.Entities.Team Add(Database.Entities.Team organization);
-    Database.Entities.Team Update(Database.Entities.Team organization);
-    Database.Entities.Team Remove(Database.Entities.Team organization);
+    Database.Entities.Team Add(Database.Entities.Team team);
+    Database.Entities.Team Update(Database.Entities.Team team);
+    Database.Entities.Team Remove(Database.Entities.Team team);
 
     Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Team>>, int)> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
@@ -116,18 +108,18 @@ internal static class TeamExtensions
 public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<TeamDbContext, Database.Entities.Team>(dbContext, timeProvider), ITeamRepository
 {
-    public Database.Entities.Team Add(Database.Entities.Team organization)
+    public Database.Entities.Team Add(Database.Entities.Team team)
     {
         var now = TimeProvider.GetUtcNow();
-        organization.CreatedAt = now;
-        return DbContext.Team.Add(organization).Entity;
+        team.CreatedAt = now;
+        return DbContext.Team.Add(team).Entity;
     }
 
-    public Database.Entities.Team Update(Database.Entities.Team organization)
+    public Database.Entities.Team Update(Database.Entities.Team team)
     {
         var now = TimeProvider.GetUtcNow();
-        organization.ModifiedAt = now;
-        return DbContext.Team.Update(organization).Entity;
+        team.ModifiedAt = now;
+        return DbContext.Team.Update(team).Entity;
     }
 
     public async Task<Database.Entities.Team?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
@@ -135,9 +127,7 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Team>> GetByIdsAsync(
-        ICollection<string> ids,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<Database.Entities.Team>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Team
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects()
@@ -168,11 +158,11 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
             .AddDependentObjects()
             .ToListAsync(cancellationToken);
 
-    public Database.Entities.Team Remove(Database.Entities.Team organization)
+    public Database.Entities.Team Remove(Database.Entities.Team team)
     {
         var now = TimeProvider.GetUtcNow();
-        organization.DeletedAt = now;
-        return DbContext.Team.Update(organization).Entity;
+        team.DeletedAt = now;
+        return DbContext.Team.Update(team).Entity;
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Team>>, int)> GetPaginatedTeamsAsync(

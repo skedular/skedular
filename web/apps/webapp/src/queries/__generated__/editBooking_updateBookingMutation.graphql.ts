@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<507f00c4047f9ea657e0bb60582d6de0>>
+ * @generated SignedSource<<6205dd4a9c392c88cb246f1304b7dd91>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -264,7 +264,7 @@ v6 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "BookingOrganizationDetails",
+            "concreteType": "Booking_OrganizationDetails",
             "kind": "LinkedField",
             "name": "organization",
             "plural": false,
@@ -274,7 +274,7 @@ v6 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "BookingLocationDetails",
+            "concreteType": "Booking_LocationDetails",
             "kind": "LinkedField",
             "name": "location",
             "plural": false,
@@ -284,7 +284,7 @@ v6 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "BookingTeamDetails",
+            "concreteType": "Booking_TeamDetails",
             "kind": "LinkedField",
             "name": "team",
             "plural": false,
@@ -305,7 +305,7 @@ v6 = [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "BookingOrganizationCustomTagDetails",
+                "concreteType": "Booking_OrganizationCustomTagDetails",
                 "kind": "LinkedField",
                 "name": "customTags",
                 "plural": true,
@@ -315,7 +315,7 @@ v6 = [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "BookingOrganizationZoneDetails",
+                "concreteType": "Booking_OrganizationZoneDetails",
                 "kind": "LinkedField",
                 "name": "zones",
                 "plural": true,

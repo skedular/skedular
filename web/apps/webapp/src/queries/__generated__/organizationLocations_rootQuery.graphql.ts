@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c1ebac8a2115d5daa2964b612a79fdb8>>
+ * @generated SignedSource<<d45462c6e2a27ca6ae44eb13e4730ffb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -146,7 +146,7 @@ v12 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "CustomerLocationDetails",
+      "concreteType": "Customer_LocationDetails",
       "kind": "LinkedField",
       "name": "preferredLocations",
       "plural": true,
@@ -574,7 +574,7 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "LocationOrganizationDetails",
+                    "concreteType": "Location_OrganizationDetails",
                     "kind": "LinkedField",
                     "name": "organization",
                     "plural": false,
@@ -673,7 +673,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "BookingLocationDetails",
+            "concreteType": "Booking_LocationDetails",
             "kind": "LinkedField",
             "name": "location",
             "plural": false,

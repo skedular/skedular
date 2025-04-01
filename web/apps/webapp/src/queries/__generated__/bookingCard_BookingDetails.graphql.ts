@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0b49d7ace89f834e804f75a98f0590dd>>
+ * @generated SignedSource<<696b9bd043012ba6ff4386fd12fe88f4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -165,7 +165,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "BookingOrganizationDetails",
+      "concreteType": "Booking_OrganizationDetails",
       "kind": "LinkedField",
       "name": "organization",
       "plural": false,
@@ -177,7 +177,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "BookingLocationDetails",
+      "concreteType": "Booking_LocationDetails",
       "kind": "LinkedField",
       "name": "location",
       "plural": false,
@@ -187,7 +187,7 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "BookingTeamDetails",
+      "concreteType": "Booking_TeamDetails",
       "kind": "LinkedField",
       "name": "team",
       "plural": false,
@@ -208,7 +208,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingOrganizationCustomTagDetails",
+          "concreteType": "Booking_OrganizationCustomTagDetails",
           "kind": "LinkedField",
           "name": "customTags",
           "plural": true,
@@ -218,7 +218,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingOrganizationZoneDetails",
+          "concreteType": "Booking_OrganizationZoneDetails",
           "kind": "LinkedField",
           "name": "zones",
           "plural": true,

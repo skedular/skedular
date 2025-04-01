@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dd171ecc86ae94fe8a260782e6de514a>>
+ * @generated SignedSource<<e35e19d41275de3a8bef43846fae034c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -118,7 +118,7 @@ v2 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "TeamLocationDetails",
+            "concreteType": "Team_LocationDetails",
             "kind": "LinkedField",
             "name": "primaryLocation",
             "plural": false,

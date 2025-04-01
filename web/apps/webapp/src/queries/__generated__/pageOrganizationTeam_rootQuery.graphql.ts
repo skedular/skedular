@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6141d64922ad6eb6fa236d66d7513775>>
+ * @generated SignedSource<<ce00ceee362d42faec7c4e197a478c93>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -189,7 +189,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "TeamLocationDetails",
+            "concreteType": "Team_LocationDetails",
             "kind": "LinkedField",
             "name": "primaryLocation",
             "plural": false,

@@ -17,9 +17,9 @@ public class Notification : Node
     [GraphQLName("notificationType")] public NotificationType NotificationType { get; set; }
     [GraphQLName("invitedBy")] public NotificationCustomerDetails? InvitedBy { get; set; }
     [GraphQLName("invitee")] public NotificationCustomerDetails? Invitee { get; set; }
-    [GraphQLName("organization")] public NotificationOrganizationDetails? Organization { get; set; }
-    [GraphQLName("location")] public NotificationLocationDetails? Location { get; set; }
-    [GraphQLName("team")] public NotificationTeamDetails? Team { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails? Organization { get; set; }
+    [GraphQLName("location")] public LocationDetails? Location { get; set; }
+    [GraphQLName("team")] public TeamDetails? Team { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -41,14 +41,14 @@ public class NotificationCustomerDetails
     [GraphQLName("photoUrl72")] public string? PhotoUrl72 { get; set; }
     [GraphQLName("photoUrl192")] public string? PhotoUrl192 { get; set; }
     [GraphQLName("photoUrl512")] public string? PhotoUrl512 { get; set; }
-    [GraphQLName("emails")] public string[] Emails { get; set; } = [];
+    [GraphQLName("emails")] public IEnumerable<string> Emails { get; set; } = [];
 }
 
 [GraphQLName("NotificationEdge")]
 public class NotificationEdge : Edge<Notification>;
 
-[GraphQLName("NotificationLocationDetails")]
-public class NotificationLocationDetails
+[GraphQLName("Notification_LocationDetails")]
+public class LocationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
@@ -61,16 +61,16 @@ public class NotificationOrderInput
     [GraphQLName("field")] public NotificationOrderField Field { get; set; }
 }
 
-[GraphQLName("NotificationOrganizationDetails")]
-public class NotificationOrganizationDetails
+[GraphQLName("Notification_OrganizationDetails")]
+public class OrganizationDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
 }
 
-[GraphQLName("NotificationTeamDetails")]
-public class NotificationTeamDetails
+[GraphQLName("Notification_TeamDetails")]
+public class TeamDetails
 {
     [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;

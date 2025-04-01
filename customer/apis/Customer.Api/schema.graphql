@@ -35,11 +35,11 @@ type CustomerDetails {
   isDefaultOrganizationOnboardingDone: Boolean!
   isPreferredLocationOnboardingDone: Boolean!
   isPreferredZoneOnboardingDone: Boolean!
-  defaultOrganization: CustomerOrganizationDetails
-  preferredLocations: [CustomerLocationDetails!]!
+  defaultOrganization: Customer_OrganizationDetails
+  preferredLocations: [Customer_LocationDetails!]!
   preferredTeams: [CustomerTeamDetails!]!
-  preferredZones: [CustomerOrganizationTagDetails!]!
-  preferredCustomTags: [CustomerOrganizationTagDetails!]!
+  preferredZones: [Customer_OrganizationTagDetails!]!
+  preferredCustomTags: [Customer_OrganizationTagDetails!]!
   preferredResources: [CustomerResourceDetails!]!
   id: ID!
 }
@@ -55,24 +55,6 @@ type CustomerEmail {
   id: ID!
 }
 
-type CustomerLocationDetails {
-  uniqueId: ID!
-  name: String
-  organization: CustomerOrganizationDetails
-}
-
-type CustomerOrganizationDetails {
-  uniqueId: ID!
-  name: String
-  logoUrl: String
-}
-
-type CustomerOrganizationTagDetails {
-  uniqueId: ID!
-  name: String
-  color: String
-}
-
 type CustomerPayload {
   clientMutationId: String
   customer: CustomerDetails!
@@ -86,7 +68,25 @@ type CustomerResourceDetails {
 type CustomerTeamDetails {
   uniqueId: ID!
   name: String
-  organization: CustomerOrganizationDetails
+  organization: Customer_OrganizationDetails
+}
+
+type Customer_LocationDetails {
+  uniqueId: ID!
+  name: String
+  organization: Customer_OrganizationDetails
+}
+
+type Customer_OrganizationDetails {
+  uniqueId: ID!
+  name: String
+  logoUrl: String
+}
+
+type Customer_OrganizationTagDetails {
+  uniqueId: ID!
+  name: String
+  color: String
 }
 
 type Mutation {

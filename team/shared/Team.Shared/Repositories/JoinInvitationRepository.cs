@@ -10,11 +10,7 @@ namespace Team.Shared.Repositories;
 public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 {
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
-
-    Task<ICollection<JoinInvitation>> GetPendingByEmailAsync(
-        ICollection<string> emails,
-        CancellationToken cancellationToken);
-
+    Task<ICollection<JoinInvitation>> GetPendingByEmailAsync(ICollection<string> emails, CancellationToken cancellationToken);
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
     JoinInvitation Remove(JoinInvitation joinInvitation);
@@ -38,15 +34,13 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<JoinInvitation>> GetPendingByEmailAsync(
-        ICollection<string> emails,
-        CancellationToken cancellationToken) => await DbContext.JoinInvitation
-        .Where(query => !query.DeletedAt.HasValue &&
-                        query.Status == InvitationStatusConstants.Pending && emails.Any(email =>
-                            query.Invitee == null && query.Email != null && EF.Functions.ILike(query.Email, email)))
-        .AddDependentObjects()
-        .OrderBy(query => query.Id)
-        .ToListAsync(cancellationToken);
+    public async Task<ICollection<JoinInvitation>> GetPendingByEmailAsync(ICollection<string> emails, CancellationToken cancellationToken) =>
+        await DbContext.JoinInvitation
+            .Where(query => !query.DeletedAt.HasValue && query.Status == InvitationStatusConstants.Pending &&
+                            emails.Any(email => query.Invitee == null && query.Email != null && EF.Functions.ILike(query.Email, email)))
+            .AddDependentObjects()
+            .OrderBy(query => query.Id)
+            .ToListAsync(cancellationToken);
 
     public JoinInvitation Add(JoinInvitation joinInvitation)
     {

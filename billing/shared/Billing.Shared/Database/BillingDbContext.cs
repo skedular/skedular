@@ -7,9 +7,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace Billing.Shared.Database;
 
-public class BillingDbContext(
-    DbContextOptions<BillingDbContext> options,
-    CustomDbContextOptions customDbContextOptions) : DbContextBase<BillingDbContext>(options, customDbContextOptions)
+public class BillingDbContext(DbContextOptions<BillingDbContext> options, CustomDbContextOptions customDbContextOptions)
+    : DbContextBase<BillingDbContext>(options, customDbContextOptions)
 {
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }

@@ -81,8 +81,8 @@ type TeamDetails {
   name: String!
   about: String
   members: [TeamMemberDetails!]!
-  organization: TeamOrganizationDetails!
-  primaryLocation: TeamLocationDetails
+  organization: Team_OrganizationDetails!
+  primaryLocation: Team_LocationDetails
   timezone: String
   hasFutureBooking: Boolean!
   canModify: Boolean!
@@ -94,11 +94,6 @@ type TeamDetails {
 type TeamEdge {
   node: TeamDetails!
   cursor: String!
-}
-
-type TeamLocationDetails {
-  uniqueId: ID!
-  name: String!
 }
 
 type TeamMemberConnection {
@@ -135,12 +130,6 @@ type TeamMembersDetailsPayload {
   members: [TeamMemberDetails!]!
 }
 
-type TeamOrganizationDetails {
-  uniqueId: ID!
-  name: String!
-  logoUrl: String
-}
-
 type TeamOrganizationMemberDetails {
   uniqueId: ID!
   customer: TeamCustomerDetails!
@@ -149,6 +138,17 @@ type TeamOrganizationMemberDetails {
 type TeamPayload {
   clientMutationId: String
   team: TeamDetails!
+}
+
+type Team_LocationDetails {
+  uniqueId: ID!
+  name: String!
+}
+
+type Team_OrganizationDetails {
+  uniqueId: ID!
+  name: String!
+  logoUrl: String
 }
 
 type Version {

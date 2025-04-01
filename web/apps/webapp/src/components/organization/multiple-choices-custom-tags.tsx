@@ -60,7 +60,7 @@ const MultipleChoicesCustomTags = ({ rootDataRelay, name, required, organization
         const castedOption = option as CustomTagDetails;
 
         return (
-          <li {...props}>
+          <li {...props} key={castedOption.id}>
             <BodyIconTypography label={castedOption.name} />
           </li>
         );

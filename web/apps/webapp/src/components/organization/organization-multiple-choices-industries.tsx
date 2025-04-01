@@ -59,7 +59,11 @@ const OrganizationMultipleChoicesIndustries = ({ rootDataRelay, name, required }
       renderOption={(props, option) => {
         const castedOption = option as SubCategoryDetails;
 
-        return <li {...props}>{castedOption.name}</li>;
+        return (
+          <li {...props} key={castedOption.id}>
+            {castedOption.name}
+          </li>
+        );
       }}
       disableCloseOnSelect
       filterOptions={(options, params) => filter(options as SubCategoryDetails[], params)}
