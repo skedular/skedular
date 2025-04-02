@@ -106,7 +106,7 @@ public class LocationMemberService(
         locationMember.Role = mappedRole;
         repositoryFactory.LocationMemberRepository.Update(locationMember);
 
-        await locationOutboxPublisher.PublishLocationAsync(
+        await locationOutboxPublisher.PublishLocationsAsync(
             [mapper.MapTo(location)],
             repositoryFactory.UnitOfWork,
             cancellationToken);

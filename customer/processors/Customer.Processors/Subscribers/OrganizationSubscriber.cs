@@ -193,7 +193,7 @@ public class OrganizationSubscriber(
                 newTeamIds.Count != existingTeamIds.Count ||
                 newTeamIds.Except(existingTeamIds).Any())
             {
-                await customerPublisher.PublishCustomerAsync([mapper.MapTo(customer)!], cancellationToken);
+                await customerPublisher.PublishCustomersAsync([mapper.MapTo(customer)!], cancellationToken);
             }
         }
     }

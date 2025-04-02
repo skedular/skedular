@@ -5,6 +5,7 @@ using Enterprise.Shared.Random;
 using Marketplace.Api.Mappers;
 using Marketplace.Api.Services.Authorization;
 using Marketplace.Shared.Models;
+using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;
@@ -26,6 +27,7 @@ public class ProductService(
     ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
+    IMarketplaceOutboxPublisher marketplaceOutboxPublisher,
     IMapper mapper) : IProductService
 {
     public async Task<Product> AddAsync(string? productId, string organizationId, ProductVersion productVersion, CancellationToken cancellationToken)
@@ -86,6 +88,8 @@ public class ProductService(
                 organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList()));
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Add(productEntity));
 
+        await marketplaceOutboxPublisher.PublishProductsAsync([product], repositoryFactory.UnitOfWork, cancellationToken);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return product;
@@ -126,6 +130,7 @@ public class ProductService(
 
         var deletedProduct = mapper.MapTo(repositoryFactory.ProductRepository.Remove(existingProduct));
 
+        await marketplaceOutboxPublisher.PublishProductsAsync([deletedProduct], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedProduct;
@@ -183,6 +188,8 @@ public class ProductService(
                 organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList()));
 
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));
+
+        await marketplaceOutboxPublisher.PublishProductsAsync([product], repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

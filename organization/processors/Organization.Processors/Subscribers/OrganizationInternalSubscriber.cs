@@ -104,7 +104,7 @@ public class OrganizationInternalSubscriber(
             mappedOrganization.OrganizationOfferings.Where(item => !item.DeletedAt.HasValue).OrderByDescending(item => item.End).First()
         ];
 
-        await organizationOutboxPublisher.PublishOrganizationAsync([mappedOrganization], repositoryFactory.UnitOfWork, cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationsAsync([mappedOrganization], repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

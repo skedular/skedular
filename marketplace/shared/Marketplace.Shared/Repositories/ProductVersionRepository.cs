@@ -26,15 +26,15 @@ internal static class ProductVersionExtensions
 public class ProductVersionRepository(MarketplaceDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<MarketplaceDbContext, ProductVersion>(dbContext, timeProvider), IProductVersionRepository
 {
+    public async Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.ProductVersion
+            .AddDependentObjects()
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
     public ProductVersion Add(ProductVersion productVersion)
     {
         var now = TimeProvider.GetUtcNow();
         productVersion.CreatedAt = now;
         return DbContext.ProductVersion.Add(productVersion).Entity;
     }
-
-    public async Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.ProductVersion
-            .AddDependentObjects()
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 }

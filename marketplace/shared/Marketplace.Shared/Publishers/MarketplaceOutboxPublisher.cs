@@ -14,7 +14,7 @@ namespace Marketplace.Shared.Publishers;
 
 public interface IMarketplaceOutboxPublisher
 {
-    Task PublishProductAsync(IEnumerable<Product> products, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    Task PublishProductsAsync(IEnumerable<Product> products, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 }
 
 public class MarketplaceOutboxPublisher(
@@ -24,7 +24,7 @@ public class MarketplaceOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IMarketplaceOutboxPublisher
 {
-    public async Task PublishProductAsync(IEnumerable<Product> products, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public async Task PublishProductsAsync(IEnumerable<Product> products, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
     {
         foreach (var product in products)
         {

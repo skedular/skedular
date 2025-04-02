@@ -33,6 +33,6 @@ public class OrganizationMemberService(
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await organizationPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], cancellationToken);
+        await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
     }
 }

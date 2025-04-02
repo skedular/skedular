@@ -13,7 +13,7 @@ namespace Customer.Shared.Publishers;
 
 public interface ICustomerOutboxPublisher
 {
-    Task PublishCustomerAsync(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    Task PublishCustomersAsync(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 }
 
 public class CustomerOutboxPublisher(
@@ -23,7 +23,7 @@ public class CustomerOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : ICustomerOutboxPublisher
 {
-    public async Task PublishCustomerAsync(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public async Task PublishCustomersAsync(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
     {
         foreach (var customer in customers)
         {

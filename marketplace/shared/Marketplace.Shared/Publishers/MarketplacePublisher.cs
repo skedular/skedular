@@ -13,7 +13,7 @@ namespace Marketplace.Shared.Publishers;
 
 public interface IMarketplacePublisher
 {
-    Task PublishLocationAsync(IEnumerable<Product> products, CancellationToken cancellationToken);
+    Task PublishProductsAsync(IEnumerable<Product> products, CancellationToken cancellationToken);
 }
 
 public class MarketplacePublisher(
@@ -23,7 +23,7 @@ public class MarketplacePublisher(
     IKafkaPublisher<Key, Event> publisher)
     : IMarketplacePublisher
 {
-    public async Task PublishLocationAsync(IEnumerable<Product> products, CancellationToken cancellationToken) =>
+    public async Task PublishProductsAsync(IEnumerable<Product> products, CancellationToken cancellationToken) =>
         await Task.WhenAll(products.Select(
             product => publisher.PublishAsync(
                 new Key { ProductId = product.Id },

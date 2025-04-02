@@ -120,7 +120,7 @@ public class BookingSubscriber(
 
         if (organizationOfferingActiveMember is null)
         {
-            await organizationPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], cancellationToken);
+            await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -13,7 +13,7 @@ namespace Organization.Shared.Publishers;
 
 public interface IOrganizationPublisher
 {
-    Task PublishOrganizationAsync(IEnumerable<Models.Organization> organizations, CancellationToken cancellationToken);
+    Task PublishOrganizationsAsync(IEnumerable<Models.Organization> organizations, CancellationToken cancellationToken);
 
     Task PublishInvitesToJoinOrganizationNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
@@ -28,7 +28,7 @@ public class OrganizationPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : IOrganizationPublisher
 {
-    public async Task PublishOrganizationAsync(IEnumerable<Models.Organization> organizations,
+    public async Task PublishOrganizationsAsync(IEnumerable<Models.Organization> organizations,
         CancellationToken cancellationToken) =>
         await Task.WhenAll(organizations.Select(
             organization => publisher.PublishAsync(

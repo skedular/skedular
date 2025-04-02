@@ -54,7 +54,7 @@ public class LocationOpeningHoursService(
 
         var location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
-        await locationOutboxPublisher.PublishLocationAsync([location], repositoryFactory.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationsAsync([location], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return location;

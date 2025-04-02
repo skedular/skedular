@@ -173,7 +173,7 @@ public class TeamInvitationService(
                 Customer = customerEntity
             });
 
-            await teamOutboxPublisher.PublishTeamAsync([mapper.MapTo(team)], repositoryFactory.UnitOfWork, cancellationToken);
+            await teamOutboxPublisher.PublishTeamsAsync([mapper.MapTo(team)], repositoryFactory.UnitOfWork, cancellationToken);
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;

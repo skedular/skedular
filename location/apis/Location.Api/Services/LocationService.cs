@@ -110,7 +110,7 @@ public class LocationService(
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
         location = mapper.MapTo(locationEntity);
 
-        await locationOutboxPublisher.PublishLocationAsync([location], repositoryFactory.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationsAsync([location], repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -161,7 +161,7 @@ public class LocationService(
 
         var deletedLocation = mapper.MapTo(repositoryFactory.LocationRepository.Remove(existingLocation));
 
-        await locationOutboxPublisher.PublishLocationAsync([deletedLocation], repositoryFactory.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationsAsync([deletedLocation], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedLocation;
@@ -286,7 +286,7 @@ public class LocationService(
 
         location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
-        await locationOutboxPublisher.PublishLocationAsync([location], repositoryFactory.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationsAsync([location], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return location;

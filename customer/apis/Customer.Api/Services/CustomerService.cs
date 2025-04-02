@@ -232,7 +232,7 @@ public class CustomerService(
             customer = mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer));
         }
 
-        await customerOutboxPublisher.PublishCustomerAsync([customer], repositoryFactory.UnitOfWork, cancellationToken);
+        await customerOutboxPublisher.PublishCustomersAsync([customer], repositoryFactory.UnitOfWork, cancellationToken);
 
         if (sendNewCustomerJoinedEmail)
         {
@@ -267,7 +267,7 @@ public class CustomerService(
             repositoryFactory.IdentityRepository.Add(identityToAdd);
             existingCustomer.Identities = existingCustomer.Identities.Concat([identityToAdd]).ToList();
 
-            await customerOutboxPublisher.PublishCustomerAsync(
+            await customerOutboxPublisher.PublishCustomersAsync(
                 [mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer))],
                 repositoryFactory.UnitOfWork,
                 cancellationToken);
@@ -300,7 +300,7 @@ public class CustomerService(
             var identityToUpdate = mapper.MergeTo(identity, matchingIdentityToUpdate, existingCustomer);
             repositoryFactory.IdentityRepository.Update(identityToUpdate);
 
-            await customerOutboxPublisher.PublishCustomerAsync(
+            await customerOutboxPublisher.PublishCustomersAsync(
                 [mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer))],
                 repositoryFactory.UnitOfWork,
                 cancellationToken);

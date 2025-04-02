@@ -14,7 +14,7 @@ namespace Team.Shared.Publishers;
 
 public interface ITeamOutboxPublisher
 {
-    Task PublishTeamAsync(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    Task PublishTeamsAsync(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 
     Task PublishInvitesToJoinTeamNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
@@ -29,7 +29,7 @@ public class TeamOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : ITeamOutboxPublisher
 {
-    public async Task PublishTeamAsync(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public async Task PublishTeamsAsync(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
     {
         foreach (var team in teams)
         {

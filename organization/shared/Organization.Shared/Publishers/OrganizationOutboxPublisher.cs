@@ -14,7 +14,7 @@ namespace Organization.Shared.Publishers;
 
 public interface IOrganizationOutboxPublisher
 {
-    Task PublishOrganizationAsync(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    Task PublishOrganizationsAsync(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
 
     Task PublishInvitesToJoinOrganizationNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
@@ -29,7 +29,7 @@ public class OrganizationOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IOrganizationOutboxPublisher
 {
-    public async Task PublishOrganizationAsync(
+    public async Task PublishOrganizationsAsync(
         IEnumerable<Models.Organization> organizations,
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)

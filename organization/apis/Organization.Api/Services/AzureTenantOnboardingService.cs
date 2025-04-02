@@ -82,7 +82,7 @@ public class AzureTenantOnboardingService(
 
         repositoryFactory.AzureInstallStateUserIdLookupRepository.Remove(azureInstallStateUserIdLookup);
 
-        await organizationOutboxPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], repositoryFactory.UnitOfWork, cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], repositoryFactory.UnitOfWork, cancellationToken);
         await organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync([tenant.Id], repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

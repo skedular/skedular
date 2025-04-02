@@ -166,7 +166,10 @@ public class OrganizationInvitationService(
                 Customer = customerEntity
             });
 
-            await organizationOutboxPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], repositoryFactory.UnitOfWork, cancellationToken);
+            await organizationOutboxPublisher.PublishOrganizationsAsync(
+                [mapper.MapTo(organization)],
+                repositoryFactory.UnitOfWork,
+                cancellationToken);
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;

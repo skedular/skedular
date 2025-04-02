@@ -129,7 +129,7 @@ public class PaymentSubscriber(
             // Always publish latest saved organization state. Since we do not use Outbox here, there is a chance we
             // might have failed to do previous steps and this run is the result of replaying the event from retry topic
             organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-            await organizationPublisher.PublishOrganizationAsync([mapper.MapTo(organization!)], cancellationToken);
+            await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization!)], cancellationToken);
         }
     }
 }

@@ -20,12 +20,12 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper map
             return;
         }
 
-        await bookingPublisher.PublishBookingAsync([mapper.MapTo(booking)], cancellationToken);
+        await bookingPublisher.PublishBookingsAsync([mapper.MapTo(booking)], cancellationToken);
     }
 
     public async Task RepublishAllBookingsAsync(CancellationToken cancellationToken)
     {
         var bookings = await repositoryFactory.BookingRepository.GetAllAsync(cancellationToken);
-        await bookingPublisher.PublishBookingAsync(bookings.Select(mapper.MapTo), cancellationToken);
+        await bookingPublisher.PublishBookingsAsync(bookings.Select(mapper.MapTo), cancellationToken);
     }
 }

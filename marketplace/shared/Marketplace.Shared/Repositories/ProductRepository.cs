@@ -9,6 +9,8 @@ namespace Marketplace.Shared.Repositories;
 public interface IProductRepository : IRepository<Product>
 {
     Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Product>> GetAllByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+    Task<ICollection<Product>> GetAllAsync(CancellationToken cancellationToken);
     Product Add(Product product);
     Product Update(Product product);
     Product Remove(Product product);
@@ -29,6 +31,23 @@ internal static class ProductExtensions
 public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<MarketplaceDbContext, Product>(dbContext, timeProvider), IProductRepository
 {
+    public async Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.Product
+            .AddDependentObjects()
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<Product>> GetAllByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
+        await DbContext.Product
+            .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<Product>> GetAllAsync(CancellationToken cancellationToken) =>
+        await DbContext.Product
+            .Where(query => !query.DeletedAt.HasValue)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
+
     public Product Add(Product product)
     {
         var now = TimeProvider.GetUtcNow();
@@ -49,9 +68,4 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
         product.DeletedAt = now;
         return DbContext.Product.Update(product).Entity;
     }
-
-    public async Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.Product
-            .AddDependentObjects()
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 }

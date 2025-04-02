@@ -157,7 +157,7 @@ public class ResourceService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var mappedResource = mapper.MapTo(repositoryFactory.ResourceRepository.Add(mapper.MapTo(resource, existingLocation, organizationTags)));
-        await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationsAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return mappedResource;
@@ -216,7 +216,7 @@ public class ResourceService(
         var mappedLocation = mapper.MapTo(existingLocation);
         mappedLocation.Resources = mappedLocation.Resources.Where(item => item.Id != id).ToList();
 
-        await locationOutboxPublisher.PublishLocationAsync([mappedLocation], repositoryFactory.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationsAsync([mappedLocation], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedResource;
@@ -258,7 +258,7 @@ public class ResourceService(
             mappedLocation.Resources = mappedLocation.Resources.Where(item => !ids.Contains(item.Id)).ToList();
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationsAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -307,7 +307,7 @@ public class ResourceService(
             resource.Inactive = false;
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationsAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -356,7 +356,7 @@ public class ResourceService(
             resource.Inactive = true;
         }
 
-        await locationOutboxPublisher.PublishLocationAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationsAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -468,7 +468,7 @@ public class ResourceService(
 
         resource = mapper.MapTo(repositoryFactory.ResourceRepository.Update(existingResource), mapper.MapTo(existingLocation));
 
-        await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
+        await locationOutboxPublisher.PublishLocationsAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return resource;

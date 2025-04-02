@@ -21,12 +21,12 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper map
             return;
         }
 
-        await organizationPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], cancellationToken);
+        await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
     }
 
     public async Task RepublishAllOrganizationsAsync(CancellationToken cancellationToken)
     {
         var organizations = await repositoryFactory.OrganizationRepository.GetAllAsync(cancellationToken);
-        await organizationPublisher.PublishOrganizationAsync(organizations.Select(mapper.MapTo), cancellationToken);
+        await organizationPublisher.PublishOrganizationsAsync(organizations.Select(mapper.MapTo), cancellationToken);
     }
 }

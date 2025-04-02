@@ -13,7 +13,7 @@ namespace Team.Shared.Publishers;
 
 public interface ITeamPublisher
 {
-    Task PublishTeamAsync(IEnumerable<Models.Team> teams, CancellationToken cancellationToken);
+    Task PublishTeamsAsync(IEnumerable<Models.Team> teams, CancellationToken cancellationToken);
 
     Task PublishInvitesToJoinTeamNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
@@ -28,7 +28,7 @@ public class TeamPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : ITeamPublisher
 {
-    public async Task PublishTeamAsync(IEnumerable<Models.Team> teams,
+    public async Task PublishTeamsAsync(IEnumerable<Models.Team> teams,
         CancellationToken cancellationToken) =>
         await Task.WhenAll(teams.Select(
             team => publisher.PublishAsync(

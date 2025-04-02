@@ -139,7 +139,7 @@ public class TeamMemberService(
         teamMember.Role = mappedRole;
         repositoryFactory.TeamMemberRepository.Update(teamMember);
 
-        await teamOutboxPublisher.PublishTeamAsync([mapper.MapTo(team)], repositoryFactory.UnitOfWork, cancellationToken);
+        await teamOutboxPublisher.PublishTeamsAsync([mapper.MapTo(team)], repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -186,7 +186,7 @@ public class TeamMemberService(
             repositoryFactory.TeamMemberRepository.Update(organizationMember);
         }
 
-        await teamOutboxPublisher.PublishTeamAsync(teams.Select(mapper.MapTo), repositoryFactory.UnitOfWork, cancellationToken);
+        await teamOutboxPublisher.PublishTeamsAsync(teams.Select(mapper.MapTo), repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -253,7 +253,7 @@ public class TeamMemberService(
         var mappedTeam = mapper.MapTo(existingTeam);
         mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
 
-        await teamOutboxPublisher.PublishTeamAsync(
+        await teamOutboxPublisher.PublishTeamsAsync(
             [mappedTeam],
             repositoryFactory.UnitOfWork,
             cancellationToken);
@@ -362,7 +362,7 @@ public class TeamMemberService(
         var mappedTeam = mapper.MapTo(existingTeam);
         mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
 
-        await teamOutboxPublisher.PublishTeamAsync([mappedTeam], repositoryFactory.UnitOfWork, cancellationToken);
+        await teamOutboxPublisher.PublishTeamsAsync([mappedTeam], repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -397,7 +397,7 @@ public class TeamMemberService(
 
         repositoryFactory.TeamMemberRepository.RemoveRange(teamMembers);
 
-        await teamOutboxPublisher.PublishTeamAsync(
+        await teamOutboxPublisher.PublishTeamsAsync(
             teams.Select(item =>
             {
                 var mapped = mapper.MapTo(item);
@@ -461,7 +461,7 @@ public class TeamMemberService(
                 var mappedTeam = mapper.MapTo(existingTeam);
                 mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.DeletedAt is null).ToList();
 
-                await teamOutboxPublisher.PublishTeamAsync([mappedTeam], repositoryFactory.UnitOfWork, cancellationToken);
+                await teamOutboxPublisher.PublishTeamsAsync([mappedTeam], repositoryFactory.UnitOfWork, cancellationToken);
 
                 await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                 await updateTransaction.CommitAsync(cancellationToken);
@@ -495,7 +495,7 @@ public class TeamMemberService(
 
         var addedItem = repositoryFactory.TeamMemberRepository.Add(teamMember);
 
-        await teamOutboxPublisher.PublishTeamAsync([mapper.MapTo(existingTeam)], repositoryFactory.UnitOfWork, cancellationToken);
+        await teamOutboxPublisher.PublishTeamsAsync([mapper.MapTo(existingTeam)], repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

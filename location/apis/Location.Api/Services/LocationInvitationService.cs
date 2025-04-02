@@ -160,7 +160,7 @@ public class LocationInvitationService(
                 Id = randomHelper.Generate(), Role = joinInvitation.Role, Location = location, Customer = customerEntity
             });
 
-            await locationOutboxPublisher.PublishLocationAsync([mapper.MapTo(location)], repositoryFactory.UnitOfWork, cancellationToken);
+            await locationOutboxPublisher.PublishLocationsAsync([mapper.MapTo(location)], repositoryFactory.UnitOfWork, cancellationToken);
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;

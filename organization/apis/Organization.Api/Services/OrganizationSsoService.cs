@@ -67,7 +67,7 @@ public class OrganizationSsoService(
             : repositoryFactory.OrganizationSsoSettingRepository.Update(
                 mapper.MergeToEntity(ssoSetting, existingOrganization.OrganizationSsoSettings, existingOrganization));
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
+        await organizationOutboxPublisher.PublishOrganizationsAsync(
             [mapper.MapTo(existingOrganization)],
             repositoryFactory.UnitOfWork,
             cancellationToken);

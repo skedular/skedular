@@ -13,7 +13,7 @@ namespace Location.Shared.Publishers;
 
 public interface ILocationPublisher
 {
-    Task PublishLocationAsync(IEnumerable<Models.Location> locations, CancellationToken cancellationToken);
+    Task PublishLocationsAsync(IEnumerable<Models.Location> locations, CancellationToken cancellationToken);
 
     Task PublishInvitesToJoinLocationNotificationAsync(
         IEnumerable<JoinInvitation> joinInvitations,
@@ -28,7 +28,7 @@ public class LocationPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : ILocationPublisher
 {
-    public async Task PublishLocationAsync(IEnumerable<Models.Location> locations, CancellationToken cancellationToken) =>
+    public async Task PublishLocationsAsync(IEnumerable<Models.Location> locations, CancellationToken cancellationToken) =>
         await Task.WhenAll(locations.Select(
             location => publisher.PublishAsync(
                 new Key { LocationId = location.Id },

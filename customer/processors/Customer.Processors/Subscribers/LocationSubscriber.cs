@@ -194,7 +194,7 @@ public class LocationSubscriber(
                 newResourceIds.Count != existingResourceIds.Count ||
                 newResourceIds.Except(existingResourceIds).Any())
             {
-                await customerPublisher.PublishCustomerAsync([mapper.MapTo(customer)!], cancellationToken);
+                await customerPublisher.PublishCustomersAsync([mapper.MapTo(customer)!], cancellationToken);
             }
         }
     }

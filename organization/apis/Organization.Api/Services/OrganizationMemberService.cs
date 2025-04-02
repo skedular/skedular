@@ -129,7 +129,7 @@ public class OrganizationMemberService(
         organizationMember.Role = mappedRole;
         repositoryFactory.OrganizationMemberRepository.Update(organizationMember);
 
-        await organizationOutboxPublisher.PublishOrganizationAsync([mapper.MapTo(organization)], repositoryFactory.UnitOfWork, cancellationToken);
+        await organizationOutboxPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], repositoryFactory.UnitOfWork, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -182,7 +182,7 @@ public class OrganizationMemberService(
             repositoryFactory.OrganizationMemberRepository.Update(organizationMember);
         }
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
+        await organizationOutboxPublisher.PublishOrganizationsAsync(
             organizations.Select(mapper.MapTo),
             repositoryFactory.UnitOfWork,
             cancellationToken);
@@ -230,7 +230,7 @@ public class OrganizationMemberService(
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(organizationMembers);
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
+        await organizationOutboxPublisher.PublishOrganizationsAsync(
             organizations.Select(item =>
             {
                 var mapped = mapper.MapTo(item);
@@ -285,7 +285,7 @@ public class OrganizationMemberService(
                 mapper.MergeToEntity(member, organizationMember, organization, customer));
         }
 
-        await organizationOutboxPublisher.PublishOrganizationAsync(
+        await organizationOutboxPublisher.PublishOrganizationsAsync(
             [mapper.MapTo(organization)],
             repositoryFactory.UnitOfWork,
             cancellationToken);
