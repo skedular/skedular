@@ -326,7 +326,6 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           name,
           about,
           timezone,
-          organizationId,
           primaryLocationId,
         },
       },

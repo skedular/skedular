@@ -383,7 +383,6 @@ input UpdateLocationInput {
   id: String!
   name: String!
   about: String
-  organizationId: String!
   timezone: String
   physicalAddress: LocationAddressDetailsInput
 }

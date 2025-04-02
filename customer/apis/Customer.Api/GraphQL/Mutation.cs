@@ -180,21 +180,19 @@ public class Mutation(IMapper mapper)
     public async Task<CustomerPayload?> UpdateCustomerDetailsAsync(
         UpdateCustomerDetailsInput input,
         [Service] ICustomerDetailsService customerDetailsService,
-        CancellationToken cancellationToken)
-    {
-        var customerFeedback = await customerDetailsService.UpdateCustomerDetailsAsync(
-            input.Id,
-            input.Timezone,
-            input.Designation,
-            input.Title,
-            input.Name,
-            input.GivenName,
-            input.MiddleName,
-            input.FamilyName,
-            input.PhoneNumber,
-            cancellationToken);
-        return mapper.MapTo(customerFeedback, input.ClientMutationId);
-    }
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await customerDetailsService.UpdateCustomerDetailsAsync(
+                input.Id,
+                input.Timezone,
+                input.Designation,
+                input.Title,
+                input.Name,
+                input.GivenName,
+                input.MiddleName,
+                input.FamilyName,
+                input.PhoneNumber,
+                cancellationToken),
+            input.ClientMutationId);
 
     [UseResolverScope]
     public async Task<CustomerPayload?> AddCustomerPreferredOrganizationTagAsync(

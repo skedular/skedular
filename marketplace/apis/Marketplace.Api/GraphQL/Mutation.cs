@@ -1,5 +1,7 @@
+using HotChocolate;
 using HotChocolate.Types;
 using Marketplace.Api.Mappers;
+using Marketplace.Api.Services;
 
 namespace Marketplace.Api.GraphQL;
 
@@ -9,26 +11,29 @@ public class Mutation(IMapper mapper)
     [UseResolverScope]
     public async Task<ProductPayload?> AddProductAsync(
         AddProductInput input,
-        CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(input.OrganizationId);
-
-        throw new NotImplementedException();
-    }
+        [Service] IProductService productService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Product = mapper.MapTo(await productService.AddAsync(input.Id, input.OrganizationId, mapper.MapTo(input), cancellationToken))!
+        };
 
     [UseResolverScope]
     public async Task<ProductPayload?> UpdateProductAsync(
         UpdateProductInput input,
-        CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(input.OrganizationId);
-
-        throw new NotImplementedException();
-    }
+        [Service] IProductService productService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Product = mapper.MapTo(await productService.UpdateAsync(input.Id, mapper.MapTo(input), cancellationToken))!
+        };
 
     [UseResolverScope]
     public async Task<ProductPayload?> DeleteProductAsync(
         DeleteProductInput input,
+        [Service] IProductService productService,
         CancellationToken cancellationToken) =>
-        throw new NotImplementedException();
+        new() { ClientMutationId = input.ClientMutationId, Product = mapper.MapTo(await productService.DeleteAsync(input.Id, cancellationToken))! };
 }

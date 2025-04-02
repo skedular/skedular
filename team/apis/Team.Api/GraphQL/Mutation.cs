@@ -14,8 +14,6 @@ public class Mutation(IMapper mapper)
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrEmpty(input.OrganizationId);
-
         var team = await teamService.AddAsync(mapper.MapTo(input), false, cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
@@ -26,8 +24,6 @@ public class Mutation(IMapper mapper)
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrEmpty(input.OrganizationId);
-
         var team = await teamService.UpdateAsync(mapper.MapTo(input), false, cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }

@@ -165,12 +165,12 @@ public class ResourceService(
 
     public async Task<Resource> UpdateAsync(Resource resource, CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(resource.Id);
+
         foreach (var tag in resource.Tags)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(tag.Id);
         }
-
-        ArgumentException.ThrowIfNullOrWhiteSpace(resource.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken);

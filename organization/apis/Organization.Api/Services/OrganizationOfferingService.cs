@@ -33,8 +33,8 @@ public class OrganizationOfferingService(
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-        var offering = offeringCode.GetOffering();
 
+        var offering = offeringCode.GetOffering();
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);

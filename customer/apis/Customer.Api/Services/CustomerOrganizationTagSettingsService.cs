@@ -30,22 +30,19 @@ public class CustomerOrganizationTagSettingsService(
         string? customerId,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationTagId);
+
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        var organizationTag = await repositoryFactory.OrganizationTagRepository.GetByIdAsync(
-            organizationTagId,
-            cancellationToken);
+        var organizationTag = await repositoryFactory.OrganizationTagRepository.GetByIdAsync(organizationTagId, cancellationToken);
         if (organizationTag is null)
         {
             throw new OrganizationTagNotFound();
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-            organizationTag.Organization.Id,
-            false,
-            false,
-            cancellationToken);
+        var organization =
+            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationTag.Organization.Id, false, false, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -70,11 +67,12 @@ public class CustomerOrganizationTagSettingsService(
         string? customerId,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationTagId);
+
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        customer.PreferredOrganizationTags =
-            customer.PreferredOrganizationTags.Where(item => item.Id != organizationTagId).ToList();
+        customer.PreferredOrganizationTags = customer.PreferredOrganizationTags.Where(item => item.Id != organizationTagId).ToList();
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 }

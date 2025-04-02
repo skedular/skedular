@@ -31,7 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
         <ProjectReference Include="..\..\shared\Marketplace.Shared\Marketplace.Shared.csproj"/>
     </ItemGroup>
 

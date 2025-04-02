@@ -240,7 +240,6 @@ public class UpdateLocationInput
     [GraphQLName("id")] public required string Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
 }

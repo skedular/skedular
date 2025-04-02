@@ -13,10 +13,7 @@ public interface ICustomerLocationSettingsService
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Customer> RemoveCustomerPreferredLocationAsync(
-        string locationId,
-        string? customerId,
-        CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> RemoveCustomerPreferredLocationAsync(string locationId, string? customerId, CancellationToken cancellationToken);
 }
 
 public class CustomerLocationSettingsService(
@@ -32,6 +29,8 @@ public class CustomerLocationSettingsService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
+
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
@@ -41,8 +40,7 @@ public class CustomerLocationSettingsService(
             throw new LocationNotFound();
         }
 
-        if (!ignoreAuthorizationCheck &&
-            !await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer, cancellationToken))
+        if (!ignoreAuthorizationCheck && !await locationAuthorizationService.CanAddLocationAsPreferredAsync(location, customer, cancellationToken))
         {
             throw new Unauthorized();
         }
@@ -61,6 +59,8 @@ public class CustomerLocationSettingsService(
         string? customerId,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
+
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);

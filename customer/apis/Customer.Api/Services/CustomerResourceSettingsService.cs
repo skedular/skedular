@@ -7,15 +7,8 @@ namespace Customer.Api.Services;
 
 public interface ICustomerResourceSettingsService
 {
-    Task<Shared.Models.Customer> AddCustomerPreferredResourceAsync(
-        string resourceId,
-        string? customerId,
-        CancellationToken cancellationToken);
-
-    Task<Shared.Models.Customer> RemoveCustomerPreferredResourceAsync(
-        string resourceId,
-        string? customerId,
-        CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> AddCustomerPreferredResourceAsync(string resourceId, string? customerId, CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> RemoveCustomerPreferredResourceAsync(string resourceId, string? customerId, CancellationToken cancellationToken);
 }
 
 public class CustomerResourceSettingsService(
@@ -30,6 +23,8 @@ public class CustomerResourceSettingsService(
         string? customerId,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(resourceId);
+
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
@@ -67,6 +62,8 @@ public class CustomerResourceSettingsService(
         string? customerId,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(resourceId);
+
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);

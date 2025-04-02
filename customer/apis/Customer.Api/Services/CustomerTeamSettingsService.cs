@@ -13,10 +13,7 @@ public interface ICustomerTeamSettingsService
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Customer> RemoveCustomerPreferredTeamAsync(
-        string teamId,
-        string? customerId,
-        CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> RemoveCustomerPreferredTeamAsync(string teamId, string? customerId, CancellationToken cancellationToken);
 }
 
 public class CustomerTeamSettingsService(
@@ -32,6 +29,8 @@ public class CustomerTeamSettingsService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
+
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
@@ -56,11 +55,10 @@ public class CustomerTeamSettingsService(
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Customer> RemoveCustomerPreferredTeamAsync(
-        string teamId,
-        string? customerId,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> RemoveCustomerPreferredTeamAsync(string teamId, string? customerId, CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
+
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);

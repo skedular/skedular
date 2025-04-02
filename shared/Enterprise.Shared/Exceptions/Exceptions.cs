@@ -59,3 +59,5 @@ public class SamlMetadataException() : Exception("Signing certificate not found 
 
 public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
     : Exception("Team Primary location organization does not match team organization");
+
+public class ProductNotFound() : Exception("Product not found");

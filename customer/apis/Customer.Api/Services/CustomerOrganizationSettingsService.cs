@@ -12,9 +12,7 @@ public interface ICustomerOrganizationSettingsService
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Customer> ClearCustomerDefaultOrganizationAsync(
-        string? customerId,
-        CancellationToken cancellationToken);
+    Task<Shared.Models.Customer> ClearCustomerDefaultOrganizationAsync(string? customerId, CancellationToken cancellationToken);
 }
 
 public class CustomerOrganizationSettingsService(
@@ -29,18 +27,18 @@ public class CustomerOrganizationSettingsService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
+
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        var organization =
-            await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
         }
 
-        if (!ignoreAuthorizationCheck &&
-            !organizationAuthorizationService.CanAddOrganizationAsDefault(organization, customer))
+        if (!ignoreAuthorizationCheck && !organizationAuthorizationService.CanAddOrganizationAsDefault(organization, customer))
         {
             throw new Unauthorized();
         }
@@ -49,9 +47,7 @@ public class CustomerOrganizationSettingsService(
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Customer> ClearCustomerDefaultOrganizationAsync(
-        string? customerId,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Customer> ClearCustomerDefaultOrganizationAsync(string? customerId, CancellationToken cancellationToken)
     {
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)

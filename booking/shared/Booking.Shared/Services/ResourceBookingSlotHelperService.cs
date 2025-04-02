@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
@@ -18,11 +19,11 @@ public class ResourceBookingSlotHelperService(IRandomHelper randomHelper, TimePr
     {
         var startPeriod = GetStartPeriod();
         var endPeriod = startPeriod.AddDays(14).AddYears(1);
-        var count = (endPeriod - startPeriod).TotalMinutes / 15;
+        var count = (endPeriod - startPeriod).TotalMinutes / OpeningHoursDetails.OpeningHoursSlotSizeInMinutes;
 
         return Enumerable
             .Range(0, (int)count)
-            .Select(idx => startPeriod.AddMinutes(idx * 15))
+            .Select(idx => startPeriod.AddMinutes(idx * OpeningHoursDetails.OpeningHoursSlotSizeInMinutes))
             .Select(start => new ResourceBookingSlot { Id = randomHelper.Generate(), Start = start, Available = true, Resource = resource })
             .ToList();
     }

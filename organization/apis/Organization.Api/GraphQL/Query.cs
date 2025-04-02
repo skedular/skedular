@@ -28,7 +28,7 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public int OpeningHoursMinutesStep() => 15;
+    public int OpeningHoursMinutesStep() => OpeningHoursDetails.OpeningHoursSlotSizeInMinutes;
 
     [UseResolverScope]
     public IEnumerable<OrganizationTypeDetails> OrganizationTypes() =>

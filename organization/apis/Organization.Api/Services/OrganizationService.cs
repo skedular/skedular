@@ -185,7 +185,7 @@ public class OrganizationService(
                 Color = "#8A2BE2",
                 Organization = organizationEntity
             });
-        
+
         repositoryFactory.OrganizationMemberRepository.AddRange(organizationMembers);
         organization = mapper.MapTo(organizationEntity);
 
@@ -236,10 +236,7 @@ public class OrganizationService(
 
     public async Task<Shared.Models.Organization?> GetByIdAsync(string organizationId, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(organizationId))
-        {
-            return null;
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)

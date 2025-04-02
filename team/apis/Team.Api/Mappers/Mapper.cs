@@ -200,7 +200,6 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId }
         };
 

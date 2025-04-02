@@ -149,10 +149,7 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    public Shared.Database.Entities.Location MergeTo(
-        Shared.Models.Location src,
-        Shared.Database.Entities.Location dest,
-        Address? physicalAddress)
+    public Shared.Database.Entities.Location MergeTo(Shared.Models.Location src, Shared.Database.Entities.Location dest, Address? physicalAddress)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;

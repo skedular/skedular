@@ -1,4 +1,5 @@
 using Api.Shared.Services.Offering;
+using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using Organization.Api.Mappers;
@@ -79,7 +80,8 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
-        var organizationMembers = await organizationMemberService.ChangeStatusAsync(input.Ids.ToList(), input.Status, cancellationToken);
+        var organizationMembers =
+            await organizationMemberService.ChangeStatusAsync(input.Ids.RemoveInvalidIds()!.ToList(), input.Status, cancellationToken);
         return new OrganizationMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
@@ -92,7 +94,7 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
-        var organizationMembers = await organizationMemberService.RemoveAsync(input.Ids.ToList(), cancellationToken);
+        var organizationMembers = await organizationMemberService.RemoveAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new OrganizationMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()

@@ -77,6 +77,8 @@ public class OrganizationMemberService(
         OrganizationMemberRole memberRole,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationMemberId);
+
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organizationMember =
             await repositoryFactory.OrganizationMemberRepository.GetByIdAsync(organizationMemberId, cancellationToken);

@@ -51,6 +51,9 @@ public class LocationService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(location.Organization);
+        ArgumentException.ThrowIfNullOrWhiteSpace(location.Organization.Id);
+
         var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
 
         ArgumentException.ThrowIfNullOrWhiteSpace(location.Organization.Id);
@@ -166,10 +169,7 @@ public class LocationService(
 
     public async Task<Shared.Models.Location?> GetByIdAsync(string locationId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(locationId))
-        {
-            return null;
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)

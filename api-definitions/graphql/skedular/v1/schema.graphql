@@ -1745,7 +1745,6 @@ input UpdateLocationInput {
   clientMutationId: String
   id: String!
   name: String!
-  organizationId: String!
   physicalAddress: LocationAddressDetailsInput
   timezone: String
 }
@@ -1865,7 +1864,6 @@ input UpdateTeamInput {
   clientMutationId: String
   id: String!
   name: String!
-  organizationId: String!
   primaryLocationId: String
   timezone: String
 }

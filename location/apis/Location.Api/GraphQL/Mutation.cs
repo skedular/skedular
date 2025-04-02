@@ -1,3 +1,4 @@
+using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using Location.Api.Mappers;
@@ -12,31 +13,23 @@ public class Mutation(IMapper mapper)
     public async Task<LocationPayload?> AddLocationAsync(
         AddLocationInput input,
         [Service] ILocationService locationService,
-        CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(input.OrganizationId);
-
-        return new LocationPayload
+        CancellationToken cancellationToken) =>
+        new()
         {
             ClientMutationId = input.ClientMutationId,
             Location = mapper.MapTo(await locationService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
         };
-    }
 
     [UseResolverScope]
     public async Task<LocationPayload?> UpdateLocationAsync(
         UpdateLocationInput input,
         [Service] ILocationService locationService,
-        CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(input.OrganizationId);
-
-        return new LocationPayload
+        CancellationToken cancellationToken) =>
+        new()
         {
             ClientMutationId = input.ClientMutationId,
             Location = mapper.MapTo(await locationService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
         };
-    }
 
     [UseResolverScope]
     public async Task<LocationPayload?> DeleteLocationAsync(
@@ -131,7 +124,7 @@ public class Mutation(IMapper mapper)
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        var resources = await resourceService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
     }
 
@@ -141,7 +134,7 @@ public class Mutation(IMapper mapper)
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.ActivateAsync(input.Ids.ToList(), cancellationToken);
+        var resources = await resourceService.ActivateAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
     }
 
@@ -151,7 +144,7 @@ public class Mutation(IMapper mapper)
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.DeactivateAsync(input.Ids.ToList(), cancellationToken);
+        var resources = await resourceService.DeactivateAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
     }
 

@@ -541,7 +541,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           name,
           about,
           timezone,
-          organizationId,
           physicalAddress: {
             formattedAddress: physicalAddress,
           },

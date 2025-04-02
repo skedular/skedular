@@ -228,7 +228,6 @@ public class UpdateTeamInput
     [GraphQLName("id")] public required string Id { get; set; }
     [GraphQLName("name")] public required string Name { get; set; }
     [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
 }

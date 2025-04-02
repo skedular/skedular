@@ -47,6 +47,9 @@ public class TeamService(
 {
     public async Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(team.Organization);
+        ArgumentException.ThrowIfNullOrWhiteSpace(team.Organization.Id);
+
         var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
 
         Location? primaryLocation = null;
@@ -210,10 +213,7 @@ public class TeamService(
 
     public async Task<Shared.Models.Team?> GetByIdAsync(string teamId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(teamId))
-        {
-            return null;
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
@@ -239,8 +239,7 @@ public class TeamService(
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
 
-        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) &&
-            string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
+        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) && string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
         {
             throw new InvalidOperationException();
         }
@@ -255,10 +254,7 @@ public class TeamService(
             // TODO: 20250117 - Morteza: We currently only support returning teams for others customer when we are part
             // of same organization meaning organization ID is then required. We for now do not support use cases where
             // team is created without organization attached.    
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                searchCriteria.OrganizationId,
-                false,
-                cancellationToken);
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, false, cancellationToken);
             if (organization is null)
             {
                 throw new OrganizationNotFound();
@@ -294,10 +290,7 @@ public class TeamService(
         var mappedTeams = new List<Edge<Shared.Models.Team>>();
         foreach (var edge in edges)
         {
-            mappedTeams.Add(
-                new Edge<Shared.Models.Team>(
-                    edge.Cursor,
-                    await EnrichTeamAsync(customer, edge.Node, cancellationToken)));
+            mappedTeams.Add(new Edge<Shared.Models.Team>(edge.Cursor, await EnrichTeamAsync(customer, edge.Node, cancellationToken)));
         }
 
         return (paginatedInfo, mappedTeams, totalCount);
@@ -309,10 +302,7 @@ public class TeamService(
 
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-                organizationId,
-                false,
-                cancellationToken);
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
             if (organization is null)
             {
                 throw new OrganizationNotFound();
@@ -353,9 +343,7 @@ public class TeamService(
 
         if (updateTeamMembers)
         {
-            var itemsToRemove = teamMembers!
-                .Where(teamMember => rebuiltTeamMembers.All(item => item.Customer.Id != teamMember.Customer.Id))
-                .ToList();
+            var itemsToRemove = teamMembers!.Where(teamMember => rebuiltTeamMembers.All(item => item.Customer.Id != teamMember.Customer.Id)).ToList();
             var updatedItems = teamMembers!
                 .Where(teamMember => rebuiltTeamMembers.Any(item => item.Customer.Id == teamMember.Customer.Id))
                 .Select(teamMember =>
@@ -379,7 +367,9 @@ public class TeamService(
         return team;
     }
 
-    private async Task<Shared.Models.Team> EnrichTeamAsync(Customer? customer, Shared.Database.Entities.Team team,
+    private async Task<Shared.Models.Team> EnrichTeamAsync(
+        Customer? customer,
+        Shared.Database.Entities.Team team,
         CancellationToken cancellationToken)
     {
         if (customer is not null && !teamAuthorizationService.CanView(team, customer))
@@ -397,8 +387,7 @@ public class TeamService(
                 CanModify = teamAuthorizationService.CanModify(team, customer),
                 CanDelete = teamAuthorizationService.CanDelete(team, customer),
                 CanInvitePeople = teamAuthorizationService.CanInvitePeople(team, customer),
-                CanCancelPeopleExistingInvitations =
-                    teamAuthorizationService.CanCancelPeopleExistingInvitations(team, customer)
+                CanCancelPeopleExistingInvitations = teamAuthorizationService.CanCancelPeopleExistingInvitations(team, customer)
             };
         }
 

@@ -1,5 +1,4 @@
-﻿using Ardalis.GuardClauses;
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
@@ -84,8 +83,13 @@ public class AzureTenantService(
     public async Task<string> GenerateAdminConsentUrlAsync(CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
-        Guard.Against.NullOrEmpty(context.GetAzureTenantId());
         ArgumentNullException.ThrowIfNull(httpContextAccessor.HttpContext);
+
+        var tenantId = context.GetAzureTenantId();
+        if (tenantId == Guid.Empty)
+        {
+            throw new ArgumentException(nameof(tenantId));
+        }
 
         var currentUri = string.IsNullOrWhiteSpace(organizationConfiguration.ApiBaseDomain)
             ? UriHelper.BuildAbsolute(
@@ -97,7 +101,6 @@ public class AzureTenantService(
         var installStateUserIdLookup = repositoryFactory.AzureInstallStateUserIdLookupRepository.Add(
             new AzureInstallStateUserIdLookup { Id = randomHelper.Generate(), InstalledByUserId = context.GetVerifiableToken() });
 
-        var tenantId = context.GetAzureTenantId();
         var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(new Uri(new Uri(currentUri), "organization/api/v1/onboard-azure-tenant").OriginalString);
         var scope = Uri.EscapeDataString(Strings.Join(s_allPermissions)!);

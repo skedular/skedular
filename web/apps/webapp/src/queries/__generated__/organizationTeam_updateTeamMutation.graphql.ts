@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e35e19d41275de3a8bef43846fae034c>>
+ * @generated SignedSource<<0e52d3fc588d2daa3178818c9b556fed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type UpdateTeamInput = {
   clientMutationId?: string | null | undefined;
   id: string;
   name: string;
-  organizationId: string;
   primaryLocationId?: string | null | undefined;
   timezone?: string | null | undefined;
 };
