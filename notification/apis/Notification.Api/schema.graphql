@@ -68,7 +68,7 @@ type Query {
   notificationVersion: Version!
   notificationCustomerRecordSynced: Boolean! @cost(weight: "10")
   pendingInvitationsCount: Int! @cost(weight: "10")
-  myNotifications(after: String first: Int before: String last: Int where: MyNotificationWhereInput! orderBy: [NotificationOrderInput!]): NotificationConnection @cost(weight: "10")
+  myNotifications(after: String first: Int before: String last: Int where: MyNotificationWhereInput! orderBy: [NotificationOrderInput!]): NotificationConnection! @cost(weight: "10")
 }
 
 type Version {

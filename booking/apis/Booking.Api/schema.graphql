@@ -127,13 +127,13 @@ type Query {
   bookingVersion: Version!
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   booking(id: String!): BookingDetails @cost(weight: "10")
-  bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): BookingConnection @cost(weight: "10")
-  allBookings(where: BookingWhereInput!): [BookingDetails!] @cost(weight: "10")
-  organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions @cost(weight: "10")
-  locationBookingPermissions(locationId: String!): LocationBookingPermissions @cost(weight: "10")
-  teamBookingPermissions(teamId: String!): TeamBookingPermissions @cost(weight: "10")
-  availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!] @cost(weight: "10")
-  organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources @cost(weight: "10")
+  bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): BookingConnection! @cost(weight: "10")
+  allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
+  organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
+  locationBookingPermissions(locationId: String!): LocationBookingPermissions! @cost(weight: "10")
+  teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
+  availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
+  organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
 }
 
 type TeamBookingPermissions {

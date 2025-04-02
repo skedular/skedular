@@ -268,7 +268,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     });
   }, [section]);
 
-  const connectionIds = useMemo(() => (rootDataTeamMembers.teamMembers ? [rootDataTeamMembers.teamMembers.__id] : []), [rootDataTeamMembers.teamMembers]);
+  const connectionIds = useMemo(() => [rootDataTeamMembers.teamMembers.__id], [rootDataTeamMembers.teamMembers]);
   const members = useMemo(
     () =>
       rootDataTeamMembers.teamMembers

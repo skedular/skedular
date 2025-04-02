@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2acbdd10d589ca0e6d99eee281aa9756>>
+ * @generated SignedSource<<028f3723c8df5350e8ede33b80481f50>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type organizationAdmin_organizationPaymentMethodsDetails_query$data = {
     readonly cardExpiryYear: number | null | undefined;
     readonly cardLastFourDigit: string | null | undefined;
     readonly id: string;
-  }> | null | undefined;
+  }>;
   readonly " $fragmentType": "organizationAdmin_organizationPaymentMethodsDetails_query";
 };
 export type organizationAdmin_organizationPaymentMethodsDetails_query$key = {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b7c63a162565b65b1fa4fcfc1ca3e6e>>
+ * @generated SignedSource<<e55eafcb26d2bd62245c2e11bf4470b0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,7 +63,7 @@ export type editBooking_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly openingHoursMinutesStep: number;
   readonly " $fragmentType": "editBooking_query";
 };

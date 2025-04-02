@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e8a54b4098007375b2e2d2cc98c156b3>>
+ * @generated SignedSource<<59030df29aeaf04246f8056cf87b4b49>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type organizationAdmin_zones_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "organizationAdmin_zones_query";
 };
 export type organizationAdmin_zones_query$key = {

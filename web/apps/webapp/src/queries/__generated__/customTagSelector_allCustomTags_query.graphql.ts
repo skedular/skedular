@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<23fda70d07d640d89e56e908f23a1e65>>
+ * @generated SignedSource<<9eda6b369bffad3accf1cc5d59f79ce9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type customTagSelector_allCustomTags_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "customTagSelector_allCustomTags_query";
 };
 export type customTagSelector_allCustomTags_query$key = {

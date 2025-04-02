@@ -258,22 +258,22 @@ type Query {
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organization(id: String!): OrganizationDetails @cost(weight: "10")
-  organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): OrganizationConnection @cost(weight: "10")
+  organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): OrganizationConnection! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
-  organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection @cost(weight: "10")
+  organizationMembers(after: String first: Int before: String last: Int where: OrganizationMemberWhereInput! orderBy: [OrganizationMemberOrderInput!]): OrganizationMemberConnection! @cost(weight: "10")
   organizationAnalytics(organizationId: String! from: DateTime! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
   ssoLoginUrl(organizationId: String! redirectUrl: String!): String! @cost(weight: "10")
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   organizationOffering(code: String!): OrganizationOfferingDetails!
-  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection! @cost(weight: "10")
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection! @cost(weight: "10")
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
-  productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+  productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection! @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  locationTags(after: String first: Int before: String last: Int where: LocationTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection @cost(weight: "10")
+  locationTags(after: String first: Int before: String last: Int where: LocationTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection! @cost(weight: "10")
   locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
 }
 

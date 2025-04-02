@@ -224,7 +224,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [defaultDate] = useState(startOfDay());
-  const connectionIds = useMemo(() => (rootDataRefetchable.locations ? [rootDataRefetchable.locations.__id] : []), [rootDataRefetchable.locations]);
+  const connectionIds = useMemo(() => [rootDataRefetchable.locations.__id], [rootDataRefetchable.locations]);
   const [selectedLocationId, setSelectedLocationId] = useState<null | string>(null);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
@@ -237,10 +237,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationI
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings],
   ];
 
-  const locations = useMemo(
-    () => (rootDataRefetchable.locations ? rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)) : []),
-    [rootDataRefetchable.locations],
-  );
+  const locations = useMemo(() => rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataRefetchable.locations]);
   const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
 
   const organizationMembers = useMemo(() => {

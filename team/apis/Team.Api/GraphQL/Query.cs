@@ -46,22 +46,16 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamConnection?> TeamsAsync(
+    public async Task<TeamConnection> TeamsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         TeamWhereInput where,
         IEnumerable<TeamOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
             new PaginationInputParam(after, first, before, last),
             new TeamSearchCriteria(
@@ -87,22 +81,16 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamConnection?> CustomerTeamsAsync(
+    public async Task<TeamConnection> CustomerTeamsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         CustomerTeamWhereInput where,
         IEnumerable<TeamOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
             new PaginationInputParam(after, first, before, last),
             new TeamSearchCriteria(
@@ -128,38 +116,24 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<IEnumerable<TeamDetails>?> MyTeamsAsync(
+    public async Task<IEnumerable<TeamDetails>> MyTeamsAsync(
         string? organizationId,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamService teamService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        return mapper.MapTo(await teamService.GetMyTeamsAsync(organizationId, cancellationToken));
-    }
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await teamService.GetMyTeamsAsync(organizationId, cancellationToken));
 
     [UseResolverScope]
-    public async Task<TeamMemberConnection?> TeamMembersAsync(
+    public async Task<TeamMemberConnection> TeamMembersAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         TeamMemberWhereInput where,
         IEnumerable<TeamMemberOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.TeamId);
-
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
 
         var (paginatedInfo, edges, totalCount) = await teamMemberService.GetPaginatedMembersAsync(
             new PaginationInputParam(after, first, before, last),

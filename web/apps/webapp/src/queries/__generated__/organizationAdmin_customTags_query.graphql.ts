@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3911ac08a4e8038a55d788df3d6f02b1>>
+ * @generated SignedSource<<71661d6e9ef556b6869073823d4a5012>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type organizationAdmin_customTags_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "organizationAdmin_customTags_query";
 };
 export type organizationAdmin_customTags_query$key = {

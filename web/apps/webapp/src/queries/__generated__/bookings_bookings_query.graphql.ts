@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9ec3f5713d52d4f5b939b88e13d62fa4>>
+ * @generated SignedSource<<eed3b4261689c9e2b2215d66080d1eb2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -57,7 +57,7 @@ export type bookings_bookings_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "bookings_bookings_query";
 };
 export type bookings_bookings_query$key = {

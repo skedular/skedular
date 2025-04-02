@@ -71,22 +71,16 @@ public class Query(IMapper mapper)
         mapper.MapTo(await organizationService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationConnection?> OrganizationsAsync(
+    public async Task<OrganizationConnection> OrganizationsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         OrganizationWhereInput where,
         IEnumerable<OrganizationOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken)
     {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var (paginatedInfo, edges, totalCount) = await organizationService.GetPaginatedOrganizationsAsync(
             new PaginationInputParam(after, first, before, last),
             new OrganizationSearchCriteria(where.NameContains),
@@ -117,22 +111,16 @@ public class Query(IMapper mapper)
             : mapper.MapTo(await organizationService.GetMyOrganizationsAsync(cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationMemberConnection?> OrganizationMembersAsync(
+    public async Task<OrganizationMemberConnection> OrganizationMembersAsync(
         string? after,
         int? first,
         string? before, int? last,
         OrganizationMemberWhereInput where,
         IEnumerable<OrganizationMemberOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.OrganizationId);
-
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
 
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
             new PaginationInputParam(after, first, before, last),
@@ -212,14 +200,13 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<OrganizationTagConnection?> CustomTagsAsync(
+    public async Task<OrganizationTagConnection> CustomTagsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         CustomTagOrganizationTagWhereInput where,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
@@ -229,7 +216,6 @@ public class Query(IMapper mapper)
             last,
             new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Custom, where.NameContains),
             orderBy,
-            cachedCustomerService,
             tagService,
             cancellationToken);
 
@@ -238,14 +224,13 @@ public class Query(IMapper mapper)
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationTagConnection?> ZonesAsync(
+    public async Task<OrganizationTagConnection> ZonesAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         ZoneOrganizationTagWhereInput where,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
@@ -255,7 +240,6 @@ public class Query(IMapper mapper)
             last,
             new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Zone, where.NameContains),
             orderBy,
-            cachedCustomerService,
             tagService,
             cancellationToken);
 
@@ -264,14 +248,13 @@ public class Query(IMapper mapper)
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationTagConnection?> ProductTagsAsync(
+    public async Task<OrganizationTagConnection> ProductTagsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         ProductTagOrganizationTagWhereInput where,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
@@ -281,7 +264,6 @@ public class Query(IMapper mapper)
             last,
             new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Product, where.NameContains),
             orderBy,
-            cachedCustomerService,
             tagService,
             cancellationToken);
 
@@ -290,14 +272,13 @@ public class Query(IMapper mapper)
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<OrganizationTagConnection?> LocationTagsAsync(
+    public async Task<OrganizationTagConnection> LocationTagsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         LocationTagOrganizationTagWhereInput where,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
@@ -307,7 +288,6 @@ public class Query(IMapper mapper)
             last,
             new TagSearchCriteria(where.OrganizationId, OrganizationTagTypeConstants.Location, where.NameContains),
             orderBy,
-            cachedCustomerService,
             tagService,
             cancellationToken);
 
@@ -315,22 +295,16 @@ public class Query(IMapper mapper)
     public async Task<OrganizationTagDetails?> LocationTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
         mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
 
-    private async Task<OrganizationTagConnection?> OrganizationTagsAsync(
+    private async Task<OrganizationTagConnection> OrganizationTagsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         TagSearchCriteria tagSearchCriteria,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
-        ICachedCustomerService cachedCustomerService,
         ITagService tagService,
         CancellationToken cancellationToken)
     {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(after, first, before, last),
             tagSearchCriteria,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<935edef07a2d0ac0b051bb56d53829bf>>
+ * @generated SignedSource<<9a68e350fd20932b5bf0ddaeef610881>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,7 +38,7 @@ export type organizationUsers_rootQuery$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"organizationUsers_organizationMembers_query" | "teamSelector_allTeams_query">;
 };
 export type organizationUsers_rootQuery = {

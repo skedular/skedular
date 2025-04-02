@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<15ca17afd47b58344e12d01b8eaa0d80>>
+ * @generated SignedSource<<26a5b36a2a14835faf9314ca943ee39b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,7 +37,7 @@ export type addResourceDialog_rootQuery$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesZones_query" | "singleChoiceResourceType_query">;
 };
 export type addResourceDialog_rootQuery = {

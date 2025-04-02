@@ -38,14 +38,13 @@ public class Query(IMapper mapper)
         mapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<BookingConnection?> BookingsAsync(
+    public async Task<BookingConnection> BookingsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         BookingWhereInput where,
         IEnumerable<BookingOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken)
     {
@@ -53,11 +52,6 @@ public class Query(IMapper mapper)
         where.LocationIds = where.LocationIds.RemoveInvalidIds();
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
         where.CustomerIds = where.CustomerIds.RemoveInvalidIds();
-
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
 
         var (paginatedInfo, edges, totalCount) = await bookingService.GetPaginatedBookingsAsync(
             new PaginationInputParam(after, first, before, last),
@@ -99,20 +93,18 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<IEnumerable<BookingDetails>?> AllBookingsAsync(
+    public async Task<IEnumerable<BookingDetails>> AllBookingsAsync(
         BookingWhereInput where,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken)
     {
-        var result = await BookingsAsync(null, null, null, null, where, [], cachedCustomerService, bookingService, cancellationToken);
-        return result?.Edges.Select(item => item.Node);
+        var result = await BookingsAsync(null, null, null, null, where, [], bookingService, cancellationToken);
+        return result.Edges.Select(item => item.Node);
     }
 
     [UseResolverScope]
-    public async Task<OrganizationBookingPermissions?> OrganizationBookingPermissionsAsync(
+    public async Task<OrganizationBookingPermissions> OrganizationBookingPermissionsAsync(
         string organizationId,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationAuthorizationService organizationAuthorizationService,
         CancellationToken cancellationToken)
     {
@@ -129,11 +121,6 @@ public class Query(IMapper mapper)
             };
         }
 
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var permissions = await organizationAuthorizationService.GetPermissionsAsync(organizationId, cancellationToken);
         return new OrganizationBookingPermissions
         {
@@ -147,9 +134,8 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<LocationBookingPermissions?> LocationBookingPermissionsAsync(
+    public async Task<LocationBookingPermissions> LocationBookingPermissionsAsync(
         string locationId,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationAuthorizationService locationAuthorizationService,
         CancellationToken cancellationToken)
     {
@@ -166,11 +152,6 @@ public class Query(IMapper mapper)
             };
         }
 
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var permissions = await locationAuthorizationService.GetPermissionsAsync(locationId, cancellationToken);
         return new LocationBookingPermissions
         {
@@ -184,9 +165,8 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<TeamBookingPermissions?> TeamBookingPermissionsAsync(
+    public async Task<TeamBookingPermissions> TeamBookingPermissionsAsync(
         string teamId,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ITeamAuthorizationService teamAuthorizationService,
         CancellationToken cancellationToken)
     {
@@ -203,11 +183,6 @@ public class Query(IMapper mapper)
             };
         }
 
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var permissions = await teamAuthorizationService.GetPermissionsAsync(teamId, cancellationToken);
         return new TeamBookingPermissions
         {
@@ -221,18 +196,11 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<IEnumerable<BookingResourceDetails>?> AvailableResourcesAsync(
+    public async Task<IEnumerable<BookingResourceDetails>> AvailableResourcesAsync(
         AvailableResourcesWhereInput where,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] IResourceService resourceService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        return mapper.MapTo(await resourceService.GetAvailableResourcesAsync(
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await resourceService.GetAvailableResourcesAsync(
             where.OrganizationId,
             where.LocationId,
             where.From,
@@ -241,20 +209,14 @@ public class Query(IMapper mapper)
             where.ZoneIds.ToSafeCollection(),
             where.ResourceIdsToInclude.ToSafeCollection(),
             cancellationToken));
-    }
 
     [UseResolverScope]
-    public async Task<OrganizationAvailableResources?> OrganizationResourcesAvailabilityAsync(
+    public async Task<OrganizationAvailableResources> OrganizationResourcesAvailabilityAsync(
         OrganizationAvailableResourcesWhereInput where,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var (resourcesCount, availableResourcesCount) = await resourceService.GetOrganizationResourceAvailabilityAsync(
             where.OrganizationId,
             where.From,

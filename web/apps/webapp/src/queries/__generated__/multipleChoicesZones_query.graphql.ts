@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f8cb19115f485583ffb55cd686aa61f2>>
+ * @generated SignedSource<<76e82c4d1f1cdeda69790c48d6e46910>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type multipleChoicesZones_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "multipleChoicesZones_query";
 };
 export type multipleChoicesZones_query$key = {

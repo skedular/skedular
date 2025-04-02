@@ -207,15 +207,8 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
     () => rootDataOrganizationUsers.organizationMembers?.edges.map(({ node }) => node).find((item) => item.id === selectedMemberId),
     [selectedMemberId, rootDataOrganizationUsers.organizationMembers],
   );
-  const connectionIds = useMemo(
-    () => (rootDataOrganizationUsers.organizationMembers ? [rootDataOrganizationUsers.organizationMembers.__id] : []),
-    [rootDataOrganizationUsers.organizationMembers],
-  );
+  const connectionIds = useMemo(() => [rootDataOrganizationUsers.organizationMembers.__id], [rootDataOrganizationUsers.organizationMembers]);
   const members = useMemo(() => {
-    if (!rootDataOrganizationUsers.organizationMembers) {
-      return [];
-    }
-
     const members = rootDataOrganizationUsers.organizationMembers.edges
       .map(({ node }) => node)
       .sort((a, b) => {

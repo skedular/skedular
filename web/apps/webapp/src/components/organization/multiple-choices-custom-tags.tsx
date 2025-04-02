@@ -40,8 +40,8 @@ const MultipleChoicesCustomTags = ({ rootDataRelay, name, required, organization
     rootDataRelay,
   );
 
-  const connectionIds = useMemo(() => (rootData.customTags ? [rootData.customTags.__id] : []), [rootData.customTags]);
-  const customTags = useMemo<CustomTagDetails[]>(() => (rootData.customTags ? rootData.customTags.edges.map(({ node }) => node) : []), [rootData.customTags]);
+  const customTags = useMemo<CustomTagDetails[]>(() => rootData.customTags.edges.map(({ node }) => node), [rootData.customTags]);
+  const connectionIds = useMemo(() => [rootData.customTags.__id], [rootData.customTags]);
   const filter = createFilterOptions<CustomTagDetails>();
 
   if (customTags.length === 0) {

@@ -44,10 +44,10 @@ type Query {
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
   teamMemberRoles: [TeamMemberRole!]!
   team(id: String!): TeamDetails @cost(weight: "10")
-  teams(after: String first: Int before: String last: Int where: TeamWhereInput! orderBy: [TeamOrderInput!]): TeamConnection @cost(weight: "10")
-  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput! orderBy: [TeamOrderInput!]): TeamConnection @cost(weight: "10")
-  myTeams(organizationId: String): [TeamDetails!] @cost(weight: "10")
-  teamMembers(after: String first: Int before: String last: Int where: TeamMemberWhereInput! orderBy: [TeamMemberOrderInput!]): TeamMemberConnection @cost(weight: "10")
+  teams(after: String first: Int before: String last: Int where: TeamWhereInput! orderBy: [TeamOrderInput!]): TeamConnection! @cost(weight: "10")
+  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput! orderBy: [TeamOrderInput!]): TeamConnection! @cost(weight: "10")
+  myTeams(organizationId: String): [TeamDetails!]! @cost(weight: "10")
+  teamMembers(after: String first: Int before: String last: Int where: TeamMemberWhereInput! orderBy: [TeamMemberOrderInput!]): TeamMemberConnection! @cost(weight: "10")
 }
 
 type RejectInvitationToJoinTeamPayload {

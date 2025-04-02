@@ -485,8 +485,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteResource],
   ];
 
-  const resourcesConnectionIds = useMemo(() => (rootDataResources.resources ? [rootDataResources.resources.__id] : []), [rootDataResources.resources]);
-  const resources = useMemo(() => (rootDataResources.resources ? rootDataResources.resources.edges.map(({ node }) => node) : []), [rootDataResources.resources]);
+  const resources = useMemo(() => rootDataResources.resources.edges.map(({ node }) => node), [rootDataResources.resources]);
+  const resourcesConnectionIds = useMemo(() => [rootDataResources.resources.__id], [rootDataResources.resources]);
   const resourceDetails = useMemo(() => resources.find((item) => item.id === selectedResourceId), [selectedResourceId, resources]);
 
   useEffect(() => {

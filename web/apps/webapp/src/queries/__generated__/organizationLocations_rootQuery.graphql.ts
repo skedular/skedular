@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d45462c6e2a27ca6ae44eb13e4730ffb>>
+ * @generated SignedSource<<48b9062244499685d65cc8fa797e7ab9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,7 +63,7 @@ export type organizationLocations_rootQuery$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "locationCard_query" | "organizationLocations_locations_availableOrganizationResources_query" | "zoneSelector_allZones_query">;
 };
 export type organizationLocations_rootQuery = {

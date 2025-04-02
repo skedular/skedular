@@ -556,8 +556,8 @@ const OrganizationAdmin = ({
   const zoneMoreActionsMenuOpen = Boolean(zoneMoreActionsAnchorEl);
   const [isEditZoneDialogOpen, setIsEditZoneDialogOpen] = useState(false);
   const [preferredZones, setPreferredZones] = useState(rootData.me?.preferredZones.map(({ uniqueId }) => uniqueId) ?? []);
-  const zonesConnectionIds = useMemo(() => (rootDataZones.zones ? [rootDataZones.zones.__id] : []), [rootDataZones.zones]);
-  const zones = useMemo(() => (rootDataZones.zones ? rootDataZones.zones.edges.map(({ node }) => node) : []), [rootDataZones.zones]);
+  const zones = useMemo(() => rootDataZones.zones.edges.map(({ node }) => node), [rootDataZones.zones]);
+  const zonesConnectionIds = useMemo(() => [rootDataZones.zones.__id], [rootDataZones.zones]);
   const zoneMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditZone],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteZone],
@@ -586,8 +586,8 @@ const OrganizationAdmin = ({
   const customTagMoreActionsMenuOpen = Boolean(customTagMoreActionsAnchorEl);
   const [isEditCustomTagDialogOpen, setIsEditCustomTagDialogOpen] = useState(false);
   const [preferredCustomTags, setPreferredCustomTags] = useState(rootData.me?.preferredCustomTags.map(({ uniqueId }) => uniqueId) ?? []);
-  const customTagsConnectionIds = useMemo(() => (rootDataCustomTags.customTags ? [rootDataCustomTags.customTags.__id] : []), [rootDataCustomTags.customTags]);
-  const customTags = useMemo(() => (rootDataCustomTags.customTags ? rootDataCustomTags.customTags.edges.map(({ node }) => node) : []), [rootDataCustomTags.customTags]);
+  const customTags = useMemo(() => rootDataCustomTags.customTags.edges.map(({ node }) => node), [rootDataCustomTags.customTags]);
+  const customTagsConnectionIds = useMemo(() => [rootDataCustomTags.customTags.__id], [rootDataCustomTags.customTags]);
   const customTagMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditCustomTag],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteCustomTag],
@@ -615,8 +615,8 @@ const OrganizationAdmin = ({
   const [productTagMoreActionsAnchorEl, setProductTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const productTagMoreActionsMenuOpen = Boolean(productTagMoreActionsAnchorEl);
   const [isEditProductTagDialogOpen, setIsEditProductTagDialogOpen] = useState(false);
-  const productTagsConnectionIds = useMemo(() => (rootDataProductTags.productTags ? [rootDataProductTags.productTags.__id] : []), [rootDataProductTags.productTags]);
-  const productTags = useMemo(() => (rootDataProductTags.productTags ? rootDataProductTags.productTags.edges.map(({ node }) => node) : []), [rootDataProductTags.productTags]);
+  const productTags = useMemo(() => rootDataProductTags.productTags.edges.map(({ node }) => node), [rootDataProductTags.productTags]);
+  const productTagsConnectionIds = useMemo(() => [rootDataProductTags.productTags.__id], [rootDataProductTags.productTags]);
   const productTagMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditProductTag],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteProductTag],
@@ -644,11 +644,8 @@ const OrganizationAdmin = ({
   const [locationTagMoreActionsAnchorEl, setLocationTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const locationTagMoreActionsMenuOpen = Boolean(locationTagMoreActionsAnchorEl);
   const [isEditLocationTagDialogOpen, setIsEditLocationTagDialogOpen] = useState(false);
-  const locationTagsConnectionIds = useMemo(() => (rootDataLocationTags.locationTags ? [rootDataLocationTags.locationTags.__id] : []), [rootDataLocationTags.locationTags]);
-  const locationTags = useMemo(
-    () => (rootDataLocationTags.locationTags ? rootDataLocationTags.locationTags.edges.map(({ node }) => node) : []),
-    [rootDataLocationTags.locationTags],
-  );
+  const locationTags = useMemo(() => rootDataLocationTags.locationTags.edges.map(({ node }) => node), [rootDataLocationTags.locationTags]);
+  const locationTagsConnectionIds = useMemo(() => [rootDataLocationTags.locationTags.__id], [rootDataLocationTags.locationTags]);
   const locationTagMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocationTag],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocationTag],

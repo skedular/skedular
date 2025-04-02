@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<49e28a4ac15d469f6e1aafd0d06573fc>>
+ * @generated SignedSource<<41d21cf7a4a6d8dc6615d0fd5ebf7e36>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -52,7 +52,7 @@ export type organizationUser_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly me: {
     readonly id: string;
   } | null | undefined;
@@ -66,7 +66,7 @@ export type organizationUser_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"teamCard_query">;
   readonly " $fragmentType": "organizationUser_query";
 };

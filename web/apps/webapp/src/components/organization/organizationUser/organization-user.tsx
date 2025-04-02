@@ -189,12 +189,9 @@ const OrganizationUser = ({ rootDataRelay, organizationId, customerId }: Props) 
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const validateProfileDetails = makeValidate(profileDetailsSchema);
   const requiredProfileDetailsFields = makeRequired(profileDetailsSchema);
-  const connectionIds = useMemo(() => (rootData.customerTeams ? [rootData.customerTeams.__id] : []), [rootData.customerTeams]);
-  const teams = useMemo(() => (rootData.customerTeams ? rootData.customerTeams.edges.map((edge) => edge.node) : []), [rootData.customerTeams]);
-  const member = useMemo(
-    () => (rootData.organizationMembers && rootData.organizationMembers.edges.length > 0 ? rootData.organizationMembers.edges[0]?.node : null),
-    [rootData.organizationMembers],
-  );
+  const teams = useMemo(() => rootData.customerTeams.edges.map((edge) => edge.node), [rootData.customerTeams]);
+  const connectionIds = useMemo(() => [rootData.customerTeams.__id], [rootData.customerTeams]);
+  const member = useMemo(() => (rootData.organizationMembers.edges.length > 0 ? rootData.organizationMembers.edges[0]?.node : null), [rootData.organizationMembers]);
 
   useEffect(() => {
     if (!section || section === 'profile') {

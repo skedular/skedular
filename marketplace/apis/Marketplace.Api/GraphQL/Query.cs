@@ -2,13 +2,14 @@ using System.Reflection;
 using Api.Shared.Services.Models;
 using HotChocolate;
 using HotChocolate.Types;
+using Marketplace.Api.Mappers;
 using Marketplace.Api.Services;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Marketplace.Api.GraphQL;
 
 [QueryType]
-public class Query
+public class Query(IMapper mapper)
 {
     [UseResolverScope]
     public Version MarketplaceVersion()
@@ -43,8 +44,8 @@ public class Query
     ];
 
     [UseResolverScope]
-    public async Task<ProductPayload?> ProductAsync(string id, CancellationToken cancellationToken) =>
-        throw new NotImplementedException();
+    public async Task<ProductDetails?> ProductAsync(string id, [Service] IProductService productService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await productService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     public async Task<ProductConnection?> ProductsAsync(

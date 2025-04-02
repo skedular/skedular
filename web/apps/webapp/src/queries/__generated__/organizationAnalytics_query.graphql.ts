@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4c8e542c77370d65f957a916b781ca1d>>
+ * @generated SignedSource<<23939c18f7787a525cc5cbfeda1afd52>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type organizationAnalytics_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"locationSelector_allLocations_query">;
   readonly " $fragmentType": "organizationAnalytics_query";
 };

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d9d8c0697388badbacee63490532db03>>
+ * @generated SignedSource<<5b5ba61b93140769925892ecfcf17c0d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,7 +27,7 @@ export type editBooking_organizationMembers_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "editBooking_organizationMembers_query";
 };
 export type editBooking_organizationMembers_query$key = {

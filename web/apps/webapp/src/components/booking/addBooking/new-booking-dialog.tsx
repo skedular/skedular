@@ -289,14 +289,14 @@ const NewBookingDialog = ({
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
   const customers = useMemo<OrganizationMemberDetails[]>(
-    () => (rootDataOrganizationMembers.organizationMembers ? rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node) : []),
+    () => rootDataOrganizationMembers.organizationMembers.edges.map(({ node }) => node),
     [rootDataOrganizationMembers.organizationMembers],
   );
   const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
-  const locations = useMemo<LocationDetails[]>(() => (rootData.locations ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
+  const locations = useMemo<LocationDetails[]>(() => rootData.locations.edges.map(({ node }) => node), [rootData.locations]);
   const resources = useMemo<ResourceDetails[]>(
     () =>
-      timeRangeValid && rootDataAvailableResources.availableResources
+      timeRangeValid
         ? rootDataAvailableResources.availableResources.map(({ uniqueId, name, customTags, zones }) => ({
             uniqueId,
             name,

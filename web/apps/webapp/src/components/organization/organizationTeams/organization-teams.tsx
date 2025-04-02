@@ -167,7 +167,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const connectionIds = useMemo(() => (rootDataRefetchable.teams ? [rootDataRefetchable.teams.__id] : []), [rootDataRefetchable.teams]);
+  const connectionIds = useMemo(() => [rootDataRefetchable.teams.__id], [rootDataRefetchable.teams]);
   const [selectedTeamId, setSelectedTeamId] = useState<null | string>(null);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
@@ -180,14 +180,7 @@ const Teams = ({ queryReference, organizationId }: Props) => {
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings],
   ];
 
-  const teams = useMemo(() => {
-    if (!rootDataRefetchable.teams) {
-      return [];
-    }
-
-    return rootDataRefetchable.teams.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name));
-  }, [rootDataRefetchable.teams]);
-
+  const teams = useMemo(() => rootDataRefetchable.teams.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataRefetchable.teams]);
   const teamDetails = useMemo(() => teams.find((item) => item.id === selectedTeamId), [selectedTeamId, teams]);
 
   const handleRefetch = useCallback(

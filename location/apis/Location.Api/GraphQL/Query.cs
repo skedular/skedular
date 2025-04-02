@@ -45,22 +45,16 @@ public class Query(IMapper mapper)
         mapper.MapTo(await locationService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
-    public async Task<LocationConnection?> LocationsAsync(
+    public async Task<LocationConnection> LocationsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         LocationWhereInput where,
         IEnumerable<LocationOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken)
     {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var (paginatedInfo, edges, totalCount) = await locationService.GetPaginatedLocationsAsync(
             new PaginationInputParam(after, first, before, last),
             new LocationSearchCriteria(
@@ -97,23 +91,17 @@ public class Query(IMapper mapper)
             : null;
 
     [UseResolverScope]
-    public async Task<LocationMemberConnection?> LocationMembersAsync(
+    public async Task<LocationMemberConnection> LocationMembersAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         LocationMemberWhereInput where,
         IEnumerable<LocationMemberOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationMemberService locationMemberService,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
-
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
 
         var (paginatedInfo, edges, totalCount) = await locationMemberService.GetPaginatedLocationMembersAsync(
             new PaginationInputParam(after, first, before, last),
@@ -181,22 +169,16 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<ResourceConnection?> ResourcesAsync(
+    public async Task<ResourceConnection> ResourcesAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         ResourceWhereInput where,
         IEnumerable<ResourceOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var (paginatedInfo, edges, totalCount) = await resourceService.GetPaginatedResourcesAsync(
             new PaginationInputParam(after, first, before, last),
             new ResourceSearchCriteria(

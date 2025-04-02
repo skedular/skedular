@@ -81,7 +81,7 @@ type Query {
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
   currencies: [CurrencyDetails!]!
   priceUnits: [PriceUnitDetails!]!
-  product(id: String!): ProductPayload @cost(weight: "10")
+  product(id: String!): ProductDetails @cost(weight: "10")
   products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ProductConnection @cost(weight: "10")
 }
 

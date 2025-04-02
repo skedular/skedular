@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3d3a56eca9238174bc9856b09e16682a>>
+ * @generated SignedSource<<2363c5c4222b07c877f177154de6e246>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,7 +39,7 @@ export type organizationLocation_resources_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "organizationLocation_resources_query";
 };
 export type organizationLocation_resources_query$key = {

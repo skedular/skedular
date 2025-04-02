@@ -40,8 +40,8 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationId }:
     rootDataRelay,
   );
 
-  const connectionIds = useMemo(() => (rootData.zones ? [rootData.zones.__id] : []), [rootData.zones]);
-  const zones = useMemo<ZoneDetails[]>(() => (rootData.zones ? rootData.zones.edges.map(({ node }) => node) : []), [rootData.zones]);
+  const zones = useMemo<ZoneDetails[]>(() => rootData.zones.edges.map(({ node }) => node), [rootData.zones]);
+  const connectionIds = useMemo(() => [rootData.zones.__id], [rootData.zones]);
   const filter = createFilterOptions<ZoneDetails>();
 
   if (zones.length === 0) {

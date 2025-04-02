@@ -41,22 +41,16 @@ public class Query(IMapper mapper)
             : 0;
 
     [UseResolverScope]
-    public async Task<NotificationConnection?> MyNotificationsAsync(
+    public async Task<NotificationConnection> MyNotificationsAsync(
         string? after,
         int? first,
         string? before,
         int? last,
         MyNotificationWhereInput where,
         IEnumerable<NotificationOrderInput>? orderBy,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] INotificationService notificationService,
         CancellationToken cancellationToken)
     {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
         var (paginatedInfo, edges, totalCount) = await notificationService.GetMyPaginatedNotificationsAsync(
             new PaginationInputParam(after, first, before, last),
             new NotificationSearchCriteria(where.OrganizationId),

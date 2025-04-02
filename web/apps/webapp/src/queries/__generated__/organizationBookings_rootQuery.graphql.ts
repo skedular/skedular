@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6e1d326fc3c51b7bdd8752af9084cf5f>>
+ * @generated SignedSource<<5639b9cb601ce3f10a85e731b68f41c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -49,7 +49,7 @@ export type organizationBookings_rootQuery$data = {
       readonly name: string;
       readonly uniqueId: string;
     };
-  }> | null | undefined;
+  }>;
   readonly organization: {
     readonly id: string;
     readonly name: string;

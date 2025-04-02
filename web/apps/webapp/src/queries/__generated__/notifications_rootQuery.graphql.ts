@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a931f310c6eb4578d9c9611a6ba0511b>>
+ * @generated SignedSource<<1c6d2cf8b976aeb743e3b509ec135f98>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -46,7 +46,7 @@ export type notifications_rootQuery$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
 };
 export type notifications_rootQuery = {
   response: notifications_rootQuery$data;

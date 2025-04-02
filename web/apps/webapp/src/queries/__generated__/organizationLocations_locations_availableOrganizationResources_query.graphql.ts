@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2f071cc47335d10234f8436eb6959ef9>>
+ * @generated SignedSource<<d07ca46d15068c7f09e15740112e8ab1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type organizationLocations_locations_availableOrganizationResources_query
     readonly location: {
       readonly uniqueId: string;
     } | null | undefined;
-  }> | null | undefined;
+  }>;
   readonly locations: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -48,7 +48,7 @@ export type organizationLocations_locations_availableOrganizationResources_query
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "organizationLocations_locations_availableOrganizationResources_query";
 };
 export type organizationLocations_locations_availableOrganizationResources_query$key = {

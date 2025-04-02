@@ -37,7 +37,7 @@ const LocationSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
   );
 
   const [id, setId] = useState<string>(defaultValue ?? allId);
-  const allItems = useMemo(() => (rootData.locations?.edges ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
+  const allItems = useMemo(() => rootData.locations.edges.map(({ node }) => node), [rootData.locations]);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;

@@ -28,18 +28,9 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
 
     [UseResolverScope]
-    public async Task<OrganizationPaymentMethod[]?> OrganizationPaymentMethodsDetailsAsync(
+    public async Task<IEnumerable<OrganizationPaymentMethod>> OrganizationPaymentMethodsDetailsAsync(
         string organizationId,
-        [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
-        CancellationToken cancellationToken)
-    {
-        if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))
-        {
-            return null;
-        }
-
-        var paymentMethods = await organizationService.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken);
-        return mapper.MapTo(paymentMethods).ToArray();
-    }
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await organizationService.GetOrganizationPaymentMethodsAsync(organizationId, cancellationToken));
 }

@@ -245,15 +245,8 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteBooking],
   ];
 
-  const bookings = useMemo(() => {
-    if (!rootDataRefetchable.bookings) {
-      return [];
-    }
-
-    return rootDataRefetchable.bookings.edges.map((edge) => edge.node);
-  }, [rootDataRefetchable.bookings]);
-
-  const connectionIds = useMemo(() => (rootDataRefetchable.bookings ? [rootDataRefetchable.bookings.__id] : []), [rootDataRefetchable.bookings]);
+  const bookings = useMemo(() => rootDataRefetchable.bookings.edges.map((edge) => edge.node), [rootDataRefetchable.bookings]);
+  const connectionIds = useMemo(() => [rootDataRefetchable.bookings.__id], [rootDataRefetchable.bookings]);
 
   const convertDateToKey = (date: Dayjs) => dayjs(date).format('YYYY-MM-DD');
 

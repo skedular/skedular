@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<43e62fc01ff096e2f8a035e5403304c7>>
+ * @generated SignedSource<<0de061cdbb8a18d1ff80073f8bca4778>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,7 @@ export type editBooking_availableResources_query$data = {
       readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
-  }> | null | undefined;
+  }>;
   readonly " $fragmentType": "editBooking_availableResources_query";
 };
 export type editBooking_availableResources_query$key = {

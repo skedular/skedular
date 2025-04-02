@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<86d65911ad78120b1f0bdf7176387f6a>>
+ * @generated SignedSource<<65314cc4d9e8b7a6efbde24854d20a56>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,7 +33,7 @@ export type organizationTeam_teamMembers_query$data = {
       };
     }>;
     readonly totalCount: number | null | undefined;
-  } | null | undefined;
+  };
   readonly " $fragmentType": "organizationTeam_teamMembers_query";
 };
 export type organizationTeam_teamMembers_query$key = {
