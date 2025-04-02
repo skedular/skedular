@@ -184,6 +184,29 @@ RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
     --protobuf-schema-file-path /events/skedular/location_v1_value.proto \
     --output-file-path /output/Skedular/Location/V1/LocationValueMetadata.g.cs
 
+RUN mkdir -p /output/Skedular/Marketplace/V1
+RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Marketplace/V1 --csharp_opt=file_extension=.g.cs marketplace_v1_key.proto
+RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Marketplace/V1 --csharp_opt=file_extension=.g.cs marketplace_v1_value.proto
+RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
+    --namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key \
+    --event-type Key \
+    --topic-name marketplace.v1.event \
+    --retry-topic-name-prefix marketplace.v1.event.retry \
+    --retry-topic-count 1 \
+    --dead-letter-topic-name marketplace.v1.event.deadletter \
+    --generate-metadata-function-helper False \
+    --protobuf-schema-file-path /events/skedular/marketplace_v1_key.proto \
+    --output-file-path /output/Skedular/Marketplace/V1/MarketplaceKeyMetadata.g.cs
+RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
+    --namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value \
+    --event-type Event \
+    --topic-name marketplace.v1.event \
+    --retry-topic-name-prefix marketplace.v1.event.retry \
+    --retry-topic-count 1 \
+    --dead-letter-topic-name marketplace.v1.event.deadletter \
+    --protobuf-schema-file-path /events/skedular/marketplace_v1_value.proto \
+    --output-file-path /output/Skedular/Marketplace/V1/MarketplaceValueMetadata.g.cs
+
 RUN mkdir -p /output/Skedular/Notification/V1
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Notification/V1 --csharp_opt=file_extension=.g.cs notification_v1_key.proto
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/Notification/V1 --csharp_opt=file_extension=.g.cs notification_v1_value.proto

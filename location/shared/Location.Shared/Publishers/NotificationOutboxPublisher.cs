@@ -92,8 +92,7 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId =
-                            emailConfiguration.InviteToJoinLocationNewCustomerEmailTemplateName,
+                        TemplateId = emailConfiguration.InviteToJoinLocationNewCustomerEmailTemplateName,
                         TemplateData = templateData,
                         Sender = emailConfiguration.InviteToJoinLocationNewCustomerEmailSender
                     }
@@ -140,8 +139,7 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId =
-                            emailConfiguration.InviteToJoinLocationExistingCustomerEmailTemplateName,
+                        TemplateId = emailConfiguration.InviteToJoinLocationExistingCustomerEmailTemplateName,
                         TemplateData = templateData,
                         Sender = emailConfiguration.InviteToJoinLocationExistingCustomerEmailSender
                     }

@@ -1,0 +1,8 @@
+syntax = "proto3";
+package marketplace;
+
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key";
+
+message Key {
+  string productId = 1;
+}

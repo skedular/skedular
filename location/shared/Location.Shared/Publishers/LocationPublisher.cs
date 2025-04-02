@@ -28,8 +28,7 @@ public class LocationPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : ILocationPublisher
 {
-    public async Task PublishLocationAsync(IEnumerable<Models.Location> locations,
-        CancellationToken cancellationToken) =>
+    public async Task PublishLocationAsync(IEnumerable<Models.Location> locations, CancellationToken cancellationToken) =>
         await Task.WhenAll(locations.Select(
             location => publisher.PublishAsync(
                 new Key { LocationId = location.Id },
@@ -56,9 +55,7 @@ public class LocationPublisher(
                     Metadata = Event.NewMetadata(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
-                        joinInvitation.IsNotDeleted()
-                            ? Type.InvitationToJoinLocationUpserted
-                            : Type.InvitationToJoinLocationDeleted,
+                        joinInvitation.IsNotDeleted() ? Type.InvitationToJoinLocationUpserted : Type.InvitationToJoinLocationDeleted,
                         context.GetCorrelationId()),
                     Data = new Data { InvitationToJoinLocation = mapper.MapTo(joinInvitation, inviteeIdToOverride) }
                 },

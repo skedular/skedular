@@ -63,9 +63,7 @@ public class LocationOutboxPublisher(
                     Metadata = Event.NewMetadata(
                         applicationConfiguration.DomainSource,
                         applicationConfiguration.AppSource,
-                        joinInvitation.IsNotDeleted()
-                            ? Type.InvitationToJoinLocationUpserted
-                            : Type.InvitationToJoinLocationDeleted,
+                        joinInvitation.IsNotDeleted() ? Type.InvitationToJoinLocationUpserted : Type.InvitationToJoinLocationDeleted,
                         context.GetCorrelationId()),
                     Data = new Data { InvitationToJoinLocation = mapper.MapTo(joinInvitation, null) }
                 },

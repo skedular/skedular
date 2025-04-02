@@ -1,5 +1,6 @@
 using Marketplace.Shared.Configurations;
 using Marketplace.Shared.Mappers;
+using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,10 +30,12 @@ public static class Extensions
             .AddScoped<IProductVersionRepository, ProductVersionRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services;
+        services
+            .AddScoped<IMarketplacePublisher, MarketplacePublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
-        services;
+        services
+            .AddScoped<IMarketplaceOutboxPublisher, MarketplaceOutboxPublisher>();
 
     public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {

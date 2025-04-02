@@ -87,6 +87,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "skedular", "skedular", "{D3
 		api-definitions\events\skedular\team_v1_key.proto = api-definitions\events\skedular\team_v1_key.proto
 		api-definitions\events\skedular\msteams_internal_v1_key.proto = api-definitions\events\skedular\msteams_internal_v1_key.proto
 		api-definitions\events\skedular\msteams_internal_v1_value.proto = api-definitions\events\skedular\msteams_internal_v1_value.proto
+		api-definitions\events\skedular\marketplace_v1_value.proto = api-definitions\events\skedular\marketplace_v1_value.proto
+		api-definitions\events\skedular\marketplace_v1_key.proto = api-definitions\events\skedular\marketplace_v1_key.proto
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skedularctl", "shared\Skedularctl\Skedularctl.csproj", "{276BBB2F-4DC5-4C3C-BA07-A8C3EBF64C51}"
