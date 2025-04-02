@@ -17,8 +17,6 @@ public class Location : ModelBaseWithDeleted
     public Organization Organization { get; set; }
     public ICollection<Resource> Resources { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
-    public ICollection<LocationMember> LocationMembers { get; set; } = [];
-    public ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
     public ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
     public ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
     public ICollection<OrganizationTag> CustomTags { get; set; } = [];

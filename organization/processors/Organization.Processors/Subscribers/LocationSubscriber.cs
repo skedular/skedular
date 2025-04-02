@@ -65,10 +65,6 @@ public class LocationSubscriber(
                     await HandleLocationDeletedEventAsync(existingLocation, cancellationToken);
                 }
                 break;
-
-            case Type.InvitationToJoinLocationUpserted:
-            case Type.InvitationToJoinLocationDeleted:
-                break;
         }
 
         return EventSubscriberResults.Success;

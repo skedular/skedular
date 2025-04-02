@@ -14,7 +14,6 @@ public interface IRepositoryFactory
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     ILocationRepository LocationRepository { get; }
     IResourceRepository ResourceRepository { get; }
-    ILocationMemberRepository LocationMemberRepository { get; }
     ITeamRepository TeamRepository { get; }
     ITeamMemberRepository TeamMemberRepository { get; }
     IOrganizationTagRepository OrganizationTagRepository { get; }
@@ -36,7 +35,6 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
         ResourceRepository = new ResourceRepository(_dbContext, timeProvider);
-        LocationMemberRepository = new LocationMemberRepository(_dbContext, timeProvider);
         TeamRepository = new TeamRepository(_dbContext, timeProvider);
         TeamMemberRepository = new TeamMemberRepository(_dbContext, timeProvider);
         OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
@@ -56,7 +54,6 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public ILocationRepository LocationRepository { get; }
     public IResourceRepository ResourceRepository { get; }
-    public ILocationMemberRepository LocationMemberRepository { get; }
     public ITeamRepository TeamRepository { get; }
     public ITeamMemberRepository TeamMemberRepository { get; }
     public IOrganizationTagRepository OrganizationTagRepository { get; }

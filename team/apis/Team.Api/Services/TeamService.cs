@@ -1,8 +1,8 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
+using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Team.Api.Mappers;
 using Team.Api.Services.Authorization;
@@ -290,7 +290,7 @@ public class TeamService(
         var mappedTeams = new List<Edge<Shared.Models.Team>>();
         foreach (var edge in edges)
         {
-            mappedTeams.Add(new Edge<Shared.Models.Team>(edge.Cursor, await EnrichTeamAsync(customer, edge.Node, cancellationToken)));
+            mappedTeams.Add(new Edge<Shared.Models.Team>(await EnrichTeamAsync(customer, edge.Node, cancellationToken), edge.Cursor));
         }
 
         return (paginatedInfo, mappedTeams, totalCount);

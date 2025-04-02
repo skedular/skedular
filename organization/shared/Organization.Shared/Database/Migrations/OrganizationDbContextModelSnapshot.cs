@@ -112,6 +112,10 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
                     b.ToTable("AzureInstallStateUserIdLookup");
                 });
 
@@ -154,11 +158,15 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("InstalledByUserId");
 
                     b.HasIndex("MembersLastRefreshedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -260,7 +268,11 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("AzureTenantId");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("AzureTenantMember");
                 });
@@ -301,9 +313,13 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("From");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -386,6 +402,8 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("FamilyName");
@@ -393,6 +411,8 @@ namespace Organization.Shared.Database.Migrations
                     b.HasIndex("GivenName");
 
                     b.HasIndex("MiddleName");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -436,9 +456,13 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("Count");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("Date");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -479,11 +503,15 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("Email");
 
                     b.HasIndex("EmailVerified");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("Identity");
                 });
@@ -516,7 +544,11 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -725,9 +757,13 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("IndustryMainCategoryId");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -1928,6 +1964,8 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("DeletedAt");
@@ -1935,6 +1973,8 @@ namespace Organization.Shared.Database.Migrations
                     b.HasIndex("Email");
 
                     b.HasIndex("InviteeId");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -1975,7 +2015,11 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -2046,11 +2090,15 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("About");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DailyMemberCountLastRecordedAt");
 
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("HasAttachedPaymentMethod");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -2111,9 +2159,13 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("IsOrganizationOnboardingDone");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -2173,9 +2225,13 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("Code");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("End");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -2215,6 +2271,10 @@ namespace Organization.Shared.Database.Migrations
                         .HasColumnName("xmin");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationMemberId");
 
@@ -2260,6 +2320,10 @@ namespace Organization.Shared.Database.Migrations
                         .HasColumnName("xmin");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId")
                         .IsUnique();
@@ -2312,9 +2376,13 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("Description");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -2355,7 +2423,11 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -2395,7 +2467,11 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("Active");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("TermsOfUse");
 

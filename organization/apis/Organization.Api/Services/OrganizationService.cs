@@ -3,9 +3,9 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
+using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Organization.Api.Mappers;
@@ -301,7 +301,7 @@ public class OrganizationService(
         foreach (var edge in edges)
         {
             mappedOrganizations.Add(
-                new Edge<Shared.Models.Organization>(edge.Cursor, await EnrichOrganizationAsync(customer, edge.Node, cancellationToken)));
+                new Edge<Shared.Models.Organization>(await EnrichOrganizationAsync(customer, edge.Node, cancellationToken), edge.Cursor));
         }
 
         return (paginatedInfo, mappedOrganizations, totalCount);

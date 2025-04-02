@@ -13,11 +13,6 @@ public interface IBookingService
         WorkspaceMember workspaceMember,
         CancellationToken cancellationToken);
 
-    ValueTask<LocationBookingPermissions> GetLocationPermissionsAsync(
-        string locationId,
-        WorkspaceMember workspaceMember,
-        CancellationToken cancellationToken);
-
     ValueTask<TeamBookingPermissions> GetTeamPermissionsAsync(
         string teamId,
         WorkspaceMember workspaceMember,
@@ -33,16 +28,14 @@ public class BookingService(
     private readonly SemaphoreSlim _cachedLocationPermissionsLock = new(1, 1);
     private readonly SemaphoreSlim _cachedOrganizationPermissionsLock = new(1, 1);
     private readonly SemaphoreSlim _cachedTeamPermissionsLock = new(1, 1);
-    private LocationBookingPermissions? _cachedLocationBookingPermissions;
     private OrganizationBookingPermissions? _cachedOrganizationBookingPermissions;
     private TeamBookingPermissions? _cachedTeamBookingPermissions;
     private bool _disposed;
 
-    public async ValueTask<OrganizationBookingPermissions>
-        GetOrganizationPermissionsAsync(
-            Workspace workspace,
-            WorkspaceMember workspaceMember,
-            CancellationToken cancellationToken)
+    public async ValueTask<OrganizationBookingPermissions> GetOrganizationPermissionsAsync(
+        Workspace workspace,
+        WorkspaceMember workspaceMember,
+        CancellationToken cancellationToken)
     {
         if (_cachedOrganizationBookingPermissions is not null)
         {
@@ -66,39 +59,10 @@ public class BookingService(
         }
     }
 
-    public async ValueTask<LocationBookingPermissions>
-        GetLocationPermissionsAsync(
-            string locationId,
-            WorkspaceMember workspaceMember,
-            CancellationToken cancellationToken)
-    {
-        if (_cachedLocationBookingPermissions is not null)
-        {
-            return _cachedLocationBookingPermissions;
-        }
-
-        try
-        {
-            await _cachedLocationPermissionsLock.WaitAsync(cancellationToken);
-            _cachedLocationBookingPermissions = mapper.MapTo(
-                await bookingServiceClient.GetLocationPermissionsAsync(
-                    new GetLocationPermissionsInput { LocationId = locationId },
-                    bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                    cancellationToken: cancellationToken));
-
-            return _cachedLocationBookingPermissions;
-        }
-        finally
-        {
-            _cachedLocationPermissionsLock.Release();
-        }
-    }
-
-    public async ValueTask<TeamBookingPermissions>
-        GetTeamPermissionsAsync(
-            string teamId,
-            WorkspaceMember workspaceMember,
-            CancellationToken cancellationToken)
+    public async ValueTask<TeamBookingPermissions> GetTeamPermissionsAsync(
+        string teamId,
+        WorkspaceMember workspaceMember,
+        CancellationToken cancellationToken)
     {
         if (_cachedTeamBookingPermissions is not null)
         {

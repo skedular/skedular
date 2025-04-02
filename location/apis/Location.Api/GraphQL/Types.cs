@@ -1,7 +1,7 @@
-using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Location.Shared.Models;
 
@@ -48,33 +48,11 @@ public class CancelInvitationToJoinLocationPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
-[GraphQLName("ChangeLocationMemberRoleInput")]
-public class ChangeLocationMemberRoleInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("role")] public LocationMemberRole Role { get; set; }
-}
-
 [GraphQLName("DeleteLocationInput")]
 public class DeleteLocationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
-}
-
-[GraphQLName("InviteCustomersToJoinLocationInput")]
-public class InviteCustomersToJoinLocationInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("locationId")] public required string LocationId { get; set; }
-    [GraphQLName("emails")] public IEnumerable<string> Emails { get; set; } = [];
-}
-
-[GraphQLName("InviteCustomersToJoinLocationPayload")]
-public class InviteCustomersToJoinLocationPayload
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
 [GraphQLName("LocationAnalytics")]
@@ -92,7 +70,7 @@ public class LocationAnalytics
 }
 
 [GraphQLName("LocationConnection")]
-public class LocationConnection : Connection<LocationEdge>;
+public class LocationConnection : Enterprise.Shared.GraphQL.Types.Connection<LocationEdge>;
 
 [GraphQLName("LocationCustomerDetails")]
 public class LocationCustomerDetails
@@ -131,7 +109,6 @@ public class LocationDetails : Node
     [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
     [GraphQLName("canModify")] public bool CanModify { get; set; }
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
-    [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
     [GraphQLName("resources")] public IEnumerable<ResourceDetails> Resources { get; set; } = [];
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
@@ -142,42 +119,7 @@ public class LocationDetails : Node
 }
 
 [GraphQLName("LocationEdge")]
-public class LocationEdge : Edge<LocationDetails>;
-
-[GraphQLName("LocationMemberConnection")]
-public class LocationMemberConnection : Connection<LocationMemberEdge>;
-
-[GraphQLName("LocationMemberDetails")]
-public class LocationMemberDetails : Node
-{
-    [GraphQLName("role")] public LocationMemberRole? Role { get; set; }
-    [GraphQLName("customer")] public LocationCustomerDetails Customer { get; set; }
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
-}
-
-[GraphQLName("LocationMemberDetailsPayload")]
-public class LocationMemberDetailsPayload
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("member")] public LocationMemberDetails? Member { get; set; }
-}
-
-[GraphQLName("LocationMemberEdge")]
-public class LocationMemberEdge : Edge<LocationMemberDetails>;
-
-[GraphQLName("LocationMemberOrderInput")]
-public class LocationMemberOrderInput
-{
-    [GraphQLName("direction")] public OrderDirection Direction { get; set; }
-    [GraphQLName("field")] public LocationMemberOrderField Field { get; set; }
-}
-
-[GraphQLName("LocationMemberWhereInput")]
-public class LocationMemberWhereInput
-{
-    [GraphQLName("locationId")] public required string LocationId { get; set; }
-    [GraphQLName("nameContains")] public string? NameContains { get; set; }
-}
+public class LocationEdge(LocationDetails node, string cursor) : Edge<LocationDetails>(node, cursor);
 
 [GraphQLName("LocationOrderInput")]
 public class LocationOrderInput
@@ -218,19 +160,6 @@ public class LocationWhereInput
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
-}
-
-[GraphQLName("RejectInvitationToJoinLocationInput")]
-public class RejectInvitationToJoinLocationInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-}
-
-[GraphQLName("RejectInvitationToJoinLocationPayload")]
-public class RejectInvitationToJoinLocationPayload
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
 [GraphQLName("UpdateLocationInput")]
@@ -348,7 +277,7 @@ public class ResourcesPayload
 }
 
 [GraphQLName("ResourceConnection")]
-public class ResourceConnection : Connection<ResourceEdge>;
+public class ResourceConnection : Enterprise.Shared.GraphQL.Types.Connection<ResourceEdge>;
 
 [GraphQLName("ResourceDetails")]
 public class ResourceDetails : Node
@@ -373,7 +302,7 @@ public class ResourceDetails : Node
 }
 
 [GraphQLName("ResourceEdge")]
-public class ResourceEdge : Edge<ResourceDetails>;
+public class ResourceEdge(ResourceDetails node, string cursor) : Edge<ResourceDetails>(node, cursor);
 
 [GraphQLName("ResourceOrderInput")]
 public class ResourceOrderInput

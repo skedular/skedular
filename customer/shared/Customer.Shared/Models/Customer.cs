@@ -36,6 +36,5 @@ public class Customer : ModelBaseWithDeleted
     public ICollection<Team> PreferredTeams { get; set; } = [];
     public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<LocationMember> LocationMembers { get; set; } = [];
     public ICollection<TeamMember> TeamMembers { get; set; } = [];
 }

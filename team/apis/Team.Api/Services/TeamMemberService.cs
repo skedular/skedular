@@ -1,9 +1,9 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
+using HotChocolate.Types.Pagination;
 using Team.Api.Mappers;
 using Team.Api.Services.Authorization;
 using Team.Shared.Models;

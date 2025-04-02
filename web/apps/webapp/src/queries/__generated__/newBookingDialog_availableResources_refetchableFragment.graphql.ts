@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<500a3be33ffc06943b1d30f2adf9df70>>
+ * @generated SignedSource<<97c9a1c5e242d59321de28cdbcb86ed8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type newBookingDialog_availableResources_refetchableFragment$variables = 
   dateFromToGetAvailableResources: any;
   dateUntilToGetAvailableResources: any;
   locationId?: string | null | undefined;
-  organizationId?: string | null | undefined;
+  organizationId: string;
 };
 export type newBookingDialog_availableResources_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"newBookingDialog_availableResources_query">;
@@ -157,12 +157,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "139e189dc59faeb033ac7eaabb4444ee",
+    "cacheID": "13b37c77258abab555d6e444fda8aa7f",
     "id": null,
     "metadata": {},
     "name": "newBookingDialog_availableResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query newBookingDialog_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $locationId: String\n  $organizationId: String\n) {\n  ...newBookingDialog_availableResources_query\n}\n\nfragment newBookingDialog_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
+    "text": "query newBookingDialog_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $locationId: String\n  $organizationId: String!\n) {\n  ...newBookingDialog_availableResources_query\n}\n\nfragment newBookingDialog_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
   }
 };
 })();

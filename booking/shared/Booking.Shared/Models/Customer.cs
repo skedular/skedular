@@ -18,7 +18,6 @@ public class Customer : ReplicatedModelBaseWithDeleted
 
     public ICollection<Identity> Identities { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<LocationMember> LocationMembers { get; set; } = [];
     public ICollection<TeamMember> TeamMembers { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
     public Organization? DefaultOrganization { get; set; }

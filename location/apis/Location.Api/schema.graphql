@@ -3,21 +3,9 @@
   mutation: Mutation
 }
 
-type AcceptInvitationToJoinLocationPayload {
-  clientMutationId: String
-}
-
-type CancelInvitationToJoinLocationPayload {
-  clientMutationId: String
-}
-
 type DesksOccupancyPercentage {
   date: DateTime!
   percentage: Float!
-}
-
-type InviteCustomersToJoinLocationPayload {
-  clientMutationId: String
 }
 
 type LocationAddressDetails {
@@ -44,21 +32,6 @@ type LocationConnection {
   totalCount: Int
 }
 
-type LocationCustomerDetails {
-  uniqueId: ID!
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-}
-
 type LocationDailyBookingsTotal {
   date: DateTime!
   total: Int!
@@ -75,7 +48,6 @@ type LocationDetails {
   hasFutureBooking: Boolean!
   canModify: Boolean!
   canDelete: Boolean!
-  canInvitePeople: Boolean!
   canViewAnalytics: Boolean!
   resources: [ResourceDetails!]!
   physicalAddress: LocationAddressDetails
@@ -87,28 +59,6 @@ type LocationDetails {
 
 type LocationEdge {
   node: LocationDetails!
-  cursor: String!
-}
-
-type LocationMemberConnection {
-  pageInfo: PageInfo!
-  edges: [LocationMemberEdge!]!
-  totalCount: Int
-}
-
-type LocationMemberDetails {
-  role: LocationMemberRole
-  customer: LocationCustomerDetails!
-  id: ID!
-}
-
-type LocationMemberDetailsPayload {
-  clientMutationId: String
-  member: LocationMemberDetails
-}
-
-type LocationMemberEdge {
-  node: LocationMemberDetails!
   cursor: String!
 }
 
@@ -134,11 +84,6 @@ type Mutation {
   addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
   updateLocation(input: UpdateLocationInput!): LocationPayload @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload @cost(weight: "10")
-  changeLocationMemberRole(input: ChangeLocationMemberRoleInput!): LocationMemberDetailsPayload @cost(weight: "10")
-  inviteCustomersToJoinLocation(input: InviteCustomersToJoinLocationInput!): InviteCustomersToJoinLocationPayload @cost(weight: "10")
-  acceptInvitationToJoinLocation(input: AcceptInvitationToJoinLocationInput!): AcceptInvitationToJoinLocationPayload @cost(weight: "10")
-  rejectInvitationToJoinLocation(input: RejectInvitationToJoinLocationInput!): RejectInvitationToJoinLocationPayload @cost(weight: "10")
-  cancelInvitationToJoinLocation(input: CancelInvitationToJoinLocationInput!): CancelInvitationToJoinLocationPayload @cost(weight: "10")
   addResource(input: AddResourceInput!): ResourcePayload @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload @cost(weight: "10")
   deleteResource(input: DeleteResourceInput!): ResourcePayload @cost(weight: "10")
@@ -172,19 +117,13 @@ type PageInfo {
 type Query {
   locationVersion: Version!
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
-  locationMemberRoles: [LocationMemberRole!]!
   location(id: String!): LocationDetails @cost(weight: "10")
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): LocationConnection! @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
-  locationMembers(after: String first: Int before: String last: Int where: LocationMemberWhereInput! orderBy: [LocationMemberOrderInput!]): LocationMemberConnection! @cost(weight: "10")
   locationAnalytics(locationId: String! from: DateTime! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput! orderBy: [LocationOrderInput!]): [LocationAnalytics!]! @cost(weight: "10")
   resources(after: String first: Int before: String last: Int where: ResourceWhereInput! orderBy: [ResourceOrderInput!]): ResourceConnection! @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
-}
-
-type RejectInvitationToJoinLocationPayload {
-  clientMutationId: String
 }
 
 type ResourceConnection {
@@ -249,11 +188,6 @@ type WeekOpeningHours {
   sunday: OpeningHoursDetails!
 }
 
-input AcceptInvitationToJoinLocationInput {
-  clientMutationId: String
-  id: String!
-}
-
 input ActivateResourcesInput {
   clientMutationId: String
   ids: [String!]!
@@ -283,17 +217,6 @@ input AddResourceInput {
   organizationResourceTypeId: String!
 }
 
-input CancelInvitationToJoinLocationInput {
-  clientMutationId: String
-  id: String!
-}
-
-input ChangeLocationMemberRoleInput {
-  clientMutationId: String
-  id: String!
-  role: LocationMemberRole!
-}
-
 input DeactivateResourcesInput {
   clientMutationId: String
   ids: [String!]!
@@ -314,12 +237,6 @@ input DeleteResourcesInput {
   ids: [String!]!
 }
 
-input InviteCustomersToJoinLocationInput {
-  clientMutationId: String
-  locationId: String!
-  emails: [String!]!
-}
-
 input LocationAddressDetailsInput {
   formattedAddress: String
   addressLine1: String
@@ -329,16 +246,6 @@ input LocationAddressDetailsInput {
   province: String
   zipcode: String
   country: String
-}
-
-input LocationMemberOrderInput {
-  direction: OrderDirection!
-  field: LocationMemberOrderField!
-}
-
-input LocationMemberWhereInput {
-  locationId: String!
-  nameContains: String
 }
 
 input LocationOrderInput {
@@ -359,11 +266,6 @@ input OpeningHoursDetailsInput {
   openAllDay: Boolean!
   from: String
   until: String
-}
-
-input RejectInvitationToJoinLocationInput {
-  clientMutationId: String
-  id: String!
 }
 
 input ResourceOrderInput {
@@ -421,20 +323,6 @@ input WeekOpeningHoursInput {
   friday: OpeningHoursDetailsInput!
   saturday: OpeningHoursDetailsInput!
   sunday: OpeningHoursDetailsInput!
-}
-
-enum LocationMemberOrderField {
-  Role
-  Name
-  GivenName
-  MiddleName
-  FamilyName
-}
-
-enum LocationMemberRole {
-  Owner
-  Administrator
-  Member
 }
 
 enum LocationOrderField {

@@ -16,9 +16,7 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     public DbSet<DailyDeskCountRecording> DailyDeskCountRecording { get; set; }
     public DbSet<DailyRoomCountRecording> DailyRoomCountRecording { get; set; }
     public DbSet<Identity> Identity { get; set; }
-    public DbSet<JoinInvitation> JoinInvitation { get; set; }
     public DbSet<Entities.Location> Location { get; set; }
-    public DbSet<LocationMember> LocationMember { get; set; }
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<OrganizationTag> OrganizationTag { get; set; }

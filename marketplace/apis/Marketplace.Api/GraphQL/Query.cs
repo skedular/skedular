@@ -1,9 +1,13 @@
 using System.Reflection;
 using Api.Shared.Services.Models;
+using Enterprise.Shared;
+using Enterprise.Shared.GraphQL.Types;
+using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
 using Marketplace.Api.Mappers;
 using Marketplace.Api.Services;
+using Marketplace.Shared.Models;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Marketplace.Api.GraphQL;
@@ -55,6 +59,30 @@ public class Query(IMapper mapper)
         int? last,
         ProductWhereInput where,
         IEnumerable<ProductOrderInput>? orderBy,
-        CancellationToken cancellationToken) =>
-        throw new NotImplementedException();
+        [Service] IProductService productService,
+        CancellationToken cancellationToken)
+    {
+        var (paginatedInfo, edges, totalCount) = await productService.GetPaginatedProductsAsync(
+            new PaginationInputParam(after, first, before, last),
+            new ProductSearchCriteria(
+                where.OrganizationIds.ToSafeCollection(),
+                where.ProductIds.ToSafeCollection(),
+                where.NameContains,
+                where.IncludeInactive),
+            orderBy.ToSafeCollection().Select(item => new ProductOrder(item.Direction, item.Field)).ToList(),
+            cancellationToken);
+
+        return new ProductConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor,
+                EndCursor = paginatedInfo.EndCursor
+            },
+            Edges = edges.Select(mapper.MapTo),
+            TotalCount = totalCount
+        };
+    }
 }

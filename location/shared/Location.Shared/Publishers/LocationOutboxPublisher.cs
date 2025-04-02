@@ -6,7 +6,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Models;
 using Enterprise.Shared.Outbox.Publishers;
 using Location.Shared.Mappers;
-using Location.Shared.Models;
 using Event = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 
@@ -15,11 +14,6 @@ namespace Location.Shared.Publishers;
 public interface ILocationOutboxPublisher
 {
     Task PublishLocationsAsync(IEnumerable<Models.Location> locations, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
-
-    Task PublishInvitesToJoinLocationNotificationAsync(
-        IEnumerable<JoinInvitation> joinInvitations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
 }
 
 public class LocationOutboxPublisher(
@@ -43,29 +37,6 @@ public class LocationOutboxPublisher(
                         location.IsNotDeleted() ? Type.LocationUpserted : Type.LocationDeleted,
                         context.GetCorrelationId()),
                     Data = new Data { Location = mapper.MapTo(location) }
-                },
-                unitOfWork,
-                cancellationToken);
-        }
-    }
-
-    public async Task PublishInvitesToJoinLocationNotificationAsync(
-        IEnumerable<JoinInvitation> joinInvitations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
-    {
-        foreach (var joinInvitation in joinInvitations)
-        {
-            await publisher.PublishAsync(
-                new Key { LocationId = joinInvitation.Id },
-                new Event
-                {
-                    Metadata = Event.NewMetadata(
-                        applicationConfiguration.DomainSource,
-                        applicationConfiguration.AppSource,
-                        joinInvitation.IsNotDeleted() ? Type.InvitationToJoinLocationUpserted : Type.InvitationToJoinLocationDeleted,
-                        context.GetCorrelationId()),
-                    Data = new Data { InvitationToJoinLocation = mapper.MapTo(joinInvitation, null) }
                 },
                 unitOfWork,
                 cancellationToken);

@@ -8,7 +8,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using IMapper = Booking.Processors.Mappers.IMapper;
 using Location = Booking.Shared.Database.Entities.Location;
-using LocationMember = Booking.Shared.Database.Entities.LocationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;
@@ -50,7 +49,7 @@ public class LocationSubscriber(
             case Type.LocationDeleted:
                 {
                     var location = mapper.MapTo(@event);
-                    var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, true, true, cancellationToken);
+                    var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, true, cancellationToken);
                     if (existingLocation is not null && existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Location event. Event timestamp is older that what is already processed.");
@@ -65,10 +64,6 @@ public class LocationSubscriber(
 
                     await HandleLocationDeletedEventAsync(existingLocation, cancellationToken);
                 }
-                break;
-
-            case Type.InvitationToJoinLocationUpserted:
-            case Type.InvitationToJoinLocationDeleted:
                 break;
         }
 
@@ -85,7 +80,6 @@ public class LocationSubscriber(
         existingLocation = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
 
         (existingLocation, var resourceIds) = await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
-        _ = await RebuildLocationMembersAsync(location, existingLocation, cancellationToken);
 
         if (locationOpeningHoursChanged)
         {
@@ -181,41 +175,5 @@ public class LocationSubscriber(
         resourceIdsToRegenerateBookingSlots.AddRange(addedItems.Select(item => item.Id));
 
         return (existingLocation, resourceIdsToRegenerateBookingSlots.Distinct().ToList());
-    }
-
-    private async Task<Location> RebuildLocationMembersAsync(
-        Shared.Models.Location location,
-        Location existingLocation,
-        CancellationToken cancellationToken)
-    {
-        var locationMembers = await repositoryFactory.LocationMemberRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
-        var itemsToRemove = locationMembers
-            .Where(locationMember => location.LocationMembers.All(item => item.Id != locationMember.Id))
-            .ToList();
-        var updatedItems = new List<LocationMember>();
-        foreach (var locationMember in locationMembers.Where(locationMember => location.LocationMembers.Any(item => item.Id == locationMember.Id)))
-        {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id, false, cancellationToken);
-
-            var updatedLocationMember = mapper.MergeToEntity(
-                location.LocationMembers.First(item => item.Id == locationMember.Id),
-                locationMember,
-                existingLocation,
-                customer);
-            updatedLocationMember.DeletedAt = null;
-            updatedItems.Add(repositoryFactory.LocationMemberRepository.Update(updatedLocationMember));
-        }
-
-        var addedItems = new List<LocationMember>();
-        foreach (var locationMember in location.LocationMembers.Where(locationMember => locationMembers.All(item => item.Id != locationMember.Id)))
-        {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(locationMember.Customer.Id, false, cancellationToken);
-            addedItems.Add(repositoryFactory.LocationMemberRepository.Add(mapper.MapToEntity(locationMember, existingLocation, customer)));
-        }
-
-        repositoryFactory.LocationMemberRepository.RemoveRange(itemsToRemove);
-        existingLocation.LocationMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
-
-        return existingLocation;
     }
 }

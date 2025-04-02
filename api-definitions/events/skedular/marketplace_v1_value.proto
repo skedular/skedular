@@ -33,8 +33,9 @@ message Data {
 message Product {
   string id = 1;
   google.protobuf.Timestamp deletedAt = 2;
-  string organizationId = 3;
-  ProductVersion productVersion = 4;
+  bool inactive = 3;
+  string organizationId = 4;
+  ProductVersion productVersion = 5;
 }
 
 message ProductVersion {

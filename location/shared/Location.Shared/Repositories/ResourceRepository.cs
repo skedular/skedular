@@ -1,7 +1,7 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
+using HotChocolate.Types.Pagination;
 using Location.Shared.Database;
 using Location.Shared.Models;
 using Microsoft.EntityFrameworkCore;

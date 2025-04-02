@@ -12,8 +12,7 @@ public class SecurityContextEnricherMiddleware(RequestDelegate next, IEnumerable
         if (splitToken is ["Bearer", _])
         {
             var token = splitToken[1];
-            await Task.WhenAll(tokenServices.Select(tokenService =>
-                tokenService.VerifyTokenAsync(token, httpContext.GetCancellationToken())));
+            await Task.WhenAll(tokenServices.Select(tokenService => tokenService.VerifyTokenAsync(token, httpContext.GetCancellationToken())));
         }
 
         await next(httpContext);

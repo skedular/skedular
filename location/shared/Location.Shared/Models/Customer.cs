@@ -18,7 +18,4 @@ public class Customer : ReplicatedModelBaseWithDeleted
 
     public ICollection<Identity> Identities { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<LocationMember> LocationMembers { get; set; } = [];
-    public ICollection<JoinInvitation> JoinInvitationsCreatedBy { get; set; } = [];
-    public ICollection<JoinInvitation> JoinInvitationsInvitee { get; set; } = [];
 }

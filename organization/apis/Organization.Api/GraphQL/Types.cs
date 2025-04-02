@@ -2,6 +2,7 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Organization.Shared.Models;
 
@@ -120,7 +121,7 @@ public class OrganizationAnalytics
 }
 
 [GraphQLName("OrganizationConnection")]
-public class OrganizationConnection : Connection<OrganizationEdge>;
+public class OrganizationConnection : Enterprise.Shared.GraphQL.Types.Connection<OrganizationEdge>;
 
 [GraphQLName("OrganizationCustomerDetails")]
 public class OrganizationCustomerDetails
@@ -184,7 +185,7 @@ public class OrganizationDetails : Node
 }
 
 [GraphQLName("OrganizationEdge")]
-public class OrganizationEdge : Edge<OrganizationDetails>;
+public class OrganizationEdge(OrganizationDetails node, string cursor) : Edge<OrganizationDetails>(node, cursor);
 
 [GraphQLName("OrganizationIndustryMainCategoryReferenceDetails")]
 public class OrganizationIndustryMainCategoryReferenceDetails : Node
@@ -210,7 +211,7 @@ public class OrganizationMemberAttendancePercentage
 }
 
 [GraphQLName("OrganizationMemberConnection")]
-public class OrganizationMemberConnection : Connection<OrganizationMemberEdge>;
+public class OrganizationMemberConnection : Enterprise.Shared.GraphQL.Types.Connection<OrganizationMemberEdge>;
 
 [GraphQLName("OrganizationMemberDetails")]
 public class OrganizationMemberDetails : Node
@@ -240,7 +241,7 @@ public class OrganizationMembersDetailsPayload
 }
 
 [GraphQLName("OrganizationMemberEdge")]
-public class OrganizationMemberEdge : Edge<OrganizationMemberDetails>;
+public class OrganizationMemberEdge(OrganizationMemberDetails node, string cursor) : Edge<OrganizationMemberDetails>(node, cursor);
 
 [GraphQLName("OrganizationMemberOrderInput")]
 public class OrganizationMemberOrderInput
@@ -375,7 +376,7 @@ public class DeleteCustomTagsInput
 }
 
 [GraphQLName("OrganizationTagConnection")]
-public class OrganizationTagConnection : Connection<OrganizationTagEdge>;
+public class OrganizationTagConnection : Enterprise.Shared.GraphQL.Types.Connection<OrganizationTagEdge>;
 
 [GraphQLName("OrganizationTagDetails")]
 public class OrganizationTagDetails : Node
@@ -388,7 +389,7 @@ public class OrganizationTagDetails : Node
 }
 
 [GraphQLName("OrganizationTagEdge")]
-public class OrganizationTagEdge : Edge<OrganizationTagDetails>;
+public class OrganizationTagEdge(OrganizationTagDetails node, string cursor) : Edge<OrganizationTagDetails>(node, cursor);
 
 [GraphQLName("OrganizationTagOrderInput")]
 public class OrganizationTagOrderInput

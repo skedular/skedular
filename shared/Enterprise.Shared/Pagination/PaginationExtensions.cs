@@ -1,5 +1,5 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Models;
+using HotChocolate.Types.Pagination;
 
 namespace Enterprise.Shared.Pagination;
 
@@ -79,7 +79,7 @@ public static class PaginationExtensions
             items = items.Reverse().Take(paginationInputParam.Last.Value).Reverse().ToList();
         }
 
-        var edges = items.Select(item => new Edge<T>(item.Id.ToCursor(), item)).ToList();
+        var edges = items.Select(item => new Edge<T>(item, item.Id.ToCursor())).ToList();
         var startCursor = edges.FirstOrDefault()?.Cursor;
         var endCursor = edges.LastOrDefault()?.Cursor;
 

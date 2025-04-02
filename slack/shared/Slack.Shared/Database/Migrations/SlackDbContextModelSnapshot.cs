@@ -18,7 +18,7 @@ namespace Slack.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -102,7 +102,11 @@ namespace Slack.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("Customer");
                 });
@@ -141,11 +145,15 @@ namespace Slack.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("Email");
 
                     b.HasIndex("EmailVerified");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("Identity");
                 });
@@ -186,9 +194,13 @@ namespace Slack.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DailyUpdateChannelId");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("SlackChannelDailyUpdateLastSentAt");
 
@@ -229,9 +241,13 @@ namespace Slack.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DailyUpdateChannelId");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("SlackChannelDailyUpdateLastSentAt");
 
@@ -283,7 +299,11 @@ namespace Slack.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -333,9 +353,13 @@ namespace Slack.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DailyUpdateChannelId");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("SlackChannelDailyUpdateLastSentAt");
 
@@ -447,9 +471,13 @@ namespace Slack.Shared.Database.Migrations
 
                     b.HasIndex("ChannelsLastRefreshedAt");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("MembersLastRefreshedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -513,7 +541,11 @@ namespace Slack.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -629,9 +661,13 @@ namespace Slack.Shared.Database.Migrations
 
                     b.HasIndex("AutomaticallyUpdateProfileStatus");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("LastProfileStatusUpdatedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("WorkspaceId");
 

@@ -1,3 +1,4 @@
+using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using Marketplace.Api.Mappers;
@@ -36,4 +37,24 @@ public class Mutation(IMapper mapper)
         [Service] IProductService productService,
         CancellationToken cancellationToken) =>
         new() { ClientMutationId = input.ClientMutationId, Product = mapper.MapTo(await productService.DeleteAsync(input.Id, cancellationToken))! };
+
+    [UseResolverScope]
+    public async Task<ProductsPayload?> ActivateProductsAsync(
+        ActivateProductsInput input,
+        [Service] IProductService productService,
+        CancellationToken cancellationToken)
+    {
+        var products = await productService.ActivateAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(mapper.MapTo)! };
+    }
+
+    [UseResolverScope]
+    public async Task<ProductsPayload?> DeactivateProductsAsync(
+        DeactivateProductsInput input,
+        [Service] IProductService productService,
+        CancellationToken cancellationToken)
+    {
+        var products = await productService.DeactivateAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(mapper.MapTo)! };
+    }
 }

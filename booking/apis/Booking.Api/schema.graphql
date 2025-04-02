@@ -87,15 +87,6 @@ type Booking_TeamDetails {
   name: String!
 }
 
-type LocationBookingPermissions {
-  canAddBooking: Boolean!
-  canUpdateBooking: Boolean!
-  canDeleteBooking: Boolean!
-  canAddBookingOnBehalf: Boolean!
-  canUpdateBookingOnBehalf: Boolean!
-  canDeleteBookingOnBehalf: Boolean!
-}
-
 type Mutation {
   addBooking(input: AddBookingInput!): BookingPayload @cost(weight: "10")
   updateBooking(input: UpdateBookingInput!): BookingPayload @cost(weight: "10")
@@ -130,7 +121,6 @@ type Query {
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): BookingConnection! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
-  locationBookingPermissions(locationId: String!): LocationBookingPermissions! @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
@@ -167,7 +157,7 @@ input AddBookingInput {
 }
 
 input AvailableResourcesWhereInput {
-  organizationId: String
+  organizationId: String!
   locationId: String
   from: DateTime!
   until: DateTime!

@@ -6,10 +6,8 @@ import { RelayError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
-import type { notifications_acceptInvitationToJoinLocationMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinLocationMutation.graphql';
 import type { notifications_acceptInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinOrganizationMutation.graphql';
 import type { notifications_acceptInvitationToJoinTeamMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinTeamMutation.graphql';
-import type { notifications_rejectInvitationToJoinLocationMutation } from '@/queries/__generated__/notifications_rejectInvitationToJoinLocationMutation.graphql';
 import type { notifications_rejectInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_rejectInvitationToJoinOrganizationMutation.graphql';
 import type { notifications_rejectInvitationToJoinTeamMutation } from '@/queries/__generated__/notifications_rejectInvitationToJoinTeamMutation.graphql';
 import type { notifications_rootQuery } from '@/queries/__generated__/notifications_rootQuery.graphql';
@@ -80,22 +78,6 @@ const Notifications = ({ queryReference }: Props) => {
   const [commitRejectInvitationToJoinOrganization] = useMutation<notifications_rejectInvitationToJoinOrganizationMutation>(graphql`
     mutation notifications_rejectInvitationToJoinOrganizationMutation($input: RejectInvitationToJoinOrganizationInput!) {
       rejectInvitationToJoinOrganization(input: $input) {
-        clientMutationId
-      }
-    }
-  `);
-
-  const [commitAcceptInvitationToJoinLocation] = useMutation<notifications_acceptInvitationToJoinLocationMutation>(graphql`
-    mutation notifications_acceptInvitationToJoinLocationMutation($input: AcceptInvitationToJoinLocationInput!) {
-      acceptInvitationToJoinLocation(input: $input) {
-        clientMutationId
-      }
-    }
-  `);
-
-  const [commitRejectInvitationToJoinLocation] = useMutation<notifications_rejectInvitationToJoinLocationMutation>(graphql`
-    mutation notifications_rejectInvitationToJoinLocationMutation($input: RejectInvitationToJoinLocationInput!) {
-      rejectInvitationToJoinLocation(input: $input) {
         clientMutationId
       }
     }
@@ -205,88 +187,6 @@ const Notifications = ({ queryReference }: Props) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
           render: <NotificationContent content={`Failed to accept invitation to join organization '${notification.organization?.name}'. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleRejectInvitationToJoinLocationClick = (id: string) => {
-    const notification = myNotifications.find((item) => item.id === id);
-    if (!notification) {
-      return <></>;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Rejecting invitation to join location '${notification.location?.name}'...`} />, infoNotificationOptions);
-
-    commitRejectInvitationToJoinLocation({
-      variables: {
-        input: {
-          clientMutationId: nanoid(),
-          id: notification.sourceId,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject invitation to join location '${notification.location?.name}'. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation to join location '${notification.location?.name} rejected.`} />,
-        });
-
-        setRejectedIds(rejectedIds.concat(id));
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject invitation to join location '${notification.location?.name}'. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleAcceptInvitationToJoinLocationClick = (id: string) => {
-    const notification = myNotifications.find((item) => item.id === id);
-    if (!notification) {
-      return <></>;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Accpeting invitation to join location '${notification.location?.name}'...`} />, infoNotificationOptions);
-
-    commitAcceptInvitationToJoinLocation({
-      variables: {
-        input: {
-          clientMutationId: nanoid(),
-          id: notification.sourceId,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to accept invitation to join location '${notification.location?.name}'. Error: ${joinErrors(errors)}`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Invitation to join location '${notification.location?.name} accepted.`} />,
-        });
-
-        setAcceptedIds(acceptedIds.concat(id));
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to accept invitation to join location '${notification.location?.name}'. Error: ${error.message}.`} />,
         });
       },
     });
@@ -443,18 +343,6 @@ const Notifications = ({ queryReference }: Props) => {
                   <SmallIconTypography label="Reject" />
                 </Button>
                 <Button variant="contained" onClick={() => handleAcceptInvitationToJoinOrganizationClick(id)} sx={{ textTransform: 'none' }}>
-                  <SmallIconTypography label="Approve" />
-                </Button>
-              </StackRow>
-            );
-
-          case 'InvitationToJoinLocation':
-            return (
-              <StackRow sx={{ paddingTop: 1, paddingBottom: 1 }}>
-                <Button variant="contained" color="secondary" onClick={() => handleRejectInvitationToJoinLocationClick(id)} sx={{ textTransform: 'none' }}>
-                  <SmallIconTypography label="Reject" />
-                </Button>
-                <Button variant="contained" onClick={() => handleAcceptInvitationToJoinLocationClick(id)} sx={{ textTransform: 'none' }}>
                   <SmallIconTypography label="Approve" />
                 </Button>
               </StackRow>

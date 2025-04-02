@@ -1,6 +1,6 @@
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
+using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Team.Shared.Database;

@@ -33,7 +33,7 @@ public class LocationAnalyticsService(
     IRepositoryFactory repositoryFactory,
     ILocationService locationService,
     ICachedCustomerService cachedCustomerService,
-    ILocationAuthorizationService locationAuthorizationService) : ILocationAnalyticsService
+    IOrganizationAuthorizationService organizationAuthorizationService) : ILocationAnalyticsService
 {
     public async Task<LocationAnalytics> GetAnalyticsAsync(
         string locationId,
@@ -50,7 +50,7 @@ public class LocationAnalyticsService(
             throw new LocationNotFound();
         }
 
-        if (!locationAuthorizationService.CanViewAnalytics(location, customer))
+        if (!organizationAuthorizationService.CanViewAnalytics(location.Organization, customer))
         {
             return new LocationAnalytics(locationId, string.Empty, [], [], []);
         }
@@ -91,7 +91,7 @@ public class LocationAnalyticsService(
                 throw new LocationNotFound();
             }
 
-            if (!locationAuthorizationService.CanViewAnalytics(location, customer))
+            if (!organizationAuthorizationService.CanViewAnalytics(location.Organization, customer))
             {
                 return [];
             }

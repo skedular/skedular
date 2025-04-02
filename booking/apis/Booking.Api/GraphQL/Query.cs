@@ -134,37 +134,6 @@ public class Query(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<LocationBookingPermissions> LocationBookingPermissionsAsync(
-        string locationId,
-        [Service] ILocationAuthorizationService locationAuthorizationService,
-        CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(locationId))
-        {
-            return new LocationBookingPermissions
-            {
-                CanAddBooking = false,
-                CanUpdateBooking = false,
-                CanDeleteBooking = false,
-                CanAddBookingOnBehalf = false,
-                CanUpdateBookingOnBehalf = false,
-                CanDeleteBookingOnBehalf = false
-            };
-        }
-
-        var permissions = await locationAuthorizationService.GetPermissionsAsync(locationId, cancellationToken);
-        return new LocationBookingPermissions
-        {
-            CanAddBooking = permissions.CanAddBooking,
-            CanUpdateBooking = permissions.CanUpdateBooking,
-            CanDeleteBooking = permissions.CanDeleteBooking,
-            CanAddBookingOnBehalf = permissions.CanAddBookingOnBehalf,
-            CanUpdateBookingOnBehalf = permissions.CanUpdateBookingOnBehalf,
-            CanDeleteBookingOnBehalf = permissions.CanDeleteBookingOnBehalf
-        };
-    }
-
-    [UseResolverScope]
     public async Task<TeamBookingPermissions> TeamBookingPermissionsAsync(
         string teamId,
         [Service] ITeamAuthorizationService teamAuthorizationService,

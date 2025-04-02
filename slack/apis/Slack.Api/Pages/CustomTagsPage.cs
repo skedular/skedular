@@ -163,8 +163,7 @@ public class CustomTagsPage(
         if (action.SelectedOption.Value.StartsWith(BookingActionTypes.Bookings))
         {
             var locationId = action.SelectedOption.Value[BookingActionTypes.Bookings.Length..];
-            var bookingPermissions =
-                await bookingService.GetLocationPermissionsAsync(locationId, workspaceMember, cancellationToken);
+            var bookingPermissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
             if (!bookingPermissions.CanViewBookings)
             {
                 throw new Unauthorized();

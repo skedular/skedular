@@ -122,7 +122,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
 
         return existingOrganization;
     }
-    
+
     private Organization RebuildOrganizationTags(Shared.Models.Organization organization, Organization existingOrganization)
     {
         var itemsToRemove = existingOrganization.Tags.Where(tag => organization.Tags.All(item => item.Id != tag.Id)).ToList();

@@ -2,6 +2,7 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Team.Shared.Models;
 
@@ -100,7 +101,7 @@ public class RejectInvitationToJoinTeamPayload
 }
 
 [GraphQLName("TeamConnection")]
-public class TeamConnection : Connection<TeamEdge>;
+public class TeamConnection : Enterprise.Shared.GraphQL.Types.Connection<TeamEdge>;
 
 [GraphQLName("TeamCustomerDetails")]
 public class TeamCustomerDetails
@@ -138,10 +139,10 @@ public class TeamDetails : Node
 }
 
 [GraphQLName("TeamEdge")]
-public class TeamEdge : Edge<TeamDetails>;
+public class TeamEdge(TeamDetails node, string cursor) : Edge<TeamDetails>(node, cursor);
 
 [GraphQLName("TeamMemberConnection")]
-public class TeamMemberConnection : Connection<TeamMemberEdge>;
+public class TeamMemberConnection : Enterprise.Shared.GraphQL.Types.Connection<TeamMemberEdge>;
 
 [GraphQLName("TeamMemberDetails")]
 public class TeamMemberDetails : Node
@@ -161,7 +162,7 @@ public class TeamMemberDetailsPayload
 }
 
 [GraphQLName("TeamMemberEdge")]
-public class TeamMemberEdge : Edge<TeamMemberDetails>;
+public class TeamMemberEdge(TeamMemberDetails node, string cursor) : Edge<TeamMemberDetails>(node, cursor);
 
 [GraphQLName("TeamMemberOrderInput")]
 public class TeamMemberOrderInput

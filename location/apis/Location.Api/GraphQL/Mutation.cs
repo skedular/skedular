@@ -39,57 +39,6 @@ public class Mutation(IMapper mapper)
         new() { ClientMutationId = input.ClientMutationId, Location = mapper.MapTo(await locationService.DeleteAsync(input.Id, cancellationToken))! };
 
     [UseResolverScope]
-    public async Task<LocationMemberDetailsPayload?> ChangeLocationMemberRoleAsync(
-        ChangeLocationMemberRoleInput input,
-        [Service] ILocationMemberService locationMemberService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId,
-            Member = mapper.MapTo(await locationMemberService.ChangeRoleAsync(input.Id, input.Role, cancellationToken))
-        };
-
-    [UseResolverScope]
-    public async Task<InviteCustomersToJoinLocationPayload?> InviteCustomersToJoinLocationAsync(
-        InviteCustomersToJoinLocationInput input,
-        [Service] ILocationInvitationService locationInvitationService,
-        CancellationToken cancellationToken)
-    {
-        await locationInvitationService.InviteMembersByEmailsAsync(input.LocationId, input.Emails.ToList(), cancellationToken);
-        return new InviteCustomersToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
-    }
-
-    [UseResolverScope]
-    public async Task<AcceptInvitationToJoinLocationPayload?> AcceptInvitationToJoinLocationAsync(
-        AcceptInvitationToJoinLocationInput input,
-        [Service] ILocationInvitationService locationInvitationService,
-        CancellationToken cancellationToken)
-    {
-        await locationInvitationService.AcceptInvitationToJoinAsync(input.Id, cancellationToken);
-        return new AcceptInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
-    }
-
-    [UseResolverScope]
-    public async Task<RejectInvitationToJoinLocationPayload?> RejectInvitationToJoinLocationAsync(
-        RejectInvitationToJoinLocationInput input,
-        [Service] ILocationInvitationService locationInvitationService,
-        CancellationToken cancellationToken)
-    {
-        await locationInvitationService.RejectInvitationToJoinAsync(input.Id, cancellationToken);
-        return new RejectInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
-    }
-
-    [UseResolverScope]
-    public async Task<CancelInvitationToJoinLocationPayload?> CancelInvitationToJoinLocationAsync(
-        CancelInvitationToJoinLocationInput input,
-        [Service] ILocationInvitationService locationInvitationService,
-        CancellationToken cancellationToken)
-    {
-        await locationInvitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken);
-        return new CancelInvitationToJoinLocationPayload { ClientMutationId = input.ClientMutationId };
-    }
-
-    [UseResolverScope]
     public async Task<ResourcePayload?> AddResourceAsync(
         AddResourceInput input,
         [Service] IResourceService resourceService,

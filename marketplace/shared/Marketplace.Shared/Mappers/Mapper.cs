@@ -14,6 +14,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
+            Inactive = src.Inactive,
             OrganizationId = src.Organization.Id,
             ProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First())
         };

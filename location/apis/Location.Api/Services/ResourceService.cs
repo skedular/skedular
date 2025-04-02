@@ -1,9 +1,9 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
+using HotChocolate.Types.Pagination;
 using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
 using Location.Shared.Models;
@@ -24,7 +24,7 @@ public interface IResourceService
     Task<ICollection<Resource>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<Resource>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Resource>>, int )> GetPaginatedResourcesAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
         ResourceSearchCriteria searchCriteria,
         ICollection<ResourceOrder> orderByFields,
@@ -37,7 +37,7 @@ public class ResourceService(
     IRandomHelper randomHelper,
     ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
-    ILocationAuthorizationService locationAuthorizationService,
+    IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     IMapper mapper,
     ILocationOutboxPublisher locationOutboxPublisher) : IResourceService
@@ -64,7 +64,7 @@ public class ResourceService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!locationAuthorizationService.CanModify(existingLocation, customer))
+        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
             throw new Unauthorized();
         }
@@ -111,7 +111,7 @@ public class ResourceService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (customer is not null && !locationAuthorizationService.CanModify(existingLocation, customer))
+        if (customer is not null && !organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
             throw new Unauthorized();
         }
@@ -204,7 +204,7 @@ public class ResourceService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!locationAuthorizationService.CanModify(existingLocation, customer))
+        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
             throw new Unauthorized();
         }
@@ -239,7 +239,7 @@ public class ResourceService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (existingLocations.Any(existingOrganization => !locationAuthorizationService.CanModify(existingOrganization, customer)))
+        if (existingLocations.Any(existingOrganization => !organizationAuthorizationService.CanModify(existingOrganization.Organization, customer)))
         {
             throw new Unauthorized();
         }
@@ -277,14 +277,13 @@ public class ResourceService(
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
-
         if (existingLocations
             .Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer)))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (existingLocations.Any(existingOrganization => !locationAuthorizationService.CanModify(existingOrganization, customer)))
+        if (existingLocations.Any(item => !organizationAuthorizationService.CanModify(item.Organization, customer)))
         {
             throw new Unauthorized();
         }
@@ -308,7 +307,6 @@ public class ResourceService(
         }
 
         await locationOutboxPublisher.PublishLocationsAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
-
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -326,14 +324,12 @@ public class ResourceService(
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
-
-        if (existingLocations
-            .Any(existingLocation => !organizationOfferingService.IsMoreInteractionAllowed(existingLocation.Organization, customer)))
+        if (existingLocations.Any(item => !organizationOfferingService.IsMoreInteractionAllowed(item.Organization, customer)))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (existingLocations.Any(existingOrganization => !locationAuthorizationService.CanModify(existingOrganization, customer)))
+        if (existingLocations.Any(item => !organizationAuthorizationService.CanModify(item.Organization, customer)))
         {
             throw new Unauthorized();
         }
@@ -357,7 +353,6 @@ public class ResourceService(
         }
 
         await locationOutboxPublisher.PublishLocationsAsync(mappedLocations, repositoryFactory.UnitOfWork, cancellationToken);
-
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -377,7 +372,7 @@ public class ResourceService(
             throw new LocationNotFound();
         }
 
-        if (!locationAuthorizationService.CanView(location, customer))
+        if (!organizationAuthorizationService.CanView(location.Organization, customer))
         {
             throw new Unauthorized();
         }
@@ -409,7 +404,7 @@ public class ResourceService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (customer is not null && !locationAuthorizationService.CanModify(existingLocation, customer))
+        if (customer is not null && !organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
             throw new Unauthorized();
         }

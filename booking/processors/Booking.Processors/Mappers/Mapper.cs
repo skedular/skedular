@@ -6,7 +6,6 @@ using Enterprise.Shared;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Location = Booking.Shared.Models.Location;
-using LocationMember = Booking.Shared.Database.Entities.LocationMember;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Models.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
@@ -36,14 +35,6 @@ public interface IMapper
         Shared.Models.OrganizationMember src,
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
-        Customer customer);
-
-    LocationMember MapToEntity(Shared.Models.LocationMember src, Shared.Database.Entities.Location organization, Customer customer);
-
-    LocationMember MergeToEntity(
-        Shared.Models.LocationMember src,
-        LocationMember dest,
-        Shared.Database.Entities.Location location,
         Customer customer);
 
     TeamMember MapToEntity(Shared.Models.TeamMember src, Shared.Database.Entities.Team organization, Customer customer);
@@ -201,22 +192,6 @@ public class Mapper : IMapper
             Organization = new Organization { Id = locationAfterState.OrganizationId }
         };
 
-        location.LocationMembers = locationAfterState.Members.Select(item => new Shared.Models.LocationMember
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Role = item.Role switch
-            {
-                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Owner => LocationMemberRole.Owner,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Administrator => LocationMemberRole.Administrator,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Role.Member => LocationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Customer = new Shared.Models.Customer { Id = item.CustomerId },
-            Location = location
-        }).ToList();
-
         var organizationTags = locationAfterState.Resources
             .SelectMany(item => item.TagIds)
             .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
@@ -334,23 +309,6 @@ public class Mapper : IMapper
         dest.Role = src.Role.ToNullableOrganizationMemberRole();
         dest.Status = src.Status.ToOrganizationMemberStatus();
         dest.Organization = organization;
-        dest.Customer = customer;
-        return dest;
-    }
-
-    public LocationMember MapToEntity(Shared.Models.LocationMember src, Shared.Database.Entities.Location location, Customer customer) =>
-        MergeToEntity(src, new LocationMember(), location, customer);
-
-    public LocationMember MergeToEntity(
-        Shared.Models.LocationMember src,
-        LocationMember dest,
-        Shared.Database.Entities.Location location,
-        Customer customer)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Role = src.Role.ToNullableLocationMemberRole();
-        dest.Location = location;
         dest.Customer = customer;
         return dest;
     }

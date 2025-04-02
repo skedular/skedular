@@ -13,7 +13,6 @@ using BookingOrderField = Booking.Shared.Models.BookingOrderField;
 using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
 using OrganizationPermissions = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions;
-using LocationPermissions = Api.Shared.Services.Grpc.Skedular.Booking.V1.LocationPermissions;
 using TeamPermissions = Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions;
 using Version = Api.Shared.Services.Grpc.Skedular.Booking.V1.Version;
 
@@ -25,7 +24,6 @@ public class BookingGrpcService(
     IBookingService bookingService,
     IResourceService resourceService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    ILocationAuthorizationService locationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IMapper mapper)
     : BookingService.BookingServiceBase
@@ -198,23 +196,6 @@ public class BookingGrpcService(
         };
     }
 
-    public override async Task<LocationPermissions> GetLocationPermissions(GetLocationPermissionsInput request, ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
-
-        var permissions = await locationAuthorizationService.GetPermissionsAsync(request.LocationId, context.CancellationToken);
-        return new LocationPermissions
-        {
-            CanViewBookings = permissions.CanViewBookings,
-            CanAddBooking = permissions.CanAddBooking,
-            CanUpdateBooking = permissions.CanUpdateBooking,
-            CanDeleteBooking = permissions.CanDeleteBooking,
-            CanAddBookingOnBehalf = permissions.CanAddBookingOnBehalf,
-            CanUpdateBookingOnBehalf = permissions.CanUpdateBookingOnBehalf,
-            CanDeleteBookingOnBehalf = permissions.CanDeleteBookingOnBehalf
-        };
-    }
-
     public override async Task<TeamPermissions> GetTeamPermissions(GetTeamPermissionsInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
@@ -253,7 +234,7 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await bookingService.AddAsync(mapper.MapTo(request),  false, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await bookingService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Update(UpdateInput request, ServerCallContext context)

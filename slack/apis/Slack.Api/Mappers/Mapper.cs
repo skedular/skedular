@@ -56,7 +56,6 @@ public interface IMapper
     Team MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team src);
     UpdateInput MapTo(Booking src);
     OrganizationBookingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src);
-    LocationBookingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.LocationPermissions src);
     TeamBookingPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions src);
     WorkspaceChannel MapTo(Conversation src, Workspace workspace);
     Shared.Models.WorkspaceChannel? MapTo(WorkspaceChannel? src);
@@ -251,12 +250,7 @@ public class Mapper : IMapper
 
     public LocationPermissions MapTo(Permissions src) => new()
     {
-        CanView = src.CanView,
-        CanModify = src.CanModify,
-        CanDelete = src.CanDelete,
-        CanInvitePeople = src.CanInvitePeople,
-        CanCancelPeopleExistingInvitations = src.CanCancelPeopleExistingInvitations,
-        CanViewAnalytics = src.CanViewAnalytics
+        CanView = src.CanView, CanModify = src.CanModify, CanDelete = src.CanDelete, CanViewAnalytics = src.CanViewAnalytics
     };
 
     public TeamPermissions MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions src) => new()
@@ -337,19 +331,6 @@ public class Mapper : IMapper
 
     OrganizationBookingPermissions IMapper.MapTo(
         global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src) =>
-        new()
-        {
-            CanViewBookings = src.CanViewBookings,
-            CanAddBooking = src.CanAddBooking,
-            CanUpdateBooking = src.CanUpdateBooking,
-            CanDeleteBooking = src.CanDeleteBooking,
-            CanAddBookingOnBehalf = src.CanAddBookingOnBehalf,
-            CanUpdateBookingOnBehalf = src.CanUpdateBookingOnBehalf,
-            CanDeleteBookingOnBehalf = src.CanDeleteBookingOnBehalf
-        };
-
-    public LocationBookingPermissions MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Booking.V1.LocationPermissions src) =>
         new()
         {
             CanViewBookings = src.CanViewBookings,
@@ -496,8 +477,6 @@ public class Mapper : IMapper
                 CanView = src.Permissions.CanView,
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
-                CanInvitePeople = src.Permissions.CanInvitePeople,
-                CanCancelPeopleExistingInvitations = src.Permissions.CanCancelPeopleExistingInvitations,
                 CanViewAnalytics = src.Permissions.CanViewAnalytics
             },
             HasFutureBooking = src.HasFutureBooking

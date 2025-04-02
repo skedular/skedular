@@ -1,5 +1,5 @@
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
+using HotChocolate.Types.Pagination;
 using Notification.Api.Mappers;
 using Notification.Shared.Models;
 using Notification.Shared.Repositories;

@@ -21,16 +21,12 @@ public interface ICustomerRepository : IRepository<Customer>
 
 internal static class CustomerExtensions
 {
-    internal static IIncludableQueryable<Customer, Database.Entities.Location?> AddDependentObjects(
+    internal static IIncludableQueryable<Customer, Organization> AddDependentObjects(
         this IQueryable<Customer> originalQuery) =>
         originalQuery
             .Include(query => query.Identities)
             .Include(query => query.OrganizationMembers)
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.JoinInvitationsCreatedBy)
-            .ThenInclude(query => query.Location)
-            .Include(query => query.JoinInvitationsInvitee)
-            .ThenInclude(query => query.Location);
+            .ThenInclude(query => query.Organization);
 }
 
 public class CustomerRepository(LocationDbContext dbContext, TimeProvider timeProvider)

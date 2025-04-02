@@ -1,5 +1,4 @@
 using System.Reflection;
-using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
@@ -31,14 +30,6 @@ public class Query(IMapper mapper)
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken);
-
-    [UseResolverScope]
-    public IEnumerable<LocationMemberRole> LocationMemberRoles() =>
-    [
-        LocationMemberRole.Owner,
-        LocationMemberRole.Administrator,
-        LocationMemberRole.Member
-    ];
 
     [UseResolverScope]
     public async Task<LocationDetails?> LocationAsync(string id, [Service] ILocationService locationService, CancellationToken cancellationToken) =>
@@ -89,39 +80,6 @@ public class Query(IMapper mapper)
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
             ? mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, cancellationToken))
             : null;
-
-    [UseResolverScope]
-    public async Task<LocationMemberConnection> LocationMembersAsync(
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        LocationMemberWhereInput where,
-        IEnumerable<LocationMemberOrderInput>? orderBy,
-        [Service] ILocationMemberService locationMemberService,
-        CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
-
-        var (paginatedInfo, edges, totalCount) = await locationMemberService.GetPaginatedLocationMembersAsync(
-            new PaginationInputParam(after, first, before, last),
-            new LocationMemberSearchCriteria(where.LocationId, where.NameContains),
-            orderBy.ToSafeCollection().Select(item => new LocationMemberOrder(item.Direction, item.Field)).ToList(),
-            cancellationToken);
-
-        return new LocationMemberConnection
-        {
-            PageInfo = new PageInfo
-            {
-                HasNextPage = paginatedInfo.HasNextPage,
-                HasPreviousPage = paginatedInfo.HasPreviousPage,
-                StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
-            },
-            Edges = edges.Select(mapper.MapTo),
-            TotalCount = totalCount
-        };
-    }
 
     [UseResolverScope]
     public async Task<LocationAnalytics?> LocationAnalyticsAsync(

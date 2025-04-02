@@ -146,6 +146,10 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
                     b.ToTable("Address");
                 });
 
@@ -185,11 +189,15 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("From");
 
                     b.HasIndex("LocationId");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Until");
 
@@ -266,6 +274,8 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("FamilyName");
@@ -273,6 +283,8 @@ namespace Location.Shared.Database.Migrations
                     b.HasIndex("GivenName");
 
                     b.HasIndex("MiddleName");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -314,11 +326,15 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasIndex("Count");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("Date");
 
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("LocationId");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("DailyDeskCountRecording");
                 });
@@ -358,11 +374,15 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasIndex("Count");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("Date");
 
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("LocationId");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("DailyRoomCountRecording");
                 });
@@ -401,78 +421,17 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("Email");
 
                     b.HasIndex("EmailVerified");
 
+                    b.HasIndex("ModifiedAt");
+
                     b.ToTable("Identity");
-                });
-
-            modelBuilder.Entity("Location.Shared.Database.Entities.JoinInvitation", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CreatedById")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(320)
-                        .HasColumnType("character varying(320)");
-
-                    b.Property<string>("InviteeId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("LocationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("Email");
-
-                    b.HasIndex("InviteeId");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("Role");
-
-                    b.HasIndex("Status");
-
-                    b.ToTable("JoinInvitation");
                 });
 
             modelBuilder.Entity("Location.Shared.Database.Entities.Location", b =>
@@ -529,11 +488,15 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasIndex("About");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DailyDeskCountLastRecordedAt");
 
                     b.HasIndex("DailyRoomCountLastRecordedAt");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -545,54 +508,6 @@ namespace Location.Shared.Database.Migrations
                     b.HasIndex("Timezone");
 
                     b.ToTable("Location");
-                });
-
-            modelBuilder.Entity("Location.Shared.Database.Entities.LocationMember", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LocationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("Role");
-
-                    b.HasIndex("CustomerId", "LocationId")
-                        .IsUnique();
-
-                    b.ToTable("LocationMember");
                 });
 
             modelBuilder.Entity("Location.Shared.Database.Entities.Organization", b =>
@@ -632,7 +547,11 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -684,7 +603,11 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -740,7 +663,11 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -808,6 +735,8 @@ namespace Location.Shared.Database.Migrations
 
                     b.HasIndex("Capacity");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("Inactive");
@@ -815,6 +744,8 @@ namespace Location.Shared.Database.Migrations
                     b.HasIndex("IsAvailableHoursOverridden");
 
                     b.HasIndex("LocationId");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -897,31 +828,6 @@ namespace Location.Shared.Database.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("Location.Shared.Database.Entities.JoinInvitation", b =>
-                {
-                    b.HasOne("Location.Shared.Database.Entities.Customer", "CreatedBy")
-                        .WithMany("JoinInvitationsCreatedBy")
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Location.Shared.Database.Entities.Customer", "Invitee")
-                        .WithMany("JoinInvitationsInvitee")
-                        .HasForeignKey("InviteeId");
-
-                    b.HasOne("Location.Shared.Database.Entities.Location", "Location")
-                        .WithMany("JoinInvitations")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("Invitee");
-
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("Location.Shared.Database.Entities.Location", b =>
                 {
                     b.HasOne("Location.Shared.Database.Entities.Organization", "Organization")
@@ -937,25 +843,6 @@ namespace Location.Shared.Database.Migrations
                     b.Navigation("Organization");
 
                     b.Navigation("PhysicalAddress");
-                });
-
-            modelBuilder.Entity("Location.Shared.Database.Entities.LocationMember", b =>
-                {
-                    b.HasOne("Location.Shared.Database.Entities.Customer", "Customer")
-                        .WithMany("LocationMembers")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Location.Shared.Database.Entities.Location", "Location")
-                        .WithMany("LocationMembers")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("Location.Shared.Database.Entities.OrganizationMember", b =>
@@ -1024,12 +911,6 @@ namespace Location.Shared.Database.Migrations
                 {
                     b.Navigation("Identities");
 
-                    b.Navigation("JoinInvitationsCreatedBy");
-
-                    b.Navigation("JoinInvitationsInvitee");
-
-                    b.Navigation("LocationMembers");
-
                     b.Navigation("OrganizationMembers");
                 });
 
@@ -1040,10 +921,6 @@ namespace Location.Shared.Database.Migrations
                     b.Navigation("DailyDeskCountRecordings");
 
                     b.Navigation("DailyRoomCountRecordings");
-
-                    b.Navigation("JoinInvitations");
-
-                    b.Navigation("LocationMembers");
 
                     b.Navigation("Resources");
                 });

@@ -2,6 +2,7 @@ using Customer.Shared.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -73,7 +74,7 @@ public class CompleteTeamOnboardingInput
 }
 
 [GraphQLName("CustomerConnection")]
-public class CustomerConnection : Connection<CustomerEdge>;
+public class CustomerConnection : Enterprise.Shared.GraphQL.Types.Connection<CustomerEdge>;
 
 [GraphQLName("CustomerDetails")]
 public class CustomerDetails : Node
@@ -126,7 +127,7 @@ public class CustomerDetails : Node
 }
 
 [GraphQLName("CustomerEdge")]
-public class CustomerEdge : Edge<CustomerDetails>;
+public class CustomerEdge(CustomerDetails node, string cursor) : Edge<CustomerDetails>(node, cursor);
 
 [GraphQLName("CustomerEmail")]
 public class CustomerIdentity : Node

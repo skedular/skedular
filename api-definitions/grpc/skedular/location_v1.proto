@@ -47,18 +47,6 @@ message PageInfo {
     string endCursor =4;
 }
 
-enum Role {
-    Owner = 0;
-    Administrator = 1;
-    Member = 2;
-}
-
-message LocationMember {
-    string id = 1;
-    Customer customer = 2;
-    Role role = 3;
-}
-
 message Customer {
     string id = 1;
     string name = 2;
@@ -109,10 +97,9 @@ message Location {
     repeated Resource resources = 6;
     bool hasFutureBooking = 7;
     Permissions permissions = 8;
-    repeated LocationMember members = 9;
-    repeated OrganizationCustomTag customTags = 10;
-    repeated OrganizationZone zones = 11;
-    OpeningHours openingHours = 12;
+    repeated OrganizationCustomTag customTags = 9;
+    repeated OrganizationZone zones = 10;
+    OpeningHours openingHours = 11;
 }
 
 message Admin_GetInput {
@@ -179,9 +166,7 @@ message Permissions {
     bool canView = 1;
     bool canModify = 2;
     bool canDelete = 3;
-    bool canInvitePeople = 4;
-    bool canCancelPeopleExistingInvitations = 5;
-    bool canViewAnalytics = 6;
+    bool canViewAnalytics = 4;
 }
 
 message AddInput {

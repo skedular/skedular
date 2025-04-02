@@ -102,7 +102,11 @@ namespace Marketplace.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Timezone");
 
@@ -143,11 +147,15 @@ namespace Marketplace.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("Email");
 
                     b.HasIndex("EmailVerified");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("Identity");
                 });
@@ -185,7 +193,11 @@ namespace Marketplace.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Type");
 
@@ -237,7 +249,11 @@ namespace Marketplace.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -293,7 +309,11 @@ namespace Marketplace.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -316,6 +336,9 @@ namespace Marketplace.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("Inactive")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -331,7 +354,13 @@ namespace Marketplace.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Inactive");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -409,7 +438,11 @@ namespace Marketplace.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("Currency");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 

@@ -15,8 +15,6 @@ public interface IRepositoryFactory
     IDailyRoomCountRecordingRepository DailyRoomCountRecordingRepository { get; }
     IResourceRepository ResourceRepository { get; }
     IIdentityRepository IdentityRepository { get; }
-    IJoinInvitationRepository JoinInvitationRepository { get; }
-    ILocationMemberRepository LocationMemberRepository { get; }
     ILocationRepository LocationRepository { get; }
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     IOrganizationRepository OrganizationRepository { get; }
@@ -39,8 +37,6 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         DailyRoomCountRecordingRepository = new DailyRoomCountRecordingRepository(_dbContext, timeProvider);
         ResourceRepository = new ResourceRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
-        JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
-        LocationMemberRepository = new LocationMemberRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
@@ -61,8 +57,6 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IDailyRoomCountRecordingRepository DailyRoomCountRecordingRepository { get; }
     public IResourceRepository ResourceRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
-    public IJoinInvitationRepository JoinInvitationRepository { get; }
-    public ILocationMemberRepository LocationMemberRepository { get; }
     public ILocationRepository LocationRepository { get; }
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }

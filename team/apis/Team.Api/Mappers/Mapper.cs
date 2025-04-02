@@ -1,7 +1,7 @@
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using Enterprise.Shared.Models;
+using HotChocolate.Types.Pagination;
 using Team.Api.GraphQL;
 using Booking = Team.Shared.Models.Booking;
 using Customer = Team.Shared.Models.Customer;
@@ -328,7 +328,7 @@ public class Mapper : IMapper
     public ICollection<TeamMember> MapTo(Admin_UpdateMembersInput src) =>
         src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList();
 
-    public TeamEdge MapTo(Edge<Shared.Models.Team> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
+    public TeamEdge MapTo(Edge<Shared.Models.Team> src) => new(MapTo(src.Node)!, src.Cursor);
 
     public global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
@@ -336,7 +336,7 @@ public class Mapper : IMapper
     public IEnumerable<Edge<TeamMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.TeamMember>> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
-    public TeamMemberEdge MapTo(Edge<TeamMember> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+    public TeamMemberEdge MapTo(Edge<TeamMember> src) => new(MapTo(src.Node), src.Cursor);
 
     private IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
@@ -358,8 +358,7 @@ public class Mapper : IMapper
             Status = src.Status switch
             {
                 TeamMemberStatus.Active => global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Active,
-                TeamMemberStatus.Inactive => global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus
-                    .Inactive,
+                TeamMemberStatus.Inactive => global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = MapToGrpcResponse(src.Customer),
@@ -401,9 +400,7 @@ public class Mapper : IMapper
         return customer;
     }
 
-    private static TeamMember MapTo(
-        global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember src,
-        Shared.Models.Team team) =>
+    private static TeamMember MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember src, Shared.Models.Team team) =>
         new()
         {
             Id = src.Id,
@@ -505,8 +502,7 @@ public class Mapper : IMapper
     private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
-    private static Booking MapTo(Shared.Database.Entities.Booking src,
-        Shared.Models.Team team) =>
+    private static Booking MapTo(Shared.Database.Entities.Booking src, Shared.Models.Team team) =>
         new()
         {
             Id = src.Id,
@@ -522,9 +518,7 @@ public class Mapper : IMapper
     private IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
-    private JoinInvitation MapTo(
-        Shared.Database.Entities.JoinInvitation src,
-        Shared.Models.Team team) =>
+    private JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src, Shared.Models.Team team) =>
         new()
         {
             Id = src.Id,
@@ -538,8 +532,7 @@ public class Mapper : IMapper
             Invitee = MapTo(src.Invitee)
         };
 
-    private Edge<TeamMember> MapTo(Edge<Shared.Database.Entities.TeamMember> src, Shared.Models.Team team) =>
-        new(src.Cursor, MapTo(src.Node, team));
+    private Edge<TeamMember> MapTo(Edge<Shared.Database.Entities.TeamMember> src, Shared.Models.Team team) => new(MapTo(src.Node, team), src.Cursor);
 
     private static Shared.Models.Location? MapTo(Location? src) =>
         src is null

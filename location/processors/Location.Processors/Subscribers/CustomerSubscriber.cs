@@ -65,31 +65,14 @@ public class CustomerSubscriber(
         CancellationToken cancellationToken)
     {
         _ = RebuildIdentities(customer, existingCustomer);
-        existingCustomer = repositoryFactory.CustomerRepository.Update(
+        _ = repositoryFactory.CustomerRepository.Update(
             mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities)
         );
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-        var emails = existingCustomer.Identities
-            .Where(item => !string.IsNullOrWhiteSpace(item.Email))
-            .Select(item => item.Email!)
-            .ToList();
-        var joinInvitations = await repositoryFactory.JoinInvitationRepository.GetPendingByEmailAsync(emails, cancellationToken);
-        if (joinInvitations.Count == 0)
-        {
-            return;
-        }
-
-        await locationPublisher.PublishInvitesToJoinLocationNotificationAsync(
-            mapper.MapTo(joinInvitations),
-            existingCustomer.Id,
-            cancellationToken);
     }
 
-    private async Task HandleCustomerDeletedEventAsync(
-        Shared.Database.Entities.Customer existingCustomer,
-        CancellationToken cancellationToken)
+    private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.CustomerRepository.Remove(existingCustomer);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

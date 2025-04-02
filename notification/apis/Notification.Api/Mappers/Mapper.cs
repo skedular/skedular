@@ -1,5 +1,5 @@
 using Enterprise.Shared;
-using Enterprise.Shared.Models;
+using HotChocolate.Types.Pagination;
 using Notification.Api.GraphQL;
 using Notification.Shared.Models;
 
@@ -39,10 +39,9 @@ public class Mapper : IMapper
             };
 
     public Edge<Shared.Models.Notification> MapTo(Edge<Shared.Database.Entities.Notification> src) =>
-        new(src.Cursor, MapTo(src.Node));
+        new(MapTo(src.Node), src.Cursor);
 
-    public NotificationEdge MapTo(Edge<Shared.Models.Notification> src) =>
-        new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+    public NotificationEdge MapTo(Edge<Shared.Models.Notification> src) => new(MapTo(src.Node), src.Cursor);
 
     private GraphQL.Notification MapTo(Shared.Models.Notification src) =>
         new()

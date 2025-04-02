@@ -1,8 +1,8 @@
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
+using HotChocolate.Types.Pagination;
 using Location.Api.GraphQL;
 using Location.Shared.Database.Entities;
 using Booking = Location.Shared.Models.Booking;
@@ -11,10 +11,8 @@ using DailyDeskCountRecording = Location.Shared.Models.DailyDeskCountRecording;
 using Resource = Location.Shared.Database.Entities.Resource;
 using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOccupancyPercentage;
 using Identity = Location.Shared.Models.Identity;
-using JoinInvitation = Location.Shared.Models.JoinInvitation;
 using LocationEdge = Location.Api.GraphQL.LocationEdge;
 using LocationDailyBookingsTotal = Location.Shared.Models.LocationDailyBookingsTotal;
-using LocationMember = Location.Shared.Models.LocationMember;
 using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationTag = Location.Shared.Models.OrganizationTag;
 using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
@@ -50,8 +48,6 @@ public interface IMapper
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Shared.Models.Resource MapTo(Resource src, Shared.Models.Location location);
-    LocationMember MapTo(Shared.Database.Entities.LocationMember src, Shared.Models.Location location);
-    LocationMemberDetails MapTo(LocationMember src);
     LocationDetails? MapTo(Shared.Models.Location? src);
     ResourceDetails MapTo(Shared.Models.Resource src);
     IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src);
@@ -64,7 +60,6 @@ public interface IMapper
 
     Shared.Models.Location MapTo(AddLocationInput src);
     Shared.Models.Location MapTo(UpdateLocationInput src);
-    JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
     Shared.Models.Location MapTo(Admin_AddInput src);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src);
     Shared.Models.Location MapTo(AddInput src);
@@ -72,8 +67,6 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource MapToGrpcResponse(Shared.Models.Resource src);
     LocationEdge MapTo(Edge<Shared.Models.Location> src);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src);
-    LocationMemberEdge MapTo(Edge<LocationMember> src);
-    IEnumerable<Edge<LocationMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.LocationMember>> src, Shared.Models.Location location);
     Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Location location);
     Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Location location);
     IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location);
@@ -103,11 +96,9 @@ public class Mapper : IMapper
             Organization = MapTo(src.Organization)
         };
 
-        location.LocationMembers = MapTo(src.LocationMembers, location).ToList();
         location.Bookings = MapTo(src.Bookings, location).ToList();
         location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
         location.DailyRoomCountRecordings = MapTo(src.DailyRoomCountRecordings, location).ToList();
-        location.JoinInvitations = MapTo(src.JoinInvitations, location).ToList();
         location.Resources = MapTo(src.Resources, location).ToList();
         location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
 
@@ -172,7 +163,6 @@ public class Mapper : IMapper
                 OpeningHours = MapTo(src.OpeningHours),
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
-                CanInvitePeople = src.Permissions.CanInvitePeople,
                 CanViewAnalytics = src.Permissions.CanViewAnalytics,
                 HasFutureBooking = src.HasFutureBooking,
                 DeskCapacity = src.Resources.Count(item => item.Tags.Any(tag => tag.Type == OrganizationTagType.ResourceDesk)),
@@ -229,23 +219,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public LocationMember
-        MapTo(Shared.Database.Entities.LocationMember src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Role = src.Role.ToLocationMemberRole(),
-            Customer = MapTo(src.Customer)!,
-            Location = location
-        };
-
-    public LocationMemberDetails MapTo(LocationMember src) =>
-        new() { Id = src.Id, Role = src.Role, Customer = MapTo(src.Customer) };
-
-    public ResourceEdge MapTo(Edge<Shared.Models.Resource> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+    public ResourceEdge MapTo(Edge<Shared.Models.Resource> src) => new(MapTo(src.Node), src.Cursor);
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
@@ -305,15 +279,10 @@ public class Mapper : IMapper
     public IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
 
-    public LocationEdge MapTo(Edge<Shared.Models.Location> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
+    public LocationEdge MapTo(Edge<Shared.Models.Location> src) => new(MapTo(src.Node)!, src.Cursor);
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
-
-    public LocationMemberEdge MapTo(Edge<LocationMember> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
-
-    public IEnumerable<Edge<LocationMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.LocationMember>> src, Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
 
     public Address MapTo(Shared.Models.Address src, Shared.Database.Entities.Location location) => MergeToEntity(src, new Address(), location);
 
@@ -407,21 +376,6 @@ public class Mapper : IMapper
                 .ToList()
         };
 
-    public JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Email = src.Email,
-            Status = src.Status.ToInvitationStatus(),
-            Role = src.Role.ToLocationMemberRole(),
-            Location = MapTo(src.Location),
-            CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
-        };
-
     public Shared.Models.Location MapTo(Admin_AddInput src) =>
         new()
         {
@@ -447,8 +401,6 @@ public class Mapper : IMapper
                 CanView = src.Permissions.CanView,
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
-                CanInvitePeople = src.Permissions.CanInvitePeople,
-                CanCancelPeopleExistingInvitations = src.Permissions.CanCancelPeopleExistingInvitations,
                 CanViewAnalytics = src.Permissions.CanViewAnalytics
             },
             HasFutureBooking = src.HasFutureBooking
@@ -522,10 +474,6 @@ public class Mapper : IMapper
         return resource;
     }
 
-    private IEnumerable<LocationMember> MapTo(IEnumerable<Shared.Database.Entities.LocationMember> src,
-        Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
-
     private static OrganizationTagDetails MapTo(OrganizationTag src) =>
         new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
 
@@ -589,23 +537,6 @@ public class Mapper : IMapper
 
     private IEnumerable<ResourceDetails> MapTo(IEnumerable<Shared.Models.Resource> src) => src.Select(MapTo);
 
-    private static LocationCustomerDetails MapTo(Customer src) =>
-        new()
-        {
-            UniqueId = src.Id,
-            Name = src.Name,
-            GivenName = src.GivenName,
-            MiddleName = src.MiddleName,
-            FamilyName = src.FamilyName,
-            PhotoUrl = src.PhotoUrl,
-            PhotoUrl24 = src.PhotoUrl24,
-            PhotoUrl32 = src.PhotoUrl32,
-            PhotoUrl48 = src.PhotoUrl48,
-            PhotoUrl72 = src.PhotoUrl72,
-            PhotoUrl192 = src.PhotoUrl192,
-            PhotoUrl512 = src.PhotoUrl512
-        };
-
     private static Shared.Models.Organization MapTo(Organization src) =>
         new()
         {
@@ -633,9 +564,7 @@ public class Mapper : IMapper
             EmailVerified = src.EmailVerified
         };
 
-    private static IEnumerable<Booking> MapTo(
-        IEnumerable<Shared.Database.Entities.Booking> src,
-        Shared.Models.Location location) =>
+    private static IEnumerable<Booking> MapTo(IEnumerable<Shared.Database.Entities.Booking> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
 
     private static Booking MapTo(Shared.Database.Entities.Booking src,
@@ -686,23 +615,6 @@ public class Mapper : IMapper
             Count = src.Count
         };
 
-    private IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src, Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
-
-    private JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Email = src.Email,
-            Status = src.Status.ToInvitationStatus(),
-            Location = location,
-            CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
-        };
-
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src, Shared.Models.Organization? organization)
     {
         var organizationTag = new OrganizationTag
@@ -724,14 +636,11 @@ public class Mapper : IMapper
         return organizationTag;
     }
 
-    private Edge<LocationMember> MapTo(Edge<Shared.Database.Entities.LocationMember> src, Shared.Models.Location location) =>
-        new(src.Cursor, MapTo(src.Node, location));
-
     private Edge<Shared.Models.Resource> MapTo(Edge<Resource> src, Shared.Models.Location location)
     {
         var resource = MapTo(src.Node);
         resource.Location = location;
-        return new Edge<Shared.Models.Resource>(src.Cursor, resource);
+        return new Edge<Shared.Models.Resource>(resource, src.Cursor);
     }
 
     private static LocationAddressDetails? MapToGraphQl(Shared.Models.Address? src) =>

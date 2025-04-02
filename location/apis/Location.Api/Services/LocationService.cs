@@ -2,9 +2,9 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
+using HotChocolate.Types.Pagination;
 using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
 using Location.Shared.Models;
@@ -40,7 +40,6 @@ public class LocationService(
     ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    ILocationAuthorizationService locationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
     IMapper mapper,
@@ -152,7 +151,7 @@ public class LocationService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!locationAuthorizationService.CanDelete(existingLocation, customer))
+        if (!organizationAuthorizationService.CanDelete(existingLocation.Organization, customer))
         {
             throw new Unauthorized();
         }
@@ -215,7 +214,7 @@ public class LocationService(
             searchCriteria.TagIds.ForEach(id =>
                 enrichedLocation.Resources = enrichedLocation.Resources.Where(desk => desk.Tags.Select(tag => tag.Id).Contains(id)).ToList());
 
-            mappedLocations.Add(new Edge<Shared.Models.Location>(edge.Cursor, enrichedLocation));
+            mappedLocations.Add(new Edge<Shared.Models.Location>(enrichedLocation, edge.Cursor));
         }
 
         return (paginatedInfo, mappedLocations, totalCount);
@@ -252,7 +251,7 @@ public class LocationService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        if (customer is not null && !locationAuthorizationService.CanModify(existingLocation, customer))
+        if (customer is not null && !organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
             throw new Unauthorized();
         }
@@ -297,7 +296,7 @@ public class LocationService(
         Shared.Database.Entities.Location locationEdge,
         CancellationToken cancellationToken)
     {
-        if (customer is not null && !locationAuthorizationService.CanView(locationEdge, customer))
+        if (customer is not null && !organizationAuthorizationService.CanView(locationEdge.Organization, customer))
         {
             throw new Unauthorized();
         }
@@ -326,12 +325,10 @@ public class LocationService(
         {
             mappedLocation.Permissions = new Permissions
             {
-                CanView = locationAuthorizationService.CanView(locationEdge, customer),
-                CanModify = locationAuthorizationService.CanModify(locationEdge, customer),
-                CanDelete = locationAuthorizationService.CanDelete(locationEdge, customer),
-                CanInvitePeople = locationAuthorizationService.CanInvitePeople(locationEdge, customer),
-                CanCancelPeopleExistingInvitations = locationAuthorizationService.CanCancelPeopleExistingInvitations(locationEdge, customer),
-                CanViewAnalytics = locationAuthorizationService.CanViewAnalytics(locationEdge, customer)
+                CanView = organizationAuthorizationService.CanView(locationEdge.Organization, customer),
+                CanModify = organizationAuthorizationService.CanModify(locationEdge.Organization, customer),
+                CanDelete = organizationAuthorizationService.CanDelete(locationEdge.Organization, customer),
+                CanViewAnalytics = organizationAuthorizationService.CanViewAnalytics(locationEdge.Organization, customer)
             };
         }
 

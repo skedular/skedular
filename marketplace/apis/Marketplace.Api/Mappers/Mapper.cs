@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
+using HotChocolate.Types.Pagination;
 using Marketplace.Api.GraphQL;
 using Marketplace.Shared.Models;
 using Organization = Marketplace.Shared.Database.Entities.Organization;
@@ -15,6 +16,9 @@ public interface IMapper
     ProductVersion MapTo(UpdateProductInput src);
     ProductDetails? MapTo(Product? src);
     Shared.Database.Entities.Product MapTo(Product src, Organization organization);
+    ProductEdge MapTo(Edge<Product> src);
+    Product MapTo(Shared.Database.Entities.Product src, Shared.Models.Organization organization);
+    Shared.Models.Organization MapTo(Organization src);
 
     Shared.Database.Entities.ProductVersion MapTo(
         ProductVersion src,
@@ -45,6 +49,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
+            Inactive = src.Inactive,
             Organization = MapTo(src.Organization),
             ProductVersions = MapTo(src.ProductVersions).ToList()
         };
@@ -91,6 +96,7 @@ public class Mapper : IMapper
             : new ProductDetails
             {
                 Id = src.Id,
+                Inactive = src.Inactive,
                 Organization = MapTo(src.Organization),
                 LatestProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First())
             };
@@ -98,16 +104,21 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Product MapTo(Product src, Organization organization) =>
         MergeTo(src, new Shared.Database.Entities.Product(), organization);
 
-    public Shared.Database.Entities.ProductVersion MapTo(
-        ProductVersion src,
-        Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags) =>
-        MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags, locationTags);
+    public ProductEdge MapTo(Edge<Product> src) => new(MapTo(src.Node)!, src.Cursor);
 
-    private static OrganizationDetails MapTo(Shared.Models.Organization src) => new() { UniqueId = src.Id };
+    public Product MapTo(Shared.Database.Entities.Product src, Shared.Models.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Inactive = src.Inactive,
+            Organization = organization,
+            ProductVersions = MapTo(src.ProductVersions).ToList()
+        };
 
-    private static Shared.Models.Organization MapTo(Organization src) =>
+    public Shared.Models.Organization MapTo(Organization src) =>
         new()
         {
             Id = src.Id,
@@ -117,6 +128,15 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             Tags = MapTo(src.Tags).ToList()
         };
+
+    public Shared.Database.Entities.ProductVersion MapTo(
+        ProductVersion src,
+        Shared.Database.Entities.Product product,
+        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> locationTags) =>
+        MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags, locationTags);
+
+    private static OrganizationDetails MapTo(Shared.Models.Organization src) => new() { UniqueId = src.Id };
 
     private static IEnumerable<Shared.Models.OrganizationTag> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 
@@ -182,6 +202,7 @@ public class Mapper : IMapper
     private static Shared.Database.Entities.Product MergeTo(Product src, Shared.Database.Entities.Product dest, Organization organization)
     {
         dest.Id = src.Id;
+        dest.Inactive = src.Inactive;
         dest.Organization = organization;
 
         return dest;

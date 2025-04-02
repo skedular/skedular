@@ -3,8 +3,8 @@ using Api.Shared.Services.Models;
 using Booking.Api.GraphQL;
 using Booking.Shared.Models;
 using Enterprise.Shared;
-using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
+using HotChocolate.Types.Pagination;
 using BookingEdge = Booking.Api.GraphQL.BookingEdge;
 using BookingType = Api.Shared.Services.Models.BookingType;
 using Customer = Booking.Shared.Models.Customer;
@@ -324,8 +324,8 @@ public class Mapper : IMapper
                 Name = src.Name
             };
 
-    public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src) => new(src.Cursor, MapTo(src.Node));
-    public BookingEdge MapTo(Edge<Shared.Models.Booking> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+    public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src) => new(MapTo(src.Node), src.Cursor);
+    public BookingEdge MapTo(Edge<Shared.Models.Booking> src) => new(MapTo(src.Node), src.Cursor);
 
     public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };

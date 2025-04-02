@@ -12,7 +12,6 @@ service BookingService {
     rpc GetVersion (VersionInput) returns (Version);
     rpc GetPaginatedBookings (GetPaginatedBookingsInput) returns (BookingConnection);
     rpc GetOrganizationPermissions (GetOrganizationPermissionsInput) returns (OrganizationPermissions);
-    rpc GetLocationPermissions (GetLocationPermissionsInput) returns (LocationPermissions);
     rpc GetTeamPermissions (GetTeamPermissionsInput) returns (TeamPermissions);
     rpc Get (GetInput) returns (Booking);
     rpc Add (AddInput) returns (Booking);
@@ -192,20 +191,6 @@ message GetOrganizationPermissionsInput {
 }
 
 message OrganizationPermissions {
-    bool canViewBookings = 1;
-    bool canAddBooking = 2;
-    bool canUpdateBooking = 3;
-    bool canDeleteBooking = 4;
-    bool canAddBookingOnBehalf = 5;
-    bool canUpdateBookingOnBehalf = 6;
-    bool canDeleteBookingOnBehalf = 7;
-}
-
-message GetLocationPermissionsInput {
-    string locationId = 1;
-}
-
-message LocationPermissions {
     bool canViewBookings = 1;
     bool canAddBooking = 2;
     bool canUpdateBooking = 3;

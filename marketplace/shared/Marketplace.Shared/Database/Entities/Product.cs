@@ -8,6 +8,8 @@ namespace Marketplace.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Product : EntityBaseWithDeleted
 {
+    public bool Inactive { get; set; }
+
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; } = string.Empty;
     public virtual Organization Organization { get; set; }
@@ -22,5 +24,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Products).HasForeignKey(item => item.OrganizationId);
+
+        builder.HasIndex(item => item.Inactive);
     }
 }

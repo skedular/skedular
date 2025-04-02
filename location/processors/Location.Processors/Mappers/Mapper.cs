@@ -7,7 +7,6 @@ using Customer = Location.Shared.Models.Customer;
 using Resource = Location.Shared.Models.Resource;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Location.Shared.Database.Entities.Identity;
-using LocationMember = Location.Shared.Database.Entities.LocationMember;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
@@ -37,7 +36,6 @@ public interface IMapper
         Shared.Database.Entities.Location location,
         ICollection<Shared.Database.Entities.Resource> resources);
 
-    IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src);
     Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
@@ -227,8 +225,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src) => src.Select(MapTo);
-
     public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
 
     public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
@@ -291,7 +287,6 @@ public class Mapper : IMapper
             Organization = MapTo(src.Organization)
         };
 
-        location.LocationMembers = MapTo(src.LocationMembers, location).ToList();
         location.Resources = MapTo(src.Resources, location).ToList();
 
         return location;
@@ -316,20 +311,6 @@ public class Mapper : IMapper
         return organization;
     }
 
-    private static JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Email = src.Email,
-            Status = src.Status.ToInvitationStatus(),
-            Location = MapTo(src.Location),
-            CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
-        };
-
     private static IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src, Shared.Models.Location location) =>
         src.Select(item => MapTo(item, location));
 
@@ -347,21 +328,6 @@ public class Mapper : IMapper
             Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
-            Location = location
-        };
-
-    private static IEnumerable<Shared.Models.LocationMember> MapTo(IEnumerable<LocationMember> src, Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
-
-    private static Shared.Models.LocationMember MapTo(LocationMember src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Role = src.Role.ToLocationMemberRole(),
-            Customer = MapTo(src.Customer)!,
             Location = location
         };
 

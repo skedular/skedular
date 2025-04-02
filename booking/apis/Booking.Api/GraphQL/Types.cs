@@ -3,6 +3,7 @@ using Booking.Shared.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -27,7 +28,7 @@ public class AddBookingInput
 }
 
 [GraphQLName("BookingConnection")]
-public class BookingConnection : Connection<BookingEdge>;
+public class BookingConnection : Enterprise.Shared.GraphQL.Types.Connection<BookingEdge>;
 
 [GraphQLName("BookingCustomerDetails")]
 public class BookingCustomerDetails
@@ -62,7 +63,7 @@ public class BookingDetails : Node
 }
 
 [GraphQLName("BookingEdge")]
-public class BookingEdge : Edge<BookingDetails>;
+public class BookingEdge(BookingDetails node, string cursor) : Edge<BookingDetails>(node, cursor);
 
 [GraphQLName("Booking_LocationDetails")]
 public class LocationDetails
@@ -149,21 +150,6 @@ public class DeleteBookingInput
     [GraphQLName("id")] public required string Id { get; set; }
 }
 
-[GraphQLName("LocationBookingPermissions")]
-public class LocationBookingPermissions
-{
-    [GraphQLName("canAddBooking")] public bool CanAddBooking { get; set; }
-    [GraphQLName("canUpdateBooking")] public bool CanUpdateBooking { get; set; }
-    [GraphQLName("canDeleteBooking")] public bool CanDeleteBooking { get; set; }
-    [GraphQLName("canAddBookingOnBehalf")] public bool CanAddBookingOnBehalf { get; set; }
-
-    [GraphQLName("canUpdateBookingOnBehalf")]
-    public bool CanUpdateBookingOnBehalf { get; set; }
-
-    [GraphQLName("canDeleteBookingOnBehalf")]
-    public bool CanDeleteBookingOnBehalf { get; set; }
-}
-
 [GraphQLName("OrganizationBookingPermissions")]
 public class OrganizationBookingPermissions
 {
@@ -213,7 +199,7 @@ public class UpdateBookingInput
 [GraphQLName("AvailableResourcesWhereInput")]
 public class AvailableResourcesWhereInput
 {
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("locationId")] public string? LocationId { get; set; }
     [GraphQLName("from")] public required DateTimeOffset From { get; set; }
     [GraphQLName("until")] public required DateTimeOffset Until { get; set; }

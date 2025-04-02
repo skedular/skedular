@@ -1,9 +1,9 @@
 using Booking.Shared.Database;
 using Booking.Shared.Models;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Time;
+using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Organization = Booking.Shared.Database.Entities.Organization;

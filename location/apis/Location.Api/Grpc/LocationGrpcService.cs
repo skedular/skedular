@@ -26,7 +26,7 @@ public class LocationGrpcService(
     IGrpcAuthenticator grpcAuthenticator,
     ILocationService locationService,
     IResourceService resourceService,
-    ILocationAuthorizationService locationAuthorizationService,
+    IOrganizationAuthorizationService organizationAuthorizationService,
     IMapper mapper) : LocationService.LocationServiceBase
 {
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
@@ -162,14 +162,12 @@ public class LocationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        var permissions = await locationAuthorizationService.GetPermissionsAsync(request.Id, context.CancellationToken);
+        var permissions = await organizationAuthorizationService.GetPermissionsAsync(request.Id, context.CancellationToken);
         return new Permissions
         {
             CanView = permissions.CanView,
             CanModify = permissions.CanModify,
             CanDelete = permissions.CanDelete,
-            CanInvitePeople = permissions.CanInvitePeople,
-            CanCancelPeopleExistingInvitations = permissions.CanCancelPeopleExistingInvitations,
             CanViewAnalytics = permissions.CanViewAnalytics
         };
     }

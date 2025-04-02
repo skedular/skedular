@@ -4,7 +4,7 @@ using Customer.Api.GraphQL;
 using Customer.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Models;
+using HotChocolate.Types.Pagination;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
 using Identity = Customer.Shared.Database.Entities.Identity;
 using Location = Customer.Shared.Models.Location;
@@ -399,9 +399,9 @@ public class Mapper(IContext context) : IMapper
             Customer = new Shared.Models.Customer { Id = src.CustomerId }
         };
 
-    public Edge<Shared.Models.Customer> MapTo(Edge<Shared.Database.Entities.Customer> src) => new(src.Cursor, MapTo(src.Node));
+    public Edge<Shared.Models.Customer> MapTo(Edge<Shared.Database.Entities.Customer> src) => new(MapTo(src.Node), src.Cursor);
 
-    public CustomerEdge MapTo(Edge<Shared.Models.Customer> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+    public CustomerEdge MapTo(Edge<Shared.Models.Customer> src) => new(MapTo(src.Node), src.Cursor);
 
     public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src) => src.Select(MapToEntity);
 

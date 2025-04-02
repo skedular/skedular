@@ -9,7 +9,7 @@ namespace Booking.Api.Services;
 public interface IResourceService
 {
     Task<ICollection<Resource>> GetAvailableResourcesAsync(
-        string? organizationId,
+        string organizationId,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
@@ -29,7 +29,6 @@ public class ResourceService(
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    ILocationAuthorizationService locationAuthorizationService,
     IMapper mapper) : IResourceService
 {
     public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
@@ -42,10 +41,7 @@ public class ResourceService(
         ICollection<string> resourceIdsToInclude,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(organizationId) && string.IsNullOrWhiteSpace(locationId))
-        {
-            throw new ArgumentException($"Both {nameof(organizationId)} and {nameof(locationId)} cannot be null or empty.");
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
 
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(organizationId))
@@ -57,24 +53,6 @@ public class ResourceService(
             }
 
             if (!organizationAuthorizationService.CanViewOrganizationDetails(organization, customer))
-            {
-                throw new Unauthorized();
-            }
-        }
-
-        if (!string.IsNullOrWhiteSpace(locationId))
-        {
-            var location = await repositoryFactory.LocationRepository.GetByIdAndExcludeInactiveResourcesAsync(
-                locationId,
-                false,
-                false,
-                cancellationToken);
-            if (location is null)
-            {
-                throw new LocationNotFound();
-            }
-
-            if (!locationAuthorizationService.CanViewLocationDetails(location, customer))
             {
                 throw new Unauthorized();
             }
@@ -124,7 +102,7 @@ public class ResourceService(
             throw new Unauthorized();
         }
 
-        var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(organizationId, false, false, cancellationToken);
+        var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(organizationId, false, cancellationToken);
         var resourceCount = locations.Aggregate(0, (acc, item) => item.Resources.Count + acc);
         var availableResourceCount = 0;
 

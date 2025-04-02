@@ -29,7 +29,7 @@ public static class OrganizationTypeExtensions
             OrganizationType.Marketplace => OrganizationTypeConstants.Marketplace,
             _ => throw new ArgumentOutOfRangeException()
         };
-    
+
     public static string ToOrganizationTypeName(this OrganizationType src) =>
         src switch
         {

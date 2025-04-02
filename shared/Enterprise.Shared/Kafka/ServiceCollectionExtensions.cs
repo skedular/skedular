@@ -19,9 +19,7 @@ public static class ServiceCollectionExtensions
 {
     private const int DelayBaseSeconds = 10;
 
-    public static IServiceCollection AddKafka(
-        this IServiceCollection services,
-        bool useTelemetry = true)
+    public static IServiceCollection AddKafka(this IServiceCollection services, bool useTelemetry = true)
     {
         services
             .AddSingleton(typeof(IKafkaPublisher<,>), typeof(KafkaPublisher<,>))
@@ -55,14 +53,9 @@ public static class ServiceCollectionExtensions
         where TKey : IEvent, new()
         where TEvent : IEvent, new()
     {
-        var topicSetting = new TopicSetting<TEvent>(
-            kafkaConfiguration.RetryTopicCount,
-            DelayBaseSeconds,
-            kafkaConfiguration.IncomingTopicPrefix);
+        var topicSetting = new TopicSetting<TEvent>(kafkaConfiguration.RetryTopicCount, DelayBaseSeconds, kafkaConfiguration.IncomingTopicPrefix);
 
-        return services.AddKafkaEventConsumers<TSubscriber, TKey, TEvent>(
-            kafkaConfiguration,
-            [topicSetting.Topic]);
+        return services.AddKafkaEventConsumers<TSubscriber, TKey, TEvent>(kafkaConfiguration, [topicSetting.Topic]);
     }
 
     public static IServiceCollection AddKafkaEventConsumers<TSubscriber, TKey, TEvent>(
@@ -102,9 +95,7 @@ public static class ServiceCollectionExtensions
         where TSubscriber : class, IEventSubscriber<TKey, TEvent>
         where TKey : IEvent, new()
         where TEvent : IEvent, new() =>
-        services.AddKafkaReliableEventConsumers<TSubscriber, TKey, TEvent>(
-            kafkaConfiguration,
-            kafkaConfiguration);
+        services.AddKafkaReliableEventConsumers<TSubscriber, TKey, TEvent>(kafkaConfiguration, kafkaConfiguration);
 
     public static IServiceCollection AddKafkaReliableEventConsumers<TSubscriber, TKey, TEvent>(
         this IServiceCollection services,
@@ -118,11 +109,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IKafkaMessageHandler<TKey, TEvent>, KafkaMessageHandler<TKey, TEvent>>();
 
         var kafkaTopicInfo = KafkaTopicHelper.GetKafkaTopicInfo<TEvent>();
-        var topicSetting = new TopicSetting<TEvent>(
-            kafkaTopicInfo.RetryTopicCount,
-            DelayBaseSeconds,
-            consumerKafkaConfiguration.IncomingTopicPrefix);
-
+        var topicSetting = new TopicSetting<TEvent>(kafkaTopicInfo.RetryTopicCount, DelayBaseSeconds, consumerKafkaConfiguration.IncomingTopicPrefix);
         var retryTopicSetting = new TopicSetting<TEvent>(
             kafkaTopicInfo.RetryTopicCount,
             DelayBaseSeconds,
@@ -189,15 +176,8 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IKafkaMessageHandler<TKey, TEvent>, KafkaMessageHandler<TKey, TEvent>>();
 
         var kafkaTopicInfo = KafkaTopicHelper.GetKafkaTopicInfo<TEvent>();
-        var topicSetting = new TopicSetting<TEvent>(
-            kafkaTopicInfo.RetryTopicCount,
-            DelayBaseSeconds,
-            kafkaConfiguration.IncomingTopicPrefix);
-
-        var retryTopicSetting = new TopicSetting<TEvent>(
-            kafkaTopicInfo.RetryTopicCount,
-            DelayBaseSeconds,
-            kafkaConfiguration.OutgoingTopicPrefix);
+        var topicSetting = new TopicSetting<TEvent>(kafkaTopicInfo.RetryTopicCount, DelayBaseSeconds, kafkaConfiguration.IncomingTopicPrefix);
+        var retryTopicSetting = new TopicSetting<TEvent>(kafkaTopicInfo.RetryTopicCount, DelayBaseSeconds, kafkaConfiguration.OutgoingTopicPrefix);
 
         services.AddSingleton<IHostedService, KafkaConsumeServiceV2<TKey, TEvent>>(
             sp => new KafkaConsumeServiceV2<TKey, TEvent>(

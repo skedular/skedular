@@ -109,9 +109,13 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("From");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("TeamId");
 
@@ -194,6 +198,8 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("FamilyName");
@@ -201,6 +207,8 @@ namespace Team.Shared.Database.Migrations
                     b.HasIndex("GivenName");
 
                     b.HasIndex("MiddleName");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -243,11 +251,15 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("Email");
 
                     b.HasIndex("EmailVerified");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("Identity");
                 });
@@ -300,6 +312,8 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("DeletedAt");
@@ -307,6 +321,8 @@ namespace Team.Shared.Database.Migrations
                     b.HasIndex("Email");
 
                     b.HasIndex("InviteeId");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Role");
 
@@ -351,7 +367,11 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -397,7 +417,11 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -449,7 +473,11 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -508,7 +536,11 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasIndex("About");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -567,7 +599,11 @@ namespace Team.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationMemberId");
 

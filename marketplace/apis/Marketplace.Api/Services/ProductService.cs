@@ -1,7 +1,9 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
+using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
+using HotChocolate.Types.Pagination;
 using Marketplace.Api.Mappers;
 using Marketplace.Api.Services.Authorization;
 using Marketplace.Shared.Models;
@@ -18,6 +20,14 @@ public interface IProductService
     Task<Product> UpdateAsync(string productId, ProductVersion productVersion, CancellationToken cancellationToken);
     Task<Product> DeleteAsync(string productId, CancellationToken cancellationToken);
     Task<Product?> GetByIdAsync(string productId, CancellationToken cancellationToken);
+    Task<ICollection<Product>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<ICollection<Product>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
+
+    Task<(PaginatedInfo, ICollection<Edge<Product>>, int )> GetPaginatedProductsAsync(
+        PaginationInputParam paginationInputParam,
+        ProductSearchCriteria searchCriteria,
+        ICollection<ProductOrder> orderByFields,
+        CancellationToken cancellationToken);
 }
 
 public class ProductService(
@@ -89,7 +99,6 @@ public class ProductService(
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Add(productEntity));
 
         await marketplaceOutboxPublisher.PublishProductsAsync([product], repositoryFactory.UnitOfWork, cancellationToken);
-
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return product;
@@ -141,18 +150,92 @@ public class ProductService(
         ArgumentException.ThrowIfNullOrWhiteSpace(productId);
 
         var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken);
-        if (existingProduct is null)
+        return existingProduct is null ? null : mapper.MapTo(existingProduct);
+    }
+
+    public async Task<ICollection<Product>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
         {
-            return null;
+            return [];
         }
 
-        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        if (!organizationAuthorizationService.CanViewProducts(existingProduct.Organization, customer))
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var products = await repositoryFactory.ProductRepository.GetByIdsAsync(ids, cancellationToken);
+        var organizationIds = products.Select(item => item.Organization.Id).ToList();
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+        if (existingOrganizations.Any(item => !organizationAuthorizationService.CanModifyProduct(item, customer)))
         {
             throw new Unauthorized();
         }
 
-        return mapper.MapTo(existingProduct);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        foreach (var product in products)
+        {
+            product.Inactive = false;
+            repositoryFactory.ProductRepository.Update(product);
+        }
+
+        var updatedProducts = products
+            .Select(product => mapper.MapTo(product, mapper.MapTo(existingOrganizations.Single(item => item.Id == product.Organization.Id))))
+            .ToList();
+
+        await marketplaceOutboxPublisher.PublishProductsAsync(updatedProducts, repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return updatedProducts;
+    }
+
+    public async Task<ICollection<Product>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var products = await repositoryFactory.ProductRepository.GetByIdsAsync(ids, cancellationToken);
+        var organizationIds = products.Select(item => item.Organization.Id).ToList();
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+        if (existingOrganizations.Any(item => !organizationAuthorizationService.CanModifyProduct(item, customer)))
+        {
+            throw new Unauthorized();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        foreach (var product in products)
+        {
+            product.Inactive = true;
+            repositoryFactory.ProductRepository.Update(product);
+        }
+
+        var updatedProducts = products
+            .Select(product => mapper.MapTo(product, mapper.MapTo(existingOrganizations.Single(item => item.Id == product.Organization.Id))))
+            .ToList();
+
+        await marketplaceOutboxPublisher.PublishProductsAsync(updatedProducts, repositoryFactory.UnitOfWork, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return updatedProducts;
+    }
+
+    public async Task<(PaginatedInfo, ICollection<Edge<Product>>, int)> GetPaginatedProductsAsync(
+        PaginationInputParam paginationInputParam,
+        ProductSearchCriteria searchCriteria,
+        ICollection<ProductOrder> orderByFields,
+        CancellationToken cancellationToken)
+    {
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.ProductRepository.GetPaginatedProductsAsync(
+            paginationInputParam,
+            searchCriteria,
+            orderByFields,
+            cancellationToken);
+
+        return (paginatedInfo, edges.Select(item => new Edge<Product>(mapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
     }
 
     private async Task<Product> UpdateInternalAsync(

@@ -14,7 +14,6 @@ public class Location : ReplicatedEntityBaseWithDeleted
     public OpeningHours? OpeningHours { get; set; }
 
     public virtual Organization Organization { get; set; }
-    public virtual ICollection<LocationMember> LocationMembers { get; set; } = [];
     public virtual ICollection<Resource> Resources { get; set; } = [];
     public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];

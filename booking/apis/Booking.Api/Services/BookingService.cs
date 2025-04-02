@@ -6,9 +6,9 @@ using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
+using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
@@ -40,7 +40,6 @@ public class BookingService(
     ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    ILocationAuthorizationService locationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     IBookingOutboxPublisher bookingOutboxPublisher,
@@ -72,7 +71,7 @@ public class BookingService(
         }
 
         var organization = await GetOrganizationAndValidatePermissionsAsync(booking, customer, false, cancellationToken);
-        var location = await GetLocationAndValidatePermissionsAsync(booking, customer, false, cancellationToken);
+        var location = await GetLocationAndValidatePermissionsAsync(booking, cancellationToken);
         var team = await GetTeamAndValidatePermissionsAsync(booking, customer, false, cancellationToken);
 
         var customerIds = booking.Resources.SelectMany(item => item.Customers).Select(item => item.Id).Distinct().ToList();
@@ -185,31 +184,6 @@ public class BookingService(
             else
             {
                 if (!organizationAuthorizationService.CanDeleteBookingOnBehalf(organization, customer))
-                {
-                    throw new Unauthorized();
-                }
-            }
-        }
-
-        if (existingBooking.Location is not null)
-        {
-            var location =
-                await repositoryFactory.LocationRepository.GetByIdAsync(existingBooking.Location.Id, false, false, cancellationToken);
-            if (location is null)
-            {
-                throw new LocationNotFound();
-            }
-
-            if (customer.Id == existingBooking.Customer.Id)
-            {
-                if (!locationAuthorizationService.CanDeleteBooking(location, customer))
-                {
-                    throw new Unauthorized();
-                }
-            }
-            else
-            {
-                if (!locationAuthorizationService.CanDeleteBookingOnBehalf(location, customer))
                 {
                     throw new Unauthorized();
                 }
@@ -471,61 +445,17 @@ public class BookingService(
         return organization;
     }
 
-    private async Task<Location?> GetLocationAndValidatePermissionsAsync(
-        Shared.Models.Booking booking,
-        Shared.Models.Customer? customer,
-        bool existing,
-        CancellationToken cancellationToken)
+    private async Task<Location?> GetLocationAndValidatePermissionsAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
         if (booking.Location is null)
         {
             return null;
         }
 
-        var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, false, false, cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, false, cancellationToken);
         if (location is null)
         {
             throw new LocationNotFound();
-        }
-
-        if (customer is null)
-        {
-            return location;
-        }
-
-        if (customer.Id == booking.Customer.Id)
-        {
-            if (existing)
-            {
-                if (!locationAuthorizationService.CanUpdateBooking(location, customer))
-                {
-                    throw new Unauthorized();
-                }
-            }
-            else
-            {
-                if (!locationAuthorizationService.CanAddBooking(location, customer))
-                {
-                    throw new Unauthorized();
-                }
-            }
-        }
-        else
-        {
-            if (existing)
-            {
-                if (!locationAuthorizationService.CanUpdateBookingOnBehalf(location, customer))
-                {
-                    throw new Unauthorized();
-                }
-            }
-            else
-            {
-                if (!locationAuthorizationService.CanAddBookingOnBehalf(location, customer))
-                {
-                    throw new Unauthorized();
-                }
-            }
         }
 
         return location;
@@ -604,7 +534,7 @@ public class BookingService(
 
     private async Task<List<string>> GetCustomerLocationIdsAsync(Shared.Models.Customer customer, CancellationToken cancellationToken)
     {
-        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdAsync(customer.Id, false, false, cancellationToken);
+        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdAsync(customer.Id, false, cancellationToken);
         return locations.Select(item => item.Id).ToList();
     }
 
@@ -638,15 +568,10 @@ public class BookingService(
 
         if (booking.Location is not null)
         {
-            var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, false, false, cancellationToken);
+            var location = await repositoryFactory.LocationRepository.GetByIdAsync(booking.Location.Id, false, cancellationToken);
             if (location is null)
             {
-                throw new OrganizationNotFound();
-            }
-
-            if (!locationAuthorizationService.CanViewBookings(location, customer))
-            {
-                throw new Unauthorized();
+                throw new LocationNotFound();
             }
         }
 
@@ -673,7 +598,7 @@ public class BookingService(
         CancellationToken cancellationToken)
     {
         var organization = await GetOrganizationAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
-        var location = await GetLocationAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
+        var location = await GetLocationAndValidatePermissionsAsync(booking, cancellationToken);
         var team = await GetTeamAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
 
         var customerIds = booking.Resources.SelectMany(item => item.Customers).Select(item => item.Id).Distinct().ToList();
@@ -757,7 +682,7 @@ public class BookingService(
             location = customer.PreferredLocations.FirstOrDefault(item => item.Organization.Id == booking.Organization.Id);
             if (location is not null)
             {
-                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, cancellationToken);
+                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, cancellationToken);
             }
 
             team = customer.PreferredTeams.FirstOrDefault(item => item.Organization.Id == booking.Organization.Id);
@@ -779,7 +704,7 @@ public class BookingService(
             location = customer.PreferredLocations.FirstOrDefault(item => item.Organization.Id == booking.Organization.Id);
             if (location is not null)
             {
-                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, cancellationToken);
+                location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, cancellationToken);
             }
         }
         else if (booking.Organization is null && (booking.Location is not null || booking.Team is not null))
@@ -798,7 +723,7 @@ public class BookingService(
                     location = customer.PreferredLocations.FirstOrDefault();
                     if (location is not null)
                     {
-                        location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, cancellationToken);
+                        location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, cancellationToken);
                     }
                 }
 
@@ -817,7 +742,7 @@ public class BookingService(
                 location = customer.PreferredLocations.FirstOrDefault(item => item.Organization.Id == customer.DefaultOrganization.Id);
                 if (location is not null)
                 {
-                    location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, false, cancellationToken);
+                    location = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, cancellationToken);
                 }
 
                 team = customer.PreferredTeams.FirstOrDefault(item => item.Organization.Id == customer.DefaultOrganization.Id);

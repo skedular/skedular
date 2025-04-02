@@ -23,6 +23,8 @@ type Mutation {
   addProduct(input: AddProductInput!): ProductPayload @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload @cost(weight: "10")
   deleteProduct(input: DeleteProductInput!): ProductPayload @cost(weight: "10")
+  activateProducts(input: ActivateProductsInput!): ProductsPayload @cost(weight: "10")
+  deactivateProducts(input: DeactivateProductsInput!): ProductsPayload @cost(weight: "10")
 }
 
 type PageInfo {
@@ -44,6 +46,7 @@ type ProductConnection {
 }
 
 type ProductDetails {
+  inactive: Boolean!
   latestProductVersion: ProductVersionDetails!
   organization: Marketplace_OrganizationDetails!
   id: ID!
@@ -76,6 +79,11 @@ type ProductVersionDetails {
   id: ID!
 }
 
+type ProductsPayload {
+  clientMutationId: String
+  products: [ProductDetails!]!
+}
+
 type Query {
   marketplaceVersion: Version!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -90,6 +98,11 @@ type Version {
   minor: Int!
   build: Int!
   revision: Int!
+}
+
+input ActivateProductsInput {
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input AddProductInput {
@@ -111,6 +124,11 @@ input AddProductInput {
   locationTagIds: [String!]!
 }
 
+input DeactivateProductsInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
 input DeleteProductInput {
   clientMutationId: String
   id: String!
@@ -122,9 +140,10 @@ input ProductOrderInput {
 }
 
 input ProductWhereInput {
-  organizationId: String
+  organizationIds: [String!]
   productIds: [String!]
   nameContains: String
+  IncludeInactive: Boolean!
 }
 
 input UpdateProductInput {

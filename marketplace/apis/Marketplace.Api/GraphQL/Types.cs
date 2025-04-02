@@ -2,6 +2,7 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Marketplace.Shared.Models;
 
@@ -24,9 +25,10 @@ public class PriceUnitDetails
 [GraphQLName("ProductWhereInput")]
 public class ProductWhereInput
 {
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("organizationIds")] public IEnumerable<string>? OrganizationIds { get; set; }
     [GraphQLName("productIds")] public IEnumerable<string>? ProductIds { get; set; } = [];
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
+    [GraphQLName("IncludeInactive")] public bool IncludeInactive { get; set; }
 }
 
 [GraphQLName("ProductOrderInput")]
@@ -37,10 +39,10 @@ public class ProductOrderInput
 }
 
 [GraphQLName("ProductConnection")]
-public class ProductConnection : Connection<ProductEdge>;
+public class ProductConnection : Enterprise.Shared.GraphQL.Types.Connection<ProductEdge>;
 
 [GraphQLName("ProductEdge")]
-public class ProductEdge : Edge<ProductDetails>;
+public class ProductEdge(ProductDetails node, string cursor) : Edge<ProductDetails>(node, cursor);
 
 [GraphQLName("ProductPayload")]
 public class ProductPayload
@@ -52,6 +54,7 @@ public class ProductPayload
 [GraphQLName("ProductDetails")]
 public class ProductDetails : Node
 {
+    [GraphQLName("inactive")] public bool Inactive { get; set; }
     [GraphQLName("latestProductVersion")] public ProductVersionDetails LatestProductVersion { get; set; }
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
@@ -153,4 +156,25 @@ public class DeleteProductInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
+}
+
+[GraphQLName("ActivateProductsInput")]
+public class ActivateProductsInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
+}
+
+[GraphQLName("DeactivateProductsInput")]
+public class DeactivateProductsInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ids")] public required IEnumerable<string> Ids { get; set; }
+}
+
+[GraphQLName("ProductsPayload")]
+public class ProductsPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("products")] public IEnumerable<ProductDetails> Products { get; set; } = [];
 }

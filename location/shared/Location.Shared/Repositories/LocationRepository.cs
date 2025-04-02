@@ -1,12 +1,12 @@
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Models;
 using Enterprise.Shared.Pagination;
+using HotChocolate.Types.Pagination;
 using Location.Shared.Database;
 using Location.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Customer = Location.Shared.Database.Entities.Customer;
+using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Shared.Repositories;
 
@@ -29,7 +29,7 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
 
 internal static class LocationExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Location, Customer> AddDependentObjects(
+    internal static IIncludableQueryable<Database.Entities.Location, IEnumerable<OrganizationTag>> AddDependentObjects(
         this IQueryable<Database.Entities.Location> originalQuery,
         bool includeDeletedResources) =>
         originalQuery
@@ -40,9 +40,7 @@ internal static class LocationExtensions
             .ThenInclude(query => query.Customer)
             .Include(query => query.PhysicalAddress)
             .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.LocationMembers.Where(locationMember => !locationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer);
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
     internal static IQueryable<Database.Entities.Location> AddSearchCriteria(
         this IQueryable<Database.Entities.Location> query,
@@ -129,9 +127,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
             .AddDependentObjects(false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Location>> GetByIdsAsync(
-        ICollection<string> ids,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<Database.Entities.Location>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects(false)

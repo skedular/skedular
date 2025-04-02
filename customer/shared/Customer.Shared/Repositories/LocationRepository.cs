@@ -22,9 +22,6 @@ internal static class LocationExtensions
         this IQueryable<Location> originalQuery,
         bool includeDeletedLocationMembers) =>
         originalQuery
-            .Include(query => query.LocationMembers.Where(locationMember => includeDeletedLocationMembers || !locationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities)
             .Include(query => query.Resources)
             .Include(query => query.Organization)
             .Include(query => query.PreferredByCustomers);

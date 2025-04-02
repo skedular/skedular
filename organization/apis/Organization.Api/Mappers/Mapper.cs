@@ -2,8 +2,8 @@ using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
-using Enterprise.Shared.Models;
 using Google.Protobuf.WellKnownTypes;
+using HotChocolate.Types.Pagination;
 using Organization.Api.GraphQL;
 using Organization.Shared.Models;
 using AddCustomTagInput = Organization.Api.GraphQL.AddCustomTagInput;
@@ -459,14 +459,14 @@ public class Mapper : IMapper
 
     public OrganizationMember MapTo(Admin_AddMemberInput src) => MapTo(src.Member, new Shared.Models.Organization { Id = src.Id });
 
-    public OrganizationEdge MapTo(Edge<Shared.Models.Organization> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
+    public OrganizationEdge MapTo(Edge<Shared.Models.Organization> src) => new(MapTo(src.Node)!, src.Cursor);
 
     public IEnumerable<Edge<OrganizationMember>> MapTo(
         IEnumerable<Edge<Shared.Database.Entities.OrganizationMember>> src,
         Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    public OrganizationMemberEdge MapTo(Edge<OrganizationMember> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node) };
+    public OrganizationMemberEdge MapTo(Edge<OrganizationMember> src) => new(MapTo(src.Node), src.Cursor);
 
     public MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
 
@@ -557,7 +557,7 @@ public class Mapper : IMapper
                 Color = src.Color
             };
 
-    public OrganizationTagEdge MapTo(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapTo(src.Node)! };
+    public OrganizationTagEdge MapTo(Edge<Tag> src) => new(MapTo(src.Node)!, src.Cursor);
 
     public CustomTag MapToGrpcResponseCustomTag(Tag? src) =>
         src is null
@@ -1038,7 +1038,7 @@ public class Mapper : IMapper
         };
 
     private Edge<OrganizationMember> MapTo(Edge<Shared.Database.Entities.OrganizationMember> src, Shared.Models.Organization organization) =>
-        new(src.Cursor, MapTo(src.Node, organization));
+        new(MapTo(src.Node, organization), src.Cursor);
 
     private static IEnumerable<AzureTenant> MapTo(IEnumerable<Shared.Database.Entities.AzureTenant> src, Shared.Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
@@ -1094,7 +1094,7 @@ public class Mapper : IMapper
     {
         var tag = MapTo(src.Node);
         tag.Organization = organization;
-        return new Edge<Tag>(src.Cursor, tag);
+        return new Edge<Tag>(tag, src.Cursor);
     }
 
     private IEnumerable<OrganizationMemberDetails> MapTo(IEnumerable<OrganizationMember> src) => src.Select(MapTo);

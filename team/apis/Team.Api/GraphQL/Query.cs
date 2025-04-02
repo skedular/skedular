@@ -36,14 +36,8 @@ public class Query(IMapper mapper)
     public IEnumerable<TeamMemberRole> TeamMemberRoles() => [TeamMemberRole.Owner, TeamMemberRole.Administrator, TeamMemberRole.Member];
 
     [UseResolverScope]
-    public async Task<TeamDetails?> TeamAsync(
-        string id,
-        [Service] ITeamService teamService,
-        CancellationToken cancellationToken)
-    {
-        var team = await teamService.GetByIdAsync(id, false, cancellationToken);
-        return mapper.MapTo(team);
-    }
+    public async Task<TeamDetails?> TeamAsync(string id, [Service] ITeamService teamService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await teamService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     public async Task<TeamConnection> TeamsAsync(

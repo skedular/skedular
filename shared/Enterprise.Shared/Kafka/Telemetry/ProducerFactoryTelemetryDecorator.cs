@@ -10,14 +10,8 @@ public class ProducerFactoryTelemetryDecorator(
     IServiceProvider serviceProvider)
     : IProducerFactory
 {
-    public IProducer<TKey, TValue> Build<TKey, TValue>(KafkaConfiguration kafkaConfiguration)
-    {
-        var producer = producerFactory.Build<TKey, TValue>(kafkaConfiguration);
-
-        producer =
-            ActivatorUtilities.CreateInstance<ProducerTelemetryDecorator<TKey, TValue>>(
-                serviceProvider, producer);
-
-        return producer;
-    }
+    public IProducer<TKey, TValue> Build<TKey, TValue>(KafkaConfiguration kafkaConfiguration) =>
+        ActivatorUtilities.CreateInstance<ProducerTelemetryDecorator<TKey, TValue>>(
+            serviceProvider,
+            producerFactory.Build<TKey, TValue>(kafkaConfiguration));
 }

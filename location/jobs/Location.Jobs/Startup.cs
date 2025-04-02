@@ -4,7 +4,6 @@ using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Outbox;
 using Location.Shared;
-using Location.Shared.Configurations;
 using Location.Shared.Database;
 
 namespace Location.Jobs;
@@ -14,10 +13,6 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 {
     protected override void ConfigureCustomServices(IServiceCollection services)
     {
-        var emailConfiguration = Configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
-        ArgumentNullException.ThrowIfNull(emailConfiguration);
-        services.AddSingleton(emailConfiguration);
-
         services
             .AddDatabase(Configuration, true, "LocationPostgresConnection")
             .WithPooledDbContextFactory<LocationDbContext>(Configuration, Migration.SetAssembly, Environment)

@@ -29,10 +29,10 @@
   "devDependencies": {
     "@types/relay-runtime": "^18.2.5",
     "eslint": "9.23.0",
-    "eslint-plugin-turbo": "^2.4.4",
+    "eslint-plugin-turbo": "^2.5.0",
     "global": "^4.4.0",
     "next": "15.2.4",
-    "turbo": "^2.4.4"
+    "turbo": "^2.5.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -17,7 +17,7 @@ public class LocationOpeningHoursService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
-    ILocationAuthorizationService locationAuthorizationService,
+    IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
     IMapper mapper) : ILocationOpeningHoursService
@@ -41,7 +41,7 @@ public class LocationOpeningHoursService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!locationAuthorizationService.CanModify(existingLocation, customer))
+        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
             throw new Unauthorized();
         }

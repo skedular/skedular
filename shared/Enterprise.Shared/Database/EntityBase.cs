@@ -25,6 +25,9 @@ public static class EntityBaseExtension
 
         builder.Property(item => item.Version).IsRowVersion();
         builder.Property(item => item.Id).HasMaxLength(maxUniqueIdLength);
+
+        builder.HasIndex(item => item.CreatedAt);
+        builder.HasIndex(item => item.ModifiedAt);
     }
 }
 

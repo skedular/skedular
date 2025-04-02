@@ -27,15 +27,8 @@ public interface IMapper
     Customer MergeToEntity(Shared.Models.Customer src, Customer dest, ICollection<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer);
-
-    Shared.Models.Notification MapInvitationToJoinOrganizationToNotification(
-        Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
-
-    Shared.Models.Notification MapInvitationToJoinLocationToNotification(
-        Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
-
-    Shared.Models.Notification MapInvitationToJoinTeamToNotification(
-        Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
+    Shared.Models.Notification MapInvitationToJoinOrganizationToNotification(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
+    Shared.Models.Notification MapInvitationToJoinTeamToNotification(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
 
     Shared.Database.Entities.Notification MapToEntity(
         Shared.Models.Notification src,
@@ -219,26 +212,6 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
             Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
             Organization = new Organization { Id = notification.OrganizationId }
-        };
-    }
-
-    public Shared.Models.Notification MapInvitationToJoinLocationToNotification(
-        Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
-    {
-        var notification = src.Data.InvitationToJoinLocation;
-        var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
-
-        return new Shared.Models.Notification
-        {
-            Id = randomHelper.Generate(),
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            SourceId = notification.Id,
-            Type = NotificationTypeConstants.InvitationToJoinLocation,
-            InvitedBy = new Shared.Models.Customer { Id = notification.InvitedById },
-            Invitee = new Shared.Models.Customer { Id = notification.InviteeId },
-            Location = new Location { Id = notification.LocationId }
         };
     }
 

@@ -14,7 +14,6 @@ public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, Cust
     public DbSet<CustomerFeedback> CustomerFeedback { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Location> Location { get; set; }
-    public DbSet<LocationMember> LocationMember { get; set; }
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationTag> OrganizationTag { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }

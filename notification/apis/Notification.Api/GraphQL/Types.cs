@@ -1,6 +1,7 @@
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
+using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Notification.Shared.Models;
 
@@ -24,7 +25,7 @@ public class Notification : Node
 }
 
 [GraphQLName("NotificationConnection")]
-public class NotificationConnection : Connection<NotificationEdge>;
+public class NotificationConnection : Enterprise.Shared.GraphQL.Types.Connection<NotificationEdge>;
 
 [GraphQLName("NotificationCustomerDetails")]
 public class NotificationCustomerDetails
@@ -45,7 +46,7 @@ public class NotificationCustomerDetails
 }
 
 [GraphQLName("NotificationEdge")]
-public class NotificationEdge : Edge<Notification>;
+public class NotificationEdge(Notification node, string cursor) : Edge<Notification>(node, cursor);
 
 [GraphQLName("Notification_LocationDetails")]
 public class LocationDetails

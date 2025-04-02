@@ -8,8 +8,6 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Location.V1.Value"
 enum Type {
   LocationUpserted = 0;
   LocationDeleted = 1;
-  InvitationToJoinLocationUpserted = 2;
-  InvitationToJoinLocationDeleted = 3;
 }
 
 message Event {
@@ -29,7 +27,6 @@ message Metadata {
 message Data { 
   oneof payload {
     Location location = 1;
-    InvitationToJoinLocation invitationToJoinLocation = 2;
   }
 }
 
@@ -38,23 +35,10 @@ message Location {
   google.protobuf.Timestamp deletedAt = 2;
   string name = 3;
   string about = 4;
-  repeated LocationMember members = 5;
-  string organizationId = 6;
-  string timezone = 7;
-  repeated Resource resources = 8;
-  OpeningHours openingHours = 9;
-}
-
-enum Role {
-  Owner = 0;
-  Administrator = 1;
-  Member = 2;
-}
-
-message LocationMember {
-  string id = 1;
-  Role role = 2;
-  string customerId = 3;
+  string organizationId = 5;
+  string timezone = 6;
+  repeated Resource resources = 7;
+  OpeningHours openingHours = 8;
 }
 
 message Resource {
@@ -67,14 +51,6 @@ message Resource {
   bool isAvailableHoursOverridden = 7;
   OpeningHours availableHours = 8;
   int32 capacity = 9;
-}
-
-message InvitationToJoinLocation {
-  string id = 1;
-  google.protobuf.Timestamp deletedAt = 2;
-  string locationId = 3;
-  string invitedById = 4;
-  string inviteeId = 5;
 }
 
 message OpeningHours {

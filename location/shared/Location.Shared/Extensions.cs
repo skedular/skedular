@@ -28,10 +28,8 @@ public static class Extensions
             .AddScoped<IDailyRoomCountRecordingRepository, DailyRoomCountRecordingRepository>()
             .AddScoped<IResourceRepository, ResourceRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
-            .AddScoped<IJoinInvitationRepository, JoinInvitationRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
-            .AddScoped<ILocationMemberRepository, LocationMemberRepository>()
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>();
 
@@ -42,8 +40,7 @@ public static class Extensions
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<ILocationOutboxPublisher, LocationOutboxPublisher>()
-            .AddScoped<INotificationOutboxPublisher, NotificationOutboxPublisher>();
+            .AddScoped<ILocationOutboxPublisher, LocationOutboxPublisher>();
 
     public static IServiceCollection AddSkedularGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {

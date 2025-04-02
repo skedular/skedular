@@ -135,6 +135,8 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DefaultOrganizationId");
 
                     b.HasIndex("DeletedAt");
@@ -148,6 +150,8 @@ namespace Customer.Shared.Database.Migrations
                     b.HasIndex("Locale");
 
                     b.HasIndex("MiddleName");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -197,7 +201,11 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasIndex("Channel");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("CustomerFeedback");
                 });
@@ -233,11 +241,15 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("Email");
 
                     b.HasIndex("EmailVerified");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.ToTable("Identity");
                 });
@@ -276,63 +288,17 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
                     b.HasIndex("OrganizationId");
 
                     b.ToTable("Location");
-                });
-
-            modelBuilder.Entity("Customer.Shared.Database.Entities.LocationMember", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LocationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Role")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<uint>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("Role");
-
-                    b.HasIndex("CustomerId", "LocationId")
-                        .IsUnique();
-
-                    b.ToTable("LocationMember");
                 });
 
             modelBuilder.Entity("Customer.Shared.Database.Entities.Organization", b =>
@@ -369,7 +335,11 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -421,7 +391,11 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -477,7 +451,11 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -521,9 +499,13 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("LocationId");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -564,7 +546,11 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
 
@@ -621,7 +607,11 @@ namespace Customer.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationMemberId");
 
@@ -784,25 +774,6 @@ namespace Customer.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Customer.Shared.Database.Entities.LocationMember", b =>
-                {
-                    b.HasOne("Customer.Shared.Database.Entities.Customer", "Customer")
-                        .WithMany("LocationMembers")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Customer.Shared.Database.Entities.Location", "Location")
-                        .WithMany("LocationMembers")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("Customer.Shared.Database.Entities.OrganizationMember", b =>
                 {
                     b.HasOne("Customer.Shared.Database.Entities.Customer", "Customer")
@@ -944,8 +915,6 @@ namespace Customer.Shared.Database.Migrations
 
                     b.Navigation("Identities");
 
-                    b.Navigation("LocationMembers");
-
                     b.Navigation("OrganizationMembers");
 
                     b.Navigation("TeamMembers");
@@ -953,8 +922,6 @@ namespace Customer.Shared.Database.Migrations
 
             modelBuilder.Entity("Customer.Shared.Database.Entities.Location", b =>
                 {
-                    b.Navigation("LocationMembers");
-
                     b.Navigation("Resources");
                 });
 

@@ -24,8 +24,6 @@ public class Location : EntityBaseWithDeleted
     public virtual Organization Organization { get; set; }
     public virtual ICollection<Resource> Resources { get; set; } = [];
     public virtual ICollection<Booking> Bookings { get; set; } = [];
-    public virtual ICollection<LocationMember> LocationMembers { get; set; } = [];
-    public virtual ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
     public virtual ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
     public virtual ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
 }

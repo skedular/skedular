@@ -1,6 +1,9 @@
 using Api.Shared.Services.Models;
-using Location.Shared.Database.Entities;
+using Enterprise.Shared.Exceptions;
+using Location.Shared.Models;
+using Location.Shared.Repositories;
 using Customer = Location.Shared.Models.Customer;
+using Organization = Location.Shared.Database.Entities.Organization;
 
 namespace Location.Api.Services.Authorization;
 
@@ -9,12 +12,12 @@ public interface IOrganizationAuthorizationService
     bool CanView(Organization organization, Customer customer);
     bool CanModify(Organization organization, Customer customer);
     bool CanDelete(Organization organization, Customer customer);
-    bool CanInvitePeople(Organization organization, Customer customer);
-    bool CanCancelPeopleExistingInvitations(Organization organization, Customer customer);
     bool CanViewAnalytics(Organization organization, Customer customer);
+    Task<Permissions> GetPermissionsAsync(string locationId, CancellationToken cancellationToken);
 }
 
-public class OrganizationAuthorizationService : IOrganizationAuthorizationService
+public class OrganizationAuthorizationService(ICachedCustomerService cachedCustomerService, IRepositoryFactory repositoryFactory)
+    : IOrganizationAuthorizationService
 {
     public bool CanView(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
@@ -40,24 +43,6 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
             Role: OrganizationMemberRoleConstants.Owner
         };
 
-    public bool CanInvitePeople(Organization organization, Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-        {
-            Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator
-        };
-
-    public bool CanCancelPeopleExistingInvitations(
-        Organization organization,
-        Customer customer) =>
-        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
-        {
-            Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator
-        };
-
     public bool CanViewAnalytics(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
@@ -65,4 +50,22 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
             Role: OrganizationMemberRoleConstants.Owner
             or OrganizationMemberRoleConstants.Administrator
         };
+
+    public async Task<Permissions> GetPermissionsAsync(string locationId, CancellationToken cancellationToken)
+    {
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
+        var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
+        if (location is null)
+        {
+            throw new OrganizationNotFound();
+        }
+
+        return new Permissions
+        {
+            CanView = CanView(location.Organization, customer),
+            CanModify = CanModify(location.Organization, customer),
+            CanDelete = CanDelete(location.Organization, customer),
+            CanViewAnalytics = CanViewAnalytics(location.Organization, customer)
+        };
+    }
 }

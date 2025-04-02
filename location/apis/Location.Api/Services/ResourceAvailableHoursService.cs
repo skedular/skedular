@@ -22,7 +22,7 @@ public class ResourceAvailableHoursService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
-    ILocationAuthorizationService locationAuthorizationService,
+    IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
     IMapper mapper) : IResourceAvailableHoursService
@@ -58,7 +58,7 @@ public class ResourceAvailableHoursService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!locationAuthorizationService.CanModify(existingLocation, customer))
+        if (!organizationAuthorizationService.CanModify(existingLocation.Organization, customer))
         {
             throw new Unauthorized();
         }

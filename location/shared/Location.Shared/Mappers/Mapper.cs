@@ -1,9 +1,6 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
-using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
-using Location.Shared.Models;
-using LocationMember = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationMember;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
 using Resource = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Resource;
@@ -14,7 +11,6 @@ namespace Location.Shared.Mappers;
 public interface IMapper
 {
     Api.Shared.Clients.Events.Skedular.Location.V1.Value.Location MapTo(Models.Location src);
-    public InvitationToJoinLocation MapTo(JoinInvitation src, string? inviteeIdToOverride);
 }
 
 public class Mapper : IMapper
@@ -30,19 +26,6 @@ public class Mapper : IMapper
             OrganizationId = src.Organization.Id,
             OpeningHours = MapTo(src.OpeningHours)
         };
-
-        location.Members.AddRange(src.LocationMembers.Select(item => new LocationMember
-        {
-            Id = item.Id,
-            CustomerId = item.Customer.Id,
-            Role = item.Role switch
-            {
-                LocationMemberRole.Owner => Role.Owner,
-                LocationMemberRole.Administrator => Role.Administrator,
-                LocationMemberRole.Member => Role.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            }
-        }));
 
         location.Resources.AddRange(src.Resources.Select(item =>
         {
@@ -65,15 +48,6 @@ public class Mapper : IMapper
 
         return location;
     }
-
-    public InvitationToJoinLocation MapTo(JoinInvitation src, string? inviteeIdToOverride) =>
-        new()
-        {
-            Id = src.Id,
-            LocationId = src.Location.Id,
-            InvitedById = src.CreatedBy.Id,
-            InviteeId = inviteeIdToOverride ?? (src.Invitee is null ? string.Empty : src.Invitee.Id)
-        };
 
     private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHours MapTo(OpeningHours? src)
     {

@@ -6,14 +6,11 @@ namespace Marketplace.Api.Services.Authorization;
 
 public interface IOrganizationAuthorizationService
 {
-    bool CanViewProducts(Organization organization, Customer customer);
     bool CanModifyProduct(Organization organization, Customer customer);
 }
 
 public class OrganizationAuthorizationService : IOrganizationAuthorizationService
 {
-    public bool CanViewProducts(Organization organization, Customer customer) => true;
-
     public bool CanModifyProduct(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {

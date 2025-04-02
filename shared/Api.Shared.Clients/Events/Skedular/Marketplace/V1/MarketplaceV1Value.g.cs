@@ -32,28 +32,29 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "CgR0eXBlGAQgASgOMhEubWFya2V0cGxhY2UuVHlwZRIoCgR0aW1lGAUgASgL",
             "MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklk",
             "GAYgASgJIjoKBERhdGESJwoHcHJvZHVjdBgBIAEoCzIULm1hcmtldHBsYWNl",
-            "LlByb2R1Y3RIAEIJCgdwYXlsb2FkIpEBCgdQcm9kdWN0EgoKAmlkGAEgASgJ",
+            "LlByb2R1Y3RIAEIJCgdwYXlsb2FkIqMBCgdQcm9kdWN0EgoKAmlkGAEgASgJ",
             "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
-            "bXASFgoOb3JnYW5pemF0aW9uSWQYAyABKAkSMwoOcHJvZHVjdFZlcnNpb24Y",
-            "BCABKAsyGy5tYXJrZXRwbGFjZS5Qcm9kdWN0VmVyc2lvbiKAAwoOUHJvZHVj",
-            "dFZlcnNpb24SCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29v",
-            "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBIMCgRuYW1lGAMgASgJEhMKC2Rlc2Ny",
-            "aXB0aW9uGAQgASgJEg0KBXByaWNlGAUgASgJEhEKCXByaWNlVW5pdBgGIAEo",
-            "CRIQCghjdXJyZW5jeRgHIAEoCRIaChJtaW5EdXJhdGlvbk1pbnV0ZXMYCCAB",
-            "KAUSGgoSbWF4RHVyYXRpb25NaW51dGVzGAkgASgFEiAKGGJvb2tBbGxMb2Nh",
-            "dGlvblJlc291cmNlcxgKIAEoCBIeChZyZWN1cnJlbmNlSW50ZXJ2YWxEYXlz",
-            "GAsgASgFEhwKFGZvcmNlQ29udGludW91c1Nsb3RzGAwgASgIEhUKDW1heFNw",
-            "cmVhZERheXMYDSABKAUSFQoNcHJvZHVjdFRhZ0lkcxgOIAMoCRIWCg5sb2Nh",
-            "dGlvblRhZ0lkcxgPIAMoCSovCgRUeXBlEhMKD1Byb2R1Y3RVcHNlcnRlZBAA",
-            "EhIKDlByb2R1Y3REZWxldGVkEAFCOqoCN0FwaS5TaGFyZWQuQ2xpZW50cy5F",
-            "dmVudHMuU2tlZHVsYXIuTWFya2V0cGxhY2UuVjEuVmFsdWViBnByb3RvMw=="));
+            "bXASEAoIaW5hY3RpdmUYAyABKAgSFgoOb3JnYW5pemF0aW9uSWQYBCABKAkS",
+            "MwoOcHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Qcm9kdWN0",
+            "VmVyc2lvbiKAAwoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkSLQoJZGVs",
+            "ZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIMCgRu",
+            "YW1lGAMgASgJEhMKC2Rlc2NyaXB0aW9uGAQgASgJEg0KBXByaWNlGAUgASgJ",
+            "EhEKCXByaWNlVW5pdBgGIAEoCRIQCghjdXJyZW5jeRgHIAEoCRIaChJtaW5E",
+            "dXJhdGlvbk1pbnV0ZXMYCCABKAUSGgoSbWF4RHVyYXRpb25NaW51dGVzGAkg",
+            "ASgFEiAKGGJvb2tBbGxMb2NhdGlvblJlc291cmNlcxgKIAEoCBIeChZyZWN1",
+            "cnJlbmNlSW50ZXJ2YWxEYXlzGAsgASgFEhwKFGZvcmNlQ29udGludW91c1Ns",
+            "b3RzGAwgASgIEhUKDW1heFNwcmVhZERheXMYDSABKAUSFQoNcHJvZHVjdFRh",
+            "Z0lkcxgOIAMoCRIWCg5sb2NhdGlvblRhZ0lkcxgPIAMoCSovCgRUeXBlEhMK",
+            "D1Byb2R1Y3RVcHNlcnRlZBAAEhIKDlByb2R1Y3REZWxldGVkEAFCOqoCN0Fw",
+            "aS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuTWFya2V0cGxhY2Uu",
+            "VjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data.Parser, new[]{ "Product" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "ProductVersion" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "Inactive", "OrganizationId", "ProductVersion" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "DeletedAt", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceIntervalDays", "ForceContinuousSlots", "MaxSpreadDays", "ProductTagIds", "LocationTagIds" }, null, null, null, null)
           }));
     }
@@ -992,6 +993,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     public Product(Product other) : this() {
       id_ = other.id_;
       deletedAt_ = other.deletedAt_ != null ? other.deletedAt_.Clone() : null;
+      inactive_ = other.inactive_;
       organizationId_ = other.organizationId_;
       productVersion_ = other.productVersion_ != null ? other.productVersion_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -1027,8 +1029,20 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "inactive" field.</summary>
+    public const int InactiveFieldNumber = 3;
+    private bool inactive_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Inactive {
+      get { return inactive_; }
+      set {
+        inactive_ = value;
+      }
+    }
+
     /// <summary>Field number for the "organizationId" field.</summary>
-    public const int OrganizationIdFieldNumber = 3;
+    public const int OrganizationIdFieldNumber = 4;
     private string organizationId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1040,7 +1054,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "productVersion" field.</summary>
-    public const int ProductVersionFieldNumber = 4;
+    public const int ProductVersionFieldNumber = 5;
     private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion productVersion_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1068,6 +1082,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       if (Id != other.Id) return false;
       if (!object.Equals(DeletedAt, other.DeletedAt)) return false;
+      if (Inactive != other.Inactive) return false;
       if (OrganizationId != other.OrganizationId) return false;
       if (!object.Equals(ProductVersion, other.ProductVersion)) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -1079,6 +1094,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (deletedAt_ != null) hash ^= DeletedAt.GetHashCode();
+      if (Inactive != false) hash ^= Inactive.GetHashCode();
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
       if (productVersion_ != null) hash ^= ProductVersion.GetHashCode();
       if (_unknownFields != null) {
@@ -1107,12 +1123,16 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(18);
         output.WriteMessage(DeletedAt);
       }
+      if (Inactive != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(Inactive);
+      }
       if (OrganizationId.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(34);
         output.WriteString(OrganizationId);
       }
       if (productVersion_ != null) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(42);
         output.WriteMessage(ProductVersion);
       }
       if (_unknownFields != null) {
@@ -1133,12 +1153,16 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(18);
         output.WriteMessage(DeletedAt);
       }
+      if (Inactive != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(Inactive);
+      }
       if (OrganizationId.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(34);
         output.WriteString(OrganizationId);
       }
       if (productVersion_ != null) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(42);
         output.WriteMessage(ProductVersion);
       }
       if (_unknownFields != null) {
@@ -1156,6 +1180,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       if (deletedAt_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeletedAt);
+      }
+      if (Inactive != false) {
+        size += 1 + 1;
       }
       if (OrganizationId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
@@ -1183,6 +1210,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
           DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
         }
         DeletedAt.MergeFrom(other.DeletedAt);
+      }
+      if (other.Inactive != false) {
+        Inactive = other.Inactive;
       }
       if (other.OrganizationId.Length != 0) {
         OrganizationId = other.OrganizationId;
@@ -1223,11 +1253,15 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             input.ReadMessage(DeletedAt);
             break;
           }
-          case 26: {
-            OrganizationId = input.ReadString();
+          case 24: {
+            Inactive = input.ReadBool();
             break;
           }
           case 34: {
+            OrganizationId = input.ReadString();
+            break;
+          }
+          case 42: {
             if (productVersion_ == null) {
               ProductVersion = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion();
             }
@@ -1264,11 +1298,15 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             input.ReadMessage(DeletedAt);
             break;
           }
-          case 26: {
-            OrganizationId = input.ReadString();
+          case 24: {
+            Inactive = input.ReadBool();
             break;
           }
           case 34: {
+            OrganizationId = input.ReadString();
+            break;
+          }
+          case 42: {
             if (productVersion_ == null) {
               ProductVersion = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion();
             }

@@ -22,12 +22,6 @@ module "organization_domain_common" {
   environment = var.environment
 }
 
-module "location_domain_common" {
-  source = "../../../../../location/shared/infrastructure/workspaces/common"
-
-  environment = var.environment
-}
-
 module "team_domain_common" {
   source = "../../../../../team/shared/infrastructure/workspaces/common"
 
@@ -68,14 +62,6 @@ data "aws_ssm_parameter" "parameter_store_name_invitation_to_join_organization_e
   name = module.organization_domain_common.parameter_store_name_invitation_to_join_organization_existing_customer_email_template_arn
 }
 
-data "aws_ssm_parameter" "parameter_store_name_invitation_to_join_location_new_customer_email_template_arn" {
-  name = module.location_domain_common.parameter_store_name_invitation_to_join_location_new_customer_email_template_arn
-}
-
-data "aws_ssm_parameter" "parameter_store_name_invitation_to_join_location_existing_customer_email_template_arn" {
-  name = module.location_domain_common.parameter_store_name_invitation_to_join_location_existing_customer_email_template_arn
-}
-
 data "aws_ssm_parameter" "parameter_store_name_invitation_to_join_team_new_customer_email_template_arn" {
   name = module.team_domain_common.parameter_store_name_invitation_to_join_team_new_customer_email_template_arn
 }
@@ -105,8 +91,6 @@ data "aws_iam_policy_document" "lambda_ses_policy_document" {
       data.aws_ssm_parameter.parameter_store_name_new_slackworkspace_joined_through_web_email_template_arn.value,
       data.aws_ssm_parameter.parameter_store_name_invitation_to_join_organization_new_customer_email_template_arn.value,
       data.aws_ssm_parameter.parameter_store_name_invitation_to_join_organization_existing_customer_email_template_arn.value,
-      data.aws_ssm_parameter.parameter_store_name_invitation_to_join_location_new_customer_email_template_arn.value,
-      data.aws_ssm_parameter.parameter_store_name_invitation_to_join_location_existing_customer_email_template_arn.value,
       data.aws_ssm_parameter.parameter_store_name_invitation_to_join_team_new_customer_email_template_arn.value,
       data.aws_ssm_parameter.parameter_store_name_invitation_to_join_team_existing_customer_email_template_arn.value,
     ]
