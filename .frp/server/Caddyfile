@@ -32,14 +32,6 @@ mapp.skedular.app {
 	reverse_proxy localhost:7000
 }
 
-staging.getskedular.com {
-	reverse_proxy localhost:8080
-}
-
-getskedular.com {
-	reverse_proxy localhost:8081
-}
-
 apistaging.skedular.app {
 	reverse_proxy localhost:49000
 }
