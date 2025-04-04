@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1d271bfa8029483ae04706307c92a606>>
+ * @generated SignedSource<<cc760b47dbd94e908db51e373e3c551e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,24 +17,22 @@ export type organizationProducts_products_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly bookAllLocationResources: boolean;
+        readonly currency: Currency;
+        readonly description: string | null | undefined;
+        readonly forceContinuousSlots: boolean;
         readonly id: string;
         readonly inactive: boolean;
-        readonly latestProductVersion: {
-          readonly bookAllLocationResources: boolean;
-          readonly currency: Currency;
-          readonly description: string | null | undefined;
-          readonly forceContinuousSlots: boolean;
-          readonly maxDurationMinutes: number | null | undefined;
-          readonly maxSpreadDays: number | null | undefined;
-          readonly minDurationMinutes: number | null | undefined;
-          readonly name: string;
-          readonly price: string;
-          readonly priceUnit: PriceUnit;
-          readonly recurrenceIntervalDays: number;
-        };
+        readonly maxDurationMinutes: number | null | undefined;
+        readonly maxSpreadDays: number | null | undefined;
+        readonly minDurationMinutes: number | null | undefined;
+        readonly name: string;
         readonly organization: {
           readonly uniqueId: string;
         };
+        readonly price: string;
+        readonly priceUnit: PriceUnit;
+        readonly recurrenceIntervalDays: number;
         readonly " $fragmentSpreads": FragmentRefs<"productCard_ProductDetails">;
       };
     }>;
@@ -173,6 +171,83 @@ return {
                 {
                   "alias": null,
                   "args": null,
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "description",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "price",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "priceUnit",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "currency",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "minDurationMinutes",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "maxDurationMinutes",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "bookAllLocationResources",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "recurrenceIntervalDays",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "forceContinuousSlots",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "maxSpreadDays",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
                   "concreteType": "Marketplace_OrganizationDetails",
                   "kind": "LinkedField",
                   "name": "organization",
@@ -183,94 +258,6 @@ return {
                       "args": null,
                       "kind": "ScalarField",
                       "name": "uniqueId",
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "ProductVersionDetails",
-                  "kind": "LinkedField",
-                  "name": "latestProductVersion",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "name",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "description",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "price",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "priceUnit",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "currency",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "minDurationMinutes",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "maxDurationMinutes",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "bookAllLocationResources",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "recurrenceIntervalDays",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "forceContinuousSlots",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "maxSpreadDays",
                       "storageKey": null
                     }
                   ],
@@ -347,6 +334,6 @@ return {
 };
 })();
 
-(node as any).hash = "0a183304a3e10e7c8c3b9d00b5f0e551";
+(node as any).hash = "23ec932d485db096ea3f54676624c822";
 
 export default node;

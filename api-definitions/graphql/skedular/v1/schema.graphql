@@ -709,10 +709,23 @@ type ProductConnection {
 }
 
 type ProductDetails {
+  bookAllLocationResources: Boolean!
+  currency: Currency!
+  description: String
+  forceContinuousSlots: Boolean!
   id: ID!
   inactive: Boolean!
-  latestProductVersion: ProductVersionDetails!
+  latestProductVersionId: String!
+  locationTags: [Marketplace_OrganizationTagDetails!]!
+  maxDurationMinutes: Int
+  maxSpreadDays: Int
+  minDurationMinutes: Int
+  name: String!
   organization: Marketplace_OrganizationDetails!
+  price: String!
+  priceUnit: PriceUnit!
+  productTags: [Marketplace_OrganizationTagDetails!]!
+  recurrenceIntervalDays: Int!
 }
 
 type ProductEdge {
@@ -723,23 +736,6 @@ type ProductEdge {
 type ProductPayload {
   clientMutationId: String
   product: ProductDetails!
-}
-
-type ProductVersionDetails {
-  bookAllLocationResources: Boolean!
-  currency: Currency!
-  description: String
-  forceContinuousSlots: Boolean!
-  id: ID!
-  locationTags: [Marketplace_OrganizationTagDetails!]!
-  maxDurationMinutes: Int
-  maxSpreadDays: Int
-  minDurationMinutes: Int
-  name: String!
-  price: String!
-  priceUnit: PriceUnit!
-  productTags: [Marketplace_OrganizationTagDetails!]!
-  recurrenceIntervalDays: Int!
 }
 
 type ProductsPayload {

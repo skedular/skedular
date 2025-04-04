@@ -74,6 +74,7 @@ public class ProductService(
             throw new Unauthorized();
         }
 
+        productVersion.Id = randomHelper.Generate();
         var productTagIds = productVersion.ProductTags.Select(item => item.Id).ToList();
         var locationTagIds = productVersion.LocationTags.Select(item => item.Id).ToList();
         var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
@@ -89,10 +90,17 @@ public class ProductService(
 
         var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
         var locationTags = organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList();
+        var productEntity = mapper.MapTo(
+            new Product { Id = productId, Inactive = false },
+            productVersion,
+            existingOrganization,
+            productTags,
+            locationTags);
 
-        var productEntity = mapper.MapTo(new Product { Id = productId }, existingOrganization, productTags, locationTags);
+        var productVersionEntity = mapper.MapTo(productVersion, productEntity, productTags, locationTags);
+        productEntity.ProductVersions.Add(productVersionEntity);
+        repositoryFactory.ProductVersionRepository.Add(productVersionEntity);
 
-        productEntity.ProductVersions.Add(mapper.MapTo(productVersion, productEntity, productTags, locationTags));
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Add(productEntity));
 
         await marketplaceOutboxPublisher.PublishProductsAsync([product], repositoryFactory.UnitOfWork, cancellationToken);
@@ -246,6 +254,7 @@ public class ProductService(
             throw new Unauthorized();
         }
 
+        productVersion.Id = randomHelper.Generate();
         var productTagIds = productVersion.ProductTags.Select(item => item.Id).ToList();
         var locationTagIds = productVersion.LocationTags.Select(item => item.Id).ToList();
         var existingProductRef = existingProduct;

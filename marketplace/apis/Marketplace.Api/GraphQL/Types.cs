@@ -55,14 +55,6 @@ public class ProductPayload
 public class ProductDetails : Node
 {
     [GraphQLName("inactive")] public bool Inactive { get; set; }
-    [GraphQLName("latestProductVersion")] public ProductVersionDetails LatestProductVersion { get; set; }
-    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
-    [GraphQLName("id")] [ID] public required string Id { get; set; }
-}
-
-[GraphQLName("ProductVersionDetails")]
-public class ProductVersionDetails : Node
-{
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("price")] public required string Price { get; set; }
@@ -81,6 +73,9 @@ public class ProductVersionDetails : Node
     [GraphQLName("maxSpreadDays")] public int? MaxSpreadDays { get; set; }
     [GraphQLName("productTags")] public IEnumerable<OrganizationTagDetails> ProductTags { get; set; } = [];
     [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
+
+    [GraphQLName("latestProductVersionId")] public required string LatestProductVersionId { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 

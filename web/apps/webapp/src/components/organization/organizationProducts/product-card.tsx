@@ -37,21 +37,19 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
       fragment productCard_ProductDetails on ProductDetails {
         id
         inactive
+        name
+        description
+        price
+        priceUnit
+        currency
+        minDurationMinutes
+        maxDurationMinutes
+        bookAllLocationResources
+        recurrenceIntervalDays
+        forceContinuousSlots
+        maxSpreadDays
         organization {
           uniqueId
-        }
-        latestProductVersion {
-          name
-          description
-          price
-          priceUnit
-          currency
-          minDurationMinutes
-          maxDurationMinutes
-          bookAllLocationResources
-          recurrenceIntervalDays
-          forceContinuousSlots
-          maxSpreadDays
         }
       }
     `,
@@ -80,7 +78,6 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
   ];
 
   const editLink = getOrganizationProductSetupBaseLink(productDetails.organization.uniqueId!, productDetails.id);
-  const productVersion = productDetails.latestProductVersion;
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -109,7 +106,7 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
   };
 
   const handleConfirmRemovingProductClick = () => {
-    const toastId = themedToast(<NotificationContent content={`Removing product '${productVersion.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Removing product '${productDetails.name}'...`} />, infoNotificationOptions);
 
     commitDeleteProduct({
       variables: {
@@ -123,7 +120,7 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove product '${productVersion.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove product '${productDetails.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -131,13 +128,13 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Product '${productVersion.name}' has been successfully removed.`} />,
+          render: <NotificationContent content={`Product '${productDetails.name}' has been successfully removed.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove product '${productVersion.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove product '${productDetails.name}'. Error: ${error.message}.`} />,
         });
       },
     });
@@ -150,7 +147,7 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
           title={
             <StackRow>
               <Link component={NextLink} href={editLink}>
-                <LeadIconTypography label={productVersion.name} startElement={<ProductIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
+                <LeadIconTypography label={productDetails.name} startElement={<ProductIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
             </StackRow>
           }
@@ -174,7 +171,7 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
       <Dialog slots={{ transition: DialogTransition }} open={productRemoveConfirmationDialogOpen} onClose={handleCancelRemovingProductClick}>
         <DefaultDialogTitle title="Remove Product" />
         <DialogContent sx={{ marginTop: 2 }}>
-          <DialogContentText>{`Are you sure you want to remove the product "${productVersion.name}"?`}</DialogContentText>
+          <DialogContentText>{`Are you sure you want to remove the product "${productDetails.name}"?`}</DialogContentText>
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmRemovingProductClick}
             onSecondaryClicked={handleCancelRemovingProductClick}

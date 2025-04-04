@@ -18,6 +18,7 @@ public interface IMapper
 
     Shared.Database.Entities.Product MapTo(
         Product src,
+        ProductVersion productVersion,
         Organization organization,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags);
@@ -63,6 +64,19 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Inactive = src.Inactive,
+            Name = src.Name,
+            Description = src.Description,
+            Price = src.Price,
+            PriceUnit = src.PriceUnit.ToPriceUnit(),
+            Currency = src.Currency.ToCurrency(),
+            MinDurationMinutes = src.MinDurationMinutes,
+            MaxDurationMinutes = src.MaxDurationMinutes,
+            BookAllLocationResources = src.BookAllLocationResources,
+            RecurrenceIntervalDays = src.RecurrenceIntervalDays,
+            ForceContinuousSlots = src.ForceContinuousSlots,
+            MaxSpreadDays = src.MaxSpreadDays,
+            ProductTags = MapTo(src.ProductTags).ToList(),
+            LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
             ProductVersions = MapTo(src.ProductVersions).ToList()
         };
@@ -110,16 +124,30 @@ public class Mapper : IMapper
             {
                 Id = src.Id,
                 Inactive = src.Inactive,
+                Name = src.Name,
+                Description = src.Description,
+                Price = src.Price.ToRoundedPrice(),
+                PriceUnit = src.PriceUnit,
+                Currency = src.Currency,
+                MinDurationMinutes = src.MinDurationMinutes,
+                MaxDurationMinutes = src.MaxDurationMinutes,
+                BookAllLocationResources = src.BookAllLocationResources,
+                RecurrenceIntervalDays = src.RecurrenceIntervalDays,
+                ForceContinuousSlots = src.ForceContinuousSlots,
+                MaxSpreadDays = src.MaxSpreadDays,
+                ProductTags = MapTo(src.ProductTags).ToList(),
+                LocationTags = MapTo(src.LocationTags).ToList(),
                 Organization = MapTo(src.Organization),
-                LatestProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First())
+                LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id
             };
 
     public Shared.Database.Entities.Product MapTo(
         Product src,
+        ProductVersion productVersion,
         Organization organization,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags) =>
-        MergeTo(src, new Shared.Database.Entities.Product(), organization, productTags, locationTags);
+        MergeTo(src, productVersion, new Shared.Database.Entities.Product(), organization, productTags, locationTags);
 
     public Shared.Database.Entities.Product MergeTo(
         ProductVersion src,
@@ -130,7 +158,6 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.Organization = organization;
-
         dest.Name = src.Name;
         dest.Description = src.Description;
         dest.Price = src.Price;
@@ -219,25 +246,6 @@ public class Mapper : IMapper
             LocationTags = MapTo(src.LocationTags).ToList()
         };
 
-    private static ProductVersionDetails MapTo(ProductVersion src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Description = src.Description,
-            Price = src.Price.ToRoundedPrice(),
-            PriceUnit = src.PriceUnit,
-            Currency = src.Currency,
-            MinDurationMinutes = src.MinDurationMinutes,
-            MaxDurationMinutes = src.MaxDurationMinutes,
-            BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceIntervalDays = src.RecurrenceIntervalDays,
-            ForceContinuousSlots = src.ForceContinuousSlots,
-            MaxSpreadDays = src.MaxSpreadDays,
-            ProductTags = MapTo(src.ProductTags).ToList(),
-            LocationTags = MapTo(src.LocationTags).ToList()
-        };
-
     private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<Shared.Models.OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTagDetails MapTo(Shared.Models.OrganizationTag src) =>
@@ -245,6 +253,7 @@ public class Mapper : IMapper
 
     private static Shared.Database.Entities.Product MergeTo(
         Product src,
+        ProductVersion productVersion,
         Shared.Database.Entities.Product dest,
         Organization organization,
         ICollection<OrganizationTag> productTags,
@@ -254,17 +263,17 @@ public class Mapper : IMapper
         dest.Inactive = src.Inactive;
         dest.Organization = organization;
 
-        dest.Name = src.Name;
-        dest.Description = src.Description;
-        dest.Price = src.Price;
-        dest.PriceUnit = src.PriceUnit.ToPriceUnit();
-        dest.Currency = src.Currency.ToCurrency();
-        dest.MinDurationMinutes = src.MinDurationMinutes;
-        dest.MaxDurationMinutes = src.MaxDurationMinutes;
-        dest.BookAllLocationResources = src.BookAllLocationResources;
-        dest.RecurrenceIntervalDays = src.RecurrenceIntervalDays;
-        dest.ForceContinuousSlots = src.ForceContinuousSlots;
-        dest.MaxSpreadDays = src.MaxSpreadDays;
+        dest.Name = productVersion.Name;
+        dest.Description = productVersion.Description;
+        dest.Price = productVersion.Price;
+        dest.PriceUnit = productVersion.PriceUnit.ToPriceUnit();
+        dest.Currency = productVersion.Currency.ToCurrency();
+        dest.MinDurationMinutes = productVersion.MinDurationMinutes;
+        dest.MaxDurationMinutes = productVersion.MaxDurationMinutes;
+        dest.BookAllLocationResources = productVersion.BookAllLocationResources;
+        dest.RecurrenceIntervalDays = productVersion.RecurrenceIntervalDays;
+        dest.ForceContinuousSlots = productVersion.ForceContinuousSlots;
+        dest.MaxSpreadDays = productVersion.MaxSpreadDays;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
 
@@ -278,6 +287,7 @@ public class Mapper : IMapper
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags)
     {
+        dest.Id = src.Id;
         dest.Name = src.Name;
         dest.Description = src.Description;
         dest.Price = src.Price;

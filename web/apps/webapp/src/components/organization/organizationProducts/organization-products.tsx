@@ -1,10 +1,11 @@
-import { DefaultDialogTitle, GridContainer, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
+import { DefaultDialogTitle, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
 import { EllipseMenuIcon } from '@/components/icons';
 import { getOrganizationProductSetupBaseLink } from '@/components/links';
 import ListGridToggle from '@/components/listGridToggle/list-grid-toggle';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { NewProductButton } from '@/components/product/addProduct';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
@@ -68,21 +69,19 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
             node {
               id
               inactive
+              name
+              description
+              price
+              priceUnit
+              currency
+              minDurationMinutes
+              maxDurationMinutes
+              bookAllLocationResources
+              recurrenceIntervalDays
+              forceContinuousSlots
+              maxSpreadDays
               organization {
                 uniqueId
-              }
-              latestProductVersion {
-                name
-                description
-                price
-                priceUnit
-                currency
-                minDurationMinutes
-                maxDurationMinutes
-                bookAllLocationResources
-                recurrenceIntervalDays
-                forceContinuousSlots
-                maxSpreadDays
               }
               ...productCard_ProductDetails
             }
@@ -118,10 +117,7 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteProduct],
   ];
 
-  const products = useMemo(
-    () => rootDataRefetchable.products.edges.map((edge) => edge.node).sort((a, b) => a.latestProductVersion.name.localeCompare(b.latestProductVersion.name)),
-    [rootDataRefetchable.products],
-  );
+  const products = useMemo(() => rootDataRefetchable.products.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataRefetchable.products]);
   const productDetails = useMemo(() => products.find((item) => item.id === selectedProductId), [selectedProductId, products]);
 
   const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
@@ -155,8 +151,7 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
       return;
     }
 
-    const productVersion = productDetails.latestProductVersion;
-    const toastId = themedToast(<NotificationContent content={`Removing product '${productVersion.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Removing product '${productDetails.name}'...`} />, infoNotificationOptions);
 
     commitDeleteProduct({
       variables: {
@@ -170,7 +165,7 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove product '${productVersion.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove product '${productDetails.name}'. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -178,13 +173,13 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Product '${productVersion.name}' has been successfully removed.`} />,
+          render: <NotificationContent content={`Product '${productDetails.name}' has been successfully removed.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove product '${productVersion.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove product '${productDetails.name}'. Error: ${error.message}.`} />,
         });
       },
     });
@@ -197,7 +192,7 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
   const rows: RowType[] = products.map((product) => {
     return {
       id: product.id,
-      product: product.latestProductVersion,
+      product,
     };
   });
 
@@ -241,6 +236,8 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
       <StackColumn sx={{ maxWidth: maxScreenWidth }}>
         <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
           <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
+          <PushToRight />
+          <NewProductButton organizationId={organizationId} />
         </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
           <SectionIconTypography label="Products" />
@@ -280,7 +277,7 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
         <Dialog slots={{ transition: DialogTransition }} open={productRemoveConfirmationDialogOpen} onClose={handleCancelRemovingProductClick}>
           <DefaultDialogTitle title="Remove Product" />
           <DialogContent sx={{ marginTop: 2 }}>
-            <DialogContentText>{`Are you sure you want to remove the product "${productDetails.latestProductVersion.name}"?`}</DialogContentText>
+            <DialogContentText>{`Are you sure you want to remove the product "${productDetails.name}"?`}</DialogContentText>
             <TwoButtonsDialogActions
               onPrimaryClicked={handleConfirmRemovingProductClick}
               onSecondaryClicked={handleCancelRemovingProductClick}

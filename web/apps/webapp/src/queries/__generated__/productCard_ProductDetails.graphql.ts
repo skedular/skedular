@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<71be1c39934a2630379c4380af6b7d57>>
+ * @generated SignedSource<<340e7d0ed439418926faad4daaca9ed6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,24 +13,22 @@ export type Currency = "Nzd" | "Usd" | "%future added value";
 export type PriceUnit = "PerHour" | "PerMinute" | "PerUse" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type productCard_ProductDetails$data = {
+  readonly bookAllLocationResources: boolean;
+  readonly currency: Currency;
+  readonly description: string | null | undefined;
+  readonly forceContinuousSlots: boolean;
   readonly id: string;
   readonly inactive: boolean;
-  readonly latestProductVersion: {
-    readonly bookAllLocationResources: boolean;
-    readonly currency: Currency;
-    readonly description: string | null | undefined;
-    readonly forceContinuousSlots: boolean;
-    readonly maxDurationMinutes: number | null | undefined;
-    readonly maxSpreadDays: number | null | undefined;
-    readonly minDurationMinutes: number | null | undefined;
-    readonly name: string;
-    readonly price: string;
-    readonly priceUnit: PriceUnit;
-    readonly recurrenceIntervalDays: number;
-  };
+  readonly maxDurationMinutes: number | null | undefined;
+  readonly maxSpreadDays: number | null | undefined;
+  readonly minDurationMinutes: number | null | undefined;
+  readonly name: string;
   readonly organization: {
     readonly uniqueId: string;
   };
+  readonly price: string;
+  readonly priceUnit: PriceUnit;
+  readonly recurrenceIntervalDays: number;
   readonly " $fragmentType": "productCard_ProductDetails";
 };
 export type productCard_ProductDetails$key = {
@@ -61,6 +59,83 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "description",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "price",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "priceUnit",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "currency",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "minDurationMinutes",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "maxDurationMinutes",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "bookAllLocationResources",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "recurrenceIntervalDays",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "forceContinuousSlots",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "maxSpreadDays",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "Marketplace_OrganizationDetails",
       "kind": "LinkedField",
       "name": "organization",
@@ -75,100 +150,12 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ProductVersionDetails",
-      "kind": "LinkedField",
-      "name": "latestProductVersion",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "description",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "price",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "priceUnit",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "currency",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "minDurationMinutes",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "maxDurationMinutes",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "bookAllLocationResources",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "recurrenceIntervalDays",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "forceContinuousSlots",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "maxSpreadDays",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
     }
   ],
   "type": "ProductDetails",
   "abstractKey": null
 };
 
-(node as any).hash = "ae17ee116e3e79318151a248cfa93509";
+(node as any).hash = "768e5ff4520d66702591f81655d15c14";
 
 export default node;

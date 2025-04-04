@@ -11,6 +11,8 @@ namespace Marketplace.Shared.Database.Entities;
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
     public string Type { get; set; }
+    public Offering? Offering { get; set; }
+
     public virtual ICollection<OrganizationTag> Tags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<Product> Products { get; set; } = [];
@@ -24,6 +26,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
+        builder.Property(item => item.Offering).HasColumnType("jsonb");
 
         builder.HasIndex(item => item.Type);
     }

@@ -47,22 +47,6 @@ type ProductConnection {
 
 type ProductDetails {
   inactive: Boolean!
-  latestProductVersion: ProductVersionDetails!
-  organization: Marketplace_OrganizationDetails!
-  id: ID!
-}
-
-type ProductEdge {
-  node: ProductDetails!
-  cursor: String!
-}
-
-type ProductPayload {
-  clientMutationId: String
-  product: ProductDetails!
-}
-
-type ProductVersionDetails {
   name: String!
   description: String
   price: String!
@@ -76,7 +60,19 @@ type ProductVersionDetails {
   maxSpreadDays: Int
   productTags: [Marketplace_OrganizationTagDetails!]!
   locationTags: [Marketplace_OrganizationTagDetails!]!
+  latestProductVersionId: String!
+  organization: Marketplace_OrganizationDetails!
   id: ID!
+}
+
+type ProductEdge {
+  node: ProductDetails!
+  cursor: String!
+}
+
+type ProductPayload {
+  clientMutationId: String
+  product: ProductDetails!
 }
 
 type ProductsPayload {

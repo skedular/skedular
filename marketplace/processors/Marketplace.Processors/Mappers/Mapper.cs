@@ -1,8 +1,10 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Customer = Marketplace.Shared.Models.Customer;
 using Identity = Marketplace.Shared.Database.Entities.Identity;
+using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Marketplace.Shared.Models.Organization;
 using OrganizationMember = Marketplace.Shared.Database.Entities.OrganizationMember;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
@@ -106,7 +108,15 @@ public class Mapper : IMapper
             Id = organizationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Type = organizationAfterState.Type.ToOrganizationType()
+            Type = organizationAfterState.Type.ToOrganizationType(),
+            Offering = new Offering
+            {
+                Id = organizationAfterState.Offering.Id,
+                Code = organizationAfterState.Offering.Code.ToOfferingCode(),
+                Start = organizationAfterState.Offering.Start.ToDateTimeOffset(),
+                End = organizationAfterState.Offering.End.ToDateTimeOffset(),
+                ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray()
+            }
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
@@ -132,6 +142,17 @@ public class Mapper : IMapper
             };
         }).ToList();
 
+        organization.Tags = organizationAfterState.Tags.Select(item => new OrganizationTag
+        {
+            Id = item.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = item.Name,
+            Type = item.Type.ToNullableOrganizationTagType(),
+            Color = item.Color,
+            Organization = organization
+        }).ToList();
+
         return organization;
     }
 
@@ -142,6 +163,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Type = src.Type.ToOrganizationType();
+        dest.Offering = src.Offering;
         return dest;
     }
 

@@ -51,3 +51,4 @@ export const getNotificationsBaseLink = () => `/notifications`;
 
 export const getOrganizationMarketplaceBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace`;
 export const getOrganizationProductSetupBaseLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}?section=setup`;
+export const getOrganizationProductAddLink = (id: string) => `${getOrganizationBaseLink(id)}/products/add`;
