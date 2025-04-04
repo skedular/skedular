@@ -193,11 +193,11 @@ const LocationCard = ({
     setLocationRemoveConfirmationDialogOpen(true);
   };
 
-  const handleCancelRemovingTeamClick = () => {
+  const handleCancelRemovingLocationClick = () => {
     setLocationRemoveConfirmationDialogOpen(false);
   };
 
-  const handleConfirmRemovingTeamClick = () => {
+  const handleConfirmRemovingLocationClick = () => {
     const toastId = themedToast(<NotificationContent content={`Removing location '${locationDetails.name}'...`} />, infoNotificationOptions);
 
     commitDeleteLocation({
@@ -399,7 +399,7 @@ const LocationCard = ({
 
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
 
-      <Dialog slots={{ transition: DialogTransition }} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
+      <Dialog slots={{ transition: DialogTransition }} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
         <DefaultDialogTitle title="Remove Location" />
         <DialogContent sx={{ marginTop: 2 }}>
           <DialogContentText>
@@ -408,8 +408,8 @@ const LocationCard = ({
               : `Are you sure you want to remove the location "${locationDetails.name}"?`}
           </DialogContentText>
           <TwoButtonsDialogActions
-            onPrimaryClicked={handleConfirmRemovingTeamClick}
-            onSecondaryClicked={handleCancelRemovingTeamClick}
+            onPrimaryClicked={handleConfirmRemovingLocationClick}
+            onSecondaryClicked={handleCancelRemovingLocationClick}
             primaryLabel="Remove"
             secondaryLabel="Cancel"
           />

@@ -15,7 +15,20 @@ public interface IMapper
     ProductVersion MapTo(AddProductInput src);
     ProductVersion MapTo(UpdateProductInput src);
     ProductDetails? MapTo(Product? src);
-    Shared.Database.Entities.Product MapTo(Product src, Organization organization);
+
+    Shared.Database.Entities.Product MapTo(
+        Product src,
+        Organization organization,
+        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> locationTags);
+
+    Shared.Database.Entities.Product MergeTo(
+        ProductVersion src,
+        Shared.Database.Entities.Product dest,
+        Organization organization,
+        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> locationTags);
+
     ProductEdge MapTo(Edge<Product> src);
     Product MapTo(Shared.Database.Entities.Product src, Shared.Models.Organization organization);
     Shared.Models.Organization MapTo(Organization src);
@@ -101,8 +114,39 @@ public class Mapper : IMapper
                 LatestProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First())
             };
 
-    public Shared.Database.Entities.Product MapTo(Product src, Organization organization) =>
-        MergeTo(src, new Shared.Database.Entities.Product(), organization);
+    public Shared.Database.Entities.Product MapTo(
+        Product src,
+        Organization organization,
+        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> locationTags) =>
+        MergeTo(src, new Shared.Database.Entities.Product(), organization, productTags, locationTags);
+
+    public Shared.Database.Entities.Product MergeTo(
+        ProductVersion src,
+        Shared.Database.Entities.Product dest,
+        Organization organization,
+        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> locationTags)
+    {
+        dest.Id = src.Id;
+        dest.Organization = organization;
+
+        dest.Name = src.Name;
+        dest.Description = src.Description;
+        dest.Price = src.Price;
+        dest.PriceUnit = src.PriceUnit.ToPriceUnit();
+        dest.Currency = src.Currency.ToCurrency();
+        dest.MinDurationMinutes = src.MinDurationMinutes;
+        dest.MaxDurationMinutes = src.MaxDurationMinutes;
+        dest.BookAllLocationResources = src.BookAllLocationResources;
+        dest.RecurrenceIntervalDays = src.RecurrenceIntervalDays;
+        dest.ForceContinuousSlots = src.ForceContinuousSlots;
+        dest.MaxSpreadDays = src.MaxSpreadDays;
+        dest.ProductTags = productTags;
+        dest.LocationTags = locationTags;
+
+        return dest;
+    }
 
     public ProductEdge MapTo(Edge<Product> src) => new(MapTo(src.Node)!, src.Cursor);
 
@@ -199,11 +243,30 @@ public class Mapper : IMapper
     private static OrganizationTagDetails MapTo(Shared.Models.OrganizationTag src) =>
         new() { UniqueId = src.Id, Name = src.Name, TagType = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
 
-    private static Shared.Database.Entities.Product MergeTo(Product src, Shared.Database.Entities.Product dest, Organization organization)
+    private static Shared.Database.Entities.Product MergeTo(
+        Product src,
+        Shared.Database.Entities.Product dest,
+        Organization organization,
+        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> locationTags)
     {
         dest.Id = src.Id;
         dest.Inactive = src.Inactive;
         dest.Organization = organization;
+
+        dest.Name = src.Name;
+        dest.Description = src.Description;
+        dest.Price = src.Price;
+        dest.PriceUnit = src.PriceUnit.ToPriceUnit();
+        dest.Currency = src.Currency.ToCurrency();
+        dest.MinDurationMinutes = src.MinDurationMinutes;
+        dest.MaxDurationMinutes = src.MaxDurationMinutes;
+        dest.BookAllLocationResources = src.BookAllLocationResources;
+        dest.RecurrenceIntervalDays = src.RecurrenceIntervalDays;
+        dest.ForceContinuousSlots = src.ForceContinuousSlots;
+        dest.MaxSpreadDays = src.MaxSpreadDays;
+        dest.ProductTags = productTags;
+        dest.LocationTags = locationTags;
 
         return dest;
     }

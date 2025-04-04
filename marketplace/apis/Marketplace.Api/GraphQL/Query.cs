@@ -52,7 +52,7 @@ public class Query(IMapper mapper)
         mapper.MapTo(await productService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
-    public async Task<ProductConnection?> ProductsAsync(
+    public async Task<ProductConnection> ProductsAsync(
         string? after,
         int? first,
         string? before,

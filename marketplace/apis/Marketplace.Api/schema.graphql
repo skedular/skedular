@@ -90,7 +90,7 @@ type Query {
   currencies: [CurrencyDetails!]!
   priceUnits: [PriceUnitDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")
-  products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ProductConnection @cost(weight: "10")
+  products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ProductConnection! @cost(weight: "10")
 }
 
 type Version {
@@ -143,7 +143,7 @@ input ProductWhereInput {
   organizationIds: [String!]
   productIds: [String!]
   nameContains: String
-  IncludeInactive: Boolean!
+  includeInactive: Boolean!
 }
 
 input UpdateProductInput {

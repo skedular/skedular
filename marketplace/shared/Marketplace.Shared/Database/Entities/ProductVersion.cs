@@ -41,16 +41,14 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.Property(item => item.Description).HasMaxLength(Constants.MaxProductDescriptionLength);
         builder.Property(item => item.PriceUnit).HasMaxLength(Constants.MaxProductPriceUnitLength);
         builder.Property(item => item.Price).HasColumnType("DECIMAL(18,4)");
-
         builder.Property(item => item.PricePerMinute).HasColumnType("DECIMAL(18,4)");
-
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
         builder.Property(item => item.BookAllLocationResources).HasDefaultValue(false);
         builder.Property(item => item.ForceContinuousSlots).HasDefaultValue(false);
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
-        builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductTags);
-        builder.HasMany(item => item.LocationTags).WithMany(item => item.LocationTags);
+        builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductVersionProductTag);
+        builder.HasMany(item => item.LocationTags).WithMany(item => item.ProductVersionLocationTags);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.PricePerMinute);

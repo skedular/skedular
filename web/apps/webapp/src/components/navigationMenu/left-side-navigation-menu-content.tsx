@@ -1,5 +1,5 @@
 import { BodyIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
-import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@/components/icons';
+import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MarketplaceIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@/components/icons';
 import {
   getOrganizationAdminSetupBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
@@ -7,6 +7,7 @@ import {
   getOrganizationBaseLink,
   getOrganizationBookingsBaseLink,
   getOrganizationLocationsBaseLink,
+  getOrganizationMarketplaceBaseLink,
   getOrganizationTeamsBaseLink,
   getOrganizationUsersBaseLink,
 } from '@/components/links';
@@ -42,6 +43,9 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
       fragment leftSideNavigationMenuContent_query on Query {
         organization(id: $organizationId) @include(if: $organizationExists) {
           id
+          type {
+            type
+          }
           canModify
           canViewAnalytics
           activeOffering {
@@ -128,6 +132,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(rootData.organization.id);
   const organizationMembersBaseLink = getOrganizationUsersBaseLink(rootData.organization.id);
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(rootData.organization.id);
+  const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceBaseLink(rootData.organization.id);
   const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(rootData.organization.id);
 
   return (
@@ -291,6 +296,32 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                       startElement={!hideIcons && <AnalyticsIcon color="inherit" />}
                       spacing={3}
                       invertDefaultColor={pathName.startsWith(organizationAnalyticsSetupBaseLink) && paletteMode === 'dark'}
+                    />
+                  )}
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          )}
+
+          {rootData.organization.type.type === 'Marketplace' && (
+            <ListItem disablePadding>
+              <Link component={NextLink} href={organizationMarketplaceSetupBaseLink}>
+                <ListItemButton
+                  selected={pathName.startsWith(organizationMarketplaceSetupBaseLink)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationMarketplaceSetupBaseLink)) }}
+                >
+                  {collapsed && (
+                    <BodyIconTypography
+                      startElement={!hideIcons && <MarketplaceIcon color="inherit" />}
+                      invertDefaultColor={pathName.startsWith(organizationMarketplaceSetupBaseLink) && paletteMode === 'dark'}
+                    />
+                  )}
+                  {!collapsed && (
+                    <BodyIconTypography
+                      label="Marketplace"
+                      startElement={!hideIcons && <MarketplaceIcon color="inherit" />}
+                      spacing={3}
+                      invertDefaultColor={pathName.startsWith(organizationMarketplaceSetupBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                 </ListItemButton>

@@ -761,7 +761,7 @@ type Query {
   bookingVersion: Version!
   currencies: [CurrencyDetails!]!
   customer(id: String!): CustomerDetails @cost(weight: "10")
-  customersByPreferredLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByPreferredLocationWhereInput!): CustomerConnection @cost(weight: "10")
+  customersByPreferredLocation(after: String before: String first: Int last: Int orderBy: [CustomerOrderInput!] where: CustomersByPreferredLocationWhereInput!): CustomerConnection! @cost(weight: "10")
   customerTeams(after: String before: String first: Int last: Int orderBy: [TeamOrderInput!] where: CustomerTeamWhereInput!): TeamConnection! @cost(weight: "10")
   customerVersion: Version!
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
@@ -806,7 +806,7 @@ type Query {
   pendingInvitationsCount: Int! @cost(weight: "10")
   priceUnits: [PriceUnitDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")
-  products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ProductConnection @cost(weight: "10")
+  products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ProductConnection! @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   productTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ProductTagOrganizationTagWhereInput!): OrganizationTagConnection! @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
@@ -1502,7 +1502,7 @@ input ProductTagOrganizationTagWhereInput {
 }
 
 input ProductWhereInput {
-  IncludeInactive: Boolean!
+  includeInactive: Boolean!
   nameContains: String
   organizationIds: [String!]
   productIds: [String!]

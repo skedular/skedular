@@ -34,7 +34,7 @@ public class Query(IMapper mapper)
         mapper.MapTo(await customerService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
-    public async Task<CustomerConnection?> CustomersByPreferredLocationAsync(
+    public async Task<CustomerConnection> CustomersByPreferredLocationAsync(
         string? after,
         int? first,
         string? before,

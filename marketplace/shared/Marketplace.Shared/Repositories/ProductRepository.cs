@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
@@ -7,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using OrganizationTag = Marketplace.Shared.Database.Entities.OrganizationTag;
 using Product = Marketplace.Shared.Database.Entities.Product;
-using ProductVersion = Marketplace.Shared.Database.Entities.ProductVersion;
 
 namespace Marketplace.Shared.Repositories;
 
@@ -30,23 +30,22 @@ public interface IProductRepository : IRepository<Product>
 
 internal static class ProductExtensions
 {
-    internal static ProductVersion LatestProductVersion(this ICollection<ProductVersion> productVersions) =>
-        productVersions.OrderByDescending(productVersion => productVersion.CreatedAt).First();
-
     internal static IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Product> originalQuery) =>
         originalQuery
             .Include(query => query.Organization)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)
-            .Include(query => query.ProductVersions.LatestProductVersion())
+            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
             .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.ProductVersions.LatestProductVersion())
+            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
             .ThenInclude(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
 
     internal static IQueryable<Product> AddSearchCriteria(this IQueryable<Product> query, ProductSearchCriteria searchCriteria)
     {
-        query = query.Where(item => !item.DeletedAt.HasValue && (searchCriteria.IncludeInactive || !item.Inactive));
+        query = query.Where(item =>
+            !item.DeletedAt.HasValue && item.Organization.Type == OrganizationTypeConstants.Marketplace &&
+            (searchCriteria.IncludeInactive || !item.Inactive));
 
         if (searchCriteria.OrganizationIds.Count > 0)
         {
@@ -60,7 +59,7 @@ internal static class ProductExtensions
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
         {
-            query = query.Where(item => EF.Functions.ILike(item.ProductVersions.LatestProductVersion().Name, $"%{searchCriteria.NameContains}%"));
+            query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
         }
 
         return query;
@@ -70,22 +69,22 @@ internal static class ProductExtensions
     {
         if (orderByFields.Count == 0)
         {
-            return originalQuery.OrderBy(query => query.ProductVersions.LatestProductVersion().Name).ThenBy(query => query.Id);
+            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
         }
 
         var orderByField = orderByFields.First();
         return orderByFields.Skip(1).Aggregate(orderByField.Field switch
         {
             ProductOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.ProductVersions.LatestProductVersion().Name)
-                : originalQuery.OrderByDescending(x => x.ProductVersions.LatestProductVersion().Name),
+                ? originalQuery.OrderBy(x => x.Name)
+                : originalQuery.OrderByDescending(x => x.Name),
             _ => throw new ArgumentOutOfRangeException()
         }, (query, orderField) =>
             orderField.Field switch
             {
                 ProductOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.ProductVersions.LatestProductVersion().Name)
-                    : query.ThenByDescending(x => x.ProductVersions.LatestProductVersion().Name),
+                    ? query.ThenBy(x => x.Name)
+                    : query.ThenByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }

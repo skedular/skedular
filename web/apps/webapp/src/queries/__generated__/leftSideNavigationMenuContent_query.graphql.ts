@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ff88387cdbf4e2affb66af0ba7949a61>>
+ * @generated SignedSource<<33bb0b45c80d948e17a1b97ee46e284b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationType = "Marketplace" | "Private" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type leftSideNavigationMenuContent_query$data = {
   readonly organization?: {
@@ -19,6 +20,9 @@ export type leftSideNavigationMenuContent_query$data = {
     readonly canModify: boolean;
     readonly canViewAnalytics: boolean;
     readonly id: string;
+    readonly type: {
+      readonly type: OrganizationType;
+    };
   } | null | undefined;
   readonly " $fragmentType": "leftSideNavigationMenuContent_query";
 };
@@ -71,6 +75,24 @@ const node: ReaderFragment = {
             {
               "alias": null,
               "args": null,
+              "concreteType": "OrganizationTypeDetails",
+              "kind": "LinkedField",
+              "name": "type",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "type",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
               "kind": "ScalarField",
               "name": "canModify",
               "storageKey": null
@@ -117,6 +139,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "874ff49cd16a0bad23ee0a302c9e3457";
+(node as any).hash = "890461b2c20e647cdb19acb23860b02f";
 
 export default node;

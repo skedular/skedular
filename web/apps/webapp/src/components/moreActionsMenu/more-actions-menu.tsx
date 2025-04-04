@@ -48,6 +48,8 @@ export enum MoreActionsMenuOptionType {
   ViewUserBookings,
   ViewLocationBookings,
   ViewTeamBookings,
+  EditProduct,
+  DeleteProduct,
 }
 
 export type MoreActionsMenuItemType = {
@@ -230,6 +232,16 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
     id: MoreActionsMenuOptionType.ViewTeamBookings,
     label: 'View Bookings',
     icon: <BookingIcon />,
+  },
+  [MoreActionsMenuOptionType.EditProduct]: {
+    id: MoreActionsMenuOptionType.EditProduct,
+    label: 'Edit Product',
+    icon: <EditIcon />,
+  },
+  [MoreActionsMenuOptionType.DeleteProduct]: {
+    id: MoreActionsMenuOptionType.DeleteProduct,
+    label: 'Remove Product',
+    icon: <DeleteIcon color="warning" />,
   },
 };
 

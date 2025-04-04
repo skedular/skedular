@@ -1,5 +1,6 @@
 import AddCircle from '@mui/icons-material/AddCircle';
 import Business from '@mui/icons-material/Business';
+import Category from '@mui/icons-material/Category';
 import CorporateFare from '@mui/icons-material/CorporateFare';
 import DateRange from '@mui/icons-material/DateRange';
 import Diversity3 from '@mui/icons-material/Diversity3';
@@ -64,6 +65,7 @@ export { default as CustomOpeningHoursIcon } from '@mui/icons-material/Schedule'
 export { default as SearchRoundedIcon } from '@mui/icons-material/SearchRounded';
 export { default as PreferredIcon } from '@mui/icons-material/Star';
 export { default as NotPreferredIcon } from '@mui/icons-material/StarOutline';
+export { default as MarketplaceIcon } from '@mui/icons-material/Storefront';
 export { default as SubscriptionsIcon } from '@mui/icons-material/Subscriptions';
 export { default as SSOIcon } from '@mui/icons-material/SyncLock';
 export { default as TodayIcon } from '@mui/icons-material/Today';
@@ -294,5 +296,14 @@ export const LocationTagIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Pr
   ) : (
     <TooltipIcon tip={tip ?? 'Location Tag'}>
       <LocalOffer fontSize={fontSize} sx={sx} color={color} />
+    </TooltipIcon>
+  );
+
+export const ProductIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
+  excludeTooltip ? (
+    <Category fontSize={fontSize} sx={sx} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'Product'}>
+      <Category fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );

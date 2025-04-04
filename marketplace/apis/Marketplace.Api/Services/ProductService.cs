@@ -34,7 +34,6 @@ public class ProductService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
-    ICachedCustomerService cachedCustomerService,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IMarketplaceOutboxPublisher marketplaceOutboxPublisher,
@@ -88,14 +87,12 @@ public class ProductService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var productEntity = mapper.MapTo(new Product { Id = productId }, existingOrganization);
+        var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
+        var locationTags = organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList();
 
-        productEntity.ProductVersions.Add(
-            mapper.MapTo(
-                productVersion,
-                productEntity,
-                organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList(),
-                organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList()));
+        var productEntity = mapper.MapTo(new Product { Id = productId }, existingOrganization, productTags, locationTags);
+
+        productEntity.ProductVersions.Add(mapper.MapTo(productVersion, productEntity, productTags, locationTags));
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Add(productEntity));
 
         await marketplaceOutboxPublisher.PublishProductsAsync([product], repositoryFactory.UnitOfWork, cancellationToken);
@@ -263,12 +260,12 @@ public class ProductService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        _ = repositoryFactory.ProductVersionRepository.Add(
-            mapper.MapTo(
-                productVersion,
-                existingProduct,
-                organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList(),
-                organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList()));
+        var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
+        var locationTags = organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList();
+
+        _ = repositoryFactory.ProductVersionRepository.Add(mapper.MapTo(productVersion, existingProduct, productTags, locationTags));
+
+        existingProduct = mapper.MergeTo(productVersion, existingProduct, existingProduct.Organization, productTags, locationTags);
 
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));
 

@@ -48,3 +48,6 @@ export const getOrganizationAdminManageOrganizationBaseLink = (id: string) => `$
 export const getOrganizationTeamAddLink = (id: string) => `${getOrganizationBaseLink(id)}/teams/add`;
 export const getOrganizationLocationAddLink = (id: string) => `${getOrganizationBaseLink(id)}/locations/add`;
 export const getNotificationsBaseLink = () => `/notifications`;
+
+export const getOrganizationMarketplaceBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace`;
+export const getOrganizationProductSetupBaseLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}?section=setup`;
