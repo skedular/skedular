@@ -12,7 +12,7 @@ import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_ro
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useParams } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
@@ -20,7 +20,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, object, string } from 'yup';
+import { array, boolean, object, string } from 'yup';
 
 type Props = {
   queryReference: PreloadedQuery<addProduct_rootQuery, Record<string, unknown>>;
@@ -49,6 +49,8 @@ type ProductDetails = {
   price: string;
   priceUnit: string;
   currency: string;
+  bookAllLocationResources: boolean;
+  forceContinuousSlots: boolean;
   productTagIds: string[];
   locationTagIds: string[];
 };
@@ -61,6 +63,8 @@ const productSchema = object({
     .required('Price is required'),
   priceUnit: string().required('Price Unit is required'),
   currency: string().required('Currency is required'),
+  mustBookAllLocationResources: boolean(),
+  forceContinuousSlots: boolean(),
   productTagIds: array().nullable(),
   locationTagIds: array().nullable(),
 });
@@ -115,7 +119,17 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     onReloadRequired();
   };
 
-  const handleProductAddClick = ({ name, description, price, priceUnit, currency, productTagIds, locationTagIds }: ProductDetails) => {
+  const handleProductAddClick = ({
+    name,
+    description,
+    price,
+    priceUnit,
+    currency,
+    bookAllLocationResources,
+    forceContinuousSlots,
+    productTagIds,
+    locationTagIds,
+  }: ProductDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
 
@@ -131,9 +145,9 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           currency: currency as Currency,
           minDurationMinutes: null,
           maxDurationMinutes: null,
-          bookAllLocationResources: false,
+          bookAllLocationResources,
           recurrenceIntervalDays: 1,
-          forceContinuousSlots: false,
+          forceContinuousSlots,
           maxSpreadDays: null,
           productTagIds,
           locationTagIds,
@@ -182,9 +196,9 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             },
             minDurationMinutes: null,
             maxDurationMinutes: null,
-            bookAllLocationResources: false,
+            bookAllLocationResources,
             recurrenceIntervalDays: 1,
-            forceContinuousSlots: false,
+            forceContinuousSlots,
             maxSpreadDays: null,
             productTags: [],
             locationTags: [],
@@ -203,8 +217,11 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             initialValues={{
               name: '',
               description: '',
+              price: '0.00',
               priceUnit: '',
               currency: '',
+              bookAllLocationResources: false,
+              forceContinuousSlots: false,
               productTagIds: [],
               locationTagIds: [],
             }}
@@ -236,6 +253,24 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
 
                   <FormFieldLabel label="Currency">
                     <SingleChoicesCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="">
+                    <Switches
+                      name="bookAllLocationResources"
+                      required={requiredFields.bookAllLocationResources}
+                      data={{ label: 'Book all location resources', value: 'bookAllLocationResources' }}
+                      helperText="If checked, all location resources will be booked for this product."
+                    />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="">
+                    <Switches
+                      name="forceContinuousSlots"
+                      required={requiredFields.forceContinuousSlots}
+                      data={{ label: 'Force Continuous slots', value: 'forceContinuousSlots' }}
+                      helperText="If checked, only continuous slots can be booked for this product."
+                    />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Product Tags">
