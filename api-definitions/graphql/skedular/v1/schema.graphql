@@ -723,6 +723,7 @@ type ProductDetails {
   name: String!
   organization: Marketplace_OrganizationDetails!
   price: String!
+  priceToDisplay: String!
   priceUnit: PriceUnitDetails!
   productTags: [Marketplace_OrganizationTagDetails!]!
   recurrenceIntervalDays: Int!

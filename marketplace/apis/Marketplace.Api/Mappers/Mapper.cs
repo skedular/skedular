@@ -117,29 +117,37 @@ public class Mapper : IMapper
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
 
-    public ProductDetails? MapTo(Product? src) =>
-        src is null
-            ? null
-            : new ProductDetails
-            {
-                Id = src.Id,
-                Inactive = src.Inactive,
-                Name = src.Name,
-                Description = src.Description,
-                Price = src.Price.ToRoundedPrice(),
-                PriceUnit = new PriceUnitDetails { Type = src.PriceUnit, Name = src.PriceUnit.ToPriceUnitName() },
-                Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
-                MinDurationMinutes = src.MinDurationMinutes,
-                MaxDurationMinutes = src.MaxDurationMinutes,
-                BookAllLocationResources = src.BookAllLocationResources,
-                RecurrenceIntervalDays = src.RecurrenceIntervalDays,
-                ForceContinuousSlots = src.ForceContinuousSlots,
-                MaxSpreadDays = src.MaxSpreadDays,
-                ProductTags = MapTo(src.ProductTags).ToList(),
-                LocationTags = MapTo(src.LocationTags).ToList(),
-                Organization = MapTo(src.Organization),
-                LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id
-            };
+    public ProductDetails? MapTo(Product? src)
+    {
+        if (src is null)
+        {
+            return null;
+        }
+
+        var roundedPrice = src.Price.ToRoundedPrice();
+
+        return new ProductDetails
+        {
+            Id = src.Id,
+            Inactive = src.Inactive,
+            Name = src.Name,
+            Description = src.Description,
+            Price = roundedPrice,
+            PriceToDisplay = roundedPrice.ToPriceToDisplay(src.Currency),
+            PriceUnit = new PriceUnitDetails { Type = src.PriceUnit, Name = src.PriceUnit.ToPriceUnitName() },
+            Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
+            MinDurationMinutes = src.MinDurationMinutes,
+            MaxDurationMinutes = src.MaxDurationMinutes,
+            BookAllLocationResources = src.BookAllLocationResources,
+            RecurrenceIntervalDays = src.RecurrenceIntervalDays,
+            ForceContinuousSlots = src.ForceContinuousSlots,
+            MaxSpreadDays = src.MaxSpreadDays,
+            ProductTags = MapTo(src.ProductTags).ToList(),
+            LocationTags = MapTo(src.LocationTags).ToList(),
+            Organization = MapTo(src.Organization),
+            LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id
+        };
+    }
 
     public Shared.Database.Entities.Product MapTo(
         Product src,

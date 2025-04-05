@@ -58,6 +58,7 @@ public class ProductDetails : Node
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("price")] public required string Price { get; set; }
+    [GraphQLName("priceToDisplay")] public required string PriceToDisplay { get; set; }
     [GraphQLName("priceUnit")] public PriceUnitDetails PriceUnit { get; set; }
     [GraphQLName("currency")] public CurrencyDetails Currency { get; set; }
     [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
@@ -74,7 +75,9 @@ public class ProductDetails : Node
     [GraphQLName("productTags")] public IEnumerable<OrganizationTagDetails> ProductTags { get; set; } = [];
     [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
 
-    [GraphQLName("latestProductVersionId")] public required string LatestProductVersionId { get; set; }
+    [GraphQLName("latestProductVersionId")]
+    public required string LatestProductVersionId { get; set; }
+
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }

@@ -50,6 +50,7 @@ type ProductDetails {
   name: String!
   description: String
   price: String!
+  priceToDisplay: String!
   priceUnit: PriceUnitDetails!
   currency: CurrencyDetails!
   minDurationMinutes: Int
