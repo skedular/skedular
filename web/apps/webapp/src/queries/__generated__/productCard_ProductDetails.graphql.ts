@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<340e7d0ed439418926faad4daaca9ed6>>
+ * @generated SignedSource<<56c1c1f8179852db04729fd6e7d9c113>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,10 @@ export type PriceUnit = "PerHour" | "PerMinute" | "PerUse" | "%future added valu
 import { FragmentRefs } from "relay-runtime";
 export type productCard_ProductDetails$data = {
   readonly bookAllLocationResources: boolean;
-  readonly currency: Currency;
+  readonly currency: {
+    readonly name: string;
+    readonly type: Currency;
+  };
   readonly description: string | null | undefined;
   readonly forceContinuousSlots: boolean;
   readonly id: string;
@@ -27,7 +30,10 @@ export type productCard_ProductDetails$data = {
     readonly uniqueId: string;
   };
   readonly price: string;
-  readonly priceUnit: PriceUnit;
+  readonly priceUnit: {
+    readonly name: string;
+    readonly type: PriceUnit;
+  };
   readonly recurrenceIntervalDays: number;
   readonly " $fragmentType": "productCard_ProductDetails";
 };
@@ -36,7 +42,25 @@ export type productCard_ProductDetails$key = {
   readonly " $fragmentSpreads": FragmentRefs<"productCard_ProductDetails">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v0/*: any*/)
+];
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -56,13 +80,7 @@ const node: ReaderFragment = {
       "name": "inactive",
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "name",
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -80,15 +98,21 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
+      "concreteType": "PriceUnitDetails",
+      "kind": "LinkedField",
       "name": "priceUnit",
+      "plural": false,
+      "selections": (v1/*: any*/),
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
+      "concreteType": "CurrencyDetails",
+      "kind": "LinkedField",
       "name": "currency",
+      "plural": false,
+      "selections": (v1/*: any*/),
       "storageKey": null
     },
     {
@@ -155,7 +179,8 @@ const node: ReaderFragment = {
   "type": "ProductDetails",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "768e5ff4520d66702591f81655d15c14";
+(node as any).hash = "a5cecdd362fd83041e9cbb1bd1b0041e";
 
 export default node;

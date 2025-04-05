@@ -50,8 +50,8 @@ type ProductDetails {
   name: String!
   description: String
   price: String!
-  priceUnit: PriceUnit!
-  currency: Currency!
+  priceUnit: PriceUnitDetails!
+  currency: CurrencyDetails!
   minDurationMinutes: Int
   maxDurationMinutes: Int
   bookAllLocationResources: Boolean!

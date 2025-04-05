@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cc760b47dbd94e908db51e373e3c551e>>
+ * @generated SignedSource<<e8f015ec40372b5e2ed58459d22b1cda>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,10 @@ export type organizationProducts_products_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly bookAllLocationResources: boolean;
-        readonly currency: Currency;
+        readonly currency: {
+          readonly name: string;
+          readonly type: Currency;
+        };
         readonly description: string | null | undefined;
         readonly forceContinuousSlots: boolean;
         readonly id: string;
@@ -31,7 +34,10 @@ export type organizationProducts_products_query$data = {
           readonly uniqueId: string;
         };
         readonly price: string;
-        readonly priceUnit: PriceUnit;
+        readonly priceUnit: {
+          readonly name: string;
+          readonly type: PriceUnit;
+        };
         readonly recurrenceIntervalDays: number;
         readonly " $fragmentSpreads": FragmentRefs<"productCard_ProductDetails">;
       };
@@ -48,6 +54,23 @@ export type organizationProducts_products_query$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "products"
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v1/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -168,13 +191,7 @@ return {
                   "name": "inactive",
                   "storageKey": null
                 },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
-                  "storageKey": null
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -192,15 +209,21 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
+                  "concreteType": "PriceUnitDetails",
+                  "kind": "LinkedField",
                   "name": "priceUnit",
+                  "plural": false,
+                  "selections": (v2/*: any*/),
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
+                  "concreteType": "CurrencyDetails",
+                  "kind": "LinkedField",
                   "name": "currency",
+                  "plural": false,
+                  "selections": (v2/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -334,6 +357,6 @@ return {
 };
 })();
 
-(node as any).hash = "23ec932d485db096ea3f54676624c822";
+(node as any).hash = "c9b563a0b9550899df96032a84b0a46d";
 
 export default node;

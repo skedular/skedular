@@ -40,8 +40,14 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
         name
         description
         price
-        priceUnit
-        currency
+        priceUnit {
+          type
+          name
+        }
+        currency {
+          type
+          name
+        }
         minDurationMinutes
         maxDurationMinutes
         bookAllLocationResources

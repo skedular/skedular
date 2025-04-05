@@ -7,7 +7,7 @@ import { RelayError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { addOrganization_addOrganizationMutation } from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
+import type { addOrganization_addOrganizationMutation, OrganizationType } from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
 import type { addOrganization_completeOrganizationOnboardingMutation } from '@/queries/__generated__/addOrganization_completeOrganizationOnboardingMutation.graphql';
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -104,7 +104,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           name,
           about,
           website,
-          type: type === 'Private' ? 'Private' : 'Marketplace',
+          type: type as OrganizationType,
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: industrySubCategoryIds ?? [],
@@ -164,7 +164,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
             about,
             website,
             type: {
-              type: type === 'Private' ? 'Private' : 'Marketplace',
+              type: type as OrganizationType,
               name: '',
             },
           },

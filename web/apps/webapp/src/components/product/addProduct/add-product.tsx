@@ -1,13 +1,13 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesLocationTags, MultipleChoicesProductTags } from '@/components/organization';
+import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoicesCurrency, SingleChoicesPriceUnit } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { addProduct_addProductMutation } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
+import type { addProduct_addProductMutation, Currency, PriceUnit } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -38,12 +38,16 @@ const RootQuery = graphql`
   ) {
     ...multipleChoicesProductTags_query
     ...multipleChoicesLocationTags_query
+    ...singleChoicePriceUnit_query
+    ...singleChoiceCurrency_query
   }
 `;
 
 type ProductDetails = {
   name: string;
   description: string | null;
+  priceUnit: string;
+  currency: string;
   productTagIds: string[];
   locationTagIds: string[];
 };
@@ -51,6 +55,8 @@ type ProductDetails = {
 const productSchema = object({
   name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
   description: string().nullable(),
+  priceUnit: string().required('Price Unit is required'),
+  currency: string().required('Currency is required'),
   productTagIds: array().nullable(),
   locationTagIds: array().nullable(),
 });
@@ -66,8 +72,14 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           name
           description
           price
-          priceUnit
-          currency
+          priceUnit {
+            type
+            name
+          }
+          currency {
+            type
+            name
+          }
           minDurationMinutes
           maxDurationMinutes
           bookAllLocationResources
@@ -99,7 +111,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     onReloadRequired();
   };
 
-  const handleProductAddClick = ({ name, description, productTagIds, locationTagIds }: ProductDetails) => {
+  const handleProductAddClick = ({ name, description, priceUnit, currency, productTagIds, locationTagIds }: ProductDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
 
@@ -111,8 +123,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           name,
           description,
           price: '2.99',
-          priceUnit: 'PerUse',
-          currency: 'Nzd',
+          priceUnit: priceUnit as PriceUnit,
+          currency: currency as Currency,
           minDurationMinutes: null,
           maxDurationMinutes: null,
           bookAllLocationResources: false,
@@ -156,8 +168,14 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             name,
             description,
             price: '2.99',
-            priceUnit: 'PerUse',
-            currency: 'Nzd',
+            priceUnit: {
+              type: priceUnit as PriceUnit,
+              name: '',
+            },
+            currency: {
+              type: currency as Currency,
+              name: '',
+            },
             minDurationMinutes: null,
             maxDurationMinutes: null,
             bookAllLocationResources: false,
@@ -181,6 +199,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             initialValues={{
               name: '',
               description: '',
+              priceUnit: '',
+              currency: '',
               productTagIds: [],
               locationTagIds: [],
             }}
@@ -201,6 +221,14 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                   <FormFieldLabel label="Description">
                     <TextField name="description" required={requiredFields.description} multiline rows={3} />
                   </FormFieldLabel>
+
+                    <FormFieldLabel label="Price Unit">
+                      <SingleChoicesPriceUnit rootDataRelay={rootData} name="priceUnit" required={requiredFields.priceUnit} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Currency">
+                      <SingleChoicesCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
+                    </FormFieldLabel>
 
                   <FormFieldLabel label="Product Tags">
                     <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />

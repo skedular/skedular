@@ -58,8 +58,8 @@ public class ProductDetails : Node
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("price")] public required string Price { get; set; }
-    [GraphQLName("priceUnit")] public PriceUnit PriceUnit { get; set; }
-    [GraphQLName("currency")] public Currency Currency { get; set; }
+    [GraphQLName("priceUnit")] public PriceUnitDetails PriceUnit { get; set; }
+    [GraphQLName("currency")] public CurrencyDetails Currency { get; set; }
     [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
     [GraphQLName("maxDurationMinutes")] public int? MaxDurationMinutes { get; set; }
 

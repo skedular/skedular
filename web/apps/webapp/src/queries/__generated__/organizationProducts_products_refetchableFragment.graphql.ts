@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<092d654094727759bc1351271382644a>>
+ * @generated SignedSource<<388cf43b378ff886cacccb83c666279d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -91,6 +91,23 @@ v1 = [
     "kind": "ObjectValue",
     "name": "where"
   }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v2/*: any*/)
 ];
 return {
   "fragment": {
@@ -170,13 +187,7 @@ return {
                     "name": "inactive",
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -194,15 +205,21 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
+                    "concreteType": "PriceUnitDetails",
+                    "kind": "LinkedField",
                     "name": "priceUnit",
+                    "plural": false,
+                    "selections": (v3/*: any*/),
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
+                    "concreteType": "CurrencyDetails",
+                    "kind": "LinkedField",
                     "name": "currency",
+                    "plural": false,
+                    "selections": (v3/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -340,16 +357,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ff66f76fc77a87ba02d369506bc0304f",
+    "cacheID": "64e4a3d3871f10953e57190554953b73",
     "id": null,
     "metadata": {},
     "name": "organizationProducts_products_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationProducts_products_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationProducts_products_query_1G22uz\n}\n\nfragment organizationProducts_products_query_1G22uz on Query {\n  products(first: $count, after: $cursor, where: {organizationIds: [$organizationId], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        price\n        priceUnit\n        currency\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceIntervalDays\n        forceContinuousSlots\n        maxSpreadDays\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  name\n  description\n  price\n  priceUnit\n  currency\n  minDurationMinutes\n  maxDurationMinutes\n  bookAllLocationResources\n  recurrenceIntervalDays\n  forceContinuousSlots\n  maxSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
+    "text": "query organizationProducts_products_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationProducts_products_query_1G22uz\n}\n\nfragment organizationProducts_products_query_1G22uz on Query {\n  products(first: $count, after: $cursor, where: {organizationIds: [$organizationId], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        price\n        priceUnit {\n          type\n          name\n        }\n        currency {\n          type\n          name\n        }\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceIntervalDays\n        forceContinuousSlots\n        maxSpreadDays\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  name\n  description\n  price\n  priceUnit {\n    type\n    name\n  }\n  currency {\n    type\n    name\n  }\n  minDurationMinutes\n  maxDurationMinutes\n  bookAllLocationResources\n  recurrenceIntervalDays\n  forceContinuousSlots\n  maxSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "23ec932d485db096ea3f54676624c822";
+(node as any).hash = "c9b563a0b9550899df96032a84b0a46d";
 
 export default node;

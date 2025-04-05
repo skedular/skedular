@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<019628de862fabe0533cb9d1f6776bac>>
+ * @generated SignedSource<<c11a71d31174afd639873e5a0eedb146>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,7 +36,10 @@ export type addProduct_addProductMutation$data = {
   readonly addProduct: {
     readonly product: {
       readonly bookAllLocationResources: boolean;
-      readonly currency: Currency;
+      readonly currency: {
+        readonly name: string;
+        readonly type: Currency;
+      };
       readonly description: string | null | undefined;
       readonly forceContinuousSlots: boolean;
       readonly id: string;
@@ -51,7 +54,10 @@ export type addProduct_addProductMutation$data = {
       readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
       readonly price: string;
-      readonly priceUnit: PriceUnit;
+      readonly priceUnit: {
+        readonly name: string;
+        readonly type: PriceUnit;
+      };
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -65,7 +71,10 @@ export type addProduct_addProductMutation$rawResponse = {
   readonly addProduct: {
     readonly product: {
       readonly bookAllLocationResources: boolean;
-      readonly currency: Currency;
+      readonly currency: {
+        readonly name: string;
+        readonly type: Currency;
+      };
       readonly description: string | null | undefined;
       readonly forceContinuousSlots: boolean;
       readonly id: string;
@@ -80,7 +89,10 @@ export type addProduct_addProductMutation$rawResponse = {
       readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
       readonly price: string;
-      readonly priceUnit: PriceUnit;
+      readonly priceUnit: {
+        readonly name: string;
+        readonly type: PriceUnit;
+      };
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly name: string | null | undefined;
@@ -116,6 +128,16 @@ v2 = [
     "alias": null,
     "args": null,
     "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v1/*: any*/)
+],
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
     "name": "uniqueId",
     "storageKey": null
   },
@@ -128,7 +150,7 @@ v2 = [
     "storageKey": null
   }
 ],
-v3 = [
+v4 = [
   {
     "alias": null,
     "args": [
@@ -183,15 +205,21 @@ v3 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
+            "concreteType": "PriceUnitDetails",
+            "kind": "LinkedField",
             "name": "priceUnit",
+            "plural": false,
+            "selections": (v2/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
+            "concreteType": "CurrencyDetails",
+            "kind": "LinkedField",
             "name": "currency",
+            "plural": false,
+            "selections": (v2/*: any*/),
             "storageKey": null
           },
           {
@@ -243,7 +271,7 @@ v3 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v2/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -253,7 +281,7 @@ v3 = [
             "kind": "LinkedField",
             "name": "locationTags",
             "plural": true,
-            "selections": (v2/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           }
         ],
@@ -269,7 +297,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addProduct_addProductMutation",
-    "selections": (v3/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -278,19 +306,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addProduct_addProductMutation",
-    "selections": (v3/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "c02ff65842dbb4a4cc19541d2c14969b",
+    "cacheID": "7ae98d6365f3dba6cc9831f2ae5e165f",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit\n      currency\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceIntervalDays\n      forceContinuousSlots\n      maxSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceIntervalDays\n      forceContinuousSlots\n      maxSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "189ffee9b1d4fdbe07c184c10b59e817";
+(node as any).hash = "ee612aad77541421ddf0dab3f0991d7a";
 
 export default node;

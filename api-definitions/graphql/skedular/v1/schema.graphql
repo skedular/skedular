@@ -710,7 +710,7 @@ type ProductConnection {
 
 type ProductDetails {
   bookAllLocationResources: Boolean!
-  currency: Currency!
+  currency: CurrencyDetails!
   description: String
   forceContinuousSlots: Boolean!
   id: ID!
@@ -723,7 +723,7 @@ type ProductDetails {
   name: String!
   organization: Marketplace_OrganizationDetails!
   price: String!
-  priceUnit: PriceUnit!
+  priceUnit: PriceUnitDetails!
   productTags: [Marketplace_OrganizationTagDetails!]!
   recurrenceIntervalDays: Int!
 }

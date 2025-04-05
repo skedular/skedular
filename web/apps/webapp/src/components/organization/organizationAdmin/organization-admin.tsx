@@ -55,7 +55,7 @@ import type { organizationAdmin_query$key } from '@/queries/__generated__/organi
 import type { organizationAdmin_removeCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_removeCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdmin_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationAdmin_setOrganizationBillingInfoMutation.graphql';
-import type { organizationAdmin_updateOrganizationMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
+import type { organizationAdmin_updateOrganizationMutation, OrganizationType } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_updateOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_updateOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationSsoSettingsMutation.graphql';
 import type { organizationAdmin_zones_query$key } from '@/queries/__generated__/organizationAdmin_zones_query.graphql';
@@ -713,7 +713,7 @@ const OrganizationAdmin = ({
           name,
           about,
           website,
-          type: type === 'Private' ? 'Private' : 'Marketplace',
+          type: type as OrganizationType,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
         },
       },
@@ -746,7 +746,7 @@ const OrganizationAdmin = ({
             about,
             website,
             type: {
-              type: type === 'Private' ? 'Private' : 'Marketplace',
+              type: type as OrganizationType,
               name: '',
             },
             industrySubCategories: rootData.organizationIndustryMainCategoriesReferences

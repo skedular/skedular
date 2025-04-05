@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eb8f94260cc301335fa9e1dd163b9fee>>
+ * @generated SignedSource<<fac5e9ff54a71027220515512d99f9f1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -69,6 +69,23 @@ v1 = [
     "kind": "ObjectValue",
     "name": "where"
   }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v2/*: any*/)
 ];
 return {
   "fragment": {
@@ -137,13 +154,7 @@ return {
                     "name": "inactive",
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -161,15 +172,21 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
+                    "concreteType": "PriceUnitDetails",
+                    "kind": "LinkedField",
                     "name": "priceUnit",
+                    "plural": false,
+                    "selections": (v3/*: any*/),
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
+                    "concreteType": "CurrencyDetails",
+                    "kind": "LinkedField",
                     "name": "currency",
+                    "plural": false,
+                    "selections": (v3/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -307,12 +324,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "07487764380529310c8dca69b86478c4",
+    "cacheID": "5447b8148a9833cc3b9301afcdc0a9d8",
     "id": null,
     "metadata": {},
     "name": "organizationProducts_rootQuery",
     "operationKind": "query",
-    "text": "query organizationProducts_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationProducts_products_query\n}\n\nfragment organizationProducts_products_query on Query {\n  products(where: {organizationIds: [$organizationId], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        price\n        priceUnit\n        currency\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceIntervalDays\n        forceContinuousSlots\n        maxSpreadDays\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  name\n  description\n  price\n  priceUnit\n  currency\n  minDurationMinutes\n  maxDurationMinutes\n  bookAllLocationResources\n  recurrenceIntervalDays\n  forceContinuousSlots\n  maxSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
+    "text": "query organizationProducts_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationProducts_products_query\n}\n\nfragment organizationProducts_products_query on Query {\n  products(where: {organizationIds: [$organizationId], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        price\n        priceUnit {\n          type\n          name\n        }\n        currency {\n          type\n          name\n        }\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceIntervalDays\n        forceContinuousSlots\n        maxSpreadDays\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  name\n  description\n  price\n  priceUnit {\n    type\n    name\n  }\n  currency {\n    type\n    name\n  }\n  minDurationMinutes\n  maxDurationMinutes\n  bookAllLocationResources\n  recurrenceIntervalDays\n  forceContinuousSlots\n  maxSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
   }
 };
 })();
