@@ -275,7 +275,7 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId]);
+  }, [loadQuery, triggerReloadId, finalOrganizationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
