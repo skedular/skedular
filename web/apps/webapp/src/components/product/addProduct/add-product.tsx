@@ -46,6 +46,7 @@ const RootQuery = graphql`
 type ProductDetails = {
   name: string;
   description: string | null;
+  price: string;
   priceUnit: string;
   currency: string;
   productTagIds: string[];
@@ -55,6 +56,9 @@ type ProductDetails = {
 const productSchema = object({
   name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
   description: string().nullable(),
+  price: string()
+    .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number')
+    .required('Price is required'),
   priceUnit: string().required('Price Unit is required'),
   currency: string().required('Currency is required'),
   productTagIds: array().nullable(),
@@ -111,7 +115,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     onReloadRequired();
   };
 
-  const handleProductAddClick = ({ name, description, priceUnit, currency, productTagIds, locationTagIds }: ProductDetails) => {
+  const handleProductAddClick = ({ name, description, price, priceUnit, currency, productTagIds, locationTagIds }: ProductDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
 
@@ -122,7 +126,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           id,
           name,
           description,
-          price: '2.99',
+          price,
           priceUnit: priceUnit as PriceUnit,
           currency: currency as Currency,
           minDurationMinutes: null,
@@ -167,7 +171,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             inactive: false,
             name,
             description,
-            price: '2.99',
+            price,
             priceUnit: {
               type: priceUnit as PriceUnit,
               name: '',
@@ -222,13 +226,17 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                     <TextField name="description" required={requiredFields.description} multiline rows={3} />
                   </FormFieldLabel>
 
-                    <FormFieldLabel label="Price Unit">
-                      <SingleChoicesPriceUnit rootDataRelay={rootData} name="priceUnit" required={requiredFields.priceUnit} />
-                    </FormFieldLabel>
+                  <FormFieldLabel label="Price">
+                    <TextField name="price" required={requiredFields.price} />
+                  </FormFieldLabel>
 
-                    <FormFieldLabel label="Currency">
-                      <SingleChoicesCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
-                    </FormFieldLabel>
+                  <FormFieldLabel label="Price Unit">
+                    <SingleChoicesPriceUnit rootDataRelay={rootData} name="priceUnit" required={requiredFields.priceUnit} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Currency">
+                    <SingleChoicesCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
+                  </FormFieldLabel>
 
                   <FormFieldLabel label="Product Tags">
                     <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
