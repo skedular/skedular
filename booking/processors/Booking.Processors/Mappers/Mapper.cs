@@ -56,8 +56,6 @@ public interface IMapper
         Shared.Database.Entities.Location? location,
         ICollection<OrganizationTag> organizationTags);
 
-    IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Customer? customer);
-
     Customer MergeToEntity(
         Shared.Models.Customer src,
         Customer dest,
@@ -356,9 +354,6 @@ public class Mapper : IMapper
         dest.OrganizationTags = organizationTags;
         return dest;
     }
-
-    public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Customer? customer) =>
-        src.Select(identity => MapToEntity(identity, customer));
 
     public Customer MergeToEntity(
         Shared.Models.Customer src,

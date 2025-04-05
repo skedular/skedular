@@ -20,7 +20,6 @@ public interface IMapper
     Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
     Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
     Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
-
     Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities);
     Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization);
 
@@ -29,29 +28,12 @@ public interface IMapper
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization organization);
 
-    Shared.Database.Entities.Customer MergeToEntity(
-        Customer src,
-        Shared.Database.Entities.Customer dest,
-        ICollection<Identity> identities);
-
-    IEnumerable<Identity> MapToEntity(
-        IEnumerable<Shared.Models.Identity> src,
-        Shared.Database.Entities.Customer? customer);
-
+    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
+    IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Shared.Database.Entities.Customer? customer);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
-
-    Identity MergeToEntity(
-        Shared.Models.Identity src,
-        Identity dest,
-        Shared.Database.Entities.Customer? customer);
-
+    Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
     Shared.Database.Entities.Booking MapToEntity(Booking src, Shared.Database.Entities.Team team);
-
-    Shared.Database.Entities.Booking MergeToEntity(
-        Booking src,
-        Shared.Database.Entities.Booking dest,
-        Shared.Database.Entities.Team team);
-
+    Shared.Database.Entities.Booking MergeToEntity(Booking src, Shared.Database.Entities.Booking dest, Shared.Database.Entities.Team team);
     IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src);
 
     Shared.Database.Entities.Organization MapToEntity(Organization src);
@@ -182,9 +164,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Shared.Database.Entities.Customer MapToEntity(
-        Customer src,
-        ICollection<Identity> identities) =>
+    public Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities) =>
         MergeToEntity(src, new Shared.Database.Entities.Customer(), identities);
 
     public Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization) =>
@@ -202,10 +182,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Customer MergeToEntity(
-        Customer src,
-        Shared.Database.Entities.Customer dest,
-        ICollection<Identity> identities)
+    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -224,16 +201,13 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<Identity> MapToEntity(
-        IEnumerable<Shared.Models.Identity> src,
-        Shared.Database.Entities.Customer? customer) =>
+    public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Shared.Database.Entities.Customer? customer) =>
         src.Select(identity => MapToEntity(identity, customer));
 
     public Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer) =>
         MergeToEntity(src, new Identity(), customer);
 
-    public Identity MergeToEntity(Shared.Models.Identity src, Identity dest,
-        Shared.Database.Entities.Customer? customer)
+    public Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer)
     {
         dest.Id = src.Id;
         dest.Email = src.Email;
@@ -262,14 +236,11 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src) =>
-        src.Select(MapTo);
+    public IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src) => src.Select(MapTo);
 
-    public Shared.Database.Entities.Organization MapToEntity(Organization src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Organization());
+    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
 
-    public Shared.Database.Entities.Organization MergeToEntity(Organization src,
-        Shared.Database.Entities.Organization dest)
+    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -352,9 +323,7 @@ public class Mapper : IMapper
             Invitee = MapTo(src.Invitee)
         };
 
-    private static IEnumerable<Shared.Models.TeamMember> MapTo(
-        IEnumerable<TeamMember> src,
-        Shared.Models.Team team) =>
+    private static IEnumerable<Shared.Models.TeamMember> MapTo(IEnumerable<TeamMember> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));
 
     private static Shared.Models.TeamMember
@@ -376,9 +345,7 @@ public class Mapper : IMapper
             Team = team
         };
 
-    private static IEnumerable<Shared.Models.OrganizationMember> MapTo(
-        IEnumerable<OrganizationMember> src,
-        Organization organization) =>
+    private static IEnumerable<Shared.Models.OrganizationMember> MapTo(IEnumerable<OrganizationMember> src, Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
     private static Shared.Models.OrganizationMember MapTo(OrganizationMember src, Organization organization) =>
@@ -419,8 +386,7 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList()
             };
 
-    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Identity> src) =>
-        src.Select(MapTo);
+    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Identity> src) => src.Select(MapTo);
 
     private static Shared.Models.Identity MapTo(Identity src) =>
         new()

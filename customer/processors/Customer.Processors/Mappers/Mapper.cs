@@ -19,9 +19,7 @@ public interface IMapper
     Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
     Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Shared.Models.Customer? MapTo(Shared.Database.Entities.Customer? src);
-    Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
-    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
@@ -30,7 +28,6 @@ public interface IMapper
 
     Resource MapToEntity(Shared.Models.Resource src, Shared.Database.Entities.Location location);
     Resource MergeToEntity(Shared.Models.Resource src, Resource dest, Shared.Database.Entities.Location location);
-    Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization organization);
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization organization);
 
     OrganizationMember MapToEntity(
@@ -236,8 +233,6 @@ public class Mapper : IMapper
                 PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
             };
 
-    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
-
     public Shared.Database.Entities.Organization MergeToEntity(Organization src,
         Shared.Database.Entities.Organization dest)
     {
@@ -247,9 +242,6 @@ public class Mapper : IMapper
         dest.LogoUrl = src.LogoUrl;
         return dest;
     }
-
-    public Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.Location(), organization);
 
     public Shared.Database.Entities.Location MergeToEntity(
         Location src,
@@ -274,9 +266,6 @@ public class Mapper : IMapper
         dest.Location = location;
         return dest;
     }
-
-    public Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.Team(), organization);
 
     public Shared.Database.Entities.Team MergeToEntity(
         Team src,

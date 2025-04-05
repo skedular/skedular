@@ -132,12 +132,9 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         return team;
     }
 
-    public Shared.Database.Entities.Organization MapToEntity(Organization src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Organization());
+    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
 
-    public Shared.Database.Entities.Organization MergeToEntity(
-        Organization src,
-        Shared.Database.Entities.Organization dest)
+    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -146,19 +143,12 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         return dest;
     }
 
-    public IEnumerable<Identity>
-        MapToEntity(IEnumerable<Shared.Models.Identity> src, Customer? customer) =>
+    public IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Customer? customer) =>
         src.Select(identity => MapToEntity(identity, customer));
 
-    public Customer MapToEntity(
-        Shared.Models.Customer src,
-        ICollection<Identity> identities) =>
-        MergeToEntity(src, new Customer(), identities);
+    public Customer MapToEntity(Shared.Models.Customer src, ICollection<Identity> identities) => MergeToEntity(src, new Customer(), identities);
 
-    public Customer MergeToEntity(
-        Shared.Models.Customer src,
-        Customer dest,
-        ICollection<Identity> identities)
+    public Customer MergeToEntity(Shared.Models.Customer src, Customer dest, ICollection<Identity> identities)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -176,13 +166,9 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         return dest;
     }
 
-    public Identity MapToEntity(Shared.Models.Identity src, Customer? customer) =>
-        MergeToEntity(src, new Identity(), customer);
+    public Identity MapToEntity(Shared.Models.Identity src, Customer? customer) => MergeToEntity(src, new Identity(), customer);
 
-    public Identity MergeToEntity(
-        Shared.Models.Identity src,
-        Identity dest,
-        Customer? customer)
+    public Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer)
     {
         dest.Id = src.Id;
         dest.Email = src.Email;
@@ -215,8 +201,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         };
     }
 
-    public Shared.Models.Notification MapInvitationToJoinTeamToNotification(
-        Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
+    public Shared.Models.Notification MapInvitationToJoinTeamToNotification(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
     {
         var notification = src.Data.InvitationToJoinTeam;
         var deletedAt = notification.DeletedAt?.ToDateTimeOffset();
@@ -272,8 +257,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Location MapToEntity(Location src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Location());
+    public Shared.Database.Entities.Location MapToEntity(Location src) => MergeToEntity(src, new Shared.Database.Entities.Location());
 
     public Shared.Database.Entities.Location MergeToEntity(Location src, Shared.Database.Entities.Location dest)
     {
@@ -283,8 +267,7 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Team MapToEntity(Team src) =>
-        MergeToEntity(src, new Shared.Database.Entities.Team());
+    public Shared.Database.Entities.Team MapToEntity(Team src) => MergeToEntity(src, new Shared.Database.Entities.Team());
 
     public Shared.Database.Entities.Team MergeToEntity(
         Team src,

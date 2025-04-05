@@ -4,13 +4,13 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Location.Shared.Models;
 using Customer = Location.Shared.Models.Customer;
-using Resource = Location.Shared.Models.Resource;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Location.Shared.Database.Entities.Identity;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
+using Resource = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Processors.Mappers;
 
@@ -19,24 +19,21 @@ public interface IMapper
     Customer MapTo(Event src);
     Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
     Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
-    Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities);
     Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
-    IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Shared.Database.Entities.Customer? customer);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
 
     Shared.Database.Entities.Booking MapToEntity(
         Booking src,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.Resource> resources);
+        ICollection<Resource> resources);
 
     Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.Resource> resources);
+        ICollection<Resource> resources);
 
-    Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
     OrganizationMember MapToEntity(
@@ -162,9 +159,6 @@ public class Mapper : IMapper
         };
     }
 
-    public Shared.Database.Entities.Customer MapToEntity(Customer src, ICollection<Identity> identities) =>
-        MergeToEntity(src, new Shared.Database.Entities.Customer(), identities);
-
     public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
     {
         dest.Id = src.Id;
@@ -183,11 +177,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public IEnumerable<Identity> MapToEntity(
-        IEnumerable<Shared.Models.Identity> src,
-        Shared.Database.Entities.Customer? customer) =>
-        src.Select(identity => MapToEntity(identity, customer));
-
     public Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer) =>
         MergeToEntity(src, new Identity(), customer);
 
@@ -204,17 +193,14 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Booking MapToEntity(
-        Booking src,
-        Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.Resource> resources) =>
+    public Shared.Database.Entities.Booking MapToEntity(Booking src, Shared.Database.Entities.Location location, ICollection<Resource> resources) =>
         MergeToEntity(src, new Shared.Database.Entities.Booking(), location, resources);
 
     public Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
         Shared.Database.Entities.Location location,
-        ICollection<Shared.Database.Entities.Resource> resources)
+        ICollection<Resource> resources)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -224,8 +210,6 @@ public class Mapper : IMapper
         dest.Resources = resources;
         return dest;
     }
-
-    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
 
     public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {
@@ -271,116 +255,4 @@ public class Mapper : IMapper
         dest.Organization = organization;
         return dest;
     }
-
-    private static Shared.Models.Location MapTo(Shared.Database.Entities.Location src)
-    {
-        var location = new Shared.Models.Location
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            About = src.About,
-            Timezone = src.Timezone,
-            OpeningHours = src.OpeningHours,
-            Organization = MapTo(src.Organization)
-        };
-
-        location.Resources = MapTo(src.Resources, location).ToList();
-
-        return location;
-    }
-
-    private static Organization MapTo(Shared.Database.Entities.Organization src)
-    {
-        var organization = new Organization
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Name = src.Name,
-            LogoUrl = src.LogoUrl,
-            Offering = src.Offering
-        };
-
-        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
-
-        return organization;
-    }
-
-    private static IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src, Shared.Models.Location location) =>
-        src.Select(item => MapTo(item, location));
-
-    private static Resource MapTo(Shared.Database.Entities.Resource src, Shared.Models.Location location) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Inactive = src.Inactive,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
-            Capacity = src.Capacity,
-            IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
-            AvailableHours = src.AvailableHours,
-            Location = location
-        };
-
-    private static IEnumerable<Shared.Models.OrganizationMember> MapTo(IEnumerable<OrganizationMember> src, Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private static Shared.Models.OrganizationMember MapTo(OrganizationMember src, Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            Role = src.Role.ToNullableOrganizationMemberRole(),
-            Status = src.Status.ToOrganizationMemberStatus(),
-            Customer = MapTo(src.Customer)!,
-            Organization = organization
-        };
-
-    private static Customer? MapTo(Shared.Database.Entities.Customer? src) =>
-        src is null
-            ? null
-            : new Customer
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
-                GivenName = src.GivenName,
-                MiddleName = src.MiddleName,
-                FamilyName = src.FamilyName,
-                PhotoUrl = src.PhotoUrl,
-                PhotoUrl24 = src.PhotoUrl24,
-                PhotoUrl32 = src.PhotoUrl32,
-                PhotoUrl48 = src.PhotoUrl48,
-                PhotoUrl72 = src.PhotoUrl72,
-                PhotoUrl192 = src.PhotoUrl192,
-                PhotoUrl512 = src.PhotoUrl512,
-                Identities = MapTo(src.Identities).ToList()
-            };
-
-    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Identity> src) => src.Select(MapTo);
-
-    private static Shared.Models.Identity MapTo(Identity src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Email = src.Email,
-            EmailVerified = src.EmailVerified
-        };
 }

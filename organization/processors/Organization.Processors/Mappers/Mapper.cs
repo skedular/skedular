@@ -40,8 +40,6 @@ public interface IMapper
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
 
-    Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization);
-
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
@@ -202,9 +200,6 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer) =>
         MergeToEntity(src, new OrganizationMember(), organization, customer);
-
-    public Shared.Database.Entities.Location MapToEntity(Location src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.Location(), organization);
 
     public Shared.Database.Entities.Location MergeToEntity(
         Location src,
