@@ -38,6 +38,7 @@ type Mutation {
   deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
+  removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
   addZone(input: AddZoneInput!): OrganizationTagPayload @cost(weight: "10")
   updateZone(input: UpdateZoneInput!): OrganizationTagPayload @cost(weight: "10")
   deleteZone(input: DeleteZoneInput!): OrganizationTagPayload @cost(weight: "10")
@@ -477,6 +478,11 @@ input RejectInvitationToJoinOrganizationInput {
 input RemoveOrganizationMembersInput {
   clientMutationId: String
   ids: [String!]!
+}
+
+input RemoveOrganizationSsoSettingsInput {
+  clientMutationId: String
+  organizationId: String!
 }
 
 input UpdateCustomTagInput {

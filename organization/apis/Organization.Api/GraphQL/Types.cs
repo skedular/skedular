@@ -468,6 +468,20 @@ public class UpdateOrganizationSsoSettingsPayload
     [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails SsoSettings { get; set; }
 }
 
+[GraphQLName("RemoveOrganizationSsoSettingsInput")]
+public class RemoveOrganizationSsoSettingsInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+}
+
+[GraphQLName("RemoveOrganizationSsoSettingsPayload")]
+public class RemoveOrganizationSsoSettingsPayload
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
+}
+
 [GraphQLName("OrganizationSsoSettingsDetails")]
 public class OrganizationSsoSettingsDetails : Node
 {

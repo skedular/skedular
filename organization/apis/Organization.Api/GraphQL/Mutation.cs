@@ -205,6 +205,17 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
+    public async Task<UpdateOrganizationSsoSettingsPayload?> RemoveOrganizationSsoSettingsAsync(
+        RemoveOrganizationSsoSettingsInput input,
+        [Service] IOrganizationSsoService organizationSsoService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            SsoSettings = mapper.MapTo(await organizationSsoService.RemoveSsoSettingsAsync(input.OrganizationId, cancellationToken))!
+        };
+
+    [UseResolverScope]
     public async Task<OrganizationTagPayload?> AddZoneAsync(
         AddZoneInput input,
         [Service] ITagService tagService,
