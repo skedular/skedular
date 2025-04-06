@@ -522,6 +522,7 @@ namespace Team.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationId")
+                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
@@ -751,7 +752,9 @@ namespace Team.Shared.Database.Migrations
                 {
                     b.HasOne("Team.Shared.Database.Entities.Organization", "Organization")
                         .WithOne("OrganizationSsoSettings")
-                        .HasForeignKey("Team.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId");
+                        .HasForeignKey("Team.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Organization");
                 });

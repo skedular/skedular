@@ -11,6 +11,7 @@ using TeamMember = Team.Shared.Database.Entities.TeamMember;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Team.Shared.Models.Organization;
 using OrganizationMember = Team.Shared.Database.Entities.OrganizationMember;
+using OrganizationSsoSetting = Team.Shared.Database.Entities.OrganizationSsoSetting;
 
 namespace Team.Processors.Mappers;
 
@@ -49,6 +50,13 @@ public interface IMapper
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
+
+    OrganizationSsoSetting MapTo(Shared.Models.OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
+
+    OrganizationSsoSetting MergeTo(
+        Shared.Models.OrganizationSsoSetting src,
+        OrganizationSsoSetting dest,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -127,6 +135,18 @@ public class Mapper : IMapper
                 Organization = organization
             };
         }).ToList();
+
+        organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
+            ? null
+            : new Shared.Models.OrganizationSsoSetting
+            {
+                Id = organizationAfterState.SsoSettings.Id,
+                EventRaisedAt = eventRaisedAt,
+                EntityId = organizationAfterState.SsoSettings.EntityId,
+                LoginUrl = organizationAfterState.SsoSettings.LoginUrl,
+                AppFederationMetadataUrl = organizationAfterState.SsoSettings.AppFederationMetadataUrl,
+                Organization = organization
+            };
 
         return organization;
     }
@@ -268,6 +288,24 @@ public class Mapper : IMapper
         dest.Status = src.Status.ToOrganizationMemberStatus();
         dest.Organization = organization;
         dest.Customer = customer;
+        return dest;
+    }
+
+    public OrganizationSsoSetting MapTo(Shared.Models.OrganizationSsoSetting src, Shared.Database.Entities.Organization organization) =>
+        MergeTo(src, new OrganizationSsoSetting(), organization);
+
+    public OrganizationSsoSetting MergeTo(
+        Shared.Models.OrganizationSsoSetting src,
+        OrganizationSsoSetting dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.EntityId = src.EntityId;
+        dest.LoginUrl = src.LoginUrl;
+        dest.AppFederationMetadataUrl = src.AppFederationMetadataUrl;
+        dest.Organization = organization;
+
         return dest;
     }
 

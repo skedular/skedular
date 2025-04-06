@@ -9,6 +9,7 @@ using Location = Booking.Shared.Models.Location;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Models.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
+using OrganizationSsoSetting = Booking.Shared.Models.OrganizationSsoSetting;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using Team = Booking.Shared.Models.Team;
 using TeamMember = Booking.Shared.Database.Entities.TeamMember;
@@ -70,6 +71,12 @@ public interface IMapper
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Customer? customer);
     OrganizationTag MapToEntity(Shared.Models.OrganizationTag src, Shared.Database.Entities.Organization organization);
     OrganizationTag MergeToEntity(Shared.Models.OrganizationTag src, OrganizationTag dest, Shared.Database.Entities.Organization organization);
+    Shared.Database.Entities.OrganizationSsoSetting MapTo(OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
+
+    Shared.Database.Entities.OrganizationSsoSetting MergeTo(
+        OrganizationSsoSetting src,
+        Shared.Database.Entities.OrganizationSsoSetting dest,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -170,6 +177,18 @@ public class Mapper : IMapper
             Color = item.Color,
             Organization = organization
         }).ToList();
+
+        organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
+            ? null
+            : new OrganizationSsoSetting
+            {
+                Id = organizationAfterState.SsoSettings.Id,
+                EventRaisedAt = eventRaisedAt,
+                EntityId = organizationAfterState.SsoSettings.EntityId,
+                LoginUrl = organizationAfterState.SsoSettings.LoginUrl,
+                AppFederationMetadataUrl = organizationAfterState.SsoSettings.AppFederationMetadataUrl,
+                Organization = organization
+            };
 
         return organization;
     }
@@ -409,6 +428,24 @@ public class Mapper : IMapper
         dest.Type = src.Type.ToNullableOrganizationTagType();
         dest.Color = src.Color;
         dest.Organization = organization;
+        return dest;
+    }
+
+    public Shared.Database.Entities.OrganizationSsoSetting MapTo(OrganizationSsoSetting src, Shared.Database.Entities.Organization organization) =>
+        MergeTo(src, new Shared.Database.Entities.OrganizationSsoSetting(), organization);
+
+    public Shared.Database.Entities.OrganizationSsoSetting MergeTo(
+        OrganizationSsoSetting src,
+        Shared.Database.Entities.OrganizationSsoSetting dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.EntityId = src.EntityId;
+        dest.LoginUrl = src.LoginUrl;
+        dest.AppFederationMetadataUrl = src.AppFederationMetadataUrl;
+        dest.Organization = organization;
+
         return dest;
     }
 

@@ -26,11 +26,10 @@ public static class Extensions
             .AddScoped<IIdentityRepository, IdentityRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
+            .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
             .AddScoped<IOrganizationOfferingRepository, OrganizationOfferingRepository>()
-            .AddScoped<IOrganizationOfferingStripePaymentIntentRepository,
-                OrganizationOfferingStripePaymentIntentRepository>()
-            .AddScoped<IOrganizationStripePaymentMethodRepository,
-                OrganizationStripePaymentMethodRepository>();
+            .AddScoped<IOrganizationOfferingStripePaymentIntentRepository, OrganizationOfferingStripePaymentIntentRepository>()
+            .AddScoped<IOrganizationStripePaymentMethodRepository, OrganizationStripePaymentMethodRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services;

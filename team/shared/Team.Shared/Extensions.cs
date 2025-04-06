@@ -27,6 +27,7 @@ public static class Extensions
             .AddScoped<IJoinInvitationRepository, JoinInvitationRepository>()
             .AddScoped<ITeamRepository, TeamRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
+            .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
             .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
             .AddScoped<ILocationRepository, LocationRepository>();

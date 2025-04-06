@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
+using Billing.Shared.Database.Entities;
 using Customer = Billing.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Billing.Shared.Database.Entities.Identity;
@@ -14,30 +15,36 @@ public interface IMapper
 {
     Customer MapTo(Event src);
     Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
-    Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
-    Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
-    Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
-    Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
+    Shared.Database.Entities.Customer MergeTo(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
+    Identity MapTo(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
+    Identity MergeTo(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
+    Shared.Database.Entities.Organization MergeTo(Organization src, Shared.Database.Entities.Organization dest);
 
-    OrganizationMember MapToEntity(
+    OrganizationMember MapTo(
         Shared.Models.OrganizationMember src,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
 
-    OrganizationMember MergeToEntity(
+    OrganizationMember MergeTo(
         Shared.Models.OrganizationMember src,
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
 
-    OrganizationOffering MapToEntity(Shared.Models.OrganizationOffering src, Shared.Database.Entities.Organization organization);
+    OrganizationOffering MapTo(Shared.Models.OrganizationOffering src, Shared.Database.Entities.Organization organization);
 
-    OrganizationOffering MergeToEntity(
+    OrganizationOffering MergeTo(
         Shared.Models.OrganizationOffering src,
         OrganizationOffering dest,
         Shared.Database.Entities.Organization organization);
 
     Shared.Models.OrganizationOffering MapTo(OrganizationOffering src);
+    OrganizationSsoSetting MapTo(Shared.Models.OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
+
+    OrganizationSsoSetting MergeTo(
+        Shared.Models.OrganizationSsoSetting src,
+        OrganizationSsoSetting dest,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -107,20 +114,32 @@ public class Mapper : IMapper
             }
         ];
 
+        organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
+            ? null
+            : new Shared.Models.OrganizationSsoSetting
+            {
+                Id = organizationAfterState.SsoSettings.Id,
+                EventRaisedAt = eventRaisedAt,
+                EntityId = organizationAfterState.SsoSettings.EntityId,
+                LoginUrl = organizationAfterState.SsoSettings.LoginUrl,
+                AppFederationMetadataUrl = organizationAfterState.SsoSettings.AppFederationMetadataUrl,
+                Organization = organization
+            };
+
         return organization;
     }
 
-    public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
+    public Shared.Database.Entities.Customer MergeTo(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
     {
         dest.Id = src.Id;
         dest.Identities = identities;
         return dest;
     }
 
-    public Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer) =>
-        MergeToEntity(src, new Identity(), customer);
+    public Identity MapTo(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer) =>
+        MergeTo(src, new Identity(), customer);
 
-    public Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer)
+    public Identity MergeTo(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer)
     {
         dest.Id = src.Id;
         if (customer is not null)
@@ -131,7 +150,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
+    public Shared.Database.Entities.Organization MergeTo(Organization src, Shared.Database.Entities.Organization dest)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -139,13 +158,13 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationMember MapToEntity(
+    public OrganizationMember MapTo(
         Shared.Models.OrganizationMember src,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer) =>
-        MergeToEntity(src, new OrganizationMember(), organization, customer);
+        MergeTo(src, new OrganizationMember(), organization, customer);
 
-    public OrganizationMember MergeToEntity(
+    public OrganizationMember MergeTo(
         Shared.Models.OrganizationMember src,
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
@@ -160,10 +179,10 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public OrganizationOffering MapToEntity(Shared.Models.OrganizationOffering src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new OrganizationOffering(), organization);
+    public OrganizationOffering MapTo(Shared.Models.OrganizationOffering src, Shared.Database.Entities.Organization organization) =>
+        MergeTo(src, new OrganizationOffering(), organization);
 
-    public OrganizationOffering MergeToEntity(
+    public OrganizationOffering MergeTo(
         Shared.Models.OrganizationOffering src,
         OrganizationOffering dest,
         Shared.Database.Entities.Organization organization)
@@ -197,6 +216,24 @@ public class Mapper : IMapper
             InvoiceDate = src.InvoiceDate,
             Organization = MapTo(src.Organization)
         };
+
+    public OrganizationSsoSetting MapTo(Shared.Models.OrganizationSsoSetting src, Shared.Database.Entities.Organization organization) =>
+        MergeTo(src, new OrganizationSsoSetting(), organization);
+
+    public OrganizationSsoSetting MergeTo(
+        Shared.Models.OrganizationSsoSetting src,
+        OrganizationSsoSetting dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.EntityId = src.EntityId;
+        dest.LoginUrl = src.LoginUrl;
+        dest.AppFederationMetadataUrl = src.AppFederationMetadataUrl;
+        dest.Organization = organization;
+
+        return dest;
+    }
 
     private static Customer MapTo(Shared.Database.Entities.Customer src) =>
         new()

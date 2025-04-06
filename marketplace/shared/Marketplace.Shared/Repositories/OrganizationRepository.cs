@@ -11,7 +11,6 @@ public interface IOrganizationRepository : IRepository<Organization>
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Organization Add(Organization organization);
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
 }
@@ -21,7 +20,9 @@ internal static class OrganizationExtensions
     internal static IIncludableQueryable<Organization, IEnumerable<Identity>> AddDependentObjects(
         this IQueryable<Organization> originalQuery) =>
         originalQuery
-            .Include(query => query.OrganizationMembers)
+            .Include(query => query.OrganizationSsoSettings)
+            .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities);
 }
@@ -46,13 +47,6 @@ public class OrganizationRepository(MarketplaceDbContext dbContext, TimeProvider
             .Where(query => ids.Contains(query.Id))
             .AddDependentObjects()
             .ToListAsync(cancellationToken);
-
-    public Organization Add(Organization organization)
-    {
-        var now = TimeProvider.GetUtcNow();
-        organization.CreatedAt = now;
-        return DbContext.Organization.Add(organization).Entity;
-    }
 
     public Organization Update(Organization organization)
     {

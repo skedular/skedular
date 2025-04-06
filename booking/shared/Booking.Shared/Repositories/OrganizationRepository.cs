@@ -46,6 +46,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
                 query.OrganizationMembers
                     .Where(item => includeDeletedOrganizationMembers || (!item.DeletedAt.HasValue && item.CustomerId == customerId))
                     .Select(item => item.Customer.Id).Contains(customerId))
+            .Include(query => query.OrganizationSsoSettings)
             .Include(query => query.OrganizationMembers.Where(
                 organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
@@ -62,6 +63,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
+            .Include(query => query.OrganizationSsoSettings)
             .Include(query => query.OrganizationMembers.Where(
                 organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)

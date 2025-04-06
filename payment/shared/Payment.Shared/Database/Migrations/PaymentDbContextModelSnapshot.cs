@@ -398,6 +398,7 @@ namespace Payment.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationId")
+                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
@@ -578,7 +579,9 @@ namespace Payment.Shared.Database.Migrations
                 {
                     b.HasOne("Payment.Shared.Database.Entities.Organization", "Organization")
                         .WithOne("OrganizationSsoSettings")
-                        .HasForeignKey("Payment.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId");
+                        .HasForeignKey("Payment.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Organization");
                 });

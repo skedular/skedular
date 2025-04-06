@@ -619,7 +619,6 @@ public class Mapper : IMapper
     public OrganizationSsoSetting MapTo(UpdateOrganizationSsoSettingsInput src) =>
         new()
         {
-            Id = string.IsNullOrWhiteSpace(src.Id) ? string.Empty : src.Id,
             EntityId = src.EntityId,
             LoginUrl = src.LoginUrl,
             AppFederationMetadataUrl = src.AppFederationMetadataUrl,
@@ -631,7 +630,7 @@ public class Mapper : IMapper
             ? null
             : new OrganizationSsoSettingsDetails
             {
-                Id = src.Id, EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl
+                EntityId = src.EntityId, LoginUrl = src.LoginUrl, AppFederationMetadataUrl = src.AppFederationMetadataUrl
             };
 
     public Shared.Database.Entities.OrganizationSsoSetting MapToEntity(

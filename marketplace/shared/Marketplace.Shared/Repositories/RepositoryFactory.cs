@@ -14,6 +14,7 @@ public interface IRepositoryFactory
     IOrganizationTagRepository OrganizationTagRepository { get; }
     IProductRepository ProductRepository { get; }
     IProductVersionRepository ProductVersionRepository { get; }
+    IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -32,6 +33,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
         ProductRepository = new ProductRepository(_dbContext, timeProvider);
         ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -48,6 +50,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationTagRepository OrganizationTagRepository { get; }
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
+    public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 

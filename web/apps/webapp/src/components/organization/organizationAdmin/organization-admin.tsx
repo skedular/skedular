@@ -249,7 +249,6 @@ const OrganizationAdmin = ({
             free
           }
           ssoSettings {
-            id
             entityId
             loginUrl
             appFederationMetadataUrl
@@ -543,20 +542,29 @@ const OrganizationAdmin = ({
   const [commitUpdateOrganizationSsoSettings] = useMutation<organizationAdmin_updateOrganizationSsoSettingsMutation>(graphql`
     mutation organizationAdmin_updateOrganizationSsoSettingsMutation($input: UpdateOrganizationSsoSettingsInput!) @raw_response_type {
       updateOrganizationSsoSettings(input: $input) {
-        ssoSettings {
+        organization {
           id
-          entityId
-          loginUrl
-          appFederationMetadataUrl
+          ssoSettings {
+            entityId
+            loginUrl
+            appFederationMetadataUrl
+          }
         }
       }
     }
   `);
 
   const [commitRemoveOrganizationSsoSettings] = useMutation<organizationAdmin_removeOrganizationSsoSettingsMutation>(graphql`
-    mutation organizationAdmin_removeOrganizationSsoSettingsMutation($input: RemoveOrganizationSsoSettingsInput!) {
+    mutation organizationAdmin_removeOrganizationSsoSettingsMutation($input: RemoveOrganizationSsoSettingsInput!) @raw_response_type {
       removeOrganizationSsoSettings(input: $input) {
-        clientMutationId
+        organization {
+          id
+          ssoSettings {
+            entityId
+            loginUrl
+            appFederationMetadataUrl
+          }
+        }
       }
     }
   `);
@@ -865,14 +873,12 @@ const OrganizationAdmin = ({
     }
 
     if (enableSso) {
-      const ssoSettingsId = organization.ssoSettings ? organization.ssoSettings.id : nanoid();
       const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' SSO settings...`} />, infoNotificationOptions);
 
       commitUpdateOrganizationSsoSettings({
         variables: {
           input: {
             clientMutationId: nanoid(),
-            id: ssoSettingsId,
             organizationId: organization.id,
             entityId,
             loginUrl,
@@ -902,11 +908,13 @@ const OrganizationAdmin = ({
         },
         optimisticResponse: {
           updateOrganizationSsoSettings: {
-            ssoSettings: {
-              id: ssoSettingsId,
-              entityId,
-              loginUrl,
-              appFederationMetadataUrl,
+            organization: {
+              id: organization.id,
+              ssoSettings: {
+                entityId,
+                loginUrl,
+                appFederationMetadataUrl,
+              }
             },
           },
         },
@@ -941,6 +949,14 @@ const OrganizationAdmin = ({
             ...errorNotificationOptions,
             render: <NotificationContent content={`Failed to remove organization '${organization?.name}' SSO settings. Error: ${error.message}.`} />,
           });
+        },
+        optimisticResponse: {
+          removeOrganizationSsoSettings: {
+            organization: {
+              id: organization.id,
+              ssoSettings: null
+            },
+          },
         },
       });
     }

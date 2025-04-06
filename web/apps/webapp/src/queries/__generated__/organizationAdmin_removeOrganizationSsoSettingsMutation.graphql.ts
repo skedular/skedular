@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<928a62b625f5eebcbf554c5db20cd862>>
+ * @generated SignedSource<<28c6155fdb52eeb5c465e9ab12c92809>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,10 +18,30 @@ export type organizationAdmin_removeOrganizationSsoSettingsMutation$variables = 
 };
 export type organizationAdmin_removeOrganizationSsoSettingsMutation$data = {
   readonly removeOrganizationSsoSettings: {
-    readonly clientMutationId: string | null | undefined;
+    readonly organization: {
+      readonly id: string;
+      readonly ssoSettings: {
+        readonly appFederationMetadataUrl: string;
+        readonly entityId: string;
+        readonly loginUrl: string;
+      } | null | undefined;
+    };
+  } | null | undefined;
+};
+export type organizationAdmin_removeOrganizationSsoSettingsMutation$rawResponse = {
+  readonly removeOrganizationSsoSettings: {
+    readonly organization: {
+      readonly id: string;
+      readonly ssoSettings: {
+        readonly appFederationMetadataUrl: string;
+        readonly entityId: string;
+        readonly loginUrl: string;
+      } | null | undefined;
+    };
   } | null | undefined;
 };
 export type organizationAdmin_removeOrganizationSsoSettingsMutation = {
+  rawResponse: organizationAdmin_removeOrganizationSsoSettingsMutation$rawResponse;
   response: organizationAdmin_removeOrganizationSsoSettingsMutation$data;
   variables: organizationAdmin_removeOrganizationSsoSettingsMutation$variables;
 };
@@ -52,8 +72,51 @@ v1 = [
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "clientMutationId",
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "organization",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationSsoSettingsDetails",
+            "kind": "LinkedField",
+            "name": "ssoSettings",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "entityId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "loginUrl",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "appFederationMetadataUrl",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -78,16 +141,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "bbac3b05e4642bd3a570aee5a107e076",
+    "cacheID": "9ad82db01ba81712907d2afc744631ff",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_removeOrganizationSsoSettingsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_removeOrganizationSsoSettingsMutation(\n  $input: RemoveOrganizationSsoSettingsInput!\n) {\n  removeOrganizationSsoSettings(input: $input) {\n    clientMutationId\n  }\n}\n"
+    "text": "mutation organizationAdmin_removeOrganizationSsoSettingsMutation(\n  $input: RemoveOrganizationSsoSettingsInput!\n) {\n  removeOrganizationSsoSettings(input: $input) {\n    organization {\n      id\n      ssoSettings {\n        entityId\n        loginUrl\n        appFederationMetadataUrl\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "268c6730ed213420180541b91fba57fa";
+(node as any).hash = "91b5fe838e4a3007f6ef26db9a62d6fc";
 
 export default node;

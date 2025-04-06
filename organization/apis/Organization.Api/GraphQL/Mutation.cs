@@ -201,7 +201,7 @@ public class Mutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            SsoSettings = mapper.MapTo(await organizationSsoService.UpdateSsoSettingsAsync(mapper.MapTo(input), cancellationToken))!
+            Organization = mapper.MapTo(await organizationSsoService.UpdateSsoSettingsAsync(mapper.MapTo(input), cancellationToken))!
         };
 
     [UseResolverScope]
@@ -212,7 +212,7 @@ public class Mutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            SsoSettings = mapper.MapTo(await organizationSsoService.RemoveSsoSettingsAsync(input.OrganizationId, cancellationToken))!
+            Organization = mapper.MapTo(await organizationSsoService.RemoveSsoSettingsAsync(input.OrganizationId, cancellationToken))!
         };
 
     [UseResolverScope]

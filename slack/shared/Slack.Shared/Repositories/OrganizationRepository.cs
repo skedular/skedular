@@ -21,6 +21,7 @@ internal static class OrganizationExtensions
     internal static IIncludableQueryable<Organization, WorkspaceChannel?> AddDependentObjects(
         this IQueryable<Organization> originalQuery) =>
         originalQuery
+            .Include(query => query.OrganizationSsoSettings)
             .Include(query => query.Workspaces)
             .Include(query => query.OrganizationMembers)
             .ThenInclude(query => query.Customer)

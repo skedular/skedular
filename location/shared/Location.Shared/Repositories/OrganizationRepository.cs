@@ -36,6 +36,7 @@ public class OrganizationRepository(LocationDbContext dbContext, TimeProvider ti
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken) =>
         await DbContext.Organization
+            .Include(query => query.OrganizationSsoSettings)
             .Include(query => query.OrganizationMembers.Where(organizationMember =>
                 includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)

@@ -26,6 +26,7 @@ public class OrganizationRepository(TeamDbContext dbContext, TimeProvider timePr
 
     public async Task<Organization?> GetByIdAsync(string id, bool includeDeletedOrganizationMembers, CancellationToken cancellationToken) =>
         await DbContext.Organization
+            .Include(query => query.OrganizationSsoSettings)
             .Include(query => query.OrganizationMembers.Where(organizationMember =>
                 includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)

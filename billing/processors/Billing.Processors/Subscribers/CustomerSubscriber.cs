@@ -64,7 +64,7 @@ public class CustomerSubscriber(
         CancellationToken cancellationToken)
     {
         _ = RebuildIdentities(customer, existingCustomer);
-        repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
+        repositoryFactory.CustomerRepository.Update(mapper.MergeTo(customer, existingCustomer, existingCustomer.Identities));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -80,14 +80,14 @@ public class CustomerSubscriber(
         var itemsToRemove = existingCustomer.Identities.Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
         var updatedItems = existingCustomer.Identities
             .Where(identity => customer.Identities.Any(item => item.Id == identity.Id))
-            .Select(identity => repositoryFactory.IdentityRepository.Update(mapper.MergeToEntity(
+            .Select(identity => repositoryFactory.IdentityRepository.Update(mapper.MergeTo(
                 customer.Identities.First(item => item.Id == identity.Id),
                 identity,
                 existingCustomer)))
             .ToList();
         var addedItems = customer.Identities
             .Where(identity => existingCustomer.Identities.All(item => item.Id != identity.Id))
-            .Select(identity => repositoryFactory.IdentityRepository.Add(mapper.MapToEntity(identity, existingCustomer)))
+            .Select(identity => repositoryFactory.IdentityRepository.Add(mapper.MapTo(identity, existingCustomer)))
             .ToList();
 
         repositoryFactory.IdentityRepository.RemoveRange(itemsToRemove);

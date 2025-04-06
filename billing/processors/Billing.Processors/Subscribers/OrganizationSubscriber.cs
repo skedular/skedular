@@ -75,10 +75,12 @@ public class OrganizationSubscriber(
         Organization existingOrganization,
         CancellationToken cancellationToken)
     {
-        existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
+        existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization));
 
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
-        _ = await RebuildOrganizationOffering(organization, existingOrganization, cancellationToken);
+        existingOrganization = await RebuildOrganizationOfferingAsync(organization, existingOrganization, cancellationToken);
+        _ = RebuildOrganizationSsoSettings(organization, existingOrganization);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
@@ -104,10 +106,8 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in organizationMembers
                      .Where(organizationMember => organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                organizationMember.Customer.Id,
-                cancellationToken);
-            var updatedOrganizationMember = mapper.MergeToEntity(
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
+            var updatedOrganizationMember = mapper.MergeTo(
                 organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
                 organizationMember,
                 existingOrganization,
@@ -120,12 +120,8 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in organization.OrganizationMembers.Where(organizationMember =>
                      organizationMembers.All(item => item.Id != organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                organizationMember.Customer.Id,
-                cancellationToken);
-            addedItems.Add(
-                repositoryFactory.OrganizationMemberRepository.Add(
-                    mapper.MapToEntity(organizationMember, existingOrganization, customer)));
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
+            addedItems.Add(repositoryFactory.OrganizationMemberRepository.Add(mapper.MapTo(organizationMember, existingOrganization, customer)));
         }
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);
@@ -134,7 +130,7 @@ public class OrganizationSubscriber(
         return existingOrganization;
     }
 
-    private async Task<Organization> RebuildOrganizationOffering(
+    private async Task<Organization> RebuildOrganizationOfferingAsync(
         Shared.Models.Organization organization,
         Organization existingOrganization,
         CancellationToken cancellationToken)
@@ -143,14 +139,16 @@ public class OrganizationSubscriber(
             existingOrganization.Id,
             cancellationToken);
         var itemsToRemove = organizationOfferings
-            .Where(organizationOffering => organization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id)).ToList();
+            .Where(organizationOffering => organization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id))
+            .ToList();
         var updatedItems = organizationOfferings
             .Where(organizationOffering => organization.OrganizationOfferings.Any(item => item.Id == organizationOffering.Id))
             .Select(organizationOffering =>
             {
-                var mappedUpdatedOffering = mapper.MergeToEntity(
+                var mappedUpdatedOffering = mapper.MergeTo(
                     organization.OrganizationOfferings.First(item => item.Id == organizationOffering.Id),
-                    organizationOffering, existingOrganization);
+                    organizationOffering,
+                    existingOrganization);
                 mappedUpdatedOffering.DeletedAt = null;
                 return repositoryFactory.OrganizationOfferingRepository.Update(mappedUpdatedOffering);
             }).ToList();
@@ -159,10 +157,54 @@ public class OrganizationSubscriber(
                 organizationOfferings.All(item => item.Id != organizationOffering.Id)).Select(
                 organizationOffering =>
                     repositoryFactory.OrganizationOfferingRepository.Add(
-                        mapper.MapToEntity(organizationOffering, existingOrganization))).ToList();
+                        mapper.MapTo(organizationOffering, existingOrganization))).ToList();
 
         repositoryFactory.OrganizationOfferingRepository.RemoveRange(itemsToRemove);
         existingOrganization.OrganizationOfferings = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+
+        return existingOrganization;
+    }
+
+    private Organization RebuildOrganizationSsoSettings(Shared.Models.Organization organization, Organization existingOrganization)
+    {
+        switch (organization.OrganizationSsoSettings)
+        {
+            case null when existingOrganization.OrganizationSsoSettings is null:
+                // No need to do anything
+                break;
+
+            case null when existingOrganization.OrganizationSsoSettings is not null:
+                repositoryFactory.OrganizationSsoSettingRepository.Remove(existingOrganization.OrganizationSsoSettings);
+                break;
+
+            default:
+                {
+                    if (organization.OrganizationSsoSettings is not null && existingOrganization.OrganizationSsoSettings is null)
+                    {
+                        repositoryFactory.OrganizationSsoSettingRepository.Add(
+                            mapper.MapTo(organization.OrganizationSsoSettings, existingOrganization));
+                    }
+                    else if (organization.OrganizationSsoSettings is not null && existingOrganization.OrganizationSsoSettings is not null)
+                    {
+                        if (organization.OrganizationSsoSettings.Id == existingOrganization.OrganizationSsoSettings.Id)
+                        {
+                            repositoryFactory.OrganizationSsoSettingRepository.Update(
+                                mapper.MergeTo(
+                                    organization.OrganizationSsoSettings,
+                                    existingOrganization.OrganizationSsoSettings,
+                                    existingOrganization));
+                        }
+                        else
+                        {
+                            repositoryFactory.OrganizationSsoSettingRepository.Remove(existingOrganization.OrganizationSsoSettings);
+                            repositoryFactory.OrganizationSsoSettingRepository.Add(
+                                mapper.MapTo(organization.OrganizationSsoSettings, existingOrganization));
+                        }
+                    }
+
+                    break;
+                }
+        }
 
         return existingOrganization;
     }

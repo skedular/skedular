@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<86fd7bf14bfa43a349c9a1b4a7f8f1eb>>
+ * @generated SignedSource<<0a811d199577c4b7a091b612e5fd49b4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -55,7 +55,6 @@ export type organizationAdmin_query$data = {
     readonly ssoSettings: {
       readonly appFederationMetadataUrl: string;
       readonly entityId: string;
-      readonly id: string;
       readonly loginUrl: string;
     } | null | undefined;
     readonly type: {
@@ -339,7 +338,6 @@ return {
           "name": "ssoSettings",
           "plural": false,
           "selections": [
-            (v0/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -478,6 +476,6 @@ return {
 };
 })();
 
-(node as any).hash = "e8360e7e88b1ea4b53660786c799c3bd";
+(node as any).hash = "c9a07cba54de6b98ba0ffc18cdb3ce67";
 
 export default node;

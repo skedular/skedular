@@ -1,6 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
+using Slack.Shared.Database.Entities;
 using Location = Slack.Shared.Models.Location;
 using Team = Slack.Shared.Models.Team;
 using Organization = Slack.Shared.Models.Organization;
@@ -45,6 +46,13 @@ public interface IMapper
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
+
+    OrganizationSsoSetting MapTo(Shared.Models.OrganizationSsoSetting src, Shared.Database.Entities.Organization organization);
+
+    OrganizationSsoSetting MergeTo(
+        Shared.Models.OrganizationSsoSetting src,
+        OrganizationSsoSetting dest,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -152,6 +160,18 @@ public class Mapper : IMapper
             };
         }).ToList();
 
+        organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
+            ? null
+            : new Shared.Models.OrganizationSsoSetting
+            {
+                Id = organizationAfterState.SsoSettings.Id,
+                EventRaisedAt = eventRaisedAt,
+                EntityId = organizationAfterState.SsoSettings.EntityId,
+                LoginUrl = organizationAfterState.SsoSettings.LoginUrl,
+                AppFederationMetadataUrl = organizationAfterState.SsoSettings.AppFederationMetadataUrl,
+                Organization = organization
+            };
+
         return organization;
     }
 
@@ -200,6 +220,24 @@ public class Mapper : IMapper
         dest.Status = src.Status.ToOrganizationMemberStatus();
         dest.Organization = organization;
         dest.Customer = customer;
+        return dest;
+    }
+
+    public OrganizationSsoSetting MapTo(Shared.Models.OrganizationSsoSetting src, Shared.Database.Entities.Organization organization) =>
+        MergeTo(src, new OrganizationSsoSetting(), organization);
+
+    public OrganizationSsoSetting MergeTo(
+        Shared.Models.OrganizationSsoSetting src,
+        OrganizationSsoSetting dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.EntityId = src.EntityId;
+        dest.LoginUrl = src.LoginUrl;
+        dest.AppFederationMetadataUrl = src.AppFederationMetadataUrl;
+        dest.Organization = organization;
+
         return dest;
     }
 }

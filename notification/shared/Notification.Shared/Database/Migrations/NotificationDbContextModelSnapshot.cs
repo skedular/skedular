@@ -405,6 +405,7 @@ namespace Notification.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationId")
+                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
@@ -531,7 +532,9 @@ namespace Notification.Shared.Database.Migrations
                 {
                     b.HasOne("Notification.Shared.Database.Entities.Organization", "Organization")
                         .WithOne("OrganizationSsoSettings")
-                        .HasForeignKey("Notification.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId");
+                        .HasForeignKey("Notification.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Organization");
                 });

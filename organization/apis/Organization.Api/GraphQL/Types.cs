@@ -453,7 +453,6 @@ public class UpdateOrganizationSsoSettingsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
-    [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("entityId")] public required string EntityId { get; set; }
     [GraphQLName("loginUrl")] public string LoginUrl { get; set; }
 
@@ -465,7 +464,7 @@ public class UpdateOrganizationSsoSettingsInput
 public class UpdateOrganizationSsoSettingsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails SsoSettings { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
 }
 
 [GraphQLName("RemoveOrganizationSsoSettingsInput")]
@@ -479,19 +478,17 @@ public class RemoveOrganizationSsoSettingsInput
 public class RemoveOrganizationSsoSettingsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
+    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
 }
 
 [GraphQLName("OrganizationSsoSettingsDetails")]
-public class OrganizationSsoSettingsDetails : Node
+public class OrganizationSsoSettingsDetails
 {
     [GraphQLName("entityId")] public required string EntityId { get; set; }
     [GraphQLName("loginUrl")] public string LoginUrl { get; set; }
 
     [GraphQLName("appFederationMetadataUrl")]
     public required string AppFederationMetadataUrl { get; set; }
-
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [GraphQLName("OrganizationTypeDetails")]

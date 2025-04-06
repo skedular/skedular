@@ -339,6 +339,7 @@ namespace Billing.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationId")
+                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<uint>("Version")
@@ -449,7 +450,9 @@ namespace Billing.Shared.Database.Migrations
                 {
                     b.HasOne("Billing.Shared.Database.Entities.Organization", "Organization")
                         .WithOne("OrganizationSsoSettings")
-                        .HasForeignKey("Billing.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId");
+                        .HasForeignKey("Billing.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Organization");
                 });

@@ -17,19 +17,22 @@ public interface IOrganizationRepository : IRepository<Organization>
 
 internal static class OrganizationExtensions
 {
-    internal static
-        IIncludableQueryable<Organization, ICollection<Identity>> AddDependentObjects(
-            this IQueryable<Organization> originalQuery,
-            bool includeDeletedOrganizationMembers,
-            bool includeAllOfferings) =>
+    internal static IIncludableQueryable<Organization, ICollection<Identity>> AddDependentObjects(
+        this IQueryable<Organization> originalQuery,
+        bool includeDeletedOrganizationMembers,
+        bool includeAllOfferings) =>
         includeAllOfferings
-            ? originalQuery.Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
+            ? originalQuery
+                .Include(query => query.OrganizationSsoSettings)
+                .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
                 .Include(query =>
                     query.OrganizationMembers.Where(organizationMember =>
                         includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
                 .ThenInclude(query => query.Customer)
                 .ThenInclude(query => query.Identities)
-            : originalQuery.Include(query => query.OrganizationOfferings
+            : originalQuery
+                .Include(query => query.OrganizationSsoSettings)
+                .Include(query => query.OrganizationOfferings
                     .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
                     .OrderByDescending(organizationOffering => organizationOffering.End)
                     .Take(1))

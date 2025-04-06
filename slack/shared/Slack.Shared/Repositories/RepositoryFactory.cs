@@ -16,6 +16,7 @@ public interface IRepositoryFactory
     IWorkspaceChannelRepository WorkspaceChannelRepository { get; }
     IWorkspaceMemberRepository WorkspaceMemberRepository { get; }
     IWorkspaceRepository WorkspaceRepository { get; }
+    IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -36,6 +37,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         WorkspaceChannelRepository = new WorkspaceChannelRepository(_dbContext, timeProvider);
         WorkspaceMemberRepository = new WorkspaceMemberRepository(_dbContext, timeProvider);
         WorkspaceRepository = new WorkspaceRepository(_dbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -54,6 +56,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IWorkspaceChannelRepository WorkspaceChannelRepository { get; }
     public IWorkspaceMemberRepository WorkspaceMemberRepository { get; }
     public IWorkspaceRepository WorkspaceRepository { get; }
+    public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
 
 
     ~RepositoryFactory() => Dispose(false);

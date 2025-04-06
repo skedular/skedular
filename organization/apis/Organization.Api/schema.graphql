@@ -201,7 +201,6 @@ type OrganizationSsoSettingsDetails {
   entityId: String!
   loginUrl: String!
   appFederationMetadataUrl: String!
-  id: ID!
 }
 
 type OrganizationTagConnection {
@@ -289,7 +288,7 @@ type UpdateOrganizationOfferingPayload {
 
 type UpdateOrganizationSsoSettingsPayload {
   clientMutationId: String
-  ssoSettings: OrganizationSsoSettingsDetails!
+  organization: OrganizationDetails!
 }
 
 type Version {
@@ -520,7 +519,6 @@ input UpdateOrganizationOfferingInput {
 input UpdateOrganizationSsoSettingsInput {
   clientMutationId: String
   organizationId: String!
-  id: String
   entityId: String!
   loginUrl: String!
   appFederationMetadataUrl: String!

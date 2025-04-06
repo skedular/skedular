@@ -82,7 +82,9 @@ public class OrganizationSubscriber(
         existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
 
         existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
-        _ = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
+        existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
+        _ = RebuildOrganizationSsoSettings(organization, existingOrganization);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
@@ -234,6 +236,50 @@ public class OrganizationSubscriber(
 
         repositoryFactory.OrganizationTagRepository.RemoveRange(itemsToRemove);
         existingOrganization.Tags = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+
+        return existingOrganization;
+    }
+
+    private Organization RebuildOrganizationSsoSettings(Shared.Models.Organization organization, Organization existingOrganization)
+    {
+        switch (organization.OrganizationSsoSettings)
+        {
+            case null when existingOrganization.OrganizationSsoSettings is null:
+                // No need to do anything
+                break;
+
+            case null when existingOrganization.OrganizationSsoSettings is not null:
+                repositoryFactory.OrganizationSsoSettingRepository.Remove(existingOrganization.OrganizationSsoSettings);
+                break;
+
+            default:
+                {
+                    if (organization.OrganizationSsoSettings is not null && existingOrganization.OrganizationSsoSettings is null)
+                    {
+                        repositoryFactory.OrganizationSsoSettingRepository.Add(
+                            mapper.MapTo(organization.OrganizationSsoSettings, existingOrganization));
+                    }
+                    else if (organization.OrganizationSsoSettings is not null && existingOrganization.OrganizationSsoSettings is not null)
+                    {
+                        if (organization.OrganizationSsoSettings.Id == existingOrganization.OrganizationSsoSettings.Id)
+                        {
+                            repositoryFactory.OrganizationSsoSettingRepository.Update(
+                                mapper.MergeTo(
+                                    organization.OrganizationSsoSettings,
+                                    existingOrganization.OrganizationSsoSettings,
+                                    existingOrganization));
+                        }
+                        else
+                        {
+                            repositoryFactory.OrganizationSsoSettingRepository.Remove(existingOrganization.OrganizationSsoSettings);
+                            repositoryFactory.OrganizationSsoSettingRepository.Add(
+                                mapper.MapTo(organization.OrganizationSsoSettings, existingOrganization));
+                        }
+                    }
+
+                    break;
+                }
+        }
 
         return existingOrganization;
     }

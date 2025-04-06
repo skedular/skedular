@@ -648,7 +648,6 @@ type OrganizationPaymentMethod {
 type OrganizationSsoSettingsDetails {
   appFederationMetadataUrl: String!
   entityId: String!
-  id: ID!
   loginUrl: String!
 }
 
@@ -993,7 +992,7 @@ type UpdateOrganizationOfferingPayload {
 
 type UpdateOrganizationSsoSettingsPayload {
   clientMutationId: String
-  ssoSettings: OrganizationSsoSettingsDetails!
+  organization: OrganizationDetails!
 }
 
 type VariedDateOpeningHours {
@@ -1717,7 +1716,6 @@ input UpdateOrganizationSsoSettingsInput {
   appFederationMetadataUrl: String!
   clientMutationId: String
   entityId: String!
-  id: String
   loginUrl: String!
   organizationId: String!
 }

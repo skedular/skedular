@@ -20,6 +20,7 @@ internal static class OrganizationExtensions
     internal static IIncludableQueryable<Organization, Customer?> AddDependentObjects(
         this IQueryable<Organization> originalQuery) =>
         originalQuery
+            .Include(query => query.OrganizationSsoSettings)
             .Include(query => query.OrganizationMembers)
             .ThenInclude(query => query.Customer);
 }

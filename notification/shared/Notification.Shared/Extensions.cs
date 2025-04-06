@@ -23,6 +23,7 @@ public static class Extensions
             .AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<IIdentityRepository, IdentityRepository>()
             .AddScoped<IOrganizationRepository, OrganizationRepository>()
+            .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<INotificationRepository, NotificationRepository>()
             .AddScoped<ITeamRepository, TeamRepository>();

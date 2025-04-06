@@ -13,6 +13,7 @@ public interface IRepositoryFactory
     ILocationRepository LocationRepository { get; }
     INotificationRepository NotificationRepository { get; }
     ITeamRepository TeamRepository { get; }
+    IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -30,6 +31,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
         NotificationRepository = new NotificationRepository(_dbContext, timeProvider);
         TeamRepository = new TeamRepository(_dbContext, timeProvider);
+        OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -45,6 +47,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public ILocationRepository LocationRepository { get; }
     public INotificationRepository NotificationRepository { get; }
     public ITeamRepository TeamRepository { get; }
+    public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 
