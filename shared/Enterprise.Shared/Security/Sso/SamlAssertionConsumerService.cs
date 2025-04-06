@@ -194,7 +194,7 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
         //TODO : encrypt the response
         var serializerContent = JsonSerializer.Serialize(samlResponse);
         response.Cookies.Append(
-            organizationId,
+            $"skedular-sso-{organizationId}",
             serializerContent,
             new CookieOptions { HttpOnly = true, Secure = true, Expires = samlResponse.SessionNotOnOrAfter });
     }

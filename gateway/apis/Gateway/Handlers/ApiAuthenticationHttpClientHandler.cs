@@ -7,35 +7,39 @@ public class ApiAuthenticationHttpClientHandler(
     ILogger<ApiAuthenticationHttpClientHandler> logger)
     : DelegatingHandler
 {
-    protected override async Task<HttpResponseMessage> SendAsync(
-        HttpRequestMessage request,
-        CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage, CancellationToken cancellationToken)
     {
         try
         {
-            if (httpContextAccessor.HttpContext == null)
+            var httpRequest = httpContextAccessor.HttpContext?.Request;
+            if (httpRequest is null)
             {
-                return await base.SendAsync(request, cancellationToken);
+                return await base.SendAsync(httpRequestMessage, cancellationToken);
             }
 
-            var authorizationHeader = httpContextAccessor.HttpContext.Request.Headers.Authorization;
+            var authorizationHeader = httpRequest.Headers.Authorization;
             if (AuthenticationHeaderValue.TryParse(authorizationHeader, out var token))
             {
-                request.Headers.Authorization =
-                    new AuthenticationHeaderValue(token.Scheme, token.Parameter);
+                httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue(token.Scheme, token.Parameter);
             }
 
-            var correlationIdHeader = httpContextAccessor.HttpContext.Request.Headers["X-Correlation-Id"];
+            var correlationIdHeader = httpRequest.Headers["X-Correlation-Id"];
             if (!string.IsNullOrWhiteSpace(correlationIdHeader))
             {
-                request.Headers.Add("X-Correlation-Id", correlationIdHeader.ToString());
+                httpRequestMessage.Headers.Add("X-Correlation-Id", correlationIdHeader.ToString());
             }
 
-            return await base.SendAsync(request, cancellationToken);
+            var ssoCookiesHeader = httpRequest.Headers["X-SSO-Cookies"];
+            if (!string.IsNullOrWhiteSpace(ssoCookiesHeader))
+            {
+                httpRequestMessage.Headers.Add("X-SSO-Cookies", ssoCookiesHeader.ToString());
+            }
+
+            return await base.SendAsync(httpRequestMessage, cancellationToken);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to run http query {RequestUri}", request.RequestUri);
+            logger.LogError(ex, "Failed to run http query {RequestUri}", httpRequestMessage.RequestUri);
 
             throw;
         }

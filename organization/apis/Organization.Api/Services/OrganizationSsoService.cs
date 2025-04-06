@@ -14,7 +14,7 @@ namespace Organization.Api.Services;
 public interface IOrganizationSsoService
 {
     Task<OrganizationSsoSetting> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting, CancellationToken cancellationToken);
-    Task<string> SsoLoginAsync(string organizationId, string redirectUrl, CancellationToken cancellationToken);
+    Task<string> SsoLoginAsync(string id, string redirectUrl, CancellationToken cancellationToken);
     Task ProcessSsoResponseAsync(HttpResponse httpResponse, string rawSamlResponse, CancellationToken cancellationToken);
 }
 
@@ -78,19 +78,18 @@ public class OrganizationSsoService(
         return mapper.MapTo(ssoSettingsEntity)!;
     }
 
-    public async Task<string> SsoLoginAsync(string organizationId, string redirectUrl, CancellationToken cancellationToken)
+    public async Task<string> SsoLoginAsync(string id, string redirectUrl, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var existingOrganizationSsoSetting =
-            await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(organizationId, cancellationToken);
+        var existingOrganizationSsoSetting = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(id, cancellationToken);
         if (existingOrganizationSsoSetting is null)
         {
             throw new OrganizationSsoIsNotYetSetup();
         }
 
         return samlLoginRequestFactory.GenerateSamlLoginRequest(
-            organizationId,
+            id,
             redirectUrl,
             existingOrganizationSsoSetting.EntityId,
             existingOrganizationSsoSetting.LoginUrl);
@@ -119,7 +118,7 @@ public class OrganizationSsoService(
             throw new Unauthorized();
         }
 
-        samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, response, existingOrganizationSsoSetting.Id);
+        samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, response, existingOrganizationSsoSetting.Organization.Id);
     }
 
     // Split and return the original ID without the prefix

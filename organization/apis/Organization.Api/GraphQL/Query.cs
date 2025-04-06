@@ -64,6 +64,15 @@ public class Query(IMapper mapper)
         mapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken));
 
     [UseResolverScope]
+    public bool OrganizationRequiredSsoTokenValid(string id, [Service] IHttpContextAccessor httpContextAccessor)
+    {
+        var request = httpContextAccessor.HttpContext?.Request;
+        ArgumentNullException.ThrowIfNull(request);
+
+        return false;
+    }
+
+    [UseResolverScope]
     public async Task<OrganizationDetails?> OrganizationAsync(
         string id,
         [Service] IOrganizationService organizationService,
@@ -166,11 +175,11 @@ public class Query(IMapper mapper)
 
     [UseResolverScope]
     public async Task<string> SsoLoginUrlAsync(
-        string organizationId,
+        string id,
         string redirectUrl,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
-        await organizationSsoService.SsoLoginAsync(organizationId, redirectUrl, cancellationToken);
+        await organizationSsoService.SsoLoginAsync(id, redirectUrl, cancellationToken);
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> AzureTenantOrganizationAsync(

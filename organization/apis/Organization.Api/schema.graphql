@@ -257,6 +257,7 @@ type Query {
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
+  organizationRequiredSsoTokenValid(id: String!): Boolean!
   organization(id: String!): OrganizationDetails @cost(weight: "10")
   organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): OrganizationConnection! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
@@ -264,7 +265,7 @@ type Query {
   organizationAnalytics(organizationId: String! from: DateTime! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
-  ssoLoginUrl(organizationId: String! redirectUrl: String!): String! @cost(weight: "10")
+  ssoLoginUrl(id: String! redirectUrl: String!): String! @cost(weight: "10")
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   organizationOffering(code: String!): OrganizationOfferingDetails!
   customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput! orderBy: [OrganizationTagOrderInput!]): OrganizationTagConnection! @cost(weight: "10")

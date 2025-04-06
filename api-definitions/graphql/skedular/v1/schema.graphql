@@ -794,6 +794,7 @@ type Query {
   organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): OrganizationMemberConnection! @cost(weight: "10")
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!]! @cost(weight: "10")
+  organizationRequiredSsoTokenValid(id: String!): Boolean!
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): OrganizationConnection! @cost(weight: "10")
   organizationTypes: [OrganizationTypeDetails!]!
@@ -810,7 +811,7 @@ type Query {
   resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput!): ResourceConnection! @cost(weight: "10")
   slackCustomerRecordSynced: Boolean! @cost(weight: "10")
   slackVersion: Version!
-  ssoLoginUrl(organizationId: String! redirectUrl: String!): String! @cost(weight: "10")
+  ssoLoginUrl(id: String! redirectUrl: String!): String! @cost(weight: "10")
   team(id: String!): TeamDetails @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   teamCustomerRecordSynced: Boolean! @cost(weight: "10")
