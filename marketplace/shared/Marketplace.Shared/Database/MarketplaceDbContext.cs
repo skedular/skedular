@@ -15,6 +15,7 @@ public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationTag> OrganizationTag { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
+    public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<ProductVersion> ProductVersion { get; set; }
 

@@ -18,6 +18,7 @@ public class MsTeamsDbContext(DbContextOptions<MsTeamsDbContext> options, Custom
     public DbSet<Location> Location { get; set; }
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
+    public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<Team> Team { get; set; }
 
     public class MsTeamsDbContextDesignFactory : IDesignTimeDbContextFactory<MsTeamsDbContext>

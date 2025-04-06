@@ -308,6 +308,57 @@ namespace Billing.Shared.Database.Migrations
                     b.ToTable("OrganizationOffering");
                 });
 
+            modelBuilder.Entity("Billing.Shared.Database.Entities.OrganizationSsoSetting", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AppFederationMetadataUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("EntityId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LoginUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId")
+                        .IsUnique();
+
+                    b.ToTable("OrganizationSsoSetting");
+                });
+
             modelBuilder.Entity("Enterprise.Shared.Outbox.Database.Entities.Outbox", b =>
                 {
                     b.Property<string>("Id")
@@ -394,6 +445,15 @@ namespace Billing.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("Billing.Shared.Database.Entities.OrganizationSsoSetting", b =>
+                {
+                    b.HasOne("Billing.Shared.Database.Entities.Organization", "Organization")
+                        .WithOne("OrganizationSsoSettings")
+                        .HasForeignKey("Billing.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId");
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("Billing.Shared.Database.Entities.Customer", b =>
                 {
                     b.Navigation("Identities");
@@ -406,6 +466,8 @@ namespace Billing.Shared.Database.Migrations
                     b.Navigation("OrganizationMembers");
 
                     b.Navigation("OrganizationOfferings");
+
+                    b.Navigation("OrganizationSsoSettings");
                 });
 #pragma warning restore 612, 618
         }

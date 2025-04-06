@@ -317,6 +317,57 @@ namespace Slack.Shared.Database.Migrations
                     b.ToTable("OrganizationMember");
                 });
 
+            modelBuilder.Entity("Slack.Shared.Database.Entities.OrganizationSsoSetting", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AppFederationMetadataUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("EntityId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LoginUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId")
+                        .IsUnique();
+
+                    b.ToTable("OrganizationSsoSetting");
+                });
+
             modelBuilder.Entity("Slack.Shared.Database.Entities.Team", b =>
                 {
                     b.Property<string>("Id")
@@ -722,6 +773,15 @@ namespace Slack.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("Slack.Shared.Database.Entities.OrganizationSsoSetting", b =>
+                {
+                    b.HasOne("Slack.Shared.Database.Entities.Organization", "Organization")
+                        .WithOne("OrganizationSsoSettings")
+                        .HasForeignKey("Slack.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId");
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("Slack.Shared.Database.Entities.Team", b =>
                 {
                     b.HasOne("Slack.Shared.Database.Entities.WorkspaceChannel", "DailyUpdateChannel")
@@ -774,6 +834,8 @@ namespace Slack.Shared.Database.Migrations
             modelBuilder.Entity("Slack.Shared.Database.Entities.Organization", b =>
                 {
                     b.Navigation("OrganizationMembers");
+
+                    b.Navigation("OrganizationSsoSettings");
 
                     b.Navigation("Workspaces");
                 });

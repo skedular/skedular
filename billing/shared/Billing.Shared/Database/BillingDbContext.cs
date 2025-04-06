@@ -14,6 +14,7 @@ public class BillingDbContext(DbContextOptions<BillingDbContext> options, Custom
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
+    public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<OrganizationOffering> OrganizationOffering { get; set; }
 
     // ReSharper disable once UnusedType.Global

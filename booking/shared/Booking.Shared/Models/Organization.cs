@@ -14,4 +14,5 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public ICollection<Team> Teams { get; set; } = [];
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<Customer> DefaultedByCustomers { get; set; } = [];
+    public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
 }

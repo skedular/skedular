@@ -367,6 +367,57 @@ namespace Payment.Shared.Database.Migrations
                     b.ToTable("OrganizationOfferingStripePaymentIntent");
                 });
 
+            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationSsoSetting", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AppFederationMetadataUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("EntityId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LoginUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId")
+                        .IsUnique();
+
+                    b.ToTable("OrganizationSsoSetting");
+                });
+
             modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationStripePaymentMethod", b =>
                 {
                     b.Property<string>("Id")
@@ -523,6 +574,15 @@ namespace Payment.Shared.Database.Migrations
                     b.Navigation("OrganizationStripePaymentMethod");
                 });
 
+            modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationSsoSetting", b =>
+                {
+                    b.HasOne("Payment.Shared.Database.Entities.Organization", "Organization")
+                        .WithOne("OrganizationSsoSettings")
+                        .HasForeignKey("Payment.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId");
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("Payment.Shared.Database.Entities.OrganizationStripePaymentMethod", b =>
                 {
                     b.HasOne("Payment.Shared.Database.Entities.Organization", "Organization")
@@ -546,6 +606,8 @@ namespace Payment.Shared.Database.Migrations
                     b.Navigation("OrganizationMembers");
 
                     b.Navigation("OrganizationOfferings");
+
+                    b.Navigation("OrganizationSsoSettings");
 
                     b.Navigation("OrganizationStripePaymentMethods");
                 });

@@ -9,5 +9,6 @@ public class Organization : ReplicatedModelBaseWithDeleted
 
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
-    public virtual ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
+    public ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
+    public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
 }

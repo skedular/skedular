@@ -17,6 +17,7 @@ public class TeamDbContext(DbContextOptions<TeamDbContext> options, CustomDbCont
     public DbSet<Entities.Team> Team { get; set; }
     public DbSet<TeamMember> TeamMember { get; set; }
     public DbSet<Organization> Organization { get; set; }
+    public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<Location> Location { get; set; }
 

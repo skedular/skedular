@@ -18,4 +18,5 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public ICollection<Workspace> Workspaces { get; set; } = [];
     public WorkspaceChannel? DailyUpdateChannel { get; set; }
     public bool HasFutureBooking { get; set; }
+    public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
 }

@@ -10,4 +10,5 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public ICollection<Location> Locations { get; set; } = [];
     public ICollection<Team> Teams { get; set; } = [];
     public ICollection<Notification> Notifications { get; set; } = [];
+    public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
 }

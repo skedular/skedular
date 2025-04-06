@@ -15,6 +15,7 @@ public class NotificationDbContext(DbContextOptions<NotificationDbContext> optio
     public DbSet<Location> Location { get; set; }
     public DbSet<Entities.Notification> Notification { get; set; }
     public DbSet<Organization> Organization { get; set; }
+    public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<Team> Team { get; set; }
 
     // ReSharper disable once UnusedType.Global

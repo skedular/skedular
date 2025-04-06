@@ -15,6 +15,7 @@ public class SlackDbContext(DbContextOptions<SlackDbContext> options, CustomDbCo
     public DbSet<Location> Location { get; set; }
     public DbSet<Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
+    public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<Team> Team { get; set; }
     public DbSet<Workspace> Workspace { get; set; }
     public DbSet<WorkspaceChannel> WorkspaceChannel { get; set; }
