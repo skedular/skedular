@@ -54,6 +54,7 @@ import type { organizationAdmin_productTags_refetchableFragment } from '@/querie
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
 import type { organizationAdmin_removeCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_removeCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
+import type { organizationAdmin_removeOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationSsoSettingsMutation.graphql';
 import type { organizationAdmin_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationAdmin_setOrganizationBillingInfoMutation.graphql';
 import type { organizationAdmin_updateOrganizationMutation, OrganizationType } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_updateOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
@@ -74,14 +75,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, object, string } from 'yup';
+import { array, boolean, object, string } from 'yup';
 import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin-left-side-navigation-menu-content';
 
 type Props = {
@@ -134,15 +135,33 @@ const organizationBillingSchema = object({
 });
 
 type OrganziationSsoSettingsDetails = {
+  enableSso: boolean;
   entityId: string;
   loginUrl: string;
   appFederationMetadataUrl: string;
 };
 
 const organziationSsoSettingsSchema = object({
-  entityId: string().required('Entity ID is required'),
-  loginUrl: string().url('Login Url must be a valid Url').required('Login Url is required'),
-  appFederationMetadataUrl: string().url('App Federation Metadata Url must be a valid Url').required('App Federation Metadata Url is required'),
+  enableSso: boolean(),
+  entityId: string().when('enableSso', {
+    is: true,
+    then: (schema) => schema.required('Entity ID is required'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  loginUrl: string()
+    .url('Login Url must be a valid Url')
+    .when('enableSso', {
+      is: true,
+      then: (schema) => schema.required('Login Url is required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  appFederationMetadataUrl: string()
+    .url('App Federation Metadata Url must be a valid Url')
+    .when('enableSso', {
+      is: true,
+      then: (schema) => schema.required('App Federation Metadata Url is required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
 });
 
 type ZoneRowType = {
@@ -534,6 +553,14 @@ const OrganizationAdmin = ({
     }
   `);
 
+  const [commitRemoveOrganizationSsoSettings] = useMutation<organizationAdmin_removeOrganizationSsoSettingsMutation>(graphql`
+    mutation organizationAdmin_removeOrganizationSsoSettingsMutation($input: RemoveOrganizationSsoSettingsInput!) {
+      removeOrganizationSsoSettings(input: $input) {
+        clientMutationId
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -548,6 +575,7 @@ const OrganizationAdmin = ({
   const validateOrganizationSsoSettings = makeValidate(organziationSsoSettingsSchema);
   const requiredOrganizationSsoSettingsFields = makeRequired(organziationSsoSettingsSchema);
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
+  const [enableSso, setEnableSso] = useState<boolean>(!!rootData.organization?.ssoSettings);
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>([]);
@@ -830,58 +858,92 @@ const OrganizationAdmin = ({
     });
   };
 
-  const handleOrganizationSsoSettingsDetailUpdateClick = ({ entityId, loginUrl, appFederationMetadataUrl }: OrganziationSsoSettingsDetails) => {
+  const handleOrganizationSsoSettingsDetailUpdateClick = ({ enableSso, entityId, loginUrl, appFederationMetadataUrl }: OrganziationSsoSettingsDetails) => {
     const organization = rootData.organization;
     if (!organization) {
       return;
     }
 
-    const ssoSettingsId = organization.ssoSettings ? organization.ssoSettings.id : nanoid();
-    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' SSO settings...`} />, infoNotificationOptions);
+    if (enableSso) {
+      const ssoSettingsId = organization.ssoSettings ? organization.ssoSettings.id : nanoid();
+      const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' SSO settings...`} />, infoNotificationOptions);
 
-    commitUpdateOrganizationSsoSettings({
-      variables: {
-        input: {
-          clientMutationId: nanoid(),
-          id: ssoSettingsId,
-          organizationId: organization.id,
-          entityId,
-          loginUrl,
-          appFederationMetadataUrl,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${name} SSO settings details updated.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateOrganizationSsoSettings: {
-          ssoSettings: {
+      commitUpdateOrganizationSsoSettings({
+        variables: {
+          input: {
+            clientMutationId: nanoid(),
             id: ssoSettingsId,
+            organizationId: organization.id,
             entityId,
             loginUrl,
             appFederationMetadataUrl,
           },
         },
-      },
-    });
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Organization ${organization?.name} SSO settings details updated.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${error.message}.`} />,
+          });
+        },
+        optimisticResponse: {
+          updateOrganizationSsoSettings: {
+            ssoSettings: {
+              id: ssoSettingsId,
+              entityId,
+              loginUrl,
+              appFederationMetadataUrl,
+            },
+          },
+        },
+      });
+    } else {
+      const toastId = themedToast(<NotificationContent content={`Removing organization '${organization.name}' SSO settings...`} />, infoNotificationOptions);
+
+      commitRemoveOrganizationSsoSettings({
+        variables: {
+          input: {
+            clientMutationId: nanoid(),
+            organizationId: organization.id,
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to remove organization '${organization?.name}' SSO settings. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Organization ${organization?.name} SSO settings removed.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove organization '${organization?.name}' SSO settings. Error: ${error.message}.`} />,
+          });
+        },
+      });
+    }
   };
 
   const handleZonesSearchTextChange = (str: string) => {
@@ -2152,47 +2214,63 @@ const OrganizationAdmin = ({
             <Form
               onSubmit={handleOrganizationSsoSettingsDetailUpdateClick}
               initialValues={{
+                enableSso,
                 entityId: ssoSettingsEntityId,
                 loginUrl: ssoSettingsLoginUrl,
                 appFederationMetadataUrl: ssoSettingsappFederationMetadataUrl,
               }}
               validate={validateOrganizationSsoSettings}
-              render={({ handleSubmit }) => (
-                <FormStackColumn onSubmit={handleSubmit}>
-                  <StackColumn
-                    sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-                    ref={(divElement) => {
-                      sectionRefs.current['sso-setup'] = divElement;
-                    }}
-                  >
-                    <SectionIconTypography label="SSO Setup" />
-                    <BodyIconTypography label="Edit your organization SSO settings" />
-                    <Divider />
-                  </StackColumn>
+              render={({ handleSubmit, values }) => {
+                setEnableSso(values.enableSso);
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Entity Id">
-                      <TextField name="entityId" required={requiredOrganizationSsoSettingsFields.entityId} />
-                    </FormFieldLabel>
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn
+                      sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+                      ref={(divElement) => {
+                        sectionRefs.current['sso-setup'] = divElement;
+                      }}
+                    >
+                      <SectionIconTypography label="SSO Setup" />
+                      <BodyIconTypography label="Edit your organization SSO settings" />
+                      <Divider />
+                    </StackColumn>
 
-                    <FormFieldLabel label="Login Url">
-                      <TextField name="loginUrl" required={requiredOrganizationSsoSettingsFields.loginUrl} />
-                    </FormFieldLabel>
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <Switches
+                        name="enableSso"
+                        required={requiredOrganizationSsoSettingsFields.enableSso}
+                        data={{ label: 'Enable SSO', value: 'enableSso' }}
+                        helperText="If checked, it enables SSO for your organization"
+                      />
 
-                    <FormFieldLabel label="App Federation Metadata Url">
-                      <TextField name="appFederationMetadataUrl" required={requiredOrganizationSsoSettingsFields.appFederationMetadataUrl} />
-                    </FormFieldLabel>
-                  </StackColumn>
+                      {enableSso && (
+                        <>
+                          <FormFieldLabel label="Entity Id">
+                            <TextField name="entityId" required={requiredOrganizationSsoSettingsFields.entityId} />
+                          </FormFieldLabel>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <StackRow>
-                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        Update
-                      </Button>
-                    </StackRow>
-                  </StackColumn>
-                </FormStackColumn>
-              )}
+                          <FormFieldLabel label="Login Url">
+                            <TextField name="loginUrl" required={requiredOrganizationSsoSettingsFields.loginUrl} />
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="App Federation Metadata Url">
+                            <TextField name="appFederationMetadataUrl" required={requiredOrganizationSsoSettingsFields.appFederationMetadataUrl} />
+                          </FormFieldLabel>
+                        </>
+                      )}
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <StackRow>
+                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                          Update
+                        </Button>
+                      </StackRow>
+                    </StackColumn>
+                  </FormStackColumn>
+                );
+              }}
             />
 
             <StackColumn
