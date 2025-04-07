@@ -2,18 +2,13 @@ using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
 using Enterprise.Shared.Kafka.Consume;
 using Location.Processors.Mappers;
-using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Customer = Location.Shared.Models.Customer;
 using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace Location.Processors.Subscribers;
 
-public class CustomerSubscriber(
-    ILogger<CustomerSubscriber> logger,
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory,
-    ILocationPublisher locationPublisher)
+public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -78,9 +73,7 @@ public class CustomerSubscriber(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private Shared.Database.Entities.Customer RebuildIdentities(
-        Customer customer,
-        Shared.Database.Entities.Customer existingCustomer)
+    private Shared.Database.Entities.Customer RebuildIdentities(Customer customer, Shared.Database.Entities.Customer existingCustomer)
     {
         var itemsToRemove = existingCustomer.Identities.Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
         var updatedItems = existingCustomer.Identities
