@@ -15,6 +15,7 @@ public class ApplicationConfiguration
     public bool EnableSchemaRegistry { get; set; }
     public IdentityProviders IdentityProviders { get; set; } = new();
     public QuerySplittingBehavior? QuerySplittingBehavior { get; set; }
+    public Cookie? Cookie { get; set; }
     public string GetSource() => $"{Environment}::{DomainSource}::{AppSource}";
 }
 
@@ -46,4 +47,15 @@ public class WorkOS
     public Uri? JwksUri { get; set; }
     public string? Issuer { get; set; }
     public string? ApiKey { get; set; }
+}
+
+public class Cookie
+{
+    public CookieEncryptionKey? EncryptionKey { get; set; }
+}
+
+public class CookieEncryptionKey
+{
+    public string? Key { get; set; }
+    public string? Iv { get; set; }
 }

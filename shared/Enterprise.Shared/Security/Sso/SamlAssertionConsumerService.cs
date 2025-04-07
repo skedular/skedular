@@ -9,110 +9,67 @@ using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Security.Sso.Models;
 using Flurl.Http;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
+using Constants = Api.Shared.Constants;
 
 namespace Enterprise.Shared.Security.Sso;
 
 public interface ISamlAssertionConsumerService
 {
-    Task<X509Certificate2> GetSigningCertificateFromMetadataAsync(
-        string metadataUrl,
-        CancellationToken cancellationToken);
-
-    bool ValidateSamlResponseSignature(string samlResponse, X509Certificate2 certificate);
+    Task<bool> ValidateSamlResponseSignatureAsync(string samlResponse, string appFederationMetadataUrl, CancellationToken cancellationToken);
     string VerifyAndDecodeSamlResponse(string rawSamlData);
-    SamlResponse ExtractSamlResponse(string decodedSaml);
-    void StoreSamlResponseInCookie(HttpResponse response, SamlResponse samlResponse, string organizationId);
+    SamlResponse ExtractSamlResponse(string saml);
+    void StoreSamlResponseInCookie(HttpResponse response, string organizationId, SamlResponse samlResponse);
+    SamlResponse RetrieveSamlResponseFromCookie(string rawResponse);
 }
 
-public class SamlAssertionConsumerService : ISamlAssertionConsumerService
+public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider timeProvider, ICookieHelper cookieHelper)
+    : ISamlAssertionConsumerService
 {
-    public async Task<X509Certificate2> GetSigningCertificateFromMetadataAsync(
-        string metadataUrl,
+    public async Task<bool> ValidateSamlResponseSignatureAsync(
+        string samlResponse,
+        string appFederationMetadataUrl,
         CancellationToken cancellationToken)
     {
-        try
+        var certificate = await GetSigningCertificateFromMetadataAsync(appFederationMetadataUrl, cancellationToken);
+        var xmlDoc = new XmlDocument { PreserveWhitespace = true };
+        xmlDoc.LoadXml(samlResponse);
+
+        var xmlNamespaceManager = new XmlNamespaceManager(xmlDoc.NameTable);
+        xmlNamespaceManager.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
+        xmlNamespaceManager.AddNamespace("samlp", "urn:oasis:names:tc:SAML:2.0:protocol");
+        xmlNamespaceManager.AddNamespace("saml", "urn:oasis:names:tc:SAML:2.0:assertion");
+
+        var signatureNode = xmlDoc.SelectSingleNode("/samlp:Response/saml:Assertion/ds:Signature", xmlNamespaceManager);
+        if (signatureNode?.ParentNode == null)
         {
-            var metadata = await metadataUrl.GetStringAsync(cancellationToken: cancellationToken);
-            var document = XDocument.Parse(metadata);
-            var certNode = document.Descendants().FirstOrDefault(x => x.Name.LocalName == "X509Certificate");
-
-            if (certNode == null)
-            {
-                throw new SamlMetadataException();
-            }
-
-            var certificateRawData = Convert.FromBase64String(certNode.Value);
-            var certificate = X509CertificateLoader.LoadCertificate(certificateRawData)
-                              ?? throw new InvalidOperationException("Invalid certificate. No private key found.");
-
-            return certificate;
-        }
-        catch (HttpRequestException ex)
-        {
-            throw new InvalidOperationException($"Failed to fetch metadata from {metadataUrl}", ex);
-        }
-    }
-
-    public bool ValidateSamlResponseSignature(string samlResponse, X509Certificate2 certificate)
-    {
-        try
-        {
-            var xmlDoc = new XmlDocument { PreserveWhitespace = true };
-            xmlDoc.LoadXml(samlResponse);
-
-            var xmlNamespaceManager = new XmlNamespaceManager(xmlDoc.NameTable);
-            xmlNamespaceManager.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
-            xmlNamespaceManager.AddNamespace("samlp", "urn:oasis:names:tc:SAML:2.0:protocol");
-            xmlNamespaceManager.AddNamespace("saml", "urn:oasis:names:tc:SAML:2.0:assertion");
-
-            var signatureNode =
-                xmlDoc.SelectSingleNode("/samlp:Response/saml:Assertion/ds:Signature", xmlNamespaceManager);
-
-            if (signatureNode?.ParentNode == null)
-            {
-                return false;
-            }
-
-            var signedXml = new SignedXml((XmlElement)signatureNode.ParentNode);
-            signedXml.LoadXml((XmlElement)signatureNode);
-
-            return signedXml.CheckSignature(certificate, true);
-        }
-        catch
-        {
-            //TODO : log exception
             return false;
         }
+
+        var signedXml = new SignedXml((XmlElement)signatureNode.ParentNode);
+        signedXml.LoadXml((XmlElement)signatureNode);
+
+        return signedXml.CheckSignature(certificate, true);
     }
 
     public string VerifyAndDecodeSamlResponse(string samlResponse)
     {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(samlResponse))
-            {
-                throw new ArgumentException("SAML response is empty");
-            }
+        ArgumentException.ThrowIfNullOrWhiteSpace(nameof(samlResponse));
 
-            if (samlResponse.Contains('%'))
-            {
-                samlResponse = HttpUtility.UrlDecode(samlResponse);
-            }
-
-            var samlData = Convert.FromBase64String(samlResponse);
-            return Encoding.UTF8.GetString(samlData);
-        }
-        catch (FormatException ex)
+        if (samlResponse.Contains('%'))
         {
-            throw new InvalidOperationException("Invalid SAML response format", ex);
+            samlResponse = HttpUtility.UrlDecode(samlResponse);
         }
+
+        var samlData = Convert.FromBase64String(samlResponse);
+        return Encoding.UTF8.GetString(samlData);
     }
 
     // Ref : https://learn.microsoft.com/en-us/entra/identity-platform/single-sign-on-saml-protocol
-    public SamlResponse ExtractSamlResponse(string decodedSaml)
+    public SamlResponse ExtractSamlResponse(string saml)
     {
         var samlResponse = new XmlDocument();
-        samlResponse.LoadXml(decodedSaml);
+        samlResponse.LoadXml(saml);
 
         var namespaceManager = new XmlNamespaceManager(samlResponse.NameTable);
         namespaceManager.AddNamespace("saml", "urn:oasis:names:tc:SAML:2.0:assertion");
@@ -127,11 +84,10 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
         response.SessionIndex = sessionIndexNode?.Value;
 
         var notOnOrAfterNode = samlResponse.SelectSingleNode(
-            "//saml:Subject/saml:SubjectConfirmation/saml:SubjectConfirmationData/@NotOnOrAfter", namespaceManager);
-        if (DateTime.TryParse(notOnOrAfterNode?.Value, out var notOnOrAfter))
-        {
-            response.SessionNotOnOrAfter = notOnOrAfter;
-        }
+            "//saml:Subject/saml:SubjectConfirmation/saml:SubjectConfirmationData/@NotOnOrAfter",
+            namespaceManager);
+        response.SessionNotOnOrAfter =
+            DateTimeOffset.TryParse(notOnOrAfterNode?.Value, out var notOnOrAfter) ? notOnOrAfter : DateTimeOffset.MaxValue;
 
         var attributes = samlResponse.SelectNodes("//saml:AttributeStatement/saml:Attribute", namespaceManager);
         ArgumentNullException.ThrowIfNull(attributes);
@@ -139,9 +95,12 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
         foreach (XmlNode attribute in attributes)
         {
             var name = attribute.Attributes?["Name"]?.Value;
+            ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
             var value = attribute.SelectSingleNode("saml:AttributeValue", namespaceManager)?.InnerText;
             ArgumentException.ThrowIfNullOrWhiteSpace(value);
-            response.Roles.Add($"{name}:{value}");
+
+            response.Roles[name] = value;
         }
 
         var responseNode = samlResponse.SelectSingleNode("//samlp:Response", namespaceManager);
@@ -158,14 +117,12 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
         response.Issuer = issuerNode.InnerText;
 
         var authnInstantNode = samlResponse.SelectSingleNode("//saml:AuthnStatement/@AuthnInstant", namespaceManager);
-        if (DateTime.TryParse(authnInstantNode?.Value, out var authnInstant))
+        if (DateTimeOffset.TryParse(authnInstantNode?.Value, out var authnInstant))
         {
             response.AuthnInstant = authnInstant;
         }
 
-        var authnContextNode =
-            samlResponse.SelectSingleNode("//saml:AuthnStatement/saml:AuthnContext/saml:AuthnContextClassRef",
-                namespaceManager);
+        var authnContextNode = samlResponse.SelectSingleNode("//saml:AuthnStatement/saml:AuthnContext/saml:AuthnContextClassRef", namespaceManager);
         response.AuthnContext = authnContextNode?.InnerText;
 
         var statusNode = samlResponse.SelectSingleNode("//samlp:Status", namespaceManager);
@@ -179,8 +136,7 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
             throw new InvalidOperationException("Operation Failed.");
         }
 
-        var nestedStatusCodeNode =
-            statusNode.SelectSingleNode("samlp:StatusCode/samlp:StatusCode/@Value", namespaceManager);
+        var nestedStatusCodeNode = statusNode.SelectSingleNode("samlp:StatusCode/samlp:StatusCode/@Value", namespaceManager);
         response.NestedStatusCode = nestedStatusCodeNode?.Value;
 
         var statusMessageNode = statusNode.SelectSingleNode("samlp:StatusMessage", namespaceManager);
@@ -189,13 +145,37 @@ public class SamlAssertionConsumerService : ISamlAssertionConsumerService
         return response;
     }
 
-    public void StoreSamlResponseInCookie(HttpResponse response, SamlResponse samlResponse, string organizationId)
-    {
-        //TODO : encrypt the response
-        var serializerContent = JsonSerializer.Serialize(samlResponse);
+    public void StoreSamlResponseInCookie(HttpResponse response, string organizationId, SamlResponse samlResponse) =>
         response.Cookies.Append(
-            $"skedular-sso-{organizationId}",
-            serializerContent,
-            new CookieOptions { HttpOnly = true, Secure = true, Expires = samlResponse.SessionNotOnOrAfter });
-    }
+            $"{Constants.OrganizationSsoCookiePrefix}-{organizationId}",
+            cookieHelper.Encrypt(JsonSerializer.Serialize(samlResponse)),
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                MaxAge = samlResponse.SessionNotOnOrAfter - timeProvider.GetUtcNow(),
+                Expires = samlResponse.SessionNotOnOrAfter
+            });
+
+    public SamlResponse RetrieveSamlResponseFromCookie(string rawResponse) =>
+        JsonSerializer.Deserialize<SamlResponse>(cookieHelper.Decrypt(rawResponse))!;
+
+    private async Task<X509Certificate2> GetSigningCertificateFromMetadataAsync(string metadataUrl, CancellationToken cancellationToken) =>
+        (await memoryCache.GetOrCreateAsync(
+            $"organization-sso-settings-{metadataUrl}",
+            async cacheEntry =>
+            {
+                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
+
+                var metadata = await metadataUrl.GetStringAsync(cancellationToken: cancellationToken);
+                var document = XDocument.Parse(metadata);
+                var certNode = document.Descendants().FirstOrDefault(x => x.Name.LocalName == "X509Certificate");
+                if (certNode == null)
+                {
+                    throw new SamlMetadataException();
+                }
+
+                var certificateRawData = Convert.FromBase64String(certNode.Value);
+                return X509CertificateLoader.LoadCertificate(certificateRawData);
+            }))!;
 }

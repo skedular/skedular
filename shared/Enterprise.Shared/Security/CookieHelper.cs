@@ -1,0 +1,72 @@
+using System.Security.Cryptography;
+using System.Text;
+using Enterprise.Shared.Configurations;
+
+namespace Enterprise.Shared.Security;
+
+public interface ICookieHelper
+{
+    string Encrypt(string plainText);
+    string Decrypt(string cipherText);
+}
+
+public class CookieHelper : ICookieHelper
+{
+    private readonly byte[] _iv;
+    private readonly byte[] _key;
+
+    public CookieHelper(ApplicationConfiguration applicationConfiguration)
+    {
+        ArgumentNullException.ThrowIfNull(applicationConfiguration.Cookie);
+        ArgumentNullException.ThrowIfNull(applicationConfiguration.Cookie.EncryptionKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.Cookie.EncryptionKey.Key);
+        ArgumentException.ThrowIfNullOrWhiteSpace(applicationConfiguration.Cookie.EncryptionKey.Iv);
+
+        _key = Encoding.UTF8.GetBytes(applicationConfiguration.Cookie.EncryptionKey.Key);
+        if (_key.Length != 32)
+        {
+            throw new ArgumentException($"{nameof(applicationConfiguration.Cookie.EncryptionKey.Key)} must be 32 bytes.");
+        }
+
+        _iv = Encoding.UTF8.GetBytes(applicationConfiguration.Cookie.EncryptionKey.Iv);
+        if (_iv.Length != 16)
+        {
+            throw new ArgumentException($"{nameof(applicationConfiguration.Cookie.EncryptionKey.Iv)} must be 16 bytes.");
+        }
+    }
+
+    public string Encrypt(string plainText)
+    {
+        using var aesAlg = Aes.Create();
+        aesAlg.Key = _key;
+        aesAlg.IV = _iv;
+
+        var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+        using var msEncrypt = new MemoryStream();
+        using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+        {
+            using (var swEncrypt = new StreamWriter(csEncrypt))
+            {
+                swEncrypt.Write(plainText);
+            }
+        }
+
+        return Convert.ToBase64String(msEncrypt.ToArray());
+    }
+
+    public string Decrypt(string cipherText)
+    {
+        var cipherBytes = Convert.FromBase64String(cipherText);
+
+        using var aesAlg = Aes.Create();
+        aesAlg.Key = _key;
+        aesAlg.IV = _iv;
+
+        var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+        using var msDecrypt = new MemoryStream(cipherBytes);
+        using var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+        using var srDecrypt = new StreamReader(csDecrypt);
+
+        return srDecrypt.ReadToEnd();
+    }
+}

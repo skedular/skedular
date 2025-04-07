@@ -133,6 +133,8 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
+      Application__Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
+      Application__Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -219,6 +221,8 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
+      Application__Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
+      Application__Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -308,6 +312,8 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
+      Application__Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
+      Application__Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -425,6 +431,8 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
+      Application__Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
+      Application__Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -511,6 +519,8 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
+      Application__Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
+      Application__Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}
@@ -600,6 +610,8 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
+      Application__Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
+      Application__Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
       Postgres__Server: ${SKEDULAR_POSTGRES_SERVER}
       Postgres__Username: ${SKEDULAR_POSTGRES_USERNAME}
       Postgres__Password: ${SKEDULAR_POSTGRES_PASSWORD}

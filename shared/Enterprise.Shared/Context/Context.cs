@@ -1,6 +1,9 @@
+using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Http;
 
 namespace Enterprise.Shared.Context;
+
+public record UserSsoContext(string Email);
 
 public interface IContext
 {
@@ -46,6 +49,8 @@ public interface IContext
     Guid GetAzureTenantId();
     void SetAzureTenantAudience(string value);
     string GetAzureTenantAudience();
+    void AddUserSsoContext(string organizationId, UserSsoContext userSsoContext);
+    UserSsoContext? GetUserSsoContext(string organizationId);
 }
 
 public class Context(IHttpContextAccessor httpContextAccessor) : IContext
@@ -71,6 +76,7 @@ public class Context(IHttpContextAccessor httpContextAccessor) : IContext
     private const string LocaleKey = "Locale";
     private const string AzureTenantIdKey = "AzureTenantId";
     private const string AzureTenantAudienceKey = "AzureTenantAudience";
+    private const string UserSsoContextKey = "UserSsoContext";
 
     public void SetCorrelationId(string value) => GetHttpContext().Items[CorrelationIdKey] = value;
 
@@ -219,6 +225,28 @@ public class Context(IHttpContextAccessor httpContextAccessor) : IContext
         GetHttpContext().Items.TryGetValue(AzureTenantAudienceKey, out var value)
             ? value as string ?? string.Empty
             : string.Empty;
+
+    public void AddUserSsoContext(string organizationId, UserSsoContext userSsoContext)
+    {
+        if (GetHttpContext().Items.TryGetValue(UserSsoContextKey, out var value))
+        {
+            if (value is ConcurrentDictionary<string, UserSsoContext> organizationUserSso)
+            {
+                organizationUserSso[organizationId] = userSsoContext;
+            }
+        }
+        else
+        {
+            GetHttpContext().Items[UserSsoContextKey] = new ConcurrentDictionary<string, UserSsoContext> { [organizationId] = userSsoContext };
+        }
+    }
+
+    public UserSsoContext? GetUserSsoContext(string organizationId) =>
+        GetHttpContext().Items.TryGetValue(UserSsoContextKey, out var value) &&
+        value is ConcurrentDictionary<string, UserSsoContext> organizationUserSso &&
+        organizationUserSso.TryGetValue(organizationId, out var userSsoContext)
+            ? userSsoContext
+            : null;
 
     private HttpContext GetHttpContext()
     {

@@ -19,7 +19,7 @@ public class Mapper : IMapper
             ProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First())
         };
 
-    public ProductVersion MapTo(Models.ProductVersion src)
+    private ProductVersion MapTo(Models.ProductVersion src)
     {
         var productVersion = new ProductVersion
         {

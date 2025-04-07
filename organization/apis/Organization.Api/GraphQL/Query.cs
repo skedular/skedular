@@ -64,13 +64,11 @@ public class Query(IMapper mapper)
         mapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken));
 
     [UseResolverScope]
-    public bool OrganizationRequiredSsoTokenValid(string id, [Service] IHttpContextAccessor httpContextAccessor)
-    {
-        var request = httpContextAccessor.HttpContext?.Request;
-        ArgumentNullException.ThrowIfNull(request);
-
-        return false;
-    }
+    public async Task<bool> OrganizationRequiredSsoTokenValidAsync(
+        string id,
+        [Service] IOrganizationSsoService organizationSsoService,
+        CancellationToken cancellationToken) =>
+        await organizationSsoService.IsSsoLoginRequired(id, cancellationToken);
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> OrganizationAsync(

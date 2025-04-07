@@ -13,11 +13,8 @@ public interface ICachedCustomerService
     Task<(Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
 }
 
-public class CachedCustomerService(
-    IRepositoryFactory repositoryFactory,
-    IMapper mapper,
-    IContext context,
-    IMemoryCache memoryCache) : ICachedCustomerService
+public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper mapper, IContext context, IMemoryCache memoryCache)
+    : ICachedCustomerService
 {
     public async Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
     {
@@ -53,10 +50,7 @@ public class CachedCustomerService(
             {
                 cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
 
-                var customer =
-                    await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(
-                        verifiableToken,
-                        cancellationToken);
+                var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken);
                 if (customer is null)
                 {
                     throw new CustomerNotFound();

@@ -87,7 +87,7 @@ public class OrganizationSubscriber(
 
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         _ = RebuildOrganizationSsoSettings(organization, existingOrganization);
-        
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await msTeamsInternalPublisher.PublishRefreshAzureTenantTeamsAndChannelsAsync(

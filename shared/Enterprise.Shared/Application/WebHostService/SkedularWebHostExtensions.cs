@@ -3,6 +3,7 @@ using System.Text.Json;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.HealthCheck;
+using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Security.Token;
 using Enterprise.Shared.Telemetry;
 using Microsoft.AspNetCore.Builder;
@@ -76,6 +77,7 @@ public static class SkedularWebHostExtensions
         app
             .UseMiddleware<TelemetryMiddleware>()
             .UseMiddleware<SecurityContextEnricherMiddleware>()
+            .UseMiddleware<SsoContextEnricherMiddleware>()
             .UseMiddleware<ContextEnricherMiddleware>();
 
         app.UseEndpoints(endpointRouteBuilder =>

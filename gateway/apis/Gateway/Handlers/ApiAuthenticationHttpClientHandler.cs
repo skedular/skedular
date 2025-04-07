@@ -1,10 +1,9 @@
 ﻿using System.Net.Http.Headers;
+using Api.Shared;
 
 namespace Gateway.Handlers;
 
-public class ApiAuthenticationHttpClientHandler(
-    IHttpContextAccessor httpContextAccessor,
-    ILogger<ApiAuthenticationHttpClientHandler> logger)
+public class ApiAuthenticationHttpClientHandler(IHttpContextAccessor httpContextAccessor, ILogger<ApiAuthenticationHttpClientHandler> logger)
     : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage, CancellationToken cancellationToken)
@@ -29,10 +28,10 @@ public class ApiAuthenticationHttpClientHandler(
                 httpRequestMessage.Headers.Add("X-Correlation-Id", correlationIdHeader.ToString());
             }
 
-            var ssoCookiesHeader = httpRequest.Headers["X-SSO-Cookies"];
+            var ssoCookiesHeader = httpRequest.Headers[Constants.OrganizationSsoCookieHeader];
             if (!string.IsNullOrWhiteSpace(ssoCookiesHeader))
             {
-                httpRequestMessage.Headers.Add("X-SSO-Cookies", ssoCookiesHeader.ToString());
+                httpRequestMessage.Headers.Add(Constants.OrganizationSsoCookieHeader, ssoCookiesHeader.ToString());
             }
 
             return await base.SendAsync(httpRequestMessage, cancellationToken);

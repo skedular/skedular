@@ -1,3 +1,4 @@
+using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Random;
@@ -5,14 +6,15 @@ using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Security.Sso.Models;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
-using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
 
 namespace Organization.Api.Services;
 
 public interface IOrganizationSsoService
 {
+    Task<bool> IsSsoLoginRequired(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> RemoveSsoSettingsAsync(string organizationId, CancellationToken cancellationToken);
     Task<string> SsoLoginAsync(string id, string redirectUrl, CancellationToken cancellationToken);
@@ -28,8 +30,31 @@ public class OrganizationSsoService(
     IMapper mapper,
     IDbTransactionBuilder transactionBuilder,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
-    IRandomHelper randomHelper) : IOrganizationSsoService
+    IRandomHelper randomHelper,
+    TimeProvider timeProvider,
+    IContext context) : IOrganizationSsoService
 {
+    public async Task<bool> IsSsoLoginRequired(string id, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        var ssoSettings = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(id, cancellationToken);
+        if (ssoSettings is null)
+        {
+            return true;
+        }
+
+        var userSsoContext = context.GetUserSsoContext(id);
+        if (userSsoContext is null)
+        {
+            return true;
+        }
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        return !customer.Identities.Any(item =>
+            !string.IsNullOrWhiteSpace(item.Email) && item.Email.Equals(userSsoContext.Email, StringComparison.InvariantCultureIgnoreCase));
+    }
+
     public async Task<Shared.Models.Organization> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(ssoSetting.Organization);
@@ -97,7 +122,7 @@ public class OrganizationSsoService(
 
         _ = repositoryFactory.OrganizationSsoSettingRepository.Remove(organization.OrganizationSsoSettings);
         organization.OrganizationSsoSettings = null;
-        
+
         await organizationOutboxPublisher.PublishOrganizationsAsync(
             [mapper.MapTo(organization)],
             repositoryFactory.UnitOfWork,
@@ -131,28 +156,30 @@ public class OrganizationSsoService(
         ArgumentException.ThrowIfNullOrEmpty(rawSamlResponse);
 
         var decodedSaml = samlAssertionConsumerService.VerifyAndDecodeSamlResponse(rawSamlResponse);
-        var response = samlAssertionConsumerService.ExtractSamlResponse(decodedSaml);
-        var existingOrganizationSsoSetting = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(
-            ExtractSamlOriginalId(response.InResponseTo),
-            cancellationToken);
-        if (existingOrganizationSsoSetting is null)
+        var samlResponse = samlAssertionConsumerService.ExtractSamlResponse(decodedSaml);
+        if (samlResponse.StatusCode != "urn:oasis:names:tc:SAML:2.0:status:Success" || samlResponse.SessionNotOnOrAfter <= timeProvider.GetUtcNow())
+        {
+            throw new Unauthorized();
+        }
+
+        var samlOriginId = samlResponse.InResponseTo.StartsWith(Constants.SamlIdPrefix)
+            ? samlResponse.InResponseTo[Constants.SamlIdPrefix.Length..]
+            : samlResponse.InResponseTo;
+        var ssoSettings = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(samlOriginId, cancellationToken);
+        if (ssoSettings is null)
         {
             throw new OrganizationSsoIsNotYetSetup();
         }
 
-        var certificate = await samlAssertionConsumerService.GetSigningCertificateFromMetadataAsync(
-            existingOrganizationSsoSetting.AppFederationMetadataUrl,
+        var isSignatureValid = await samlAssertionConsumerService.ValidateSamlResponseSignatureAsync(
+            decodedSaml,
+            ssoSettings.AppFederationMetadataUrl,
             cancellationToken);
-        var isSignatureValid = samlAssertionConsumerService.ValidateSamlResponseSignature(decodedSaml, certificate);
         if (!isSignatureValid)
         {
             throw new Unauthorized();
         }
 
-        samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, response, existingOrganizationSsoSetting.Organization.Id);
+        samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, ssoSettings.Organization.Id, samlResponse);
     }
-
-    // Split and return the original ID without the prefix
-    private static string ExtractSamlOriginalId(string prefixedId) =>
-        prefixedId.StartsWith(Constants.SamlIdPrefix) ? prefixedId[Constants.SamlIdPrefix.Length..] : prefixedId;
 }

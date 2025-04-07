@@ -11,7 +11,7 @@ public interface ISamlLoginRequestFactory
     string GenerateSamlLoginRequest(string organizationId, string redirectUrl, string entityId, string loginUrl);
 }
 
-public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger) : ISamlLoginRequestFactory
+public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger, TimeProvider timeProvider) : ISamlLoginRequestFactory
 {
     public string GenerateSamlLoginRequest(string organizationId, string redirectUrl, string entityId, string loginUrl)
     {
@@ -27,7 +27,7 @@ public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger) : 
         return url;
     }
 
-    private static string GenerateSamlRequest(string organizationId, string appUrl)
+    private string GenerateSamlRequest(string organizationId, string appUrl)
     {
         var samlId = $"{Constants.SamlIdPrefix}{organizationId}";
         //ref : https://learn.microsoft.com/en-us/entra/identity-platform/single-sign-on-saml-protocol
@@ -35,7 +35,7 @@ public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger) : 
                     <samlp:AuthnRequest
                       xmlns=""urn:oasis:names:tc:SAML:2.0:metadata""
                       ID=""{samlId}""
-                      Version=""2.0"" IssueInstant=""{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ssZ}""
+                      Version=""2.0"" IssueInstant=""{timeProvider.GetUtcNow():yyyy-MM-ddTHH:mm:ssZ}""
                       xmlns:samlp=""urn:oasis:names:tc:SAML:2.0:protocol"">
                       <Issuer xmlns=""urn:oasis:names:tc:SAML:2.0:assertion"">{appUrl}</Issuer>
                     </samlp:AuthnRequest>";

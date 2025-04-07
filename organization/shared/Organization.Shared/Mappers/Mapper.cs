@@ -6,6 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 using Organization.Shared.Models;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
+using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 
 namespace Organization.Shared.Mappers;
@@ -13,7 +14,7 @@ namespace Organization.Shared.Mappers;
 public interface IMapper
 {
     Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization MapTo(Models.Organization src);
-    public InvitationToJoinOrganization MapTo(JoinInvitation src, string? inviteeIdToOverride);
+    InvitationToJoinOrganization MapTo(JoinInvitation src, string? inviteeIdToOverride);
 }
 
 public class Mapper : IMapper

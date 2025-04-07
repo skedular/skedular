@@ -93,7 +93,7 @@ public class CustomerService(
             throw new CustomerNotFound();
         }
 
-        return await AddAsync(mapper.MapTo(), true, cancellationToken);
+        return await AddAsync(mapper.MapTo(context), true, cancellationToken);
     }
 
     public async Task<(bool, Shared.Models.Customer?)> AnyCustomerExistByVerifiableTokenAsync(
@@ -226,7 +226,7 @@ public class CustomerService(
         }
         else
         {
-            var identity = mapper.MapToIdentity();
+            var identity = mapper.MapToIdentity(context);
             identity.CreatedAt = timeProvider.GetUtcNow();
             existingCustomer.Identities = existingCustomer.Identities.Concat([identity]).ToList();
             customer = mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer));

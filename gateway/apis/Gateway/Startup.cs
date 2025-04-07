@@ -10,8 +10,7 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
 {
     protected override void ConfigureCustomServices(IServiceCollection services)
     {
-        var subgraphsConfigurations =
-            Configuration.GetSection(SubgraphsConfigurations.Key).Get<SubgraphsConfigurations>();
+        var subgraphsConfigurations = Configuration.GetSection(SubgraphsConfigurations.Key).Get<SubgraphsConfigurations>();
         ArgumentNullException.ThrowIfNull(subgraphsConfigurations);
         services.AddSingleton(subgraphsConfigurations);
 
@@ -23,9 +22,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddSingleton<IConfigurationRewriter, ServiceDiscoveryConfigurationRewrite>()
             .AddScoped<ApiAuthenticationHttpClientHandler>();
 
-        var fusionGatewayBuilder = services
-            .AddFusionGatewayServer()
-            .ConfigureFromFile("gateway.fgp");
+        var fusionGatewayBuilder =
+            services
+                .AddFusionGatewayServer()
+                .ConfigureFromFile("gateway.fgp");
 
         if (Environment.IsDevelopment())
         {

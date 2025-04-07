@@ -97,6 +97,9 @@ public static class Constants
 
     public const int MaxOrganizationTypeLength = 50;
 
+    public const string OrganizationSsoCookiePrefix = "skedular-sso";
+    public const string OrganizationSsoCookieHeader = "X-SSO-Cookies";
+
     public const int MaxProductNameLength = 500;
     public const int MaxProductDescriptionLength = 10000;
     public const int MaxProductPriceCurrencyLength = 16;

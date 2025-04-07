@@ -2,6 +2,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Token;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ public static class Extensions
         services.AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = applicationConfiguration.IdentityProviders.WorkOS.ApiKey }));
 
         return services
+            .AddSingleton<ICookieHelper, CookieHelper>()
             .AddScoped<IGrpcAuthenticator, GrpcAuthenticator>()
             .AddSingleton<IWorkOSTokenService, WorkOSTokenService>()
             .AddSingleton<ICognitoTokenService, CognitoTokenService>()

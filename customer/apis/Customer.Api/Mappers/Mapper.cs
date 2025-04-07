@@ -17,8 +17,8 @@ namespace Customer.Api.Mappers;
 
 public interface IMapper
 {
-    Shared.Models.Customer MapTo();
-    Identity MapToIdentity();
+    Shared.Models.Customer MapTo(IContext context);
+    Identity MapToIdentity(IContext context);
     CustomerDetails MapTo(Shared.Models.Customer src);
     CustomerPayload MapTo(Shared.Models.Customer src, string? clientMutationId);
     CustomerFeedback MapTo(SubmitCustomerFeedbackInput src);
@@ -47,9 +47,9 @@ public interface IMapper
     CustomerEdge MapTo(Edge<Shared.Models.Customer> src);
 }
 
-public class Mapper(IContext context) : IMapper
+public class Mapper : IMapper
 {
-    public Shared.Models.Customer MapTo() =>
+    public Shared.Models.Customer MapTo(IContext context) =>
         new()
         {
             Designation = context.GetDesignation(),
@@ -91,7 +91,7 @@ public class Mapper(IContext context) : IMapper
             PreferredResources = []
         };
 
-    public Identity MapToIdentity() =>
+    public Identity MapToIdentity(IContext context) =>
         new() { Id = context.GetVerifiableToken().ToSafeString(), Email = context.GetEmail(), EmailVerified = context.GetEmailVerified() };
 
     public CustomerDetails MapTo(Shared.Models.Customer src) =>

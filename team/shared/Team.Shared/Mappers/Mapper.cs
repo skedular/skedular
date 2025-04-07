@@ -10,7 +10,7 @@ namespace Team.Shared.Mappers;
 public interface IMapper
 {
     Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team MapTo(Models.Team src);
-    public InvitationToJoinTeam MapTo(JoinInvitation src, string? inviteeIdToOverride);
+    InvitationToJoinTeam MapTo(JoinInvitation src, string? inviteeIdToOverride);
 }
 
 public class Mapper : IMapper
