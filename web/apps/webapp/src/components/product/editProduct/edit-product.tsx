@@ -314,7 +314,7 @@ const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Product ${product.name} updated.`} />,
+          render: <NotificationContent content={`Product ${name} updated.`} />,
         });
 
         router.back();
