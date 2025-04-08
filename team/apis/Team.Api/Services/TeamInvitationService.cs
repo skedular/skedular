@@ -112,26 +112,17 @@ public class TeamInvitationService(
 
             if (matchingCustomerByEmail is null)
             {
-                await notificationOutboxPublisher.PublishInviteToJoinTeamNewCustomerAsync(
-                    mapper.MapTo(team),
-                    customer,
-                    email,
-                    repositoryFactory.UnitOfWork,
-                    cancellationToken);
+                notificationOutboxPublisher.PublishInviteToJoinTeamNewCustomer(mapper.MapTo(team), customer, email, repositoryFactory.UnitOfWork);
             }
             else
             {
-                await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(
-                    [mapper.MapTo(existingJoinInvitation)],
-                    repositoryFactory.UnitOfWork,
-                    cancellationToken);
+                teamOutboxPublisher.PublishInvitesToJoinTeamNotification([mapper.MapTo(existingJoinInvitation)], repositoryFactory.UnitOfWork);
 
-                await notificationOutboxPublisher.PublishInviteToJoinTeamExistingCustomerAsync(
+                notificationOutboxPublisher.PublishInviteToJoinTeamExistingCustomer(
                     mapper.MapTo(team),
                     customer,
                     mapper.MapTo(matchingCustomerByEmail)!,
-                    repositoryFactory.UnitOfWork,
-                    cancellationToken);
+                    repositoryFactory.UnitOfWork);
             }
         }
 
@@ -152,9 +143,7 @@ public class TeamInvitationService(
 
         EnsureCustomerAuthorizedToChangeJoinInvitationStatus(joinInvitation, customer);
 
-        var team =
-            await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id,
-                cancellationToken);
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id, cancellationToken);
         if (team is null)
         {
             throw new TeamNotFound();
@@ -173,16 +162,13 @@ public class TeamInvitationService(
                 Customer = customerEntity
             });
 
-            await teamOutboxPublisher.PublishTeamsAsync([mapper.MapTo(team)], repositoryFactory.UnitOfWork, cancellationToken);
+            teamOutboxPublisher.PublishTeams([mapper.MapTo(team)], repositoryFactory.UnitOfWork);
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
-        await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(
-            [mapper.MapTo(joinInvitation)],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        teamOutboxPublisher.PublishInvitesToJoinTeamNotification([mapper.MapTo(joinInvitation)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -206,10 +192,7 @@ public class TeamInvitationService(
         joinInvitation.Status = InvitationStatusConstants.Rejected;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
-        await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(
-            [mapper.MapTo(joinInvitation)],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        teamOutboxPublisher.PublishInvitesToJoinTeamNotification([mapper.MapTo(joinInvitation)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -242,10 +225,7 @@ public class TeamInvitationService(
         joinInvitation.Status = InvitationStatusConstants.Cancelled;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
 
-        await teamOutboxPublisher.PublishInvitesToJoinTeamNotificationAsync(
-            [mapper.MapTo(joinInvitation)],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        teamOutboxPublisher.PublishInvitesToJoinTeamNotification([mapper.MapTo(joinInvitation)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

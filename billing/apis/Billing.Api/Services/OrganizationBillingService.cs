@@ -91,7 +91,8 @@ public class OrganizationBillingService(
 
         var organization = mapper.MapTo(repositoryFactory.OrganizationRepository.Update(existingOrganization));
 
-        await billingOutboxPublisher.PublishOrganizationsBillingInfoAsync([organization], repositoryFactory.UnitOfWork, cancellationToken);
+        billingOutboxPublisher.PublishOrganizationsBillingInfo([organization], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 

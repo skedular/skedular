@@ -14,12 +14,8 @@ namespace Organization.Shared.Publishers;
 
 public interface IOrganizationOutboxPublisher
 {
-    Task PublishOrganizationsAsync(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
-
-    Task PublishInvitesToJoinOrganizationNotificationAsync(
-        IEnumerable<JoinInvitation> joinInvitations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork);
+    void PublishInvitesToJoinOrganizationNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork);
 }
 
 public class OrganizationOutboxPublisher(
@@ -29,14 +25,11 @@ public class OrganizationOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IOrganizationOutboxPublisher
 {
-    public async Task PublishOrganizationsAsync(
-        IEnumerable<Models.Organization> organizations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishOrganizations(IEnumerable<Models.Organization> organizations, IUnitOfWork unitOfWork)
     {
         foreach (var organization in organizations)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { OrganizationId = organization.Id },
                 new Event
                 {
@@ -47,19 +40,15 @@ public class OrganizationOutboxPublisher(
                         context.GetCorrelationId()),
                     Data = new Data { Organization = mapper.MapTo(organization) }
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 
-    public async Task PublishInvitesToJoinOrganizationNotificationAsync(
-        IEnumerable<JoinInvitation> joinInvitations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishInvitesToJoinOrganizationNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork)
     {
         foreach (var joinInvitation in joinInvitations)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { OrganizationId = joinInvitation.Id },
                 new Event
                 {
@@ -72,8 +61,7 @@ public class OrganizationOutboxPublisher(
                         context.GetCorrelationId()),
                     Data = new Data { InvitationToJoinOrganization = mapper.MapTo(joinInvitation, null) }
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 }

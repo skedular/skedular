@@ -185,10 +185,6 @@ public class PaymentService(
         var hasAttachedPaymentMethod = organization.OrganizationStripePaymentMethods.Any(item =>
             !item.DeletedAt.HasValue && item.Status == OrganizationStripePaymentMethodStatus.Confirmed);
 
-        await paymentOutboxPublisher.PublishOrganizationPaymentMethodStateAsync(
-            organizationId,
-            hasAttachedPaymentMethod,
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        paymentOutboxPublisher.PublishOrganizationPaymentMethodState(organizationId, hasAttachedPaymentMethod, repositoryFactory.UnitOfWork);
     }
 }

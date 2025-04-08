@@ -13,7 +13,7 @@ namespace Location.Shared.Publishers;
 
 public interface ILocationOutboxPublisher
 {
-    Task PublishLocationsAsync(IEnumerable<Models.Location> locations, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    void PublishLocations(IEnumerable<Models.Location> locations, IUnitOfWork unitOfWork);
 }
 
 public class LocationOutboxPublisher(
@@ -23,11 +23,11 @@ public class LocationOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : ILocationOutboxPublisher
 {
-    public async Task PublishLocationsAsync(IEnumerable<Models.Location> locations, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public void PublishLocations(IEnumerable<Models.Location> locations, IUnitOfWork unitOfWork)
     {
         foreach (var location in locations)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { LocationId = location.Id },
                 new Event
                 {
@@ -38,8 +38,7 @@ public class LocationOutboxPublisher(
                         context.GetCorrelationId()),
                     Data = new Data { Location = mapper.MapTo(location) }
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 }

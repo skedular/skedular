@@ -10,7 +10,7 @@ namespace Booking.Shared.Publishers;
 
 public interface IBookingInternalOutboxPublisher
 {
-    Task PublishGenerateResourceBookingSlotAsync(IEnumerable<string> resourceIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    void PublishGenerateResourceBookingSlot(IEnumerable<string> resourceIds, IUnitOfWork unitOfWork);
 }
 
 public class BookingInternalOutboxPublisher(
@@ -19,14 +19,11 @@ public class BookingInternalOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IBookingInternalOutboxPublisher
 {
-    public async Task PublishGenerateResourceBookingSlotAsync(
-        IEnumerable<string> resourceIds,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishGenerateResourceBookingSlot(IEnumerable<string> resourceIds, IUnitOfWork unitOfWork)
     {
         foreach (var resourceId in resourceIds)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { ResourceId = resourceId },
                 new Event
                 {
@@ -37,8 +34,7 @@ public class BookingInternalOutboxPublisher(
                         context.GetCorrelationId()),
                     ResourceId = resourceId
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 }

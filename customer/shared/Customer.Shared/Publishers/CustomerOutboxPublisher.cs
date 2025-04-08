@@ -13,7 +13,7 @@ namespace Customer.Shared.Publishers;
 
 public interface ICustomerOutboxPublisher
 {
-    Task PublishCustomersAsync(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    void PublishCustomers(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork);
 }
 
 public class CustomerOutboxPublisher(
@@ -23,11 +23,11 @@ public class CustomerOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : ICustomerOutboxPublisher
 {
-    public async Task PublishCustomersAsync(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public void PublishCustomers(IEnumerable<Models.Customer> customers, IUnitOfWork unitOfWork)
     {
         foreach (var customer in customers)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { CustomerId = customer.Id },
                 new Event
                 {
@@ -38,8 +38,7 @@ public class CustomerOutboxPublisher(
                         context.GetCorrelationId()),
                     Data = new Data { Customer = mapper.MapTo(customer) }
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 }

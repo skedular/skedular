@@ -11,11 +11,7 @@ namespace Payment.Shared.Publishers;
 
 public interface IPaymentOutboxPublisher
 {
-    Task PublishOrganizationPaymentMethodStateAsync(
-        string organizationId,
-        bool hasAttachedPaymentMethod,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    void PublishOrganizationPaymentMethodState(string organizationId, bool hasAttachedPaymentMethod, IUnitOfWork unitOfWork);
 }
 
 public class PaymentOutboxPublisher(
@@ -24,12 +20,8 @@ public class PaymentOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IPaymentOutboxPublisher
 {
-    public async Task PublishOrganizationPaymentMethodStateAsync(
-        string organizationId,
-        bool hasAttachedPaymentMethod,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken) =>
-        await publisher.PublishAsync(new Key { OrganizationId = organizationId }, new Event
+    public void PublishOrganizationPaymentMethodState(string organizationId, bool hasAttachedPaymentMethod, IUnitOfWork unitOfWork) =>
+        publisher.Publish(new Key { OrganizationId = organizationId }, new Event
             {
                 Metadata = Event.NewMetadata(
                     applicationConfiguration.DomainSource,
@@ -44,6 +36,5 @@ public class PaymentOutboxPublisher(
                     }
                 }
             },
-            unitOfWork,
-            cancellationToken);
+            unitOfWork);
 }

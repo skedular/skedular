@@ -14,12 +14,8 @@ namespace Team.Shared.Publishers;
 
 public interface ITeamOutboxPublisher
 {
-    Task PublishTeamsAsync(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
-
-    Task PublishInvitesToJoinTeamNotificationAsync(
-        IEnumerable<JoinInvitation> joinInvitations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    void PublishTeams(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork);
+    void PublishInvitesToJoinTeamNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork);
 }
 
 public class TeamOutboxPublisher(
@@ -29,11 +25,11 @@ public class TeamOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : ITeamOutboxPublisher
 {
-    public async Task PublishTeamsAsync(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public void PublishTeams(IEnumerable<Models.Team> teams, IUnitOfWork unitOfWork)
     {
         foreach (var team in teams)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { TeamId = team.Id },
                 new Event
                 {
@@ -44,19 +40,15 @@ public class TeamOutboxPublisher(
                         context.GetCorrelationId()),
                     Data = new Data { Team = mapper.MapTo(team) }
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 
-    public async Task PublishInvitesToJoinTeamNotificationAsync(
-        IEnumerable<JoinInvitation> joinInvitations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishInvitesToJoinTeamNotification(IEnumerable<JoinInvitation> joinInvitations, IUnitOfWork unitOfWork)
     {
         foreach (var joinInvitation in joinInvitations)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { TeamId = joinInvitation.Id },
                 new Event
                 {
@@ -69,8 +61,7 @@ public class TeamOutboxPublisher(
                         context.GetCorrelationId()),
                     Data = new Data { InvitationToJoinTeam = mapper.MapTo(joinInvitation, null) }
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 }

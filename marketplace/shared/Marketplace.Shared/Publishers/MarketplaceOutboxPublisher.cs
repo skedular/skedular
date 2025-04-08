@@ -14,7 +14,7 @@ namespace Marketplace.Shared.Publishers;
 
 public interface IMarketplaceOutboxPublisher
 {
-    Task PublishProductsAsync(IEnumerable<Product> products, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    void PublishProducts(IEnumerable<Product> products, IUnitOfWork unitOfWork);
 }
 
 public class MarketplaceOutboxPublisher(
@@ -24,11 +24,11 @@ public class MarketplaceOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IMarketplaceOutboxPublisher
 {
-    public async Task PublishProductsAsync(IEnumerable<Product> products, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public void PublishProducts(IEnumerable<Product> products, IUnitOfWork unitOfWork)
     {
         foreach (var product in products)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { ProductId = product.Id },
                 new Event
                 {
@@ -39,8 +39,7 @@ public class MarketplaceOutboxPublisher(
                         context.GetCorrelationId()),
                     Data = new Data { Product = mapper.MapTo(product) }
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 }

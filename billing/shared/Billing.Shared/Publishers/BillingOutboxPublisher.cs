@@ -14,12 +14,8 @@ namespace Billing.Shared.Publishers;
 
 public interface IBillingOutboxPublisher
 {
-    Task PublishBillingOrganizationsOfferingsAsync(
-        IEnumerable<OrganizationOffering> organizationOfferings,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
-
-    Task PublishOrganizationsBillingInfoAsync(IEnumerable<Organization> organizations, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    void PublishBillingOrganizationsOfferings(IEnumerable<OrganizationOffering> organizationOfferings, IUnitOfWork unitOfWork);
+    void PublishOrganizationsBillingInfo(IEnumerable<Organization> organizations, IUnitOfWork unitOfWork);
 }
 
 public class BillingOutboxPublisher(
@@ -29,14 +25,11 @@ public class BillingOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IBillingOutboxPublisher
 {
-    public async Task PublishBillingOrganizationsOfferingsAsync(
-        IEnumerable<OrganizationOffering> organizationOfferings,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishBillingOrganizationsOfferings(IEnumerable<OrganizationOffering> organizationOfferings, IUnitOfWork unitOfWork)
     {
         foreach (var organizationOffering in organizationOfferings)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { OrganizationOfferingId = organizationOffering.Id },
                 new Event
                 {
@@ -47,19 +40,15 @@ public class BillingOutboxPublisher(
                         context.GetCorrelationId()),
                     Data = new Data { OrganizationOfferingBilling = mapper.MapTo(organizationOffering) }
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 
-    public async Task PublishOrganizationsBillingInfoAsync(
-        IEnumerable<Organization> organizations,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishOrganizationsBillingInfo(IEnumerable<Organization> organizations, IUnitOfWork unitOfWork)
     {
         foreach (var organization in organizations)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { OrganizationId = organization.Id },
                 new Event
                 {
@@ -70,8 +59,7 @@ public class BillingOutboxPublisher(
                         context.GetCorrelationId()),
                     Data = new Data { OrganizationBillingInfo = mapper.MapTo(organization) }
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 }

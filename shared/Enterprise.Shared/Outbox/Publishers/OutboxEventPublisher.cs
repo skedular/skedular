@@ -14,11 +14,7 @@ namespace Enterprise.Shared.Outbox.Publishers;
 /// </summary>
 public interface IOutboxEventPublisher<in TKey, in TEvent> where TEvent : IMetadataEvent
 {
-    Task PublishAsync(
-        TKey key,
-        TEvent @event,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    void Publish(TKey key, TEvent @event, IUnitOfWork unitOfWork);
 }
 
 public class OutboxEventPublisher<TKey, TEvent>(
@@ -32,22 +28,14 @@ public class OutboxEventPublisher<TKey, TEvent>(
     : IOutboxEventPublisher<TKey, TEvent>
     where TEvent : class, IMetadataEvent
 {
-    public async Task PublishAsync(
-        TKey key,
-        TEvent @event,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void Publish(TKey key, TEvent @event, IUnitOfWork unitOfWork)
     {
         ArgumentNullException.ThrowIfNull(@event);
 
         var topic = @event.GetTopicName(kafkaConfiguration.OutgoingTopicPrefix);
-        var serializedKey = keySerializer.Serialize(key, new SerializationContext(MessageComponentType.Key, topic));
-        var serializedEvent =
-            payloadSerializer.Serialize(@event, new SerializationContext(MessageComponentType.Value, topic));
         var dbContext = (IOutboxStore)unitOfWork;
-        var activitySource = activityAccessor.GetActivitySource(TelemetryKeys.ActivitySourceName);
 
-        using (activitySource.StartActivity(TelemetryKeys.EventSave))
+        using (activityAccessor.GetActivitySource(TelemetryKeys.ActivitySourceName).StartActivity(TelemetryKeys.EventSave))
         {
             var headers = new Dictionary<string, string>();
             dictionaryActivityPropagator.PropagateActivity(headers);
@@ -56,13 +44,11 @@ public class OutboxEventPublisher<TKey, TEvent>(
             {
                 Id = randomHelper.Generate(),
                 Headers = headers,
-                Key = serializedKey,
+                Key = keySerializer.Serialize(key, new SerializationContext(MessageComponentType.Key, topic)),
                 Topic = topic,
-                Payload = serializedEvent,
+                Payload = payloadSerializer.Serialize(@event, new SerializationContext(MessageComponentType.Value, topic)),
                 Timestamp = timeProvider.GetUtcNow()
             });
-
-            await unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

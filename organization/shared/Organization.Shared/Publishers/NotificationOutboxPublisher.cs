@@ -17,19 +17,17 @@ namespace Organization.Shared.Publishers;
 
 public interface INotificationOutboxPublisher
 {
-    Task PublishInviteToJoinOrganizationNewCustomerAsync(
+    void PublishInviteToJoinOrganizationNewCustomer(
         Models.Organization organization,
         Customer inviterCustomer,
         string inviteeCustomerEmail,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+        IUnitOfWork unitOfWork);
 
-    Task PublishInviteToJoinOrganizationExistingCustomerAsync(
+    void PublishInviteToJoinOrganizationExistingCustomer(
         Models.Organization organization,
         Customer inviterCustomer,
         Customer inviteeCustomer,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+        IUnitOfWork unitOfWork);
 }
 
 public class InviteToJoinOrganizationNewCustomerDataData
@@ -58,12 +56,11 @@ public class NotificationOutboxPublisher(
     IRandomHelper randomHelper)
     : INotificationOutboxPublisher
 {
-    public async Task PublishInviteToJoinOrganizationNewCustomerAsync(
+    public void PublishInviteToJoinOrganizationNewCustomer(
         Models.Organization organization,
         Customer inviterCustomer,
         string inviteeCustomerEmail,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+        IUnitOfWork unitOfWork)
     {
         var data = new InviteToJoinOrganizationExistingCustomerData
         {
@@ -92,8 +89,7 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId =
-                            emailConfiguration.InviteToJoinOrganizationNewCustomerEmailTemplateName,
+                        TemplateId = emailConfiguration.InviteToJoinOrganizationNewCustomerEmailTemplateName,
                         TemplateData = templateData,
                         Sender = emailConfiguration.InviteToJoinOrganizationNewCustomerEmailSender
                     }
@@ -103,15 +99,14 @@ public class NotificationOutboxPublisher(
 
         @event.Data.Notification.Email.ToAddresses.Add(inviteeCustomerEmail);
 
-        await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
+        publisher.Publish(key, @event, unitOfWork);
     }
 
-    public async Task PublishInviteToJoinOrganizationExistingCustomerAsync(
+    public void PublishInviteToJoinOrganizationExistingCustomer(
         Models.Organization organization,
         Customer inviterCustomer,
         Customer inviteeCustomer,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+        IUnitOfWork unitOfWork)
     {
         var data = new InviteToJoinOrganizationNewCustomerDataData
         {
@@ -140,8 +135,7 @@ public class NotificationOutboxPublisher(
                     Email = new EmailDetails
                     {
                         Id = randomHelper.Generate(),
-                        TemplateId =
-                            emailConfiguration.InviteToJoinOrganizationExistingCustomerEmailTemplateName,
+                        TemplateId = emailConfiguration.InviteToJoinOrganizationExistingCustomerEmailTemplateName,
                         TemplateData = templateData,
                         Sender = emailConfiguration.InviteToJoinOrganizationExistingCustomerEmailSender
                     }
@@ -151,6 +145,6 @@ public class NotificationOutboxPublisher(
 
         @event.Data.Notification.Email.ToAddresses.AddRange(inviteeCustomer.Identities.Select(item => item.Email));
 
-        await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
+        publisher.Publish(key, @event, unitOfWork);
     }
 }

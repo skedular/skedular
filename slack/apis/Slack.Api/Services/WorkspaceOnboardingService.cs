@@ -48,12 +48,10 @@ public class WorkspaceOnboardingService(
         await CreateOrganizationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
         await CreateLocationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
 
-        await slackInternalOutboxPublisher.PublishRefreshWorkspaceMembersAsync([workspace.Id], repositoryFactory.UnitOfWork, cancellationToken);
-        await slackInternalOutboxPublisher.PublishRefreshWorkspaceChannelsAsync([workspace.Id], repositoryFactory.UnitOfWork, cancellationToken);
-        await notificationOutboxPublisher.PublishNewSlackWorkspaceJoinedSubmittedAsync(
-            mapper.MapTo(workspace),
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        slackInternalOutboxPublisher.PublishRefreshWorkspaceMembers([workspace.Id], repositoryFactory.UnitOfWork);
+        slackInternalOutboxPublisher.PublishRefreshWorkspaceChannels([workspace.Id], repositoryFactory.UnitOfWork);
+        notificationOutboxPublisher.PublishNewSlackWorkspaceJoinedSubmitted(mapper.MapTo(workspace), repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }

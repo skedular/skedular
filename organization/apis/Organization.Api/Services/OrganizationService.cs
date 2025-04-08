@@ -189,7 +189,7 @@ public class OrganizationService(
         repositoryFactory.OrganizationMemberRepository.AddRange(organizationMembers);
         organization = mapper.MapTo(organizationEntity);
 
-        await organizationOutboxPublisher.PublishOrganizationsAsync([organization], repositoryFactory.UnitOfWork, cancellationToken);
+        organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return organization;
@@ -228,7 +228,8 @@ public class OrganizationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
         var deletedOrganization = mapper.MapTo(repositoryFactory.OrganizationRepository.Remove(organization));
 
-        await organizationOutboxPublisher.PublishOrganizationsAsync([deletedOrganization], repositoryFactory.UnitOfWork, cancellationToken);
+        organizationOutboxPublisher.PublishOrganizations([deletedOrganization], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedOrganization;
@@ -337,7 +338,8 @@ public class OrganizationService(
         organization = mapper.MapTo(
             repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)));
 
-        await organizationOutboxPublisher.PublishOrganizationsAsync([organization], repositoryFactory.UnitOfWork, cancellationToken);
+        organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return organization;

@@ -84,18 +84,14 @@ public class LocationSubscriber(
         if (locationOpeningHoursChanged)
         {
             // Regenerate all
-            await bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlotAsync(
+            bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlot(
                 existingLocation.Resources.Where(item => item.DeletedAt is null).Select(item => item.Id),
-                repositoryFactory.UnitOfWork,
-                cancellationToken);
+                repositoryFactory.UnitOfWork);
         }
         else
         {
             // Regenerate those changed
-            await bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlotAsync(
-                resourceIds,
-                repositoryFactory.UnitOfWork,
-                cancellationToken);
+            bookingInternalOutboxPublisher.PublishGenerateResourceBookingSlot(resourceIds, repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

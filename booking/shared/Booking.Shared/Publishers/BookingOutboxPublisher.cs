@@ -13,7 +13,7 @@ namespace Booking.Shared.Publishers;
 
 public interface IBookingOutboxPublisher
 {
-    Task PublishBookingsAsync(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    void PublishBookings(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork);
 }
 
 public class BookingOutboxPublisher(
@@ -23,11 +23,11 @@ public class BookingOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IBookingOutboxPublisher
 {
-    public async Task PublishBookingsAsync(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public void PublishBookings(IEnumerable<Models.Booking> bookings, IUnitOfWork unitOfWork)
     {
         foreach (var booking in bookings)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { BookingId = booking.Id },
                 new Event
                 {
@@ -38,8 +38,7 @@ public class BookingOutboxPublisher(
                         context.GetCorrelationId()),
                     Data = new Data { Booking = mapper.MapTo(booking) }
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 }

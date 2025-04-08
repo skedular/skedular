@@ -86,10 +86,7 @@ public class OrganizationSsoService(
                 mapper.MergeToEntity(ssoSetting, organization.OrganizationSsoSettings, organization));
         }
 
-        await organizationOutboxPublisher.PublishOrganizationsAsync(
-            [mapper.MapTo(organization)],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -123,10 +120,7 @@ public class OrganizationSsoService(
         _ = repositoryFactory.OrganizationSsoSettingRepository.Remove(organization.OrganizationSsoSettings);
         organization.OrganizationSsoSettings = null;
 
-        await organizationOutboxPublisher.PublishOrganizationsAsync(
-            [mapper.MapTo(organization)],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

@@ -17,19 +17,8 @@ namespace Team.Shared.Publishers;
 
 public interface INotificationOutboxPublisher
 {
-    Task PublishInviteToJoinTeamNewCustomerAsync(
-        Models.Team team,
-        Customer inviterCustomer,
-        string inviteeCustomerEmail,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
-
-    Task PublishInviteToJoinTeamExistingCustomerAsync(
-        Models.Team team,
-        Customer inviterCustomer,
-        Customer inviteeCustomer,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken);
+    void PublishInviteToJoinTeamNewCustomer(Models.Team team, Customer inviterCustomer, string inviteeCustomerEmail, IUnitOfWork unitOfWork);
+    void PublishInviteToJoinTeamExistingCustomer(Models.Team team, Customer inviterCustomer, Customer inviteeCustomer, IUnitOfWork unitOfWork);
 }
 
 public class InviteToJoinTeamNewCustomerDataData
@@ -58,12 +47,7 @@ public class NotificationOutboxPublisher(
     IRandomHelper randomHelper)
     : INotificationOutboxPublisher
 {
-    public async Task PublishInviteToJoinTeamNewCustomerAsync(
-        Models.Team team,
-        Customer inviterCustomer,
-        string inviteeCustomerEmail,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishInviteToJoinTeamNewCustomer(Models.Team team, Customer inviterCustomer, string inviteeCustomerEmail, IUnitOfWork unitOfWork)
     {
         var data = new InviteToJoinTeamExistingCustomerData
         {
@@ -103,15 +87,10 @@ public class NotificationOutboxPublisher(
 
         @event.Data.Notification.Email.ToAddresses.Add(inviteeCustomerEmail);
 
-        await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
+        publisher.Publish(key, @event, unitOfWork);
     }
 
-    public async Task PublishInviteToJoinTeamExistingCustomerAsync(
-        Models.Team team,
-        Customer inviterCustomer,
-        Customer inviteeCustomer,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishInviteToJoinTeamExistingCustomer(Models.Team team, Customer inviterCustomer, Customer inviteeCustomer, IUnitOfWork unitOfWork)
     {
         var data = new InviteToJoinTeamNewCustomerDataData
         {
@@ -151,6 +130,6 @@ public class NotificationOutboxPublisher(
 
         @event.Data.Notification.Email.ToAddresses.AddRange(inviteeCustomer.Identities.Select(item => item.Email));
 
-        await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
+        publisher.Publish(key, @event, unitOfWork);
     }
 }

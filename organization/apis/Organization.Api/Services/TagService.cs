@@ -127,10 +127,8 @@ public class TagService(
         var tagEntity = mapper.MapTo(tag, existingOrganization);
         _ = repositoryFactory.TagRepository.Add(tagEntity);
 
-        await organizationOutboxPublisher.PublishOrganizationsAsync(
-            [mapper.MapTo(existingOrganization)],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(existingOrganization)], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return tag;
@@ -179,10 +177,8 @@ public class TagService(
         var mappedOrganization = mapper.MapTo(existingOrganization);
         mappedOrganization.Tags = mappedOrganization.Tags.Where(item => item.Id != tagId).ToList();
 
-        await organizationOutboxPublisher.PublishOrganizationsAsync(
-            [mappedOrganization],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedTag;
@@ -218,7 +214,7 @@ public class TagService(
             mappedOrganization.Tags = mappedOrganization.Tags.Where(item => !ids.Contains(item.Id)).ToList();
         }
 
-        await organizationOutboxPublisher.PublishOrganizationsAsync(mappedOrganizations, repositoryFactory.UnitOfWork, cancellationToken);
+        organizationOutboxPublisher.PublishOrganizations(mappedOrganizations, repositoryFactory.UnitOfWork);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedTags;
@@ -301,10 +297,8 @@ public class TagService(
 
         tag = mapper.MapTo(repositoryFactory.TagRepository.Update(mapper.MergeTo(tag, existingTag, existingOrganization)));
 
-        await organizationOutboxPublisher.PublishOrganizationsAsync(
-            [mapper.MapTo(existingOrganization)],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(existingOrganization)], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return tag;

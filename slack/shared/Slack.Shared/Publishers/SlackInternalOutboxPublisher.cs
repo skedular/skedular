@@ -10,9 +10,9 @@ namespace Slack.Shared.Publishers;
 
 public interface ISlackInternalOutboxPublisher
 {
-    Task PublishRefreshWorkspaceAsync(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
-    Task PublishRefreshWorkspaceMembersAsync(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
-    Task PublishRefreshWorkspaceChannelsAsync(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    void PublishRefreshWorkspace(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork);
+    void PublishRefreshWorkspaceMembers(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork);
+    void PublishRefreshWorkspaceChannels(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork);
 }
 
 public class SlackInternalOutboxPublisher(
@@ -21,14 +21,11 @@ public class SlackInternalOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : ISlackInternalOutboxPublisher
 {
-    public async Task PublishRefreshWorkspaceMembersAsync(
-        IEnumerable<string> workspaceIds,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishRefreshWorkspaceMembers(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork)
     {
         foreach (var workspaceId in workspaceIds)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { WorkspaceId = workspaceId },
                 new Event
                 {
@@ -39,19 +36,15 @@ public class SlackInternalOutboxPublisher(
                         context.GetCorrelationId()),
                     WorkspaceId = workspaceId
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 
-    public async Task PublishRefreshWorkspaceChannelsAsync(
-        IEnumerable<string> workspaceIds,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishRefreshWorkspaceChannels(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork)
     {
         foreach (var workspaceId in workspaceIds)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { WorkspaceId = workspaceId },
                 new Event
                 {
@@ -62,16 +55,15 @@ public class SlackInternalOutboxPublisher(
                         context.GetCorrelationId()),
                     WorkspaceId = workspaceId
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 
-    public async Task PublishRefreshWorkspaceAsync(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public void PublishRefreshWorkspace(IEnumerable<string> workspaceIds, IUnitOfWork unitOfWork)
     {
         foreach (var workspaceId in workspaceIds)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { WorkspaceId = workspaceId },
                 new Event
                 {
@@ -82,8 +74,7 @@ public class SlackInternalOutboxPublisher(
                         context.GetCorrelationId()),
                     WorkspaceId = workspaceId
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 }

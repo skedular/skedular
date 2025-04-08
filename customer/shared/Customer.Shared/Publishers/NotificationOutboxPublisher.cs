@@ -16,8 +16,8 @@ namespace Customer.Shared.Publishers;
 
 public interface INotificationOutboxPublisher
 {
-    Task PublishNewCustomerFeedbackSubmittedAsync(CustomerFeedback customerFeedback, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
-    Task PublishNewCustomerJoinedSubmittedAsync(Models.Customer customer, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    void PublishNewCustomerFeedbackSubmitted(CustomerFeedback customerFeedback, IUnitOfWork unitOfWork);
+    void PublishNewCustomerJoinedSubmitted(Models.Customer customer, IUnitOfWork unitOfWork);
 }
 
 public class NewCustomerFeedbackData
@@ -40,10 +40,7 @@ public class NotificationOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : INotificationOutboxPublisher
 {
-    public async Task PublishNewCustomerFeedbackSubmittedAsync(
-        CustomerFeedback customerFeedback,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishNewCustomerFeedbackSubmitted(CustomerFeedback customerFeedback, IUnitOfWork unitOfWork)
     {
         var emails = GetEmails(customerFeedback.Customer);
         var channel = customerFeedback.Channel switch
@@ -90,10 +87,10 @@ public class NotificationOutboxPublisher(
 
         @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewCustomerFeedbackThroughWebSubmittedEmailReceivers);
 
-        await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
+        publisher.Publish(key, @event, unitOfWork);
     }
 
-    public async Task PublishNewCustomerJoinedSubmittedAsync(Models.Customer customer, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public void PublishNewCustomerJoinedSubmitted(Models.Customer customer, IUnitOfWork unitOfWork)
     {
         if (!emailConfiguration.EnableNewCustomerJoinedThroughWebEmail)
         {
@@ -135,7 +132,7 @@ public class NotificationOutboxPublisher(
 
         @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewCustomerJoinedThroughWebEmailReceivers);
 
-        await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
+        publisher.Publish(key, @event, unitOfWork);
     }
 
     private static string GetEmails(Models.Customer customer) =>

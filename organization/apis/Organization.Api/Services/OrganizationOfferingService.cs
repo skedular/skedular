@@ -93,7 +93,7 @@ public class OrganizationOfferingService(
         }
 
         organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
-        await organizationOutboxPublisher.PublishOrganizationsAsync([mapper.MapTo(organization!)], repositoryFactory.UnitOfWork, cancellationToken);
+        organizationOutboxPublisher.PublishOrganizations([mapper.MapTo(organization!)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

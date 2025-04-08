@@ -16,7 +16,7 @@ namespace Slack.Shared.Publishers;
 
 public interface INotificationOutboxPublisher
 {
-    Task PublishNewSlackWorkspaceJoinedSubmittedAsync(Workspace workspace, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    void PublishNewSlackWorkspaceJoinedSubmitted(Workspace workspace, IUnitOfWork unitOfWork);
 }
 
 public class NewSlackWorkspaceJoinedData
@@ -33,7 +33,7 @@ public class NotificationOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : INotificationOutboxPublisher
 {
-    public async Task PublishNewSlackWorkspaceJoinedSubmittedAsync(Workspace workspace, IUnitOfWork unitOfWork, CancellationToken cancellationToken)
+    public void PublishNewSlackWorkspaceJoinedSubmitted(Workspace workspace, IUnitOfWork unitOfWork)
     {
         if (!emailConfiguration.EnableNewSlackWorkspaceJoinedThroughWebEmail)
         {
@@ -74,6 +74,6 @@ public class NotificationOutboxPublisher(
 
         @event.Data.Notification.Email.ToAddresses.AddRange(emailConfiguration.NewSlackWorkspaceJoinedThroughWebEmailReceivers);
 
-        await publisher.PublishAsync(key, @event, unitOfWork, cancellationToken);
+        publisher.Publish(key, @event, unitOfWork);
     }
 }

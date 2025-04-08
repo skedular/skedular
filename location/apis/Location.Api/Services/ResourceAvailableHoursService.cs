@@ -80,7 +80,8 @@ public class ResourceAvailableHoursService(
 
         var resource = mapper.MapTo(repositoryFactory.ResourceRepository.Update(existingResource));
 
-        await locationOutboxPublisher.PublishLocationsAsync([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork, cancellationToken);
+        locationOutboxPublisher.PublishLocations([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return resource;

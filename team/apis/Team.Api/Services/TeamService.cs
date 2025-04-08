@@ -134,7 +134,8 @@ public class TeamService(
         repositoryFactory.TeamMemberRepository.AddRange(rebuiltTeamMembers);
         team = mapper.MapTo(teamEntity);
 
-        await teamOutboxPublisher.PublishTeamsAsync([team], repositoryFactory.UnitOfWork, cancellationToken);
+        teamOutboxPublisher.PublishTeams([team], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return team;
@@ -205,7 +206,8 @@ public class TeamService(
 
         var deletedTeam = mapper.MapTo(repositoryFactory.TeamRepository.Remove(existingTeam));
 
-        await teamOutboxPublisher.PublishTeamsAsync([deletedTeam], repositoryFactory.UnitOfWork, cancellationToken);
+        teamOutboxPublisher.PublishTeams([deletedTeam], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedTeam;
@@ -361,7 +363,8 @@ public class TeamService(
 
         team = mapper.MapTo(repositoryFactory.TeamRepository.Update(mapper.MergeTo(team, existingTeam, organization, primaryLocation)));
 
-        await teamOutboxPublisher.PublishTeamsAsync([team], repositoryFactory.UnitOfWork, cancellationToken);
+        teamOutboxPublisher.PublishTeams([team], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return team;

@@ -53,8 +53,9 @@ public class CustomerHelperService(
         CancellationToken cancellationToken)
     {
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
         var customer = mapper.MapTo(repositoryFactory.CustomerRepository.Update(existingCustomer));
-        await customerOutboxPublisher.PublishCustomersAsync([customer], repositoryFactory.UnitOfWork, cancellationToken);
+        customerOutboxPublisher.PublishCustomers([customer], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

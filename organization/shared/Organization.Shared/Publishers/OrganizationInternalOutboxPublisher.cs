@@ -10,7 +10,7 @@ namespace Organization.Shared.Publishers;
 
 public interface IOrganizationInternalOutboxPublisher
 {
-    Task PublishRefreshAzureTenantMembersAsync(IEnumerable<string> azureTenantIds, IUnitOfWork unitOfWork, CancellationToken cancellationToken);
+    void PublishRefreshAzureTenantMembers(IEnumerable<string> azureTenantIds, IUnitOfWork unitOfWork);
 }
 
 public class OrganizationInternalOutboxPublisher(
@@ -19,14 +19,11 @@ public class OrganizationInternalOutboxPublisher(
     IOutboxEventPublisher<Key, Event> publisher)
     : IOrganizationInternalOutboxPublisher
 {
-    public async Task PublishRefreshAzureTenantMembersAsync(
-        IEnumerable<string> azureTenantIds,
-        IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken)
+    public void PublishRefreshAzureTenantMembers(IEnumerable<string> azureTenantIds, IUnitOfWork unitOfWork)
     {
         foreach (var azureTenantId in azureTenantIds)
         {
-            await publisher.PublishAsync(
+            publisher.Publish(
                 new Key { AzureTenantId = azureTenantId },
                 new Event
                 {
@@ -37,8 +34,7 @@ public class OrganizationInternalOutboxPublisher(
                         context.GetCorrelationId()),
                     AzureTenantId = azureTenantId
                 },
-                unitOfWork,
-                cancellationToken);
+                unitOfWork);
         }
     }
 }

@@ -103,7 +103,8 @@ public class ProductService(
 
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Add(productEntity));
 
-        await marketplaceOutboxPublisher.PublishProductsAsync([product], repositoryFactory.UnitOfWork, cancellationToken);
+        marketplaceOutboxPublisher.PublishProducts([product], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return product;
@@ -144,7 +145,8 @@ public class ProductService(
 
         var deletedProduct = mapper.MapTo(repositoryFactory.ProductRepository.Remove(existingProduct));
 
-        await marketplaceOutboxPublisher.PublishProductsAsync([deletedProduct], repositoryFactory.UnitOfWork, cancellationToken);
+        marketplaceOutboxPublisher.PublishProducts([deletedProduct], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         return deletedProduct;
@@ -186,7 +188,8 @@ public class ProductService(
             .Select(product => mapper.MapTo(product, mapper.MapTo(existingOrganizations.Single(item => item.Id == product.Organization.Id))))
             .ToList();
 
-        await marketplaceOutboxPublisher.PublishProductsAsync(updatedProducts, repositoryFactory.UnitOfWork, cancellationToken);
+        marketplaceOutboxPublisher.PublishProducts(updatedProducts, repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -221,7 +224,8 @@ public class ProductService(
             .Select(product => mapper.MapTo(product, mapper.MapTo(existingOrganizations.Single(item => item.Id == product.Organization.Id))))
             .ToList();
 
-        await marketplaceOutboxPublisher.PublishProductsAsync(updatedProducts, repositoryFactory.UnitOfWork, cancellationToken);
+        marketplaceOutboxPublisher.PublishProducts(updatedProducts, repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -278,7 +282,7 @@ public class ProductService(
 
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));
 
-        await marketplaceOutboxPublisher.PublishProductsAsync([product], repositoryFactory.UnitOfWork, cancellationToken);
+        marketplaceOutboxPublisher.PublishProducts([product], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -294,7 +298,8 @@ public class ProductService(
 
         if (productVersion is { RequireConsecutiveDays: true, MaxBookingSpreadDays: not null })
         {
-            throw new ArgumentException("MaxBookingSpreadDays can't be set if ForceContinuousSlots is set", nameof(productVersion.MaxBookingSpreadDays));
+            throw new ArgumentException("MaxBookingSpreadDays can't be set if ForceContinuousSlots is set",
+                nameof(productVersion.MaxBookingSpreadDays));
         }
 
         if (productVersion.MinDurationMinutes is not null && productVersion.MaxDurationMinutes is not null)

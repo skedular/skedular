@@ -133,10 +133,8 @@ public class AzureTenantService(
             var tenant = await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
             ArgumentNullException.ThrowIfNull(tenant);
             tenant = repositoryFactory.AzureTenantRepository.Update(tenant);
-            await organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembersAsync(
-                [tenant.Id],
-                repositoryFactory.UnitOfWork,
-                cancellationToken);
+            organizationInternalOutboxPublisher.PublishRefreshAzureTenantMembers([tenant.Id], repositoryFactory.UnitOfWork);
+
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }

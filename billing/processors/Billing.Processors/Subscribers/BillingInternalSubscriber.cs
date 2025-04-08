@@ -52,10 +52,8 @@ public class BillingInternalSubscriber(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.OrganizationOfferingRepository.Update(organizationOffering);
-        await billingOutboxPublisher.PublishBillingOrganizationsOfferingsAsync(
-            [mapper.MapTo(organizationOffering)],
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        billingOutboxPublisher.PublishBillingOrganizationsOfferings([mapper.MapTo(organizationOffering)], repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
