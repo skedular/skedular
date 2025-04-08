@@ -168,7 +168,6 @@ public class Mapper : IMapper
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags)
     {
-        dest.Id = src.Id;
         dest.Organization = organization;
         dest.Name = src.Name;
         dest.Description = src.Description;

@@ -1,47 +1,28 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
-import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoicesCurrency, SingleChoicesPriceUnit } from '@/components/organization';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { addProduct_addProductMutation, Currency, PriceUnit } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
-import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
+import type { editProduct_query$key } from '@/queries/__generated__/editProduct_query.graphql';
+import type { Currency, editProduct_updateProductMutation, PriceUnit } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { useParams } from 'next/navigation';
-import { memo, useContext, useEffect, useState, useTransition } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { useRouter } from 'next/navigation';
+import { memo, useContext, useState } from 'react';
 import { Form } from 'react-final-form';
-import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { array, boolean, number, object, string } from 'yup';
 
 type Props = {
-  queryReference: PreloadedQuery<addProduct_rootQuery, Record<string, unknown>>;
-  onReloadRequired: () => void;
+  rootDataRelay: editProduct_query$key;
+  onReloadRequired?: () => void;
   organizationId: string;
-  onAdded: (locationId: string) => void;
-  onCancel: () => void;
 };
-
-const RootQuery = graphql`
-  query addProduct_rootQuery(
-    $organizationId: String!
-    $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
-    $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
-  ) {
-    ...multipleChoicesProductTags_query
-    ...multipleChoicesLocationTags_query
-    ...singleChoicePriceUnit_query
-    ...singleChoiceCurrency_query
-  }
-`;
 
 type ProductDetails = {
   name: string;
@@ -160,11 +141,57 @@ const productSchema = object({
   locationTagIds: array().nullable(),
 });
 
-const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
-  const rootData = usePreloadedQuery<addProduct_rootQuery>(RootQuery, queryReference);
-  const [commitAddProduct] = useMutation<addProduct_addProductMutation>(graphql`
-    mutation addProduct_addProductMutation($input: AddProductInput!) @raw_response_type {
-      addProduct(input: $input) {
+const EditProduct = ({ rootDataRelay, organizationId }: Props) => {
+  const rootData = useFragment<editProduct_query$key>(
+    graphql`
+      fragment editProduct_query on Query {
+        product(id: $productId) {
+          id
+          inactive
+          name
+          description
+          price
+          priceUnit {
+            type
+            name
+          }
+          currency {
+            type
+            name
+          }
+          numberOfResourcesToBook
+          minDurationMinutes
+          maxDurationMinutes
+          bookAllLocationResources
+          recurrenceWindowDays
+          requireConsecutiveDays
+          maxBookingSpreadDays
+          productTags {
+            uniqueId
+            name
+            color
+          }
+          locationTags {
+            uniqueId
+            name
+            color
+          }
+          organization {
+            uniqueId
+          }
+        }
+        ...multipleChoicesProductTags_query
+        ...multipleChoicesLocationTags_query
+        ...singleChoicePriceUnit_query
+        ...singleChoiceCurrency_query
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [commitUpdateProduct] = useMutation<editProduct_updateProductMutation>(graphql`
+    mutation editProduct_updateProductMutation($input: UpdateProductInput!) @raw_response_type {
+      updateProduct(input: $input) {
         product {
           id
           inactive
@@ -201,31 +228,29 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     }
   `);
 
+  const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateProductDetails = makeValidate(productSchema);
   const requiredFields = makeRequired(productSchema);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState<string | null>('');
-  const [price, setPrice] = useState('0.00');
-  const [priceUnit, setPriceUnit] = useState('');
-  const [currency, setCurrency] = useState('');
-  const [numberOfResourcesToBook, setNumberOfResourcesToBook] = useState(1);
-  const [minDurationMinutes, setMinDurationMinutes] = useState<number | null>(null);
-  const [maxDurationMinutes, setMaxDurationMinutes] = useState<number | null>(null);
-  const [bookAllLocationResources, setBookAllLocationResources] = useState(false);
-  const [recurrenceWindowDays, setRecurrenceWindowDays] = useState(1);
-  const [requireConsecutiveDays, setRequireConsecutiveDays] = useState(false);
-  const [maxBookingSpreadDays, setMaxBookingSpreadDays] = useState<number | null>(1);
-  const [productTagIds, setProductTagIds] = useState<string[]>([]);
-  const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
+  const [name, setName] = useState(rootData.product ? rootData.product.name : '');
+  const [description, setDescription] = useState<string | null>(rootData.product && rootData.product.description ? rootData.product.description : null);
+  const [price, setPrice] = useState(rootData.product ? rootData.product.price : '');
+  const [priceUnit, setPriceUnit] = useState(rootData.product ? rootData.product.priceUnit.type : '');
+  const [currency, setCurrency] = useState(rootData.product ? rootData.product.currency.type : '');
+  const [numberOfResourcesToBook, setNumberOfResourcesToBook] = useState(rootData.product ? rootData.product.numberOfResourcesToBook : '');
+  const [minDurationMinutes, setMinDurationMinutes] = useState<number | null>(rootData.product && rootData.product.minDurationMinutes ? rootData.product.minDurationMinutes : null);
+  const [maxDurationMinutes, setMaxDurationMinutes] = useState<number | null>(rootData.product && rootData.product.maxDurationMinutes ? rootData.product.maxDurationMinutes : null);
+  const [bookAllLocationResources, setBookAllLocationResources] = useState(rootData.product ? rootData.product.bookAllLocationResources : false);
+  const [recurrenceWindowDays, setRecurrenceWindowDays] = useState(rootData.product ? rootData.product.recurrenceWindowDays : 1);
+  const [requireConsecutiveDays, setRequireConsecutiveDays] = useState(rootData.product ? rootData.product.requireConsecutiveDays : false);
+  const [maxBookingSpreadDays, setMaxBookingSpreadDays] = useState<number | null>(
+    rootData.product && rootData.product.maxBookingSpreadDays ? rootData.product.maxBookingSpreadDays : 1,
+  );
+  const [productTagIds, setProductTagIds] = useState<string[]>(rootData.product ? rootData.product.productTags.map(({ uniqueId }) => uniqueId) : []);
+  const [locationTagIds, setLocationTagIds] = useState<string[]>(rootData.product ? rootData.product.locationTags.map(({ uniqueId }) => uniqueId) : []);
 
-  const handleCloseClick = () => {
-    onCancel();
-    onReloadRequired();
-  };
-
-  const handleProductAddClick = ({
+  const handleProductDetailUpdateClick = ({
     name,
     description,
     price,
@@ -241,19 +266,25 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     productTagIds,
     locationTagIds,
   }: ProductDetails) => {
+    if (!rootData.product) {
+      return;
+    }
+
+    const product = rootData.product;
+
     const id = nanoid();
     const numberOfResourcesToBook = Number(numberOfResourcesToBookStr);
     const minDurationMinutes = minDurationMinutesStr ? Number(minDurationMinutesStr) : null;
     const maxDurationMinutes = maxDurationMinutesStr ? Number(maxDurationMinutesStr) : null;
     const recurrenceWindowDays = recurrenceWindowDaysStr ? Number(recurrenceWindowDaysStr) : 1;
     const maxBookingSpreadDays = maxBookingSpreadDaysStr ? Number(maxBookingSpreadDaysStr) : null;
-    const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating product '${product.name}'...`} />, infoNotificationOptions);
 
-    commitAddProduct({
+    commitUpdateProduct({
       variables: {
         input: {
           clientMutationId: nanoid(),
-          id,
+          id: product.id,
           name,
           description,
           price,
@@ -268,14 +299,14 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           maxBookingSpreadDays,
           productTagIds,
           locationTagIds,
-          organizationId,
+          organizationId: product.organization.uniqueId,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new product '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update product '${product.name}'. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -283,22 +314,21 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Product ${name} added.`} />,
+          render: <NotificationContent content={`Product ${product.name} updated.`} />,
         });
 
-        onAdded(id);
-        onReloadRequired();
+        router.back();
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to add new product '${name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update product '${product.name}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
-        addProduct: {
+        updateProduct: {
           product: {
-            id,
+            id: product.id,
             inactive: false,
             name,
             description,
@@ -326,12 +356,22 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     });
   };
 
+  const handleCloseClick = () => {
+    router.back();
+  };
+
+  if (!rootData.product) {
+    return <></>;
+  }
+
+  const product = rootData.product;
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBarWithStackColumn onClose={handleCloseClick} label="Add Product">
+        <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Product Information">
           <Form
-            onSubmit={handleProductAddClick}
+            onSubmit={handleProductDetailUpdateClick}
             initialValues={{
               name,
               description,
@@ -368,8 +408,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <SectionIconTypography label="Product Setup" />
-                    <BodyIconTypography label="Edit your product name and details" />
+                    <SectionIconTypography label="Edit Product" />
+                    <BodyIconTypography label="Edit your product details" />
                     <Divider />
                   </StackColumn>
 
@@ -452,7 +492,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                        <BodyIconTypography label="Add" invertDefaultColor={paletteMode === 'dark'} />
+                        Update
                       </Button>
                     </StackRow>
                   </StackColumn>
@@ -466,73 +506,4 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
   );
 };
 
-const MemoAddProduct = memo(AddProduct);
-
-type RelayProps = {
-  onReloadRequired: () => void;
-  onAdded: (id: string) => void;
-  onCancel: () => void;
-};
-
-const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<addProduct_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
-  const [, startTransition] = useTransition();
-  const { organizationId } = useParams();
-  let finalOrganizationId = '';
-
-  if (typeof organizationId === 'string') {
-    finalOrganizationId = organizationId;
-  } else if (Array.isArray(organizationId)) {
-    if (typeof organizationId[0] === 'undefined') {
-      throw new Error('organizationId is required');
-    }
-
-    finalOrganizationId = organizationId[0];
-  } else {
-    throw new Error('organizationId is required');
-  }
-
-  useEffect(() => {
-    loadQuery(
-      {
-        organizationId: finalOrganizationId,
-        multipleChoicesProductTagsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'Name',
-          },
-        ],
-        multipleChoicesLocationTagsSortingValues: [
-          {
-            direction: 'Ascending',
-            field: 'Name',
-          },
-        ],
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, triggerReloadId, finalOrganizationId]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReloadId(nanoid());
-
-      onReloadRequired();
-    });
-  };
-
-  if (!queryReference) {
-    return <Loading />;
-  }
-
-  return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAddProduct queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} onAdded={onAdded} onCancel={onCancel} />
-    </ErrorBoundary>
-  );
-};
-
-export default memo(AddProductWithRelay);
+export default memo(EditProduct);
