@@ -56,9 +56,10 @@ type ProductDetails {
   minDurationMinutes: Int
   maxDurationMinutes: Int
   bookAllLocationResources: Boolean!
-  recurrenceIntervalDays: Int!
-  forceContinuousSlots: Boolean!
-  maxSpreadDays: Int
+  recurrenceWindowDays: Int!
+  requireConsecutiveDays: Boolean!
+  maxBookingSpreadDays: Int
+  numberOfResourcesToBook: Int!
   productTags: [Marketplace_OrganizationTagDetails!]!
   locationTags: [Marketplace_OrganizationTagDetails!]!
   latestProductVersionId: String!
@@ -114,9 +115,10 @@ input AddProductInput {
   minDurationMinutes: Int
   maxDurationMinutes: Int
   bookAllLocationResources: Boolean!
-  recurrenceIntervalDays: Int!
-  forceContinuousSlots: Boolean!
-  maxSpreadDays: Int
+  recurrenceWindowDays: Int!
+  requireConsecutiveDays: Boolean!
+  maxBookingSpreadDays: Int
+  numberOfResourcesToBook: Int!
   productTagIds: [String!]!
   locationTagIds: [String!]!
 }
@@ -155,9 +157,10 @@ input UpdateProductInput {
   minDurationMinutes: Int
   maxDurationMinutes: Int
   bookAllLocationResources: Boolean!
-  recurrenceIntervalDays: Int!
-  forceContinuousSlots: Boolean!
-  maxSpreadDays: Int
+  recurrenceWindowDays: Int!
+  requireConsecutiveDays: Boolean!
+  maxBookingSpreadDays: Int
+  numberOfResourcesToBook: Int!
   productTagIds: [String!]!
   locationTagIds: [String!]!
 }

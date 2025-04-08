@@ -72,9 +72,10 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceIntervalDays = src.RecurrenceIntervalDays,
-            ForceContinuousSlots = src.ForceContinuousSlots,
-            MaxSpreadDays = src.MaxSpreadDays,
+            RecurrenceWindowDays = src.RecurrenceWindowDays,
+            RequireConsecutiveDays = src.RequireConsecutiveDays,
+            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
@@ -92,9 +93,10 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceIntervalDays = src.RecurrenceIntervalDays,
-            ForceContinuousSlots = src.ForceContinuousSlots,
-            MaxSpreadDays = src.MaxSpreadDays,
+            RecurrenceWindowDays = src.RecurrenceWindowDays,
+            RequireConsecutiveDays = src.RequireConsecutiveDays,
+            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
@@ -110,9 +112,10 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceIntervalDays = src.RecurrenceIntervalDays,
-            ForceContinuousSlots = src.ForceContinuousSlots,
-            MaxSpreadDays = src.MaxSpreadDays,
+            RecurrenceWindowDays = src.RecurrenceWindowDays,
+            RequireConsecutiveDays = src.RequireConsecutiveDays,
+            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
         };
@@ -139,9 +142,10 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceIntervalDays = src.RecurrenceIntervalDays,
-            ForceContinuousSlots = src.ForceContinuousSlots,
-            MaxSpreadDays = src.MaxSpreadDays,
+            RecurrenceWindowDays = src.RecurrenceWindowDays,
+            RequireConsecutiveDays = src.RequireConsecutiveDays,
+            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
@@ -174,9 +178,10 @@ public class Mapper : IMapper
         dest.MinDurationMinutes = src.MinDurationMinutes;
         dest.MaxDurationMinutes = src.MaxDurationMinutes;
         dest.BookAllLocationResources = src.BookAllLocationResources;
-        dest.RecurrenceIntervalDays = src.RecurrenceIntervalDays;
-        dest.ForceContinuousSlots = src.ForceContinuousSlots;
-        dest.MaxSpreadDays = src.MaxSpreadDays;
+        dest.RecurrenceWindowDays = src.RecurrenceWindowDays;
+        dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
+        dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
+        dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
 
@@ -247,9 +252,10 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceIntervalDays = src.RecurrenceIntervalDays,
-            ForceContinuousSlots = src.ForceContinuousSlots,
-            MaxSpreadDays = src.MaxSpreadDays,
+            RecurrenceWindowDays = src.RecurrenceWindowDays,
+            RequireConsecutiveDays = src.RequireConsecutiveDays,
+            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             ProductTags = MapTo(src.ProductTags).ToList(),
             LocationTags = MapTo(src.LocationTags).ToList()
         };
@@ -279,9 +285,10 @@ public class Mapper : IMapper
         dest.MinDurationMinutes = productVersion.MinDurationMinutes;
         dest.MaxDurationMinutes = productVersion.MaxDurationMinutes;
         dest.BookAllLocationResources = productVersion.BookAllLocationResources;
-        dest.RecurrenceIntervalDays = productVersion.RecurrenceIntervalDays;
-        dest.ForceContinuousSlots = productVersion.ForceContinuousSlots;
-        dest.MaxSpreadDays = productVersion.MaxSpreadDays;
+        dest.RecurrenceWindowDays = productVersion.RecurrenceWindowDays;
+        dest.RequireConsecutiveDays = productVersion.RequireConsecutiveDays;
+        dest.MaxBookingSpreadDays = productVersion.MaxBookingSpreadDays;
+        dest.NumberOfResourcesToBook = productVersion.NumberOfResourcesToBook;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
 
@@ -304,9 +311,10 @@ public class Mapper : IMapper
         dest.MinDurationMinutes = src.MinDurationMinutes;
         dest.MaxDurationMinutes = src.MaxDurationMinutes;
         dest.BookAllLocationResources = src.BookAllLocationResources;
-        dest.RecurrenceIntervalDays = src.RecurrenceIntervalDays;
-        dest.ForceContinuousSlots = src.ForceContinuousSlots;
-        dest.MaxSpreadDays = src.MaxSpreadDays;
+        dest.RecurrenceWindowDays = src.RecurrenceWindowDays;
+        dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
+        dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
+        dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         dest.Product = product;

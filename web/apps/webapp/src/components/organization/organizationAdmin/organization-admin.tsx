@@ -914,7 +914,7 @@ const OrganizationAdmin = ({
                 entityId,
                 loginUrl,
                 appFederationMetadataUrl,
-              }
+              },
             },
           },
         },
@@ -954,7 +954,7 @@ const OrganizationAdmin = ({
           removeOrganizationSsoSettings: {
             organization: {
               id: organization.id,
-              ssoSettings: null
+              ssoSettings: null,
             },
           },
         },

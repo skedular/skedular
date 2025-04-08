@@ -5,6 +5,7 @@ using Api.Shared.Services.Models;
 using Marketplace.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Marketplace.Shared.Database.Migrations
 {
     [DbContext(typeof(MarketplaceDbContext))]
-    partial class MarketplaceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250408064455_RenamedForceContinuousSlotsToMustBookConsecutiveDays")]
+    partial class RenamedForceContinuousSlotsToMustBookConsecutiveDays
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -409,10 +412,10 @@ namespace Marketplace.Shared.Database.Migrations
                     b.Property<bool>("Inactive")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("MaxBookingSpreadDays")
+                    b.Property<int?>("MaxDurationMinutes")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("MaxDurationMinutes")
+                    b.Property<int?>("MaxSpreadDays")
                         .HasColumnType("integer");
 
                     b.Property<int?>("MinDurationMinutes")
@@ -421,15 +424,15 @@ namespace Marketplace.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("MustBookConsecutiveDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
-
-                    b.Property<int>("NumberOfResourcesToBook")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1);
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
@@ -446,13 +449,8 @@ namespace Marketplace.Shared.Database.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("character varying(16)");
 
-                    b.Property<int>("RecurrenceWindowDays")
+                    b.Property<int>("RecurrenceIntervalDays")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("RequireConsecutiveDays")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -504,10 +502,10 @@ namespace Marketplace.Shared.Database.Migrations
                         .HasMaxLength(10000)
                         .HasColumnType("character varying(10000)");
 
-                    b.Property<int?>("MaxBookingSpreadDays")
+                    b.Property<int?>("MaxDurationMinutes")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("MaxDurationMinutes")
+                    b.Property<int?>("MaxSpreadDays")
                         .HasColumnType("integer");
 
                     b.Property<int?>("MinDurationMinutes")
@@ -516,15 +514,15 @@ namespace Marketplace.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("MustBookConsecutiveDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
-
-                    b.Property<int>("NumberOfResourcesToBook")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1);
 
                     b.Property<decimal>("Price")
                         .HasColumnType("DECIMAL(18,4)");
@@ -541,13 +539,8 @@ namespace Marketplace.Shared.Database.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("RecurrenceWindowDays")
+                    b.Property<int>("RecurrenceIntervalDays")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("RequireConsecutiveDays")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()

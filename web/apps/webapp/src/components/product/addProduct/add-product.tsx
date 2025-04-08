@@ -20,7 +20,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, boolean, object, string } from 'yup';
+import { array, boolean, number, object, string } from 'yup';
 
 type Props = {
   queryReference: PreloadedQuery<addProduct_rootQuery, Record<string, unknown>>;
@@ -49,8 +49,13 @@ type ProductDetails = {
   price: string;
   priceUnit: string;
   currency: string;
+  numberOfResourcesToBook: number;
+  minDurationMinutes: number | null;
+  maxDurationMinutes: number | null;
   bookAllLocationResources: boolean;
-  forceContinuousSlots: boolean;
+  recurrenceWindowDays: number;
+  requireConsecutiveDays: boolean;
+  maxBookingSpreadDays: number | null;
   productTagIds: string[];
   locationTagIds: string[];
 };
@@ -63,8 +68,94 @@ const productSchema = object({
     .required('Price is required'),
   priceUnit: string().required('Price Unit is required'),
   currency: string().required('Currency is required'),
+  numberOfResourcesToBook: number().required('Number of resources to book is required').min(1, 'Number of resources to book must be greater than 0'),
+  minDurationMinutes: number()
+    .nullable()
+    .test('is-multiple-of-15', 'Minimum duration in minutes must be in 15-minutes increments', function (value) {
+      if (typeof value !== 'number') {
+        return true;
+      }
+
+      return value % 15 === 0;
+    })
+    .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes', function (value) {
+      const { maxDurationMinutes } = this.parent;
+      if (!maxDurationMinutes) {
+        return true;
+      }
+
+      if (typeof value !== 'number') {
+        return true;
+      }
+
+      return value <= maxDurationMinutes;
+    }),
+  maxDurationMinutes: number()
+    .nullable()
+    .test('is-multiple-of-15', 'Maximum duration in minutes must be in 15-minutes increments', function (value) {
+      if (typeof value !== 'number') {
+        return true;
+      }
+
+      return value % 15 === 0;
+    })
+    .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes', function (value) {
+      const { minDurationMinutes } = this.parent;
+      if (!minDurationMinutes) {
+        return true;
+      }
+
+      if (typeof value !== 'number') {
+        return true;
+      }
+
+      return value >= minDurationMinutes;
+    }),
   mustBookAllLocationResources: boolean(),
-  forceContinuousSlots: boolean(),
+  recurrenceWindowDays: number()
+    .test('is-required', 'Recurrence window days is required', function (value) {
+      const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
+      if (bookAllLocationResources || requireConsecutiveDays) {
+        return true;
+      }
+
+      return !!value;
+    })
+    .test('is-greater-than-zero', 'Recurrence window days must be greater than 0', function (value) {
+      const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
+      if (bookAllLocationResources || requireConsecutiveDays) {
+        return true;
+      }
+
+      return typeof value === 'number' && value > 0;
+    }),
+  requireConsecutiveDays: boolean(),
+  maxBookingSpreadDays: number()
+    .nullable()
+    .test('is-required', 'Max booking spread days is required', function (value) {
+      const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
+      if (bookAllLocationResources || requireConsecutiveDays) {
+        return true;
+      }
+
+      return !!value;
+    })
+    .test('is-greater-than-recurrence', 'Max booking spread days must be greater than or equal to recurrence window days', function (value) {
+      const { bookAllLocationResources, requireConsecutiveDays, recurrenceWindowDays } = this.parent;
+      if (bookAllLocationResources || requireConsecutiveDays) {
+        return true;
+      }
+
+      return typeof value === 'number' && value >= recurrenceWindowDays;
+    })
+    .test('is-greater-than-zero', 'Max booking spread days must be greater than 0', function (value) {
+      const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
+      if (bookAllLocationResources || requireConsecutiveDays) {
+        return true;
+      }
+
+      return typeof value === 'number' && value > 0;
+    }),
   productTagIds: array().nullable(),
   locationTagIds: array().nullable(),
 });
@@ -88,12 +179,13 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
             type
             name
           }
+          numberOfResourcesToBook
           minDurationMinutes
           maxDurationMinutes
           bookAllLocationResources
-          recurrenceIntervalDays
-          forceContinuousSlots
-          maxSpreadDays
+          recurrenceWindowDays
+          requireConsecutiveDays
+          maxBookingSpreadDays
           productTags {
             uniqueId
             name
@@ -113,6 +205,20 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateProductDetails = makeValidate(productSchema);
   const requiredFields = makeRequired(productSchema);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState<string | null>('');
+  const [price, setPrice] = useState('0.00');
+  const [priceUnit, setPriceUnit] = useState('');
+  const [currency, setCurrency] = useState('');
+  const [numberOfResourcesToBook, setNumberOfResourcesToBook] = useState(1);
+  const [minDurationMinutes, setMinDurationMinutes] = useState<number | null>(null);
+  const [maxDurationMinutes, setMaxDurationMinutes] = useState<number | null>(null);
+  const [bookAllLocationResources, setBookAllLocationResources] = useState(false);
+  const [recurrenceWindowDays, setRecurrenceWindowDays] = useState(1);
+  const [requireConsecutiveDays, setRequireConsecutiveDays] = useState(false);
+  const [maxBookingSpreadDays, setMaxBookingSpreadDays] = useState<number | null>(1);
+  const [productTagIds, setProductTagIds] = useState<string[]>([]);
+  const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
 
   const handleCloseClick = () => {
     onCancel();
@@ -125,13 +231,23 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
     price,
     priceUnit,
     currency,
+    numberOfResourcesToBook: numberOfResourcesToBookStr,
+    minDurationMinutes: minDurationMinutesStr,
+    maxDurationMinutes: maxDurationMinutesStr,
     bookAllLocationResources,
-    forceContinuousSlots,
+    recurrenceWindowDays: recurrenceWindowDaysStr,
+    requireConsecutiveDays,
+    maxBookingSpreadDays: maxBookingSpreadDaysStr,
     productTagIds,
     locationTagIds,
   }: ProductDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
+    const numberOfResourcesToBook = Number(numberOfResourcesToBookStr);
+    const minDurationMinutes = minDurationMinutesStr ? Number(minDurationMinutesStr) : null;
+    const maxDurationMinutes = maxDurationMinutesStr ? Number(maxDurationMinutesStr) : null;
+    const recurrenceWindowDays = recurrenceWindowDaysStr ? Number(recurrenceWindowDaysStr) : 1;
+    const maxBookingSpreadDays = maxBookingSpreadDaysStr ? Number(maxBookingSpreadDaysStr) : null;
 
     commitAddProduct({
       variables: {
@@ -143,12 +259,13 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           price,
           priceUnit: priceUnit as PriceUnit,
           currency: currency as Currency,
-          minDurationMinutes: null,
-          maxDurationMinutes: null,
+          numberOfResourcesToBook,
           bookAllLocationResources,
-          recurrenceIntervalDays: 1,
-          forceContinuousSlots,
-          maxSpreadDays: null,
+          minDurationMinutes,
+          maxDurationMinutes,
+          recurrenceWindowDays,
+          requireConsecutiveDays,
+          maxBookingSpreadDays,
           productTagIds,
           locationTagIds,
           organizationId,
@@ -194,12 +311,13 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
               type: currency as Currency,
               name: '',
             },
-            minDurationMinutes: null,
-            maxDurationMinutes: null,
+            numberOfResourcesToBook,
             bookAllLocationResources,
-            recurrenceIntervalDays: 1,
-            forceContinuousSlots,
-            maxSpreadDays: null,
+            minDurationMinutes,
+            maxDurationMinutes,
+            recurrenceWindowDays,
+            requireConsecutiveDays,
+            maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
           },
@@ -215,82 +333,132 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
           <Form
             onSubmit={handleProductAddClick}
             initialValues={{
-              name: '',
-              description: '',
-              price: '0.00',
-              priceUnit: '',
-              currency: '',
-              bookAllLocationResources: false,
-              forceContinuousSlots: false,
-              productTagIds: [],
-              locationTagIds: [],
+              name,
+              description,
+              price,
+              priceUnit,
+              currency,
+              minDurationMinutes,
+              maxDurationMinutes,
+              bookAllLocationResources,
+              requireConsecutiveDays,
+              recurrenceWindowDays,
+              maxBookingSpreadDays,
+              numberOfResourcesToBook,
+              productTagIds,
+              locationTagIds,
             }}
             validate={validateProductDetails}
-            render={({ handleSubmit }) => (
-              <FormStackColumn onSubmit={handleSubmit}>
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <SectionIconTypography label="Product Setup" />
-                  <BodyIconTypography label="Edit your product name and details" />
-                  <Divider />
-                </StackColumn>
+            render={({ handleSubmit, values }) => {
+              setName(values.name);
+              setDescription(values.description);
+              setPrice(values.price);
+              setPriceUnit(values.priceUnit);
+              setCurrency(values.currency);
+              setMinDurationMinutes(values.minDurationMinutes);
+              setMaxDurationMinutes(values.maxDurationMinutes);
+              setBookAllLocationResources(values.bookAllLocationResources);
+              setRequireConsecutiveDays(values.requireConsecutiveDays);
+              setRecurrenceWindowDays(values.recurrenceWindowDays);
+              setMaxBookingSpreadDays(values.maxBookingSpreadDays);
+              setNumberOfResourcesToBook(values.numberOfResourcesToBook);
+              setProductTagIds(values.productTagIds);
+              setLocationTagIds(values.locationTagIds);
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredFields.name} />
-                  </FormFieldLabel>
+              return (
+                <FormStackColumn onSubmit={handleSubmit}>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <SectionIconTypography label="Product Setup" />
+                    <BodyIconTypography label="Edit your product name and details" />
+                    <Divider />
+                  </StackColumn>
 
-                  <FormFieldLabel label="Description">
-                    <TextField name="description" required={requiredFields.description} multiline rows={3} />
-                  </FormFieldLabel>
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <FormFieldLabel label="Name">
+                      <TextField name="name" required={requiredFields.name} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Price">
-                    <TextField name="price" required={requiredFields.price} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Description">
+                      <TextField name="description" required={requiredFields.description} multiline rows={3} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Price Unit">
-                    <SingleChoicesPriceUnit rootDataRelay={rootData} name="priceUnit" required={requiredFields.priceUnit} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Price">
+                      <TextField name="price" required={requiredFields.price} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Currency">
-                    <SingleChoicesCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Price Unit">
+                      <SingleChoicesPriceUnit rootDataRelay={rootData} name="priceUnit" required={requiredFields.priceUnit} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="">
-                    <Switches
-                      name="bookAllLocationResources"
-                      required={requiredFields.bookAllLocationResources}
-                      data={{ label: 'Book all location resources', value: 'bookAllLocationResources' }}
-                      helperText="If checked, all location resources will be booked for this product."
-                    />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Currency">
+                      <SingleChoicesCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="">
-                    <Switches
-                      name="forceContinuousSlots"
-                      required={requiredFields.forceContinuousSlots}
-                      data={{ label: 'Force Continuous slots', value: 'forceContinuousSlots' }}
-                      helperText="If checked, only continuous slots can be booked for this product."
-                    />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Minimum Duration (minutes)">
+                      <TextField name="minDurationMinutes" required={requiredFields.minDurationMinutes} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Product Tags">
-                    <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
-                  </FormFieldLabel>
+                    <FormFieldLabel label="Maximum Duration (minutes)">
+                      <TextField name="maxDurationMinutes" required={requiredFields.maxDurationMinutes} />
+                    </FormFieldLabel>
 
-                  <FormFieldLabel label="Location Tags">
-                    <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
-                  </FormFieldLabel>
-                </StackColumn>
+                    <FormFieldLabel label="">
+                      <Switches
+                        name="bookAllLocationResources"
+                        required={requiredFields.bookAllLocationResources}
+                        data={{ label: 'Book all location resources', value: 'bookAllLocationResources' }}
+                        helperText="If checked, all location resources will be booked for this product."
+                      />
+                    </FormFieldLabel>
 
-                <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <StackRow>
-                    <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                      <BodyIconTypography label="Add" invertDefaultColor={paletteMode === 'dark'} />
-                    </Button>
-                  </StackRow>
-                </StackColumn>
-              </FormStackColumn>
-            )}
+                    {!bookAllLocationResources && (
+                      <FormFieldLabel label="Number of Resources to Book">
+                        <TextField name="numberOfResourcesToBook" required={requiredFields.numberOfResourcesToBook} />
+                      </FormFieldLabel>
+                    )}
+
+                    {!bookAllLocationResources && !requireConsecutiveDays && (
+                      <FormFieldLabel label="Recurrence Window Days">
+                        <TextField name="recurrenceWindowDays" required={requiredFields.recurrenceWindowDays} />
+                      </FormFieldLabel>
+                    )}
+
+                    {!bookAllLocationResources && (
+                      <FormFieldLabel label="">
+                        <Switches
+                          name="requireConsecutiveDays"
+                          required={requiredFields.requireConsecutiveDays}
+                          data={{ label: 'Must book consecutive days', value: 'requireConsecutiveDays' }}
+                          helperText="If checked, only consecutive days booking allowed for this product."
+                        />
+                      </FormFieldLabel>
+                    )}
+
+                    {!bookAllLocationResources && !requireConsecutiveDays && (
+                      <FormFieldLabel label="Max Booking Spread Days">
+                        <TextField name="maxBookingSpreadDays" required={requiredFields.maxBookingSpreadDays} />
+                      </FormFieldLabel>
+                    )}
+
+                    <FormFieldLabel label="Product Tags">
+                      <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Location Tags">
+                      <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
+                    </FormFieldLabel>
+                  </StackColumn>
+
+                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                    <StackRow>
+                      <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                        <BodyIconTypography label="Add" invertDefaultColor={paletteMode === 'dark'} />
+                      </Button>
+                    </StackRow>
+                  </StackColumn>
+                </FormStackColumn>
+              );
+            }}
           />
         </AppBarWithStackColumn>
       </Box>

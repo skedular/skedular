@@ -32,9 +32,10 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes ?? -1,
             MaxDurationMinutes = src.MaxDurationMinutes ?? -1,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceIntervalDays = src.RecurrenceIntervalDays,
-            ForceContinuousSlots = src.ForceContinuousSlots,
-            MaxSpreadDays = src.MaxSpreadDays ?? -1
+            RecurrenceWindowDays = src.RecurrenceWindowDays,
+            RequireConsecutiveDays = src.RequireConsecutiveDays,
+            MaxBookingSpreadDays = src.MaxBookingSpreadDays ?? -1,
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook
         };
 
         productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));

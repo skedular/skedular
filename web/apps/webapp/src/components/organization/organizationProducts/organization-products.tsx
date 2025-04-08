@@ -80,12 +80,13 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
                 type
                 name
               }
+              numberOfResourcesToBook
               minDurationMinutes
               maxDurationMinutes
               bookAllLocationResources
-              recurrenceIntervalDays
-              forceContinuousSlots
-              maxSpreadDays
+              recurrenceWindowDays
+              requireConsecutiveDays
+              maxBookingSpreadDays
               organization {
                 uniqueId
               }

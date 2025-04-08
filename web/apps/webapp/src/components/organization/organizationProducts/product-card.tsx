@@ -48,12 +48,13 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
           type
           name
         }
+        numberOfResourcesToBook
         minDurationMinutes
         maxDurationMinutes
         bookAllLocationResources
-        recurrenceIntervalDays
-        forceContinuousSlots
-        maxSpreadDays
+        recurrenceWindowDays
+        requireConsecutiveDays
+        maxBookingSpreadDays
         organization {
           uniqueId
         }

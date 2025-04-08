@@ -67,11 +67,12 @@ public class ProductDetails : Node
     [GraphQLName("bookAllLocationResources")]
     public bool BookAllLocationResources { get; set; }
 
-    [GraphQLName("recurrenceIntervalDays")]
-    public int RecurrenceIntervalDays { get; set; }
+    [GraphQLName("recurrenceWindowDays")]
+    public int RecurrenceWindowDays { get; set; }
 
-    [GraphQLName("forceContinuousSlots")] public bool ForceContinuousSlots { get; set; }
-    [GraphQLName("maxSpreadDays")] public int? MaxSpreadDays { get; set; }
+    [GraphQLName("requireConsecutiveDays")] public bool RequireConsecutiveDays { get; set; }
+    [GraphQLName("maxBookingSpreadDays")] public int? MaxBookingSpreadDays { get; set; }
+    [GraphQLName("numberOfResourcesToBook")] public int NumberOfResourcesToBook { get; set; }
     [GraphQLName("productTags")] public IEnumerable<OrganizationTagDetails> ProductTags { get; set; } = [];
     [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
 
@@ -114,11 +115,12 @@ public class AddProductInput
     [GraphQLName("bookAllLocationResources")]
     public bool BookAllLocationResources { get; set; }
 
-    [GraphQLName("recurrenceIntervalDays")]
-    public int RecurrenceIntervalDays { get; set; }
+    [GraphQLName("recurrenceWindowDays")]
+    public int RecurrenceWindowDays { get; set; }
 
-    [GraphQLName("forceContinuousSlots")] public bool ForceContinuousSlots { get; set; }
-    [GraphQLName("maxSpreadDays")] public int? MaxSpreadDays { get; set; }
+    [GraphQLName("requireConsecutiveDays")] public bool RequireConsecutiveDays { get; set; }
+    [GraphQLName("maxBookingSpreadDays")] public int? MaxBookingSpreadDays { get; set; }
+    [GraphQLName("numberOfResourcesToBook")] public int NumberOfResourcesToBook { get; set; }
     [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
 }
@@ -140,11 +142,12 @@ public class UpdateProductInput
     [GraphQLName("bookAllLocationResources")]
     public bool BookAllLocationResources { get; set; }
 
-    [GraphQLName("recurrenceIntervalDays")]
-    public int RecurrenceIntervalDays { get; set; }
+    [GraphQLName("recurrenceWindowDays")]
+    public int RecurrenceWindowDays { get; set; }
 
-    [GraphQLName("forceContinuousSlots")] public bool ForceContinuousSlots { get; set; }
-    [GraphQLName("maxSpreadDays")] public int? MaxSpreadDays { get; set; }
+    [GraphQLName("requireConsecutiveDays")] public bool RequireConsecutiveDays { get; set; }
+    [GraphQLName("maxBookingSpreadDays")] public int? MaxBookingSpreadDays { get; set; }
+    [GraphQLName("numberOfResourcesToBook")] public int NumberOfResourcesToBook { get; set; }
     [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
 }

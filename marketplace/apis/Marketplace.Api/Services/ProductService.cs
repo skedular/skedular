@@ -91,7 +91,7 @@ public class ProductService(
         var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
         var locationTags = organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList();
         var productEntity = mapper.MapTo(
-            new Product { Id = productId, Inactive = false },
+            new Product { Id = productId, Inactive = true },
             productVersion,
             existingOrganization,
             productTags,
@@ -287,14 +287,14 @@ public class ProductService(
 
     private static void Validate(ProductVersion productVersion)
     {
-        if (productVersion.RecurrenceIntervalDays <= 0)
+        if (productVersion.RecurrenceWindowDays <= 0)
         {
-            throw new ArgumentException("RecurrenceIntervalDays must be greater than 0", nameof(productVersion.RecurrenceIntervalDays));
+            throw new ArgumentException("RecurrenceWindowDays must be greater than 0", nameof(productVersion.RecurrenceWindowDays));
         }
 
-        if (productVersion is { ForceContinuousSlots: true, MaxSpreadDays: not null })
+        if (productVersion is { RequireConsecutiveDays: true, MaxBookingSpreadDays: not null })
         {
-            throw new ArgumentException("MaxSpreadDays can't be set if ForceContinuousSlots is set", nameof(productVersion.MaxSpreadDays));
+            throw new ArgumentException("MaxBookingSpreadDays can't be set if ForceContinuousSlots is set", nameof(productVersion.MaxBookingSpreadDays));
         }
 
         if (productVersion.MinDurationMinutes is not null && productVersion.MaxDurationMinutes is not null)

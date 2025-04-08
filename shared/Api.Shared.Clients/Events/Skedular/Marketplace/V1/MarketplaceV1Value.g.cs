@@ -36,18 +36,19 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
             "bXASEAoIaW5hY3RpdmUYAyABKAgSFgoOb3JnYW5pemF0aW9uSWQYBCABKAkS",
             "MwoOcHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Qcm9kdWN0",
-            "VmVyc2lvbiKAAwoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkSLQoJZGVs",
+            "VmVyc2lvbiKoAwoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkSLQoJZGVs",
             "ZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIMCgRu",
             "YW1lGAMgASgJEhMKC2Rlc2NyaXB0aW9uGAQgASgJEg0KBXByaWNlGAUgASgJ",
             "EhEKCXByaWNlVW5pdBgGIAEoCRIQCghjdXJyZW5jeRgHIAEoCRIaChJtaW5E",
             "dXJhdGlvbk1pbnV0ZXMYCCABKAUSGgoSbWF4RHVyYXRpb25NaW51dGVzGAkg",
-            "ASgFEiAKGGJvb2tBbGxMb2NhdGlvblJlc291cmNlcxgKIAEoCBIeChZyZWN1",
-            "cnJlbmNlSW50ZXJ2YWxEYXlzGAsgASgFEhwKFGZvcmNlQ29udGludW91c1Ns",
-            "b3RzGAwgASgIEhUKDW1heFNwcmVhZERheXMYDSABKAUSFQoNcHJvZHVjdFRh",
-            "Z0lkcxgOIAMoCRIWCg5sb2NhdGlvblRhZ0lkcxgPIAMoCSovCgRUeXBlEhMK",
-            "D1Byb2R1Y3RVcHNlcnRlZBAAEhIKDlByb2R1Y3REZWxldGVkEAFCOqoCN0Fw",
-            "aS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuTWFya2V0cGxhY2Uu",
-            "VjEuVmFsdWViBnByb3RvMw=="));
+            "ASgFEiAKGGJvb2tBbGxMb2NhdGlvblJlc291cmNlcxgKIAEoCBIcChRyZWN1",
+            "cnJlbmNlV2luZG93RGF5cxgLIAEoBRIeChZyZXF1aXJlQ29uc2VjdXRpdmVE",
+            "YXlzGAwgASgIEhwKFG1heEJvb2tpbmdTcHJlYWREYXlzGA0gASgFEh8KF251",
+            "bWJlck9mUmVzb3VyY2VzVG9Cb29rGA4gASgFEhUKDXByb2R1Y3RUYWdJZHMY",
+            "DyADKAkSFgoObG9jYXRpb25UYWdJZHMYECADKAkqLwoEVHlwZRITCg9Qcm9k",
+            "dWN0VXBzZXJ0ZWQQABISCg5Qcm9kdWN0RGVsZXRlZBABQjqqAjdBcGkuU2hh",
+            "cmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLk1hcmtldHBsYWNlLlYxLlZh",
+            "bHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -55,7 +56,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data.Parser, new[]{ "Product" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "Inactive", "OrganizationId", "ProductVersion" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "DeletedAt", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceIntervalDays", "ForceContinuousSlots", "MaxSpreadDays", "ProductTagIds", "LocationTagIds" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "DeletedAt", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1365,9 +1366,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       minDurationMinutes_ = other.minDurationMinutes_;
       maxDurationMinutes_ = other.maxDurationMinutes_;
       bookAllLocationResources_ = other.bookAllLocationResources_;
-      recurrenceIntervalDays_ = other.recurrenceIntervalDays_;
-      forceContinuousSlots_ = other.forceContinuousSlots_;
-      maxSpreadDays_ = other.maxSpreadDays_;
+      recurrenceWindowDays_ = other.recurrenceWindowDays_;
+      requireConsecutiveDays_ = other.requireConsecutiveDays_;
+      maxBookingSpreadDays_ = other.maxBookingSpreadDays_;
+      numberOfResourcesToBook_ = other.numberOfResourcesToBook_;
       productTagIds_ = other.productTagIds_.Clone();
       locationTagIds_ = other.locationTagIds_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -1499,46 +1501,58 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "recurrenceIntervalDays" field.</summary>
-    public const int RecurrenceIntervalDaysFieldNumber = 11;
-    private int recurrenceIntervalDays_;
+    /// <summary>Field number for the "recurrenceWindowDays" field.</summary>
+    public const int RecurrenceWindowDaysFieldNumber = 11;
+    private int recurrenceWindowDays_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int RecurrenceIntervalDays {
-      get { return recurrenceIntervalDays_; }
+    public int RecurrenceWindowDays {
+      get { return recurrenceWindowDays_; }
       set {
-        recurrenceIntervalDays_ = value;
+        recurrenceWindowDays_ = value;
       }
     }
 
-    /// <summary>Field number for the "forceContinuousSlots" field.</summary>
-    public const int ForceContinuousSlotsFieldNumber = 12;
-    private bool forceContinuousSlots_;
+    /// <summary>Field number for the "requireConsecutiveDays" field.</summary>
+    public const int RequireConsecutiveDaysFieldNumber = 12;
+    private bool requireConsecutiveDays_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool ForceContinuousSlots {
-      get { return forceContinuousSlots_; }
+    public bool RequireConsecutiveDays {
+      get { return requireConsecutiveDays_; }
       set {
-        forceContinuousSlots_ = value;
+        requireConsecutiveDays_ = value;
       }
     }
 
-    /// <summary>Field number for the "maxSpreadDays" field.</summary>
-    public const int MaxSpreadDaysFieldNumber = 13;
-    private int maxSpreadDays_;
+    /// <summary>Field number for the "maxBookingSpreadDays" field.</summary>
+    public const int MaxBookingSpreadDaysFieldNumber = 13;
+    private int maxBookingSpreadDays_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int MaxSpreadDays {
-      get { return maxSpreadDays_; }
+    public int MaxBookingSpreadDays {
+      get { return maxBookingSpreadDays_; }
       set {
-        maxSpreadDays_ = value;
+        maxBookingSpreadDays_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "numberOfResourcesToBook" field.</summary>
+    public const int NumberOfResourcesToBookFieldNumber = 14;
+    private int numberOfResourcesToBook_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int NumberOfResourcesToBook {
+      get { return numberOfResourcesToBook_; }
+      set {
+        numberOfResourcesToBook_ = value;
       }
     }
 
     /// <summary>Field number for the "productTagIds" field.</summary>
-    public const int ProductTagIdsFieldNumber = 14;
+    public const int ProductTagIdsFieldNumber = 15;
     private static readonly pb::FieldCodec<string> _repeated_productTagIds_codec
-        = pb::FieldCodec.ForString(114);
+        = pb::FieldCodec.ForString(122);
     private readonly pbc::RepeatedField<string> productTagIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1547,9 +1561,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "locationTagIds" field.</summary>
-    public const int LocationTagIdsFieldNumber = 15;
+    public const int LocationTagIdsFieldNumber = 16;
     private static readonly pb::FieldCodec<string> _repeated_locationTagIds_codec
-        = pb::FieldCodec.ForString(122);
+        = pb::FieldCodec.ForString(130);
     private readonly pbc::RepeatedField<string> locationTagIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1582,9 +1596,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (MinDurationMinutes != other.MinDurationMinutes) return false;
       if (MaxDurationMinutes != other.MaxDurationMinutes) return false;
       if (BookAllLocationResources != other.BookAllLocationResources) return false;
-      if (RecurrenceIntervalDays != other.RecurrenceIntervalDays) return false;
-      if (ForceContinuousSlots != other.ForceContinuousSlots) return false;
-      if (MaxSpreadDays != other.MaxSpreadDays) return false;
+      if (RecurrenceWindowDays != other.RecurrenceWindowDays) return false;
+      if (RequireConsecutiveDays != other.RequireConsecutiveDays) return false;
+      if (MaxBookingSpreadDays != other.MaxBookingSpreadDays) return false;
+      if (NumberOfResourcesToBook != other.NumberOfResourcesToBook) return false;
       if(!productTagIds_.Equals(other.productTagIds_)) return false;
       if(!locationTagIds_.Equals(other.locationTagIds_)) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -1604,9 +1619,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (MinDurationMinutes != 0) hash ^= MinDurationMinutes.GetHashCode();
       if (MaxDurationMinutes != 0) hash ^= MaxDurationMinutes.GetHashCode();
       if (BookAllLocationResources != false) hash ^= BookAllLocationResources.GetHashCode();
-      if (RecurrenceIntervalDays != 0) hash ^= RecurrenceIntervalDays.GetHashCode();
-      if (ForceContinuousSlots != false) hash ^= ForceContinuousSlots.GetHashCode();
-      if (MaxSpreadDays != 0) hash ^= MaxSpreadDays.GetHashCode();
+      if (RecurrenceWindowDays != 0) hash ^= RecurrenceWindowDays.GetHashCode();
+      if (RequireConsecutiveDays != false) hash ^= RequireConsecutiveDays.GetHashCode();
+      if (MaxBookingSpreadDays != 0) hash ^= MaxBookingSpreadDays.GetHashCode();
+      if (NumberOfResourcesToBook != 0) hash ^= NumberOfResourcesToBook.GetHashCode();
       hash ^= productTagIds_.GetHashCode();
       hash ^= locationTagIds_.GetHashCode();
       if (_unknownFields != null) {
@@ -1667,17 +1683,21 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(80);
         output.WriteBool(BookAllLocationResources);
       }
-      if (RecurrenceIntervalDays != 0) {
+      if (RecurrenceWindowDays != 0) {
         output.WriteRawTag(88);
-        output.WriteInt32(RecurrenceIntervalDays);
+        output.WriteInt32(RecurrenceWindowDays);
       }
-      if (ForceContinuousSlots != false) {
+      if (RequireConsecutiveDays != false) {
         output.WriteRawTag(96);
-        output.WriteBool(ForceContinuousSlots);
+        output.WriteBool(RequireConsecutiveDays);
       }
-      if (MaxSpreadDays != 0) {
+      if (MaxBookingSpreadDays != 0) {
         output.WriteRawTag(104);
-        output.WriteInt32(MaxSpreadDays);
+        output.WriteInt32(MaxBookingSpreadDays);
+      }
+      if (NumberOfResourcesToBook != 0) {
+        output.WriteRawTag(112);
+        output.WriteInt32(NumberOfResourcesToBook);
       }
       productTagIds_.WriteTo(output, _repeated_productTagIds_codec);
       locationTagIds_.WriteTo(output, _repeated_locationTagIds_codec);
@@ -1731,17 +1751,21 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(80);
         output.WriteBool(BookAllLocationResources);
       }
-      if (RecurrenceIntervalDays != 0) {
+      if (RecurrenceWindowDays != 0) {
         output.WriteRawTag(88);
-        output.WriteInt32(RecurrenceIntervalDays);
+        output.WriteInt32(RecurrenceWindowDays);
       }
-      if (ForceContinuousSlots != false) {
+      if (RequireConsecutiveDays != false) {
         output.WriteRawTag(96);
-        output.WriteBool(ForceContinuousSlots);
+        output.WriteBool(RequireConsecutiveDays);
       }
-      if (MaxSpreadDays != 0) {
+      if (MaxBookingSpreadDays != 0) {
         output.WriteRawTag(104);
-        output.WriteInt32(MaxSpreadDays);
+        output.WriteInt32(MaxBookingSpreadDays);
+      }
+      if (NumberOfResourcesToBook != 0) {
+        output.WriteRawTag(112);
+        output.WriteInt32(NumberOfResourcesToBook);
       }
       productTagIds_.WriteTo(ref output, _repeated_productTagIds_codec);
       locationTagIds_.WriteTo(ref output, _repeated_locationTagIds_codec);
@@ -1785,14 +1809,17 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (BookAllLocationResources != false) {
         size += 1 + 1;
       }
-      if (RecurrenceIntervalDays != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(RecurrenceIntervalDays);
+      if (RecurrenceWindowDays != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(RecurrenceWindowDays);
       }
-      if (ForceContinuousSlots != false) {
+      if (RequireConsecutiveDays != false) {
         size += 1 + 1;
       }
-      if (MaxSpreadDays != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MaxSpreadDays);
+      if (MaxBookingSpreadDays != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MaxBookingSpreadDays);
+      }
+      if (NumberOfResourcesToBook != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(NumberOfResourcesToBook);
       }
       size += productTagIds_.CalculateSize(_repeated_productTagIds_codec);
       size += locationTagIds_.CalculateSize(_repeated_locationTagIds_codec);
@@ -1841,14 +1868,17 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (other.BookAllLocationResources != false) {
         BookAllLocationResources = other.BookAllLocationResources;
       }
-      if (other.RecurrenceIntervalDays != 0) {
-        RecurrenceIntervalDays = other.RecurrenceIntervalDays;
+      if (other.RecurrenceWindowDays != 0) {
+        RecurrenceWindowDays = other.RecurrenceWindowDays;
       }
-      if (other.ForceContinuousSlots != false) {
-        ForceContinuousSlots = other.ForceContinuousSlots;
+      if (other.RequireConsecutiveDays != false) {
+        RequireConsecutiveDays = other.RequireConsecutiveDays;
       }
-      if (other.MaxSpreadDays != 0) {
-        MaxSpreadDays = other.MaxSpreadDays;
+      if (other.MaxBookingSpreadDays != 0) {
+        MaxBookingSpreadDays = other.MaxBookingSpreadDays;
+      }
+      if (other.NumberOfResourcesToBook != 0) {
+        NumberOfResourcesToBook = other.NumberOfResourcesToBook;
       }
       productTagIds_.Add(other.productTagIds_);
       locationTagIds_.Add(other.locationTagIds_);
@@ -1915,22 +1945,26 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 88: {
-            RecurrenceIntervalDays = input.ReadInt32();
+            RecurrenceWindowDays = input.ReadInt32();
             break;
           }
           case 96: {
-            ForceContinuousSlots = input.ReadBool();
+            RequireConsecutiveDays = input.ReadBool();
             break;
           }
           case 104: {
-            MaxSpreadDays = input.ReadInt32();
+            MaxBookingSpreadDays = input.ReadInt32();
             break;
           }
-          case 114: {
-            productTagIds_.AddEntriesFrom(input, _repeated_productTagIds_codec);
+          case 112: {
+            NumberOfResourcesToBook = input.ReadInt32();
             break;
           }
           case 122: {
+            productTagIds_.AddEntriesFrom(input, _repeated_productTagIds_codec);
+            break;
+          }
+          case 130: {
             locationTagIds_.AddEntriesFrom(input, _repeated_locationTagIds_codec);
             break;
           }
@@ -1997,22 +2031,26 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 88: {
-            RecurrenceIntervalDays = input.ReadInt32();
+            RecurrenceWindowDays = input.ReadInt32();
             break;
           }
           case 96: {
-            ForceContinuousSlots = input.ReadBool();
+            RequireConsecutiveDays = input.ReadBool();
             break;
           }
           case 104: {
-            MaxSpreadDays = input.ReadInt32();
+            MaxBookingSpreadDays = input.ReadInt32();
             break;
           }
-          case 114: {
-            productTagIds_.AddEntriesFrom(ref input, _repeated_productTagIds_codec);
+          case 112: {
+            NumberOfResourcesToBook = input.ReadInt32();
             break;
           }
           case 122: {
+            productTagIds_.AddEntriesFrom(ref input, _repeated_productTagIds_codec);
+            break;
+          }
+          case 130: {
             locationTagIds_.AddEntriesFrom(ref input, _repeated_locationTagIds_codec);
             break;
           }

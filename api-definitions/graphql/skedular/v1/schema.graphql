@@ -712,21 +712,22 @@ type ProductDetails {
   bookAllLocationResources: Boolean!
   currency: CurrencyDetails!
   description: String
-  forceContinuousSlots: Boolean!
   id: ID!
   inactive: Boolean!
   latestProductVersionId: String!
   locationTags: [Marketplace_OrganizationTagDetails!]!
+  maxBookingSpreadDays: Int
   maxDurationMinutes: Int
-  maxSpreadDays: Int
   minDurationMinutes: Int
   name: String!
+  numberOfResourcesToBook: Int!
   organization: Marketplace_OrganizationDetails!
   price: String!
   priceToDisplay: String!
   priceUnit: PriceUnitDetails!
   productTags: [Marketplace_OrganizationTagDetails!]!
-  recurrenceIntervalDays: Int!
+  recurrenceWindowDays: Int!
+  requireConsecutiveDays: Boolean!
 }
 
 type ProductEdge {
@@ -794,7 +795,7 @@ type Query {
   organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): OrganizationMemberConnection! @cost(weight: "10")
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!]! @cost(weight: "10")
-  organizationRequiredSsoTokenValid(id: String!): Boolean!
+  organizationRequiredSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): OrganizationConnection! @cost(weight: "10")
   organizationTypes: [OrganizationTypeDetails!]!
@@ -1121,18 +1122,19 @@ input AddProductInput {
   clientMutationId: String
   currency: Currency!
   description: String
-  forceContinuousSlots: Boolean!
   id: String
   locationTagIds: [String!]!
+  maxBookingSpreadDays: Int
   maxDurationMinutes: Int
-  maxSpreadDays: Int
   minDurationMinutes: Int
   name: String!
+  numberOfResourcesToBook: Int!
   organizationId: String!
   price: String!
   priceUnit: PriceUnit!
   productTagIds: [String!]!
-  recurrenceIntervalDays: Int!
+  recurrenceWindowDays: Int!
+  requireConsecutiveDays: Boolean!
 }
 
 input AddProductTagInput {
@@ -1725,18 +1727,19 @@ input UpdateProductInput {
   clientMutationId: String
   currency: Currency!
   description: String
-  forceContinuousSlots: Boolean!
   id: String!
   locationTagIds: [String!]!
+  maxBookingSpreadDays: Int
   maxDurationMinutes: Int
-  maxSpreadDays: Int
   minDurationMinutes: Int
   name: String!
+  numberOfResourcesToBook: Int!
   organizationId: String!
   price: String!
   priceUnit: PriceUnit!
   productTagIds: [String!]!
-  recurrenceIntervalDays: Int!
+  recurrenceWindowDays: Int!
+  requireConsecutiveDays: Boolean!
 }
 
 input UpdateProductTagInput {

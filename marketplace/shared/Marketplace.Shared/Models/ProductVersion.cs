@@ -14,9 +14,10 @@ public class ProductVersion : ModelBase
     public int? MinDurationMinutes { get; set; }
     public int? MaxDurationMinutes { get; set; }
     public bool BookAllLocationResources { get; set; }
-    public int RecurrenceIntervalDays { get; set; }
-    public bool ForceContinuousSlots { get; set; }
-    public int? MaxSpreadDays { get; set; }
+    public int RecurrenceWindowDays { get; set; }
+    public bool RequireConsecutiveDays { get; set; }
+    public int? MaxBookingSpreadDays { get; set; }
+    public int NumberOfResourcesToBook { get; set; }
     public Product Product { get; set; }
     public ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public ICollection<OrganizationTag> LocationTags { get; set; } = [];

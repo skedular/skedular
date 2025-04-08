@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<56c1c1f8179852db04729fd6e7d9c113>>
+ * @generated SignedSource<<2c0a242fc765f94310b8959ebea2702c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,13 +19,13 @@ export type productCard_ProductDetails$data = {
     readonly type: Currency;
   };
   readonly description: string | null | undefined;
-  readonly forceContinuousSlots: boolean;
   readonly id: string;
   readonly inactive: boolean;
+  readonly maxBookingSpreadDays: number | null | undefined;
   readonly maxDurationMinutes: number | null | undefined;
-  readonly maxSpreadDays: number | null | undefined;
   readonly minDurationMinutes: number | null | undefined;
   readonly name: string;
+  readonly numberOfResourcesToBook: number;
   readonly organization: {
     readonly uniqueId: string;
   };
@@ -34,7 +34,8 @@ export type productCard_ProductDetails$data = {
     readonly name: string;
     readonly type: PriceUnit;
   };
-  readonly recurrenceIntervalDays: number;
+  readonly recurrenceWindowDays: number;
+  readonly requireConsecutiveDays: boolean;
   readonly " $fragmentType": "productCard_ProductDetails";
 };
 export type productCard_ProductDetails$key = {
@@ -119,6 +120,13 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "numberOfResourcesToBook",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "minDurationMinutes",
       "storageKey": null
     },
@@ -140,21 +148,21 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "recurrenceIntervalDays",
+      "name": "recurrenceWindowDays",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "forceContinuousSlots",
+      "name": "requireConsecutiveDays",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "maxSpreadDays",
+      "name": "maxBookingSpreadDays",
       "storageKey": null
     },
     {
@@ -181,6 +189,6 @@ return {
 };
 })();
 
-(node as any).hash = "a5cecdd362fd83041e9cbb1bd1b0041e";
+(node as any).hash = "c87f4893d7f0b978a9b23194728a7c32";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c11a71d31174afd639873e5a0eedb146>>
+ * @generated SignedSource<<2a35b60f8417e8dfe7419129f3a8b0ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,18 +16,19 @@ export type AddProductInput = {
   clientMutationId?: string | null | undefined;
   currency: Currency;
   description?: string | null | undefined;
-  forceContinuousSlots: boolean;
   id?: string | null | undefined;
   locationTagIds: ReadonlyArray<string>;
+  maxBookingSpreadDays?: number | null | undefined;
   maxDurationMinutes?: number | null | undefined;
-  maxSpreadDays?: number | null | undefined;
   minDurationMinutes?: number | null | undefined;
   name: string;
+  numberOfResourcesToBook: number;
   organizationId: string;
   price: string;
   priceUnit: PriceUnit;
   productTagIds: ReadonlyArray<string>;
-  recurrenceIntervalDays: number;
+  recurrenceWindowDays: number;
+  requireConsecutiveDays: boolean;
 };
 export type addProduct_addProductMutation$variables = {
   input: AddProductInput;
@@ -41,7 +42,6 @@ export type addProduct_addProductMutation$data = {
         readonly type: Currency;
       };
       readonly description: string | null | undefined;
-      readonly forceContinuousSlots: boolean;
       readonly id: string;
       readonly inactive: boolean;
       readonly locationTags: ReadonlyArray<{
@@ -49,10 +49,11 @@ export type addProduct_addProductMutation$data = {
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
+      readonly maxBookingSpreadDays: number | null | undefined;
       readonly maxDurationMinutes: number | null | undefined;
-      readonly maxSpreadDays: number | null | undefined;
       readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
+      readonly numberOfResourcesToBook: number;
       readonly price: string;
       readonly priceUnit: {
         readonly name: string;
@@ -63,7 +64,8 @@ export type addProduct_addProductMutation$data = {
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
-      readonly recurrenceIntervalDays: number;
+      readonly recurrenceWindowDays: number;
+      readonly requireConsecutiveDays: boolean;
     };
   } | null | undefined;
 };
@@ -76,7 +78,6 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly type: Currency;
       };
       readonly description: string | null | undefined;
-      readonly forceContinuousSlots: boolean;
       readonly id: string;
       readonly inactive: boolean;
       readonly locationTags: ReadonlyArray<{
@@ -84,10 +85,11 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
+      readonly maxBookingSpreadDays: number | null | undefined;
       readonly maxDurationMinutes: number | null | undefined;
-      readonly maxSpreadDays: number | null | undefined;
       readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
+      readonly numberOfResourcesToBook: number;
       readonly price: string;
       readonly priceUnit: {
         readonly name: string;
@@ -98,7 +100,8 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly name: string | null | undefined;
         readonly uniqueId: string;
       }>;
-      readonly recurrenceIntervalDays: number;
+      readonly recurrenceWindowDays: number;
+      readonly requireConsecutiveDays: boolean;
     };
   } | null | undefined;
 };
@@ -226,6 +229,13 @@ v4 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
+            "name": "numberOfResourcesToBook",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
             "name": "minDurationMinutes",
             "storageKey": null
           },
@@ -247,21 +257,21 @@ v4 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "recurrenceIntervalDays",
+            "name": "recurrenceWindowDays",
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "forceContinuousSlots",
+            "name": "requireConsecutiveDays",
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "maxSpreadDays",
+            "name": "maxBookingSpreadDays",
             "storageKey": null
           },
           {
@@ -309,16 +319,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "7ae98d6365f3dba6cc9831f2ae5e165f",
+    "cacheID": "772863afeec65b8f1a24cdcf0d04e33a",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceIntervalDays\n      forceContinuousSlots\n      maxSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ee612aad77541421ddf0dab3f0991d7a";
+(node as any).hash = "a666c83b2ec2cba6e2a0525cbf6b034f";
 
 export default node;

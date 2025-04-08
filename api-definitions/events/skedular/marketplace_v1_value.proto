@@ -49,9 +49,10 @@ message ProductVersion {
   int32 minDurationMinutes = 8;
   int32 maxDurationMinutes = 9;
   bool bookAllLocationResources = 10;
-  int32 recurrenceIntervalDays = 11;
-  bool forceContinuousSlots = 12;
-  int32 maxSpreadDays = 13;
-  repeated string productTagIds = 14;
-  repeated string locationTagIds = 15;
+  int32 recurrenceWindowDays = 11;
+  bool requireConsecutiveDays = 12;
+  int32 maxBookingSpreadDays = 13;
+  int32 numberOfResourcesToBook = 14;
+  repeated string productTagIds = 15;
+  repeated string locationTagIds = 16;
 }
