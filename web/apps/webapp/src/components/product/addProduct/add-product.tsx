@@ -402,6 +402,14 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                       <TextField name="maxDurationMinutes" required={requiredFields.maxDurationMinutes} />
                     </FormFieldLabel>
 
+                    <FormFieldLabel label="Product Tags">
+                      <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Location Tags">
+                      <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="">
                       <Switches
                         name="bookAllLocationResources"
@@ -417,12 +425,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                       </FormFieldLabel>
                     )}
 
-                    {!bookAllLocationResources && !requireConsecutiveDays && (
-                      <FormFieldLabel label="Recurrence Window Days">
-                        <TextField name="recurrenceWindowDays" required={requiredFields.recurrenceWindowDays} />
-                      </FormFieldLabel>
-                    )}
-
                     {!bookAllLocationResources && (
                       <FormFieldLabel label="">
                         <Switches
@@ -435,18 +437,16 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                     )}
 
                     {!bookAllLocationResources && !requireConsecutiveDays && (
+                      <FormFieldLabel label="Recurrence Window Days">
+                        <TextField name="recurrenceWindowDays" required={requiredFields.recurrenceWindowDays} />
+                      </FormFieldLabel>
+                    )}
+
+                    {!bookAllLocationResources && !requireConsecutiveDays && (
                       <FormFieldLabel label="Max Booking Spread Days">
                         <TextField name="maxBookingSpreadDays" required={requiredFields.maxBookingSpreadDays} />
                       </FormFieldLabel>
                     )}
-
-                    <FormFieldLabel label="Product Tags">
-                      <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Location Tags">
-                      <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
-                    </FormFieldLabel>
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
