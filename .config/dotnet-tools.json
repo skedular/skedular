@@ -3,14 +3,14 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2024.3.6",
+      "version": "2024.3.7",
       "commands": [
         "jb"
       ],
       "rollForward": false
     },
     "dotnet-ef": {
-      "version": "9.0.3",
+      "version": "9.0.4",
       "commands": [
         "dotnet-ef"
       ],

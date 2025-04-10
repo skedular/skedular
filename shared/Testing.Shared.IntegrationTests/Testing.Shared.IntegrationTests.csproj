@@ -9,8 +9,8 @@
 
     <ItemGroup>
         <PackageReference Include="PactNet" Version="5.0.1"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.3"/>
-        <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.4"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>
         <!--        <PackageReference Include="Xunit.DependencyInjection" Version="10.2.1"/>-->
         <!--        <PackageReference Include="Xunit.DependencyInjection.Logging" Version="10.0.0"/>-->

@@ -10,7 +10,7 @@
     <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.402.72"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.402.74"/>
         <PackageReference Include="Confluent.Kafka" Version="2.9.0"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.9.0"/>
         <PackageReference Include="CountryData" Version="6.12.0"/>
@@ -18,14 +18,14 @@
         <PackageReference Include="Flurl.Http" Version="4.0.2"/>
         <PackageReference Include="Google.Apis.Auth" Version="1.69.0"/>
         <PackageReference Include="IdGen" Version="3.0.7"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.3"/>
-        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.3"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.3"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.3"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3"/>
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.3"/>
-        <PackageReference Include="Microsoft.Graph" Version="5.75.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.Graph" Version="5.76.0"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.8.3"/>
         <PackageReference Include="Nanoid" Version="3.1.0"/>
         <PackageReference Include="NSwag.AspNetCore" Version="14.3.0"/>
@@ -42,8 +42,8 @@
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
         <PackageReference Include="Npgsql.OpenTelemetry" Version="9.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
