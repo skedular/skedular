@@ -275,3 +275,23 @@ resource "cloudflare_record" "webapp_gmail_aws_ses_spf" {
   proxied = false
   ttl     = 3600
 }
+
+resource "cloudflare_record" "bing-verification" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.public_website.id
+  name    = "d4b213988b9e9e47f7d9f17ea01d5b38"
+  content = "verify.bing.com"
+  type    = "CNAME"
+  proxied = false
+  ttl     = 600
+}
+
+resource "cloudflare_record" "yandex-verification" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = data.cloudflare_zone.public_website.id
+  name    = "@"
+  content = "\"yandex-verification: 47a94d9de0bdc184\""
+  type    = "TXT"
+  proxied = false
+  ttl     = 3600
+}
