@@ -132,17 +132,13 @@ const productSchema = object({
   requireConsecutiveDays: boolean(),
   maxBookingSpreadDays: number()
     .nullable()
-    .test('is-required', 'Max booking spread days is required', function (value) {
-      const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
+    .test('is-greater-than-recurrence', 'Max booking spread days must be greater than or equal to recurrence window days', function (value) {
+      const { bookAllLocationResources, requireConsecutiveDays, recurrenceWindowDays } = this.parent;
       if (bookAllLocationResources || requireConsecutiveDays) {
         return true;
       }
 
-      return !!value;
-    })
-    .test('is-greater-than-recurrence', 'Max booking spread days must be greater than or equal to recurrence window days', function (value) {
-      const { bookAllLocationResources, requireConsecutiveDays, recurrenceWindowDays } = this.parent;
-      if (bookAllLocationResources || requireConsecutiveDays) {
+      if (!value) {
         return true;
       }
 
@@ -151,6 +147,10 @@ const productSchema = object({
     .test('is-greater-than-zero', 'Max booking spread days must be greater than 0', function (value) {
       const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
       if (bookAllLocationResources || requireConsecutiveDays) {
+        return true;
+      }
+
+      if (!value) {
         return true;
       }
 

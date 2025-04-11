@@ -174,24 +174,23 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
           {productDetails.minDurationMinutes && (
             <StackRow>
               <BodyIconTypography label="Min duration:" />
-              <SmallIconTypography label={`${productDetails.minDurationMinutes} minutes`} />
-            </StackRow>
-          )}
-
-          {productDetails.maxDurationMinutes && (
-            <StackRow>
-              <BodyIconTypography label="Max duration:" />
-              <SmallIconTypography label={`${productDetails.maxDurationMinutes} minutes`} />
+              <SmallIconTypography label={productDetails.minDurationMinutes ? `${productDetails.minDurationMinutes} minutes` : 'No limit'} />
             </StackRow>
           )}
 
           <StackRow>
-            <BodyIconTypography label="Must Book Consecutive Days:" />
+            <BodyIconTypography label="Max duration:" />
+            <SmallIconTypography label={productDetails.maxDurationMinutes ? `${productDetails.maxDurationMinutes} minutes` : 'No limit'} />
+          </StackRow>
+
+          <StackRow>
+            <BodyIconTypography label="Must book consecutive days:" />
             <SmallIconTypography label={productDetails.requireConsecutiveDays ? 'Yes' : 'No'} />
           </StackRow>
+
           <StackRow>
-            <BodyIconTypography label="Max Booking Spread Days:" />
-            <SmallIconTypography label={`${productDetails.maxBookingSpreadDays}`} />
+            <BodyIconTypography label="Max booking spread days:" />
+            <SmallIconTypography label={productDetails.maxBookingSpreadDays ? productDetails.maxBookingSpreadDays.toString() : 'No limit'} />
           </StackRow>
         </CardContent>
       </Card>
