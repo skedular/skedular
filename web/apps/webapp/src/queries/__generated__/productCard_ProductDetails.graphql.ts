@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2c0a242fc765f94310b8959ebea2702c>>
+ * @generated SignedSource<<273f91cc729fc7e4aaf4fe47bd3b03ee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,18 +9,10 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type Currency = "Nzd" | "Usd" | "%future added value";
-export type PriceUnit = "PerHour" | "PerMinute" | "PerUse" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type productCard_ProductDetails$data = {
-  readonly bookAllLocationResources: boolean;
-  readonly currency: {
-    readonly name: string;
-    readonly type: Currency;
-  };
   readonly description: string | null | undefined;
   readonly id: string;
-  readonly inactive: boolean;
   readonly maxBookingSpreadDays: number | null | undefined;
   readonly maxDurationMinutes: number | null | undefined;
   readonly minDurationMinutes: number | null | undefined;
@@ -29,12 +21,10 @@ export type productCard_ProductDetails$data = {
   readonly organization: {
     readonly uniqueId: string;
   };
-  readonly price: string;
+  readonly priceToDisplay: string;
   readonly priceUnit: {
     readonly name: string;
-    readonly type: PriceUnit;
   };
-  readonly recurrenceWindowDays: number;
   readonly requireConsecutiveDays: boolean;
   readonly " $fragmentType": "productCard_ProductDetails";
 };
@@ -50,17 +40,7 @@ var v0 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v0/*: any*/)
-];
+};
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -72,13 +52,6 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "inactive",
       "storageKey": null
     },
     (v0/*: any*/),
@@ -93,7 +66,7 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "price",
+      "name": "priceToDisplay",
       "storageKey": null
     },
     {
@@ -103,17 +76,9 @@ return {
       "kind": "LinkedField",
       "name": "priceUnit",
       "plural": false,
-      "selections": (v1/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "CurrencyDetails",
-      "kind": "LinkedField",
-      "name": "currency",
-      "plural": false,
-      "selections": (v1/*: any*/),
+      "selections": [
+        (v0/*: any*/)
+      ],
       "storageKey": null
     },
     {
@@ -135,20 +100,6 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "maxDurationMinutes",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "bookAllLocationResources",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "recurrenceWindowDays",
       "storageKey": null
     },
     {
@@ -189,6 +140,6 @@ return {
 };
 })();
 
-(node as any).hash = "c87f4893d7f0b978a9b23194728a7c32";
+(node as any).hash = "163b0b2500c1bb6d963aab18439a6ebe";
 
 export default node;

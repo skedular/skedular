@@ -7,8 +7,8 @@ public static class PriceExtensions
     public static string ToPriceToDisplay(this string price, Currency currency) =>
         currency switch
         {
-            Currency.Nzd => "$price",
-            Currency.Usd => "$price",
+            Currency.Nzd => $"NZD ${price}",
+            Currency.Usd => $"USD ${price}",
             _ => throw new ArgumentOutOfRangeException()
         };
 }

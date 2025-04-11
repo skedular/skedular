@@ -1,7 +1,5 @@
-import { DefaultDialogTitle, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
-import { EllipseMenuIcon } from '@/components/icons';
+import { DefaultDialogTitle, GridContainer, PushToRight, SectionIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
 import { getOrganizationProductSetupBaseLink } from '@/components/links';
-import ListGridToggle from '@/components/listGridToggle/list-grid-toggle';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -10,7 +8,7 @@ import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
+import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { joinErrors, startOfDay } from '@/libs/utils';
 import type { organizationProducts_deleteProductMutation } from '@/queries/__generated__/organizationProducts_deleteProductMutation.graphql';
 import type { organizationProducts_products_query$key } from '@/queries/__generated__/organizationProducts_products_query.graphql';
@@ -21,10 +19,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
 import Box from '@mui/system/Box';
-import type { GridColDef } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
@@ -45,18 +40,9 @@ const RootQuery = graphql`
   }
 `;
 
-type ProductDetails = {
-  name: string;
-};
-
-type RowType = {
-  id: string;
-  product: ProductDetails;
-};
-
 const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<organizationProducts_rootQuery>(RootQuery, queryReference);
-  const [rootDataRefetchable, refetch] = useRefetchableFragment<organizationProducts_products_refetchableFragment, organizationProducts_products_query$key>(
+  const [rootDataRefetchable] = useRefetchableFragment<organizationProducts_products_refetchableFragment, organizationProducts_products_query$key>(
     graphql`
       fragment organizationProducts_products_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
@@ -68,25 +54,7 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
           edges {
             node {
               id
-              inactive
               name
-              description
-              price
-              priceUnit {
-                type
-                name
-              }
-              currency {
-                type
-                name
-              }
-              numberOfResourcesToBook
-              minDurationMinutes
-              maxDurationMinutes
-              bookAllLocationResources
-              recurrenceWindowDays
-              requireConsecutiveDays
-              maxBookingSpreadDays
               organization {
                 uniqueId
               }
@@ -109,7 +77,6 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
     }
   `);
 
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -192,48 +159,6 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
     });
   };
 
-  const handlViewModeChanged = (newViewMode: 'list' | 'grid') => {
-    setViewMode(newViewMode);
-  };
-
-  const rows: RowType[] = products.map((product) => {
-    return {
-      id: product.id,
-      product,
-    };
-  });
-
-  const columns: GridColDef<(typeof rows)[number]>[] = [
-    {
-      field: 'product',
-      headerName: 'Product',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value.name} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'moreActions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedProductId(params.id as string);
-              setMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
-
   if (!rootDataRefetchable.products) {
     return <></>;
   }
@@ -242,7 +167,6 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
     <>
       <StackColumn sx={{ maxWidth: maxScreenWidth }}>
         <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-          <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
           <PushToRight />
           <NewProductButton organizationId={organizationId} />
         </GridContainer>
@@ -251,30 +175,13 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
           <Divider />
           <Box sx={{ paddingBottom: defaultPadding }} />
 
-          {viewMode === 'grid' && (
-            <GridContainer>
-              {products.map((product) => (
-                <Grid key={product.id}>
-                  <ProductCard rootDataRelay={product} onReloadRequired={onReloadRequired} connectionIds={connectionIds} />
-                </Grid>
-              ))}
-            </GridContainer>
-          )}
-
-          {viewMode === 'list' && (
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              ignoreDiacritics
-              disableRowSelectionOnClick
-              hideFooter
-              getRowHeight={() => 'auto'}
-              rowSpacingType="margin"
-              getRowSpacing={() => ({ top: 3, bottom: 3 })}
-              sx={defaultGridStyle}
-              localeText={{ noRowsLabel: 'No product found' }}
-            />
-          )}
+          <GridContainer>
+            {products.map((product) => (
+              <Grid key={product.id}>
+                <ProductCard rootDataRelay={product} onReloadRequired={onReloadRequired} connectionIds={connectionIds} />
+              </Grid>
+            ))}
+          </GridContainer>
         </StackColumn>
       </StackColumn>
 

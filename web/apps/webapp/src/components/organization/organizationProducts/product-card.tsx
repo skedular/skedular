@@ -1,4 +1,4 @@
-import { DefaultDialogTitle, LeadIconTypography, StackRow, TwoButtonsDialogActions } from '@/components/commons';
+import { BodyIconTypography, DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import { EllipseMenuIcon, ProductIcon } from '@/components/icons';
 import { getOrganizationProductSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -9,6 +9,7 @@ import { coal, sandstone } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { productCard_deleteProductMutation } from '@/queries/__generated__/productCard_deleteProductMutation.graphql';
 import type { productCard_ProductDetails$key } from '@/queries/__generated__/productCard_ProductDetails.graphql';
+import { Divider } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -36,23 +37,15 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
     graphql`
       fragment productCard_ProductDetails on ProductDetails {
         id
-        inactive
         name
         description
-        price
+        priceToDisplay
         priceUnit {
-          type
-          name
-        }
-        currency {
-          type
           name
         }
         numberOfResourcesToBook
         minDurationMinutes
         maxDurationMinutes
-        bookAllLocationResources
-        recurrenceWindowDays
         requireConsecutiveDays
         maxBookingSpreadDays
         organization {
@@ -170,7 +163,37 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
             </>
           }
         />
-        <CardContent></CardContent>
+        <CardContent>
+          <BodyIconTypography label={productDetails.description} />
+          <Divider />
+          <StackRow>
+            <BodyIconTypography label="Price:" />
+            <SmallIconTypography label={`${productDetails.priceToDisplay} - ${productDetails.priceUnit.name}`} />
+          </StackRow>
+
+          {productDetails.minDurationMinutes && (
+            <StackRow>
+              <BodyIconTypography label="Min duration:" />
+              <SmallIconTypography label={`${productDetails.minDurationMinutes} minutes`} />
+            </StackRow>
+          )}
+
+          {productDetails.maxDurationMinutes && (
+            <StackRow>
+              <BodyIconTypography label="Max duration:" />
+              <SmallIconTypography label={`${productDetails.maxDurationMinutes} minutes`} />
+            </StackRow>
+          )}
+
+          <StackRow>
+            <BodyIconTypography label="Must Book Consecutive Days:" />
+            <SmallIconTypography label={productDetails.requireConsecutiveDays ? 'Yes' : 'No'} />
+          </StackRow>
+          <StackRow>
+            <BodyIconTypography label="Max Booking Spread Days:" />
+            <SmallIconTypography label={`${productDetails.maxBookingSpreadDays}`} />
+          </StackRow>
+        </CardContent>
       </Card>
 
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />

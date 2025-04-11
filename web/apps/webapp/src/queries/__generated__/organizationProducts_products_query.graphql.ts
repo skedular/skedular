@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c20d9411bf7f21fa3ee5f265c43aaac6>>
+ * @generated SignedSource<<44cf4ba82ba81bf40473c1def5ebe3fe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,37 +9,17 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type Currency = "Nzd" | "Usd" | "%future added value";
-export type PriceUnit = "PerHour" | "PerMinute" | "PerUse" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationProducts_products_query$data = {
   readonly products: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly bookAllLocationResources: boolean;
-        readonly currency: {
-          readonly name: string;
-          readonly type: Currency;
-        };
-        readonly description: string | null | undefined;
         readonly id: string;
-        readonly inactive: boolean;
-        readonly maxBookingSpreadDays: number | null | undefined;
-        readonly maxDurationMinutes: number | null | undefined;
-        readonly minDurationMinutes: number | null | undefined;
         readonly name: string;
-        readonly numberOfResourcesToBook: number;
         readonly organization: {
           readonly uniqueId: string;
         };
-        readonly price: string;
-        readonly priceUnit: {
-          readonly name: string;
-          readonly type: PriceUnit;
-        };
-        readonly recurrenceWindowDays: number;
-        readonly requireConsecutiveDays: boolean;
         readonly " $fragmentSpreads": FragmentRefs<"productCard_ProductDetails">;
       };
     }>;
@@ -55,23 +35,6 @@ export type organizationProducts_products_query$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "products"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v2 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v1/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -189,91 +152,7 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "inactive",
-                  "storageKey": null
-                },
-                (v1/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "description",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "price",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "PriceUnitDetails",
-                  "kind": "LinkedField",
-                  "name": "priceUnit",
-                  "plural": false,
-                  "selections": (v2/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "CurrencyDetails",
-                  "kind": "LinkedField",
-                  "name": "currency",
-                  "plural": false,
-                  "selections": (v2/*: any*/),
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "numberOfResourcesToBook",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "minDurationMinutes",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "maxDurationMinutes",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "bookAllLocationResources",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "recurrenceWindowDays",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "requireConsecutiveDays",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "maxBookingSpreadDays",
+                  "name": "name",
                   "storageKey": null
                 },
                 {
@@ -365,6 +244,6 @@ return {
 };
 })();
 
-(node as any).hash = "e9853a7cd93ddb62892018b433d931d2";
+(node as any).hash = "29a7f18812b72cb75b4299a4d41d5400";
 
 export default node;

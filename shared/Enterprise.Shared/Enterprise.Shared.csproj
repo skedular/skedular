@@ -10,7 +10,7 @@
     <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.402.74"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.402.75"/>
         <PackageReference Include="Confluent.Kafka" Version="2.9.0"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.9.0"/>
         <PackageReference Include="CountryData" Version="6.12.0"/>
@@ -33,7 +33,7 @@
         <PackageReference Include="Scrutor" Version="6.0.1"/>
         <PackageReference Include="StackExchange.Redis" Version="2.8.31"/>
         <PackageReference Include="Stripe.net" Version="48.0.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1"/>
         <PackageReference Include="WorkOS.net" Version="2.8.0"/>
 
         <PackageReference Include="Google.Protobuf" Version="3.30.2"/>
