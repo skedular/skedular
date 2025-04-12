@@ -49,8 +49,11 @@ type ProductRowType = {
   id: string;
   name: string;
   price: string;
+  numberOfResourcesToBook: number;
   minDurationMinutes: number | null | undefined;
   maxDurationMinutes: number | null | undefined;
+  bookAllLocationResources: boolean;
+  recurrenceWindowDays: number;
   requireConsecutiveDays: boolean;
   maxBookingSpreadDays: number | null | undefined;
 };
@@ -93,6 +96,8 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
               numberOfResourcesToBook
               minDurationMinutes
               maxDurationMinutes
+              bookAllLocationResources
+              recurrenceWindowDays
               requireConsecutiveDays
               maxBookingSpreadDays
               organization {
@@ -637,8 +642,11 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     id: product.id,
     name: product.name,
     price: product.priceToDisplay,
+    numberOfResourcesToBook: product.numberOfResourcesToBook,
     minDurationMinutes: product.minDurationMinutes,
     maxDurationMinutes: product.maxDurationMinutes,
+    bookAllLocationResources: product.bookAllLocationResources,
+    recurrenceWindowDays: product.recurrenceWindowDays,
     requireConsecutiveDays: product.requireConsecutiveDays,
     maxBookingSpreadDays: product.maxBookingSpreadDays,
   }));
@@ -665,18 +673,42 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       minWidth: 200,
     },
     {
+      field: 'numberOfResourcesToBook',
+      headerName: 'Number of resources to book',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
       field: 'minDurationMinutes',
       headerName: 'Min duration',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value ? `${params.value} minutes` : 'No limit'} />,
       display: 'flex',
-      minWidth: 150,
+      minWidth: 120,
     },
     {
       field: 'maxDurationMinutes',
       headerName: 'Max duration',
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value ? `${params.value} minutes` : 'No limit'} />,
+      display: 'flex',
+      minWidth: 120,
+    },
+    {
+      field: 'bookAllLocationResources',
+      headerName: 'Book all location resources',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value ? 'Yes' : 'No'} />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'recurrenceWindowDays',
+      headerName: 'Recurrence window days',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
       display: 'flex',
       minWidth: 150,
     },
@@ -686,7 +718,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value ? 'Yes' : 'No'} />,
       display: 'flex',
-      minWidth: 200,
+      minWidth: 150,
     },
     {
       field: 'maxBookingSpreadDays',
@@ -694,7 +726,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value ? params.value.toString() : 'No limit'} />,
       display: 'flex',
-      minWidth: 200,
+      minWidth: 150,
     },
     {
       field: 'More Actions',

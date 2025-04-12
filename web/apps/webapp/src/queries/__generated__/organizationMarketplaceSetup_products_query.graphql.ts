@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d47ecf314006bd2c3ac22e3ea9d04db>>
+ * @generated SignedSource<<2412bb583eea0ce7b5aba04524760c20>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type organizationMarketplaceSetup_products_query$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly bookAllLocationResources: boolean;
         readonly description: string | null | undefined;
         readonly id: string;
         readonly maxBookingSpreadDays: number | null | undefined;
@@ -29,6 +30,7 @@ export type organizationMarketplaceSetup_products_query$data = {
         readonly priceUnit: {
           readonly name: string;
         };
+        readonly recurrenceWindowDays: number;
         readonly requireConsecutiveDays: boolean;
       };
     }>;
@@ -226,6 +228,20 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "bookAllLocationResources",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "recurrenceWindowDays",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "requireConsecutiveDays",
                   "storageKey": null
                 },
@@ -320,6 +336,6 @@ return {
 };
 })();
 
-(node as any).hash = "ec0aed943b85ff3f404ba66831c43f63";
+(node as any).hash = "a95bbd789595b66bdd339fee8d9d63ab";
 
 export default node;
