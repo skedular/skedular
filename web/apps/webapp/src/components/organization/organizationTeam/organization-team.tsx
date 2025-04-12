@@ -802,7 +802,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       display: 'flex',
     },
     {
-      field: 'moreActions',
+      field: 'More Actions',
       headerName: '',
       editable: false,
       sortable: false,

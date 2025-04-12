@@ -1155,7 +1155,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
       display: 'flex',
     },
     {
-      field: 'moreActions',
+      field: 'More Actions',
       headerName: '',
       editable: false,
       sortable: false,

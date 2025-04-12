@@ -406,7 +406,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from,
       minWidth: 200,
     },
     {
-      field: 'moreActions',
+      field: 'More Actions',
       headerName: '',
       editable: false,
       sortable: false,

@@ -1456,7 +1456,7 @@ const OrganizationAdmin = ({
       display: 'flex',
     },
     {
-      field: 'moreActions',
+      field: 'More Actions',
       headerName: '',
       editable: false,
       sortable: false,
@@ -1531,7 +1531,7 @@ const OrganizationAdmin = ({
       display: 'flex',
     },
     {
-      field: 'moreActions',
+      field: 'More Actions',
       headerName: '',
       editable: false,
       sortable: false,

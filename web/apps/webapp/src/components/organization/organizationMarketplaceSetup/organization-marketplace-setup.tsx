@@ -49,6 +49,10 @@ type ProductRowType = {
   id: string;
   name: string;
   price: string;
+  minDurationMinutes: number | null | undefined;
+  maxDurationMinutes: number | null | undefined;
+  requireConsecutiveDays: boolean;
+  maxBookingSpreadDays: number | null | undefined;
 };
 
 type ProductTagRowType = {
@@ -633,6 +637,10 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     id: product.id,
     name: product.name,
     price: product.priceToDisplay,
+    minDurationMinutes: product.minDurationMinutes,
+    maxDurationMinutes: product.maxDurationMinutes,
+    requireConsecutiveDays: product.requireConsecutiveDays,
+    maxBookingSpreadDays: product.maxBookingSpreadDays,
   }));
 
   const productColumns: GridColDef<(typeof productRows)[number]>[] = [
@@ -648,12 +656,48 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       field: 'price',
       headerName: 'Price',
       editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      renderCell: (params) => {
+        const product = products.find((product) => product.id === (params.id as string));
+
+        return <SmallIconTypography label={`${params.value} - ${product?.priceUnit.name}`} />;
+      },
       display: 'flex',
       minWidth: 200,
     },
     {
-      field: 'moreActions',
+      field: 'minDurationMinutes',
+      headerName: 'Min duration',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value ? `${params.value} minutes` : 'No limit'} />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'maxDurationMinutes',
+      headerName: 'Max duration',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value ? `${params.value} minutes` : 'No limit'} />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'requireConsecutiveDays',
+      headerName: 'Must book consecutive days',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value ? 'Yes' : 'No'} />,
+      display: 'flex',
+      minWidth: 200,
+    },
+    {
+      field: 'maxBookingSpreadDays',
+      headerName: 'Max booking spread days',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value ? params.value.toString() : 'No limit'} />,
+      display: 'flex',
+      minWidth: 200,
+    },
+    {
+      field: 'More Actions',
       headerName: '',
       editable: false,
       sortable: false,
@@ -705,7 +749,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       minWidth: 200,
     },
     {
-      field: 'moreActions',
+      field: 'More Actions',
       headerName: '',
       editable: false,
       sortable: false,
@@ -757,7 +801,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       minWidth: 200,
     },
     {
-      field: 'moreActions',
+      field: 'More Actions',
       headerName: '',
       editable: false,
       sortable: false,
