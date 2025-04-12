@@ -10,7 +10,7 @@ import {
 } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesCustomTags, MultipleChoicesZones, SingleChoicesResourceType } from '@/components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoicesResourceType } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
@@ -46,8 +46,14 @@ const RootQuery = graphql`
     $organizationId: String!
     $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
     $locationsSortingValues: [LocationOrderInput!]
   ) {
+    organization(id: $organizationId) {
+      type {
+        type
+      }
+    }
     locations(where: { organizationId: $organizationId }, orderBy: $locationsSortingValues) {
       __id
       totalCount
@@ -61,6 +67,7 @@ const RootQuery = graphql`
     ...singleChoiceResourceType_query
     ...multipleChoicesCustomTags_query
     ...multipleChoicesZones_query
+    ...multipleChoicesProductTags_query
   }
 `;
 
@@ -75,6 +82,7 @@ type ResourceDetails = {
   name: string;
   customTagIds: string[];
   zoneIds: string[];
+  productTagIds: string[];
   capacity: number;
 };
 
@@ -84,6 +92,7 @@ const ResourceSchema = object({
   name: string().required('Resource name is required'),
   customTagIds: array().nullable(),
   zoneIds: array().nullable(),
+  productTagIds: array().nullable(),
   capacity: number().required('Capacity is required').min(1, 'Capacity must be greater than 0'),
 });
 
@@ -110,6 +119,11 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
             name
             color
           }
+          productTags {
+            uniqueId
+            name
+            color
+          }
           resourceType {
             uniqueId
             name
@@ -132,7 +146,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
     setSelectedColor(color);
   };
 
-  const handleAddClick = ({ location: locationId, resourceTypeId, name, customTagIds, zoneIds, capacity: capacityStr }: ResourceDetails) => {
+  const handleAddClick = ({ location: locationId, resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr }: ResourceDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding resource '${name}'...`} />, infoNotificationOptions);
     const capacity = parseInt(capacityStr.toString(), 10);
@@ -147,6 +161,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
           name,
           customTagIds,
           zoneIds,
+          productTagIds,
           inactive: false,
           requireBookingApproval: false,
           color: selectedColor,
@@ -186,6 +201,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
             requireBookingApproval: false,
             customTags: [],
             zones: [],
+            productTags: [],
             color: selectedColor,
             capacity,
             resourceType: {
@@ -211,6 +227,7 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
             name: '',
             customTagIds: [],
             zoneIds: [],
+            productTagIds: [],
             capacity: 1,
           }}
           validate={validate}
@@ -261,6 +278,12 @@ const AddResourceDialog = ({ queryReference, organizationId, locationId, connect
                 <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationId={organizationId} />
               </FormFieldLabel>
 
+              {rootData.organization?.type.type === 'Marketplace' && (
+                <FormFieldLabel label="Product Tags" useWiderSpace>
+                  <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
+                </FormFieldLabel>
+              )}
+
               <FormFieldLabel label="Color" useWiderSpace>
                 <ColorPicker onChange={handleColorChange} />
               </FormFieldLabel>
@@ -306,6 +329,12 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationId, location
           },
         ],
         multipleChoicesZonesSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        multipleChoicesProductTagsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

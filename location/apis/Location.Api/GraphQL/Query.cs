@@ -142,7 +142,7 @@ public class Query(IMapper mapper)
             new ResourceSearchCriteria(
                 where.LocationId,
                 where.NameContains,
-                where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection())),
+                where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection()).Concat(where.ProductTagIds.ToSafeCollection())),
             orderBy.ToSafeCollection().Select(item => new ResourceOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

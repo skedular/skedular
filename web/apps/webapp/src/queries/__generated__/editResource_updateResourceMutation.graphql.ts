@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3c63c798b9741774814aca2a762958fb>>
+ * @generated SignedSource<<87903c519b5aa6b1db5a8fada67d8226>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type UpdateResourceInput = {
   inactive: boolean;
   name: string;
   organizationResourceTypeId: string;
+  productTagIds: ReadonlyArray<string>;
   requireBookingApproval: boolean;
   zoneIds: ReadonlyArray<string>;
 };
@@ -84,6 +85,11 @@ export type editResource_updateResourceMutation$data = {
       readonly inactive: boolean;
       readonly isAvailableHoursOverridden: boolean;
       readonly name: string;
+      readonly productTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
       readonly requireBookingApproval: boolean;
       readonly resourceType: {
         readonly color: string | null | undefined;
@@ -158,6 +164,11 @@ export type editResource_updateResourceMutation$rawResponse = {
       readonly inactive: boolean;
       readonly isAvailableHoursOverridden: boolean;
       readonly name: string;
+      readonly productTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
       readonly requireBookingApproval: boolean;
       readonly resourceType: {
         readonly color: string | null | undefined;
@@ -319,6 +330,16 @@ v5 = [
             "args": null,
             "concreteType": "Location_OrganizationTagDetails",
             "kind": "LinkedField",
+            "name": "productTags",
+            "plural": true,
+            "selections": (v3/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Location_OrganizationTagDetails",
+            "kind": "LinkedField",
             "name": "resourceType",
             "plural": false,
             "selections": (v3/*: any*/),
@@ -448,16 +469,16 @@ return {
     "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "21583a17c36b35f7db05ff2cc53ea7aa",
+    "cacheID": "58b5a0523d7b73eb038ecdae45a21602",
     "id": null,
     "metadata": {},
     "name": "editResource_updateResourceMutation",
     "operationKind": "mutation",
-    "text": "mutation editResource_updateResourceMutation(\n  $input: UpdateResourceInput!\n) {\n  updateResource(input: $input) {\n    resource {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      capacity\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n      isAvailableHoursOverridden\n      availableHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editResource_updateResourceMutation(\n  $input: UpdateResourceInput!\n) {\n  updateResource(input: $input) {\n    resource {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      capacity\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n      isAvailableHoursOverridden\n      availableHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a64d5236804c6104e8e863f41643c559";
+(node as any).hash = "609f81ac1aa87836c5479237a2322539";
 
 export default node;

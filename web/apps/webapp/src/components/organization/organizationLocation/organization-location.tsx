@@ -18,6 +18,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { CustomTagSelector } from '@/components/organization/customTagSelector/';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
+import { ProductTags } from '@/components/productTag';
 import { Resource } from '@/components/resource';
 import { AddResourceButton } from '@/components/resource/addResource';
 import { ResourceType } from '@/components/resourceType';
@@ -94,12 +95,19 @@ type ZoneDetails = {
   color: string | null | undefined;
 };
 
+type ProductTagDetails = {
+  id: string;
+  name: string | null | undefined;
+  color: string | null | undefined;
+};
+
 type ResourceRowType = {
   id: string;
   resource: ResourceDetails;
   resourceType: ResourceTypeDetails;
   customTags: CustomTagDetails[];
   zones: ZoneDetails[];
+  productTags: ProductTagDetails[];
   status: boolean;
   preferred: boolean;
   capacity: number;
@@ -216,6 +224,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                 name
                 color
               }
+              productTags {
+                uniqueId
+                name
+                color
+              }
               resourceType {
                 uniqueId
                 name
@@ -321,6 +334,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
             name
             color
           }
+          productTags {
+            uniqueId
+            name
+            color
+          }
           resourceType {
             uniqueId
             name
@@ -347,6 +365,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
             color
           }
           zones {
+            uniqueId
+            name
+            color
+          }
+          productTags {
             uniqueId
             name
             color
@@ -1064,6 +1087,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     resourceType: { id: resource.resourceType.uniqueId, name: resource.resourceType.name, color: resource.resourceType.color },
     customTags: resource.customTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
     zones: resource.zones.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
+    productTags: resource.productTags.map((item) => ({ id: item.uniqueId, name: item.name, color: item.color })),
     status: !resource.inactive,
     preferred: preferredResources.includes(resource.id),
     capacity: resource.capacity,
@@ -1107,6 +1131,14 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
       headerName: 'Zones',
       editable: false,
       renderCell: (params) => <Zones zones={params.value} hideIcon />,
+      display: 'flex',
+      minWidth: 250,
+    },
+    {
+      field: 'productTags',
+      headerName: 'Product Tags',
+      editable: false,
+      renderCell: (params) => <ProductTags productTags={params.value} hideIcon />,
       display: 'flex',
       minWidth: 250,
     },

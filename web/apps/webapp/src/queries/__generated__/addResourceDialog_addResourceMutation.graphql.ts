@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ad9bd9991c185b31583d59554d7c444>>
+ * @generated SignedSource<<27d06a5e327f3a1d826c36f7926e00ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type AddResourceInput = {
   locationId: string;
   name: string;
   organizationResourceTypeId: string;
+  productTagIds: ReadonlyArray<string>;
   requireBookingApproval: boolean;
   zoneIds: ReadonlyArray<string>;
 };
@@ -39,6 +40,11 @@ export type addResourceDialog_addResourceMutation$data = {
       readonly id: string;
       readonly inactive: boolean;
       readonly name: string;
+      readonly productTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
       readonly requireBookingApproval: boolean;
       readonly resourceType: {
         readonly color: string | null | undefined;
@@ -66,6 +72,11 @@ export type addResourceDialog_addResourceMutation$rawResponse = {
       readonly id: string;
       readonly inactive: boolean;
       readonly name: string;
+      readonly productTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
       readonly requireBookingApproval: boolean;
       readonly resourceType: {
         readonly color: string | null | undefined;
@@ -194,6 +205,16 @@ v5 = {
       "args": null,
       "concreteType": "Location_OrganizationTagDetails",
       "kind": "LinkedField",
+      "name": "productTags",
+      "plural": true,
+      "selections": (v4/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Location_OrganizationTagDetails",
+      "kind": "LinkedField",
       "name": "resourceType",
       "plural": false,
       "selections": (v4/*: any*/),
@@ -267,16 +288,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "59abb1134cbd4f1def207d4e0a233d59",
+    "cacheID": "1ced0a14b9fc65ec51d8c239206b88f9",
     "id": null,
     "metadata": {},
     "name": "addResourceDialog_addResourceMutation",
     "operationKind": "mutation",
-    "text": "mutation addResourceDialog_addResourceMutation(\n  $input: AddResourceInput!\n) {\n  addResource(input: $input) {\n    resource {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      capacity\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addResourceDialog_addResourceMutation(\n  $input: AddResourceInput!\n) {\n  addResource(input: $input) {\n    resource {\n      id\n      name\n      inactive\n      requireBookingApproval\n      color\n      capacity\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c450425827162641a09118a01651ee25";
+(node as any).hash = "ce9d107b6a068e5de279330598b7ef97";
 
 export default node;

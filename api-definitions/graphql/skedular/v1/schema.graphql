@@ -851,6 +851,7 @@ type ResourceDetails {
   inactive: Boolean!
   isAvailableHoursOverridden: Boolean!
   name: String!
+  productTags: [Location_OrganizationTagDetails!]!
   requireBookingApproval: Boolean!
   resourceType: Location_OrganizationTagDetails!
   zones: [Location_OrganizationTagDetails!]!
@@ -1156,6 +1157,7 @@ input AddResourceInput {
   locationId: String!
   name: String!
   organizationResourceTypeId: String!
+  productTagIds: [String!]!
   requireBookingApproval: Boolean!
   zoneIds: [String!]!
 }
@@ -1572,6 +1574,7 @@ input ResourceWhereInput {
   customTagIds: [String!]
   locationId: String!
   nameContains: String
+  productTagIds: [String!]
   zoneIds: [String!]
 }
 
@@ -1759,6 +1762,7 @@ input UpdateResourceInput {
   inactive: Boolean!
   name: String!
   organizationResourceTypeId: String!
+  productTagIds: [String!]!
   requireBookingApproval: Boolean!
   zoneIds: [String!]!
 }

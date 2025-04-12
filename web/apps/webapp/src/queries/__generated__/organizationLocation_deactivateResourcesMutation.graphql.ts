@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5cd71ac2457a90896e0e28354dccdf95>>
+ * @generated SignedSource<<b1286bdd55d7505efb31c570456e82b9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,6 +28,11 @@ export type organizationLocation_deactivateResourcesMutation$data = {
       readonly id: string;
       readonly inactive: boolean;
       readonly name: string;
+      readonly productTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
       readonly requireBookingApproval: boolean;
       readonly resourceType: {
         readonly color: string | null | undefined;
@@ -151,6 +156,16 @@ v4 = [
             "args": null,
             "concreteType": "Location_OrganizationTagDetails",
             "kind": "LinkedField",
+            "name": "productTags",
+            "plural": true,
+            "selections": (v3/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Location_OrganizationTagDetails",
+            "kind": "LinkedField",
             "name": "resourceType",
             "plural": false,
             "selections": (v3/*: any*/),
@@ -181,16 +196,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "1cdae9d2008780a6abd550011b5c89f9",
+    "cacheID": "f30b9d7d49561816c3fea5428a33c592",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_deactivateResourcesMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_deactivateResourcesMutation(\n  $input: DeactivateResourcesInput!\n) {\n  deactivateResources(input: $input) {\n    resources {\n      id\n      name\n      color\n      inactive\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_deactivateResourcesMutation(\n  $input: DeactivateResourcesInput!\n) {\n  deactivateResources(input: $input) {\n    resources {\n      id\n      name\n      color\n      inactive\n      requireBookingApproval\n      customTags {\n        uniqueId\n        name\n        color\n      }\n      zones {\n        uniqueId\n        name\n        color\n      }\n      productTags {\n        uniqueId\n        name\n        color\n      }\n      resourceType {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a9b6b6c599cd5cd357a2bd10a9214f78";
+(node as any).hash = "5169d0aaa42e9da18ed7ffb8646688fd";
 
 export default node;

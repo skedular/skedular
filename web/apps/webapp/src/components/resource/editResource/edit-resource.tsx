@@ -10,7 +10,7 @@ import {
   StackRow,
 } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesCustomTags, MultipleChoicesZones, SingleChoicesResourceType } from '@/components/organization';
+import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoicesResourceType } from '@/components/organization';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
@@ -43,6 +43,7 @@ type ResourceDetails = {
   resourceTypeId: string;
   customTagIds: string[];
   zoneIds: string[];
+  productTagIds: string[];
   capacity: number;
 };
 
@@ -51,6 +52,7 @@ const ResourceSchema = object({
   name: string().required('Resource name is required'),
   customTagIds: array().nullable(),
   zoneIds: array().nullable(),
+  productTagIds: array().nullable(),
   capacity: number().required('Capacity is required').min(1, 'Capacity must be greater than 0'),
 });
 
@@ -58,6 +60,11 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
   const rootData = useFragment<editResource_query$key>(
     graphql`
       fragment editResource_query on Query {
+        organization(id: $organizationId) {
+          type {
+            type
+          }
+        }
         location(id: $locationId) {
           openingHours {
             weekOpeningHours {
@@ -123,6 +130,11 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
             name
             color
           }
+          productTags {
+            uniqueId
+            name
+            color
+          }
           resourceType {
             uniqueId
             name
@@ -179,6 +191,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
         ...singleChoiceResourceType_query
         ...multipleChoicesCustomTags_query
         ...multipleChoicesZones_query
+        ...multipleChoicesProductTags_query
         ...weekOpeningHours_query
       }
     `,
@@ -201,6 +214,11 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
             color
           }
           zones {
+            uniqueId
+            name
+            color
+          }
+          productTags {
             uniqueId
             name
             color
@@ -282,6 +300,11 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
             name
             color
           }
+          productTags {
+            uniqueId
+            name
+            color
+          }
           resourceType {
             uniqueId
             name
@@ -355,7 +378,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
     router.back();
   };
 
-  const handleResourceDetailUpdateClick = ({ resourceTypeId, name, customTagIds, zoneIds, capacity: capacityStr }: ResourceDetails) => {
+  const handleResourceDetailUpdateClick = ({ resourceTypeId, name, customTagIds, zoneIds, productTagIds, capacity: capacityStr }: ResourceDetails) => {
     const resource = rootData.resource;
     if (!resource) {
       return;
@@ -375,6 +398,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
           requireBookingApproval: resource.requireBookingApproval,
           customTagIds,
           zoneIds,
+          productTagIds,
           color: selectedColor,
           capacity,
           organizationResourceTypeId: resourceTypeId,
@@ -412,6 +436,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
             requireBookingApproval: resource.requireBookingApproval,
             customTags: [],
             zones: [],
+            productTags: [],
             color: selectedColor,
             capacity,
             resourceType: {
@@ -474,6 +499,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
             requireBookingApproval: resource.requireBookingApproval,
             customTags: resource.customTags,
             zones: resource.zones,
+            productTags: resource.productTags,
             color: resource.color,
             capacity: resource.capacity,
             resourceType: resource.resourceType,
@@ -507,6 +533,7 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
               resourceTypeId: resource.resourceType.uniqueId,
               customTagIds: resource.customTags.map(({ uniqueId }) => uniqueId),
               zoneIds: resource.zones.map(({ uniqueId }) => uniqueId),
+              productTagIds: resource.productTags.map(({ uniqueId }) => uniqueId),
               capacity: resource.capacity,
             }}
             validate={validateResourceDetails}
@@ -534,6 +561,12 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
                   <FormFieldLabel label="Zones">
                     <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationId={organizationId} />
                   </FormFieldLabel>
+
+                  {rootData.organization?.type.type === 'Marketplace' && (
+                    <FormFieldLabel label="Product Tags">
+                      <MultipleChoicesProductTags rootDataRelay={rootData} name="productTagIds" required={requiredFields.productTagIds} organizationId={organizationId} />
+                    </FormFieldLabel>
+                  )}
 
                   <FormFieldLabel label="Color">
                     <ColorPicker onChange={handleColorChange} defaultColor={rootData.resource?.color} />

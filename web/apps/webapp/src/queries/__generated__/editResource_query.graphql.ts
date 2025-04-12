@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d1b47dff5e03018a7b80789e353fa7c9>>
+ * @generated SignedSource<<d78a815a4329717eb5b946d47f4df7e8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationType = "Marketplace" | "Private" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editResource_query$data = {
   readonly location: {
@@ -57,6 +58,11 @@ export type editResource_query$data = {
           readonly until: string | null | undefined;
         };
       };
+    };
+  } | null | undefined;
+  readonly organization: {
+    readonly type: {
+      readonly type: OrganizationType;
     };
   } | null | undefined;
   readonly resource: {
@@ -117,6 +123,11 @@ export type editResource_query$data = {
     readonly inactive: boolean;
     readonly isAvailableHoursOverridden: boolean;
     readonly name: string;
+    readonly productTags: ReadonlyArray<{
+      readonly color: string | null | undefined;
+      readonly name: string | null | undefined;
+      readonly uniqueId: string;
+    }>;
     readonly requireBookingApproval: boolean;
     readonly resourceType: {
       readonly color: string | null | undefined;
@@ -129,7 +140,7 @@ export type editResource_query$data = {
       readonly uniqueId: string;
     }>;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesZones_query" | "singleChoiceResourceType_query" | "weekOpeningHours_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesCustomTags_query" | "multipleChoicesProductTags_query" | "multipleChoicesZones_query" | "singleChoiceResourceType_query" | "weekOpeningHours_query">;
   readonly " $fragmentType": "editResource_query";
 };
 export type editResource_query$key = {
@@ -284,6 +295,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "organizationId"
+    },
+    {
+      "kind": "RootArgument",
       "name": "resourceId"
     }
   ],
@@ -291,6 +306,41 @@ return {
   "metadata": null,
   "name": "editResource_query",
   "selections": [
+    {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "id",
+          "variableName": "organizationId"
+        }
+      ],
+      "concreteType": "OrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationTypeDetails",
+          "kind": "LinkedField",
+          "name": "type",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": [
@@ -387,6 +437,16 @@ return {
           "args": null,
           "concreteType": "Location_OrganizationTagDetails",
           "kind": "LinkedField",
+          "name": "productTags",
+          "plural": true,
+          "selections": (v4/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Location_OrganizationTagDetails",
+          "kind": "LinkedField",
           "name": "resourceType",
           "plural": false,
           "selections": (v4/*: any*/),
@@ -430,6 +490,11 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
+      "name": "multipleChoicesProductTags_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
       "name": "weekOpeningHours_query"
     }
   ],
@@ -438,6 +503,6 @@ return {
 };
 })();
 
-(node as any).hash = "676b3092b20ef4dbcda0513a48dabd28";
+(node as any).hash = "2dbf9bce1712aaaebe0e0b40f54f2855";
 
 export default node;

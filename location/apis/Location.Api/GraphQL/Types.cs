@@ -158,8 +158,8 @@ public class LocationWhereInput
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
     [GraphQLName("locationIds")] public IEnumerable<string>? LocationIds { get; set; } = [];
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
+    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
 }
 
 [GraphQLName("UpdateLocationInput")]
@@ -210,6 +210,7 @@ public class AddResourceInput
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
+    [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
 
     [GraphQLName("requireBookingApproval")]
     public bool RequireBookingApproval { get; set; }
@@ -236,6 +237,7 @@ public class UpdateResourceInput
     [GraphQLName("capacity")] public int Capacity { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
+    [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
 
     [GraphQLName("organizationResourceTypeId")]
     public required string OrganizationResourceTypeId { get; set; }
@@ -292,6 +294,7 @@ public class ResourceDetails : Node
     [GraphQLName("capacity")] public int Capacity { get; set; }
     [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
     [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
+    [GraphQLName("productTags")] public IEnumerable<OrganizationTagDetails> ProductTags { get; set; } = [];
     [GraphQLName("resourceType")] public OrganizationTagDetails ResourceType { get; set; }
 
     [GraphQLName("isAvailableHoursOverridden")]
@@ -323,8 +326,9 @@ public class ResourceWhereInput
 {
     [GraphQLName("locationId")] public required string LocationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
+    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
+    [GraphQLName("productTagIds")] public IEnumerable<string>? ProductTagIds { get; set; }
 }
 
 [GraphQLName("ResourcesOccupancyPercentage")]

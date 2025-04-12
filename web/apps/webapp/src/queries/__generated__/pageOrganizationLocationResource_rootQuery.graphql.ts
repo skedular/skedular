@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b7ca3c1d4794eb4214d4fb7262009595>>
+ * @generated SignedSource<<e96b656147f819c418613ab71358f140>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type OrganizationTagOrderInput = {
 export type pageOrganizationLocationResource_rootQuery$variables = {
   locationId: string;
   multipleChoicesCustomTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
+  multipleChoicesProductTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   multipleChoicesZonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   organizationId: string;
   resourceId: string;
@@ -48,47 +49,52 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "multipleChoicesZonesSortingValues"
+  "name": "multipleChoicesProductTagsSortingValues"
 },
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationId"
+  "name": "multipleChoicesZonesSortingValues"
 },
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
+  "name": "organizationId"
+},
+v5 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
   "name": "resourceId"
 },
-v5 = [
+v6 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "resourceId"
   }
 ],
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v9 = [
+v10 = [
   {
     "alias": null,
     "args": null,
@@ -96,10 +102,10 @@ v9 = [
     "name": "uniqueId",
     "storageKey": null
   },
-  (v6/*: any*/),
-  (v8/*: any*/)
+  (v7/*: any*/),
+  (v9/*: any*/)
 ],
-v10 = [
+v11 = [
   {
     "alias": null,
     "args": null,
@@ -129,7 +135,7 @@ v10 = [
     "storageKey": null
   }
 ],
-v11 = [
+v12 = [
   {
     "alias": null,
     "args": null,
@@ -145,7 +151,7 @@ v11 = [
         "kind": "LinkedField",
         "name": "monday",
         "plural": false,
-        "selections": (v10/*: any*/),
+        "selections": (v11/*: any*/),
         "storageKey": null
       },
       {
@@ -155,7 +161,7 @@ v11 = [
         "kind": "LinkedField",
         "name": "tuesday",
         "plural": false,
-        "selections": (v10/*: any*/),
+        "selections": (v11/*: any*/),
         "storageKey": null
       },
       {
@@ -165,7 +171,7 @@ v11 = [
         "kind": "LinkedField",
         "name": "wednesday",
         "plural": false,
-        "selections": (v10/*: any*/),
+        "selections": (v11/*: any*/),
         "storageKey": null
       },
       {
@@ -175,7 +181,7 @@ v11 = [
         "kind": "LinkedField",
         "name": "thursday",
         "plural": false,
-        "selections": (v10/*: any*/),
+        "selections": (v11/*: any*/),
         "storageKey": null
       },
       {
@@ -185,7 +191,7 @@ v11 = [
         "kind": "LinkedField",
         "name": "friday",
         "plural": false,
-        "selections": (v10/*: any*/),
+        "selections": (v11/*: any*/),
         "storageKey": null
       },
       {
@@ -195,7 +201,7 @@ v11 = [
         "kind": "LinkedField",
         "name": "saturday",
         "plural": false,
-        "selections": (v10/*: any*/),
+        "selections": (v11/*: any*/),
         "storageKey": null
       },
       {
@@ -205,14 +211,14 @@ v11 = [
         "kind": "LinkedField",
         "name": "sunday",
         "plural": false,
-        "selections": (v10/*: any*/),
+        "selections": (v11/*: any*/),
         "storageKey": null
       }
     ],
     "storageKey": null
   }
 ],
-v12 = {
+v13 = {
   "fields": [
     {
       "kind": "Variable",
@@ -223,15 +229,15 @@ v12 = {
   "kind": "ObjectValue",
   "name": "where"
 },
-v13 = [
+v14 = [
   {
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "multipleChoicesCustomTagsSortingValues"
   },
-  (v12/*: any*/)
+  (v13/*: any*/)
 ],
-v14 = [
+v15 = [
   {
     "alias": null,
     "args": null,
@@ -255,9 +261,9 @@ v14 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
-          (v6/*: any*/),
           (v8/*: any*/),
+          (v7/*: any*/),
+          (v9/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -316,17 +322,25 @@ v14 = [
     ]
   }
 ],
-v15 = [
+v16 = [
   "where",
   "orderBy"
 ],
-v16 = [
+v17 = [
   {
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "multipleChoicesZonesSortingValues"
   },
-  (v12/*: any*/)
+  (v13/*: any*/)
+],
+v18 = [
+  {
+    "kind": "Variable",
+    "name": "orderBy",
+    "variableName": "multipleChoicesProductTagsSortingValues"
+  },
+  (v13/*: any*/)
 ];
 return {
   "fragment": {
@@ -335,7 +349,8 @@ return {
       (v1/*: any*/),
       (v2/*: any*/),
       (v3/*: any*/),
-      (v4/*: any*/)
+      (v4/*: any*/),
+      (v5/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -343,13 +358,13 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v6/*: any*/),
         "concreteType": "ResourceDetails",
         "kind": "LinkedField",
         "name": "resource",
         "plural": false,
         "selections": [
-          (v6/*: any*/)
+          (v7/*: any*/)
         ],
         "storageKey": null
       },
@@ -365,10 +380,11 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v3/*: any*/),
-      (v0/*: any*/),
       (v4/*: any*/),
+      (v0/*: any*/),
+      (v5/*: any*/),
       (v1/*: any*/),
+      (v3/*: any*/),
       (v2/*: any*/)
     ],
     "kind": "Operation",
@@ -376,14 +392,14 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v6/*: any*/),
         "concreteType": "ResourceDetails",
         "kind": "LinkedField",
         "name": "resource",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
           (v7/*: any*/),
+          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -398,7 +414,7 @@ return {
             "name": "requireBookingApproval",
             "storageKey": null
           },
-          (v8/*: any*/),
+          (v9/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -413,7 +429,7 @@ return {
             "kind": "LinkedField",
             "name": "customTags",
             "plural": true,
-            "selections": (v9/*: any*/),
+            "selections": (v10/*: any*/),
             "storageKey": null
           },
           {
@@ -423,7 +439,17 @@ return {
             "kind": "LinkedField",
             "name": "zones",
             "plural": true,
-            "selections": (v9/*: any*/),
+            "selections": (v10/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Location_OrganizationTagDetails",
+            "kind": "LinkedField",
+            "name": "productTags",
+            "plural": true,
+            "selections": (v10/*: any*/),
             "storageKey": null
           },
           {
@@ -433,7 +459,7 @@ return {
             "kind": "LinkedField",
             "name": "resourceType",
             "plural": false,
-            "selections": (v9/*: any*/),
+            "selections": (v10/*: any*/),
             "storageKey": null
           },
           {
@@ -450,7 +476,57 @@ return {
             "kind": "LinkedField",
             "name": "availableHours",
             "plural": false,
-            "selections": (v11/*: any*/),
+            "selections": (v12/*: any*/),
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "id",
+            "variableName": "organizationId"
+          }
+        ],
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "organization",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationTypeDetails",
+            "kind": "LinkedField",
+            "name": "type",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v8/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationTagDetails",
+            "kind": "LinkedField",
+            "name": "resourceTypes",
+            "plural": true,
+            "selections": [
+              (v8/*: any*/),
+              (v7/*: any*/),
+              (v9/*: any*/)
+            ],
             "storageKey": null
           }
         ],
@@ -477,59 +553,27 @@ return {
             "kind": "LinkedField",
             "name": "openingHours",
             "plural": false,
-            "selections": (v11/*: any*/),
+            "selections": (v12/*: any*/),
             "storageKey": null
           },
-          (v7/*: any*/)
+          (v8/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "id",
-            "variableName": "organizationId"
-          }
-        ],
-        "concreteType": "OrganizationDetails",
-        "kind": "LinkedField",
-        "name": "organization",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationTagDetails",
-            "kind": "LinkedField",
-            "name": "resourceTypes",
-            "plural": true,
-            "selections": [
-              (v7/*: any*/),
-              (v6/*: any*/),
-              (v8/*: any*/)
-            ],
-            "storageKey": null
-          },
-          (v7/*: any*/)
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v13/*: any*/),
+        "args": (v14/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "customTags",
         "plural": false,
-        "selections": (v14/*: any*/),
+        "selections": (v15/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v13/*: any*/),
-        "filters": (v15/*: any*/),
+        "args": (v14/*: any*/),
+        "filters": (v16/*: any*/),
         "handle": "connection",
         "key": "multipleChoicesCustomTags_customTags",
         "kind": "LinkedHandle",
@@ -537,22 +581,41 @@ return {
       },
       {
         "alias": null,
-        "args": (v16/*: any*/),
+        "args": (v17/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "zones",
         "plural": false,
-        "selections": (v14/*: any*/),
+        "selections": (v15/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v16/*: any*/),
-        "filters": (v15/*: any*/),
+        "args": (v17/*: any*/),
+        "filters": (v16/*: any*/),
         "handle": "connection",
         "key": "multipleChoicesZones_zones",
         "kind": "LinkedHandle",
         "name": "zones"
+      },
+      {
+        "alias": null,
+        "args": (v18/*: any*/),
+        "concreteType": "OrganizationTagConnection",
+        "kind": "LinkedField",
+        "name": "productTags",
+        "plural": false,
+        "selections": (v15/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v18/*: any*/),
+        "filters": (v16/*: any*/),
+        "handle": "connection",
+        "key": "multipleChoicesProductTags_productTags",
+        "kind": "LinkedHandle",
+        "name": "productTags"
       },
       {
         "alias": null,
@@ -564,16 +627,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "280f44ad501198b91c9143ce4f4ddd67",
+    "cacheID": "16a2376b6d0c5f83a79aadbb338a8781",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocationResource_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocationResource_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $resourceId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n) {\n  resource(id: $resourceId) {\n    name\n    id\n  }\n  ...editResource_query\n}\n\nfragment editResource_query on Query {\n  location(id: $locationId) {\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n    id\n  }\n  resource(id: $resourceId) {\n    id\n    name\n    inactive\n    requireBookingApproval\n    color\n    capacity\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n    resourceType {\n      uniqueId\n      name\n      color\n    }\n    isAvailableHoursOverridden\n    availableHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n  }\n  ...singleChoiceResourceType_query\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n  ...weekOpeningHours_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceResourceType_query on Query {\n  organization(id: $organizationId) {\n    resourceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment weekOpeningHours_query on Query {\n  openingHoursMinutesStep\n}\n"
+    "text": "query pageOrganizationLocationResource_rootQuery(\n  $organizationId: String!\n  $locationId: String!\n  $resourceId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  resource(id: $resourceId) {\n    name\n    id\n  }\n  ...editResource_query\n}\n\nfragment editResource_query on Query {\n  organization(id: $organizationId) {\n    type {\n      type\n    }\n    id\n  }\n  location(id: $locationId) {\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n    id\n  }\n  resource(id: $resourceId) {\n    id\n    name\n    inactive\n    requireBookingApproval\n    color\n    capacity\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n    productTags {\n      uniqueId\n      name\n      color\n    }\n    resourceType {\n      uniqueId\n      name\n      color\n    }\n    isAvailableHoursOverridden\n    availableHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n  }\n  ...singleChoiceResourceType_query\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n  ...multipleChoicesProductTags_query\n  ...weekOpeningHours_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  customTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesCustomTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  productTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesProductTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  zones(where: {organizationId: $organizationId}, orderBy: $multipleChoicesZonesSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceResourceType_query on Query {\n  organization(id: $organizationId) {\n    resourceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment weekOpeningHours_query on Query {\n  openingHoursMinutesStep\n}\n"
   }
 };
 })();
 
-(node as any).hash = "15a511f9af163529d2c30dc25322f7ac";
+(node as any).hash = "1f324288f8f3ac5b9c103c12c05e726f";
 
 export default node;

@@ -273,6 +273,7 @@ public class Mapper : IMapper
             AvailableHours = src.AvailableHours is null ? null : MapTo(src.AvailableHours),
             CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
             Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)),
+            ProductTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Product)),
             ResourceType = MapTo(src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))
         };
 
@@ -354,6 +355,7 @@ public class Mapper : IMapper
             Capacity = src.Capacity,
             Tags = src.CustomTagIds
                 .Concat(src.ZoneIds)
+                .Concat(src.ProductTagIds)
                 .Concat([src.OrganizationResourceTypeId])
                 .Select(item => new OrganizationTag { Id = item })
                 .ToList(),
@@ -371,6 +373,7 @@ public class Mapper : IMapper
             Capacity = src.Capacity,
             Tags = src.CustomTagIds
                 .Concat(src.ZoneIds)
+                .Concat(src.ProductTagIds)
                 .Concat([src.OrganizationResourceTypeId])
                 .Select(item => new OrganizationTag { Id = item })
                 .ToList()

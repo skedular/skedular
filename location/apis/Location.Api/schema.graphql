@@ -140,6 +140,7 @@ type ResourceDetails {
   capacity: Int!
   customTags: [Location_OrganizationTagDetails!]!
   zones: [Location_OrganizationTagDetails!]!
+  productTags: [Location_OrganizationTagDetails!]!
   resourceType: Location_OrganizationTagDetails!
   isAvailableHoursOverridden: Boolean!
   availableHours: OpeningHours
@@ -211,6 +212,7 @@ input AddResourceInput {
   locationId: String!
   customTagIds: [String!]!
   zoneIds: [String!]!
+  productTagIds: [String!]!
   requireBookingApproval: Boolean!
   color: String
   capacity: Int!
@@ -257,8 +259,8 @@ input LocationWhereInput {
   organizationId: String
   locationIds: [String!]
   nameContains: String
-  zoneIds: [String!]
   customTagIds: [String!]
+  zoneIds: [String!]
 }
 
 input OpeningHoursDetailsInput {
@@ -276,8 +278,9 @@ input ResourceOrderInput {
 input ResourceWhereInput {
   locationId: String!
   nameContains: String
-  zoneIds: [String!]
   customTagIds: [String!]
+  zoneIds: [String!]
+  productTagIds: [String!]
 }
 
 input UpdateLocationInput {
@@ -312,6 +315,7 @@ input UpdateResourceInput {
   capacity: Int!
   customTagIds: [String!]!
   zoneIds: [String!]!
+  productTagIds: [String!]!
   organizationResourceTypeId: String!
 }
 

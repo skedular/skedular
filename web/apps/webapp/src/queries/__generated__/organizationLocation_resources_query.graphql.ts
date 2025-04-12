@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2363c5c4222b07c877f177154de6e246>>
+ * @generated SignedSource<<f8aabd4f36ef9c0987f2b1b2c4c61e15>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,6 +25,11 @@ export type organizationLocation_resources_query$data = {
         readonly id: string;
         readonly inactive: boolean;
         readonly name: string;
+        readonly productTags: ReadonlyArray<{
+          readonly color: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly uniqueId: string;
+        }>;
         readonly requireBookingApproval: boolean;
         readonly resourceType: {
           readonly color: string | null | undefined;
@@ -243,6 +248,16 @@ return {
                   "args": null,
                   "concreteType": "Location_OrganizationTagDetails",
                   "kind": "LinkedField",
+                  "name": "productTags",
+                  "plural": true,
+                  "selections": (v3/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Location_OrganizationTagDetails",
+                  "kind": "LinkedField",
                   "name": "resourceType",
                   "plural": false,
                   "selections": (v3/*: any*/),
@@ -314,6 +329,6 @@ return {
 };
 })();
 
-(node as any).hash = "414db5cf2cbaa5e5a963919651ae8f7c";
+(node as any).hash = "8ba48ee9e271dd94833b86f8cddb04de";
 
 export default node;
