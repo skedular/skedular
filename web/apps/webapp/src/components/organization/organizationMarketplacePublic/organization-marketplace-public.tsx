@@ -1,19 +1,18 @@
-import { DefaultDialogTitle, GridContainer, PushToRight, SectionIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
+import { DefaultDialogTitle, GridContainer, SectionIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
 import { getOrganizationProductBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { NewProductButton } from '@/components/product/addProduct';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { joinErrors, startOfDay } from '@/libs/utils';
-import type { organizationProducts_deleteProductsMutation } from '@/queries/__generated__/organizationProducts_deleteProductsMutation.graphql';
-import type { organizationProducts_products_query$key } from '@/queries/__generated__/organizationProducts_products_query.graphql';
-import type { organizationProducts_products_refetchableFragment } from '@/queries/__generated__/organizationProducts_products_refetchableFragment.graphql';
-import type { organizationProducts_rootQuery } from '@/queries/__generated__/organizationProducts_rootQuery.graphql';
+import type { organizationMarketplacePublic_deleteProductsMutation } from '@/queries/__generated__/organizationMarketplacePublic_deleteProductsMutation.graphql';
+import type { organizationMarketplacePublic_products_query$key } from '@/queries/__generated__/organizationMarketplacePublic_products_query.graphql';
+import type { organizationMarketplacePublic_products_refetchableFragment } from '@/queries/__generated__/organizationMarketplacePublic_products_refetchableFragment.graphql';
+import type { organizationMarketplacePublic_rootQuery } from '@/queries/__generated__/organizationMarketplacePublic_rootQuery.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -29,26 +28,26 @@ import { toast } from 'react-toastify';
 import ProductCard from './product-card';
 
 type Props = {
-  queryReference: PreloadedQuery<organizationProducts_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<organizationMarketplacePublic_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
 };
 
 const RootQuery = graphql`
-  query organizationProducts_rootQuery($organizationId: String!, $productsSortingValues: [ProductOrderInput!]) {
-    ...organizationProducts_products_query
+  query organizationMarketplacePublic_rootQuery($organizationId: String!, $productsSortingValues: [ProductOrderInput!]) {
+    ...organizationMarketplacePublic_products_query
   }
 `;
 
-const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId }: Props) => {
-  const rootData = usePreloadedQuery<organizationProducts_rootQuery>(RootQuery, queryReference);
-  const [rootDataRefetchable] = useRefetchableFragment<organizationProducts_products_refetchableFragment, organizationProducts_products_query$key>(
+const OrganizationMarketplacePublic = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+  const rootData = usePreloadedQuery<organizationMarketplacePublic_rootQuery>(RootQuery, queryReference);
+  const [rootDataRefetchable] = useRefetchableFragment<organizationMarketplacePublic_products_refetchableFragment, organizationMarketplacePublic_products_query$key>(
     graphql`
-      fragment organizationProducts_products_query on Query
+      fragment organizationMarketplacePublic_products_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "organizationProducts_products_refetchableFragment") {
+      @refetchable(queryName: "organizationMarketplacePublic_products_refetchableFragment") {
         products(first: $count, after: $cursor, where: { organizationIds: [$organizationId], includeInactive: true }, orderBy: $productsSortingValues)
-          @connection(key: "organizationProducts_products") {
+          @connection(key: "organizationMarketplacePublic_products") {
           __id
           totalCount
           edges {
@@ -67,8 +66,8 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
     rootData,
   );
 
-  const [commitDeleteProducts] = useMutation<organizationProducts_deleteProductsMutation>(graphql`
-    mutation organizationProducts_deleteProductsMutation($connectionIds: [ID!]!, $input: DeleteProductsInput!) {
+  const [commitDeleteProducts] = useMutation<organizationMarketplacePublic_deleteProductsMutation>(graphql`
+    mutation organizationMarketplacePublic_deleteProductsMutation($connectionIds: [ID!]!, $input: DeleteProductsInput!) {
       deleteProducts(input: $input) {
         products {
           id @deleteEdge(connections: $connectionIds)
@@ -166,10 +165,6 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
   return (
     <>
       <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-        <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-          <PushToRight />
-          <NewProductButton organizationId={organizationId} />
-        </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
           <SectionIconTypography label="Products" />
           <Divider />
@@ -205,14 +200,14 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
   );
 };
 
-const MemoOrganizationProducts = memo(OrganizationProducts);
+const MemoOrganizationMarketplacePublic = memo(OrganizationMarketplacePublic);
 
 type RelayProps = {
   organizationId: string;
 };
 
-const OrganizationProductsWithRelay = ({ organizationId }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<organizationProducts_rootQuery>(RootQuery);
+const OrganizationMarketplacePublicWithRelay = ({ organizationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<organizationMarketplacePublic_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
 
@@ -247,9 +242,9 @@ const OrganizationProductsWithRelay = ({ organizationId }: RelayProps) => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationProducts queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
+      <MemoOrganizationMarketplacePublic queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(OrganizationProductsWithRelay);
+export default memo(OrganizationMarketplacePublicWithRelay);

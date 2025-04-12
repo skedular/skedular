@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<291cef98cafce2acb0445f11469da78c>>
+ * @generated SignedSource<<56e5c453269ba8c07eb403d638f4f721>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,16 +16,16 @@ export type ProductOrderInput = {
   direction: OrderDirection;
   field: ProductOrderField;
 };
-export type organizationProducts_rootQuery$variables = {
+export type organizationMarketplacePublic_rootQuery$variables = {
   organizationId: string;
   productsSortingValues?: ReadonlyArray<ProductOrderInput> | null | undefined;
 };
-export type organizationProducts_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationProducts_products_query">;
+export type organizationMarketplacePublic_rootQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplacePublic_products_query">;
 };
-export type organizationProducts_rootQuery = {
-  response: organizationProducts_rootQuery$data;
-  variables: organizationProducts_rootQuery$variables;
+export type organizationMarketplacePublic_rootQuery = {
+  response: organizationMarketplacePublic_rootQuery$data;
+  variables: organizationMarketplacePublic_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -82,12 +82,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationProducts_rootQuery",
+    "name": "organizationMarketplacePublic_rootQuery",
     "selections": [
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "organizationProducts_products_query"
+        "name": "organizationMarketplacePublic_products_query"
       }
     ],
     "type": "Query",
@@ -97,7 +97,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationProducts_rootQuery",
+    "name": "organizationMarketplacePublic_rootQuery",
     "selections": [
       {
         "alias": null,
@@ -285,23 +285,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "organizationProducts_products",
+        "key": "organizationMarketplacePublic_products",
         "kind": "LinkedHandle",
         "name": "products"
       }
     ]
   },
   "params": {
-    "cacheID": "fb4fc683fb10e042b71c44b664bcab9a",
+    "cacheID": "367d3a3527922c0e5a99c61885187578",
     "id": null,
     "metadata": {},
-    "name": "organizationProducts_rootQuery",
+    "name": "organizationMarketplacePublic_rootQuery",
     "operationKind": "query",
-    "text": "query organizationProducts_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationProducts_products_query\n}\n\nfragment organizationProducts_products_query on Query {\n  products(where: {organizationIds: [$organizationId], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
+    "text": "query organizationMarketplacePublic_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationMarketplacePublic_products_query\n}\n\nfragment organizationMarketplacePublic_products_query on Query {\n  products(where: {organizationIds: [$organizationId], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0d5adf91211cc8e9fe37a117017376b0";
+(node as any).hash = "0debe8d48ac2aa3c12eacad44c946231";
 
 export default node;

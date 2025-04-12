@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16f739fa4017cca6e7346cf0e549a971>>
+ * @generated SignedSource<<5f7d137bcbf059020a253d33f7e7d785>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,18 +16,18 @@ export type ProductOrderInput = {
   direction: OrderDirection;
   field: ProductOrderField;
 };
-export type organizationProducts_products_refetchableFragment$variables = {
+export type organizationMarketplacePublic_products_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationId: string;
   productsSortingValues?: ReadonlyArray<ProductOrderInput> | null | undefined;
 };
-export type organizationProducts_products_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationProducts_products_query">;
+export type organizationMarketplacePublic_products_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplacePublic_products_query">;
 };
-export type organizationProducts_products_refetchableFragment = {
-  response: organizationProducts_products_refetchableFragment$data;
-  variables: organizationProducts_products_refetchableFragment$variables;
+export type organizationMarketplacePublic_products_refetchableFragment = {
+  response: organizationMarketplacePublic_products_refetchableFragment$data;
+  variables: organizationMarketplacePublic_products_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -104,7 +104,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationProducts_products_refetchableFragment",
+    "name": "organizationMarketplacePublic_products_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -120,7 +120,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "organizationProducts_products_query"
+        "name": "organizationMarketplacePublic_products_query"
       }
     ],
     "type": "Query",
@@ -130,7 +130,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationProducts_products_refetchableFragment",
+    "name": "organizationMarketplacePublic_products_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -318,23 +318,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "organizationProducts_products",
+        "key": "organizationMarketplacePublic_products",
         "kind": "LinkedHandle",
         "name": "products"
       }
     ]
   },
   "params": {
-    "cacheID": "c3b704e9ec9617ffb6dcfa97a867ad2c",
+    "cacheID": "616b7df4e63b8c685f6bd4bb88c989ee",
     "id": null,
     "metadata": {},
-    "name": "organizationProducts_products_refetchableFragment",
+    "name": "organizationMarketplacePublic_products_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationProducts_products_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationProducts_products_query_1G22uz\n}\n\nfragment organizationProducts_products_query_1G22uz on Query {\n  products(first: $count, after: $cursor, where: {organizationIds: [$organizationId], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
+    "text": "query organizationMarketplacePublic_products_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationMarketplacePublic_products_query_1G22uz\n}\n\nfragment organizationMarketplacePublic_products_query_1G22uz on Query {\n  products(first: $count, after: $cursor, where: {organizationIds: [$organizationId], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "29a7f18812b72cb75b4299a4d41d5400";
+(node as any).hash = "6521d0ef5d2e56c45c7b8ebcc77a4433";
 
 export default node;

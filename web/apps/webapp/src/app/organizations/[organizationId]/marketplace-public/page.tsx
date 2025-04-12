@@ -1,6 +1,6 @@
 'use client';
 
-import { OrganizationProducts } from '@/components/organization/organizationProducts';
+import { OrganizationMarketplacePublic } from '@/components/organization/organizationMarketplacePublic';
 import { RootShell } from '@/components/rootShell';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
@@ -23,7 +23,7 @@ const OrganizationMarketplacePublicPage = () => {
 
   return (
     <RootShell>
-      <OrganizationProducts organizationId={finalOrganizationId} />
+      <OrganizationMarketplacePublic organizationId={finalOrganizationId} />
     </RootShell>
   );
 };
