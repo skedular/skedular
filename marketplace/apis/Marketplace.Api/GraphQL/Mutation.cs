@@ -32,11 +32,14 @@ public class Mutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<ProductPayload?> DeleteProductAsync(
-        DeleteProductInput input,
+    public async Task<ProductsPayload?> DeleteProductsAsync(
+        DeleteProductsInput input,
         [Service] IProductService productService,
-        CancellationToken cancellationToken) =>
-        new() { ClientMutationId = input.ClientMutationId, Product = mapper.MapTo(await productService.DeleteAsync(input.Id, cancellationToken))! };
+        CancellationToken cancellationToken)
+    {
+        var products = await productService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(mapper.MapTo)! };
+    }
 
     [UseResolverScope]
     public async Task<ProductsPayload?> ActivateProductsAsync(

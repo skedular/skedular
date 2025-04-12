@@ -23,10 +23,16 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageOrganizationMarketplaceSetup_rootQuery($organizationId: String!, $productTagNameSearchText: String, $locationTagNameSearchText: String) {
+  query pageOrganizationMarketplaceSetup_rootQuery(
+    $organizationId: String!
+    $productNameSearchText: String
+    $productTagNameSearchText: String
+    $locationTagNameSearchText: String
+  ) {
     organization(id: $organizationId) {
       name
     }
+    ...organizationMarketplaceSetup_products_query
     ...organizationMarketplaceSetup_productTags_query
     ...organizationMarketplaceSetup_locationTags_query
   }
@@ -56,7 +62,13 @@ const MarketplaceSetupPage = ({ queryReference, onReloadRequired, organizationId
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationMarketplaceSetup rootDataProductTagsRelay={rootData} rootDataLocationTagsRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
+      <OrganizationMarketplaceSetup
+        rootDataProductsRelay={rootData}
+        rootDataProductTagsRelay={rootData}
+        rootDataLocationTagsRelay={rootData}
+        onReloadRequired={onReloadRequired}
+        organizationId={organizationId}
+      />
     </RootShell>
   );
 };

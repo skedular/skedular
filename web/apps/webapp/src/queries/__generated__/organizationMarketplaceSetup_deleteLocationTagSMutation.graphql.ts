@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e8ae8163305283f56b870da3ed0301df>>
+ * @generated SignedSource<<74c6e182609fd145b6673864e0dca746>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,20 +13,20 @@ export type DeleteLocationTagsInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationMarketplaceSetup_deleteLocationTagsMutation$variables = {
+export type organizationMarketplaceSetup_deleteLocationTagSMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: DeleteLocationTagsInput;
 };
-export type organizationMarketplaceSetup_deleteLocationTagsMutation$data = {
+export type organizationMarketplaceSetup_deleteLocationTagSMutation$data = {
   readonly deleteLocationTags: {
     readonly organizationTags: ReadonlyArray<{
       readonly id: string;
     }>;
   } | null | undefined;
 };
-export type organizationMarketplaceSetup_deleteLocationTagsMutation = {
-  response: organizationMarketplaceSetup_deleteLocationTagsMutation$data;
-  variables: organizationMarketplaceSetup_deleteLocationTagsMutation$variables;
+export type organizationMarketplaceSetup_deleteLocationTagSMutation = {
+  response: organizationMarketplaceSetup_deleteLocationTagSMutation$data;
+  variables: organizationMarketplaceSetup_deleteLocationTagSMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMarketplaceSetup_deleteLocationTagsMutation",
+    "name": "organizationMarketplaceSetup_deleteLocationTagSMutation",
     "selections": [
       {
         "alias": null,
@@ -94,7 +94,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMarketplaceSetup_deleteLocationTagsMutation",
+    "name": "organizationMarketplaceSetup_deleteLocationTagSMutation",
     "selections": [
       {
         "alias": null,
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e7d03c91b633614f5037826b33aa99e0",
+    "cacheID": "1ff04a6f499a3217ecb1c4f51abd5b2e",
     "id": null,
     "metadata": {},
-    "name": "organizationMarketplaceSetup_deleteLocationTagsMutation",
+    "name": "organizationMarketplaceSetup_deleteLocationTagSMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_deleteLocationTagsMutation(\n  $input: DeleteLocationTagsInput!\n) {\n  deleteLocationTags(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationMarketplaceSetup_deleteLocationTagSMutation(\n  $input: DeleteLocationTagsInput!\n) {\n  deleteLocationTags(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ba22b84d73b64845bb342b6e4b7d375f";
+(node as any).hash = "b5a6b95243b6ea9be7ec5d8868727f61";
 
 export default node;

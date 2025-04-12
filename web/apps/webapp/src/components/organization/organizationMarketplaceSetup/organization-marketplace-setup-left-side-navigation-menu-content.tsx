@@ -1,6 +1,10 @@
 import { BodyIconTypography } from '@/components/commons';
-import { LocationTagIcon, ProductTagIcon } from '@/components/icons';
-import { getOrganizationMarketplaceSetupLocationTagsBaseLink, getOrganizationMarketplaceSetupProductTagsBaseLink } from '@/components/links';
+import { LocationTagIcon, ProductIcon, ProductTagIcon } from '@/components/icons';
+import {
+  getOrganizationMarketplaceSetupLocationTagsBaseLink,
+  getOrganizationMarketplaceSetupProductsBaseLink,
+  getOrganizationMarketplaceSetupProductTagsBaseLink,
+} from '@/components/links';
 import { PaletteModeContext } from '@/libs/providers';
 import {
   getSelectedListItemBorderRadius,
@@ -59,6 +63,7 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
+  const productsLink = getOrganizationMarketplaceSetupProductsBaseLink(organizationId);
   const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(organizationId);
   const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(organizationId);
 
@@ -74,6 +79,25 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
         width: collapsed ? secondDrawerCollapsedDrawerWidthPx : secondDrawerExpandedDrawerWidthPx,
       }}
     >
+      <ListItem disablePadding>
+        <Link component={NextLink} href={productsLink}>
+          <ListItemButton selected={fullPath === productsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === productsLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <ProductTagIcon color="inherit" />} invertDefaultColor={fullPath === productsLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Product"
+                startElement={!hideIcons && <ProductIcon excludeTooltip color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === productsLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
       <ListItem disablePadding>
         <Link component={NextLink} href={productTagsLink}>
           <ListItemButton selected={fullPath === productTagsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === productTagsLink) }}>

@@ -18,7 +18,7 @@ public interface IProductService
 {
     Task<Product> AddAsync(string? productId, string organizationId, ProductVersion productVersion, CancellationToken cancellationToken);
     Task<Product> UpdateAsync(string productId, ProductVersion productVersion, CancellationToken cancellationToken);
-    Task<Product> DeleteAsync(string productId, CancellationToken cancellationToken);
+    Task<ICollection<Product>> DeleteAsync(ICollection<string> productIds, CancellationToken cancellationToken);
     Task<Product?> GetByIdAsync(string productId, CancellationToken cancellationToken);
     Task<ICollection<Product>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<Product>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
@@ -125,31 +125,33 @@ public class ProductService(
         return await UpdateInternalAsync(productVersion, existingProduct, customer, cancellationToken);
     }
 
-    public async Task<Product> DeleteAsync(string productId, CancellationToken cancellationToken)
+    public async Task<ICollection<Product>> DeleteAsync(ICollection<string> productIds, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(productId);
-
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken);
-        if (existingProduct is null)
+        var existingProducts = await repositoryFactory.ProductRepository.GetByIdsAsync(productIds, cancellationToken);
+        if (existingProducts.Count != productIds.Count)
         {
             throw new ProductNotFound();
         }
 
-        if (!organizationAuthorizationService.CanModifyProduct(existingProduct.Organization, customer))
+        foreach (var existingProduct in existingProducts)
         {
-            throw new Unauthorized();
+            if (!organizationAuthorizationService.CanModifyProduct(existingProduct.Organization, customer))
+            {
+                throw new Unauthorized();
+            }
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var deletedProduct = mapper.MapTo(repositoryFactory.ProductRepository.Remove(existingProduct));
+        repositoryFactory.ProductRepository.RemoveRange(existingProducts);
+        var deletedProducts = existingProducts.Select(mapper.MapTo).ToList();
 
-        marketplaceOutboxPublisher.PublishProducts([deletedProduct], repositoryFactory.UnitOfWork);
+        marketplaceOutboxPublisher.PublishProducts(deletedProducts, repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        return deletedProduct;
+        return deletedProducts;
     }
 
     public async Task<Product?> GetByIdAsync(string productId, CancellationToken cancellationToken)

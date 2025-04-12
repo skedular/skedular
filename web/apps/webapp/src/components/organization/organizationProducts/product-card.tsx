@@ -1,13 +1,13 @@
 import { BodyIconTypography, DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import { EllipseMenuIcon, ProductIcon } from '@/components/icons';
-import { getOrganizationProductSetupBaseLink } from '@/components/links';
+import { getOrganizationProductBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { productCard_deleteProductMutation } from '@/queries/__generated__/productCard_deleteProductMutation.graphql';
+import type { productCard_deleteProductsMutation } from '@/queries/__generated__/productCard_deleteProductsMutation.graphql';
 import type { productCard_ProductDetails$key } from '@/queries/__generated__/productCard_ProductDetails.graphql';
 import { Divider } from '@mui/material';
 import Card from '@mui/material/Card';
@@ -56,10 +56,10 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
     rootDataRelay,
   );
 
-  const [commitDeleteProduct] = useMutation<productCard_deleteProductMutation>(graphql`
-    mutation productCard_deleteProductMutation($connectionIds: [ID!]!, $input: DeleteProductInput!) {
-      deleteProduct(input: $input) {
-        product {
+  const [commitDeleteProducts] = useMutation<productCard_deleteProductsMutation>(graphql`
+    mutation productCard_deleteProductsMutation($connectionIds: [ID!]!, $input: DeleteProductsInput!) {
+      deleteProducts(input: $input) {
+        products {
           id @deleteEdge(connections: $connectionIds)
         }
       }
@@ -77,7 +77,7 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteProduct],
   ];
 
-  const editLink = getOrganizationProductSetupBaseLink(productDetails.organization.uniqueId!, productDetails.id);
+  const editLink = getOrganizationProductBaseLink(productDetails.organization.uniqueId!, productDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -108,12 +108,12 @@ const ProductCard = ({ rootDataRelay, connectionIds }: Props) => {
   const handleConfirmRemovingProductClick = () => {
     const toastId = themedToast(<NotificationContent content={`Removing product '${productDetails.name}'...`} />, infoNotificationOptions);
 
-    commitDeleteProduct({
+    commitDeleteProducts({
       variables: {
         connectionIds: connectionIds,
         input: {
           clientMutationId: nanoid(),
-          id: productDetails.id,
+          ids: [productDetails.id],
         },
       },
       onCompleted: (_, errors) => {

@@ -48,8 +48,9 @@ export const getOrganizationLocationAddLink = (id: string) => `${getOrganization
 export const getNotificationsBaseLink = () => `/notifications`;
 
 export const getOrganizationMarketplaceSetupBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-setup`;
+export const getOrganizationMarketplaceSetupProductsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-setup?section=products-setup`;
 export const getOrganizationMarketplaceSetupProductTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-setup?section=product-tags-setup`;
 export const getOrganizationMarketplaceSetupLocationTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-setup?section=location-tags-setup`;
 export const getOrganizationMarketplaceBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-public`;
-export const getOrganizationProductSetupBaseLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}?section=setup`;
+export const getOrganizationProductBaseLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}`;
 export const getOrganizationProductAddLink = (id: string) => `${getOrganizationBaseLink(id)}/products/add`;

@@ -43,8 +43,7 @@ public class OrganizationStripePaymentMethodRepository(PaymentDbContext dbContex
     public void RemoveRange(ICollection<OrganizationStripePaymentMethod> organizationStripePaymentMethods)
     {
         var now = TimeProvider.GetUtcNow();
-        organizationStripePaymentMethods.ForEach(organizationStripePaymentMethod =>
-            organizationStripePaymentMethod.DeletedAt = now);
+        organizationStripePaymentMethods.ForEach(organizationStripePaymentMethod => organizationStripePaymentMethod.DeletedAt = now);
         DbContext.OrganizationStripePaymentMethod.UpdateRange(organizationStripePaymentMethods);
     }
 }

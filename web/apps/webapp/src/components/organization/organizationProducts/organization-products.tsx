@@ -1,5 +1,5 @@
 import { DefaultDialogTitle, GridContainer, PushToRight, SectionIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
-import { getOrganizationProductSetupBaseLink } from '@/components/links';
+import { getOrganizationProductBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -10,7 +10,7 @@ import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { joinErrors, startOfDay } from '@/libs/utils';
-import type { organizationProducts_deleteProductMutation } from '@/queries/__generated__/organizationProducts_deleteProductMutation.graphql';
+import type { organizationProducts_deleteProductsMutation } from '@/queries/__generated__/organizationProducts_deleteProductsMutation.graphql';
 import type { organizationProducts_products_query$key } from '@/queries/__generated__/organizationProducts_products_query.graphql';
 import type { organizationProducts_products_refetchableFragment } from '@/queries/__generated__/organizationProducts_products_refetchableFragment.graphql';
 import type { organizationProducts_rootQuery } from '@/queries/__generated__/organizationProducts_rootQuery.graphql';
@@ -67,10 +67,10 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
     rootData,
   );
 
-  const [commitDeleteProduct] = useMutation<organizationProducts_deleteProductMutation>(graphql`
-    mutation organizationProducts_deleteProductMutation($connectionIds: [ID!]!, $input: DeleteProductInput!) {
-      deleteProduct(input: $input) {
-        product {
+  const [commitDeleteProducts] = useMutation<organizationProducts_deleteProductsMutation>(graphql`
+    mutation organizationProducts_deleteProductsMutation($connectionIds: [ID!]!, $input: DeleteProductsInput!) {
+      deleteProducts(input: $input) {
+        products {
           id @deleteEdge(connections: $connectionIds)
         }
       }
@@ -103,7 +103,7 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
           return;
         }
 
-        router.push(getOrganizationProductSetupBaseLink(productDetails.organization?.uniqueId!, productDetails.id));
+        router.push(getOrganizationProductBaseLink(productDetails.organization?.uniqueId!, productDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteProduct:
@@ -127,12 +127,12 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationId
 
     const toastId = themedToast(<NotificationContent content={`Removing product '${productDetails.name}'...`} />, infoNotificationOptions);
 
-    commitDeleteProduct({
+    commitDeleteProducts({
       variables: {
         connectionIds: connectionIds,
         input: {
           clientMutationId: nanoid(),
-          id: productDetails.id,
+          ids: [productDetails.id],
         },
       },
       onCompleted: (_, errors) => {

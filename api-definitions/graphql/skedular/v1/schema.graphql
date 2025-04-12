@@ -345,7 +345,7 @@ type Mutation {
   deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
-  deleteProduct(input: DeleteProductInput!): ProductPayload @cost(weight: "10")
+  deleteProducts(input: DeleteProductsInput!): ProductsPayload @cost(weight: "10")
   deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteResource(input: DeleteResourceInput!): ResourcePayload @cost(weight: "10")
@@ -1363,17 +1363,17 @@ input DeleteOrganizationInput {
   id: String!
 }
 
-input DeleteProductInput {
-  clientMutationId: String
-  id: String!
-}
-
 input DeleteProductTagInput {
   clientMutationId: String
   id: String!
 }
 
 input DeleteProductTagsInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+input DeleteProductsInput {
   clientMutationId: String
   ids: [String!]!
 }

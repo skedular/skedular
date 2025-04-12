@@ -1,4 +1,5 @@
 using Api.Shared.Services.Models;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
@@ -20,6 +21,7 @@ public interface IProductRepository : IRepository<Product>
     Product Add(Product product);
     Product Update(Product product);
     Product Remove(Product product);
+    void RemoveRange(ICollection<Product> products);
 
     Task<(PaginatedInfo, ICollection<Edge<Product>>, int )> GetPaginatedProductsAsync(
         PaginationInputParam paginationInputParam,
@@ -135,6 +137,13 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
         var now = TimeProvider.GetUtcNow();
         product.DeletedAt = now;
         return DbContext.Product.Update(product).Entity;
+    }
+
+    public void RemoveRange(ICollection<Product> products)
+    {
+        var now = TimeProvider.GetUtcNow();
+        products.ForEach(product => product.DeletedAt = now);
+        DbContext.Product.UpdateRange(products);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Product>>, int)> GetPaginatedProductsAsync(

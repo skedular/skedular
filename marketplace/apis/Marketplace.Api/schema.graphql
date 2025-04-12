@@ -22,7 +22,7 @@ type Marketplace_OrganizationTagDetails {
 type Mutation {
   addProduct(input: AddProductInput!): ProductPayload @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload @cost(weight: "10")
-  deleteProduct(input: DeleteProductInput!): ProductPayload @cost(weight: "10")
+  deleteProducts(input: DeleteProductsInput!): ProductsPayload @cost(weight: "10")
   activateProducts(input: ActivateProductsInput!): ProductsPayload @cost(weight: "10")
   deactivateProducts(input: DeactivateProductsInput!): ProductsPayload @cost(weight: "10")
 }
@@ -128,9 +128,9 @@ input DeactivateProductsInput {
   ids: [String!]!
 }
 
-input DeleteProductInput {
+input DeleteProductsInput {
   clientMutationId: String
-  id: String!
+  ids: [String!]!
 }
 
 input ProductOrderInput {
