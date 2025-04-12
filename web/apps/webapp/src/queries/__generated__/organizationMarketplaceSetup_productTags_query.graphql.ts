@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f0273d38c930d751fee0dfe7d3e2c205>>
+ * @generated SignedSource<<ba8c6af342c22b57c42719767eb667ea>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationAdmin_productTags_query$data = {
+export type organizationMarketplaceSetup_productTags_query$data = {
   readonly productTags: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -23,11 +23,11 @@ export type organizationAdmin_productTags_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   };
-  readonly " $fragmentType": "organizationAdmin_productTags_query";
+  readonly " $fragmentType": "organizationMarketplaceSetup_productTags_query";
 };
-export type organizationAdmin_productTags_query$key = {
-  readonly " $data"?: organizationAdmin_productTags_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_productTags_query">;
+export type organizationMarketplaceSetup_productTags_query$key = {
+  readonly " $data"?: organizationMarketplaceSetup_productTags_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_productTags_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -75,10 +75,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationAdmin_productTags_refetchableFragment.graphql')
+      "operation": require('./organizationMarketplaceSetup_productTags_refetchableFragment.graphql')
     }
   },
-  "name": "organizationAdmin_productTags_query",
+  "name": "organizationMarketplaceSetup_productTags_query",
   "selections": [
     {
       "alias": "productTags",
@@ -112,7 +112,7 @@ return {
       ],
       "concreteType": "OrganizationTagConnection",
       "kind": "LinkedField",
-      "name": "__organizationAdmin_productTags_connection",
+      "name": "__organizationMarketplaceSetup_productTags_connection",
       "plural": false,
       "selections": [
         {
@@ -232,6 +232,6 @@ return {
 };
 })();
 
-(node as any).hash = "77d2543da6415ff54def7be585cfe25c";
+(node as any).hash = "f31c0f2f2c96251a84712725290b9acb";
 
 export default node;

@@ -41,14 +41,15 @@ export const getOrganizationAdminBillingAndPaymentBaseLink = (id: string) => `${
 export const getOrganizationAdminSSOBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=sso-setup`;
 export const getOrganizationAdminZonesBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=zones-setup`;
 export const getOrganizationAdminCustomTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=tags-setup`;
-export const getOrganizationAdminProductTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=product-tags-setup`;
-export const getOrganizationAdminLocationTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=location-tags-setup`;
 export const getOrganizationAdminSubscriptionsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=subscriptions`;
 export const getOrganizationAdminManageOrganizationBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/admin?section=manage-organization`;
 export const getOrganizationTeamAddLink = (id: string) => `${getOrganizationBaseLink(id)}/teams/add`;
 export const getOrganizationLocationAddLink = (id: string) => `${getOrganizationBaseLink(id)}/locations/add`;
 export const getNotificationsBaseLink = () => `/notifications`;
 
-export const getOrganizationMarketplaceBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace`;
+export const getOrganizationMarketplaceSetupBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-setup`;
+export const getOrganizationMarketplaceSetupProductTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-setup?section=product-tags-setup`;
+export const getOrganizationMarketplaceSetupLocationTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-setup?section=location-tags-setup`;
+export const getOrganizationMarketplaceBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-public`;
 export const getOrganizationProductSetupBaseLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}?section=setup`;
 export const getOrganizationProductAddLink = (id: string) => `${getOrganizationBaseLink(id)}/products/add`;

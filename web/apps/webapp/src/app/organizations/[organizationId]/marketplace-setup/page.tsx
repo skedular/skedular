@@ -2,11 +2,11 @@
 
 import { BodyIconTypography, StackColumn } from '@/components/commons';
 import { Loading } from '@/components/loading';
-import { OrganizationAdmin } from '@/components/organization/organizationAdmin';
+import { OrganizationMarketplaceSetup } from '@/components/organization/organizationMarketplaceSetup';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import type { pageOrganizationAdmin_rootQuery } from '@/queries/__generated__/pageOrganizationAdmin_rootQuery.graphql';
+import type { pageOrganizationMarketplaceSetup_rootQuery } from '@/queries/__generated__/pageOrganizationMarketplaceSetup_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
@@ -17,25 +17,23 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 type Props = {
-  queryReference: PreloadedQuery<pageOrganizationAdmin_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<pageOrganizationMarketplaceSetup_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
 };
 
 const RootQuery = graphql`
-  query pageOrganizationAdmin_rootQuery($organizationId: String!, $zoneNameSearchText: String, $customTagNameSearchText: String) {
+  query pageOrganizationMarketplaceSetup_rootQuery($organizationId: String!, $productTagNameSearchText: String, $locationTagNameSearchText: String) {
     organization(id: $organizationId) {
       name
     }
-    ...organizationAdmin_query
-    ...organizationAdmin_organizationPaymentMethodsDetails_query
-    ...organizationAdmin_zones_query
-    ...organizationAdmin_customTags_query
+    ...organizationMarketplaceSetup_productTags_query
+    ...organizationMarketplaceSetup_locationTags_query
   }
 `;
 
-const AdminPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
-  const rootData = usePreloadedQuery<pageOrganizationAdmin_rootQuery>(RootQuery, queryReference);
+const MarketplaceSetupPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+  const rootData = usePreloadedQuery<pageOrganizationMarketplaceSetup_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
   const handleBackClick = () => {
@@ -49,7 +47,7 @@ const AdminPage = ({ queryReference, onReloadRequired, organizationId }: Props) 
       </Button>
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Breadcrumbs>
-          <BodyIconTypography label="Admin" />
+          <BodyIconTypography label="Marketplace Setup" />
           <BodyIconTypography label={rootData.organization?.name} />
         </Breadcrumbs>
       </Box>
@@ -58,22 +56,15 @@ const AdminPage = ({ queryReference, onReloadRequired, organizationId }: Props) 
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationAdmin
-        rootDataRelay={rootData}
-        rootDataOrganizationPaymentMethodsDetailsRelay={rootData}
-        rootDataZonesRelay={rootData}
-        rootDataCustomTagsRelay={rootData}
-        onReloadRequired={onReloadRequired}
-        organizationId={organizationId}
-      />
+      <OrganizationMarketplaceSetup rootDataProductTagsRelay={rootData} rootDataLocationTagsRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
     </RootShell>
   );
 };
 
-const MemoAdminPage = memo(AdminPage);
+const MemoMarketplaceSetupPage = memo(MarketplaceSetupPage);
 
-const AdminPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageOrganizationAdmin_rootQuery>(RootQuery);
+const MarketplaceSetupPageWithRelay = () => {
+  const [queryReference, loadQuery] = useQueryLoader<pageOrganizationMarketplaceSetup_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
   const { organizationId, teamId } = useParams();
@@ -114,9 +105,9 @@ const AdminPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAdminPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoMarketplaceSetupPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(AdminPageWithRelay);
+export default memo(MarketplaceSetupPageWithRelay);

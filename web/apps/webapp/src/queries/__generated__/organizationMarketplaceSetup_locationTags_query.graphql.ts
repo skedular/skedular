@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<74f464767d7eae4c7d1ca7df559acb9b>>
+ * @generated SignedSource<<d5e480ac4ad2e6674895bf3d4d0c0aea>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationAdmin_locationTags_query$data = {
+export type organizationMarketplaceSetup_locationTags_query$data = {
   readonly locationTags: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -23,11 +23,11 @@ export type organizationAdmin_locationTags_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   };
-  readonly " $fragmentType": "organizationAdmin_locationTags_query";
+  readonly " $fragmentType": "organizationMarketplaceSetup_locationTags_query";
 };
-export type organizationAdmin_locationTags_query$key = {
-  readonly " $data"?: organizationAdmin_locationTags_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_locationTags_query">;
+export type organizationMarketplaceSetup_locationTags_query$key = {
+  readonly " $data"?: organizationMarketplaceSetup_locationTags_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_locationTags_query">;
 };
 
 const node: ReaderFragment = (function(){
@@ -75,10 +75,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./organizationAdmin_locationTags_refetchableFragment.graphql')
+      "operation": require('./organizationMarketplaceSetup_locationTags_refetchableFragment.graphql')
     }
   },
-  "name": "organizationAdmin_locationTags_query",
+  "name": "organizationMarketplaceSetup_locationTags_query",
   "selections": [
     {
       "alias": "locationTags",
@@ -112,7 +112,7 @@ return {
       ],
       "concreteType": "OrganizationTagConnection",
       "kind": "LinkedField",
-      "name": "__organizationAdmin_locationTags_connection",
+      "name": "__organizationMarketplaceSetup_locationTags_connection",
       "plural": false,
       "selections": [
         {
@@ -232,6 +232,6 @@ return {
 };
 })();
 
-(node as any).hash = "c1460b2f08e49e5874dbe1d601d676bd";
+(node as any).hash = "afc58f1f3ece4ce2f642a5eef8ec5408";
 
 export default node;

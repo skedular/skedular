@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b74703a17f67324af5c081567f0d717c>>
+ * @generated SignedSource<<63a92dd463f59df2005eb281ca49c4e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,24 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type DeleteLocationTagsInput = {
+export type DeleteProductTagsInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationAdmin_deleteLocationTagsMutation$variables = {
+export type organizationMarketplaceSetup_deleteProductTagsMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: DeleteLocationTagsInput;
+  input: DeleteProductTagsInput;
 };
-export type organizationAdmin_deleteLocationTagsMutation$data = {
-  readonly deleteLocationTags: {
+export type organizationMarketplaceSetup_deleteProductTagsMutation$data = {
+  readonly deleteProductTags: {
     readonly organizationTags: ReadonlyArray<{
       readonly id: string;
     }>;
   } | null | undefined;
 };
-export type organizationAdmin_deleteLocationTagsMutation = {
-  response: organizationAdmin_deleteLocationTagsMutation$data;
-  variables: organizationAdmin_deleteLocationTagsMutation$variables;
+export type organizationMarketplaceSetup_deleteProductTagsMutation = {
+  response: organizationMarketplaceSetup_deleteProductTagsMutation$data;
+  variables: organizationMarketplaceSetup_deleteProductTagsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,14 +61,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_deleteLocationTagsMutation",
+    "name": "organizationMarketplaceSetup_deleteProductTagsMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
-        "name": "deleteLocationTags",
+        "name": "deleteProductTags",
         "plural": false,
         "selections": [
           {
@@ -94,14 +94,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_deleteLocationTagsMutation",
+    "name": "organizationMarketplaceSetup_deleteProductTagsMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
-        "name": "deleteLocationTags",
+        "name": "deleteProductTags",
         "plural": false,
         "selections": [
           {
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6f1370aaf793d1db704c3871fe65b692",
+    "cacheID": "fe232e8824b357469302be6ab32f3513",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_deleteLocationTagsMutation",
+    "name": "organizationMarketplaceSetup_deleteProductTagsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_deleteLocationTagsMutation(\n  $input: DeleteLocationTagsInput!\n) {\n  deleteLocationTags(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationMarketplaceSetup_deleteProductTagsMutation(\n  $input: DeleteProductTagsInput!\n) {\n  deleteProductTags(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "26fdf0e53f73d410b3d63e6758cacafc";
+(node as any).hash = "cfa4eca0ba377f275bf8666469bb8437";
 
 export default node;

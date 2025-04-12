@@ -1,0 +1,118 @@
+import { BodyIconTypography } from '@/components/commons';
+import { LocationTagIcon, ProductTagIcon } from '@/components/icons';
+import { getOrganizationMarketplaceSetupLocationTagsBaseLink, getOrganizationMarketplaceSetupProductTagsBaseLink } from '@/components/links';
+import { PaletteModeContext } from '@/libs/providers';
+import {
+  getSelectedListItemBorderRadius,
+  sandstone,
+  secondDrawerCollapsedDrawerWidth,
+  secondDrawerCollapsedDrawerWidthPx,
+  secondDrawerExpandedDrawerWidth,
+  secondDrawerExpandedDrawerWidthPx,
+} from '@/libs/theme';
+import Link from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import NextLink from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { memo, useContext } from 'react';
+
+type Props = {
+  organizationId: string;
+  collapsed?: boolean;
+  hideIcons?: boolean;
+};
+
+const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizationId, collapsed, hideIcons }: Props) => {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const paletteMode = useContext(PaletteModeContext);
+  const maxWidth = collapsed ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
+  const styles = {
+    width: maxWidth,
+    borderRadius: 4,
+    marginLeft: 1,
+    marginRight: 1,
+    transition: 'border-radius 0.3s ease, width 0.3s ease',
+    '&:hover': {
+      width: maxWidth,
+      borderRadius: 4,
+      marginLeft: 1,
+      marginRight: 1,
+      transition: 'none',
+    },
+    '&.Mui-selected': {
+      width: maxWidth,
+      borderRadius: 4,
+      marginLeft: 1,
+      marginRight: 1,
+      backgroundColor: sandstone,
+      '&:hover': {
+        width: maxWidth,
+        borderRadius: 4,
+        marginLeft: 1,
+        marginRight: 1,
+        backgroundColor: sandstone,
+      },
+    },
+  };
+
+  const fullPath = `${pathname}?${searchParams.toString()}`;
+  const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(organizationId);
+  const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(organizationId);
+
+  return (
+    <List
+      sx={{
+        backgroundColor: (theme) => theme.palette.background.paper,
+        borderRight: 1,
+        borderColor: (theme) => theme.palette.divider,
+        paddingTop: { xs: 1, sm: 1, md: 3 },
+        height: '100vh',
+        position: 'fixed',
+        width: collapsed ? secondDrawerCollapsedDrawerWidthPx : secondDrawerExpandedDrawerWidthPx,
+      }}
+    >
+      <ListItem disablePadding>
+        <Link component={NextLink} href={productTagsLink}>
+          <ListItemButton selected={fullPath === productTagsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === productTagsLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <ProductTagIcon color="inherit" />} invertDefaultColor={fullPath === productTagsLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Product Tag"
+                startElement={!hideIcons && <ProductTagIcon excludeTooltip color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === productTagsLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={locationTagsLink}>
+          <ListItemButton selected={fullPath === locationTagsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === locationTagsLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <LocationTagIcon color="inherit" />} invertDefaultColor={fullPath === locationTagsLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Location Tag"
+                startElement={!hideIcons && <LocationTagIcon excludeTooltip color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === locationTagsLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+    </List>
+  );
+};
+
+export default memo(OrganizationMarketplaceSetupLeftSideNavigationMenuContent);

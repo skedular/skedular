@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16e2579cc31e4af0bb718a4cc3f9ef47>>
+ * @generated SignedSource<<5c9e0a45de4ebcc6e0deb05456a84295>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,18 +10,18 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type organizationAdmin_productTags_refetchableFragment$variables = {
+export type organizationMarketplaceSetup_productTags_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationId: string;
   productTagNameSearchText?: string | null | undefined;
 };
-export type organizationAdmin_productTags_refetchableFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_productTags_query">;
+export type organizationMarketplaceSetup_productTags_refetchableFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_productTags_query">;
 };
-export type organizationAdmin_productTags_refetchableFragment = {
-  response: organizationAdmin_productTags_refetchableFragment$data;
-  variables: organizationAdmin_productTags_refetchableFragment$variables;
+export type organizationMarketplaceSetup_productTags_refetchableFragment = {
+  response: organizationMarketplaceSetup_productTags_refetchableFragment$data;
+  variables: organizationMarketplaceSetup_productTags_refetchableFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -90,7 +90,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationAdmin_productTags_refetchableFragment",
+    "name": "organizationMarketplaceSetup_productTags_refetchableFragment",
     "selections": [
       {
         "args": [
@@ -106,7 +106,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "organizationAdmin_productTags_query"
+        "name": "organizationMarketplaceSetup_productTags_query"
       }
     ],
     "type": "Query",
@@ -116,7 +116,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationAdmin_productTags_refetchableFragment",
+    "name": "organizationMarketplaceSetup_productTags_refetchableFragment",
     "selections": [
       {
         "alias": null,
@@ -245,23 +245,23 @@ return {
           "orderBy"
         ],
         "handle": "connection",
-        "key": "organizationAdmin_productTags",
+        "key": "organizationMarketplaceSetup_productTags",
         "kind": "LinkedHandle",
         "name": "productTags"
       }
     ]
   },
   "params": {
-    "cacheID": "8e7539b306f9ea359d0362b5227ea103",
+    "cacheID": "356d97b6ce14cb2929934ab84558b38d",
     "id": null,
     "metadata": {},
-    "name": "organizationAdmin_productTags_refetchableFragment",
+    "name": "organizationMarketplaceSetup_productTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationAdmin_productTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productTagNameSearchText: String\n) {\n  ...organizationAdmin_productTags_query_1G22uz\n}\n\nfragment organizationAdmin_productTags_query_1G22uz on Query {\n  productTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $productTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_productTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productTagNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_productTags_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_productTags_query_1G22uz on Query {\n  productTags(first: $count, after: $cursor, where: {organizationId: $organizationId, nameContains: $productTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "77d2543da6415ff54def7be585cfe25c";
+(node as any).hash = "f31c0f2f2c96251a84712725290b9acb";
 
 export default node;
