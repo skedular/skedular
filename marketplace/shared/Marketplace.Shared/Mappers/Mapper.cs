@@ -1,4 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 
 namespace Marketplace.Shared.Mappers;
@@ -16,7 +17,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Inactive = src.Inactive,
             OrganizationId = src.Organization.Id,
-            ProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First())
+            LatestProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First())
         };
 
     private ProductVersion MapTo(Models.ProductVersion src)
@@ -27,8 +28,8 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             Description = src.Name.ToSafeString(),
             Price = src.Price.ToRoundedPrice().ToSafeString(),
-            PriceUnit = src.PriceUnit.ToString(),
-            Currency = src.Currency.ToString(),
+            PriceUnit = src.PriceUnit.ToPriceUnit(),
+            Currency = src.Currency.ToCurrency(),
             MinDurationMinutes = src.MinDurationMinutes ?? -1,
             MaxDurationMinutes = src.MaxDurationMinutes ?? -1,
             BookAllLocationResources = src.BookAllLocationResources,

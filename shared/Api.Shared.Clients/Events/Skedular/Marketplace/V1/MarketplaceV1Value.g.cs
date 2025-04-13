@@ -32,31 +32,30 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "CgR0eXBlGAQgASgOMhEubWFya2V0cGxhY2UuVHlwZRIoCgR0aW1lGAUgASgL",
             "MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklk",
             "GAYgASgJIjoKBERhdGESJwoHcHJvZHVjdBgBIAEoCzIULm1hcmtldHBsYWNl",
-            "LlByb2R1Y3RIAEIJCgdwYXlsb2FkIqMBCgdQcm9kdWN0EgoKAmlkGAEgASgJ",
+            "LlByb2R1Y3RIAEIJCgdwYXlsb2FkIqkBCgdQcm9kdWN0EgoKAmlkGAEgASgJ",
             "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
             "bXASEAoIaW5hY3RpdmUYAyABKAgSFgoOb3JnYW5pemF0aW9uSWQYBCABKAkS",
-            "MwoOcHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Qcm9kdWN0",
-            "VmVyc2lvbiKoAwoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkSLQoJZGVs",
-            "ZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIMCgRu",
-            "YW1lGAMgASgJEhMKC2Rlc2NyaXB0aW9uGAQgASgJEg0KBXByaWNlGAUgASgJ",
-            "EhEKCXByaWNlVW5pdBgGIAEoCRIQCghjdXJyZW5jeRgHIAEoCRIaChJtaW5E",
-            "dXJhdGlvbk1pbnV0ZXMYCCABKAUSGgoSbWF4RHVyYXRpb25NaW51dGVzGAkg",
-            "ASgFEiAKGGJvb2tBbGxMb2NhdGlvblJlc291cmNlcxgKIAEoCBIcChRyZWN1",
-            "cnJlbmNlV2luZG93RGF5cxgLIAEoBRIeChZyZXF1aXJlQ29uc2VjdXRpdmVE",
-            "YXlzGAwgASgIEhwKFG1heEJvb2tpbmdTcHJlYWREYXlzGA0gASgFEh8KF251",
-            "bWJlck9mUmVzb3VyY2VzVG9Cb29rGA4gASgFEhUKDXByb2R1Y3RUYWdJZHMY",
-            "DyADKAkSFgoObG9jYXRpb25UYWdJZHMYECADKAkqLwoEVHlwZRITCg9Qcm9k",
-            "dWN0VXBzZXJ0ZWQQABISCg5Qcm9kdWN0RGVsZXRlZBABQjqqAjdBcGkuU2hh",
-            "cmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLk1hcmtldHBsYWNlLlYxLlZh",
-            "bHVlYgZwcm90bzM="));
+            "OQoUbGF0ZXN0UHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Q",
+            "cm9kdWN0VmVyc2lvbiL5AgoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
+            "DAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRINCgVwcmljZRgE",
+            "IAEoCRIRCglwcmljZVVuaXQYBSABKAkSEAoIY3VycmVuY3kYBiABKAkSGgoS",
+            "bWluRHVyYXRpb25NaW51dGVzGAcgASgFEhoKEm1heER1cmF0aW9uTWludXRl",
+            "cxgIIAEoBRIgChhib29rQWxsTG9jYXRpb25SZXNvdXJjZXMYCSABKAgSHAoU",
+            "cmVjdXJyZW5jZVdpbmRvd0RheXMYCiABKAUSHgoWcmVxdWlyZUNvbnNlY3V0",
+            "aXZlRGF5cxgLIAEoCBIcChRtYXhCb29raW5nU3ByZWFkRGF5cxgMIAEoBRIf",
+            "ChdudW1iZXJPZlJlc291cmNlc1RvQm9vaxgNIAEoBRIVCg1wcm9kdWN0VGFn",
+            "SWRzGA4gAygJEhYKDmxvY2F0aW9uVGFnSWRzGA8gAygJKi8KBFR5cGUSEwoP",
+            "UHJvZHVjdFVwc2VydGVkEAASEgoOUHJvZHVjdERlbGV0ZWQQAUI6qgI3QXBp",
+            "LlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5NYXJrZXRwbGFjZS5W",
+            "MS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data.Parser, new[]{ "Product" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "Inactive", "OrganizationId", "ProductVersion" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "DeletedAt", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "Inactive", "OrganizationId", "LatestProductVersion" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Price", "PriceUnit", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds" }, null, null, null, null)
           }));
     }
     #endregion
@@ -996,7 +995,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       deletedAt_ = other.deletedAt_ != null ? other.deletedAt_.Clone() : null;
       inactive_ = other.inactive_;
       organizationId_ = other.organizationId_;
-      productVersion_ = other.productVersion_ != null ? other.productVersion_.Clone() : null;
+      latestProductVersion_ = other.latestProductVersion_ != null ? other.latestProductVersion_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1054,15 +1053,15 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "productVersion" field.</summary>
-    public const int ProductVersionFieldNumber = 5;
-    private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion productVersion_;
+    /// <summary>Field number for the "latestProductVersion" field.</summary>
+    public const int LatestProductVersionFieldNumber = 5;
+    private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion latestProductVersion_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion ProductVersion {
-      get { return productVersion_; }
+    public global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion LatestProductVersion {
+      get { return latestProductVersion_; }
       set {
-        productVersion_ = value;
+        latestProductVersion_ = value;
       }
     }
 
@@ -1085,7 +1084,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (!object.Equals(DeletedAt, other.DeletedAt)) return false;
       if (Inactive != other.Inactive) return false;
       if (OrganizationId != other.OrganizationId) return false;
-      if (!object.Equals(ProductVersion, other.ProductVersion)) return false;
+      if (!object.Equals(LatestProductVersion, other.LatestProductVersion)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1097,7 +1096,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (deletedAt_ != null) hash ^= DeletedAt.GetHashCode();
       if (Inactive != false) hash ^= Inactive.GetHashCode();
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
-      if (productVersion_ != null) hash ^= ProductVersion.GetHashCode();
+      if (latestProductVersion_ != null) hash ^= LatestProductVersion.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1132,9 +1131,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(34);
         output.WriteString(OrganizationId);
       }
-      if (productVersion_ != null) {
+      if (latestProductVersion_ != null) {
         output.WriteRawTag(42);
-        output.WriteMessage(ProductVersion);
+        output.WriteMessage(LatestProductVersion);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -1162,9 +1161,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(34);
         output.WriteString(OrganizationId);
       }
-      if (productVersion_ != null) {
+      if (latestProductVersion_ != null) {
         output.WriteRawTag(42);
-        output.WriteMessage(ProductVersion);
+        output.WriteMessage(LatestProductVersion);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -1188,8 +1187,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (OrganizationId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
       }
-      if (productVersion_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(ProductVersion);
+      if (latestProductVersion_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(LatestProductVersion);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1218,11 +1217,11 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (other.OrganizationId.Length != 0) {
         OrganizationId = other.OrganizationId;
       }
-      if (other.productVersion_ != null) {
-        if (productVersion_ == null) {
-          ProductVersion = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion();
+      if (other.latestProductVersion_ != null) {
+        if (latestProductVersion_ == null) {
+          LatestProductVersion = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion();
         }
-        ProductVersion.MergeFrom(other.ProductVersion);
+        LatestProductVersion.MergeFrom(other.LatestProductVersion);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1263,10 +1262,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 42: {
-            if (productVersion_ == null) {
-              ProductVersion = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion();
+            if (latestProductVersion_ == null) {
+              LatestProductVersion = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion();
             }
-            input.ReadMessage(ProductVersion);
+            input.ReadMessage(LatestProductVersion);
             break;
           }
         }
@@ -1308,10 +1307,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 42: {
-            if (productVersion_ == null) {
-              ProductVersion = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion();
+            if (latestProductVersion_ == null) {
+              LatestProductVersion = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion();
             }
-            input.ReadMessage(ProductVersion);
+            input.ReadMessage(LatestProductVersion);
             break;
           }
         }
@@ -1357,7 +1356,6 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ProductVersion(ProductVersion other) : this() {
       id_ = other.id_;
-      deletedAt_ = other.deletedAt_ != null ? other.deletedAt_.Clone() : null;
       name_ = other.name_;
       description_ = other.description_;
       price_ = other.price_;
@@ -1393,20 +1391,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "deletedAt" field.</summary>
-    public const int DeletedAtFieldNumber = 2;
-    private global::Google.Protobuf.WellKnownTypes.Timestamp deletedAt_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Google.Protobuf.WellKnownTypes.Timestamp DeletedAt {
-      get { return deletedAt_; }
-      set {
-        deletedAt_ = value;
-      }
-    }
-
     /// <summary>Field number for the "name" field.</summary>
-    public const int NameFieldNumber = 3;
+    public const int NameFieldNumber = 2;
     private string name_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1418,7 +1404,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "description" field.</summary>
-    public const int DescriptionFieldNumber = 4;
+    public const int DescriptionFieldNumber = 3;
     private string description_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1430,7 +1416,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "price" field.</summary>
-    public const int PriceFieldNumber = 5;
+    public const int PriceFieldNumber = 4;
     private string price_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1442,7 +1428,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "priceUnit" field.</summary>
-    public const int PriceUnitFieldNumber = 6;
+    public const int PriceUnitFieldNumber = 5;
     private string priceUnit_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1454,7 +1440,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "currency" field.</summary>
-    public const int CurrencyFieldNumber = 7;
+    public const int CurrencyFieldNumber = 6;
     private string currency_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1466,7 +1452,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "minDurationMinutes" field.</summary>
-    public const int MinDurationMinutesFieldNumber = 8;
+    public const int MinDurationMinutesFieldNumber = 7;
     private int minDurationMinutes_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1478,7 +1464,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "maxDurationMinutes" field.</summary>
-    public const int MaxDurationMinutesFieldNumber = 9;
+    public const int MaxDurationMinutesFieldNumber = 8;
     private int maxDurationMinutes_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1490,7 +1476,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "bookAllLocationResources" field.</summary>
-    public const int BookAllLocationResourcesFieldNumber = 10;
+    public const int BookAllLocationResourcesFieldNumber = 9;
     private bool bookAllLocationResources_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1502,7 +1488,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "recurrenceWindowDays" field.</summary>
-    public const int RecurrenceWindowDaysFieldNumber = 11;
+    public const int RecurrenceWindowDaysFieldNumber = 10;
     private int recurrenceWindowDays_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1514,7 +1500,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "requireConsecutiveDays" field.</summary>
-    public const int RequireConsecutiveDaysFieldNumber = 12;
+    public const int RequireConsecutiveDaysFieldNumber = 11;
     private bool requireConsecutiveDays_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1526,7 +1512,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "maxBookingSpreadDays" field.</summary>
-    public const int MaxBookingSpreadDaysFieldNumber = 13;
+    public const int MaxBookingSpreadDaysFieldNumber = 12;
     private int maxBookingSpreadDays_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1538,7 +1524,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "numberOfResourcesToBook" field.</summary>
-    public const int NumberOfResourcesToBookFieldNumber = 14;
+    public const int NumberOfResourcesToBookFieldNumber = 13;
     private int numberOfResourcesToBook_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1550,9 +1536,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "productTagIds" field.</summary>
-    public const int ProductTagIdsFieldNumber = 15;
+    public const int ProductTagIdsFieldNumber = 14;
     private static readonly pb::FieldCodec<string> _repeated_productTagIds_codec
-        = pb::FieldCodec.ForString(122);
+        = pb::FieldCodec.ForString(114);
     private readonly pbc::RepeatedField<string> productTagIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1561,9 +1547,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "locationTagIds" field.</summary>
-    public const int LocationTagIdsFieldNumber = 16;
+    public const int LocationTagIdsFieldNumber = 15;
     private static readonly pb::FieldCodec<string> _repeated_locationTagIds_codec
-        = pb::FieldCodec.ForString(130);
+        = pb::FieldCodec.ForString(122);
     private readonly pbc::RepeatedField<string> locationTagIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1587,7 +1573,6 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         return true;
       }
       if (Id != other.Id) return false;
-      if (!object.Equals(DeletedAt, other.DeletedAt)) return false;
       if (Name != other.Name) return false;
       if (Description != other.Description) return false;
       if (Price != other.Price) return false;
@@ -1610,7 +1595,6 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (deletedAt_ != null) hash ^= DeletedAt.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Description.Length != 0) hash ^= Description.GetHashCode();
       if (Price.Length != 0) hash ^= Price.GetHashCode();
@@ -1647,56 +1631,52 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (deletedAt_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(DeletedAt);
-      }
       if (Name.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteString(Name);
       }
       if (Description.Length != 0) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(26);
         output.WriteString(Description);
       }
       if (Price.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(34);
         output.WriteString(Price);
       }
       if (PriceUnit.Length != 0) {
-        output.WriteRawTag(50);
+        output.WriteRawTag(42);
         output.WriteString(PriceUnit);
       }
       if (Currency.Length != 0) {
-        output.WriteRawTag(58);
+        output.WriteRawTag(50);
         output.WriteString(Currency);
       }
       if (MinDurationMinutes != 0) {
-        output.WriteRawTag(64);
+        output.WriteRawTag(56);
         output.WriteInt32(MinDurationMinutes);
       }
       if (MaxDurationMinutes != 0) {
-        output.WriteRawTag(72);
+        output.WriteRawTag(64);
         output.WriteInt32(MaxDurationMinutes);
       }
       if (BookAllLocationResources != false) {
-        output.WriteRawTag(80);
+        output.WriteRawTag(72);
         output.WriteBool(BookAllLocationResources);
       }
       if (RecurrenceWindowDays != 0) {
-        output.WriteRawTag(88);
+        output.WriteRawTag(80);
         output.WriteInt32(RecurrenceWindowDays);
       }
       if (RequireConsecutiveDays != false) {
-        output.WriteRawTag(96);
+        output.WriteRawTag(88);
         output.WriteBool(RequireConsecutiveDays);
       }
       if (MaxBookingSpreadDays != 0) {
-        output.WriteRawTag(104);
+        output.WriteRawTag(96);
         output.WriteInt32(MaxBookingSpreadDays);
       }
       if (NumberOfResourcesToBook != 0) {
-        output.WriteRawTag(112);
+        output.WriteRawTag(104);
         output.WriteInt32(NumberOfResourcesToBook);
       }
       productTagIds_.WriteTo(output, _repeated_productTagIds_codec);
@@ -1715,56 +1695,52 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (deletedAt_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(DeletedAt);
-      }
       if (Name.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteString(Name);
       }
       if (Description.Length != 0) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(26);
         output.WriteString(Description);
       }
       if (Price.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(34);
         output.WriteString(Price);
       }
       if (PriceUnit.Length != 0) {
-        output.WriteRawTag(50);
+        output.WriteRawTag(42);
         output.WriteString(PriceUnit);
       }
       if (Currency.Length != 0) {
-        output.WriteRawTag(58);
+        output.WriteRawTag(50);
         output.WriteString(Currency);
       }
       if (MinDurationMinutes != 0) {
-        output.WriteRawTag(64);
+        output.WriteRawTag(56);
         output.WriteInt32(MinDurationMinutes);
       }
       if (MaxDurationMinutes != 0) {
-        output.WriteRawTag(72);
+        output.WriteRawTag(64);
         output.WriteInt32(MaxDurationMinutes);
       }
       if (BookAllLocationResources != false) {
-        output.WriteRawTag(80);
+        output.WriteRawTag(72);
         output.WriteBool(BookAllLocationResources);
       }
       if (RecurrenceWindowDays != 0) {
-        output.WriteRawTag(88);
+        output.WriteRawTag(80);
         output.WriteInt32(RecurrenceWindowDays);
       }
       if (RequireConsecutiveDays != false) {
-        output.WriteRawTag(96);
+        output.WriteRawTag(88);
         output.WriteBool(RequireConsecutiveDays);
       }
       if (MaxBookingSpreadDays != 0) {
-        output.WriteRawTag(104);
+        output.WriteRawTag(96);
         output.WriteInt32(MaxBookingSpreadDays);
       }
       if (NumberOfResourcesToBook != 0) {
-        output.WriteRawTag(112);
+        output.WriteRawTag(104);
         output.WriteInt32(NumberOfResourcesToBook);
       }
       productTagIds_.WriteTo(ref output, _repeated_productTagIds_codec);
@@ -1781,9 +1757,6 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       int size = 0;
       if (Id.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (deletedAt_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeletedAt);
       }
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
@@ -1837,12 +1810,6 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       if (other.Id.Length != 0) {
         Id = other.Id;
-      }
-      if (other.deletedAt_ != null) {
-        if (deletedAt_ == null) {
-          DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-        }
-        DeletedAt.MergeFrom(other.DeletedAt);
       }
       if (other.Name.Length != 0) {
         Name = other.Name;
@@ -1906,65 +1873,58 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 18: {
-            if (deletedAt_ == null) {
-              DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(DeletedAt);
-            break;
-          }
-          case 26: {
             Name = input.ReadString();
             break;
           }
-          case 34: {
+          case 26: {
             Description = input.ReadString();
             break;
           }
-          case 42: {
+          case 34: {
             Price = input.ReadString();
             break;
           }
-          case 50: {
+          case 42: {
             PriceUnit = input.ReadString();
             break;
           }
-          case 58: {
+          case 50: {
             Currency = input.ReadString();
             break;
           }
-          case 64: {
+          case 56: {
             MinDurationMinutes = input.ReadInt32();
             break;
           }
-          case 72: {
+          case 64: {
             MaxDurationMinutes = input.ReadInt32();
             break;
           }
-          case 80: {
+          case 72: {
             BookAllLocationResources = input.ReadBool();
             break;
           }
-          case 88: {
+          case 80: {
             RecurrenceWindowDays = input.ReadInt32();
             break;
           }
-          case 96: {
+          case 88: {
             RequireConsecutiveDays = input.ReadBool();
             break;
           }
-          case 104: {
+          case 96: {
             MaxBookingSpreadDays = input.ReadInt32();
             break;
           }
-          case 112: {
+          case 104: {
             NumberOfResourcesToBook = input.ReadInt32();
             break;
           }
-          case 122: {
+          case 114: {
             productTagIds_.AddEntriesFrom(input, _repeated_productTagIds_codec);
             break;
           }
-          case 130: {
+          case 122: {
             locationTagIds_.AddEntriesFrom(input, _repeated_locationTagIds_codec);
             break;
           }
@@ -1992,65 +1952,58 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 18: {
-            if (deletedAt_ == null) {
-              DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(DeletedAt);
-            break;
-          }
-          case 26: {
             Name = input.ReadString();
             break;
           }
-          case 34: {
+          case 26: {
             Description = input.ReadString();
             break;
           }
-          case 42: {
+          case 34: {
             Price = input.ReadString();
             break;
           }
-          case 50: {
+          case 42: {
             PriceUnit = input.ReadString();
             break;
           }
-          case 58: {
+          case 50: {
             Currency = input.ReadString();
             break;
           }
-          case 64: {
+          case 56: {
             MinDurationMinutes = input.ReadInt32();
             break;
           }
-          case 72: {
+          case 64: {
             MaxDurationMinutes = input.ReadInt32();
             break;
           }
-          case 80: {
+          case 72: {
             BookAllLocationResources = input.ReadBool();
             break;
           }
-          case 88: {
+          case 80: {
             RecurrenceWindowDays = input.ReadInt32();
             break;
           }
-          case 96: {
+          case 88: {
             RequireConsecutiveDays = input.ReadBool();
             break;
           }
-          case 104: {
+          case 96: {
             MaxBookingSpreadDays = input.ReadInt32();
             break;
           }
-          case 112: {
+          case 104: {
             NumberOfResourcesToBook = input.ReadInt32();
             break;
           }
-          case 122: {
+          case 114: {
             productTagIds_.AddEntriesFrom(ref input, _repeated_productTagIds_codec);
             break;
           }
-          case 130: {
+          case 122: {
             locationTagIds_.AddEntriesFrom(ref input, _repeated_locationTagIds_codec);
             break;
           }

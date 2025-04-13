@@ -1,5 +1,5 @@
-using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
 using Booking.Processors.Subscribers;
 using Booking.Shared;
 using Booking.Shared.Database;
@@ -45,6 +45,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
                 Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 TeamSubscriber,
+                Api.Shared.Clients.Events.Skedular.Team.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
+                MarketplaceSubscriber,
                 Key,
                 Event>(kafkaConfiguration);
 

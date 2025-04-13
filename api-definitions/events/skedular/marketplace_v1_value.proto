@@ -35,24 +35,23 @@ message Product {
   google.protobuf.Timestamp deletedAt = 2;
   bool inactive = 3;
   string organizationId = 4;
-  ProductVersion productVersion = 5;
+  ProductVersion latestProductVersion = 5;
 }
 
 message ProductVersion {
   string id = 1;
-  google.protobuf.Timestamp deletedAt = 2;
-  string name = 3;
-  string description = 4;
-  string price = 5;
-  string priceUnit = 6;
-  string currency = 7;
-  int32 minDurationMinutes = 8;
-  int32 maxDurationMinutes = 9;
-  bool bookAllLocationResources = 10;
-  int32 recurrenceWindowDays = 11;
-  bool requireConsecutiveDays = 12;
-  int32 maxBookingSpreadDays = 13;
-  int32 numberOfResourcesToBook = 14;
-  repeated string productTagIds = 15;
-  repeated string locationTagIds = 16;
+  string name = 2;
+  string description = 3;
+  string price = 4;
+  string priceUnit = 5;
+  string currency = 6;
+  int32 minDurationMinutes = 7;
+  int32 maxDurationMinutes = 8;
+  bool bookAllLocationResources = 9;
+  int32 recurrenceWindowDays = 10;
+  bool requireConsecutiveDays = 11;
+  int32 maxBookingSpreadDays = 12;
+  int32 numberOfResourcesToBook = 13;
+  repeated string productTagIds = 14;
+  repeated string locationTagIds = 15;
 }

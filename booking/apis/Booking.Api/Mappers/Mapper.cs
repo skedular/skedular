@@ -442,6 +442,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
+                Type = src.Type.ToOrganizationType(),
                 Name = src.Name,
                 LogoUrl = src.LogoUrl,
                 Offering = src.Offering

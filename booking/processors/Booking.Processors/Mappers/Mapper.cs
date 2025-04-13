@@ -10,6 +10,8 @@ using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Models.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Booking.Shared.Models.OrganizationSsoSetting;
+using Product = Booking.Shared.Models.Product;
+using ProductVersion = Booking.Shared.Models.ProductVersion;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using Team = Booking.Shared.Models.Team;
 using TeamMember = Booking.Shared.Database.Entities.TeamMember;
@@ -23,6 +25,20 @@ public interface IMapper
     Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
     Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
+    Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src);
+
+    Shared.Database.Entities.Product MergeToEntity(
+        Product src,
+        Shared.Database.Entities.Product dest,
+        Shared.Database.Entities.Organization organization,
+        ICollection<Shared.Database.Entities.ProductVersion> productVersions);
+
+    Shared.Database.Entities.ProductVersion MergeToEntity(
+        ProductVersion src,
+        Shared.Database.Entities.ProductVersion dest,
+        Shared.Database.Entities.Product product,
+        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> locationTags);
 
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
@@ -280,9 +296,68 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Type = src.Type.ToOrganizationType();
         dest.Name = src.Name;
         dest.LogoUrl = src.LogoUrl;
         dest.Offering = src.Offering;
+        return dest;
+    }
+
+    public Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src)
+    {
+        var productAfterState = src.Data.Product;
+        var deletedAt = productAfterState.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        var product = new Product
+        {
+            Id = productAfterState.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Organization = new Organization { Id = productAfterState.OrganizationId }
+        };
+
+        product.ProductVersions = new List<ProductVersion> { MapTo(productAfterState.LatestProductVersion, product) };
+
+        return product;
+    }
+
+    public Shared.Database.Entities.Product MergeToEntity(
+        Product src,
+        Shared.Database.Entities.Product dest,
+        Shared.Database.Entities.Organization organization,
+        ICollection<Shared.Database.Entities.ProductVersion> productVersions)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Organization = organization;
+        dest.ProductVersions = productVersions;
+        return dest;
+    }
+
+    public Shared.Database.Entities.ProductVersion MergeToEntity(
+        ProductVersion src,
+        Shared.Database.Entities.ProductVersion dest,
+        Shared.Database.Entities.Product product,
+        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> locationTags)
+    {
+        dest.Id = src.Id;
+        dest.Name = src.Name;
+        dest.Price = src.Price;
+        dest.PriceUnit = src.PriceUnit.ToPriceUnit();
+        dest.PricePerMinute = src.Price;
+        dest.Currency = src.Currency.ToCurrency();
+        dest.MinDurationMinutes = src.MinDurationMinutes;
+        dest.MaxDurationMinutes = src.MaxDurationMinutes;
+        dest.BookAllLocationResources = src.BookAllLocationResources;
+        dest.RecurrenceWindowDays = src.RecurrenceWindowDays;
+        dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
+        dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
+        dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
+        dest.Product = product;
+        dest.ProductTags = productTags;
+        dest.LocationTags = locationTags;
         return dest;
     }
 
@@ -478,4 +553,25 @@ public class Mapper : IMapper
             src.OpenAllDay,
             string.IsNullOrWhiteSpace(src.From) ? null : TimeOnly.Parse(src.From),
             string.IsNullOrWhiteSpace(src.Until) ? null : TimeOnly.Parse(src.Until));
+
+    private static ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Price = src.Price.FromRoundedPrice(),
+            PriceUnit = src.PriceUnit.ToPriceUnit(),
+            PricePerMinute = src.Price.FromRoundedPrice(),
+            Currency = src.Currency.ToCurrency(),
+            MinDurationMinutes = src.MinDurationMinutes == -1 ? null : src.MinDurationMinutes,
+            MaxDurationMinutes = src.MaxDurationMinutes == -1 ? null : src.MaxDurationMinutes,
+            BookAllLocationResources = src.BookAllLocationResources,
+            RecurrenceWindowDays = src.RecurrenceWindowDays,
+            RequireConsecutiveDays = src.RequireConsecutiveDays,
+            MaxBookingSpreadDays = src.MaxBookingSpreadDays == -1 ? null : src.MaxBookingSpreadDays,
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            Product = product
+        };
 }

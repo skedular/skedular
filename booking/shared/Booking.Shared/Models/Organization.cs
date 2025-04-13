@@ -5,6 +5,7 @@ namespace Booking.Shared.Models;
 
 public class Organization : ReplicatedModelBaseWithDeleted
 {
+    public OrganizationType Type { get; set; }
     public string? Name { get; set; }
     public string? LogoUrl { get; set; }
     public Offering? Offering { get; set; }
@@ -15,4 +16,5 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<Customer> DefaultedByCustomers { get; set; } = [];
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
+    public ICollection<Product> Products { get; set; } = [];
 }

@@ -10,6 +10,7 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
+    public string Type { get; set; }
     public string? Name { get; set; }
     public string? LogoUrl { get; set; }
     public Offering? Offering { get; set; }
@@ -21,6 +22,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual ICollection<Customer> DefaultedByCustomers { get; set; } = [];
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
+    public virtual ICollection<Product> Products { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -30,10 +32,12 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxOrganizationNameLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.Offering).HasColumnType("jsonb");
 
+        builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.Name);
     }
 }

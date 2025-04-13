@@ -5,6 +5,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Booking.Shared.Database.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250413064457_AddProductAndProductVersionToDomain")]
+    partial class AddProductAndProductVersionToDomain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -571,7 +574,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<bool?>("BookAllLocationResources")
+                    b.Property<bool>("BookAllLocationResources")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
@@ -580,6 +583,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Currency")
+                        .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("character varying(16)");
 
@@ -596,21 +600,23 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<int?>("NumberOfResourcesToBook")
+                    b.Property<int>("NumberOfResourcesToBook")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasDefaultValue(1);
 
-                    b.Property<decimal?>("Price")
+                    b.Property<decimal>("Price")
                         .HasColumnType("DECIMAL(18,4)");
 
-                    b.Property<decimal?>("PricePerMinute")
+                    b.Property<decimal>("PricePerMinute")
                         .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<string>("PriceUnit")
+                        .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("character varying(16)");
 
@@ -618,10 +624,10 @@ namespace Booking.Shared.Database.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int?>("RecurrenceWindowDays")
+                    b.Property<int>("RecurrenceWindowDays")
                         .HasColumnType("integer");
 
-                    b.Property<bool?>("RequireConsecutiveDays")
+                    b.Property<bool>("RequireConsecutiveDays")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
