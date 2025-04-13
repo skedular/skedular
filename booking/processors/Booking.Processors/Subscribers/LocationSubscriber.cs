@@ -76,8 +76,16 @@ public class LocationSubscriber(
         Organization organization,
         CancellationToken cancellationToken)
     {
+        var organizationTags = new List<OrganizationTag>();
+        var organizationTagIds = location.OrganizationTags.Select(item => item.Id).Distinct().ToList();
+        foreach (var tagId in organizationTagIds)
+        {
+            organizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(tagId, organization, cancellationToken));
+        }
+
         var locationOpeningHoursChanged = !location.OpeningHours.IsEqual(existingLocation.OpeningHours);
-        existingLocation = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization));
+        existingLocation =
+            repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation, organization, organizationTags));
 
         (existingLocation, var resourceIds) = await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
 

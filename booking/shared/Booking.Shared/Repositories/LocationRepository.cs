@@ -10,8 +10,6 @@ public interface ILocationRepository : IRepository<Location>
 {
     Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, bool includeDeletedResources, CancellationToken cancellationToken);
-    Task<Location?> GetByIdAndExcludeInactiveResourcesAsync(string id, bool includeDeletedResources, CancellationToken cancellationToken);
-    Location Add(Location location);
     Location Update(Location location);
     Location Remove(Location location);
     Task<ICollection<Location>> GetByCustomerIdAsync(string customerId, bool includeDeletedResources, CancellationToken cancellationToken);
@@ -20,7 +18,7 @@ public interface ILocationRepository : IRepository<Location>
 
 internal static class LocationExtensions
 {
-    internal static IIncludableQueryable<Location, ICollection<Customer>> AddDependentObjects(
+    internal static IIncludableQueryable<Location, IEnumerable<OrganizationTag>> AddDependentObjects(
         this IQueryable<Location> originalQuery,
         bool includeDeletedResource,
         bool includeInactiveResource) =>
@@ -33,7 +31,8 @@ internal static class LocationExtensions
             .Include(query => query.Organization)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
-            .Include(query => query.PreferredByCustomers);
+            .Include(query => query.PreferredByCustomers)
+            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 }
 
 public class LocationRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -44,13 +43,6 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         await UpsertNakedAsync<Organization>(id, organization, cancellationToken);
 
         return (await GetByIdAsync(id, true, cancellationToken))!;
-    }
-
-    public Location Add(Location location)
-    {
-        var now = TimeProvider.GetUtcNow();
-        location.CreatedAt = now;
-        return DbContext.Location.Add(location).Entity;
     }
 
     public Location Remove(Location location)
@@ -70,14 +62,6 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
     public async Task<Location?> GetByIdAsync(string id, bool includeDeletedResources, CancellationToken cancellationToken) =>
         await DbContext.Location
             .AddDependentObjects(includeDeletedResources, true)
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
-    public async Task<Location?> GetByIdAndExcludeInactiveResourcesAsync(
-        string id,
-        bool includeDeletedResources,
-        CancellationToken cancellationToken) =>
-        await DbContext.Location
-            .AddDependentObjects(includeDeletedResources, false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Location>> GetByCustomerIdAsync(

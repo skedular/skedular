@@ -321,7 +321,8 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name
+                Name = src.Name,
+                OrganizationTags = MapTo(src.OrganizationTags).ToList()
             };
 
     public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src) => new(MapTo(src.Node), src.Cursor);

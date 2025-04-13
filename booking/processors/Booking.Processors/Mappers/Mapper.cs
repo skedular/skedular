@@ -27,7 +27,8 @@ public interface IMapper
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization organization);
+        Shared.Database.Entities.Organization organization,
+        ICollection<OrganizationTag> organizationTags);
 
     Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization organization);
     OrganizationMember MapToEntity(Shared.Models.OrganizationMember src, Shared.Database.Entities.Organization organization, Customer customer);
@@ -209,7 +210,10 @@ public class Mapper : IMapper
             Organization = new Organization { Id = locationAfterState.OrganizationId }
         };
 
-        var organizationTags = locationAfterState.Resources
+        location.OrganizationTags = locationAfterState.TagIds
+            .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization }).ToList();
+
+        var resourceOrganizationTags = locationAfterState.Resources
             .SelectMany(item => item.TagIds)
             .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
 
@@ -225,7 +229,7 @@ public class Mapper : IMapper
             Capacity = item.Capacity,
             IsAvailableHoursOverridden = item.IsAvailableHoursOverridden,
             AvailableHours = item.AvailableHours is null ? null : MapTo(item.AvailableHours),
-            OrganizationTags = organizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
+            OrganizationTags = resourceOrganizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
             Location = location
         }).ToList();
 
@@ -272,9 +276,7 @@ public class Mapper : IMapper
         return team;
     }
 
-    public Shared.Database.Entities.Organization MergeToEntity(
-        Organization src,
-        Shared.Database.Entities.Organization dest)
+    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
@@ -287,13 +289,15 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization organization)
+        Shared.Database.Entities.Organization organization,
+        ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
         dest.OpeningHours = src.OpeningHours;
         dest.Organization = organization;
+        dest.OrganizationTags = organizationTags;
         return dest;
     }
 
