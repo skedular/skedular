@@ -560,9 +560,9 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     if (!productDetails) {
       return;
     }
-  
+
     const toastId = themedToast(<NotificationContent content={'Deactivating product...'} />, infoNotificationOptions);
-  
+
     commitDeactivateProducts({
       variables: {
         input: {
@@ -576,10 +576,10 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
             ...errorNotificationOptions,
             render: <NotificationContent content={`Failed to deactivate product. Error: ${joinErrors(errors)}`} />,
           });
-  
+
           return;
         }
-  
+
         toast.update(toastId, {
           ...successNotificationOptions,
           render: <NotificationContent content={'Product deactivated.'} />,
@@ -594,14 +594,14 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       },
     });
   };
-  
+
   const handleActivateProductClick = () => {
     if (!productDetails) {
       return;
     }
-  
+
     const toastId = themedToast(<NotificationContent content={'Activating product...'} />, infoNotificationOptions);
-  
+
     commitActivateProducts({
       variables: {
         input: {
@@ -615,10 +615,10 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
             ...errorNotificationOptions,
             render: <NotificationContent content={`Failed to activate product. Error: ${joinErrors(errors)}`} />,
           });
-  
+
           return;
         }
-  
+
         toast.update(toastId, {
           ...successNotificationOptions,
           render: <NotificationContent content={'Product activated.'} />,
@@ -633,7 +633,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       },
     });
   };
-  
+
   const handleProductTagsSearchTextChange = (str: string) => {
     setProductTagNameSearchText(str);
 
