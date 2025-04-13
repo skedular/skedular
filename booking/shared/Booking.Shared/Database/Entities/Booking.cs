@@ -14,7 +14,7 @@ public class Booking : EntityBaseWithDeleted
     public DateTimeOffset Until { get; set; }
     public string? Notes { get; set; }
     public string Type { get; set; }
-    public BookingSchedules? BookingSchedules { get; set; }
+    public BookingSchedules BookingSchedules { get; set; }
 
     public virtual Customer Customer { get; set; }
     public virtual Organization? Organization { get; set; }

@@ -57,8 +57,7 @@ public class Mapper : IMapper
             return resource;
         });
 
-    private static IEnumerable<BookingSchedule> MapTo(BookingSchedules? src) =>
-        src is null ? [] : src.Schedules.Select(MapTo);
+    private static IEnumerable<BookingSchedule> MapTo(BookingSchedules src) => src.Schedules.Select(MapTo);
 
     private static BookingSchedule MapTo(Api.Shared.Services.Models.BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };

@@ -554,8 +554,8 @@ public class Mapper : IMapper
         MapToGrpcResponse(IEnumerable<ResourceCustomersPair> src) =>
         src.Select(item => MapToGrpcResponse(item.Resource, item.Customers));
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule> MapToGrpcResponse(BookingSchedules? src) =>
-        src is null ? [] : src.Schedules.Select(MapToGrpcResponse);
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule> MapToGrpcResponse(BookingSchedules src) =>
+        src.Schedules.Select(MapToGrpcResponse);
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule MapToGrpcResponse(BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
