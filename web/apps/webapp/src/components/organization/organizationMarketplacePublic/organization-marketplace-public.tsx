@@ -46,7 +46,7 @@ const OrganizationMarketplacePublic = ({ queryReference, onReloadRequired, organ
       fragment organizationMarketplacePublic_products_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationMarketplacePublic_products_refetchableFragment") {
-        products(first: $count, after: $cursor, where: { organizationIds: [$organizationId], includeInactive: true }, orderBy: $productsSortingValues)
+        products(first: $count, after: $cursor, where: { organizationIds: [$organizationId], includeInactive: false }, orderBy: $productsSortingValues)
           @connection(key: "organizationMarketplacePublic_products") {
           __id
           totalCount

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2412bb583eea0ce7b5aba04524760c20>>
+ * @generated SignedSource<<13cf3dfcae41ae1f84c4ac02cd075c0a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type organizationMarketplaceSetup_products_query$data = {
         readonly bookAllLocationResources: boolean;
         readonly description: string | null | undefined;
         readonly id: string;
+        readonly inactive: boolean;
         readonly maxBookingSpreadDays: number | null | undefined;
         readonly maxDurationMinutes: number | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
@@ -174,6 +175,13 @@ return {
                   "args": null,
                   "kind": "ScalarField",
                   "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "inactive",
                   "storageKey": null
                 },
                 (v1/*: any*/),
@@ -336,6 +344,6 @@ return {
 };
 })();
 
-(node as any).hash = "a95bbd789595b66bdd339fee8d9d63ab";
+(node as any).hash = "925ee562e9c9c4b54240e786a820939f";
 
 export default node;

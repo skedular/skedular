@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5f7d137bcbf059020a253d33f7e7d785>>
+ * @generated SignedSource<<1ffc3d1173912bfab561fffba714a1ad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -74,7 +74,7 @@ v1 = [
       {
         "kind": "Literal",
         "name": "includeInactive",
-        "value": true
+        "value": false
       },
       {
         "items": [
@@ -325,16 +325,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "616b7df4e63b8c685f6bd4bb88c989ee",
+    "cacheID": "8602a7f8c8a795f66ad5ed533cee9ae7",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplacePublic_products_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplacePublic_products_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationMarketplacePublic_products_query_1G22uz\n}\n\nfragment organizationMarketplacePublic_products_query_1G22uz on Query {\n  products(first: $count, after: $cursor, where: {organizationIds: [$organizationId], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
+    "text": "query organizationMarketplacePublic_products_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationMarketplacePublic_products_query_1G22uz\n}\n\nfragment organizationMarketplacePublic_products_query_1G22uz on Query {\n  products(first: $count, after: $cursor, where: {organizationIds: [$organizationId], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6521d0ef5d2e56c45c7b8ebcc77a4433";
+(node as any).hash = "4743dafd7dedfce2709dba224d2f62e0";
 
 export default node;

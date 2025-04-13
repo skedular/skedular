@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<03aa9793fe3694a44b76f49cbe9561de>>
+ * @generated SignedSource<<938e893c97e029a1277585a8249a2d71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -174,6 +174,13 @@ return {
                     "name": "id",
                     "storageKey": null
                   },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "inactive",
+                    "storageKey": null
+                  },
                   (v2/*: any*/),
                   {
                     "alias": null,
@@ -343,16 +350,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "00bdf25f0d28f9f61820d2325b3e4124",
+    "cacheID": "0059e7e533c356f14b5d86de6ad7e649",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_products_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplaceSetup_products_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_products_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_products_query_1G22uz on Query {\n  products(first: $count, after: $cursor, where: {organizationIds: [$organizationId], nameContains: $productNameSearchText, includeInactive: true}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        priceToDisplay\n        priceUnit {\n          name\n        }\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceWindowDays\n        requireConsecutiveDays\n        maxBookingSpreadDays\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_products_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationId: String!\n  $productNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_products_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_products_query_1G22uz on Query {\n  products(first: $count, after: $cursor, where: {organizationIds: [$organizationId], nameContains: $productNameSearchText, includeInactive: true}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        priceToDisplay\n        priceUnit {\n          name\n        }\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceWindowDays\n        requireConsecutiveDays\n        maxBookingSpreadDays\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a95bbd789595b66bdd339fee8d9d63ab";
+(node as any).hash = "925ee562e9c9c4b54240e786a820939f";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<56e5c453269ba8c07eb403d638f4f721>>
+ * @generated SignedSource<<4d2ac0b47667f5534fa1c3b4c7e753ca>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -52,7 +52,7 @@ v1 = [
       {
         "kind": "Literal",
         "name": "includeInactive",
-        "value": true
+        "value": false
       },
       {
         "items": [
@@ -292,12 +292,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "367d3a3527922c0e5a99c61885187578",
+    "cacheID": "31011ded25ede8a731fca4189b2164b9",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplacePublic_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMarketplacePublic_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationMarketplacePublic_products_query\n}\n\nfragment organizationMarketplacePublic_products_query on Query {\n  products(where: {organizationIds: [$organizationId], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
+    "text": "query organizationMarketplacePublic_rootQuery(\n  $organizationId: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  ...organizationMarketplacePublic_products_query\n}\n\nfragment organizationMarketplacePublic_products_query on Query {\n  products(where: {organizationIds: [$organizationId], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueId\n        }\n        ...productCard_ProductDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    uniqueId\n  }\n}\n"
   }
 };
 })();

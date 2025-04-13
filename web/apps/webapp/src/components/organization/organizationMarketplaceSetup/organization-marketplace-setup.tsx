@@ -12,8 +12,10 @@ import { NewProductButton } from '@/components/product/addProduct';
 import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
 import { PaletteModeContext } from '@/libs/providers';
-import { defaultGridActionPadding, defaultGridStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
+import type { organizationMarketplaceSetup_activateProductsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_activateProductsMutation.graphql';
+import type { organizationMarketplaceSetup_deactivateProductsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deactivateProductsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteLocationTagSMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteLocationTagSMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductSMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductSMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductTagSMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagSMutation.graphql';
@@ -56,6 +58,7 @@ type ProductRowType = {
   recurrenceWindowDays: number;
   requireConsecutiveDays: boolean;
   maxBookingSpreadDays: number | null | undefined;
+  status: boolean;
 };
 
 type ProductTagRowType = {
@@ -87,6 +90,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
           edges {
             node {
               id
+              inactive
               name
               description
               priceToDisplay
@@ -201,6 +205,60 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     }
   `);
 
+  const [commitActivateProducts] = useMutation<organizationMarketplaceSetup_activateProductsMutation>(graphql`
+    mutation organizationMarketplaceSetup_activateProductsMutation($input: ActivateProductsInput!) {
+      activateProducts(input: $input) {
+        products {
+          id
+          inactive
+          name
+          description
+          priceToDisplay
+          priceUnit {
+            name
+          }
+          numberOfResourcesToBook
+          minDurationMinutes
+          maxDurationMinutes
+          bookAllLocationResources
+          recurrenceWindowDays
+          requireConsecutiveDays
+          maxBookingSpreadDays
+          organization {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
+  const [commitDeactivateProducts] = useMutation<organizationMarketplaceSetup_deactivateProductsMutation>(graphql`
+    mutation organizationMarketplaceSetup_deactivateProductsMutation($input: DeactivateProductsInput!) {
+      deactivateProducts(input: $input) {
+        products {
+          id
+          inactive
+          name
+          description
+          priceToDisplay
+          priceUnit {
+            name
+          }
+          numberOfResourcesToBook
+          minDurationMinutes
+          maxDurationMinutes
+          bookAllLocationResources
+          recurrenceWindowDays
+          requireConsecutiveDays
+          maxBookingSpreadDays
+          organization {
+            uniqueId
+          }
+        }
+      }
+    }
+  `);
+
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
@@ -219,6 +277,8 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
   const productMoreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditProduct],
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteProduct],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateProduct],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeactivateProduct],
   ];
   const productDetails = useMemo(() => products.find((item) => item.id === selectedProductId), [selectedProductId, products]);
 
@@ -339,6 +399,14 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       case MoreActionsMenuOptionType.DeleteProduct:
         handleRemoveProductClick();
         break;
+
+      case MoreActionsMenuOptionType.ActivateProduct:
+        handleActivateProductClick();
+        break;
+
+      case MoreActionsMenuOptionType.DeactivateProduct:
+        handleDeactivateProductClick();
+        break;
     }
   };
 
@@ -418,6 +486,154 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     });
   };
 
+  const handleDeactivateProductsClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Deactivating products...'} />, infoNotificationOptions);
+
+    commitDeactivateProducts({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedProducts.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate products. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Products deactivated.'} />,
+        });
+        setSeledctedProducts([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate products. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleActivateProductsClick = () => {
+    const toastId = themedToast(<NotificationContent content={'Activating products...'} />, infoNotificationOptions);
+
+    commitActivateProducts({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedProducts.map((id) => id as string),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate products. Error: ${joinErrors(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Products activated.'} />,
+        });
+        setSeledctedProducts([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate products. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleDeactivateProductClick = () => {
+    if (!productDetails) {
+      return;
+    }
+  
+    const toastId = themedToast(<NotificationContent content={'Deactivating product...'} />, infoNotificationOptions);
+  
+    commitDeactivateProducts({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [productDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to deactivate product. Error: ${joinErrors(errors)}`} />,
+          });
+  
+          return;
+        }
+  
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Product deactivated.'} />,
+        });
+        setSeledctedProducts([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to deactivate product. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+  
+  const handleActivateProductClick = () => {
+    if (!productDetails) {
+      return;
+    }
+  
+    const toastId = themedToast(<NotificationContent content={'Activating product...'} />, infoNotificationOptions);
+  
+    commitActivateProducts({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          ids: [productDetails.id],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to activate product. Error: ${joinErrors(errors)}`} />,
+          });
+  
+          return;
+        }
+  
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={'Product activated.'} />,
+        });
+        setSeledctedProducts([]);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to activate product. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+  
   const handleProductTagsSearchTextChange = (str: string) => {
     setProductTagNameSearchText(str);
 
@@ -649,6 +865,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     recurrenceWindowDays: product.recurrenceWindowDays,
     requireConsecutiveDays: product.requireConsecutiveDays,
     maxBookingSpreadDays: product.maxBookingSpreadDays,
+    status: !product.inactive,
   }));
 
   const productColumns: GridColDef<(typeof productRows)[number]>[] = [
@@ -727,6 +944,28 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       renderCell: (params) => <SmallIconTypography label={params.value ? params.value.toString() : 'No limit'} />,
       display: 'flex',
       minWidth: 150,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      editable: false,
+      renderCell: (params) => (
+        <StackRow>
+          {params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="Active" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: emerald }} />
+            </StackRow>
+          )}
+          {!params.value && (
+            <StackRow sx={{ justifyContent: 'space-between', width: 76 }}>
+              <SmallIconTypography label="Inactive" />
+              <Box sx={{ width: 15, height: 15, borderRadius: '50%', backgroundColor: flame }} />
+            </StackRow>
+          )}
+        </StackRow>
+      ),
+      display: 'flex',
     },
     {
       field: 'More Actions',
@@ -899,8 +1138,14 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
                   <StackRow sx={{ alignItems: 'center' }}>
                     <SmallIconTypography label={`${seledctedProducts.length} records selected`} />
                     <PushToRight />
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateProductsClick} sx={defaultButtonStyle}>
+                      Deactivate Product
+                    </Button>
+                    <Button size="medium" variant="contained" color="secondary" onClick={handleActivateProductsClick} sx={defaultButtonStyle}>
+                      Activate Product
+                    </Button>
                     <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductsClick} sx={{ textTransform: 'none' }}>
-                      Remove
+                      Remove Product
                     </Button>
                   </StackRow>
                 </Box>
@@ -974,7 +1219,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
                     <SmallIconTypography label={`${seledctedProductTags.length} records selected`} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
-                      Remove Tag
+                      Remove Product Tag
                     </Button>
                   </StackRow>
                 </Box>
@@ -1048,7 +1293,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
                     <SmallIconTypography label={`${seledctedLocationTags.length} records selected`} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationTagsClick} sx={{ textTransform: 'none' }}>
-                      Remove Tag
+                      Remove Location Tag
                     </Button>
                   </StackRow>
                 </Box>
