@@ -14,10 +14,6 @@ public class OrganizationJoinInvitationNotFound() : Exception("Organization join
 
 public class LocationNotFound() : Exception("Location not found");
 
-public class LocationMemberNotFound() : Exception("Location member not found");
-
-public class LocationJoinInvitationNotFound() : Exception("Location join invitation not found");
-
 public class TeamNotFound() : Exception("Team not found");
 
 public class TeamMemberNotFound() : Exception("Team member ot found");

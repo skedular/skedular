@@ -135,7 +135,7 @@ public class OrganizationSsoService(
         var existingOrganizationSsoSetting = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(id, cancellationToken);
         if (existingOrganizationSsoSetting is null)
         {
-            throw new OrganizationSsoIsNotYetSetup();
+            return string.Empty;
         }
 
         return samlLoginRequestFactory.GenerateSamlLoginRequest(
