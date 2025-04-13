@@ -507,7 +507,8 @@ public class Mapper : IMapper
             ResourceType = MapTo(src.ResourceType),
             RequireBookingApproval = src.RequireBookingApproval,
             OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
-            OrganizationZones = MapTo(src.OrganizationZones).ToList()
+            OrganizationZones = MapTo(src.OrganizationZones).ToList(),
+            OrganizationProductTags = MapTo(src.OrganizationProductTags).ToList()
         };
 
     public Workspace MapToEntity(Shared.Models.Workspace src, Organization organization) =>
@@ -766,6 +767,13 @@ public class Mapper : IMapper
 
     private static OrganizationZone MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    private static IEnumerable<OrganizationProductTag> MapTo(
+        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationProductTag> src) =>
+        src.Select(MapTo);
+
+    private static OrganizationProductTag MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationProductTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString() };
 
     private static IEnumerable<OrganizationCustomTag> MapTo(
         IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag> src) => src.Select(MapTo);

@@ -158,6 +158,12 @@ message OrganizationZone {
     string color = 3;
 }
 
+message OrganizationProductTag {
+    string id = 1;
+    string name = 2;
+    string color = 3;
+}
+
 message GetPermissionsInput {
     string id = 1;
 }
@@ -203,11 +209,12 @@ message Resource {
     bool requireBookingApproval = 4;
     repeated OrganizationCustomTag organizationCustomTags = 5;
     repeated OrganizationZone organizationZones = 6;
-    string color = 7;
-    bool isAvailableHoursOverridden = 8;
-    OpeningHours availableHours = 9;
-    ResourceType resourceType = 10;
-    int32 capacity = 11;
+    repeated OrganizationProductTag organizationProductTags = 7;
+    string color = 8;
+    bool isAvailableHoursOverridden = 9;
+    OpeningHours availableHours = 10;
+    ResourceType resourceType = 11;
+    int32 capacity = 12;
 }
 
 message ResourceConnection {

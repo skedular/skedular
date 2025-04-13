@@ -473,6 +473,8 @@ public class Mapper : IMapper
         resource.OrganizationCustomTags.AddRange(
             MapToGrpcResponseOrganizationCustomTags(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)));
         resource.OrganizationZones.AddRange(MapToGrpcResponseOrganizationZones(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)));
+        resource.OrganizationProductTags.AddRange(
+            MapToGrpcResponseOrganizationProductTags(src.Tags.Where(item => item.Type == OrganizationTagType.Product)));
 
         return resource;
     }
@@ -514,6 +516,9 @@ public class Mapper : IMapper
     private static OrganizationZone MapToGrpcResponseOrganizationZone(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
+    private static OrganizationProductTag MapToGrpcResponseOrganizationProductTag(OrganizationTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
+
     private static IEnumerable<OrganizationTag> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationTag> src,
         Shared.Models.Organization? organization) =>
@@ -529,6 +534,9 @@ public class Mapper : IMapper
 
     private static IEnumerable<OrganizationZone> MapToGrpcResponseOrganizationZones(IEnumerable<OrganizationTag> src) =>
         src.Select(MapToGrpcResponseOrganizationZone);
+
+    private static IEnumerable<OrganizationProductTag> MapToGrpcResponseOrganizationProductTags(IEnumerable<OrganizationTag> src) =>
+        src.Select(MapToGrpcResponseOrganizationProductTag);
 
     private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> MapToGrpcResponse(IEnumerable<Shared.Models.Resource> src) =>
         src.Select(MapToGrpcResponse);

@@ -48,7 +48,13 @@ public class EditResourceButtonHandler(
         }
 
         var values = viewSubmission.View.State.Values;
+        var resource = await locationServiceClient.GetResourceAsync(
+            new GetResourceInput { Id = context.ResourceId },
+            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
+            cancellationToken: cancellationToken);
+        
         var updateInput = new UpdateResourceInput { Id = context.ResourceId };
+        updateInput.TagIds.AddRange(resource.OrganizationProductTags.Select(item => item.Id));
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var locationBlock))
         {
