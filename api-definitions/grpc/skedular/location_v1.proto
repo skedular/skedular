@@ -75,6 +75,7 @@ message Admin_AddInput {
     string about = 3;
     string organizationId = 4;
     string timezone = 5;
+    repeated string locationTagIds = 6;
 }
 
 message LocationConnection {
@@ -99,7 +100,8 @@ message Location {
     Permissions permissions = 8;
     repeated OrganizationCustomTag customTags = 9;
     repeated OrganizationZone zones = 10;
-    OpeningHours openingHours = 11;
+    repeated OrganizationLocationTag locationTags = 11;
+    OpeningHours openingHours = 12;
 }
 
 message Admin_GetInput {
@@ -164,6 +166,12 @@ message OrganizationProductTag {
     string color = 3;
 }
 
+message OrganizationLocationTag {
+    string id = 1;
+    string name = 2;
+    string color = 3;
+}
+
 message GetPermissionsInput {
     string id = 1;
 }
@@ -181,6 +189,7 @@ message AddInput {
     string about = 3;
     string organizationId = 4;
     string timezone = 5;
+    repeated string locationTagIds = 6;
 }
 
 message UpdateInput {
@@ -189,6 +198,7 @@ message UpdateInput {
     string about = 3;
     string organizationId = 4;
     string timezone = 5;
+    repeated string locationTagIds = 6;
 }
 
 message RemoveInput {

@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Address = Location.Shared.Database.Entities.Address;
 using Booking = Location.Shared.Database.Entities.Booking;
 using Customer = Location.Shared.Models.Customer;
+using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Api.Services;
 
@@ -95,9 +96,19 @@ public class LocationService(
             location.Id = randomHelper.Generate();
         }
 
+        var locationRef = location;
+        var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
+            new Specification<OrganizationTag>
+            {
+                Criteria = query => !query.DeletedAt.HasValue &&
+                                    locationRef.Tags.Select(item => item.Id).Contains(query.Id) &&
+                                    query.Organization.Id == locationRef.Organization.Id &&
+                                    !query.Organization.DeletedAt.HasValue
+            }).ToListAsync(cancellationToken);
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var locationEntity = mapper.MapTo(location, organization);
+        var locationEntity = mapper.MapTo(location, organization, organizationTags);
         var physicalAddress = location.PhysicalAddress is null ? null : mapper.MapTo(location.PhysicalAddress, locationEntity);
         if (physicalAddress is not null)
         {
@@ -258,6 +269,17 @@ public class LocationService(
             throw new Unauthorized();
         }
 
+        var locationRef = location;
+        var locationEntityRef = existingLocation;
+        var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
+            new Specification<OrganizationTag>
+            {
+                Criteria = query => !query.DeletedAt.HasValue &&
+                                    locationRef.Tags.Select(item => item.Id).Contains(query.Id) &&
+                                    query.Organization.Id == locationEntityRef.Organization.Id &&
+                                    !query.Organization.DeletedAt.HasValue
+            }).ToListAsync(cancellationToken);
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         Address? physicalAddress = null;
@@ -280,7 +302,7 @@ public class LocationService(
 
         var originalOpeningHours = existingLocation.OpeningHours;
 
-        existingLocation = mapper.MergeTo(location, existingLocation, physicalAddress);
+        existingLocation = mapper.MergeTo(location, existingLocation, physicalAddress, organizationTags);
 
         // Restoring original opening hours
         existingLocation.OpeningHours = originalOpeningHours;
@@ -306,7 +328,7 @@ public class LocationService(
         var mappedLocation = mapper.MapTo(locationEdge);
 
         mappedLocation.CustomTags = mappedLocation.Resources
-            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag => new OrganizationTag
+            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag => new Shared.Models.OrganizationTag
             {
                 Id = customTag.Id, Name = customTag.Name, Type = OrganizationTagType.Custom, Color = customTag.Color
             }))
@@ -315,7 +337,7 @@ public class LocationService(
             .ToList();
 
         mappedLocation.Zones = mappedLocation.Resources
-            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone).Select(zone => new OrganizationTag
+            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone).Select(zone => new Shared.Models.OrganizationTag
             {
                 Id = zone.Id, Name = zone.Name, Type = OrganizationTagType.Zone, Color = zone.Color
             }))

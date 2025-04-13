@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<261ebde9c1bd8aee6160822d88857cf6>>
+ * @generated SignedSource<<d3e11dd243981e1f9045d7de3dbdff17>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,6 +37,11 @@ export type organizationLocation_updateLocationOpeningHoursMutation$data = {
     readonly location: {
       readonly about: string | null | undefined;
       readonly id: string;
+      readonly locationTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
       readonly name: string;
       readonly openingHours: {
         readonly weekOpeningHours: {
@@ -96,6 +101,11 @@ export type organizationLocation_updateLocationOpeningHoursMutation$rawResponse 
     readonly location: {
       readonly about: string | null | undefined;
       readonly id: string;
+      readonly locationTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
       readonly name: string;
       readonly openingHours: {
         readonly weekOpeningHours: {
@@ -164,7 +174,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -194,7 +211,7 @@ v1 = [
     "storageKey": null
   }
 ],
-v2 = [
+v3 = [
   {
     "alias": null,
     "args": [
@@ -224,13 +241,7 @@ v2 = [
             "name": "id",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -266,6 +277,32 @@ v2 = [
           {
             "alias": null,
             "args": null,
+            "concreteType": "Location_OrganizationTagDetails",
+            "kind": "LinkedField",
+            "name": "locationTags",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "uniqueId",
+                "storageKey": null
+              },
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "color",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "OpeningHours",
             "kind": "LinkedField",
             "name": "openingHours",
@@ -286,7 +323,7 @@ v2 = [
                     "kind": "LinkedField",
                     "name": "monday",
                     "plural": false,
-                    "selections": (v1/*: any*/),
+                    "selections": (v2/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -296,7 +333,7 @@ v2 = [
                     "kind": "LinkedField",
                     "name": "tuesday",
                     "plural": false,
-                    "selections": (v1/*: any*/),
+                    "selections": (v2/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -306,7 +343,7 @@ v2 = [
                     "kind": "LinkedField",
                     "name": "wednesday",
                     "plural": false,
-                    "selections": (v1/*: any*/),
+                    "selections": (v2/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -316,7 +353,7 @@ v2 = [
                     "kind": "LinkedField",
                     "name": "thursday",
                     "plural": false,
-                    "selections": (v1/*: any*/),
+                    "selections": (v2/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -326,7 +363,7 @@ v2 = [
                     "kind": "LinkedField",
                     "name": "friday",
                     "plural": false,
-                    "selections": (v1/*: any*/),
+                    "selections": (v2/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -336,7 +373,7 @@ v2 = [
                     "kind": "LinkedField",
                     "name": "saturday",
                     "plural": false,
-                    "selections": (v1/*: any*/),
+                    "selections": (v2/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -346,7 +383,7 @@ v2 = [
                     "kind": "LinkedField",
                     "name": "sunday",
                     "plural": false,
-                    "selections": (v1/*: any*/),
+                    "selections": (v2/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -368,7 +405,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocation_updateLocationOpeningHoursMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v3/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -377,19 +414,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationLocation_updateLocationOpeningHoursMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "eca03d7d3ca95e7eaaa57b7738076ff0",
+    "cacheID": "1ebf8fc5bf23dd9f49d8df95731a2b0c",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationOpeningHoursMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationOpeningHoursMutation(\n  $input: UpdateLocationOpeningHoursInput!\n) {\n  updateLocationOpeningHours(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        formattedAddress\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationOpeningHoursMutation(\n  $input: UpdateLocationOpeningHoursInput!\n) {\n  updateLocationOpeningHours(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        formattedAddress\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "90c7afd23d3a550231fc859b54e1ce92";
+(node as any).hash = "aa1dbba6440c6edf27a4ce4239cc3022";
 
 export default node;

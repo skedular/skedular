@@ -40,7 +40,8 @@ internal static class LocationExtensions
             .ThenInclude(query => query.Customer)
             .Include(query => query.PhysicalAddress)
             .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
     internal static IQueryable<Database.Entities.Location> AddSearchCriteria(
         this IQueryable<Database.Entities.Location> query,
@@ -52,18 +53,14 @@ internal static class LocationExtensions
         {
             query = query.Where(item => !item.Organization.DeletedAt.HasValue &&
                                         (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
-                                            !organizationMember.DeletedAt.HasValue &&
-                                            organizationMember.Customer.Id ==
-                                            searchCriteria.CustomerId)));
+                                            !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == searchCriteria.CustomerId)));
         }
         else
         {
             query = query.Where(item => !item.Organization.DeletedAt.HasValue &&
                                         item.Organization.Id == searchCriteria.OrganizationId &&
                                         (searchCriteria.CustomerId == null || item.Organization.OrganizationMembers.Any(organizationMember =>
-                                            !organizationMember.DeletedAt.HasValue &&
-                                            organizationMember.Customer.Id ==
-                                            searchCriteria.CustomerId)));
+                                            !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == searchCriteria.CustomerId)));
         }
 
         if (searchCriteria.LocationIds.Count > 0)

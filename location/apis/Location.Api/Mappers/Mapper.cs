@@ -32,8 +32,18 @@ public interface IMapper
 {
     Shared.Models.Location MapTo(Shared.Database.Entities.Location src);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
-    Shared.Database.Entities.Location MapTo(Shared.Models.Location src, Organization organization);
-    Shared.Database.Entities.Location MergeTo(Shared.Models.Location src, Shared.Database.Entities.Location dest, Address? physicalAddress);
+
+    Shared.Database.Entities.Location MapTo(
+        Shared.Models.Location src,
+        Organization organization,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
+
+    Shared.Database.Entities.Location MergeTo(
+        Shared.Models.Location src,
+        Shared.Database.Entities.Location dest,
+        Address? physicalAddress,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
+
     Shared.Models.Resource MapTo(Resource src);
 
     Resource MapTo(
@@ -93,7 +103,8 @@ public class Mapper : IMapper
             About = src.About,
             Timezone = src.Timezone,
             OpeningHours = src.OpeningHours,
-            Organization = MapTo(src.Organization)
+            Organization = MapTo(src.Organization),
+            Tags = MapTo(src.OrganizationTags).ToList()
         };
 
         location.Bookings = MapTo(src.Bookings, location).ToList();
@@ -129,7 +140,10 @@ public class Mapper : IMapper
                 Identities = MapTo(src.Identities).ToList()
             };
 
-    public Shared.Database.Entities.Location MapTo(Shared.Models.Location src, Organization organization) =>
+    public Shared.Database.Entities.Location MapTo(
+        Shared.Models.Location src,
+        Organization organization,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags) =>
         new()
         {
             Id = src.Id,
@@ -137,10 +151,15 @@ public class Mapper : IMapper
             About = src.About,
             Timezone = src.Timezone,
             OpeningHours = src.OpeningHours,
-            Organization = organization
+            Organization = organization,
+            OrganizationTags = organizationTags
         };
 
-    public Shared.Database.Entities.Location MergeTo(Shared.Models.Location src, Shared.Database.Entities.Location dest, Address? physicalAddress)
+    public Shared.Database.Entities.Location MergeTo(
+        Shared.Models.Location src,
+        Shared.Database.Entities.Location dest,
+        Address? physicalAddress,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -148,6 +167,7 @@ public class Mapper : IMapper
         dest.Timezone = src.Timezone;
         dest.OpeningHours = src.OpeningHours;
         dest.PhysicalAddress = physicalAddress;
+        dest.OrganizationTags = organizationTags;
         return dest;
     }
 
@@ -174,7 +194,8 @@ public class Mapper : IMapper
                 ResourceTypes = src.Organization.Tags
                     .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
                     .Select(MapTo),
-                PhysicalAddress = MapToGraphQl(src.PhysicalAddress)
+                PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
+                LocationTags = MapTo(src.Tags)
             };
 
     public Shared.Models.Resource MapTo(Resource src) =>
@@ -327,7 +348,8 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
         location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
@@ -337,7 +359,14 @@ public class Mapper : IMapper
 
     public Shared.Models.Location MapTo(UpdateLocationInput src)
     {
-        var location = new Shared.Models.Location { Id = src.Id.ToSafeString(), Name = src.Name, About = src.About, Timezone = src.Timezone };
+        var location = new Shared.Models.Location
+        {
+            Id = src.Id.ToSafeString(),
+            Name = src.Name,
+            About = src.About,
+            Timezone = src.Timezone,
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+        };
 
         location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
 
@@ -386,7 +415,8 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src)
@@ -412,6 +442,7 @@ public class Mapper : IMapper
         location.Resources.AddRange(MapToGrpcResponse(src.Resources));
         location.CustomTags.AddRange(MapToGrpcResponseOrganizationCustomTags(src.CustomTags));
         location.Zones.AddRange(MapToGrpcResponseOrganizationZones(src.Zones));
+        location.LocationTags.AddRange(MapToGrpcResponseOrganizationLocationTags(src.Tags));
 
         return location;
     }
@@ -423,7 +454,8 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public Shared.Models.Location MapTo(UpdateInput src) =>
@@ -433,7 +465,8 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public Shared.Models.Resource MapTo(Resource src, Shared.Models.Location location) =>
@@ -519,6 +552,9 @@ public class Mapper : IMapper
     private static OrganizationProductTag MapToGrpcResponseOrganizationProductTag(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
+    private static OrganizationLocationTag MapToGrpcResponseOrganizationLocationTag(OrganizationTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
+
     private static IEnumerable<OrganizationTag> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationTag> src,
         Shared.Models.Organization? organization) =>
@@ -537,6 +573,9 @@ public class Mapper : IMapper
 
     private static IEnumerable<OrganizationProductTag> MapToGrpcResponseOrganizationProductTags(IEnumerable<OrganizationTag> src) =>
         src.Select(MapToGrpcResponseOrganizationProductTag);
+
+    private static IEnumerable<OrganizationLocationTag> MapToGrpcResponseOrganizationLocationTags(IEnumerable<OrganizationTag> src) =>
+        src.Select(MapToGrpcResponseOrganizationLocationTag);
 
     private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> MapToGrpcResponse(IEnumerable<Shared.Models.Resource> src) =>
         src.Select(MapToGrpcResponse);

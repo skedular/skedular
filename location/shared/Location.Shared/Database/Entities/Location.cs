@@ -26,6 +26,7 @@ public class Location : EntityBaseWithDeleted
     public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
     public virtual ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
+    public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -42,6 +43,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
 
         builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Location).HasForeignKey<Location>(item => item.PhysicalAddressId);
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
+        builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Locations);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.About);

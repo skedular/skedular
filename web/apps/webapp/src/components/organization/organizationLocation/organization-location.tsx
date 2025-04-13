@@ -16,6 +16,7 @@ import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIc
 import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { MultipleChoicesLocationTags } from '@/components/organization';
 import { CustomTagSelector } from '@/components/organization/customTagSelector/';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
 import { ProductTags } from '@/components/productTag';
@@ -53,7 +54,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, us
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
-import { object, string } from 'yup';
+import { array, object, string } from 'yup';
 import OrganizationLocationLeftSideNavigationMenuContent from './organization-location-left-side-navigation-menu-content';
 
 type Props = {
@@ -69,7 +70,16 @@ type LocationDetails = {
   about: string | null;
   timezone: string;
   physicalAddress: string;
+  locationTagIds: string[];
 };
+
+const locationSchema = object({
+  name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
+  about: string().nullable(),
+  timezone: string().required('Timezone is required'),
+  physicalAddress: string().nullable(),
+  locationTagIds: array().nullable(),
+});
 
 type ResourceTypeDetails = {
   id: string;
@@ -113,13 +123,6 @@ type ResourceRowType = {
   capacity: number;
 };
 
-const locationSchema = object({
-  name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
-  about: string().nullable(),
-  timezone: string().required('Timezone is required'),
-  physicalAddress: string().nullable(),
-});
-
 const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadRequired, organizationId, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
@@ -137,6 +140,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           timezone
           physicalAddress {
             formattedAddress
+          }
+          locationTags {
+            uniqueId
+            name
+            color
           }
           openingHours {
             weekOpeningHours {
@@ -186,6 +194,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           }
         }
         openingHoursMinutesStep
+        ...multipleChoicesLocationTags_query
         ...weekOpeningHours_query
         ...customTagSelector_allCustomTags_query
         ...zoneSelector_allZones_query
@@ -252,6 +261,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           timezone
           physicalAddress {
             formattedAddress
+          }
+          locationTags {
+            uniqueId
+            name
+            color
           }
           openingHours {
             weekOpeningHours {
@@ -431,6 +445,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           physicalAddress {
             formattedAddress
           }
+          locationTags {
+            uniqueId
+            name
+            color
+          }
           openingHours {
             weekOpeningHours {
               monday {
@@ -548,7 +567,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     [refetchResources],
   );
 
-  const handleLocationDetailUpdateClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
+  const handleLocationDetailUpdateClick = ({ name, about, timezone, physicalAddress, locationTagIds }: LocationDetails) => {
     const location = rootData.location;
     if (!location) {
       return;
@@ -567,6 +586,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           physicalAddress: {
             formattedAddress: physicalAddress,
           },
+          locationTagIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -600,6 +620,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
             physicalAddress: {
               formattedAddress: physicalAddress,
             },
+            locationTags: location.locationTags,
             openingHours: location.openingHours,
           },
         },
@@ -1068,6 +1089,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
             about: location.about,
             timezone: location.timezone,
             physicalAddress: location.physicalAddress,
+            locationTags: location.locationTags,
             openingHours: {
               weekOpeningHours,
             },
@@ -1223,6 +1245,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                 about: location.about,
                 timezone: location.timezone ?? '',
                 physicalAddress: location.physicalAddress?.formattedAddress,
+                locationTagIds: location.locationTags.map((item) => item.uniqueId),
               }}
               validate={validateLocationDetails}
               render={({ handleSubmit }) => (
@@ -1263,6 +1286,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
 
                     <FormFieldLabel label="Physical Address">
                       <TextField name="physicalAddress" required={requiredLocationDetailsFields.physicalAddress} multiline rows={5} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Location Tags">
+                      <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredLocationDetailsFields.locationTagIds} organizationId={organizationId} />
                     </FormFieldLabel>
                   </StackColumn>
 

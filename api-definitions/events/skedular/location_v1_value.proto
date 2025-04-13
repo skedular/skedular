@@ -38,7 +38,8 @@ message Location {
   string organizationId = 5;
   string timezone = 6;
   repeated Resource resources = 7;
-  OpeningHours openingHours = 8;
+  repeated string tagIds = 8;
+  OpeningHours openingHours = 9;
 }
 
 message Resource {

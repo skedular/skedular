@@ -255,6 +255,7 @@ type LocationDetails {
   deskCapacity: Int!
   hasFutureBooking: Boolean!
   id: ID!
+  locationTags: [Location_OrganizationTagDetails!]!
   name: String!
   openingHours: OpeningHours!
   organization: Location_OrganizationDetails!
@@ -1086,6 +1087,7 @@ input AddLocationInput {
   about: String
   clientMutationId: String
   id: String
+  locationTagIds: [String!]!
   name: String!
   organizationId: String!
   physicalAddress: LocationAddressDetailsInput
@@ -1663,6 +1665,7 @@ input UpdateLocationInput {
   about: String
   clientMutationId: String
   id: String!
+  locationTagIds: [String!]!
   name: String!
   physicalAddress: LocationAddressDetailsInput
   timezone: String

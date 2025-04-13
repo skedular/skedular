@@ -33,6 +33,7 @@ public class AddLocationInput
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
+    [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
 }
 
 [GraphQLName("CancelInvitationToJoinLocationInput")]
@@ -115,6 +116,7 @@ public class LocationDetails : Node
     [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
     [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
     [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
+    [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -171,6 +173,7 @@ public class UpdateLocationInput
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
+    [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
 }
 
 [GraphQLName("LocationAddressDetails")]

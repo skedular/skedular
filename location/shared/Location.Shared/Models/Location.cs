@@ -21,6 +21,7 @@ public class Location : ModelBaseWithDeleted
     public ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
     public ICollection<OrganizationTag> CustomTags { get; set; } = [];
     public ICollection<OrganizationTag> Zones { get; set; } = [];
+    public ICollection<OrganizationTag> Tags { get; set; } = [];
 
     public bool HasFutureBooking { get; set; }
     public Permissions Permissions { get; set; } = new();

@@ -25,6 +25,7 @@ const RootQuery = graphql`
     $resourceCustomTagIds: [String!]
     $zonesSortingValues: [OrganizationTagOrderInput!]
     $customTagsSortingValues: [OrganizationTagOrderInput!]
+    $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
   ) {
     location(id: $locationId) {
       name
@@ -123,6 +124,12 @@ const LocationPageWithRelay = () => {
           },
         ],
         customTagsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+        multipleChoicesLocationTagsSortingValues: [
           {
             direction: 'Ascending',
             field: 'Name',

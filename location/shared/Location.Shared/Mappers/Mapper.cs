@@ -46,6 +46,8 @@ public class Mapper : IMapper
             return resource;
         }));
 
+        location.TagIds.AddRange(src.Tags.Select(tag => tag.Id));
+
         return location;
     }
 
