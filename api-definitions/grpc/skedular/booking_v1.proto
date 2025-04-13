@@ -135,6 +135,7 @@ message Booking {
     Team team = 8;
     repeated Resource resources = 9;
     BookingType type = 10;
+    repeated BookingSchedule Schedules = 11;
 }
 
 message Customer {
@@ -291,4 +292,9 @@ message ResourceType {
     string id = 1;
     string name = 2;
     string color = 3;
+}
+
+message BookingSchedule {
+    google.protobuf.Timestamp from = 1;
+    google.protobuf.Timestamp until = 2;
 }

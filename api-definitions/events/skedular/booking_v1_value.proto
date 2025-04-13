@@ -38,6 +38,7 @@ message Booking {
   repeated Resource resources = 9;
   string teamId = 10;
   BookingType type = 11;
+  repeated BookingSchedule Schedules = 12;
 }
 
 enum BookingType
@@ -56,4 +57,9 @@ enum BookingType
 message Resource {
   string id = 1;
   repeated string customerIds = 2;
+}
+
+message BookingSchedule {
+  google.protobuf.Timestamp from = 1;
+  google.protobuf.Timestamp until = 2;
 }

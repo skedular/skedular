@@ -2,6 +2,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
+using BookingSchedule = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule;
 using Resource = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource;
 
 namespace Booking.Shared.Mappers;
@@ -41,6 +42,7 @@ public class Mapper : IMapper
         };
 
         booking.Resources.AddRange(MapTo(src.Resources));
+        booking.Schedules.AddRange(MapTo(src.BookingSchedules));
 
         return booking;
     }
@@ -54,4 +56,10 @@ public class Mapper : IMapper
 
             return resource;
         });
+
+    private static IEnumerable<BookingSchedule> MapTo(BookingSchedules? src) =>
+        src is null ? [] : src.Schedules.Select(MapTo);
+
+    private static BookingSchedule MapTo(Api.Shared.Services.Models.BookingSchedule src) =>
+        new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
 }

@@ -6,6 +6,7 @@ using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using BookingEdge = Booking.Api.GraphQL.BookingEdge;
+using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using BookingType = Api.Shared.Services.Models.BookingType;
 using Customer = Booking.Shared.Models.Customer;
 using Identity = Booking.Shared.Models.Identity;
@@ -68,6 +69,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type.ToBookingType(),
+            BookingSchedules = src.BookingSchedules,
             Customer = MapTo(src.Customer)!,
             Organization = MapTo(src.Organization),
             Location = MapTo(src.Location),
@@ -128,6 +130,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type,
+            BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From, src.Until) }),
             Customer = customer,
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
@@ -147,6 +150,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = src.Type,
+            BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From, src.Until) }),
             Customer = customer,
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
@@ -178,6 +182,7 @@ public class Mapper : IMapper
         dest.Until = src.Until;
         dest.Notes = src.Notes;
         dest.Type = src.Type.ToBookingType();
+        dest.BookingSchedules = src.BookingSchedules;
         dest.Customer = customer;
         dest.Organization = organization;
         dest.Location = location;
@@ -214,6 +219,7 @@ public class Mapper : IMapper
         };
 
         booking.Resources.AddRange(MapToGrpcResponse(src.Resources));
+        booking.Schedules.AddRange(MapToGrpcResponse(src.BookingSchedules));
 
         return booking;
     }
@@ -241,6 +247,7 @@ public class Mapper : IMapper
                 global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) }),
             Customer = new Customer { Id = src.CustomerId },
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
@@ -272,6 +279,7 @@ public class Mapper : IMapper
                 global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) }),
             Customer = customer,
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
@@ -303,6 +311,7 @@ public class Mapper : IMapper
                 global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) }),
             Customer = customer,
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
@@ -544,4 +553,10 @@ public class Mapper : IMapper
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource>
         MapToGrpcResponse(IEnumerable<ResourceCustomersPair> src) =>
         src.Select(item => MapToGrpcResponse(item.Resource, item.Customers));
+
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule> MapToGrpcResponse(BookingSchedules? src) =>
+        src is null ? [] : src.Schedules.Select(MapToGrpcResponse);
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule MapToGrpcResponse(BookingSchedule src) =>
+        new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
 }
