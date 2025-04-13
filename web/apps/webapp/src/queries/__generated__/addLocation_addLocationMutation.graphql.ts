@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<999cce9c0f71bbf9638515e966d7a892>>
+ * @generated SignedSource<<176601f95d708bc6bb0d3c1e78dfbf3e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,6 +37,11 @@ export type addLocation_addLocationMutation$data = {
     readonly location: {
       readonly about: string | null | undefined;
       readonly id: string;
+      readonly locationTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
       readonly name: string;
       readonly physicalAddress: {
         readonly formattedAddress: string | null | undefined;
@@ -50,6 +55,11 @@ export type addLocation_addLocationMutation$rawResponse = {
     readonly location: {
       readonly about: string | null | undefined;
       readonly id: string;
+      readonly locationTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly name: string | null | undefined;
+        readonly uniqueId: string;
+      }>;
       readonly name: string;
       readonly physicalAddress: {
         readonly formattedAddress: string | null | undefined;
@@ -72,7 +82,14 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v2 = [
   {
     "alias": null,
     "args": [
@@ -102,13 +119,7 @@ v1 = [
             "name": "id",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -140,6 +151,32 @@ v1 = [
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Location_OrganizationTagDetails",
+            "kind": "LinkedField",
+            "name": "locationTags",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "uniqueId",
+                "storageKey": null
+              },
+              (v1/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "color",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -154,7 +191,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addLocation_addLocationMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -163,19 +200,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addLocation_addLocationMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "0c2711ddb44f8a4134fe787b2b8219ca",
+    "cacheID": "403b145808e05e0a5735bfc2c9846a47",
     "id": null,
     "metadata": {},
     "name": "addLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        formattedAddress\n      }\n    }\n  }\n}\n"
+    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        formattedAddress\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a2723c937dd7c493dbe170bf00a49264";
+(node as any).hash = "35a4b1987e4ef49ff75eec5242f93628";
 
 export default node;

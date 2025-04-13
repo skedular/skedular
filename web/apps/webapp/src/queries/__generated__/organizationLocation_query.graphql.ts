@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af95627ead14b9f558d57e01a367d6eb>>
+ * @generated SignedSource<<9cd2c5948c49b83eee8f4913e1b2167e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationType = "Marketplace" | "Private" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationLocation_query$data = {
   readonly location: {
@@ -78,6 +79,11 @@ export type organizationLocation_query$data = {
     }>;
   } | null | undefined;
   readonly openingHoursMinutesStep: number;
+  readonly organization: {
+    readonly type: {
+      readonly type: OrganizationType;
+    };
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "multipleChoicesLocationTags_query" | "weekOpeningHours_query" | "zoneSelector_allZones_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
@@ -143,6 +149,10 @@ return {
     {
       "kind": "RootArgument",
       "name": "locationId"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "organizationId"
     }
   ],
   "kind": "Fragment",
@@ -167,6 +177,41 @@ return {
           "plural": true,
           "selections": [
             (v1/*: any*/)
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "id",
+          "variableName": "organizationId"
+        }
+      ],
+      "concreteType": "OrganizationDetails",
+      "kind": "LinkedField",
+      "name": "organization",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationTypeDetails",
+          "kind": "LinkedField",
+          "name": "type",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            }
           ],
           "storageKey": null
         }
@@ -369,6 +414,6 @@ return {
 };
 })();
 
-(node as any).hash = "91cf0e1b862c732acc362589012120be";
+(node as any).hash = "8405503920333354fc354339e679e2a8";
 
 export default node;

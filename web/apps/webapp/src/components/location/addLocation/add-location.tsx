@@ -1,23 +1,41 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
+import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { MultipleChoicesLocationTags } from '@/components/organization';
+import type { RootError } from '@/components/relayError';
+import { RelayError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { addLocation_addLocationMutation } from '@/queries/__generated__/addLocation_addLocationMutation.graphql';
 import type { addLocation_completeLocationOnboardingMutation } from '@/queries/__generated__/addLocation_completeLocationOnboardingMutation.graphql';
+import type { addLocation_rootQuery } from '@/queries/__generated__/addLocation_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
-import { memo, useContext } from 'react';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
-import { graphql, useMutation } from 'react-relay';
+import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
-import { object, string } from 'yup';
+import { array, object, string } from 'yup';
+
+const RootQuery = graphql`
+  query addLocation_rootQuery($organizationId: String!, $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]) {
+    organization(id: $organizationId) {
+      type {
+        type
+      }
+    }
+    ...multipleChoicesLocationTags_query
+  }
+`;
 
 type Props = {
+  queryReference: PreloadedQuery<addLocation_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
   onAdded: (locationId: string) => void;
@@ -31,6 +49,7 @@ type LocationDetails = {
   about: string | null;
   timezone: string;
   physicalAddress: string | null;
+  locationTagIds: string[];
 };
 
 const locationSchema = object({
@@ -38,9 +57,12 @@ const locationSchema = object({
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
   physicalAddress: string().nullable(),
+  locationTagIds: array().nullable(),
 });
 
-const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addLabel, showDismiss }: Props) => {
+const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel, addLabel, showDismiss }: Props) => {
+  const rootData = usePreloadedQuery<addLocation_rootQuery>(RootQuery, queryReference);
+
   const [commitAddLocation] = useMutation<addLocation_addLocationMutation>(graphql`
     mutation addLocation_addLocationMutation($input: AddLocationInput!) @raw_response_type {
       addLocation(input: $input) {
@@ -51,6 +73,11 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addL
           timezone
           physicalAddress {
             formattedAddress
+          }
+          locationTags {
+            uniqueId
+            name
+            color
           }
         }
       }
@@ -68,7 +95,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addL
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateLocationDetails = makeValidate(locationSchema);
-  const requiredLocationDetailsFields = makeRequired(locationSchema);
+  const requiredFields = makeRequired(locationSchema);
 
   const handleCloseClick = () => {
     commitCompleteLocationOnboarding({
@@ -88,7 +115,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addL
     });
   };
 
-  const handleLocationAddClick = ({ name, about, timezone, physicalAddress }: LocationDetails) => {
+  const handleLocationAddClick = ({ name, about, timezone, physicalAddress, locationTagIds }: LocationDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
 
@@ -104,6 +131,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addL
           physicalAddress: {
             formattedAddress: physicalAddress,
           },
+          locationTagIds,
         },
       },
       onCompleted: (_, errors) => {
@@ -162,6 +190,7 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addL
             physicalAddress: {
               formattedAddress: physicalAddress,
             },
+            locationTags: [],
           },
         },
       },
@@ -174,7 +203,13 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addL
         <AppBarWithStackColumn onClose={handleCloseClick} label="Add Location">
           <Form
             onSubmit={handleLocationAddClick}
-            initialValues={{}}
+            initialValues={{
+              name: '',
+              about: '',
+              timezone: '',
+              physicalAddress: '',
+              locationTagIds: [],
+            }}
             validate={validateLocationDetails}
             render={({ handleSubmit }) => (
               <FormStackColumn onSubmit={handleSubmit}>
@@ -186,20 +221,26 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addL
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Name">
-                    <TextField name="name" required={requiredLocationDetailsFields.name} />
+                    <TextField name="name" required={requiredFields.name} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="About">
-                    <TextField name="about" required={requiredLocationDetailsFields.about} multiline rows={3} />
+                    <TextField name="about" required={requiredFields.about} multiline rows={3} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Timezone">
-                    <SingleChoinceTimezone name="timezone" required={requiredLocationDetailsFields.timezone} />
+                    <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Physical Address">
-                    <TextField name="physicalAddress" required={requiredLocationDetailsFields.physicalAddress} multiline rows={5} />
+                    <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
                   </FormFieldLabel>
+
+                  {rootData.organization?.type.type === 'Marketplace' && (
+                    <FormFieldLabel label="Location Tags">
+                      <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
+                    </FormFieldLabel>
+                  )}
                 </StackColumn>
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
@@ -223,4 +264,63 @@ const AddLocation = ({ onReloadRequired, organizationId, onAdded, onCancel, addL
   );
 };
 
-export default memo(AddLocation);
+const MemoAddLocation = memo(AddLocation);
+
+type RelayProps = {
+  onReloadRequired: () => void;
+  organizationId: string;
+  onAdded: (locationId: string) => void;
+  onCancel: () => void;
+  addLabel?: string;
+  showDismiss: boolean;
+};
+
+const AddLocationWithRelay = ({ onReloadRequired, organizationId, onAdded, onCancel, addLabel, showDismiss }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<addLocation_rootQuery>(RootQuery);
+  const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    loadQuery(
+      {
+        organizationId,
+        multipleChoicesLocationTagsSortingValues: [
+          {
+            direction: 'Ascending',
+            field: 'Name',
+          },
+        ],
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReloadId, organizationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReloadId(nanoid());
+      onReloadRequired();
+    });
+  };
+
+  if (!queryReference) {
+    return <Loading />;
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+      <MemoAddLocation
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationId={organizationId}
+        onAdded={onAdded}
+        onCancel={onCancel}
+        addLabel={addLabel}
+        showDismiss={showDismiss}
+      />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(AddLocationWithRelay);

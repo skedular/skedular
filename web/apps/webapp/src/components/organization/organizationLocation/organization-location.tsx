@@ -133,6 +133,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
             uniqueId
           }
         }
+        organization(id: $organizationId) {
+          type {
+            type
+          }
+        }
         location(id: $locationId) {
           id
           name
@@ -1288,9 +1293,16 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                       <TextField name="physicalAddress" required={requiredLocationDetailsFields.physicalAddress} multiline rows={5} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Location Tags">
-                      <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredLocationDetailsFields.locationTagIds} organizationId={organizationId} />
-                    </FormFieldLabel>
+                    {rootData.organization?.type.type === 'Marketplace' && (
+                      <FormFieldLabel label="Location Tags">
+                        <MultipleChoicesLocationTags
+                          rootDataRelay={rootData}
+                          name="locationTagIds"
+                          required={requiredLocationDetailsFields.locationTagIds}
+                          organizationId={organizationId}
+                        />
+                      </FormFieldLabel>
+                    )}
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
