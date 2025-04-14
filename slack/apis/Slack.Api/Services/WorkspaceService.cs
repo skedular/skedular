@@ -2,7 +2,6 @@ using Enterprise.Shared.Database;
 using Flurl;
 using Slack.Api.Mappers;
 using Slack.Shared.Configurations;
-using Slack.Shared.Models;
 using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using SlackNet;
@@ -12,7 +11,6 @@ namespace Slack.Api.Services;
 public interface IWorkspaceService
 {
     Task<string> InstallAsync(string code, string? state, CancellationToken cancellationToken);
-    Task<Workspace> AddAsync(Workspace workspace, CancellationToken cancellationToken);
 }
 
 public class WorkspaceService(
@@ -59,22 +57,5 @@ public class WorkspaceService(
         }
 
         return slackConfiguration.SuccessInstallUrl!.ToString().SetQueryParam("app", slackConfiguration.AppId);
-    }
-
-    public async Task<Workspace> AddAsync(Workspace workspace, CancellationToken cancellationToken)
-    {
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(workspace.Organization.Id, cancellationToken);
-        var existingWorkspace = await repositoryFactory.WorkspaceRepository.GetByIdAsync(workspace.Id, cancellationToken) ??
-                                repositoryFactory.WorkspaceRepository.Add(mapper.MapToEntity(workspace, organization));
-
-        slackInternalOutboxPublisher.PublishRefreshWorkspaceMembers([workspace.Id], repositoryFactory.UnitOfWork);
-        slackInternalOutboxPublisher.PublishRefreshWorkspaceChannels([workspace.Id], repositoryFactory.UnitOfWork);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        return mapper.MapTo(existingWorkspace);
     }
 }

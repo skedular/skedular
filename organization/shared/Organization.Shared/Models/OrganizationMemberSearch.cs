@@ -14,7 +14,7 @@ public class OrganizationMemberSearchCriteria
     }
 
     public string OrganizationId { get; }
-    public string? NameContains { get; }
+    public string? NameContains { get; set; }
     public string? CustomerId { get; }
 }
 

@@ -11,14 +11,14 @@ public interface ITeamAuthorizationService
     bool CanDelete(Shared.Database.Entities.Team team, Customer customer);
     bool CanInvitePeople(Shared.Database.Entities.Team team, Customer customer);
     bool CanCancelPeopleExistingInvitations(Shared.Database.Entities.Team team, Customer customer);
+    bool CanViewMemberPersonalDetails(Shared.Database.Entities.Team team, Customer customer);
     Task<Permissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken);
 }
 
 public class TeamAuthorizationService(
     ICachedCustomerService cachedCustomerService,
     IRepositoryFactory repositoryFactory,
-    IOrganizationAuthorizationService organizationAuthorizationService)
-    : ITeamAuthorizationService
+    IOrganizationAuthorizationService organizationAuthorizationService) : ITeamAuthorizationService
 {
     public bool CanView(Shared.Database.Entities.Team team, Customer customer) =>
         organizationAuthorizationService.CanView(team.Organization, customer);
@@ -35,12 +35,13 @@ public class TeamAuthorizationService(
     public bool CanCancelPeopleExistingInvitations(Shared.Database.Entities.Team team, Customer customer) =>
         organizationAuthorizationService.CanCancelPeopleExistingInvitations(team.Organization, customer);
 
+    public bool CanViewMemberPersonalDetails(Shared.Database.Entities.Team team, Customer customer) =>
+        organizationAuthorizationService.CanViewMemberPersonalDetails(team.Organization, customer);
+
     public async Task<Permissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(
-            teamId,
-            cancellationToken);
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
         if (team is null)
         {
             throw new OrganizationNotFound();

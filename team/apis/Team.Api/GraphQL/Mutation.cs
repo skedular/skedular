@@ -14,7 +14,7 @@ public class Mutation(IMapper mapper)
         [Service] ITeamService teamService,
         CancellationToken cancellationToken)
     {
-        var team = await teamService.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        var team = await teamService.AddAsync(mapper.MapTo(input), cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
@@ -46,11 +46,7 @@ public class Mutation(IMapper mapper)
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
-        var team = await teamMemberService.UpdateMembersAsync(
-            input.Id,
-            mapper.MapToTeamMembers(input),
-            false,
-            cancellationToken);
+        var team = await teamMemberService.UpdateMembersAsync(input.Id, mapper.MapToTeamMembers(input), cancellationToken);
         return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
@@ -92,10 +88,7 @@ public class Mutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Member = mapper.MapTo(await teamMemberService.ChangeRoleAsync(
-                input.Id,
-                input.Role,
-                cancellationToken))
+            Member = mapper.MapTo(await teamMemberService.ChangeRoleAsync(input.Id, input.Role, cancellationToken))
         };
 
     [UseResolverScope]

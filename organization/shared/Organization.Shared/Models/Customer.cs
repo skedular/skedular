@@ -1,9 +1,18 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace Organization.Shared.Models;
 
-public class Customer : ReplicatedModelBaseWithDeleted
+public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
 {
+    public ICollection<Identity> Identities { get; set; } = [];
+    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public ICollection<JoinInvitation> JoinInvitationsCreatedBy { get; set; } = [];
+    public ICollection<JoinInvitation> JoinInvitationsInvitee { get; set; } = [];
+    public string? Designation { get; set; }
+    public string? Title { get; set; }
+    public string? Timezone { get; set; }
+    public string? Locale { get; set; }
     public string? Name { get; set; }
     public string? GivenName { get; set; }
     public string? MiddleName { get; set; }
@@ -16,9 +25,4 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public string? PhotoUrl192 { get; set; }
     public string? PhotoUrl512 { get; set; }
     public string? PhoneNumber { get; set; }
-
-    public ICollection<Identity> Identities { get; set; } = [];
-    public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<JoinInvitation> JoinInvitationsCreatedBy { get; set; } = [];
-    public ICollection<JoinInvitation> JoinInvitationsInvitee { get; set; } = [];
 }

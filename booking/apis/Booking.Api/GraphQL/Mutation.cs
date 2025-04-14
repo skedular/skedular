@@ -14,7 +14,7 @@ public class Mutation(IMapper mapper)
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await bookingService.AddAsync(mapper.MapTo(input), false, cancellationToken);
+        var booking = await bookingService.AddAsync(mapper.MapTo(input), cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
 

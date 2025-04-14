@@ -15,11 +15,7 @@ namespace Team.Api.Services;
 
 public interface ITeamInvitationService
 {
-    Task InviteMembersByEmailsAsync(
-        string teamId,
-        ICollection<string> emails,
-        CancellationToken cancellationToken);
-
+    Task InviteMembersByEmailsAsync(string teamId, ICollection<string> emails, CancellationToken cancellationToken);
     Task AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
@@ -35,10 +31,7 @@ public class TeamInvitationService(
     INotificationOutboxPublisher notificationOutboxPublisher,
     ITeamOutboxPublisher teamOutboxPublisher) : ITeamInvitationService
 {
-    public async Task InviteMembersByEmailsAsync(
-        string teamId,
-        ICollection<string> emails,
-        CancellationToken cancellationToken)
+    public async Task InviteMembersByEmailsAsync(string teamId, ICollection<string> emails, CancellationToken cancellationToken)
     {
         if (emails.Count == 0)
         {
@@ -48,8 +41,7 @@ public class TeamInvitationService(
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var team =
-            await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
+        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
         if (team is null)
         {
             throw new TeamNotFound();
@@ -62,14 +54,12 @@ public class TeamInvitationService(
 
         var existingMemberEmails = team.TeamMembers
             .SelectMany(item =>
-                item.Customer.Identities
-                    .Where(identity => !string.IsNullOrWhiteSpace(identity.Email))
-                    .Select(identity => identity.Email))
+                item.Customer.Identities.Where(identity => !string.IsNullOrWhiteSpace(identity.Email)).Select(identity => identity.Email))
             .ToList();
 
-        emails = emails.Where(item =>
-                !existingMemberEmails.Any(existingMemberEmail =>
-                    string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase)))
+        emails = emails
+            .Where(item => !existingMemberEmails.Any(existingMemberEmail =>
+                string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase)))
             .ToList();
         if (emails.Count == 0)
         {
@@ -79,23 +69,19 @@ public class TeamInvitationService(
         var pendingInvitations = await repositoryFactory.JoinInvitationRepository
             .Query(new Specification<JoinInvitation>
             {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue &&
-                    query.Team.Id == teamId &&
-                    query.Status == InvitationStatusConstants.Pending
+                Criteria = query => !query.DeletedAt.HasValue && query.Team.Id == teamId && query.Status == InvitationStatusConstants.Pending
             }).ToListAsync(cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         foreach (var email in emails)
         {
-            var matchingCustomerByEmail =
-                await repositoryFactory.CustomerRepository.GetByEmailAsync(email, cancellationToken);
-            var existingJoinInvitation = pendingInvitations.FirstOrDefault(item =>
-                (item.Email is not null &&
-                 string.Equals(item.Email, email, StringComparison.InvariantCultureIgnoreCase)) || (
-                    matchingCustomerByEmail is not null && item.Invitee is not null &&
-                    item.Invitee.Id == matchingCustomerByEmail.Id));
+            var matchingCustomerByEmail = await repositoryFactory.CustomerRepository.GetByEmailAsync(email, cancellationToken);
+            var existingJoinInvitation = pendingInvitations.FirstOrDefault(item => (item.Email is not null &&
+                                                                                    string.Equals(item.Email, email,
+                                                                                        StringComparison.InvariantCultureIgnoreCase)) ||
+                                                                                   (matchingCustomerByEmail is not null && item.Invitee is not null &&
+                                                                                    item.Invitee.Id == matchingCustomerByEmail.Id));
 
             existingJoinInvitation = existingJoinInvitation is null
                 ? repositoryFactory.JoinInvitationRepository.Add(new JoinInvitation
@@ -231,9 +217,7 @@ public class TeamInvitationService(
         await transaction.CommitAsync(cancellationToken);
     }
 
-    private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(
-        JoinInvitation joinInvitation,
-        Customer customer)
+    private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(JoinInvitation joinInvitation, Customer customer)
     {
         if (joinInvitation.Invitee is null && joinInvitation.Email is null)
         {
@@ -247,7 +231,8 @@ public class TeamInvitationService(
 
         if (joinInvitation.Email is not null && !customer.Identities
                 .Where(item => !string.IsNullOrWhiteSpace(item.Email))
-                .Select(item => item.Email).Any(item => string.Equals(item, joinInvitation.Email, StringComparison.InvariantCultureIgnoreCase)))
+                .Select(item => item.Email)
+                .Any(item => string.Equals(item, joinInvitation.Email, StringComparison.InvariantCultureIgnoreCase)))
         {
             throw new Unauthorized();
         }

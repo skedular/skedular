@@ -13,29 +13,25 @@ public interface IOrganizationAuthorizationService
     bool CanInvitePeople(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanCancelPeopleExistingInvitations(Shared.Database.Entities.Organization organization, Customer customer);
     bool CanViewAnalytics(Shared.Database.Entities.Organization organization, Customer customer);
+    bool CanViewMemberPersonalDetails(Shared.Database.Entities.Organization organization, Customer customer);
     Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken);
 }
 
-public class OrganizationAuthorizationService(
-    ICachedCustomerService cachedCustomerService,
-    IRepositoryFactory repositoryFactory)
+public class OrganizationAuthorizationService(ICachedCustomerService cachedCustomerService, IRepositoryFactory repositoryFactory)
     : IOrganizationAuthorizationService
 {
     public bool CanView(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator
-            or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
         };
 
     public bool CanModify(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
         };
 
     public bool CanDelete(Shared.Database.Entities.Organization organization, Customer customer) =>
@@ -49,8 +45,7 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
         };
 
     public bool CanCancelPeopleExistingInvitations(
@@ -59,24 +54,27 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
         };
 
     public bool CanViewAnalytics(Shared.Database.Entities.Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+        };
+
+    public bool CanViewMemberPersonalDetails(Shared.Database.Entities.Organization organization, Customer customer) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Status: OrganizationMemberStatusConstants.Active,
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
         };
 
     public async Task<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
-            organizationId,
-            cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();

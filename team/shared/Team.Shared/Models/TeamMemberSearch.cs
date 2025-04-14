@@ -13,7 +13,7 @@ public class TeamMemberSearchCriteria
     }
 
     public string TeamId { get; }
-    public string? NameContains { get; }
+    public string? NameContains { get; set; }
 }
 
 public record TeamMemberOrder(OrderDirection Direction, TeamMemberOrderField Field);

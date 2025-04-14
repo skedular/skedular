@@ -45,7 +45,6 @@ public interface IMapper
 
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
-    Shared.Models.Booking MapTo(Admin_AddInput src);
     Shared.Models.Booking MapTo(UpdateInput src);
     Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src);
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
@@ -136,7 +135,7 @@ public class Mapper : IMapper
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList(),
-            ProductVersions = src.ProductVersionIds.Select(item => new ProductVersion{Id = item}).ToList()
+            ProductVersions = src.ProductVersionIds.Select(item => new ProductVersion { Id = item }).ToList()
         };
     }
 
@@ -157,7 +156,7 @@ public class Mapper : IMapper
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList(),
-            ProductVersions = src.ProductVersionIds.Select(item => new ProductVersion{Id = item}).ToList()
+            ProductVersions = src.ProductVersionIds.Select(item => new ProductVersion { Id = item }).ToList()
         };
     }
 
@@ -251,38 +250,6 @@ public class Mapper : IMapper
             },
             BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) }),
             Customer = new Customer { Id = src.CustomerId },
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
-            Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
-            Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },
-            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, [customer])).ToList()
-        };
-    }
-
-    public Shared.Models.Booking MapTo(Admin_AddInput src)
-    {
-        var customer = new Customer { Id = src.CustomerId };
-
-        return new Shared.Models.Booking
-        {
-            Id = src.Id,
-            From = src.From.ToDateTimeOffset(),
-            Until = src.Until.ToDateTimeOffset(),
-            Notes = src.Notes.ToSafeString(),
-            Type = src.Type switch
-            {
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => BookingType.WorkingFromHome,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => BookingType.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => BookingType.SickLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => BookingType.AnnualLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellBeingLeave => BookingType.WellBeingLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffices => BookingType.ClientOffices,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => BookingType.Vacation,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => BookingType.TravelingForWork,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            BookingSchedules = new BookingSchedules(new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) }),
-            Customer = customer,
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Shared.Models.Organization { Id = src.OrganizationId },
             Location = string.IsNullOrWhiteSpace(src.LocationId) ? null : new Shared.Models.Location { Id = src.LocationId },
             Team = string.IsNullOrWhiteSpace(src.TeamId) ? null : new Shared.Models.Team { Id = src.TeamId },

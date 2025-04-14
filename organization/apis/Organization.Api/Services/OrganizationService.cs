@@ -192,6 +192,27 @@ public class OrganizationService(
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        if (customer is null)
+        {
+            return organization;
+        }
+
+        if (organizationAuthorizationService.CanViewMemberPersonalDetails(organizationEntity, customer))
+        {
+            return organization;
+        }
+
+        var memberVisibilityPolicy = organizationEntity.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
+        foreach (var member in organization.OrganizationMembers.Where(item => item.Customer.Id != customer.Id))
+        {
+            member.Customer = member.Customer.Redact(memberVisibilityPolicy);
+            foreach (var identity in member.Customer.Identities)
+            {
+                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+            }
+        }
+
         return organization;
     }
 
@@ -232,6 +253,22 @@ public class OrganizationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        if (organizationAuthorizationService.CanViewMemberPersonalDetails(organization, customer))
+        {
+            return deletedOrganization;
+        }
+
+        var memberVisibilityPolicy = organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
+        foreach (var member in deletedOrganization.OrganizationMembers.Where(item => item.Customer.Id != customer.Id))
+        {
+            member.Customer = member.Customer.Redact(memberVisibilityPolicy);
+            foreach (var identity in member.Customer.Identities)
+            {
+                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+            }
+        }
+
         return deletedOrganization;
     }
 
@@ -342,6 +379,27 @@ public class OrganizationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        if (customer is null)
+        {
+            return organization;
+        }
+
+        if (organizationAuthorizationService.CanViewMemberPersonalDetails(existingOrganization, customer))
+        {
+            return organization;
+        }
+
+        var memberVisibilityPolicy = existingOrganization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
+        foreach (var member in organization.OrganizationMembers.Where(item => item.Customer.Id != customer.Id))
+        {
+            member.Customer = member.Customer.Redact(memberVisibilityPolicy);
+            foreach (var identity in member.Customer.Identities)
+            {
+                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+            }
+        }
+
         return organization;
     }
 
@@ -391,6 +449,21 @@ public class OrganizationService(
         if (organizationMember is not null)
         {
             mappedOrganization.IsMyOnboardingDone = organizationMember.IsOrganizationOnboardingDone ?? false;
+        }
+
+        if (organizationAuthorizationService.CanViewMemberPersonalDetails(organization, customer))
+        {
+            return mappedOrganization;
+        }
+
+        var memberVisibilityPolicy = organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
+        foreach (var member in mappedOrganization.OrganizationMembers.Where(item => item.Customer.Id != customer.Id))
+        {
+            member.Customer = member.Customer.Redact(memberVisibilityPolicy);
+            foreach (var identity in member.Customer.Identities)
+            {
+                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+            }
         }
 
         return mappedOrganization;

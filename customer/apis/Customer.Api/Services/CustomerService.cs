@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Customer.Api.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
@@ -59,15 +60,31 @@ public class CustomerService(
         if (!ignoreAuthorizationCheck)
         {
             var (_, callingCustomer) = await cachedCustomerService.GetAsync(cancellationToken);
-            var askingCustomerOrganizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
-            var askingCustomerOrganizationIds = askingCustomerOrganizations.Select(item => item.Id).ToList();
-            var callingCustomerOrganizations =
-                await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(callingCustomer.Id, cancellationToken);
-            var callingCustomerOrganizationIds = callingCustomerOrganizations.Select(item => item.Id).ToList();
-
-            if (!askingCustomerOrganizationIds.Any(item => callingCustomerOrganizationIds.Contains(item)))
+            if (callingCustomer.Id != id)
             {
-                throw new Unauthorized();
+                var askingCustomerOrganizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
+                var callingCustomerOrganizations =
+                    await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(callingCustomer.Id, cancellationToken);
+
+                var mutualOrganizations = askingCustomerOrganizations
+                    .Where(item => callingCustomerOrganizations.Select(organization => organization.Id).Contains(item.Id))
+                    .ToList();
+                if (mutualOrganizations.Count == 0)
+                {
+                    throw new Unauthorized();
+                }
+
+                if (mutualOrganizations.All(item => item.MemberVisibilityPolicy != OrganizationMemberVisibilityPolicyConstants.FullAccess))
+                {
+                    var result = mapper.MapTo(customer);
+                    result = result.Redact(OrganizationMemberVisibilityPolicy.LimitedAccess);
+                    foreach (var identity in result.Identities)
+                    {
+                        identity.Email = identity.Email.FullRedact(OrganizationMemberVisibilityPolicy.LimitedAccess);
+                    }
+
+                    return result;
+                }
             }
         }
 

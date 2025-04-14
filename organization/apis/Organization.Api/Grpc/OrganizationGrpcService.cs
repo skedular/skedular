@@ -61,7 +61,8 @@ public class OrganizationGrpcService(
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Get(
-        GetInput request, ServerCallContext context)
+        GetInput request,
+        ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
@@ -80,7 +81,8 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await organizationMemberService.AddMemberAsync(request.Id, mapper.MapTo(request), context.CancellationToken));
+        return mapper.MapToGrpcResponse(
+            await organizationMemberService.AdminAddMemberAsync(request.Id, mapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<MemberConnection> GetPaginatedMembers(GetPaginatedMembersInput request, ServerCallContext context)

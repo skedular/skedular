@@ -13,7 +13,7 @@ public interface ITeamRepository : IRepository<Database.Entities.Team>
 {
     Task<Database.Entities.Team?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Team>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<IEnumerable<Database.Entities.Team>> GetByCustomerIdAsync(string customerId, string? organizationId, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Team>> GetByCustomerIdAsync(string customerId, string? organizationId, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Team>> GetAllAsync(CancellationToken cancellationToken);
     Database.Entities.Team Add(Database.Entities.Team team);
     Database.Entities.Team Update(Database.Entities.Team team);
@@ -133,15 +133,12 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
             .AddDependentObjects()
             .ToListAsync(cancellationToken);
 
-    public async Task<IEnumerable<Database.Entities.Team>> GetByCustomerIdAsync(
+    public async Task<ICollection<Database.Entities.Team>> GetByCustomerIdAsync(
         string customerId,
         string? organizationId,
         CancellationToken cancellationToken)
     {
-        var query = DbContext.Team
-            .Where(team =>
-                !team.DeletedAt.HasValue && team.TeamMembers.Any(item => item.Customer.Id == customerId));
-
+        var query = DbContext.Team.Where(team => !team.DeletedAt.HasValue && team.TeamMembers.Any(item => item.Customer.Id == customerId));
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             query = query.Where(team => !team.Organization.DeletedAt.HasValue && team.Organization.Id == organizationId);

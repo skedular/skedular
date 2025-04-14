@@ -5,8 +5,6 @@ option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Team.V1";
 
 service TeamService {
     rpc Admin_Get (Admin_GetInput) returns (Team);
-    rpc Admin_Add (Admin_AddInput) returns (Team);
-    rpc Admin_UpdateMembers (Admin_UpdateMembersInput) returns (Team);
 
     rpc GetVersion (VersionInput) returns (Version);
     rpc Get (GetInput) returns (Team);
@@ -108,16 +106,6 @@ message Permissions {
     bool canCancelPeopleExistingInvitations = 5;
 }
 
-message Admin_AddInput {
-    string id = 1;
-    string name = 2;
-    string about = 3;
-    string organizationId = 4;
-    string timezone = 5;
-    repeated TeamMember members = 6;
-    string primaryLocationId = 7;
-}
-
 message AddInput {
     string id = 1;
     string name = 2;
@@ -176,11 +164,6 @@ message Customer {
     string photoUrl192 = 11;
     string photoUrl512 = 12;
     string phoneNumber = 13;
-}
-
-message Admin_UpdateMembersInput {
-    string id = 1;
-    repeated TeamMember members = 2;
 }
 
 message Location {

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
@@ -18,7 +19,7 @@ namespace Team.Api.Services;
 
 public interface ITeamService
 {
-    Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
+    Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, CancellationToken cancellationToken);
     Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken);
     Task<Shared.Models.Team> DeleteAsync(string teamId, CancellationToken cancellationToken);
     Task<Shared.Models.Team?> GetByIdAsync(string teamId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
@@ -45,12 +46,12 @@ public class TeamService(
     TimeProvider timeProvider,
     ITeamMemberService teamMemberService) : ITeamService
 {
-    public async Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Team> AddAsync(Shared.Models.Team team, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(team.Organization);
         ArgumentException.ThrowIfNullOrWhiteSpace(team.Organization.Id);
 
-        var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
 
         Location? primaryLocation = null;
         if (team.PrimaryLocation is not null)
@@ -73,23 +74,15 @@ public class TeamService(
         }
 
         var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
-        if (!ignoreAuthorizationCheck)
+        if (!organizationAuthorizationService.CanModify(organization, customer))
         {
-            if (customer is null)
-            {
-                throw new CustomerNotFound();
-            }
+            throw new Unauthorized();
+        }
 
-            if (!organizationAuthorizationService.CanModify(organization, customer))
-            {
-                throw new Unauthorized();
-            }
-
-            if (!organizationOfferingService.CanCreateTeam(organization) ||
-                !organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
-            {
-                throw new NoMoreInteractionAllowed();
-            }
+        if (!organizationOfferingService.CanCreateTeam(organization) ||
+            !organizationOfferingService.IsMoreInteractionAllowed(organization, customer))
+        {
+            throw new NoMoreInteractionAllowed();
         }
 
         if (!string.IsNullOrWhiteSpace(team.Id))
@@ -97,11 +90,6 @@ public class TeamService(
             var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
             if (existingTeam is not null)
             {
-                if (!ignoreAuthorizationCheck && customer is null)
-                {
-                    throw new CustomerNotFound();
-                }
-
                 return await UpdateInternalAsync(
                     team,
                     existingTeam,
@@ -138,6 +126,31 @@ public class TeamService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        if (teamAuthorizationService.CanViewMemberPersonalDetails(teamEntity, customer))
+        {
+            return team;
+        }
+
+        var memberVisibilityPolicy = teamEntity.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
+        foreach (var member in team.TeamMembers.Where(item => item.Customer.Id != customer.Id))
+        {
+            member.Customer = member.Customer.Redact(memberVisibilityPolicy);
+            foreach (var identity in member.Customer.Identities)
+            {
+                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+            }
+
+            if (member.OrganizationMember is not null)
+            {
+                member.OrganizationMember.Customer = member.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
+                foreach (var identity in member.OrganizationMember.Customer.Identities)
+                {
+                    identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+                }
+            }
+        }
+
         return team;
     }
 
@@ -210,6 +223,31 @@ public class TeamService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        if (teamAuthorizationService.CanViewMemberPersonalDetails(existingTeam, customer))
+        {
+            return deletedTeam;
+        }
+
+        var memberVisibilityPolicy = existingTeam.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
+        foreach (var member in deletedTeam.TeamMembers.Where(item => item.Customer.Id != customer.Id))
+        {
+            member.Customer = member.Customer.Redact(memberVisibilityPolicy);
+            foreach (var identity in member.Customer.Identities)
+            {
+                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+            }
+
+            if (member.OrganizationMember is not null)
+            {
+                member.OrganizationMember.Customer = member.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
+                foreach (var identity in member.OrganizationMember.Customer.Identities)
+                {
+                    identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+                }
+            }
+        }
+
         return deletedTeam;
     }
 
@@ -232,12 +270,11 @@ public class TeamService(
         return await EnrichTeamAsync(customer, team, cancellationToken);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int)>
-        GetPaginatedTeamsAsync(
-            PaginationInputParam paginationInputParam,
-            TeamSearchCriteria searchCriteria,
-            ICollection<TeamOrder> orderByFields,
-            CancellationToken cancellationToken)
+    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(
+        PaginationInputParam paginationInputParam,
+        TeamSearchCriteria searchCriteria,
+        ICollection<TeamOrder> orderByFields,
+        CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
 
@@ -301,7 +338,6 @@ public class TeamService(
     public async Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(string? organizationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
-
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
@@ -317,19 +353,48 @@ public class TeamService(
         }
 
         var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customer.Id, organizationId, cancellationToken);
-        return teams.Select(mapper.MapTo).ToList();
+        var result = teams.Select(mapper.MapTo).ToList();
+        foreach (var team in result)
+        {
+            var teamEntity = teams.First(item => item.Id == team.Id);
+            if (teamAuthorizationService.CanViewMemberPersonalDetails(teamEntity, customer))
+            {
+                continue;
+            }
+
+            var memberVisibilityPolicy = teamEntity.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
+            foreach (var member in team.TeamMembers.Where(item => item.Customer.Id != customer.Id))
+            {
+                member.Customer = member.Customer.Redact(memberVisibilityPolicy);
+                foreach (var identity in member.Customer.Identities)
+                {
+                    identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+                }
+
+                if (member.OrganizationMember is not null)
+                {
+                    member.OrganizationMember.Customer = member.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
+                    foreach (var identity in member.OrganizationMember.Customer.Identities)
+                    {
+                        identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     private async Task<Shared.Models.Team> UpdateInternalAsync(
         Shared.Models.Team team,
         Shared.Database.Entities.Team existingTeam,
-        Customer? customer,
+        Customer customer,
         Organization organization,
         Location? primaryLocation,
         bool updateTeamMembers,
         CancellationToken cancellationToken)
     {
-        if (customer is not null && !teamAuthorizationService.CanModify(existingTeam, customer))
+        if (!teamAuthorizationService.CanModify(existingTeam, customer))
         {
             throw new Unauthorized();
         }
@@ -367,6 +432,31 @@ public class TeamService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        if (teamAuthorizationService.CanViewMemberPersonalDetails(existingTeam, customer))
+        {
+            return team;
+        }
+
+        var memberVisibilityPolicy = existingTeam.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
+        foreach (var member in team.TeamMembers.Where(item => item.Customer.Id != customer.Id))
+        {
+            member.Customer = member.Customer.Redact(memberVisibilityPolicy);
+            foreach (var identity in member.Customer.Identities)
+            {
+                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+            }
+
+            if (member.OrganizationMember is not null)
+            {
+                member.OrganizationMember.Customer = member.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
+                foreach (var identity in member.OrganizationMember.Customer.Identities)
+                {
+                    identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+                }
+            }
+        }
+
         return team;
     }
 
@@ -398,6 +488,35 @@ public class TeamService(
         mappedTeam.HasFutureBooking = await repositoryFactory.BookingRepository
             .Query(new Specification<Booking> { Criteria = query => !query.DeletedAt.HasValue && query.Team.Id == team.Id && query.From >= now })
             .AnyAsync(cancellationToken);
+
+        if (customer is null)
+        {
+            return mappedTeam;
+        }
+
+        if (teamAuthorizationService.CanViewMemberPersonalDetails(team, customer))
+        {
+            return mappedTeam;
+        }
+
+        var memberVisibilityPolicy = team.Organization.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
+        foreach (var member in mappedTeam.TeamMembers.Where(item => item.Customer.Id != customer.Id))
+        {
+            member.Customer = member.Customer.Redact(memberVisibilityPolicy);
+            foreach (var identity in member.Customer.Identities)
+            {
+                identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+            }
+
+            if (member.OrganizationMember is not null)
+            {
+                member.OrganizationMember.Customer = member.OrganizationMember.Customer.Redact(memberVisibilityPolicy);
+                foreach (var identity in member.OrganizationMember.Customer.Identities)
+                {
+                    identity.Email = identity.Email.FullRedact(memberVisibilityPolicy);
+                }
+            }
+        }
 
         return mappedTeam;
     }

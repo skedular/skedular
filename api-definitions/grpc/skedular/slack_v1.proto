@@ -5,7 +5,6 @@ option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Slack.V1";
 
 service SlackService {
     rpc GetVersion (VersionInput) returns (Version);
-    rpc Admin_AddWorkspace (Admin_AddWorkspaceInput) returns (Workspace);
 }
 
 message VersionInput {
@@ -16,40 +15,4 @@ message Version {
     int32 minor = 2;
     int32 build = 3;
     int32 revision = 4;
-}
-
-message Admin_AddWorkspaceInput {
-    string id = 1;
-    string name = 2;
-    string domain = 3;
-    string emailDomain = 4;
-    string enterpriseId = 5;
-    string enterpriseName = 6;
-    string botUserId = 7;
-    string botUserScope = 8;
-    string botUserAccessToken = 9;
-    string botRefreshToken = 10;
-    string authedUserId = 11;
-    string authedUserScope = 12;
-    string authedUserAccessToken = 13;
-    string authedRefreshToken = 14;
-    string organizationId = 15;
-}
-
-message Workspace {
-    string id = 1;
-    string name = 2;
-    string domain = 3;
-    string emailDomain = 4;
-    string enterpriseId = 5;
-    string enterpriseName = 6;
-    string botUserId = 7;
-    string botUserScope = 8;
-    string botUserAccessToken = 9;
-    string botRefreshToken = 10;
-    string authedUserId = 11;
-    string authedUserScope = 12;
-    string authedUserAccessToken = 13;
-    string authedRefreshToken = 14;
-    string organizationId = 15;
 }

@@ -7,7 +7,6 @@ option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Booking.V1";
 
 service BookingService {
     rpc Admin_GetPaginatedBookings (Admin_GetPaginatedBookingsInput) returns (BookingConnection);
-    rpc Admin_Add (Admin_AddInput) returns (Booking);
 
     rpc GetVersion (VersionInput) returns (Version);
     rpc GetPaginatedBookings (GetPaginatedBookingsInput) returns (BookingConnection);
@@ -217,19 +216,6 @@ message TeamPermissions {
 
 message GetInput {
     string id = 1;
-}
-
-message Admin_AddInput {
-    string id = 1;
-    google.protobuf.Timestamp from = 2;
-    google.protobuf.Timestamp until = 3;
-    string notes = 4;
-    string customerId = 5;
-    string organizationId = 6;
-    string locationId = 7;
-    string teamId = 8;
-    repeated string resourceIds = 9;
-    BookingType type = 10;
 }
 
 message AddInput {

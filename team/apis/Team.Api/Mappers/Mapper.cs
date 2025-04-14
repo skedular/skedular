@@ -43,9 +43,7 @@ public interface IMapper
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
     global::Api.Shared.Services.Grpc.Skedular.Team.V1.Team MapToGrpcResponse(Shared.Models.Team src);
     Shared.Models.Team MapTo(AddInput src);
-    Shared.Models.Team MapTo(Admin_AddInput src);
     Shared.Models.Team MapTo(UpdateInput src);
-    ICollection<TeamMember> MapTo(Admin_UpdateMembersInput src);
     TeamEdge MapTo(Edge<Shared.Models.Team> src);
     global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src);
     IEnumerable<Edge<TeamMember>> MapTo(IEnumerable<Edge<Shared.Database.Entities.TeamMember>> src, Shared.Models.Team team);
@@ -301,18 +299,6 @@ public class Mapper : IMapper
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
         };
 
-    public Shared.Models.Team MapTo(Admin_AddInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            About = src.About,
-            Timezone = src.Timezone,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
-            TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
-        };
-
     public Shared.Models.Team MapTo(UpdateInput src) =>
         new()
         {
@@ -324,9 +310,6 @@ public class Mapper : IMapper
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
         };
-
-    public ICollection<TeamMember> MapTo(Admin_UpdateMembersInput src) =>
-        src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList();
 
     public TeamEdge MapTo(Edge<Shared.Models.Team> src) => new(MapTo(src.Node)!, src.Cursor);
 

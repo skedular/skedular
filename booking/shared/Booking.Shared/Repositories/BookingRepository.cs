@@ -33,6 +33,7 @@ internal static class BookingExtensions
             .Include(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .Include(query => query.Organization)
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .Include(query => query.Location)
             .ThenInclude(query => query.Organization)
             .Include(query => query.Team)

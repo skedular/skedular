@@ -221,20 +221,11 @@ public class BookingGrpcService(
         return mapper.MapToGrpcResponse(await bookingService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Admin_Add(
-        Admin_AddInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(await bookingService.AddAsync(mapper.MapTo(request), true, context.CancellationToken));
-    }
-
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Add(AddInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await bookingService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await bookingService.AddAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Update(UpdateInput request, ServerCallContext context)
