@@ -371,6 +371,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, t
           teamId: bookingDetails.team?.uniqueId,
           resourceIds: [],
           type,
+          productVersionIds: [],
         },
       },
       onCompleted: (response, errors) => {

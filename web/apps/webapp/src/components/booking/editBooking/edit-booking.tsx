@@ -501,6 +501,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
           teamId,
           resourceIds,
           type,
+          productVersionIds: [],
         },
       },
       onCompleted: (_, errors) => {

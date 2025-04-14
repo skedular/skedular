@@ -25,6 +25,31 @@ public class AddBookingInput
     [GraphQLName("locationId")] public string? LocationId { get; set; }
     [GraphQLName("resourceIds")] public IEnumerable<string> ResourceIds { get; set; } = [];
     [GraphQLName("teamId")] public string? TeamId { get; set; }
+    [GraphQLName("productVersionIds")] public IEnumerable<string> ProductVersionIds { get; set; } = [];
+}
+
+[GraphQLName("UpdateBookingInput")]
+public class UpdateBookingInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("customerId")] public required string CustomerId { get; set; }
+    [GraphQLName("from")] public DateTimeOffset From { get; set; }
+    [GraphQLName("until")] public DateTimeOffset Until { get; set; }
+    [GraphQLName("notes")] public string? Notes { get; set; }
+    [GraphQLName("type")] public BookingType Type { get; set; }
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("locationId")] public string? LocationId { get; set; }
+    [GraphQLName("resourceIds")] public IEnumerable<string> ResourceIds { get; set; } = [];
+    [GraphQLName("teamId")] public string? TeamId { get; set; }
+    [GraphQLName("productVersionIds")] public IEnumerable<string> ProductVersionIds { get; set; } = [];
+}
+
+[GraphQLName("DeleteBookingInput")]
+public class DeleteBookingInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
 }
 
 [GraphQLName("BookingConnection")]
@@ -59,6 +84,7 @@ public class BookingDetails : Node
     [GraphQLName("location")] public LocationDetails? Location { get; set; }
     [GraphQLName("resources")] public IEnumerable<BookingResourceDetails> Resources { get; set; } = [];
     [GraphQLName("team")] public TeamDetails? Team { get; set; }
+    [GraphQLName("productVersions")] public IEnumerable<ProductVersionDetails> ProductVersions { get; set; } = [];
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -143,13 +169,6 @@ public class BookingWhereInput
     public bool? CombineOrganizationsLocationsTeams { get; set; }
 }
 
-[GraphQLName("DeleteBookingInput")]
-public class DeleteBookingInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-}
-
 [GraphQLName("OrganizationBookingPermissions")]
 public class OrganizationBookingPermissions
 {
@@ -178,22 +197,6 @@ public class TeamBookingPermissions
 
     [GraphQLName("canDeleteBookingOnBehalf")]
     public bool CanDeleteBookingOnBehalf { get; set; }
-}
-
-[GraphQLName("UpdateBookingInput")]
-public class UpdateBookingInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("customerId")] public required string CustomerId { get; set; }
-    [GraphQLName("from")] public DateTimeOffset From { get; set; }
-    [GraphQLName("until")] public DateTimeOffset Until { get; set; }
-    [GraphQLName("notes")] public string? Notes { get; set; }
-    [GraphQLName("type")] public BookingType Type { get; set; }
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
-    [GraphQLName("locationId")] public string? LocationId { get; set; }
-    [GraphQLName("resourceIds")] public IEnumerable<string> ResourceIds { get; set; } = [];
-    [GraphQLName("teamId")] public string? TeamId { get; set; }
 }
 
 [GraphQLName("AvailableResourcesWhereInput")]
@@ -241,4 +244,59 @@ public class OrganizationAvailableResourcesWhereInput
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
     [GraphQLName("from")] public required DateTimeOffset From { get; set; }
     [GraphQLName("until")] public required DateTimeOffset Until { get; set; }
+}
+
+[GraphQLName("Booking_ProductVersionDetails")]
+public class ProductVersionDetails
+{
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("description")] public string? Description { get; set; }
+    [GraphQLName("price")] public required string Price { get; set; }
+    [GraphQLName("priceToDisplay")] public required string PriceToDisplay { get; set; }
+    [GraphQLName("priceUnit")] public PriceUnitDetails PriceUnit { get; set; }
+    [GraphQLName("currency")] public CurrencyDetails Currency { get; set; }
+    [GraphQLName("minDurationMinutes")] public int? MinDurationMinutes { get; set; }
+    [GraphQLName("maxDurationMinutes")] public int? MaxDurationMinutes { get; set; }
+
+    [GraphQLName("bookAllLocationResources")]
+    public bool BookAllLocationResources { get; set; }
+
+    [GraphQLName("recurrenceWindowDays")] public int RecurrenceWindowDays { get; set; }
+
+    [GraphQLName("requireConsecutiveDays")]
+    public bool RequireConsecutiveDays { get; set; }
+
+    [GraphQLName("maxBookingSpreadDays")] public int? MaxBookingSpreadDays { get; set; }
+
+    [GraphQLName("numberOfResourcesToBook")]
+    public int NumberOfResourcesToBook { get; set; }
+
+    [GraphQLName("productTags")] public IEnumerable<OrganizationTagDetails> ProductTags { get; set; } = [];
+    [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
+
+    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; }
+}
+
+[GraphQLName("Booking_CurrencyDetails")]
+public class CurrencyDetails
+{
+    [GraphQLName("type")] public Currency Type { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+}
+
+[GraphQLName("Booking_PriceUnitDetails")]
+public class PriceUnitDetails
+{
+    [GraphQLName("type")] public PriceUnit Type { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+}
+
+[GraphQLName("Booking_OrganizationTagDetails")]
+public class OrganizationTagDetails
+{
+    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
+    [GraphQLName("name")] public string? Name { get; set; }
+    [GraphQLName("tagType")] public string? TagType { get; set; }
+    [GraphQLName("color")] public string? Color { get; set; }
 }

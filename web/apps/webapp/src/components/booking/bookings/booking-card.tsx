@@ -267,6 +267,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationId, conne
           teamId: bookingDetails.team?.uniqueId,
           resourceIds: [],
           type,
+          productVersionIds: [],
         },
       },
       onCompleted: (response, errors) => {

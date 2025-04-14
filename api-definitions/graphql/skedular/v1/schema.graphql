@@ -45,6 +45,7 @@ type BookingDetails {
   location: Booking_LocationDetails
   notes: String
   organization: Booking_OrganizationDetails
+  productVersions: [Booking_ProductVersionDetails!]!
   resources: [BookingResourceDetails!]!
   team: Booking_TeamDetails
   type: BookingType!
@@ -74,6 +75,11 @@ type BookingResourceDetails {
   zones: [Booking_OrganizationZoneDetails!]!
 }
 
+type Booking_CurrencyDetails {
+  name: String!
+  type: Currency!
+}
+
 type Booking_LocationDetails {
   name: String!
   uniqueId: ID!
@@ -90,9 +96,41 @@ type Booking_OrganizationDetails {
   uniqueId: ID!
 }
 
+type Booking_OrganizationTagDetails {
+  color: String
+  name: String
+  tagType: String
+  uniqueId: ID!
+}
+
 type Booking_OrganizationZoneDetails {
   color: String
   name: String
+  uniqueId: ID!
+}
+
+type Booking_PriceUnitDetails {
+  name: String!
+  type: PriceUnit!
+}
+
+type Booking_ProductVersionDetails {
+  bookAllLocationResources: Boolean!
+  currency: Booking_CurrencyDetails!
+  description: String
+  locationTags: [Booking_OrganizationTagDetails!]!
+  maxBookingSpreadDays: Int
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
+  name: String!
+  numberOfResourcesToBook: Int!
+  organization: Booking_OrganizationDetails!
+  price: String!
+  priceToDisplay: String!
+  priceUnit: Booking_PriceUnitDetails!
+  productTags: [Booking_OrganizationTagDetails!]!
+  recurrenceWindowDays: Int!
+  requireConsecutiveDays: Boolean!
   uniqueId: ID!
 }
 
@@ -1048,6 +1086,7 @@ input AddBookingInput {
   locationId: String
   notes: String
   organizationId: String
+  productVersionIds: [String!]!
   resourceIds: [String!]!
   teamId: String
   type: BookingType!
@@ -1634,6 +1673,7 @@ input UpdateBookingInput {
   locationId: String
   notes: String
   organizationId: String
+  productVersionIds: [String!]!
   resourceIds: [String!]!
   teamId: String
   type: BookingType!

@@ -440,6 +440,7 @@ const NewBookingDialog = ({
           locationId,
           resourceIds,
           type,
+          productVersionIds: [],
         },
       },
       onCompleted: (response, errors) => {

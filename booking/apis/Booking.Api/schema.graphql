@@ -34,6 +34,7 @@ type BookingDetails {
   location: Booking_LocationDetails
   resources: [BookingResourceDetails!]!
   team: Booking_TeamDetails
+  productVersions: [Booking_ProductVersionDetails!]!
   id: ID!
 }
 
@@ -60,6 +61,11 @@ type BookingResourceDetails {
   customers: [BookingCustomerDetails!]!
 }
 
+type Booking_CurrencyDetails {
+  type: Currency!
+  name: String!
+}
+
 type Booking_LocationDetails {
   uniqueId: ID!
   name: String!
@@ -76,10 +82,42 @@ type Booking_OrganizationDetails {
   name: String!
 }
 
+type Booking_OrganizationTagDetails {
+  uniqueId: ID!
+  name: String
+  tagType: String
+  color: String
+}
+
 type Booking_OrganizationZoneDetails {
   uniqueId: ID!
   name: String
   color: String
+}
+
+type Booking_PriceUnitDetails {
+  type: PriceUnit!
+  name: String!
+}
+
+type Booking_ProductVersionDetails {
+  uniqueId: ID!
+  name: String!
+  description: String
+  price: String!
+  priceToDisplay: String!
+  priceUnit: Booking_PriceUnitDetails!
+  currency: Booking_CurrencyDetails!
+  minDurationMinutes: Int
+  maxDurationMinutes: Int
+  bookAllLocationResources: Boolean!
+  recurrenceWindowDays: Int!
+  requireConsecutiveDays: Boolean!
+  maxBookingSpreadDays: Int
+  numberOfResourcesToBook: Int!
+  productTags: [Booking_OrganizationTagDetails!]!
+  locationTags: [Booking_OrganizationTagDetails!]!
+  organization: Booking_OrganizationDetails!
 }
 
 type Booking_TeamDetails {
@@ -154,6 +192,7 @@ input AddBookingInput {
   locationId: String
   resourceIds: [String!]!
   teamId: String
+  productVersionIds: [String!]!
 }
 
 input AvailableResourcesWhereInput {
@@ -215,6 +254,7 @@ input UpdateBookingInput {
   locationId: String
   resourceIds: [String!]!
   teamId: String
+  productVersionIds: [String!]!
 }
 
 enum BookingOrderField {
@@ -243,9 +283,20 @@ enum BookingType {
   NonWorkingDay
 }
 
+enum Currency {
+  Nzd
+  Usd
+}
+
 enum OrderDirection {
   Ascending
   Descending
+}
+
+enum PriceUnit {
+  PerMinute
+  PerHour
+  PerUse
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
