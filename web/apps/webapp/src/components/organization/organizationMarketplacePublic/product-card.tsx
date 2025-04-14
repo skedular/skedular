@@ -1,18 +1,24 @@
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
 import { ProductIcon } from '@/components/icons';
+import { getOrganizationBookingProductLink } from '@/components/links';
+import BookProductButton from '@/components/product/bookProduct/book-product-button';
+import { PaletteModeContext } from '@/libs/providers';
 import type { productCard_ProductDetails$key } from '@/queries/__generated__/productCard_ProductDetails.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import { memo } from 'react';
+import Link from '@mui/material/Link';
+import NextLink from 'next/link';
+import { memo, useContext } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: productCard_ProductDetails$key;
   onReloadRequired: () => void;
+  organizationId: string;
 };
 
-const ProductCard = ({ rootDataRelay }: Props) => {
+const ProductCard = ({ rootDataRelay, organizationId }: Props) => {
   const productDetails = useFragment(
     graphql`
       fragment productCard_ProductDetails on ProductDetails {
@@ -36,13 +42,29 @@ const ProductCard = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const paletteMode = useContext(PaletteModeContext);
+
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
         <CardHeader
           title={
             <StackRow>
-              <LeadIconTypography label={productDetails.name} startElement={<ProductIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
+              <Link component={NextLink} href={getOrganizationBookingProductLink(organizationId, productDetails.id)}>
+                <LeadIconTypography label={productDetails.name} startElement={<ProductIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
+              </Link>
+
+              <PushToRight />
+              <BookProductButton
+                organizationId={organizationId}
+                productId={productDetails.id}
+                label="Book Now"
+                hideIcon
+                variant="contained"
+                size="small"
+                sx={{ textTransform: 'none' }}
+                invertDefaultColor={paletteMode === 'dark'}
+              />
             </StackRow>
           }
         />

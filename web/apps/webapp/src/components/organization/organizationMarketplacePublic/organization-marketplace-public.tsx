@@ -17,6 +17,7 @@ import ProductCard from './product-card';
 type Props = {
   queryReference: PreloadedQuery<organizationMarketplacePublic_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
+  organizationId: string;
 };
 
 const RootQuery = graphql`
@@ -38,7 +39,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationMarketplacePublic = ({ queryReference, onReloadRequired }: Props) => {
+const OrganizationMarketplacePublic = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<organizationMarketplacePublic_rootQuery>(RootQuery, queryReference);
   const products = useMemo(() => rootData.products.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootData.products]);
 
@@ -57,7 +58,7 @@ const OrganizationMarketplacePublic = ({ queryReference, onReloadRequired }: Pro
           <GridContainer>
             {products.map((product) => (
               <Grid key={product.id}>
-                <ProductCard rootDataRelay={product} onReloadRequired={onReloadRequired} />
+                <ProductCard rootDataRelay={product} onReloadRequired={onReloadRequired} organizationId={organizationId} />
               </Grid>
             ))}
           </GridContainer>
@@ -109,7 +110,7 @@ const OrganizationMarketplacePublicWithRelay = ({ organizationId }: RelayProps) 
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationMarketplacePublic queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+      <MemoOrganizationMarketplacePublic queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={organizationId} />
     </ErrorBoundary>
   );
 };

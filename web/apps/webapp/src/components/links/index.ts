@@ -54,3 +54,4 @@ export const getOrganizationMarketplaceSetupLocationTagsBaseLink = (id: string) 
 export const getOrganizationMarketplaceBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-public`;
 export const getOrganizationProductBaseLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}`;
 export const getOrganizationProductAddLink = (id: string) => `${getOrganizationBaseLink(id)}/products/add`;
+export const getOrganizationBookingProductLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}/book`;
