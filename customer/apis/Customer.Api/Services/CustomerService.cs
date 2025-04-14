@@ -59,15 +59,11 @@ public class CustomerService(
         if (!ignoreAuthorizationCheck)
         {
             var (_, callingCustomer) = await cachedCustomerService.GetAsync(cancellationToken);
-
-            var askingCustomerOrganizationIds = (await repositoryFactory.OrganizationRepository
-                    .GetByCustomerIdAsync(customer.Id, cancellationToken))
-                .Select(item => item.Id)
-                .ToList();
-            var callingCustomerOrganizationIds = (await repositoryFactory.OrganizationRepository
-                    .GetByCustomerIdAsync(callingCustomer.Id, cancellationToken))
-                .Select(item => item.Id)
-                .ToList();
+            var askingCustomerOrganizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
+            var askingCustomerOrganizationIds = askingCustomerOrganizations.Select(item => item.Id).ToList();
+            var callingCustomerOrganizations =
+                await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(callingCustomer.Id, cancellationToken);
+            var callingCustomerOrganizationIds = callingCustomerOrganizations.Select(item => item.Id).ToList();
 
             if (!askingCustomerOrganizationIds.Any(item => callingCustomerOrganizationIds.Contains(item)))
             {

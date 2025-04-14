@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8e967ca470c1eeb60d41cdd1828ab54f>>
+ * @generated SignedSource<<7cd1a82432aca6fc111bb57c02ad9887>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type addOrganization_rootQuery$data = {
   readonly activeOrganizationTermsOfUse: {
     readonly id: string;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query" | "organizationTermsOfUse_query" | "singleChoiceOrganizationType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query" | "organizationTermsOfUse_query" | "singleChoiceOrganizationMemberVisibilityPolicyquery" | "singleChoiceOrganizationType_query">;
 };
 export type addOrganization_rootQuery = {
   response: addOrganization_rootQuery$data;
@@ -36,7 +36,17 @@ v1 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-};
+},
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v1/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -70,6 +80,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "singleChoiceOrganizationType_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "singleChoiceOrganizationMemberVisibilityPolicyquery"
       }
     ],
     "type": "Query",
@@ -133,31 +148,32 @@ return {
         "kind": "LinkedField",
         "name": "organizationTypes",
         "plural": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "type",
-            "storageKey": null
-          },
-          (v1/*: any*/)
-        ],
+        "selections": (v2/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "OrganizationMemberVisibilityPolicyDetails",
+        "kind": "LinkedField",
+        "name": "organizationMemberVisibilityPolicies",
+        "plural": true,
+        "selections": (v2/*: any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "68cfc0a1f732e202890dc92e590f8b22",
+    "cacheID": "388a16743f0b9c3a0aa08dfce81fb9f5",
     "id": null,
     "metadata": {},
     "name": "addOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query addOrganization_rootQuery {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n  ...singleChoiceOrganizationType_query\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment singleChoiceOrganizationType_query on Query {\n  organizationTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query addOrganization_rootQuery {\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...organizationTermsOfUse_query\n  ...singleChoiceOrganizationType_query\n  ...singleChoiceOrganizationMemberVisibilityPolicyquery\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n\nfragment singleChoiceOrganizationMemberVisibilityPolicyquery on Query {\n  organizationMemberVisibilityPolicies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceOrganizationType_query on Query {\n  organizationTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b65c802713228ded727f9a1d48ef41fc";
+(node as any).hash = "c8976010b86d7ad2b17a41cd1b5a4eab";
 
 export default node;

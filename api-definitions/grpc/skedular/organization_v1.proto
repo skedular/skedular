@@ -69,6 +69,7 @@ message Admin_AddInput {
     repeated string industrySubCategoryIds = 8;
     string offeringCode = 9;
     string type = 10;
+    string memberVisibilityPolicy = 11;
 }
 
 message Organization {
@@ -87,6 +88,7 @@ message Organization {
     repeated Tag tags = 13;
     repeated ResourceType resourceTypes = 14;
     string type = 15;
+    string memberVisibilityPolicy = 16;
 }
 
 message IndustrySubCategory {

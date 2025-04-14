@@ -19,7 +19,7 @@ import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, NotPreferredIcon, Pref
 import { getOrganizationBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { OrganizationMultipleChoicesIndustries, SingleChoicesOrganizationType } from '@/components/organization';
+import { OrganizationMultipleChoicesIndustries, SingleChoicesOrganizationMemberVisibilityPolicy, SingleChoicesOrganizationType } from '@/components/organization';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
@@ -44,7 +44,11 @@ import type { organizationAdmin_removeCustomerPreferredOrganizationTagMutation }
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdmin_removeOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationSsoSettingsMutation.graphql';
 import type { organizationAdmin_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationAdmin_setOrganizationBillingInfoMutation.graphql';
-import type { organizationAdmin_updateOrganizationMutation, OrganizationType } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
+import type {
+  organizationAdmin_updateOrganizationMutation,
+  OrganizationMemberVisibilityPolicy,
+  OrganizationType,
+} from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_updateOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_updateOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationSsoSettingsMutation.graphql';
 import type { organizationAdmin_zones_query$key } from '@/queries/__generated__/organizationAdmin_zones_query.graphql';
@@ -87,6 +91,7 @@ type OrganizationDetails = {
   about: string | null;
   website: string | null;
   type: string;
+  memberVisibilityPolicy: string;
   industrySubCategoryIds: string[];
 };
 
@@ -95,6 +100,7 @@ const organizationSchema = object({
   about: string().nullable(),
   website: string().nullable(),
   type: string().required('Organization type is required'),
+  memberVisibilityPolicy: string().required('Member visibility policy is required'),
   industrySubCategoryIds: array().nullable(),
 });
 
@@ -193,6 +199,10 @@ const OrganizationAdmin = ({
             type
             name
           }
+          memberVisibilityPolicy {
+            type
+            name
+          }
           website
           canModify
           industrySubCategories {
@@ -245,6 +255,7 @@ const OrganizationAdmin = ({
         }
         ...organizationMultipleChoicesIndustries_query
         ...singleChoiceOrganizationType_query
+        ...singleChoiceOrganizationMemberVisibilityPolicyquery
       }
     `,
     rootDataRelay,
@@ -327,6 +338,10 @@ const OrganizationAdmin = ({
           about
           website
           type {
+            type
+            name
+          }
+          memberVisibilityPolicy {
             type
             name
           }
@@ -572,7 +587,7 @@ const OrganizationAdmin = ({
     });
   }, [refetchOrganizationPaymentMethodsDetails]);
 
-  const handleOrganizationDetailUpdateClick = ({ name, about, website, type, industrySubCategoryIds }: OrganizationDetails) => {
+  const handleOrganizationDetailUpdateClick = ({ name, about, website, type, memberVisibilityPolicy, industrySubCategoryIds }: OrganizationDetails) => {
     if (!rootData.organization) {
       return;
     }
@@ -591,6 +606,7 @@ const OrganizationAdmin = ({
           website,
           type: type as OrganizationType,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
+          memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
         },
       },
       onCompleted: (_, errors) => {
@@ -623,6 +639,10 @@ const OrganizationAdmin = ({
             website,
             type: {
               type: type as OrganizationType,
+              name: '',
+            },
+            memberVisibilityPolicy: {
+              type: type as OrganizationMemberVisibilityPolicy,
               name: '',
             },
             industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
@@ -1585,6 +1605,7 @@ const OrganizationAdmin = ({
                 about: organization.about,
                 website: organization.website,
                 type: organization.type.type,
+                memberVisibilityPolicy: organization.memberVisibilityPolicy.type,
                 industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
               }}
               validate={validateOrganizationDetails}
@@ -1614,8 +1635,16 @@ const OrganizationAdmin = ({
                       <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="type">
+                    <FormFieldLabel label="Type">
                       <SingleChoicesOrganizationType rootDataRelay={rootData} name="type" required={requiredOrganizationDetailsFields.type} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Member Visibility Policy">
+                      <SingleChoicesOrganizationMemberVisibilityPolicy
+                        rootDataRelay={rootData}
+                        name="memberVisibilityPolicy"
+                        required={requiredOrganizationDetailsFields.memberVisibilityPolicy}
+                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Industry">

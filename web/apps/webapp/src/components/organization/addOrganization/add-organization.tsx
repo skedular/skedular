@@ -1,13 +1,22 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { OrganizationMultipleChoicesIndustries, OrganizationTermsOfUse, SingleChoicesOrganizationType } from '@/components/organization';
+import {
+  OrganizationMultipleChoicesIndustries,
+  OrganizationTermsOfUse,
+  SingleChoicesOrganizationMemberVisibilityPolicy,
+  SingleChoicesOrganizationType,
+} from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { addOrganization_addOrganizationMutation, OrganizationType } from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
+import type {
+  addOrganization_addOrganizationMutation,
+  OrganizationMemberVisibilityPolicy,
+  OrganizationType,
+} from '@/queries/__generated__/addOrganization_addOrganizationMutation.graphql';
 import type { addOrganization_completeOrganizationOnboardingMutation } from '@/queries/__generated__/addOrganization_completeOrganizationOnboardingMutation.graphql';
 import type { addOrganization_rootQuery } from '@/queries/__generated__/addOrganization_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -39,6 +48,7 @@ const RootQuery = graphql`
     ...organizationMultipleChoicesIndustries_query
     ...organizationTermsOfUse_query
     ...singleChoiceOrganizationType_query
+    ...singleChoiceOrganizationMemberVisibilityPolicyquery
   }
 `;
 
@@ -47,6 +57,7 @@ type OrganizationDetails = {
   about: string | null;
   website: string | null;
   type: string;
+  memberVisibilityPolicy: string;
   agreedToTermsOfUse: boolean;
   industrySubCategoryIds: string[];
 };
@@ -56,6 +67,7 @@ const organizationSchema = object({
   about: string().nullable(),
   website: string().nullable(),
   type: string().required('Organization type is required'),
+  memberVisibilityPolicy: string().required('Member visibility policy is required'),
   industrySubCategoryIds: array().nullable(),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
@@ -71,6 +83,10 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           about
           website
           type {
+            type
+            name
+          }
+          memberVisibilityPolicy {
             type
             name
           }
@@ -92,7 +108,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({ name, about, website, type, industrySubCategoryIds }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ name, about, website, type, memberVisibilityPolicy, industrySubCategoryIds }: OrganizationDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -108,6 +124,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: industrySubCategoryIds ?? [],
+          memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
         },
       },
       onCompleted: (_, errors) => {
@@ -167,6 +184,10 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               type: type as OrganizationType,
               name: '',
             },
+            memberVisibilityPolicy: {
+              type: type as OrganizationMemberVisibilityPolicy,
+              name: '',
+            },
           },
         },
       },
@@ -184,6 +205,7 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               about: null,
               website: null,
               type: '',
+              memberVisibilityPolicy: '',
             }}
             validate={validateOrganizationDetails}
             render={({ handleSubmit }) => (
@@ -211,9 +233,14 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
                     <SingleChoicesOrganizationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
                   </FormFieldLabel>
 
+                  <FormFieldLabel label="Member Visibility Policy">
+                    <SingleChoicesOrganizationMemberVisibilityPolicy rootDataRelay={rootData} name="memberVisibilityPolicy" required={requiredFields.memberVisibilityPolicy} />
+                  </FormFieldLabel>
+
                   <FormFieldLabel label="Industry">
                     <OrganizationMultipleChoicesIndustries rootDataRelay={rootData} name="industrySubCategoryIds" required={requiredFields.industrySubCategoryIds} />
                   </FormFieldLabel>
+
                   <OrganizationTermsOfUse rootDataRelay={rootData} name="agreedToTermsOfUse" required={requiredFields.agreedToTermsOfUse} />
                 </StackColumn>
 

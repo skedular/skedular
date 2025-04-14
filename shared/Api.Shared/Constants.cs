@@ -96,6 +96,7 @@ public static class Constants
     public const int MaxFeedbackChannelLength = 32;
 
     public const int MaxOrganizationTypeLength = 50;
+    public const int MaxOrganizationMemberVisibilityPolicyLength = 50;
 
     public const string OrganizationSsoCookiePrefix = "skedular-sso";
     public const string OrganizationSsoCookieHeader = "X-SSO-Cookies";

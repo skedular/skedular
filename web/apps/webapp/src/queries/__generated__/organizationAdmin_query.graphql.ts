@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a811d199577c4b7a091b612e5fd49b4>>
+ * @generated SignedSource<<789e89348e10db34da88e9e9e4f232aa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationMemberVisibilityPolicy = "FullAccess" | "LimitedAccess" | "%future added value";
 export type OrganizationType = "Marketplace" | "Private" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
@@ -51,6 +52,10 @@ export type organizationAdmin_query$data = {
       readonly name: string;
     }>;
     readonly logoUrl: string | null | undefined;
+    readonly memberVisibilityPolicy: {
+      readonly name: string;
+      readonly type: OrganizationMemberVisibilityPolicy;
+    };
     readonly name: string;
     readonly ssoSettings: {
       readonly appFederationMetadataUrl: string;
@@ -80,7 +85,7 @@ export type organizationAdmin_query$data = {
       readonly name: string;
     }>;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query" | "singleChoiceOrganizationType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMultipleChoicesIndustries_query" | "singleChoiceOrganizationMemberVisibilityPolicyquery" | "singleChoiceOrganizationType_query">;
   readonly " $fragmentType": "organizationAdmin_query";
 };
 export type organizationAdmin_query$key = {
@@ -113,38 +118,48 @@ v2 = {
   "storageKey": null
 },
 v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v2/*: any*/)
+],
+v4 = [
   (v0/*: any*/),
   (v2/*: any*/)
 ],
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isEnterprise",
   "storageKey": null
 },
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "unitPrice",
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "featureSet",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "underPriceLines",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -231,16 +246,17 @@ return {
           "kind": "LinkedField",
           "name": "type",
           "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "type",
-              "storageKey": null
-            },
-            (v2/*: any*/)
-          ],
+          "selections": (v3/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationMemberVisibilityPolicyDetails",
+          "kind": "LinkedField",
+          "name": "memberVisibilityPolicy",
+          "plural": false,
+          "selections": (v3/*: any*/),
           "storageKey": null
         },
         {
@@ -264,7 +280,7 @@ return {
           "kind": "LinkedField",
           "name": "industrySubCategories",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -283,7 +299,7 @@ return {
           "plural": false,
           "selections": [
             (v0/*: any*/),
-            (v4/*: any*/),
+            (v5/*: any*/),
             (v2/*: any*/),
             {
               "alias": null,
@@ -299,10 +315,10 @@ return {
               "name": "end",
               "storageKey": null
             },
-            (v5/*: any*/),
             (v6/*: any*/),
             (v7/*: any*/),
-            (v8/*: any*/)
+            (v8/*: any*/),
+            (v9/*: any*/)
           ],
           "storageKey": null
         },
@@ -314,7 +330,7 @@ return {
           "name": "availableOfferings",
           "plural": true,
           "selections": [
-            (v4/*: any*/),
+            (v5/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -323,10 +339,10 @@ return {
               "storageKey": null
             },
             (v2/*: any*/),
-            (v5/*: any*/),
             (v6/*: any*/),
             (v7/*: any*/),
-            (v8/*: any*/)
+            (v8/*: any*/),
+            (v9/*: any*/)
           ],
           "storageKey": null
         },
@@ -380,7 +396,7 @@ return {
           "kind": "LinkedField",
           "name": "subCategories",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v4/*: any*/),
           "storageKey": null
         }
       ],
@@ -469,6 +485,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "singleChoiceOrganizationType_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "singleChoiceOrganizationMemberVisibilityPolicyquery"
     }
   ],
   "type": "Query",
@@ -476,6 +497,6 @@ return {
 };
 })();
 
-(node as any).hash = "c9a07cba54de6b98ba0ffc18cdb3ce67";
+(node as any).hash = "07baa72e8c7cee16b1937ebbae88b952";
 
 export default node;

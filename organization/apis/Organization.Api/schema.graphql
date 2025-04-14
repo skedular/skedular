@@ -106,6 +106,7 @@ type OrganizationDetails {
   website: String
   logoUrl: String
   type: OrganizationTypeDetails!
+  memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   agreedToTermsOfUse: Boolean!
   termsOfUse: OrganizationTermsOfUse
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
@@ -174,6 +175,11 @@ type OrganizationMemberEdge {
 
 type OrganizationMemberPayload {
   clientMutationId: String
+}
+
+type OrganizationMemberVisibilityPolicyDetails {
+  type: OrganizationMemberVisibilityPolicy!
+  name: String!
 }
 
 type OrganizationMembersDetailsPayload {
@@ -253,6 +259,7 @@ type Query {
   organizationVersion: Version!
   openingHoursMinutesStep: Int!
   organizationTypes: [OrganizationTypeDetails!]!
+  organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
@@ -328,6 +335,7 @@ input AddOrganizationInput {
   about: String
   website: String
   type: OrganizationType!
+  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   agreedToTermsOfUse: Boolean!
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
@@ -507,6 +515,7 @@ input UpdateOrganizationInput {
   about: String
   website: String
   type: OrganizationType!
+  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   industrySubCategoryIds: [String!]!
 }
 
@@ -569,6 +578,11 @@ enum OrganizationMemberRole {
 enum OrganizationMemberStatus {
   Active
   Inactive
+}
+
+enum OrganizationMemberVisibilityPolicy {
+  FullAccess
+  LimitedAccess
 }
 
 enum OrganizationOrderField {

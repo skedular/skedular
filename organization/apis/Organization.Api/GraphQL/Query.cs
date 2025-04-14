@@ -38,6 +38,21 @@ public class Query(IMapper mapper)
     ];
 
     [UseResolverScope]
+    public IEnumerable<OrganizationMemberVisibilityPolicyDetails> OrganizationMemberVisibilityPolicies() =>
+    [
+        new()
+        {
+            Type = OrganizationMemberVisibilityPolicy.FullAccess,
+            Name = OrganizationMemberVisibilityPolicy.FullAccess.ToOrganizationMemberVisibilityPolicyName()
+        },
+        new()
+        {
+            Type = OrganizationMemberVisibilityPolicy.LimitedAccess,
+            Name = OrganizationMemberVisibilityPolicy.LimitedAccess.ToOrganizationMemberVisibilityPolicyName()
+        }
+    ];
+
+    [UseResolverScope]
     public async Task<bool> OrganizationCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>

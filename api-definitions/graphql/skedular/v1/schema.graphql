@@ -592,6 +592,7 @@ type OrganizationDetails {
   isMyOnboardingDone: Boolean!
   logoUrl: String
   members: [OrganizationMemberDetails!]!
+  memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   name: String!
   resourceTypes: [OrganizationTagDetails!]!
   ssoSettings: OrganizationSsoSettingsDetails
@@ -648,6 +649,11 @@ type OrganizationMemberEdge {
 
 type OrganizationMemberPayload {
   clientMutationId: String
+}
+
+type OrganizationMemberVisibilityPolicyDetails {
+  name: String!
+  type: OrganizationMemberVisibilityPolicy!
 }
 
 type OrganizationMembersDetailsPayload {
@@ -832,6 +838,7 @@ type Query {
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationMembers(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput!): OrganizationMemberConnection! @cost(weight: "10")
+  organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!]! @cost(weight: "10")
   organizationRequiredSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
@@ -1148,6 +1155,7 @@ input AddOrganizationInput {
   clientMutationId: String
   id: String
   industrySubCategoryIds: [String!]!
+  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
   termsOfUseId: String!
   type: OrganizationType!
@@ -1749,6 +1757,7 @@ input UpdateOrganizationInput {
   clientMutationId: String
   id: String!
   industrySubCategoryIds: [String!]!
+  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
   type: OrganizationType!
   website: String
@@ -1951,6 +1960,11 @@ enum OrganizationMemberRole {
 enum OrganizationMemberStatus {
   Active
   Inactive
+}
+
+enum OrganizationMemberVisibilityPolicy {
+  FullAccess
+  LimitedAccess
 }
 
 enum OrganizationOrderField {

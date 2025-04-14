@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bef598849725edc497f2985780a5d8bf>>
+ * @generated SignedSource<<08d1c51222590deb64b24f1489f37e5d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -359,6 +359,16 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "OrganizationMemberVisibilityPolicyDetails",
+            "kind": "LinkedField",
+            "name": "memberVisibilityPolicy",
+            "plural": false,
+            "selections": (v6/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "kind": "ScalarField",
             "name": "website",
             "storageKey": null
@@ -613,6 +623,16 @@ return {
       },
       {
         "alias": null,
+        "args": null,
+        "concreteType": "OrganizationMemberVisibilityPolicyDetails",
+        "kind": "LinkedField",
+        "name": "organizationMemberVisibilityPolicies",
+        "plural": true,
+        "selections": (v6/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
         "args": (v15/*: any*/),
         "concreteType": "OrganizationPaymentMethod",
         "kind": "LinkedField",
@@ -697,12 +717,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ca6eddd5518fd13bb8dd5c566050a546",
+    "cacheID": "845f5d389a3d9bf3210bab49f66616d3",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $customTagNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_organizationPaymentMethodsDetails_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_customTags_query\n}\n\nfragment organizationAdmin_customTags_query on Query {\n  customTags(where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationAdmin_organizationPaymentMethodsDetails_query on Query {\n  organizationPaymentMethodsDetails(organizationId: $organizationId) {\n    id\n    cardBrand\n    cardExpiryMonth\n    cardExpiryYear\n    cardLastFourDigit\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  me {\n    id\n    preferredZones {\n      uniqueId\n    }\n    preferredCustomTags {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    hasAttachedPaymentMethod\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  organizationBillingInfo(organizationId: $organizationId) {\n    id\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...singleChoiceOrganizationType_query\n}\n\nfragment organizationAdmin_zones_query on Query {\n  zones(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment singleChoiceOrganizationType_query on Query {\n  organizationTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationId: String!\n  $zoneNameSearchText: String\n  $customTagNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_organizationPaymentMethodsDetails_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_customTags_query\n}\n\nfragment organizationAdmin_customTags_query on Query {\n  customTags(where: {organizationId: $organizationId, nameContains: $customTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationAdmin_organizationPaymentMethodsDetails_query on Query {\n  organizationPaymentMethodsDetails(organizationId: $organizationId) {\n    id\n    cardBrand\n    cardExpiryMonth\n    cardExpiryYear\n    cardLastFourDigit\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  me {\n    id\n    preferredZones {\n      uniqueId\n    }\n    preferredCustomTags {\n      uniqueId\n    }\n  }\n  organization(id: $organizationId) {\n    id\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    memberVisibilityPolicy {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    hasAttachedPaymentMethod\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  organizationBillingInfo(organizationId: $organizationId) {\n    id\n    email\n    addressLine1\n    addressLine2\n    suburb\n    city\n    province\n    zipcode\n    country\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...singleChoiceOrganizationType_query\n  ...singleChoiceOrganizationMemberVisibilityPolicyquery\n}\n\nfragment organizationAdmin_zones_query on Query {\n  zones(where: {organizationId: $organizationId, nameContains: $zoneNameSearchText}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment singleChoiceOrganizationMemberVisibilityPolicyquery on Query {\n  organizationMemberVisibilityPolicies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceOrganizationType_query on Query {\n  organizationTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

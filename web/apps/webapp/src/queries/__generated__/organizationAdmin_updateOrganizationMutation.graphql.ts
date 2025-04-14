@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<255a3fb37b72b6243d39eeac8f450bce>>
+ * @generated SignedSource<<9d8a6ff2353b25f1262e7e5fd9cf8b82>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,14 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationMemberVisibilityPolicy = "FullAccess" | "LimitedAccess" | "%future added value";
 export type OrganizationType = "Marketplace" | "Private" | "%future added value";
 export type UpdateOrganizationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   id: string;
   industrySubCategoryIds: ReadonlyArray<string>;
+  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;
   name: string;
   type: OrganizationType;
   website?: string | null | undefined;
@@ -31,6 +33,10 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly id: string;
         readonly name: string;
       }>;
+      readonly memberVisibilityPolicy: {
+        readonly name: string;
+        readonly type: OrganizationMemberVisibilityPolicy;
+      };
       readonly name: string;
       readonly type: {
         readonly name: string;
@@ -49,6 +55,10 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly id: string;
         readonly name: string;
       }>;
+      readonly memberVisibilityPolicy: {
+        readonly name: string;
+        readonly type: OrganizationMemberVisibilityPolicy;
+      };
       readonly name: string;
       readonly type: {
         readonly name: string;
@@ -87,6 +97,16 @@ v2 = {
   "storageKey": null
 },
 v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v2/*: any*/)
+],
+v4 = [
   {
     "alias": null,
     "args": [
@@ -132,16 +152,17 @@ v3 = [
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              (v2/*: any*/)
-            ],
+            "selections": (v3/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationMemberVisibilityPolicyDetails",
+            "kind": "LinkedField",
+            "name": "memberVisibilityPolicy",
+            "plural": false,
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -170,7 +191,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdmin_updateOrganizationMutation",
-    "selections": (v3/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -179,19 +200,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationAdmin_updateOrganizationMutation",
-    "selections": (v3/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "dbaff9119ab52a797579ad977132dca0",
+    "cacheID": "179daaf38085bf0118ee1e2d9ac87fb5",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "32d4b5519bf64811e11cc67bda7bf844";
+(node as any).hash = "82b6528f6ade57938b40727609561f91";
 
 export default node;

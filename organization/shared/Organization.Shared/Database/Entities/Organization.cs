@@ -16,9 +16,11 @@ public class Organization : EntityBaseWithDeleted
     public bool AgreedToTermsOfUse { get; set; }
     public string? LogoUrl { get; set; }
     public string Type { get; set; }
+    public string MemberVisibilityPolicy { get; set; }
     public bool HasAttachedPaymentMethod { get; set; }
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
+
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
     public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
@@ -45,6 +47,10 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.Website).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
+        builder
+            .Property(item => item.MemberVisibilityPolicy)
+            .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
+            .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);

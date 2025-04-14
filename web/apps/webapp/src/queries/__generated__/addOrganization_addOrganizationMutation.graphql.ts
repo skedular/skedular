@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<503b293020f1abf3856b03114ba90fd6>>
+ * @generated SignedSource<<2d0333d042fa8c59fb4c092895388982>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationMemberVisibilityPolicy = "FullAccess" | "LimitedAccess" | "%future added value";
 export type OrganizationType = "Marketplace" | "Private" | "%future added value";
 export type AddOrganizationInput = {
   about?: string | null | undefined;
@@ -16,6 +17,7 @@ export type AddOrganizationInput = {
   clientMutationId?: string | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
+  memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;
   name: string;
   termsOfUseId: string;
   type: OrganizationType;
@@ -29,6 +31,10 @@ export type addOrganization_addOrganizationMutation$data = {
     readonly organization: {
       readonly about: string | null | undefined;
       readonly id: string;
+      readonly memberVisibilityPolicy: {
+        readonly name: string;
+        readonly type: OrganizationMemberVisibilityPolicy;
+      };
       readonly name: string;
       readonly type: {
         readonly name: string;
@@ -43,6 +49,10 @@ export type addOrganization_addOrganizationMutation$rawResponse = {
     readonly organization: {
       readonly about: string | null | undefined;
       readonly id: string;
+      readonly memberVisibilityPolicy: {
+        readonly name: string;
+        readonly type: OrganizationMemberVisibilityPolicy;
+      };
       readonly name: string;
       readonly type: {
         readonly name: string;
@@ -74,6 +84,16 @@ v1 = {
   "storageKey": null
 },
 v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v1/*: any*/)
+],
+v3 = [
   {
     "alias": null,
     "args": [
@@ -125,16 +145,17 @@ v2 = [
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              (v1/*: any*/)
-            ],
+            "selections": (v2/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationMemberVisibilityPolicyDetails",
+            "kind": "LinkedField",
+            "name": "memberVisibilityPolicy",
+            "plural": false,
+            "selections": (v2/*: any*/),
             "storageKey": null
           }
         ],
@@ -150,7 +171,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addOrganization_addOrganizationMutation",
-    "selections": (v2/*: any*/),
+    "selections": (v3/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -159,19 +180,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addOrganization_addOrganizationMutation",
-    "selections": (v2/*: any*/)
+    "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "74acab808b08d5d3e15cab7c60f5acd6",
+    "cacheID": "1c868ad117995ca7ca16c0fb09110ab2",
     "id": null,
     "metadata": {},
     "name": "addOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation addOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a2817023d7a00cdeb5874e963e1e8134";
+(node as any).hash = "d3c7c674c90714e54c81984bc766ddeb";
 
 export default node;

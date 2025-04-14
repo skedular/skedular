@@ -70,7 +70,8 @@ public class WorkspaceOnboardingService(
                 Name = name.ToSafeString(),
                 AgreedToTermsOfUse = true,
                 TermsOfUseId = activeTermsOfUse.Id,
-                Type = OrganizationTypeConstants.Private
+                Type = OrganizationTypeConstants.Private,
+                MemberVisibilityPolicy = OrganizationMemberVisibilityPolicyConstants.FullAccess
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
