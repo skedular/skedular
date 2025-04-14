@@ -84,7 +84,9 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = organizationAfterState.Name,
-            LogoUrl = organizationAfterState.LogoUrl
+            LogoUrl = organizationAfterState.LogoUrl,
+            Type = organizationAfterState.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
@@ -253,13 +255,14 @@ public class Mapper : IMapper
                 PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList()
             };
 
-    public Shared.Database.Entities.Organization MergeToEntity(Organization src,
-        Shared.Database.Entities.Organization dest)
+    public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
         dest.LogoUrl = src.LogoUrl;
+        dest.Type = src.Type.ToOrganizationType();
+        dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         return dest;
     }
 
@@ -408,7 +411,9 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                LogoUrl = src.LogoUrl
+                LogoUrl = src.LogoUrl,
+                Type = src.Type.ToOrganizationType(),
+                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
             };
 
     private static Location? MapTo(Shared.Database.Entities.Location? src, bool includeResources) =>

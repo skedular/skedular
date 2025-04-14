@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Notification.Api.GraphQL;
@@ -91,7 +92,9 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
-                LogoUrl = src.LogoUrl
+                LogoUrl = src.LogoUrl,
+                Type = src.Type.ToOrganizationType(),
+                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
             };
 
     private static Location? MapTo(Shared.Database.Entities.Location? src) =>

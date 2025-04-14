@@ -1,4 +1,5 @@
 using Api.Shared.Services.Grpc.Skedular.Customer.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Slack.Shared.Models;
 using SlackNet;
@@ -216,6 +217,8 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
             EventRaisedAt = src.EventRaisedAt,
+            Type = src.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt
         };
 

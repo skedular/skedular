@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,6 +10,8 @@ namespace Slack.Shared.Database.Entities;
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
     public DateTimeOffset? SlackChannelDailyUpdateLastSentAt { get; set; }
+    public string Type { get; set; }
+    public string MemberVisibilityPolicy { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<Workspace> Workspaces { get; set; } = [];
@@ -22,6 +25,13 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
     public void Configure(EntityTypeBuilder<Organization> builder)
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
+
+        builder.Property(item => item.Type).HasMaxLength(Api.Shared.Constants.MaxOrganizationTypeLength)
+            .HasDefaultValue(OrganizationTypeConstants.Private);
+        builder
+            .Property(item => item.MemberVisibilityPolicy)
+            .HasMaxLength(Api.Shared.Constants.MaxOrganizationMemberVisibilityPolicyLength)
+            .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
 
         builder.HasOne(item => item.DailyUpdateChannel).WithMany(item => item.OrganizationDailyUpdateChannels);
 

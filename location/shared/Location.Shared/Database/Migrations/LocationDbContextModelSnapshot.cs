@@ -529,6 +529,13 @@ namespace Location.Shared.Database.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
+                    b.Property<string>("MemberVisibilityPolicy")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasDefaultValue("FULL_ACCESS");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -538,6 +545,13 @@ namespace Location.Shared.Database.Migrations
 
                     b.Property<Offering>("Offering")
                         .HasColumnType("jsonb");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasDefaultValue("PRIVATE");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()

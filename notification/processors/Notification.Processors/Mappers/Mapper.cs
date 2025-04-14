@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Random;
 using Notification.Shared.Models;
@@ -98,7 +99,9 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = organizationAfterState.Name,
-            LogoUrl = organizationAfterState.LogoUrl
+            LogoUrl = organizationAfterState.LogoUrl,
+            Type = organizationAfterState.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
         organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
@@ -160,6 +163,8 @@ public class Mapper(IRandomHelper randomHelper) : IMapper
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
         dest.LogoUrl = src.LogoUrl;
+        dest.Type = src.Type.ToOrganizationType();
+        dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         return dest;
     }
 

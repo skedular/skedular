@@ -194,8 +194,7 @@ public class Mapper : IMapper
             Organization = string.IsNullOrWhiteSpace(item.Organization?.Id) ? null : new Shared.Models.Organization { Id = item.Organization.Id }
         }).ToList();
 
-        customer.PreferredTeams =
-            src.PreferredTeams.Select(item => new Team
+        customer.PreferredTeams = src.PreferredTeams.Select(item => new Team
             {
                 Id = item.Id,
                 Name = item.Name.ToSafeString(),
@@ -230,6 +229,8 @@ public class Mapper : IMapper
             Website = src.Website.ToSafeString(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),
+            Type = src.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             HasFutureBooking = src.HasFutureBooking
         };
@@ -725,6 +726,8 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
             EventRaisedAt = src.EventRaisedAt,
+            Type = src.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt
         };
 

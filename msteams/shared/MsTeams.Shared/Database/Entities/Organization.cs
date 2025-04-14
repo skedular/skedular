@@ -1,3 +1,5 @@
+using Api.Shared;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -8,6 +10,9 @@ namespace MsTeams.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
+    public string Type { get; set; }
+    public string MemberVisibilityPolicy { get; set; }
+
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<AzureTenant> AzureTenants { get; set; } = [];
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
@@ -16,5 +21,14 @@ public class Organization : ReplicatedEntityBaseWithDeleted
 
 public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 {
-    public void Configure(EntityTypeBuilder<Organization> builder) => builder.ConfigureReplicatedEntityBaseWithDeleted();
+    public void Configure(EntityTypeBuilder<Organization> builder)
+    {
+        builder.ConfigureReplicatedEntityBaseWithDeleted();
+
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
+        builder
+            .Property(item => item.MemberVisibilityPolicy)
+            .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
+            .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
+    }
 }

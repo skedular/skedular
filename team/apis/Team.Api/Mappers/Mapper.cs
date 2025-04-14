@@ -434,7 +434,9 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             Name = src.Name,
             LogoUrl = src.LogoUrl,
-            Offering = src.Offering
+            Offering = src.Offering,
+            Type = src.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
     private OrganizationMember? MapTo(Shared.Database.Entities.OrganizationMember? src) =>

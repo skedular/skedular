@@ -1,4 +1,5 @@
 using Api.Shared;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -11,6 +12,8 @@ public class Organization : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
     public string? LogoUrl { get; set; }
+    public string Type { get; set; }
+    public string MemberVisibilityPolicy { get; set; }
 
     public virtual ICollection<OrganizationTag> Tags { get; set; } = [];
     public virtual ICollection<Location> Locations { get; set; } = [];
@@ -29,6 +32,11 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxOrganizationNameLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
+        builder
+            .Property(item => item.MemberVisibilityPolicy)
+            .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
+            .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
 
         builder.HasIndex(item => item.Name);
     }

@@ -1,4 +1,5 @@
 using Api.Shared;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -11,6 +12,8 @@ public class Organization : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
     public string? StripeCustomerId { get; set; }
+    public string Type { get; set; }
+    public string MemberVisibilityPolicy { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
@@ -27,6 +30,11 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxOrganizationNameLength);
         builder.Property(item => item.StripeCustomerId).HasMaxLength(Constants.StripeCustomerIdLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
+        builder
+            .Property(item => item.MemberVisibilityPolicy)
+            .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
+            .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.StripeCustomerId);

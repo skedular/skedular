@@ -72,7 +72,12 @@ public class Mapper : IMapper
 
         var organization = new Organization
         {
-            Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt, Name = organizationAfterState.Name
+            Id = organizationAfterState.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Name = organizationAfterState.Name,
+            Type = organizationAfterState.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
@@ -155,6 +160,8 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
+        dest.Type = src.Type.ToOrganizationType();
+        dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         return dest;
     }
 
@@ -262,7 +269,9 @@ public class Mapper : IMapper
             BillingContactCity = src.BillingContactCity,
             BillingContactProvince = src.BillingContactProvince,
             BillingContactZipcode = src.BillingContactZipcode,
-            BillingContactCountry = src.BillingContactCountry
+            BillingContactCountry = src.BillingContactCountry,
+            Type = src.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();

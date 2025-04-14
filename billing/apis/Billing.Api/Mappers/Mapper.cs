@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Billing.Api.GraphQL;
 using Billing.Shared.Models;
 using Enterprise.Shared;
@@ -59,7 +60,9 @@ public class Mapper : IMapper
             BillingContactCity = src.BillingContactCity,
             BillingContactProvince = src.BillingContactProvince,
             BillingContactZipcode = src.BillingContactZipcode,
-            BillingContactCountry = src.BillingContactCountry
+            BillingContactCountry = src.BillingContactCountry,
+            Type = src.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();

@@ -118,7 +118,14 @@ public class Mapper : IMapper
         var deletedAt = organizationAfterState.DeletedAt?.ToDateTimeOffset();
         var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
 
-        var organization = new Organization { Id = organizationAfterState.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt };
+        var organization = new Organization
+        {
+            Id = organizationAfterState.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Type = organizationAfterState.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
+        };
 
         organization.AzureTenants = organizationAfterState.AzureTenantIds
             .Select(item => new Shared.Models.AzureTenant { Id = item, Organization = organization, EventRaisedAt = eventRaisedAt })
@@ -166,6 +173,8 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Type = src.Type.ToOrganizationType();
+        dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         return dest;
     }
 

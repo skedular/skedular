@@ -110,7 +110,9 @@ public class Mapper : IMapper
                 Start = organizationAfterState.Offering.Start.ToDateTimeOffset(),
                 End = organizationAfterState.Offering.End.ToDateTimeOffset(),
                 ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray()
-            }
+            },
+            Type = organizationAfterState.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
@@ -267,6 +269,8 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.LogoUrl = src.LogoUrl;
         dest.Offering = src.Offering;
+        dest.Type = src.Type.ToOrganizationType();
+        dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         return dest;
     }
 
@@ -339,7 +343,9 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             Name = src.Name,
             LogoUrl = src.LogoUrl,
-            Offering = src.Offering
+            Offering = src.Offering,
+            Type = src.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();

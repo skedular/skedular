@@ -453,10 +453,11 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Type = src.Type.ToOrganizationType(),
                 Name = src.Name,
                 LogoUrl = src.LogoUrl,
-                Offering = src.Offering
+                Offering = src.Offering,
+                Type = src.Type.ToOrganizationType(),
+                MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
             };
 
     private static Shared.Models.Team? MapTo(Team? src) =>

@@ -108,7 +108,9 @@ public class Mapper : IMapper
                 Start = organizationAfterState.Offering.Start.ToDateTimeOffset(),
                 End = organizationAfterState.Offering.End.ToDateTimeOffset(),
                 ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray()
-            }
+            },
+            Type = organizationAfterState.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
         };
 
         organization.Tags = organizationAfterState.Tags.Select(item => new Shared.Models.OrganizationTag
@@ -237,6 +239,8 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.LogoUrl = src.LogoUrl;
         dest.Offering = src.Offering;
+        dest.Type = src.Type.ToOrganizationType();
+        dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         return dest;
     }
 

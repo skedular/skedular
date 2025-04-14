@@ -10,10 +10,11 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
-    public string Type { get; set; }
     public string? Name { get; set; }
     public string? LogoUrl { get; set; }
     public Offering? Offering { get; set; }
+    public string Type { get; set; }
+    public string MemberVisibilityPolicy { get; set; }
 
     public virtual ICollection<OrganizationTag> Tags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
@@ -32,10 +33,14 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxOrganizationNameLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.Offering).HasColumnType("jsonb");
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
+        builder
+            .Property(item => item.MemberVisibilityPolicy)
+            .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
+            .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
 
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.Name);

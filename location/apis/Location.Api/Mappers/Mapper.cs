@@ -598,6 +598,8 @@ public class Mapper : IMapper
             Name = src.Name,
             LogoUrl = src.LogoUrl,
             Offering = src.Offering,
+            Type = src.Type.ToOrganizationType(),
+            MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             Tags = MapTo(src.Tags).ToList()
         };
 
