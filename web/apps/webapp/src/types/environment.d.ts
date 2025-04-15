@@ -1,4 +1,4 @@
-export {};
+export { };
 
 declare global {
   namespace NodeJS {
@@ -10,7 +10,7 @@ declare global {
       NEXT_PUBLIC_SLACK_REDIRECT_URL: string;
       NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID: string;
       NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID: string;
-      NEXT_PUBLIC_PAYMENT_ENDPOINT: string;
+      NEXT_PUBLIC_API_ENDPOINT: string;
       NEXT_PUBLIC_APPLICATION_REGISTRATION_ID: string;
       COGNITO_DOMAIN: string;
       COGNITO_CLIENT_ID: string;

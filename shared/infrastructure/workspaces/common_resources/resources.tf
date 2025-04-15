@@ -1,33 +1,7 @@
 locals {
-  is_staging = var.environment == "staging"
-  dns_records_staging = [
-    "apistaging",
-    "billingapistaging",
-    "bookingapistaging",
-    "customerapistaging",
-    "locationapistaging",
-    "msteamsapistaging",
-    "notificationapistaging",
-    "organizationapistaging",
-    "paymentapistaging",
-    "slackapistaging",
-    "teamapistaging",
-    "marketplaceapistaging"
-  ]
-  dns_records_production = [
-    "api",
-    "billingapi",
-    "bookingapi",
-    "customerapi",
-    "locationapi",
-    "msteamsapi",
-    "notificationapi",
-    "organizationapi",
-    "paymentapi",
-    "slackapi",
-    "teamapi",
-    "marketplaceapi"
-  ]
+  is_staging             = var.environment == "staging"
+  dns_records_staging    = ["apistaging", "slackapistaging"]
+  dns_records_production = ["api", "slackapi"]
 }
 
 module "common" {

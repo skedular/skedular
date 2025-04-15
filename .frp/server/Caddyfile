@@ -36,94 +36,14 @@ apistaging.skedular.app {
 	reverse_proxy localhost:49000
 }
 
-customerapistaging.skedular.app {
-	reverse_proxy localhost:40000
-}
-
-paymentapistaging.skedular.app {
-	reverse_proxy localhost:40100
-}
-
-organizationapistaging.skedular.app {
-	reverse_proxy localhost:40200
-}
-
-bookingapistaging.skedular.app {
-	reverse_proxy localhost:40300
-}
-
-notificationapistaging.skedular.app {
-	reverse_proxy localhost:40400
-}
-
-teamapistaging.skedular.app {
-	reverse_proxy localhost:40500
-}
-
-locationapistaging.skedular.app {
-	reverse_proxy localhost:40600
-}
-
 slackapistaging.skedular.app {
 	reverse_proxy localhost:40700
-}
-
-billingapistaging.skedular.app {
-	reverse_proxy localhost:40800
-}
-
-msteamsapistaging.skedular.app {
-	reverse_proxy localhost:40900
-}
-
-marketplaceapistaging.skedular.app {
-	reverse_proxy localhost:41000
 }
 
 api.skedular.app {
 	reverse_proxy localhost:9000
 }
 
-customerapi.skedular.app {
-	reverse_proxy localhost:10000
-}
-
-paymentapi.skedular.app {
-	reverse_proxy localhost:10100
-}
-
-organizationapi.skedular.app {
-	reverse_proxy localhost:10200
-}
-
-bookingapi.skedular.app {
-	reverse_proxy localhost:10300
-}
-
-notificationapi.skedular.app {
-	reverse_proxy localhost:10400
-}
-
-teamapi.skedular.app {
-	reverse_proxy localhost:10500
-}
-
-locationapi.skedular.app {
-	reverse_proxy localhost:10600
-}
-
 slackapi.skedular.app {
 	reverse_proxy localhost:10700
-}
-
-billingapi.skedular.app {
-	reverse_proxy localhost:10800
-}
-
-msteamsapi.skedular.app {
-	reverse_proxy localhost:10900
-}
-
-marketplaceapi.skedular.app {
-	reverse_proxy localhost:11000
 }
