@@ -114,16 +114,16 @@ const productSchema = object({
   mustBookAllLocationResources: boolean(),
   recurrenceWindowDays: number()
     .test('is-required', 'Recurrence window days is required', function (value) {
-      const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
-      if (bookAllLocationResources || requireConsecutiveDays) {
+      const { bookAllLocationResources } = this.parent;
+      if (bookAllLocationResources) {
         return true;
       }
 
       return !!value;
     })
     .test('is-greater-than-zero', 'Recurrence window days must be greater than 0', function (value) {
-      const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
-      if (bookAllLocationResources || requireConsecutiveDays) {
+      const { bookAllLocationResources } = this.parent;
+      if (bookAllLocationResources) {
         return true;
       }
 
@@ -426,6 +426,12 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                     )}
 
                     {!bookAllLocationResources && (
+                      <FormFieldLabel label="Recurrence Window Days">
+                        <TextField name="recurrenceWindowDays" required={requiredFields.recurrenceWindowDays} />
+                      </FormFieldLabel>
+                    )}
+
+                    {!bookAllLocationResources && (
                       <FormFieldLabel label="">
                         <Switches
                           name="requireConsecutiveDays"
@@ -433,12 +439,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                           data={{ label: 'Must book consecutive days', value: 'requireConsecutiveDays' }}
                           helperText="If checked, only consecutive days booking allowed for this product."
                         />
-                      </FormFieldLabel>
-                    )}
-
-                    {!bookAllLocationResources && !requireConsecutiveDays && (
-                      <FormFieldLabel label="Recurrence Window Days">
-                        <TextField name="recurrenceWindowDays" required={requiredFields.recurrenceWindowDays} />
                       </FormFieldLabel>
                     )}
 
