@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9d410b8a89ab060fac13353f8cb61dce>>
+ * @generated SignedSource<<859cd2e3f37ea547ded683a239002706>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,13 +11,16 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type pageOrganizationProductBook_rootQuery$variables = {
+  dateFromToGetAvailableResources: any;
+  dateUntilToGetAvailableResources: any;
+  organizationId: string;
   productId: string;
 };
 export type pageOrganizationProductBook_rootQuery$data = {
   readonly product: {
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"bookProduct_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"bookProduct_availableResources_query" | "bookProduct_query">;
 };
 export type pageOrganizationProductBook_rootQuery = {
   response: pageOrganizationProductBook_rootQuery$data;
@@ -25,35 +28,48 @@ export type pageOrganizationProductBook_rootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "productId"
-  }
-],
-v1 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "dateFromToGetAvailableResources"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "dateUntilToGetAvailableResources"
+},
+v2 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationId"
+},
+v3 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "productId"
+},
+v4 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "productId"
   }
 ],
-v2 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = [
+v7 = [
   {
     "alias": null,
     "args": null,
@@ -61,24 +77,47 @@ v4 = [
     "name": "type",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v5/*: any*/)
+],
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "uniqueId",
+  "storageKey": null
+},
+v9 = [
+  (v8/*: any*/),
+  (v5/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/),
+      (v3/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "pageOrganizationProductBook_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "ProductDetails",
         "kind": "LinkedField",
         "name": "product",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       },
@@ -86,6 +125,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "bookProduct_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "bookProduct_availableResources_query"
       }
     ],
     "type": "Query",
@@ -93,20 +137,25 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v2/*: any*/),
+      (v3/*: any*/),
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Operation",
     "name": "pageOrganizationProductBook_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "ProductDetails",
         "kind": "LinkedField",
         "name": "product",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
+          (v5/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -128,7 +177,7 @@ return {
             "kind": "LinkedField",
             "name": "priceUnit",
             "plural": false,
-            "selections": (v4/*: any*/),
+            "selections": (v7/*: any*/),
             "storageKey": null
           },
           {
@@ -138,7 +187,7 @@ return {
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v4/*: any*/),
+            "selections": (v7/*: any*/),
             "storageKey": null
           },
           {
@@ -201,7 +250,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v3/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       },
@@ -211,20 +260,80 @@ return {
         "kind": "ScalarField",
         "name": "openingHoursMinutesStep",
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": [
+          {
+            "fields": [
+              {
+                "kind": "Variable",
+                "name": "from",
+                "variableName": "dateFromToGetAvailableResources"
+              },
+              {
+                "kind": "Variable",
+                "name": "organizationId",
+                "variableName": "organizationId"
+              },
+              {
+                "kind": "Variable",
+                "name": "productId",
+                "variableName": "productId"
+              },
+              {
+                "kind": "Variable",
+                "name": "until",
+                "variableName": "dateUntilToGetAvailableResources"
+              }
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
+        ],
+        "concreteType": "BookingResourceDetails",
+        "kind": "LinkedField",
+        "name": "availableResources",
+        "plural": true,
+        "selections": [
+          (v8/*: any*/),
+          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Booking_OrganizationCustomTagDetails",
+            "kind": "LinkedField",
+            "name": "customTags",
+            "plural": true,
+            "selections": (v9/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Booking_OrganizationZoneDetails",
+            "kind": "LinkedField",
+            "name": "zones",
+            "plural": true,
+            "selections": (v9/*: any*/),
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "14c126fcf907b7351d49cd7cd0bd6d59",
+    "cacheID": "79b8f955f4f6ab4d88b05f637f9b8b69",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProductBook_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProductBook_rootQuery(\n  $productId: String!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n  }\n  openingHoursMinutesStep\n}\n"
+    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationId: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n  }\n  openingHoursMinutesStep\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e0f80baaa624b38b5c5ccef44fb01541";
+(node as any).hash = "e77f2131de252ccab8edcdad93e79b32";
 
 export default node;

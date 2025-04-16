@@ -156,7 +156,7 @@ const productSchema = object({
 
       return typeof value === 'number' && value > 0;
     }),
-  productTagIds: array().nullable(),
+  productTagIds: array().min(1, 'At least one product tag must be selected').required('Product tags are required'),
   locationTagIds: array().nullable(),
 });
 

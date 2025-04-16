@@ -18,11 +18,17 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 const RootQuery = graphql`
-  query pageOrganizationProductBook_rootQuery($productId: String!) {
+  query pageOrganizationProductBook_rootQuery(
+    $organizationId: String!
+    $productId: String!
+    $dateFromToGetAvailableResources: DateTime!
+    $dateUntilToGetAvailableResources: DateTime!
+  ) {
     product(id: $productId) {
       name
     }
     ...bookProduct_query
+    ...bookProduct_availableResources_query
   }
 `;
 
@@ -61,7 +67,7 @@ const OrganizationProductBookPage = ({ queryReference, onReloadRequired, organiz
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <BookProduct rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
+      <BookProduct rootDataRelay={rootData} rootDataAvailableResourcesRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
     </RootShell>
   );
 };
@@ -102,13 +108,16 @@ const OrganizationProductBookPageWithRelay = () => {
   }
 
   useEffect(() => {
-    const date = startOfDay();
+    const date = startOfDay().add(8, 'hour');
     const startDate = date.toISOString();
-    const endDate = date.add(1, 'day').toISOString();
+    const endDate = date.add(9, 'hour').toISOString();
 
     loadQuery(
       {
+        organizationId: finalOrganizationId,
         productId: finalProductId,
+        dateFromToGetAvailableResources: startDate,
+        dateUntilToGetAvailableResources: endDate,
       },
       {
         fetchPolicy: 'store-and-network',
