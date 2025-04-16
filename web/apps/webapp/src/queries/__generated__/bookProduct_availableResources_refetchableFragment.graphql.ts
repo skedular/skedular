@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4394153d7d956ffc8edc54039b6cb007>>
+ * @generated SignedSource<<8cffe6fb61f5fead36187b57f653a65a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -134,6 +134,19 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "Booking_LocationDetails",
+            "kind": "LinkedField",
+            "name": "location",
+            "plural": false,
+            "selections": [
+              (v1/*: any*/),
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "Booking_OrganizationCustomTagDetails",
             "kind": "LinkedField",
             "name": "customTags",
@@ -157,16 +170,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "905632aa17a73398a4e5078ca65cf1b2",
+    "cacheID": "aa453334c0f7727f4b3d45bbb1057de7",
     "id": null,
     "metadata": {},
     "name": "bookProduct_availableResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookProduct_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationId: String!\n  $productId: String\n) {\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
+    "text": "query bookProduct_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationId: String!\n  $productId: String\n) {\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    location {\n      uniqueId\n      name\n    }\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "87c464dc3d0244261154a23e9fa82ea8";
+(node as any).hash = "9e2ab79dcce0b8fdaa8b8f183f8ff59b";
 
 export default node;

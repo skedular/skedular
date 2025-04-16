@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<51e2c4c143b8476b503430abed40bc5f>>
+ * @generated SignedSource<<a3397bda22de28bfdec5efdf5b4f97f3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,10 @@ export type bookProduct_availableResources_query$data = {
       readonly name: string | null | undefined;
       readonly uniqueId: string;
     }>;
+    readonly location: {
+      readonly name: string;
+      readonly uniqueId: string;
+    } | null | undefined;
     readonly name: string;
     readonly uniqueId: string;
     readonly zones: ReadonlyArray<{
@@ -127,6 +131,19 @@ return {
         {
           "alias": null,
           "args": null,
+          "concreteType": "Booking_LocationDetails",
+          "kind": "LinkedField",
+          "name": "location",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/),
+            (v1/*: any*/)
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "Booking_OrganizationCustomTagDetails",
           "kind": "LinkedField",
           "name": "customTags",
@@ -153,6 +170,6 @@ return {
 };
 })();
 
-(node as any).hash = "87c464dc3d0244261154a23e9fa82ea8";
+(node as any).hash = "9e2ab79dcce0b8fdaa8b8f183f8ff59b";
 
 export default node;

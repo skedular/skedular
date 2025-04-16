@@ -1,6 +1,20 @@
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { LocationAvatar } from '@/components/avatars';
+import {
+  AppBarWithStackColumn,
+  BodyIconTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  LeadIconTypography,
+  PushToRight,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
+import { CustomTagIcon, LocationIcon, ZoneIcon } from '@/components/icons';
 import { autoCloseErrorNotificationOptions, infoNotificationOptions, NotificationContent } from '@/components/notification';
+import { DefaultSelect } from '@/components/styled';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
@@ -12,6 +26,8 @@ import type { bookProduct_query$key } from '@/queries/__generated__/bookProduct_
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs, { Dayjs } from 'dayjs';
@@ -44,9 +60,15 @@ type ZoneDetails = {
   color: string | null | undefined;
 };
 
+type LocationDetails = {
+  uniqueId: string;
+  name: string;
+};
+
 type ResourceDetails = {
   uniqueId: string;
   name: string;
+  location: LocationDetails | null;
   customTags: CustomTagDetails[];
   zones: ZoneDetails[];
 };
@@ -60,6 +82,8 @@ const bookingSchema = object({
   date: date().required('Date/Time is required'),
   resources: array().min(1, 'At least one resource is required').required('Resource is required'),
 });
+
+const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
 const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDate }: Props) => {
   const rootData = useFragment<bookProduct_query$key>(
@@ -104,6 +128,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
         availableResources(where: { organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources }) {
           uniqueId
           name
+          location {
+            uniqueId
+            name
+          }
           customTags {
             uniqueId
             name
@@ -182,19 +210,54 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
   const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
   const [resourceIds, setResourceIds] = useState<string[]>([]);
   const filterResource = createFilterOptions<ResourceDetails>();
+  const [selectedLocationId, setSelectedLocationId] = useState<string>(allId);
+  const [selectedCustomTagId, setSelectedCustomTagId] = useState<string>(allId);
+  const [selectedZoneId, setSelectedZoneId] = useState<string>(allId);
 
   const resources = useMemo<ResourceDetails[]>(
     () =>
       timeRangeValid
-        ? rootDataAvailableResources.availableResources.map(({ uniqueId, name, customTags, zones }) => ({
+        ? rootDataAvailableResources.availableResources.map(({ uniqueId, name, location, customTags, zones }) => ({
             uniqueId,
             name,
+            location: location ? { uniqueId: location.uniqueId, name: location.name } : null,
             customTags: customTags.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
             zones: zones.map(({ uniqueId: id, name, color }) => ({ id, name, color })),
           }))
         : [],
     [rootDataAvailableResources.availableResources, timeRangeValid],
   );
+
+  const locations = useMemo<LocationDetails[]>(
+    () => Array.from(new Map<string, LocationDetails>(resources.filter((item) => item.location !== null).map((item) => [item.location!.uniqueId, item.location!])).values()),
+    [resources],
+  );
+  const customTags = useMemo<CustomTagDetails[]>(
+    () => Array.from(new Map<string, CustomTagDetails>(resources.flatMap((item) => item.customTags).map((item) => [item.id, item])).values()),
+    [resources],
+  );
+  const zones = useMemo<ZoneDetails[]>(
+    () => Array.from(new Map<string, ZoneDetails>(resources.flatMap((item) => item.zones).map((item) => [item.id, item])).values()),
+    [resources],
+  );
+
+  const filteredResources = useMemo<ResourceDetails[]>(() => {
+    let filtered = resources;
+
+    if (selectedLocationId !== allId) {
+      filtered = filtered.filter((item) => item.location?.uniqueId === selectedLocationId);
+    }
+
+    if (selectedCustomTagId !== allId) {
+      filtered = filtered.filter((item) => item.customTags.some((tag) => tag.id === selectedCustomTagId));
+    }
+
+    if (selectedZoneId !== allId) {
+      filtered = filtered.filter((item) => item.zones.some((zone) => zone.id === selectedZoneId));
+    }
+
+    return filtered;
+  }, [resources, selectedLocationId, selectedCustomTagId, selectedZoneId]);
 
   const handleRefetchAvailableResources = useCallback(
     ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }, locationId?: string) => {
@@ -281,6 +344,24 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
     const type = 'WorkingFromOffice';
   };
 
+  const handleLocationChanged = (event: SelectChangeEvent<unknown>) => {
+    const id = event.target.value as string;
+
+    setSelectedLocationId(id);
+  };
+
+  const handleCustomTagChanged = (event: SelectChangeEvent<unknown>) => {
+    const id = event.target.value as string;
+
+    setSelectedCustomTagId(id);
+  };
+
+  const handleZoneChanged = (event: SelectChangeEvent<unknown>) => {
+    const id = event.target.value as string;
+
+    setSelectedZoneId(id);
+  };
+
   if (!rootData.product) {
     return <></>;
   }
@@ -322,13 +403,129 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
                       </StackColumn>
                     </FormFieldLabel>
 
+                    <FormFieldLabel label="Filters">
+                      <DefaultSelect
+                        value={selectedLocationId}
+                        onChange={handleLocationChanged}
+                        size="small"
+                        renderValue={(selectedId) => {
+                          const selectedItem = locations.find((item) => item.uniqueId === selectedId);
+                          if (selectedItem) {
+                            return (
+                              <StackRow>
+                                <LeadIconTypography label="Location" startElement={<LocationIcon />} />
+                                <Divider orientation="vertical" flexItem />
+                                <PushToRight />
+                                <SmallIconTypography label={selectedItem.name} />
+                              </StackRow>
+                            );
+                          }
+
+                          return (
+                            <StackRow>
+                              <LeadIconTypography label="Location" startElement={<LocationIcon />} />
+                              <Divider orientation="vertical" flexItem />
+                              <PushToRight />
+                              <SmallIconTypography label="All" />
+                            </StackRow>
+                          );
+                        }}
+                      >
+                        <MenuItem value={allId}>
+                          <BodyIconTypography label="All" />
+                        </MenuItem>
+
+                        {locations.map((item) => (
+                          <MenuItem key={item.uniqueId} value={item.uniqueId}>
+                            <BodyIconTypography startElement={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
+                          </MenuItem>
+                        ))}
+                      </DefaultSelect>
+
+                      <DefaultSelect
+                        value={selectedCustomTagId}
+                        onChange={handleCustomTagChanged}
+                        size="small"
+                        renderValue={(selectedId) => {
+                          const selectedItem = customTags.find((item) => item.id === selectedId);
+                          if (selectedItem) {
+                            return (
+                              <StackRow>
+                                <LeadIconTypography label="Tag" startElement={<CustomTagIcon />} />
+                                <Divider orientation="vertical" flexItem />
+                                <PushToRight />
+                                <SmallIconTypography label={selectedItem.name} />
+                              </StackRow>
+                            );
+                          }
+
+                          return (
+                            <StackRow>
+                              <LeadIconTypography label="Tag" startElement={<CustomTagIcon />} />
+                              <Divider orientation="vertical" flexItem />
+                              <PushToRight />
+                              <SmallIconTypography label="All" />
+                            </StackRow>
+                          );
+                        }}
+                      >
+                        <MenuItem value={allId}>
+                          <BodyIconTypography label="All" />
+                        </MenuItem>
+
+                        {customTags.map((item) => (
+                          <MenuItem key={item.id} value={item.id}>
+                            <BodyIconTypography startElement={<CustomTagIcon />} label={item.name} />
+                          </MenuItem>
+                        ))}
+                      </DefaultSelect>
+
+                      <DefaultSelect
+                        value={selectedZoneId}
+                        onChange={handleZoneChanged}
+                        size="small"
+                        renderValue={(selectedId) => {
+                          const selectedItem = zones.find((item) => item.id === selectedId);
+                          if (selectedItem) {
+                            return (
+                              <StackRow>
+                                <LeadIconTypography label="Zone" startElement={<ZoneIcon />} />
+                                <Divider orientation="vertical" flexItem />
+                                <PushToRight />
+                                <SmallIconTypography label={selectedItem.name} />
+                              </StackRow>
+                            );
+                          }
+
+                          return (
+                            <StackRow>
+                              <LeadIconTypography label="Zone" startElement={<ZoneIcon />} />
+                              <Divider orientation="vertical" flexItem />
+                              <PushToRight />
+                              <SmallIconTypography label="All" />
+                            </StackRow>
+                          );
+                        }}
+                      >
+                        <MenuItem value={allId}>
+                          <BodyIconTypography label="All" />
+                        </MenuItem>
+
+                        {zones.map((item) => (
+                          <MenuItem key={item.id} value={item.id}>
+                            <BodyIconTypography startElement={<ZoneIcon />} label={item.name} />
+                          </MenuItem>
+                        ))}
+                      </DefaultSelect>
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Resources">
-                      {resources.length > 0 && (
+                      {filteredResources.length > 0 && (
                         <Autocomplete
                           name="resources"
                           multiple={true}
                           required={requiredFields.resources}
-                          options={resources}
+                          options={filteredResources}
                           getOptionValue={(option) => (option as ResourceDetails).uniqueId}
                           getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
                           renderOption={(props, option) => {
@@ -351,7 +548,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
                         />
                       )}
 
-                      {resources.length === 0 && <BodyIconTypography label="There are currently no available resources." />}
+                      {filteredResources.length === 0 && <BodyIconTypography label="There are currently no available resources." />}
                     </FormFieldLabel>
                   </StackColumn>
 
