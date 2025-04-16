@@ -299,7 +299,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [, startTransition] = useTransition();
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-  const validateBookingDetails = makeValidate(bookingSchema);
+  const validate = makeValidate(bookingSchema);
   const requiredFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(dayjs(rootData.booking?.from));
   const [allDay, setAllDay] = useState<boolean>(isMidnight(rootData.booking?.from) && isMidnight(rootData.booking?.until));
@@ -620,7 +620,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
               location: locationId,
               resources: booking.resources ? booking.resources.map(({ uniqueId }) => uniqueId) : [],
             }}
-            validate={validateBookingDetails}
+            validate={validate}
             render={({ handleSubmit, values }) => {
               setFrom(values.date);
               setAllDay(values.allDay);
