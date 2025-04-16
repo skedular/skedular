@@ -254,6 +254,7 @@ public class BookingGrpcService(
             request.CustomTagIds,
             request.ZoneIds,
             request.ResourceIdsToInclude,
+            request.ProductId,
             context.CancellationToken);
 
         var availableResources = new AvailableResources();

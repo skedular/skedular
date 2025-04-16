@@ -16,6 +16,7 @@ public interface IResourceService
         ICollection<string> customTagIds,
         ICollection<string> zoneIds,
         ICollection<string> resourceIdsToInclude,
+        string? productId,
         CancellationToken cancellationToken);
 
     Task<(int, int)> GetOrganizationResourceAvailabilityAsync(
@@ -39,6 +40,7 @@ public class ResourceService(
         ICollection<string> customTagIds,
         ICollection<string> zoneIds,
         ICollection<string> resourceIdsToInclude,
+        string? productId,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
@@ -58,13 +60,26 @@ public class ResourceService(
             }
         }
 
+        ICollection<string> productRelatedTags = [];
+        if (!string.IsNullOrWhiteSpace(productId))
+        {
+            var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken);
+            if (product is null)
+            {
+                throw new ProductNotFound();
+            }
+
+            var productVersion = product.ProductVersions.OrderByDescending(item => item.CreatedAt).First();
+            productRelatedTags = productVersion.ProductTags.Concat(productVersion.LocationTags).Select(item => item.Id).ToList();
+        }
+        
         var resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
             organizationId,
             locationId,
             from,
             until,
             [],
-            customTagIds.Concat(zoneIds).ToList(),
+            customTagIds.Concat(zoneIds).Concat(productRelatedTags).ToList(),
             [],
             cancellationToken);
 

@@ -203,6 +203,7 @@ input AvailableResourcesWhereInput {
   customTagIds: [String!]
   zoneIds: [String!]
   resourceIdsToInclude: [String!]
+  productId: String
 }
 
 input BookingOrderInput {

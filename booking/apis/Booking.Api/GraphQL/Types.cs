@@ -209,6 +209,7 @@ public class AvailableResourcesWhereInput
     [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
     [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
     [GraphQLName("resourceIdsToInclude")] public IEnumerable<string>? ResourceIdsToInclude { get; set; }
+    [GraphQLName("productId")] public string? ProductId { get; set; }
 }
 
 [GraphQLName("BookingResourceDetails")]

@@ -1244,6 +1244,7 @@ input AvailableResourcesWhereInput {
   from: DateTime!
   locationId: String
   organizationId: String!
+  productId: String
   resourceIdsToInclude: [String!]
   until: DateTime!
   zoneIds: [String!]

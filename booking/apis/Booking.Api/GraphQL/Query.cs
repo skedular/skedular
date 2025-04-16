@@ -177,6 +177,7 @@ public class Query(IMapper mapper)
             where.CustomTagIds.ToSafeCollection(),
             where.ZoneIds.ToSafeCollection(),
             where.ResourceIdsToInclude.ToSafeCollection(),
+            where.ProductId,
             cancellationToken));
 
     [UseResolverScope]
