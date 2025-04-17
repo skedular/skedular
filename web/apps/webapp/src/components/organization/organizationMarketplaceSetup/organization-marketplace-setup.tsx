@@ -11,6 +11,7 @@ import { EditOrganizationProductTagDialog } from '@/components/organization/edit
 import { NewProductButton } from '@/components/product/addProduct';
 import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
+import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -268,7 +269,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const [productNameSearchText, setProductNameSearchText] = useState<string>('');
-  const [seledctedProducts, setSeledctedProducts] = useState<GridRowSelectionModel>([]);
+  const [seledctedProducts, setSeledctedProducts] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const [selectedProductId, setSelectedProductId] = useState<null | string>(null);
   const [productMoreActionsAnchorEl, setProductMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const productMoreActionsMenuOpen = Boolean(productMoreActionsAnchorEl);
@@ -299,7 +300,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
   );
 
   const [productTagNameSearchText, setProductTagNameSearchText] = useState<string>('');
-  const [seledctedProductTags, setSeledctedProductTags] = useState<GridRowSelectionModel>([]);
+  const [seledctedProductTags, setSeledctedProductTags] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const [selectedProductTagId, setSelectedProductTagId] = useState<null | string>(null);
   const [productTagMoreActionsAnchorEl, setProductTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const productTagMoreActionsMenuOpen = Boolean(productTagMoreActionsAnchorEl);
@@ -328,7 +329,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
   );
 
   const [locationTagNameSearchText, setLocationTagNameSearchText] = useState<string>('');
-  const [seledctedLocationTags, setSeledctedLocationTags] = useState<GridRowSelectionModel>([]);
+  const [seledctedLocationTags, setSeledctedLocationTags] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const [selectedLocationTagId, setSelectedLocationTagId] = useState<null | string>(null);
   const [locationTagMoreActionsAnchorEl, setLocationTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const locationTagMoreActionsMenuOpen = Boolean(locationTagMoreActionsAnchorEl);
@@ -418,7 +419,10 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
         connectionIds: productsConnectionIds,
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedProducts.map((id) => id as string),
+          ids: seledctedProducts.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -493,7 +497,10 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       variables: {
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedProducts.map((id) => id as string),
+          ids: seledctedProducts.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -510,7 +517,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
           ...successNotificationOptions,
           render: <NotificationContent content={'Products deactivated.'} />,
         });
-        setSeledctedProducts([]);
+        setSeledctedProducts(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -528,7 +535,10 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       variables: {
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedProducts.map((id) => id as string),
+          ids: seledctedProducts.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -545,7 +555,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
           ...successNotificationOptions,
           render: <NotificationContent content={'Products activated.'} />,
         });
-        setSeledctedProducts([]);
+        setSeledctedProducts(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -584,7 +594,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
           ...successNotificationOptions,
           render: <NotificationContent content={'Product deactivated.'} />,
         });
-        setSeledctedProducts([]);
+        setSeledctedProducts(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -623,7 +633,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
           ...successNotificationOptions,
           render: <NotificationContent content={'Product activated.'} />,
         });
-        setSeledctedProducts([]);
+        setSeledctedProducts(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -674,7 +684,10 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
         connectionIds: productTagsConnectionIds,
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedProductTags.map((id) => id as string),
+          ids: seledctedProductTags.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -782,7 +795,10 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
         connectionIds: locationTagsConnectionIds,
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedLocationTags.map((id) => id as string),
+          ids: seledctedLocationTags.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -1123,7 +1139,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
               <Search size="small" placeholder="Search for product" defaultValue={productNameSearchText} onChange={handleProductsSearchTextChange} />
             </GridContainer>
 
-            {seledctedProducts.length > 0 && (
+            {seledctedProducts.ids.size > 0 && (
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
@@ -1136,7 +1152,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
                   }}
                 >
                   <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedProducts.length} records selected`} />
+                    <SmallIconTypography label={`${seledctedProducts.ids.size} records selected`} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateProductsClick} sx={defaultButtonStyle}>
                       Deactivate Product
@@ -1203,7 +1219,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
               <Search size="small" placeholder="Search for product tags" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
             </GridContainer>
 
-            {seledctedProductTags.length > 0 && (
+            {seledctedProductTags.ids.size > 0 && (
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
@@ -1216,7 +1232,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
                   }}
                 >
                   <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedProductTags.length} records selected`} />
+                    <SmallIconTypography label={`${seledctedProductTags.ids.size} records selected`} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
                       Remove Product Tag
@@ -1277,7 +1293,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
               <Search size="small" placeholder="Search for location tags" defaultValue={locationTagNameSearchText} onChange={handleLocationTagsSearchTextChange} />
             </GridContainer>
 
-            {seledctedLocationTags.length > 0 && (
+            {seledctedLocationTags.ids.size > 0 && (
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
@@ -1290,7 +1306,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
                   }}
                 >
                   <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedLocationTags.length} records selected`} />
+                    <SmallIconTypography label={`${seledctedLocationTags.ids.size} records selected`} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationTagsClick} sx={{ textTransform: 'none' }}>
                       Remove Location Tag

@@ -27,6 +27,7 @@ import { EditOrganizationCustomTagDialog } from '@/components/organization/editO
 import { EditOrganizationZoneDialog } from '@/components/organization/editOrganizationZone/';
 import { Search } from '@/components/search';
 import { Zone } from '@/components/zone';
+import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext } from '@/libs/providers';
 import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -499,7 +500,7 @@ const OrganizationAdmin = ({
   const [enableSso, setEnableSso] = useState<boolean>(!!rootData.organization?.ssoSettings);
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
-  const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>([]);
+  const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const [selectedZoneId, setSelectedZoneId] = useState<null | string>(null);
   const [zoneMoreActionsAnchorEl, setZoneMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const zoneMoreActionsMenuOpen = Boolean(zoneMoreActionsAnchorEl);
@@ -529,7 +530,7 @@ const OrganizationAdmin = ({
   );
 
   const [customTagNameSearchText, setCustomTagNameSearchText] = useState<string>('');
-  const [seledctedCustomTags, setSeledctedCustomTags] = useState<GridRowSelectionModel>([]);
+  const [seledctedCustomTags, setSeledctedCustomTags] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<null | string>(null);
   const [customTagMoreActionsAnchorEl, setCustomTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const customTagMoreActionsMenuOpen = Boolean(customTagMoreActionsAnchorEl);
@@ -862,7 +863,10 @@ const OrganizationAdmin = ({
         connectionIds: zonesConnectionIds,
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedZones.map((id) => id as string),
+          ids: seledctedZones.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -967,7 +971,10 @@ const OrganizationAdmin = ({
         connectionIds: customTagsConnectionIds,
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedCustomTags.map((id) => id as string),
+          ids: seledctedCustomTags.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -1863,7 +1870,7 @@ const OrganizationAdmin = ({
               <Search size="small" placeholder="Search for zones" defaultValue={zoneNameSearchText} onChange={handleZonesSearchTextChange} />
             </GridContainer>
 
-            {seledctedZones.length > 0 && (
+            {seledctedZones.ids.size > 0 && (
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
@@ -1876,7 +1883,7 @@ const OrganizationAdmin = ({
                   }}
                 >
                   <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedZones.length} records selected`} />
+                    <SmallIconTypography label={`${seledctedZones.ids.size} records selected`} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveZonesClick} sx={{ textTransform: 'none' }}>
                       Remove Zone
@@ -1937,7 +1944,7 @@ const OrganizationAdmin = ({
               <Search size="small" placeholder="Search for tags" defaultValue={customTagNameSearchText} onChange={handleCustomTagsSearchTextChange} />
             </GridContainer>
 
-            {seledctedCustomTags.length > 0 && (
+            {seledctedCustomTags.ids.size > 0 && (
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
@@ -1950,7 +1957,7 @@ const OrganizationAdmin = ({
                   }}
                 >
                   <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedCustomTags.length} records selected`} />
+                    <SmallIconTypography label={`${seledctedCustomTags.ids.size} records selected`} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveCustomTagsClick} sx={{ textTransform: 'none' }}>
                       Remove Tag

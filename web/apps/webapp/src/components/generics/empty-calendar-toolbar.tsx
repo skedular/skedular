@@ -1,7 +1,6 @@
 import { StaticDatePickerSlotProps } from '@mui/x-date-pickers/StaticDatePicker';
-import type { Dayjs } from 'dayjs';
 
-export const SimpleCalendarSlotProps: StaticDatePickerSlotProps<Dayjs> = {
+export const SimpleCalendarSlotProps: StaticDatePickerSlotProps = {
   leftArrowIcon: { fontSize: 'medium' },
   rightArrowIcon: { fontSize: 'medium' },
   previousIconButton: {

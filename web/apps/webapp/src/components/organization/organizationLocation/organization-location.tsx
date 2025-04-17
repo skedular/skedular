@@ -26,6 +26,7 @@ import { ResourceType } from '@/components/resourceType';
 import { Search } from '@/components/search';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { Zones } from '@/components/zone';
+import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -520,7 +521,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   const [resourceCustomTagIds, setResourceCustomTagIds] = useState<string[]>([]);
   const [resourceZoneIds, setResourceZoneIds] = useState<string[]>([]);
   const [selectedResourceId, setSelectedResourceId] = useState<null | string>(null);
-  const [seledctedResources, setSeledctedResources] = useState<GridRowSelectionModel>([]);
+  const [seledctedResources, setSeledctedResources] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const [resourceMoreActionsAnchorEl, setResourceMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const resourceMoreActionsMenuOpen = Boolean(resourceMoreActionsAnchorEl);
   const [preferredResources, setPreferredResources] = useState(rootData.me?.preferredResources.map(({ uniqueId }) => uniqueId) ?? []);
@@ -694,7 +695,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
       variables: {
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedResources.map((id) => id as string),
+          ids: seledctedResources.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -711,7 +715,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           ...successNotificationOptions,
           render: <NotificationContent content={'Resources deactivated.'} />,
         });
-        setSeledctedResources([]);
+        setSeledctedResources(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -729,7 +733,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
       variables: {
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedResources.map((id) => id as string),
+          ids: seledctedResources.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -746,7 +753,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           ...successNotificationOptions,
           render: <NotificationContent content={'Resources activated.'} />,
         });
-        setSeledctedResources([]);
+        setSeledctedResources(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -765,7 +772,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
         connectionIds: resourcesConnectionIds,
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedResources.map((id) => id as string),
+          ids: seledctedResources.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -782,7 +792,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           ...successNotificationOptions,
           render: <NotificationContent content={'Resources removed.'} />,
         });
-        setSeledctedResources([]);
+        setSeledctedResources(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -821,7 +831,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           ...successNotificationOptions,
           render: <NotificationContent content={'Resource deactivated.'} />,
         });
-        setSeledctedResources([]);
+        setSeledctedResources(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -860,7 +870,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           ...successNotificationOptions,
           render: <NotificationContent content={'Resource activated.'} />,
         });
-        setSeledctedResources([]);
+        setSeledctedResources(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -900,7 +910,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           ...successNotificationOptions,
           render: <NotificationContent content={'Resource removed.'} />,
         });
-        setSeledctedResources([]);
+        setSeledctedResources(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1371,7 +1381,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
               <Search size="small" placeholder="Search for resources" defaultValue={resourceNameSearchText} onChange={handleResourceNameSearchTextChange} />
             </GridContainer>
 
-            {seledctedResources.length > 0 && (
+            {seledctedResources.ids.size > 0 && (
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
@@ -1384,7 +1394,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                   }}
                 >
                   <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedResources.length} records selected`} />
+                    <SmallIconTypography label={`${seledctedResources.ids.size} records selected`} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateResourcesClick} sx={defaultButtonStyle}>
                       Deactivate Resource

@@ -10,6 +10,7 @@ import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { Search } from '@/components/search';
 import { TeamSelector } from '@/components/team/teamSelector';
+import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
@@ -190,7 +191,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
   const router = useRouter();
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-  const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>([]);
+  const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
@@ -276,7 +277,10 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       variables: {
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedMembers.map((id) => id as string),
+          ids: seledctedMembers.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
           status: 'Inactive',
         },
       },
@@ -294,7 +298,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
           ...successNotificationOptions,
           render: <NotificationContent content={'Users deactivated.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -312,7 +316,10 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
       variables: {
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedMembers.map((id) => id as string),
+          ids: seledctedMembers.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
           status: 'Active',
         },
       },
@@ -330,7 +337,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
           ...successNotificationOptions,
           render: <NotificationContent content={'Users activated.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -349,7 +356,10 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
         connectionIds,
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedMembers.map((id) => id as string),
+          ids: seledctedMembers.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -366,7 +376,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
           ...successNotificationOptions,
           render: <NotificationContent content={'Users removed.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -440,7 +450,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
           ...successNotificationOptions,
           render: <NotificationContent content={'User deactivated.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -480,7 +490,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
           ...successNotificationOptions,
           render: <NotificationContent content={'User activated.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -520,7 +530,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
           ...successNotificationOptions,
           render: <NotificationContent content={'User removed.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -734,7 +744,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
               <Search size="small" placeholder="Search for users" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
             </GridContainer>
 
-            {seledctedMembers.length > 0 && (
+            {seledctedMembers.ids.size > 0 && (
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
@@ -747,7 +757,7 @@ const OrganizationUsers = ({ queryReference, organizationId }: Props) => {
                   }}
                 >
                   <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedMembers.length} records selected`} invertDefaultColor={paletteMode === 'dark'} />
+                    <SmallIconTypography label={`${seledctedMembers.ids.size} records selected`} invertDefaultColor={paletteMode === 'dark'} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateUsersClick} sx={defaultButtonStyle}>
                       Deactivate User

@@ -19,6 +19,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
 import { Search } from '@/components/search';
+import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
@@ -232,7 +233,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
-  const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>([]);
+  const [seledctedMembers, setSeledctedMembers] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
   const validate = makeValidate(teamSchema);
   const requiredTeamDetailsFields = makeRequired(teamSchema);
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
@@ -375,7 +376,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       variables: {
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedMembers.map((id) => id as string),
+          ids: seledctedMembers.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
           status: 'Inactive',
         },
       },
@@ -393,7 +397,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Members deactivated.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -411,7 +415,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       variables: {
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedMembers.map((id) => id as string),
+          ids: seledctedMembers.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
           status: 'Active',
         },
       },
@@ -429,7 +436,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Members activated.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -448,7 +455,10 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         connectionIds,
         input: {
           clientMutationId: nanoid(),
-          ids: seledctedMembers.map((id) => id as string),
+          ids: seledctedMembers.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
         },
       },
       onCompleted: (_, errors) => {
@@ -463,7 +473,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Members removed.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -521,7 +531,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Member deactivated.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -561,7 +571,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Member activated.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -599,7 +609,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           ...successNotificationOptions,
           render: <NotificationContent content={'Member removed.'} />,
         });
-        setSeledctedMembers([]);
+        setSeledctedMembers(defaultGridRowSelectionModelValue);
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -929,7 +939,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
               <Search size="small" placeholder="Search for members" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
             </GridContainer>
 
-            {seledctedMembers.length > 0 && (
+            {seledctedMembers.ids.size > 0 && (
               <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
                 <Box
                   sx={{
@@ -942,7 +952,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                   }}
                 >
                   <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedMembers.length} records selected`} />
+                    <SmallIconTypography label={`${seledctedMembers.ids.size} records selected`} />
                     <PushToRight />
                     <Button size="medium" variant="contained" color="secondary" onClick={handleDeactivateMembersClick} sx={defaultButtonStyle}>
                       Deactivate Member

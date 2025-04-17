@@ -10,7 +10,7 @@ import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 
-interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
+interface CustomPickerDayProps extends PickersDayProps {
   isSelected: boolean;
   isHovered: boolean;
 }
@@ -49,7 +49,7 @@ const CustomPickersDay = styled(PickersDay, {
 })) as React.ComponentType<CustomPickerDayProps>;
 
 const Day = (
-  props: PickersDayProps<Dayjs> & {
+  props: PickersDayProps & {
     selectedDay?: Dayjs | null;
     hoveredDay?: Dayjs | null;
   },
@@ -144,7 +144,7 @@ const WeekPicker = ({ defaultStartWeek, onWeekChanged }: Props) => {
       >
         <DateCalendar
           value={start}
-          onChange={(newValue) => handleChange(newValue)}
+          onChange={(newValue) => handleChange(newValue as Dayjs)}
           showDaysOutsideCurrentMonth
           slots={{ day: Day }}
           slotProps={{
