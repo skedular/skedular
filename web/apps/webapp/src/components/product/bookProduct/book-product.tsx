@@ -29,7 +29,8 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -205,8 +206,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
   const validate = makeValidate(bookingSchema);
   const requiredFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(defaultDate ?? startOfDay());
-  const [timeFrom, setTimeFrom] = useState<Dayjs | null>(toOpeningHoursFromTime('08:00'));
-  const [timeUntil, setTimeUntil] = useState<Dayjs | null>(toOpeningHoursFromTime('17:00'));
+  const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('08:00'), toOpeningHoursFromTime('17:00')]);
   const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
   const [resourceIds, setResourceIds] = useState<string[]>([]);
   const filterResource = createFilterOptions<ResourceDetails>();
@@ -311,6 +311,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
   );
 
   useEffect(() => {
+    const [timeFrom, timeUntil] = timeRange;
     const range = getDateRange(from, { timeFrom, timeUntil });
     if (range.valid) {
       setTimeRangeValid(true);
@@ -318,7 +319,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
     } else {
       setTimeRangeValid(false);
     }
-  }, [handleRefetchAvailableResources, from, timeFrom, timeUntil, getDateRange]);
+  }, [handleRefetchAvailableResources, from, timeRange, getDateRange]);
 
   const handleCloseClick = () => {
     router.back();
@@ -331,6 +332,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
 
     const id = nanoid();
     const start = date as unknown as Dayjs;
+    const [timeFrom, timeUntil] = timeRange;
     const dateRange = getDateRange(start, { timeFrom, timeUntil });
     if (!dateRange.valid) {
       return;
@@ -394,11 +396,11 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Date/Time">
                       <StackColumn>
-                        <DatePicker name="date" required={requiredFields.date} />
-
                         <StackRow>
-                          <TimePicker minutesStep={rootData.openingHoursMinutesStep} defaultValue={timeFrom} onChange={setTimeFrom} />
-                          <TimePicker minutesStep={rootData.openingHoursMinutesStep} defaultValue={timeUntil} onChange={setTimeUntil} />
+                          <Box sx={{ width: 'fit-content' }}>
+                            <DatePicker name="date" required={requiredFields.date} />
+                          </Box>
+                          <TimeRangePicker minutesStep={rootData.openingHoursMinutesStep} defaultValue={timeRange} onChange={setTimeRange} />
                         </StackRow>
                       </StackColumn>
                     </FormFieldLabel>

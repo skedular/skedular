@@ -18,7 +18,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -303,8 +304,10 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
   const requiredFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(dayjs(rootData.booking?.from));
   const [allDay, setAllDay] = useState<boolean>(isMidnight(rootData.booking?.from) && isMidnight(rootData.booking?.until));
-  const [timeFrom, setTimeFrom] = useState<Dayjs | null>(toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)));
-  const [timeUntil, setTimeUntil] = useState<Dayjs | null>(toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)));
+  const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([
+    toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)),
+    toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)),
+  ]);
   const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
   const [customerId, setCustomerId] = useState<string | undefined>(rootData.booking?.customer?.uniqueId);
   const [teamId, setTeamId] = useState<string | undefined>(rootData.booking?.team?.uniqueId);
@@ -439,6 +442,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
 
   useEffect(() => handleRefetchTeams(rootData.booking?.customer?.uniqueId), [handleRefetchTeams, rootData.booking?.customer?.uniqueId]);
   useEffect(() => {
+    const [timeFrom, timeUntil] = timeRange;
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
     if (range.valid) {
       setTimeRangeValid(true);
@@ -446,7 +450,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     } else {
       setTimeRangeValid(false);
     }
-  }, [handleRefetchAvailableResources, from, allDay, timeFrom, timeUntil, locationId, getDateRange]);
+  }, [handleRefetchAvailableResources, from, allDay, timeRange, locationId, getDateRange]);
 
   const handleCloseClick = () => {
     router.back();
@@ -468,6 +472,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
 
     const booking = rootData.booking;
     const start = date as unknown as Dayjs;
+    const [timeFrom, timeUntil] = timeRange;
     const dateRange = getDateRange(allDay, start, { timeFrom, timeUntil });
     if (!dateRange.valid) {
       return;
@@ -582,6 +587,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
 
     setLocationId(locationId);
 
+    const [timeFrom, timeUntil] = timeRange;
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
     if (range.valid) {
       setTimeRangeValid(true);
@@ -669,15 +675,13 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Date/Time">
-                      <StackColumn>
-                        <DatePicker name="date" required={requiredFields.date} />
-
+                      <StackRow>
+                        <Box sx={{ width: 'fit-content' }}>
+                          <DatePicker name="date" required={requiredFields.date} />
+                        </Box>
                         <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
-                        <StackRow>
-                          <TimePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeFrom} onChange={setTimeFrom} />
-                          <TimePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeUntil} onChange={setTimeUntil} />
-                        </StackRow>
-                      </StackColumn>
+                        <TimeRangePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
+                      </StackRow>
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Notes">

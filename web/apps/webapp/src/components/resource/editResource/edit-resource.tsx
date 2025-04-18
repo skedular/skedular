@@ -513,6 +513,67 @@ const EditResource = ({ rootDataRelay, organizationId }: Props) => {
 
   const handleIsAvailableHoursOverriddenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsAvailableHoursOverridden(event.target.checked);
+
+    if (event.target.checked) {
+      return;
+    }
+
+    const resource = rootData.resource;
+    if (!resource) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Updating resource '${resource.name}' available hours...`} />, infoNotificationOptions);
+
+    commitUpdateLocationResourceAvailableHours({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          id: resource.id,
+          overrideAvailableHours: false,
+          availableHours: null,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update resource '${resource?.name}' available hours . Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Resource ${resource.name} available hours updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update resource '${resource?.name}' available hours. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateLocationResourceAvailableHours: {
+          resource: {
+            id: resource.id,
+            name: resource.name,
+            inactive: resource.inactive,
+            requireBookingApproval: resource.requireBookingApproval,
+            customTags: resource.customTags,
+            zones: resource.zones,
+            productTags: resource.productTags,
+            color: resource.color,
+            capacity: resource.capacity,
+            resourceType: resource.resourceType,
+            isAvailableHoursOverridden: false,
+            availableHours: null,
+          },
+        },
+      },
+    });
   };
 
   if (!rootData.location || !rootData.resource) {

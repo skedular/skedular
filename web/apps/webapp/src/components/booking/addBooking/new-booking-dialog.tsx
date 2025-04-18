@@ -15,10 +15,12 @@ import type { newBookingDialog_customerTeams_refetchableFragment } from '@/queri
 import type { newBookingDialog_organizationMembers_query$key } from '@/queries/__generated__/newBookingDialog_organizationMembers_query.graphql';
 import type { newBookingDialog_organizationMembers_refetchableFragment } from '@/queries/__generated__/newBookingDialog_organizationMembers_refetchableFragment.graphql';
 import type { newBookingDialog_query$key } from '@/queries/__generated__/newBookingDialog_query.graphql';
+import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, DatePicker, makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
@@ -277,8 +279,7 @@ const NewBookingDialog = ({
   const requiredFields = makeRequired(bookingSchema);
   const [from, setFrom] = useState<Dayjs | Date>(defaultDate ?? startOfDay());
   const [allDay, setAllDay] = useState<boolean>(true);
-  const [timeFrom, setTimeFrom] = useState<Dayjs | null>(toOpeningHoursFromTime('00:00'));
-  const [timeUntil, setTimeUntil] = useState<Dayjs | null>(toOpeningHoursFromTime('00:00'));
+  const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('00:00'), toOpeningHoursFromTime('00:00')]);
   const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
   const [customerId, setCustomerId] = useState<string | undefined>();
   const [teamId, setTeamId] = useState<string | undefined>();
@@ -397,6 +398,7 @@ const NewBookingDialog = ({
   );
 
   useEffect(() => {
+    const [timeFrom, timeUntil] = timeRange;
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
     if (range.valid) {
       setTimeRangeValid(true);
@@ -404,7 +406,7 @@ const NewBookingDialog = ({
     } else {
       setTimeRangeValid(false);
     }
-  }, [handleRefetchAvailableResources, from, allDay, timeFrom, timeUntil, locationId, getDateRange]);
+  }, [handleRefetchAvailableResources, from, allDay, timeRange, locationId, getDateRange]);
 
   const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, resources: resourceIds }: BookingDetails) => {
     if (!rootData.me) {
@@ -413,6 +415,7 @@ const NewBookingDialog = ({
 
     const id = nanoid();
     const start = date as unknown as Dayjs;
+    const [timeFrom, timeUntil] = timeRange;
     const dateRange = getDateRange(allDay, start, { timeFrom, timeUntil });
     if (!dateRange.valid) {
       return;
@@ -544,6 +547,7 @@ const NewBookingDialog = ({
 
     setLocationId(locationId);
 
+    const [timeFrom, timeUntil] = timeRange;
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
     if (range.valid) {
       setTimeRangeValid(true);
@@ -625,11 +629,14 @@ const NewBookingDialog = ({
 
                 <FormFieldLabel label="Date/Time" useWiderSpace>
                   <StackColumn>
-                    <DatePicker name="date" required={requiredFields.date} />
+                    <Box sx={{ width: 'fit-content' }}>
+                      <DatePicker name="date" required={requiredFields.date} />
+                    </Box>
 
-                    <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
-                    <TimePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeFrom} onChange={setTimeFrom} />
-                    <TimePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeUntil} onChange={setTimeUntil} />
+                    <StackRow>
+                      <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
+                      <TimeRangePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
+                    </StackRow>
                   </StackColumn>
                 </FormFieldLabel>
 
