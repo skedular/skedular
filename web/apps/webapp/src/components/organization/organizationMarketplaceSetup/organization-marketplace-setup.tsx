@@ -935,7 +935,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value ? 'Yes' : 'No'} />,
       display: 'flex',
-      minWidth: 150,
+      minWidth: 100,
     },
     {
       field: 'recurrenceWindowDays',
@@ -951,7 +951,7 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       editable: false,
       renderCell: (params) => <SmallIconTypography label={params.value ? 'Yes' : 'No'} />,
       display: 'flex',
-      minWidth: 150,
+      minWidth: 100,
     },
     {
       field: 'maxBookingSpreadDays',

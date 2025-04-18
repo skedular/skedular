@@ -66,16 +66,17 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Switch from '@mui/material/Switch';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, boolean, object, string } from 'yup';
+import { array, object, string } from 'yup';
 import OrganizationAdminLeftSideNavigationMenuContent from './organization-admin-left-side-navigation-menu-content';
 
 type Props = {
@@ -128,33 +129,15 @@ const organizationBillingSchema = object({
 });
 
 type OrganziationSsoSettingsDetails = {
-  enableSso: boolean;
   entityId: string;
   loginUrl: string;
   appFederationMetadataUrl: string;
 };
 
 const organziationSsoSettingsSchema = object({
-  enableSso: boolean(),
-  entityId: string().when('enableSso', {
-    is: true,
-    then: (schema) => schema.required('Entity ID is required'),
-    otherwise: (schema) => schema.notRequired(),
-  }),
-  loginUrl: string()
-    .url('Login Url must be a valid Url')
-    .when('enableSso', {
-      is: true,
-      then: (schema) => schema.required('Login Url is required'),
-      otherwise: (schema) => schema.notRequired(),
-    }),
-  appFederationMetadataUrl: string()
-    .url('App Federation Metadata Url must be a valid Url')
-    .when('enableSso', {
-      is: true,
-      then: (schema) => schema.required('App Federation Metadata Url is required'),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+  entityId: string().required('Entity ID is required'),
+  loginUrl: string().url('Login Url must be a valid Url').required('Login Url is required'),
+  appFederationMetadataUrl: string().url('App Federation Metadata Url must be a valid Url').required('App Federation Metadata Url is required'),
 });
 
 type ZoneRowType = {
@@ -497,7 +480,7 @@ const OrganizationAdmin = ({
   const validateOrganizationSsoSettings = makeValidate(organziationSsoSettingsSchema);
   const requiredOrganizationSsoSettingsFields = makeRequired(organziationSsoSettingsSchema);
   const [isAddPaymentMethodDialogOpen, setIsAddPaymentMethodDialogOpen] = useState(false);
-  const [enableSso, setEnableSso] = useState<boolean>(!!rootData.organization?.ssoSettings);
+  const [ssoEnabled, setSsoEnabled] = useState(!!rootData.organization?.ssoSettings);
 
   const [zoneNameSearchText, setZoneNameSearchText] = useState<string>('');
   const [seledctedZones, setSeledctedZones] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
@@ -727,100 +710,111 @@ const OrganizationAdmin = ({
     });
   };
 
-  const handleOrganizationSsoSettingsDetailUpdateClick = ({ enableSso, entityId, loginUrl, appFederationMetadataUrl }: OrganziationSsoSettingsDetails) => {
+  const handleEnableOrganizationSsoSettingsClick = ({ entityId, loginUrl, appFederationMetadataUrl }: OrganziationSsoSettingsDetails) => {
     const organization = rootData.organization;
     if (!organization) {
       return;
     }
 
-    if (enableSso) {
-      const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' SSO settings...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' SSO settings...`} />, infoNotificationOptions);
 
-      commitUpdateOrganizationSsoSettings({
-        variables: {
-          input: {
-            clientMutationId: nanoid(),
-            organizationId: organization.id,
-            entityId,
-            loginUrl,
-            appFederationMetadataUrl,
-          },
+    commitUpdateOrganizationSsoSettings({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          organizationId: organization.id,
+          entityId,
+          loginUrl,
+          appFederationMetadataUrl,
         },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${joinErrors(errors)}.`} />,
-            });
-
-            return;
-          }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Organization ${organization?.name} SSO settings details updated.`} />,
-          });
-        },
-        onError: (error) => {
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${error.message}.`} />,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${joinErrors(errors)}.`} />,
           });
-        },
-        optimisticResponse: {
-          updateOrganizationSsoSettings: {
-            organization: {
-              id: organization.id,
-              ssoSettings: {
-                entityId,
-                loginUrl,
-                appFederationMetadataUrl,
-              },
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${organization?.name} SSO settings details updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateOrganizationSsoSettings: {
+          organization: {
+            id: organization.id,
+            ssoSettings: {
+              entityId,
+              loginUrl,
+              appFederationMetadataUrl,
             },
           },
         },
-      });
-    } else {
-      const toastId = themedToast(<NotificationContent content={`Removing organization '${organization.name}' SSO settings...`} />, infoNotificationOptions);
+      },
+    });
+  };
 
-      commitRemoveOrganizationSsoSettings({
-        variables: {
-          input: {
-            clientMutationId: nanoid(),
-            organizationId: organization.id,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors && errors.length > 0) {
-            toast.update(toastId, {
-              ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove organization '${organization?.name}' SSO settings. Error: ${joinErrors(errors)}.`} />,
-            });
+  const handleEnableSsoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSsoEnabled(event.target.checked);
 
-            return;
-          }
-
-          toast.update(toastId, {
-            ...successNotificationOptions,
-            render: <NotificationContent content={`Organization ${organization?.name} SSO settings removed.`} />,
-          });
-        },
-        onError: (error) => {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove organization '${organization?.name}' SSO settings. Error: ${error.message}.`} />,
-          });
-        },
-        optimisticResponse: {
-          removeOrganizationSsoSettings: {
-            organization: {
-              id: organization.id,
-              ssoSettings: null,
-            },
-          },
-        },
-      });
+    if (event.target.checked) {
+      return;
     }
+
+    const organization = rootData.organization;
+    if (!organization) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Removing organization '${organization.name}' SSO settings...`} />, infoNotificationOptions);
+
+    commitRemoveOrganizationSsoSettings({
+      variables: {
+        input: {
+          clientMutationId: nanoid(),
+          organizationId: organization.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove organization '${organization?.name}' SSO settings. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${organization?.name} SSO settings removed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove organization '${organization?.name}' SSO settings. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        removeOrganizationSsoSettings: {
+          organization: {
+            id: organization.id,
+            ssoSettings: null,
+          },
+        },
+      },
+    });
   };
 
   const handleZonesSearchTextChange = (str: string) => {
@@ -1785,17 +1779,14 @@ const OrganizationAdmin = ({
             )}
 
             <Form
-              onSubmit={handleOrganizationSsoSettingsDetailUpdateClick}
+              onSubmit={handleEnableOrganizationSsoSettingsClick}
               initialValues={{
-                enableSso,
                 entityId: ssoSettingsEntityId,
                 loginUrl: ssoSettingsLoginUrl,
                 appFederationMetadataUrl: ssoSettingsappFederationMetadataUrl,
               }}
               validate={validateOrganizationSsoSettings}
               render={({ handleSubmit, values }) => {
-                setEnableSso(values.enableSso);
-
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
                     <StackColumn
@@ -1810,14 +1801,11 @@ const OrganizationAdmin = ({
                     </StackColumn>
 
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <Switches
-                        name="enableSso"
-                        required={requiredOrganizationSsoSettingsFields.enableSso}
-                        data={{ label: 'Enable SSO', value: 'enableSso' }}
-                        helperText="If checked, it enables SSO for your organization"
-                      />
+                      <FormFieldLabel label="Enable Sign sign-on">
+                        <Switch defaultChecked={ssoEnabled} onChange={handleEnableSsoChange} />
+                      </FormFieldLabel>
 
-                      {enableSso && (
+                      {ssoEnabled && (
                         <>
                           <FormFieldLabel label="Entity Id">
                             <TextField name="entityId" required={requiredOrganizationSsoSettingsFields.entityId} />
@@ -1834,13 +1822,15 @@ const OrganizationAdmin = ({
                       )}
                     </StackColumn>
 
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <StackRow>
-                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
-                          Update
-                        </Button>
-                      </StackRow>
-                    </StackColumn>
+                    {ssoEnabled && (
+                      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                        <StackRow>
+                          <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                            Update
+                          </Button>
+                        </StackRow>
+                      </StackColumn>
+                    )}
                   </FormStackColumn>
                 );
               }}
