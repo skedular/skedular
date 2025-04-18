@@ -41,7 +41,7 @@ public class OrganizationSsoService(
         var ssoSettings = await repositoryFactory.OrganizationSsoSettingRepository.GetByOrganizationIdAsync(id, cancellationToken);
         if (ssoSettings is null)
         {
-            return true;
+            return false;
         }
 
         var userSsoContext = context.GetUserSsoContext(id);

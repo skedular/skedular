@@ -1,7 +1,7 @@
 import { AppBar } from '@/components/appBar';
 import { getSignInUrlAction } from '@/components/authActions';
-import { SmallHeadingIconTypography } from '@/components/commons';
-import { LogoutIcon } from '@/components/icons';
+import { LeadIconTypography, PushToRight, SmallHeadingIconTypography } from '@/components/commons';
+import { LogoutIcon, SsoSigninIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Notifications } from '@/components/notification/notifications';
@@ -9,10 +9,13 @@ import { Observability } from '@/components/observability';
 import { OrganizationOnboarding } from '@/components/organization/organizationOnboarding';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { InMsTeamsContext } from '@/libs/providers';
+import { InMsTeamsContext, PaletteModeContext } from '@/libs/providers';
+import { coal, emerald } from '@/libs/theme';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { nanoid } from 'nanoid';
@@ -21,6 +24,7 @@ import type { JSX, PropsWithChildren } from 'react';
 import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import StackRow from '../commons/stack-row';
 import { getOrganizationSsoSignInBaseLink } from '../links';
 
 type Props = {
@@ -60,6 +64,10 @@ const RootQuery = graphql`
     }
 
     organizationRequiredSsoTokenValid(id: $organizationId) @include(if: $organizationExists)
+    organization(id: $organizationId) @include(if: $organizationExists) {
+      logoUrl
+      name
+    }
 
     ...appBar_query
     ...leftSideNavigationMenu_query
@@ -81,6 +89,7 @@ const RootShell = ({
   organizationId,
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
+  const paletteMode = useContext(PaletteModeContext);
   const inMsTeams = useContext(InMsTeamsContext);
   const router = useRouter();
 
@@ -157,11 +166,6 @@ const RootShell = ({
     return <Loading message="Kindly hold on as we proceed to activate your account..." />;
   }
 
-  if (rootData.organizationRequiredSsoTokenValid) {
-    router.push(getOrganizationSsoSignInBaseLink(organizationId));
-    return <></>;
-  }
-
   return (
     <>
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
@@ -176,9 +180,28 @@ const RootShell = ({
             showBreadcrumps={showBreadcrumps}
             breadcrumbs={breadcrumbs}
           />
-          {!inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding />}
-          {rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />}
-          {rootData.myOrganizations.length > 0 && <>{children}</>}
+          {rootData.organizationRequiredSsoTokenValid && (
+            <Card sx={{ textAlign: 'center', backgroundColor: paletteMode === 'dark' ? emerald : coal }}>
+              <CardContent>
+                <StackRow>
+                  <LeadIconTypography
+                    label={`Single sign-on to see results in the ${rootData.organization?.name} organization.`}
+                    invertDefaultColor
+                    startElement={<SsoSigninIcon />}
+                  />
+                  <PushToRight />
+                  <Button variant="contained" href={getOrganizationSsoSignInBaseLink(organizationId)} sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}>
+                    Single sign-on
+                  </Button>
+                </StackRow>
+              </CardContent>
+            </Card>
+          )}
+          {!rootData.organizationRequiredSsoTokenValid && !inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && (
+            <OrganizationOnboarding />
+          )}
+          {!rootData.organizationRequiredSsoTokenValid && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />}
+          {!rootData.organizationRequiredSsoTokenValid && rootData.myOrganizations.length > 0 && <>{children}</>}
         </Box>
       </Box>
     </>
