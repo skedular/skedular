@@ -1,7 +1,7 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { AppBarWithStackColumn, BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
-import { autoCloseErrorNotificationOptions, errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
@@ -309,6 +309,7 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)),
   ]);
   const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
+  const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
   const [customerId, setCustomerId] = useState<string | undefined>(rootData.booking?.customer?.uniqueId);
   const [teamId, setTeamId] = useState<string | undefined>(rootData.booking?.team?.uniqueId);
   const [locationId, setLocationId] = useState<string | undefined>(rootData.booking?.location?.uniqueId);
@@ -402,44 +403,47 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     [refetchAvailableResources],
   );
 
-  const getDateRange = useCallback(
-    (allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
-      const allDayFrom = dayjs(date).utc();
-      const allDayUntil = dayjs(date).utc().add(1, 'day');
-      const invalidResult = { valid: false, from: allDayFrom, until: allDayUntil };
+  const getDateRange = useCallback((allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
+    const allDayFrom = dayjs(date).utc();
+    const allDayUntil = dayjs(date).utc().add(1, 'day');
+    const invalidResult = { valid: false, from: allDayFrom, until: allDayUntil };
 
-      if (allDay) {
-        return { valid: true, from: allDayFrom, until: allDayUntil };
-      }
+    if (allDay) {
+      setDateTimeErrorMessage('');
 
-      if (!timeFrom || !timeUntil) {
-        themedToast(<NotificationContent content="Time required when not booking full day." />, autoCloseErrorNotificationOptions);
+      return { valid: true, from: allDayFrom, until: allDayUntil };
+    }
 
-        return invalidResult;
-      }
+    if (!timeFrom || !timeUntil) {
+      setDateTimeErrorMessage('Time required when not booking full day.');
 
-      if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
-        return { valid: true, from: allDayFrom, until: allDayUntil };
-      }
+      return invalidResult;
+    }
 
-      const utcDate = dayjs(date).utc();
-      const from = utcDate.set('hour', timeFrom.get('hour')).set('minute', timeFrom.get('minute'));
-      const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
+    if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
+      setDateTimeErrorMessage('');
 
-      if (from.isAfter(until)) {
-        themedToast(<NotificationContent content="Time values are incorrect." />, autoCloseErrorNotificationOptions);
+      return { valid: true, from: allDayFrom, until: allDayUntil };
+    }
 
-        return invalidResult;
-      }
+    const utcDate = dayjs(date).utc();
+    const from = utcDate.set('hour', timeFrom.get('hour')).set('minute', timeFrom.get('minute'));
+    const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
 
-      return {
-        valid: true,
-        from,
-        until,
-      };
-    },
-    [themedToast],
-  );
+    if (from.isAfter(until)) {
+      setDateTimeErrorMessage('Time values are incorrect.');
+
+      return invalidResult;
+    }
+
+    setDateTimeErrorMessage('');
+
+    return {
+      valid: true,
+      from,
+      until,
+    };
+  }, []);
 
   useEffect(() => handleRefetchTeams(rootData.booking?.customer?.uniqueId), [handleRefetchTeams, rootData.booking?.customer?.uniqueId]);
   useEffect(() => {
@@ -676,13 +680,22 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Date/Time">
-                      <StackRow>
+                      <StackColumn>
+                        <StackRow>
+                          <Box sx={{ width: 'fit-content' }}>
+                            <DatePicker name="date" required={requiredFields.date} />
+                          </Box>
+                          <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
+                        </StackRow>
+
                         <Box sx={{ width: 'fit-content' }}>
-                          <DatePicker name="date" required={requiredFields.date} />
+                          <TimeRangePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
                         </Box>
-                        <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
-                        <TimeRangePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
-                      </StackRow>
+                      </StackColumn>
+                    </FormFieldLabel>
+
+                    <FormFieldLabel>
+                      <ErrorTypography errorMessage={dateTimeErrorMessage} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Notes">

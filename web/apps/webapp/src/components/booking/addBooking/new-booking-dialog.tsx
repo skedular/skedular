@@ -1,8 +1,8 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
+import { BodyIconTypography, DefaultDialogTitle, ErrorTypography, FormFieldLabel, FormStackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import StackColumn from '@/components/commons/stack-column';
 import { CustomTags } from '@/components/customTag';
-import { autoCloseErrorNotificationOptions, errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
@@ -281,6 +281,7 @@ const NewBookingDialog = ({
   const [allDay, setAllDay] = useState<boolean>(true);
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('00:00'), toOpeningHoursFromTime('00:00')]);
   const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
+  const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
   const [customerId, setCustomerId] = useState<string | undefined>();
   const [teamId, setTeamId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
@@ -359,44 +360,47 @@ const NewBookingDialog = ({
     [refetchAvailableResources],
   );
 
-  const getDateRange = useCallback(
-    (allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
-      const allDayFrom = dayjs(date).utc();
-      const allDayUntil = dayjs(date).utc().add(1, 'day');
-      const invalidResult = { valid: false, from: allDayFrom, until: allDayUntil };
+  const getDateRange = useCallback((allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
+    const allDayFrom = dayjs(date).utc();
+    const allDayUntil = dayjs(date).utc().add(1, 'day');
+    const invalidResult = { valid: false, from: allDayFrom, until: allDayUntil };
 
-      if (allDay) {
-        return { valid: true, from: allDayFrom, until: allDayUntil };
-      }
+    if (allDay) {
+      setDateTimeErrorMessage('');
 
-      if (!timeFrom || !timeUntil) {
-        themedToast(<NotificationContent content="Time required when not booking full day." />, autoCloseErrorNotificationOptions);
+      return { valid: true, from: allDayFrom, until: allDayUntil };
+    }
 
-        return invalidResult;
-      }
+    if (!timeFrom || !timeUntil) {
+      setDateTimeErrorMessage('Time required when not booking full day.');
 
-      if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
-        return { valid: true, from: allDayFrom, until: allDayUntil };
-      }
+      return invalidResult;
+    }
 
-      const utcDate = dayjs(date).utc();
-      const from = utcDate.set('hour', timeFrom.get('hour')).set('minute', timeFrom.get('minute'));
-      const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
+    if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
+      setDateTimeErrorMessage('');
 
-      if (from.isAfter(until)) {
-        themedToast(<NotificationContent content="Time values are incorrect." />, autoCloseErrorNotificationOptions);
+      return { valid: true, from: allDayFrom, until: allDayUntil };
+    }
 
-        return invalidResult;
-      }
+    const utcDate = dayjs(date).utc();
+    const from = utcDate.set('hour', timeFrom.get('hour')).set('minute', timeFrom.get('minute'));
+    const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
 
-      return {
-        valid: true,
-        from,
-        until,
-      };
-    },
-    [themedToast],
-  );
+    if (from.isAfter(until)) {
+      setDateTimeErrorMessage('Time values are incorrect.');
+
+      return invalidResult;
+    }
+
+    setDateTimeErrorMessage('');
+
+    return {
+      valid: true,
+      from,
+      until,
+    };
+  }, []);
 
   useEffect(() => {
     const [timeFrom, timeUntil] = timeRange;
@@ -630,15 +634,21 @@ const NewBookingDialog = ({
 
                 <FormFieldLabel label="Date/Time" useWiderSpace>
                   <StackColumn>
-                    <Box sx={{ width: 'fit-content' }}>
-                      <DatePicker name="date" required={requiredFields.date} />
-                    </Box>
-
                     <StackRow>
+                      <Box sx={{ width: 'fit-content' }}>
+                        <DatePicker name="date" required={requiredFields.date} />
+                      </Box>
                       <Switches name="allDay" required={requiredFields.allDay} data={{ label: 'All Day', value: 'allDay' }} />
-                      <TimeRangePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
                     </StackRow>
+
+                    <Box sx={{ width: 'fit-content' }}>
+                      <TimeRangePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
+                    </Box>
                   </StackColumn>
+                </FormFieldLabel>
+
+                <FormFieldLabel useWiderSpace>
+                  <ErrorTypography errorMessage={dateTimeErrorMessage} />
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Notes" useWiderSpace>

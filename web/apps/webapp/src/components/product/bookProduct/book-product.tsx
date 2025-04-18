@@ -328,6 +328,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
           return invalidResult;
         }
 
+        setDateTimeErrorMessage('');
+
         return { valid: true, from: allDayFrom, until: allDayUntil };
       }
 
@@ -342,7 +344,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
       }
 
       const durationInMinutes = until.diff(from, 'minutes');
-
       if (product.minDurationMinutes && durationInMinutes < product.minDurationMinutes) {
         setDateTimeErrorMessage(`You can only book resources for a minimum duration of ${product.minDurationMinutes} minutes for this product.`);
 
@@ -354,6 +355,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
 
         return invalidResult;
       }
+
+      setDateTimeErrorMessage('');
 
       return {
         valid: true,
