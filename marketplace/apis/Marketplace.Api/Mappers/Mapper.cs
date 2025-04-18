@@ -137,6 +137,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Price = roundedPrice,
             PriceToDisplay = roundedPrice.ToPriceToDisplay(src.Currency),
+            CurrencyToDisplay = src.Currency.ToCurrencyToDisplay(),
             PriceUnit = new PriceUnitDetails { Type = src.PriceUnit, Name = src.PriceUnit.ToPriceUnitName() },
             Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
             MinDurationMinutes = src.MinDurationMinutes,

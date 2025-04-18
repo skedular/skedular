@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2fe17670c115155c2d8abdf982b13252>>
+ * @generated SignedSource<<ab0c71befa75ef5c37ca7f1324f72d97>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type bookProduct_query$data = {
       readonly name: string;
       readonly type: Currency;
     };
+    readonly currencyToDisplay: string;
     readonly description: string | null | undefined;
     readonly id: string;
     readonly maxBookingSpreadDays: number | null | undefined;
@@ -136,6 +137,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "currencyToDisplay",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "CurrencyDetails",
           "kind": "LinkedField",
           "name": "currency",
@@ -208,6 +216,6 @@ return {
 };
 })();
 
-(node as any).hash = "8041c72263f8b65b8fcde5a57e4127f3";
+(node as any).hash = "6ee2acaee4d9499c6e439dd6de1245ee";
 
 export default node;

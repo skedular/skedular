@@ -113,6 +113,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
             type
             name
           }
+          currencyToDisplay
           currency {
             type
             name
@@ -167,8 +168,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
           id
           from
           until
-          notesany
-          he
+          notes
           type
           customer {
             uniqueId
@@ -197,8 +197,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
             customTags {
               uniqueId
               name
-              colorany
-              he
+              color
             }
             zones {
               uniqueId
@@ -377,7 +376,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
   }, [handleRefetchAvailableResources, date, timeRange, getDateRange]);
 
   const totalPrice = useMemo(() => {
-    if (!rootData.product || quantity < 1) {
+    const product = rootData.product;
+    if (!product || quantity < 1) {
       return 'N/A';
     }
 
@@ -386,21 +386,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
     const dateRange = getDateRange(start, { timeFrom, timeUntil });
     if (!dateRange.valid) {
       return 'N/A';
-    }
-
-    const product = rootData.product;
-
-    let currencyToDisplay: string;
-    switch (product.currency.type) {
-      case 'Nzd':
-        currencyToDisplay = 'NZ$';
-        break;
-      case 'Usd':
-        currencyToDisplay = 'US$';
-        break;
-      default:
-        currencyToDisplay = product.currency.name;
-        break;
     }
 
     const totalMinutes = dateRange.until.diff(dateRange.from, 'minutes');
@@ -419,7 +404,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
         break;
     }
 
-    return `${currencyToDisplay}${price.toFixed(2)}`;
+    return `${product.currencyToDisplay}${price.toFixed(2)}`;
   }, [getDateRange, rootData.product, quantity, date, timeRange]);
 
   const handleCloseClick = () => {

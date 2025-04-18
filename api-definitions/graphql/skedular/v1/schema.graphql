@@ -756,6 +756,7 @@ type ProductConnection {
 type ProductDetails {
   bookAllLocationResources: Boolean!
   currency: CurrencyDetails!
+  currencyToDisplay: String!
   description: String
   id: ID!
   inactive: Boolean!
