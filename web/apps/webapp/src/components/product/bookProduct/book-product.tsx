@@ -2,6 +2,7 @@ import { LocationAvatar } from '@/components/avatars';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
+  ErrorTypography,
   FormFieldLabel,
   FormStackColumn,
   LeadIconTypography,
@@ -13,7 +14,7 @@ import {
 } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { CustomTagIcon, LocationIcon, ZoneIcon } from '@/components/icons';
-import { autoCloseErrorNotificationOptions, infoNotificationOptions, NotificationContent } from '@/components/notification';
+import { infoNotificationOptions, NotificationContent } from '@/components/notification';
 import { DefaultSelect } from '@/components/styled';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
@@ -32,14 +33,14 @@ import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import { Autocomplete, DatePicker, makeRequired, makeValidate } from 'mui-rff';
+import { Autocomplete, DatePicker, makeRequired, makeValidate, TextField } from 'mui-rff';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
-import { array, date, object } from 'yup';
+import { array, date, number, object } from 'yup';
 
 type Props = {
   rootDataRelay: bookProduct_query$key;
@@ -76,13 +77,23 @@ type ResourceDetails = {
 
 type BookingDetails = {
   date: Date;
+  quantity: number;
   resources: string[];
 };
 
-const bookingSchema = object({
-  date: date().required('Date/Time is required'),
-  resources: array().min(1, 'At least one resource is required').required('Resource is required'),
-});
+const bookingSchema = (numberOfResourcesToBook: number) =>
+  object({
+    date: date().required('Date is required'),
+    quantity: number().min(1, 'At least one resource is required').required('Quantity is required'),
+    resources: array()
+      .min(1, 'At least one resource is required')
+      .required('Resource is required')
+      .test(
+        'less-equal-number-of-resources-to-book',
+        `You can book only up to ${numberOfResourcesToBook} resources for this product`,
+        (value) => value?.length <= numberOfResourcesToBook,
+      ),
+  });
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
@@ -156,7 +167,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
           id
           from
           until
-          notes
+          notesany
+          he
           type
           customer {
             uniqueId
@@ -185,7 +197,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
             customTags {
               uniqueId
               name
-              color
+              colorany
+              he
             }
             zones {
               uniqueId
@@ -203,16 +216,26 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const UpdateGlobalReloadId = useContext(UpdateGlobalReloadIdContext);
   const [, startTransition] = useTransition();
-  const validate = makeValidate(bookingSchema);
-  const requiredFields = makeRequired(bookingSchema);
-  const [from, setFrom] = useState<Dayjs | Date>(defaultDate ?? startOfDay());
-  const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('08:00'), toOpeningHoursFromTime('17:00')]);
+  const [date, setDate] = useState<Dayjs | Date>(defaultDate ?? startOfDay());
+  const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>(() => {
+    const start = toOpeningHoursFromTime('08:00');
+
+    if (rootData.product?.minDurationMinutes) {
+      return [start, start!.add(rootData.product?.minDurationMinutes, 'minutes')];
+    } else if (rootData.product?.maxDurationMinutes) {
+      return [start, start!.add(rootData.product?.maxDurationMinutes, 'minutes')];
+    } else {
+      return [start, toOpeningHoursFromTime('17:00')];
+    }
+  });
+
   const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
-  const [resourceIds, setResourceIds] = useState<string[]>([]);
+  const [quantity, setQuantity] = useState(1);
   const filterResource = createFilterOptions<ResourceDetails>();
   const [selectedLocationId, setSelectedLocationId] = useState<string>(allId);
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<string>(allId);
   const [selectedZoneId, setSelectedZoneId] = useState<string>(allId);
+  const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
 
   const resources = useMemo<ResourceDetails[]>(
     () =>
@@ -259,6 +282,12 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
     return filtered;
   }, [resources, selectedLocationId, selectedCustomTagId, selectedZoneId]);
 
+  const [resourceIds, setResourceIds] = useState<string[]>(
+    filteredResources.slice(0, (rootData.product?.numberOfResourcesToBook ?? 1) * quantity).map((resource) => resource.uniqueId),
+  );
+  const validate = makeValidate(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
+  const requiredFields = makeRequired(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
+
   const handleRefetchAvailableResources = useCallback(
     ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }, locationId?: string) => {
       startTransition(() => {
@@ -278,16 +307,28 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
 
   const getDateRange = useCallback(
     (date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
+      const product = rootData.product;
       const allDayFrom = dayjs(date).utc();
       const allDayUntil = dayjs(date).utc().add(1, 'day');
+      const invalidResult = { valid: false, from: allDayFrom, until: allDayUntil };
+
+      if (!product) {
+        return invalidResult;
+      }
 
       if (!timeFrom || !timeUntil) {
-        themedToast(<NotificationContent content={`Time required when not booking full day.`} />, autoCloseErrorNotificationOptions);
+        setDateTimeErrorMessage('Time required.');
 
-        return { valid: false, from: allDayFrom, until: allDayUntil };
+        return invalidResult;
       }
 
       if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
+        if (product.maxDurationMinutes && allDayUntil.diff(allDayFrom, 'minutes') > product.maxDurationMinutes) {
+          setDateTimeErrorMessage(`You can only book resources for a maximum duration of ${product.maxDurationMinutes} minutes for this product.`);
+
+          return invalidResult;
+        }
+
         return { valid: true, from: allDayFrom, until: allDayUntil };
       }
 
@@ -296,9 +337,23 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
       const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
 
       if (from.isAfter(until)) {
-        themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
+        setDateTimeErrorMessage('Time values are incorrect.');
 
-        return { valid: false, from: allDayFrom, until: allDayUntil };
+        return invalidResult;
+      }
+
+      const durationInMinutes = until.diff(from, 'minutes');
+
+      if (product.minDurationMinutes && durationInMinutes < product.minDurationMinutes) {
+        setDateTimeErrorMessage(`You can only book resources for a minimum duration of ${product.minDurationMinutes} minutes for this product.`);
+
+        return invalidResult;
+      }
+
+      if (product.maxDurationMinutes && durationInMinutes > product.maxDurationMinutes) {
+        setDateTimeErrorMessage(`You can only book resources for a maximum duration of ${product.maxDurationMinutes} minutes for this product.`);
+
+        return invalidResult;
       }
 
       return {
@@ -307,19 +362,65 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
         until,
       };
     },
-    [themedToast],
+    [rootData.product],
   );
 
   useEffect(() => {
     const [timeFrom, timeUntil] = timeRange;
-    const range = getDateRange(from, { timeFrom, timeUntil });
+    const range = getDateRange(date, { timeFrom, timeUntil });
     if (range.valid) {
       setTimeRangeValid(true);
       handleRefetchAvailableResources(range);
     } else {
       setTimeRangeValid(false);
     }
-  }, [handleRefetchAvailableResources, from, timeRange, getDateRange]);
+  }, [handleRefetchAvailableResources, date, timeRange, getDateRange]);
+
+  const totalPrice = useMemo(() => {
+    if (!rootData.product || quantity < 1) {
+      return 'N/A';
+    }
+
+    const start = date as unknown as Dayjs;
+    const [timeFrom, timeUntil] = timeRange;
+    const dateRange = getDateRange(start, { timeFrom, timeUntil });
+    if (!dateRange.valid) {
+      return 'N/A';
+    }
+
+    const product = rootData.product;
+
+    let currencyToDisplay: string;
+    switch (product.currency.type) {
+      case 'Nzd':
+        currencyToDisplay = 'NZ$';
+        break;
+      case 'Usd':
+        currencyToDisplay = 'US$';
+        break;
+      default:
+        currencyToDisplay = product.currency.name;
+        break;
+    }
+
+    const totalMinutes = dateRange.until.diff(dateRange.from, 'minutes');
+    let price = 0.0;
+    switch (product.priceUnit.type) {
+      case 'PerMinute':
+        price = parseFloat(product.price) * quantity * totalMinutes;
+        break;
+
+      case 'PerHour':
+        price = (parseFloat(product.price) / 60) * quantity * totalMinutes;
+        break;
+
+      case 'PerUse':
+        price = parseFloat(product.price) * quantity;
+        break;
+    }
+
+    return `${currencyToDisplay}${price.toFixed(2)}`;
+  }, [getDateRange, rootData.product, quantity, date, timeRange]);
 
   const handleCloseClick = () => {
     router.back();
@@ -377,13 +478,15 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
           <Form
             onSubmit={handleAddClick}
             initialValues={{
-              date: from,
+              date,
               resources: resourceIds,
+              quantity,
             }}
             validate={validate}
             render={({ handleSubmit, values }) => {
-              setFrom(values.date);
+              setDate(values.date);
               setResourceIds(values.resources);
+              setQuantity(values.quantity);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -405,123 +508,138 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
                       </StackColumn>
                     </FormFieldLabel>
 
+                    <FormFieldLabel>
+                      <ErrorTypography errorMessage={dateTimeErrorMessage} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Quantity">
+                      <TextField name="quantity" required={requiredFields.quantity} />
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Filters">
-                      <DefaultSelect
-                        value={selectedLocationId}
-                        onChange={handleLocationChanged}
-                        size="small"
-                        renderValue={(selectedId) => {
-                          const selectedItem = locations.find((item) => item.uniqueId === selectedId);
-                          if (selectedItem) {
+                      <StackColumn>
+                        <DefaultSelect
+                          value={selectedLocationId}
+                          onChange={handleLocationChanged}
+                          size="small"
+                          renderValue={(selectedId) => {
+                            const selectedItem = locations.find((item) => item.uniqueId === selectedId);
+                            if (selectedItem) {
+                              return (
+                                <StackRow>
+                                  <LeadIconTypography label="Location" startElement={<LocationIcon />} />
+                                  <Divider orientation="vertical" flexItem />
+                                  <PushToRight />
+                                  <SmallIconTypography label={selectedItem.name} />
+                                </StackRow>
+                              );
+                            }
+
                             return (
                               <StackRow>
                                 <LeadIconTypography label="Location" startElement={<LocationIcon />} />
                                 <Divider orientation="vertical" flexItem />
                                 <PushToRight />
-                                <SmallIconTypography label={selectedItem.name} />
+                                <SmallIconTypography label="All" />
                               </StackRow>
                             );
-                          }
-
-                          return (
-                            <StackRow>
-                              <LeadIconTypography label="Location" startElement={<LocationIcon />} />
-                              <Divider orientation="vertical" flexItem />
-                              <PushToRight />
-                              <SmallIconTypography label="All" />
-                            </StackRow>
-                          );
-                        }}
-                      >
-                        <MenuItem value={allId}>
-                          <BodyIconTypography label="All" />
-                        </MenuItem>
-
-                        {locations.map((item) => (
-                          <MenuItem key={item.uniqueId} value={item.uniqueId}>
-                            <BodyIconTypography startElement={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
+                          }}
+                        >
+                          <MenuItem value={allId}>
+                            <BodyIconTypography label="All" />
                           </MenuItem>
-                        ))}
-                      </DefaultSelect>
 
-                      <DefaultSelect
-                        value={selectedCustomTagId}
-                        onChange={handleCustomTagChanged}
-                        size="small"
-                        renderValue={(selectedId) => {
-                          const selectedItem = customTags.find((item) => item.id === selectedId);
-                          if (selectedItem) {
-                            return (
-                              <StackRow>
-                                <LeadIconTypography label="Tag" startElement={<CustomTagIcon />} />
-                                <Divider orientation="vertical" flexItem />
-                                <PushToRight />
-                                <SmallIconTypography label={selectedItem.name} />
-                              </StackRow>
-                            );
-                          }
+                          {locations.map((item) => (
+                            <MenuItem key={item.uniqueId} value={item.uniqueId}>
+                              <BodyIconTypography startElement={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
+                            </MenuItem>
+                          ))}
+                        </DefaultSelect>
 
-                          return (
-                            <StackRow>
-                              <LeadIconTypography label="Tag" startElement={<CustomTagIcon />} />
-                              <Divider orientation="vertical" flexItem />
-                              <PushToRight />
-                              <SmallIconTypography label="All" />
-                            </StackRow>
-                          );
-                        }}
-                      >
-                        <MenuItem value={allId}>
-                          <BodyIconTypography label="All" />
-                        </MenuItem>
+                        <StackRow>
+                          <DefaultSelect
+                            value={selectedCustomTagId}
+                            onChange={handleCustomTagChanged}
+                            size="small"
+                            renderValue={(selectedId) => {
+                              const selectedItem = customTags.find((item) => item.id === selectedId);
+                              if (selectedItem) {
+                                return (
+                                  <StackRow>
+                                    <LeadIconTypography label="Tag" startElement={<CustomTagIcon />} />
+                                    <Divider orientation="vertical" flexItem />
+                                    <PushToRight />
+                                    <SmallIconTypography label={selectedItem.name} />
+                                  </StackRow>
+                                );
+                              }
 
-                        {customTags.map((item) => (
-                          <MenuItem key={item.id} value={item.id}>
-                            <BodyIconTypography startElement={<CustomTagIcon />} label={item.name} />
-                          </MenuItem>
-                        ))}
-                      </DefaultSelect>
+                              return (
+                                <StackRow>
+                                  <LeadIconTypography label="Tag" startElement={<CustomTagIcon />} />
+                                  <Divider orientation="vertical" flexItem />
+                                  <PushToRight />
+                                  <SmallIconTypography label="All" />
+                                </StackRow>
+                              );
+                            }}
+                          >
+                            <MenuItem value={allId}>
+                              <BodyIconTypography label="All" />
+                            </MenuItem>
 
-                      <DefaultSelect
-                        value={selectedZoneId}
-                        onChange={handleZoneChanged}
-                        size="small"
-                        renderValue={(selectedId) => {
-                          const selectedItem = zones.find((item) => item.id === selectedId);
-                          if (selectedItem) {
-                            return (
-                              <StackRow>
-                                <LeadIconTypography label="Zone" startElement={<ZoneIcon />} />
-                                <Divider orientation="vertical" flexItem />
-                                <PushToRight />
-                                <SmallIconTypography label={selectedItem.name} />
-                              </StackRow>
-                            );
-                          }
+                            {customTags.map((item) => (
+                              <MenuItem key={item.id} value={item.id}>
+                                <BodyIconTypography startElement={<CustomTagIcon />} label={item.name} />
+                              </MenuItem>
+                            ))}
+                          </DefaultSelect>
 
-                          return (
-                            <StackRow>
-                              <LeadIconTypography label="Zone" startElement={<ZoneIcon />} />
-                              <Divider orientation="vertical" flexItem />
-                              <PushToRight />
-                              <SmallIconTypography label="All" />
-                            </StackRow>
-                          );
-                        }}
-                      >
-                        <MenuItem value={allId}>
-                          <BodyIconTypography label="All" />
-                        </MenuItem>
+                          <DefaultSelect
+                            value={selectedZoneId}
+                            onChange={handleZoneChanged}
+                            size="small"
+                            renderValue={(selectedId) => {
+                              const selectedItem = zones.find((item) => item.id === selectedId);
+                              if (selectedItem) {
+                                return (
+                                  <StackRow>
+                                    <LeadIconTypography label="Zone" startElement={<ZoneIcon />} />
+                                    <Divider orientation="vertical" flexItem />
+                                    <PushToRight />
+                                    <SmallIconTypography label={selectedItem.name} />
+                                  </StackRow>
+                                );
+                              }
 
-                        {zones.map((item) => (
-                          <MenuItem key={item.id} value={item.id}>
-                            <BodyIconTypography startElement={<ZoneIcon />} label={item.name} />
-                          </MenuItem>
-                        ))}
-                      </DefaultSelect>
+                              return (
+                                <StackRow>
+                                  <LeadIconTypography label="Zone" startElement={<ZoneIcon />} />
+                                  <Divider orientation="vertical" flexItem />
+                                  <PushToRight />
+                                  <SmallIconTypography label="All" />
+                                </StackRow>
+                              );
+                            }}
+                          >
+                            <MenuItem value={allId}>
+                              <BodyIconTypography label="All" />
+                            </MenuItem>
+
+                            {zones.map((item) => (
+                              <MenuItem key={item.id} value={item.id}>
+                                <BodyIconTypography startElement={<ZoneIcon />} label={item.name} />
+                              </MenuItem>
+                            ))}
+                          </DefaultSelect>
+                        </StackRow>
+                      </StackColumn>
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Resources">
+                      {filteredResources.length > 0 && quantity > 0 && (
+                        <BodyIconTypography label={`Feel free to choose up to ${product.numberOfResourcesToBook * quantity} resources from the list below!`} />
+                      )}
                       {filteredResources.length > 0 && (
                         <Autocomplete
                           name="resources"
@@ -543,6 +661,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
                               </li>
                             );
                           }}
+                          disableCloseOnSelect
                           filterOptions={(options, params) => filterResource(options as ResourceDetails[], params)}
                           selectOnFocus
                           clearOnBlur
@@ -551,6 +670,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
                       )}
 
                       {filteredResources.length === 0 && <BodyIconTypography label="There are currently no available resources." />}
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Total Price">
+                      <BodyIconTypography label={totalPrice} />
                     </FormFieldLabel>
                   </StackColumn>
 

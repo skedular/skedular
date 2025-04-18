@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3e90d89c91a6e77d4640ecea861cf27f>>
+ * @generated SignedSource<<913460c12178d553c3c8f0cfb1b57381>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type Currency = "Nzd" | "Usd" | "%future added value";
 export type PriceUnit = "PerHour" | "PerMinute" | "PerUse" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editProduct_query$data = {
+  readonly openingHoursMinutesStep: number;
   readonly product: {
     readonly bookAllLocationResources: boolean;
     readonly currency: {
@@ -251,6 +252,13 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "openingHoursMinutesStep",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "multipleChoicesProductTags_query"
@@ -276,6 +284,6 @@ return {
 };
 })();
 
-(node as any).hash = "200922baa87108466df05378e4ef32aa";
+(node as any).hash = "08ad10dc9192ec92a5fec77411e2e698";
 
 export default node;

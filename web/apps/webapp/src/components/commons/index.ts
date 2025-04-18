@@ -4,6 +4,7 @@ export { default as CaptionIconTypography } from './caption-icon-typography';
 export { default as ColorPicker } from './color-picker';
 export { default as CreditCard } from './credit-card';
 export { default as DefaultDialogTitle } from './default-dialog-title';
+export { default as ErrorTypography } from './error-typography';
 export { default as ExtraLargeHeadingIconTypography } from './extra-large-heading-icon-typography';
 export { default as FormFieldLabel } from './form-field-label';
 export { default as FormStackColumn } from './form-stack-column';

@@ -406,15 +406,16 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
     (allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
       const allDayFrom = dayjs(date).utc();
       const allDayUntil = dayjs(date).utc().add(1, 'day');
+      const invalidResult = { valid: false, from: allDayFrom, until: allDayUntil };
 
       if (allDay) {
         return { valid: true, from: allDayFrom, until: allDayUntil };
       }
 
       if (!timeFrom || !timeUntil) {
-        themedToast(<NotificationContent content={`Time required when not booking full day.`} />, autoCloseErrorNotificationOptions);
+        themedToast(<NotificationContent content="Time required when not booking full day." />, autoCloseErrorNotificationOptions);
 
-        return { valid: false, from: allDayFrom, until: allDayUntil };
+        return invalidResult;
       }
 
       if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
@@ -426,9 +427,9 @@ const EditBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMe
       const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
 
       if (from.isAfter(until)) {
-        themedToast(<NotificationContent content={`Time values are incorrect.`} />, autoCloseErrorNotificationOptions);
+        themedToast(<NotificationContent content="Time values are incorrect." />, autoCloseErrorNotificationOptions);
 
-        return { valid: false, from: allDayFrom, until: allDayUntil };
+        return invalidResult;
       }
 
       return {

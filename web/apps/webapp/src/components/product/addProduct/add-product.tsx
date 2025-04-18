@@ -36,6 +36,7 @@ const RootQuery = graphql`
     $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
   ) {
+    openingHoursMinutesStep
     ...multipleChoicesProductTags_query
     ...multipleChoicesLocationTags_query
     ...singleChoicePriceUnit_query
@@ -60,105 +61,106 @@ type ProductDetails = {
   locationTagIds: string[];
 };
 
-const productSchema = object({
-  name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
-  description: string().nullable(),
-  price: string()
-    .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number')
-    .required('Price is required'),
-  priceUnit: string().required('Price Unit is required'),
-  currency: string().required('Currency is required'),
-  numberOfResourcesToBook: number().required('Number of resources to book is required').min(1, 'Number of resources to book must be greater than 0'),
-  minDurationMinutes: number()
-    .nullable()
-    .test('is-multiple-of-15', 'Minimum duration in minutes must be in 15-minutes increments', function (value) {
-      if (typeof value !== 'number') {
-        return true;
-      }
+const productSchema = (openingHoursMinutesStep: number) =>
+  object({
+    name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
+    description: string().nullable(),
+    price: string()
+      .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number')
+      .required('Price is required'),
+    priceUnit: string().required('Price Unit is required'),
+    currency: string().required('Currency is required'),
+    numberOfResourcesToBook: number().required('Number of resources to book is required').min(1, 'Number of resources to book must be greater than 0'),
+    minDurationMinutes: number()
+      .nullable()
+      .test('is-multiple-of-openingHoursMinutesStep', `Minimum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments`, function (value) {
+        if (typeof value !== 'number') {
+          return true;
+        }
 
-      return value % 15 === 0;
-    })
-    .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes', function (value) {
-      const { maxDurationMinutes } = this.parent;
-      if (!maxDurationMinutes) {
-        return true;
-      }
+        return value % openingHoursMinutesStep === 0;
+      })
+      .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes', function (value) {
+        const { maxDurationMinutes } = this.parent;
+        if (!maxDurationMinutes) {
+          return true;
+        }
 
-      if (typeof value !== 'number') {
-        return true;
-      }
+        if (typeof value !== 'number') {
+          return true;
+        }
 
-      return value <= maxDurationMinutes;
-    }),
-  maxDurationMinutes: number()
-    .nullable()
-    .test('is-multiple-of-15', 'Maximum duration in minutes must be in 15-minutes increments', function (value) {
-      if (typeof value !== 'number') {
-        return true;
-      }
+        return value <= maxDurationMinutes;
+      }),
+    maxDurationMinutes: number()
+      .nullable()
+      .test('is-multiple-of-openingHoursMinutesStep', `Maximum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments`, function (value) {
+        if (typeof value !== 'number') {
+          return true;
+        }
 
-      return value % 15 === 0;
-    })
-    .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes', function (value) {
-      const { minDurationMinutes } = this.parent;
-      if (!minDurationMinutes) {
-        return true;
-      }
+        return value % openingHoursMinutesStep === 0;
+      })
+      .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes', function (value) {
+        const { minDurationMinutes } = this.parent;
+        if (!minDurationMinutes) {
+          return true;
+        }
 
-      if (typeof value !== 'number') {
-        return true;
-      }
+        if (typeof value !== 'number') {
+          return true;
+        }
 
-      return value >= minDurationMinutes;
-    }),
-  mustBookAllLocationResources: boolean(),
-  recurrenceWindowDays: number()
-    .test('is-required', 'Recurrence window days is required', function (value) {
-      const { bookAllLocationResources } = this.parent;
-      if (bookAllLocationResources) {
-        return true;
-      }
+        return value >= minDurationMinutes;
+      }),
+    mustBookAllLocationResources: boolean(),
+    recurrenceWindowDays: number()
+      .test('is-required', 'Recurrence window days is required', function (value) {
+        const { bookAllLocationResources } = this.parent;
+        if (bookAllLocationResources) {
+          return true;
+        }
 
-      return !!value;
-    })
-    .test('is-greater-than-zero', 'Recurrence window days must be greater than 0', function (value) {
-      const { bookAllLocationResources } = this.parent;
-      if (bookAllLocationResources) {
-        return true;
-      }
+        return !!value;
+      })
+      .test('is-greater-than-zero', 'Recurrence window days must be greater than 0', function (value) {
+        const { bookAllLocationResources } = this.parent;
+        if (bookAllLocationResources) {
+          return true;
+        }
 
-      return typeof value === 'number' && value > 0;
-    }),
-  requireConsecutiveDays: boolean(),
-  maxBookingSpreadDays: number()
-    .nullable()
-    .test('is-greater-than-recurrence', 'Max booking spread days must be greater than or equal to recurrence window days', function (value) {
-      const { bookAllLocationResources, requireConsecutiveDays, recurrenceWindowDays } = this.parent;
-      if (bookAllLocationResources || requireConsecutiveDays) {
-        return true;
-      }
+        return typeof value === 'number' && value > 0;
+      }),
+    requireConsecutiveDays: boolean(),
+    maxBookingSpreadDays: number()
+      .nullable()
+      .test('is-greater-than-recurrence', 'Max booking spread days must be greater than or equal to recurrence window days', function (value) {
+        const { bookAllLocationResources, requireConsecutiveDays, recurrenceWindowDays } = this.parent;
+        if (bookAllLocationResources || requireConsecutiveDays) {
+          return true;
+        }
 
-      if (!value) {
-        return true;
-      }
+        if (!value) {
+          return true;
+        }
 
-      return typeof value === 'number' && value >= recurrenceWindowDays;
-    })
-    .test('is-greater-than-zero', 'Max booking spread days must be greater than 0', function (value) {
-      const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
-      if (bookAllLocationResources || requireConsecutiveDays) {
-        return true;
-      }
+        return typeof value === 'number' && value >= recurrenceWindowDays;
+      })
+      .test('is-greater-than-zero', 'Max booking spread days must be greater than 0', function (value) {
+        const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
+        if (bookAllLocationResources || requireConsecutiveDays) {
+          return true;
+        }
 
-      if (!value) {
-        return true;
-      }
+        if (!value) {
+          return true;
+        }
 
-      return typeof value === 'number' && value > 0;
-    }),
-  productTagIds: array().min(1, 'At least one product tag must be selected').required('Product tags are required'),
-  locationTagIds: array().nullable(),
-});
+        return typeof value === 'number' && value > 0;
+      }),
+    productTagIds: array().min(1, 'At least one product tag must be selected').required('Product tags are required'),
+    locationTagIds: array().nullable(),
+  });
 
 const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel }: Props) => {
   const rootData = usePreloadedQuery<addProduct_rootQuery>(RootQuery, queryReference);
@@ -203,8 +205,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validateProductDetails = makeValidate(productSchema);
-  const requiredFields = makeRequired(productSchema);
+  const validateProductDetails = makeValidate(productSchema(rootData.openingHoursMinutesStep));
+  const requiredFields = makeRequired(productSchema(rootData.openingHoursMinutesStep));
   const [name, setName] = useState('');
   const [description, setDescription] = useState<string | null>('');
   const [price, setPrice] = useState('0.00');
@@ -410,7 +412,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                       <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="">
+                    <FormFieldLabel>
                       <Switches
                         name="bookAllLocationResources"
                         required={requiredFields.bookAllLocationResources}
@@ -432,7 +434,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationId, onAdded,
                     )}
 
                     {!bookAllLocationResources && (
-                      <FormFieldLabel label="">
+                      <FormFieldLabel>
                         <Switches
                           name="requireConsecutiveDays"
                           required={requiredFields.requireConsecutiveDays}

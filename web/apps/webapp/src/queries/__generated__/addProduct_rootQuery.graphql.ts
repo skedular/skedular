@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c96e4e46d44819dbff7dfd807d62d09>>
+ * @generated SignedSource<<8cab5572d034f17b82ac1c48e689df58>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type addProduct_rootQuery$variables = {
   organizationId: string;
 };
 export type addProduct_rootQuery$data = {
+  readonly openingHoursMinutesStep: number;
   readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesLocationTags_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoicePriceUnit_query">;
 };
 export type addProduct_rootQuery = {
@@ -46,6 +47,13 @@ v2 = {
   "name": "organizationId"
 },
 v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "openingHoursMinutesStep",
+  "storageKey": null
+},
+v4 = {
   "fields": [
     {
       "kind": "Variable",
@@ -56,22 +64,22 @@ v3 = {
   "kind": "ObjectValue",
   "name": "where"
 },
-v4 = [
+v5 = [
   {
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "multipleChoicesProductTagsSortingValues"
   },
-  (v3/*: any*/)
+  (v4/*: any*/)
 ],
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v6 = [
+v7 = [
   {
     "alias": null,
     "args": null,
@@ -102,7 +110,7 @@ v6 = [
             "name": "id",
             "storageKey": null
           },
-          (v5/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -168,19 +176,19 @@ v6 = [
     ]
   }
 ],
-v7 = [
+v8 = [
   "where",
   "orderBy"
 ],
-v8 = [
+v9 = [
   {
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "multipleChoicesLocationTagsSortingValues"
   },
-  (v3/*: any*/)
+  (v4/*: any*/)
 ],
-v9 = [
+v10 = [
   {
     "alias": null,
     "args": null,
@@ -188,7 +196,7 @@ v9 = [
     "name": "type",
     "storageKey": null
   },
-  (v5/*: any*/)
+  (v6/*: any*/)
 ];
 return {
   "fragment": {
@@ -201,6 +209,7 @@ return {
     "metadata": null,
     "name": "addProduct_rootQuery",
     "selections": [
+      (v3/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -235,20 +244,21 @@ return {
     "kind": "Operation",
     "name": "addProduct_rootQuery",
     "selections": [
+      (v3/*: any*/),
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v5/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "productTags",
         "plural": false,
-        "selections": (v6/*: any*/),
+        "selections": (v7/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v4/*: any*/),
-        "filters": (v7/*: any*/),
+        "args": (v5/*: any*/),
+        "filters": (v8/*: any*/),
         "handle": "connection",
         "key": "multipleChoicesProductTags_productTags",
         "kind": "LinkedHandle",
@@ -256,18 +266,18 @@ return {
       },
       {
         "alias": null,
-        "args": (v8/*: any*/),
+        "args": (v9/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "locationTags",
         "plural": false,
-        "selections": (v6/*: any*/),
+        "selections": (v7/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v8/*: any*/),
-        "filters": (v7/*: any*/),
+        "args": (v9/*: any*/),
+        "filters": (v8/*: any*/),
         "handle": "connection",
         "key": "multipleChoicesLocationTags_locationTags",
         "kind": "LinkedHandle",
@@ -280,7 +290,7 @@ return {
         "kind": "LinkedField",
         "name": "priceUnits",
         "plural": true,
-        "selections": (v9/*: any*/),
+        "selections": (v10/*: any*/),
         "storageKey": null
       },
       {
@@ -290,22 +300,22 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v9/*: any*/),
+        "selections": (v10/*: any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "a6881ab6bee8e8f47bef445d66128a85",
+    "cacheID": "5ddad224ef72842eeb7f7ccca35e7dc7",
     "id": null,
     "metadata": {},
     "name": "addProduct_rootQuery",
     "operationKind": "query",
-    "text": "query addProduct_rootQuery(\n  $organizationId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  ...multipleChoicesProductTags_query\n  ...multipleChoicesLocationTags_query\n  ...singleChoicePriceUnit_query\n  ...singleChoiceCurrency_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  productTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesProductTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoicePriceUnit_query on Query {\n  priceUnits {\n    type\n    name\n  }\n}\n"
+    "text": "query addProduct_rootQuery(\n  $organizationId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  openingHoursMinutesStep\n  ...multipleChoicesProductTags_query\n  ...multipleChoicesLocationTags_query\n  ...singleChoicePriceUnit_query\n  ...singleChoiceCurrency_query\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesLocationTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  productTags(where: {organizationId: $organizationId}, orderBy: $multipleChoicesProductTagsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoicePriceUnit_query on Query {\n  priceUnits {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "00bd1aee812e3e9c8c35e38ee4366581";
+(node as any).hash = "61afce0d8a354ea1a8f734a29d05fafa";
 
 export default node;
