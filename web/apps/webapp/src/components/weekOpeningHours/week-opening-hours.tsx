@@ -1,6 +1,5 @@
 import { ClosedOpenAllDayCustomToggle } from '@/components/closedOpenAllDayCustomToggle';
-import { FormFieldLabel, StackColumn, StackRow } from '@/components/commons';
-import { autoCloseErrorNotificationOptions, NotificationContent } from '@/components/notification';
+import { ErrorTypography, FormFieldLabel, StackColumn, StackRow } from '@/components/commons';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getOpeningHoursFromDateTime, toOpeningHoursFromTime } from '@/libs/utils';
@@ -9,7 +8,7 @@ import Button from '@mui/material/Button';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import { Dayjs } from 'dayjs';
-import { memo, useContext, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { toast } from 'react-toastify';
 
@@ -36,10 +35,12 @@ export type WeekOpeningHoursDetails = {
   sunday: OpeningHoursDetails;
 };
 
-export type OpeningHoursDetailsInternal = {
-  state: 'closed' | 'openAllDay' | 'custom';
-  from: Date | Dayjs | null;
-  until: Date | Dayjs | null;
+type OpeningHoursState = 'closed' | 'openAllDay' | 'custom';
+
+export type OpeningHoursDetailsInternal<T = Date | Dayjs> = {
+  state: OpeningHoursState;
+  from: T | null;
+  until: T | null;
 };
 
 const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetailUpdateClick }: Props) => {
@@ -54,15 +55,15 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const [mondayOpeningState, setMondayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
-    defaultValue.monday.closed ? 'closed' : defaultValue.monday.openAllDay ? 'openAllDay' : 'custom',
-  );
+  const [mondayErrorMessage, setMondayErrorMessage] = useState<string>('');
+  const [mondayOpeningState, setMondayOpeningState] = useState<OpeningHoursState>(defaultValue.monday.closed ? 'closed' : defaultValue.monday.openAllDay ? 'openAllDay' : 'custom');
   const [mondayOpeningHours, setMondayOpeningHours] = useState<DateRange<Dayjs>>([
     toOpeningHoursFromTime(defaultValue.monday.from),
     toOpeningHoursFromTime(defaultValue.monday.until),
   ]);
 
-  const [tuesdayOpeningState, setTuesdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+  const [tuesdayErrorMessage, setTuesdayErrorMessage] = useState<string>('');
+  const [tuesdayOpeningState, setTuesdayOpeningState] = useState<OpeningHoursState>(
     defaultValue.tuesday.closed ? 'closed' : defaultValue.tuesday.openAllDay ? 'openAllDay' : 'custom',
   );
   const [tuesdayOpeningHours, setTuesdayOpeningHours] = useState<DateRange<Dayjs>>([
@@ -70,7 +71,8 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
     toOpeningHoursFromTime(defaultValue.tuesday.until),
   ]);
 
-  const [wednesdayOpeningState, setWednesdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+  const [wednesdayErrorMessage, setWednesdayErrorMessage] = useState<string>('');
+  const [wednesdayOpeningState, setWednesdayOpeningState] = useState<OpeningHoursState>(
     defaultValue.wednesday.closed ? 'closed' : defaultValue.wednesday.openAllDay ? 'openAllDay' : 'custom',
   );
   const [wednesdayOpeningHours, setWednesdayOpeningHours] = useState<DateRange<Dayjs>>([
@@ -78,7 +80,8 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
     toOpeningHoursFromTime(defaultValue.wednesday.until),
   ]);
 
-  const [thursdayOpeningState, setThursdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+  const [thursdayErrorMessage, setThursdayErrorMessage] = useState<string>('');
+  const [thursdayOpeningState, setThursdayOpeningState] = useState<OpeningHoursState>(
     defaultValue.thursday.closed ? 'closed' : defaultValue.thursday.openAllDay ? 'openAllDay' : 'custom',
   );
   const [thursdayOpeningHours, setThursdayOpeningHours] = useState<DateRange<Dayjs>>([
@@ -86,15 +89,15 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
     toOpeningHoursFromTime(defaultValue.thursday.until),
   ]);
 
-  const [fridayOpeningState, setFridayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
-    defaultValue.friday.closed ? 'closed' : defaultValue.friday.openAllDay ? 'openAllDay' : 'custom',
-  );
+  const [fridayErrorMessage, setFridayErrorMessage] = useState<string>('');
+  const [fridayOpeningState, setFridayOpeningState] = useState<OpeningHoursState>(defaultValue.friday.closed ? 'closed' : defaultValue.friday.openAllDay ? 'openAllDay' : 'custom');
   const [fridayOpeningHours, setFridayOpeningHours] = useState<DateRange<Dayjs>>([
     toOpeningHoursFromTime(defaultValue.friday.from),
     toOpeningHoursFromTime(defaultValue.friday.until),
   ]);
 
-  const [saturdayOpeningState, setSaturdayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
+  const [saturdayErrorMessage, setSaturdayErrorMessage] = useState<string>('');
+  const [saturdayOpeningState, setSaturdayOpeningState] = useState<OpeningHoursState>(
     defaultValue.saturday.closed ? 'closed' : defaultValue.saturday.openAllDay ? 'openAllDay' : 'custom',
   );
   const [saturdayOpeningHours, setSaturdayOpeningHours] = useState<DateRange<Dayjs>>([
@@ -102,32 +105,36 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
     toOpeningHoursFromTime(defaultValue.saturday.until),
   ]);
 
-  const [sundayOpeningState, setSundayOpeningState] = useState<'closed' | 'openAllDay' | 'custom'>(
-    defaultValue.sunday.closed ? 'closed' : defaultValue.sunday.openAllDay ? 'openAllDay' : 'custom',
-  );
+  const [sundayErrorMessage, setSundayErrorMessage] = useState<string>('');
+  const [sundayOpeningState, setSundayOpeningState] = useState<OpeningHoursState>(defaultValue.sunday.closed ? 'closed' : defaultValue.sunday.openAllDay ? 'openAllDay' : 'custom');
   const [sundayOpeningHours, setSundayOpeningHours] = useState<DateRange<Dayjs>>([
     toOpeningHoursFromTime(defaultValue.sunday.from),
     toOpeningHoursFromTime(defaultValue.sunday.until),
   ]);
   const minutesStep = rootData.openingHoursMinutesStep;
 
-  const validate = (weekday: string, state: 'closed' | 'openAllDay' | 'custom', from: Dayjs | null, until: Dayjs | null): boolean => {
+  const validate = (state: OpeningHoursState, from: Dayjs | null, until: Dayjs | null) => {
     if (state === 'custom' && (!from || !until)) {
-      themedToast(<NotificationContent content={`${weekday}: From and Until required when not closed or open all day`} />, autoCloseErrorNotificationOptions);
-
-      return false;
+      return {
+        result: false,
+        errorMessage: 'From and Until required when not closed or open all day',
+      };
     }
 
     if (state === 'custom' && from && (from.isSame(until) || from.isAfter(until))) {
-      themedToast(<NotificationContent content={`${weekday}: From cannot be same or after Until`} />, autoCloseErrorNotificationOptions);
-
-      return false;
+      return {
+        result: false,
+        errorMessage: 'From cannot be same or after Until',
+      };
     }
 
-    return true;
+    return {
+      result: true,
+      errorMessage: '',
+    };
   };
 
-  const getValue = (state: 'closed' | 'openAllDay' | 'custom', from: Dayjs | null, until: Dayjs | null) => {
+  const getValue = (state: OpeningHoursState, from: Dayjs | null, until: Dayjs | null) => {
     return state === 'closed'
       ? { closed: true, openAllDay: false, from: null, until: null }
       : state === 'openAllDay'
@@ -135,52 +142,102 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
         : { closed: false, openAllDay: false, from: getOpeningHoursFromDateTime(from), until: getOpeningHoursFromDateTime(until) };
   };
 
+  const validateAll = useCallback(() => {
+    let result = true;
+
+    let validationResult = validate(mondayOpeningState, mondayOpeningHours[0], mondayOpeningHours[1]);
+    if (validationResult.result) {
+      setMondayErrorMessage('');
+    } else {
+      setMondayErrorMessage(validationResult.errorMessage);
+      result = false;
+    }
+
+    validationResult = validate(tuesdayOpeningState, tuesdayOpeningHours[0], tuesdayOpeningHours[1]);
+    if (validationResult.result) {
+      setTuesdayErrorMessage('');
+    } else {
+      setTuesdayErrorMessage(validationResult.errorMessage);
+      result = false;
+    }
+
+    validationResult = validate(wednesdayOpeningState, wednesdayOpeningHours[0], wednesdayOpeningHours[1]);
+    if (validationResult.result) {
+      setWednesdayErrorMessage('');
+    } else {
+      setWednesdayErrorMessage(validationResult.errorMessage);
+      result = false;
+    }
+
+    validationResult = validate(thursdayOpeningState, thursdayOpeningHours[0], thursdayOpeningHours[1]);
+    if (validationResult.result) {
+      setThursdayErrorMessage('');
+    } else {
+      setThursdayErrorMessage(validationResult.errorMessage);
+      result = false;
+    }
+
+    validationResult = validate(fridayOpeningState, fridayOpeningHours[0], fridayOpeningHours[1]);
+    if (validationResult.result) {
+      setFridayErrorMessage('');
+    } else {
+      setFridayErrorMessage(validationResult.errorMessage);
+      result = false;
+    }
+
+    validationResult = validate(saturdayOpeningState, saturdayOpeningHours[0], saturdayOpeningHours[1]);
+    if (validationResult.result) {
+      setSaturdayErrorMessage('');
+    } else {
+      setSaturdayErrorMessage(validationResult.errorMessage);
+      result = false;
+    }
+
+    validationResult = validate(sundayOpeningState, sundayOpeningHours[0], sundayOpeningHours[1]);
+    if (validationResult.result) {
+      setSundayErrorMessage('');
+    } else {
+      setSundayErrorMessage(validationResult.errorMessage);
+      result = false;
+    }
+
+    return result;
+  }, [
+    mondayOpeningState,
+    mondayOpeningHours,
+    tuesdayOpeningState,
+    tuesdayOpeningHours,
+    wednesdayOpeningState,
+    wednesdayOpeningHours,
+    thursdayOpeningState,
+    thursdayOpeningHours,
+    fridayOpeningState,
+    fridayOpeningHours,
+    saturdayOpeningState,
+    saturdayOpeningHours,
+    sundayOpeningState,
+    sundayOpeningHours,
+  ]);
+
   const handleWeekOpeningHoursDetailUpdateClick = () => {
-    const [mondayOpeningHoursFrom, mondayOpeningHoursUntil] = mondayOpeningHours;
-    if (!validate('Monday', mondayOpeningState, mondayOpeningHoursFrom, mondayOpeningHoursUntil)) {
-      return;
-    }
-
-    const [tuesdayOpeningHoursFrom, tuesdayOpeningHoursUntil] = tuesdayOpeningHours;
-    if (!validate('Tuesday', tuesdayOpeningState, tuesdayOpeningHoursFrom, tuesdayOpeningHoursUntil)) {
-      return;
-    }
-
-    const [wednesdayOpeningHoursFrom, wednesdayOpeningHoursUntil] = wednesdayOpeningHours;
-    if (!validate('Wednesday', wednesdayOpeningState, wednesdayOpeningHoursFrom, wednesdayOpeningHoursUntil)) {
-      return;
-    }
-
-    const [thursdayOpeningHoursFrom, thursdayOpeningHoursUntil] = thursdayOpeningHours;
-    if (!validate('Thursday', thursdayOpeningState, thursdayOpeningHoursFrom, thursdayOpeningHoursUntil)) {
-      return;
-    }
-
-    const [fridayOpeningHoursFrom, fridayOpeningHoursUntil] = fridayOpeningHours;
-    if (!validate('Friday', fridayOpeningState, fridayOpeningHoursFrom, fridayOpeningHoursUntil)) {
-      return;
-    }
-
-    const [saturdayOpeningHoursFrom, saturdayOpeningHoursUntil] = saturdayOpeningHours;
-    if (!validate('Saturday', saturdayOpeningState, saturdayOpeningHoursFrom, saturdayOpeningHoursUntil)) {
-      return;
-    }
-
-    const [sundayOpeningHoursFrom, sundayOpeningHoursUntil] = sundayOpeningHours;
-    if (!validate('Sunday', sundayOpeningState, sundayOpeningHoursFrom, sundayOpeningHoursUntil)) {
+    if (!validateAll()) {
       return;
     }
 
     onWeekOpeningHoursDetailUpdateClick({
-      monday: getValue(mondayOpeningState, mondayOpeningHoursFrom, mondayOpeningHoursUntil),
-      tuesday: getValue(tuesdayOpeningState, tuesdayOpeningHoursFrom, tuesdayOpeningHoursUntil),
-      wednesday: getValue(wednesdayOpeningState, wednesdayOpeningHoursFrom, wednesdayOpeningHoursUntil),
-      thursday: getValue(thursdayOpeningState, thursdayOpeningHoursFrom, thursdayOpeningHoursUntil),
-      friday: getValue(fridayOpeningState, fridayOpeningHoursFrom, fridayOpeningHoursUntil),
-      saturday: getValue(saturdayOpeningState, saturdayOpeningHoursFrom, saturdayOpeningHoursUntil),
-      sunday: getValue(sundayOpeningState, sundayOpeningHoursFrom, sundayOpeningHoursUntil),
+      monday: getValue(mondayOpeningState, mondayOpeningHours[0], mondayOpeningHours[1]),
+      tuesday: getValue(tuesdayOpeningState, tuesdayOpeningHours[0], tuesdayOpeningHours[1]),
+      wednesday: getValue(wednesdayOpeningState, wednesdayOpeningHours[0], wednesdayOpeningHours[1]),
+      thursday: getValue(thursdayOpeningState, thursdayOpeningHours[0], thursdayOpeningHours[1]),
+      friday: getValue(fridayOpeningState, fridayOpeningHours[0], fridayOpeningHours[1]),
+      saturday: getValue(saturdayOpeningState, saturdayOpeningHours[0], saturdayOpeningHours[1]),
+      sunday: getValue(sundayOpeningState, sundayOpeningHours[0], sundayOpeningHours[1]),
     });
   };
+
+  useEffect(() => {
+    validateAll();
+  }, [validateAll]);
 
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
@@ -191,11 +248,19 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
         </StackRow>
       </FormFieldLabel>
 
+      <FormFieldLabel>
+        <ErrorTypography errorMessage={mondayErrorMessage} />
+      </FormFieldLabel>
+
       <FormFieldLabel label="Tuesday">
         <StackRow>
           <ClosedOpenAllDayCustomToggle defaultValue={tuesdayOpeningState} onChange={setTuesdayOpeningState} />
           <TimeRangePicker minutesStep={minutesStep} disabled={tuesdayOpeningState !== 'custom'} defaultValue={tuesdayOpeningHours} onChange={setTuesdayOpeningHours} />
         </StackRow>
+      </FormFieldLabel>
+
+      <FormFieldLabel>
+        <ErrorTypography errorMessage={tuesdayErrorMessage} />
       </FormFieldLabel>
 
       <FormFieldLabel label="Wednesday">
@@ -205,11 +270,19 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
         </StackRow>
       </FormFieldLabel>
 
+      <FormFieldLabel>
+        <ErrorTypography errorMessage={wednesdayErrorMessage} />
+      </FormFieldLabel>
+
       <FormFieldLabel label="Thursday">
         <StackRow>
           <ClosedOpenAllDayCustomToggle defaultValue={thursdayOpeningState} onChange={setThursdayOpeningState} />
           <TimeRangePicker minutesStep={minutesStep} disabled={thursdayOpeningState !== 'custom'} defaultValue={thursdayOpeningHours} onChange={setThursdayOpeningHours} />
         </StackRow>
+      </FormFieldLabel>
+
+      <FormFieldLabel>
+        <ErrorTypography errorMessage={thursdayErrorMessage} />
       </FormFieldLabel>
 
       <FormFieldLabel label="Friday">
@@ -219,6 +292,10 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
         </StackRow>
       </FormFieldLabel>
 
+      <FormFieldLabel>
+        <ErrorTypography errorMessage={fridayErrorMessage} />
+      </FormFieldLabel>
+
       <FormFieldLabel label="Saturday">
         <StackRow>
           <ClosedOpenAllDayCustomToggle defaultValue={saturdayOpeningState} onChange={setSaturdayOpeningState} />
@@ -226,11 +303,19 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
         </StackRow>
       </FormFieldLabel>
 
+      <FormFieldLabel>
+        <ErrorTypography errorMessage={saturdayErrorMessage} />
+      </FormFieldLabel>
+
       <FormFieldLabel label="Sunday">
         <StackRow>
           <ClosedOpenAllDayCustomToggle defaultValue={sundayOpeningState} onChange={setSundayOpeningState} />
           <TimeRangePicker minutesStep={minutesStep} disabled={sundayOpeningState !== 'custom'} defaultValue={sundayOpeningHours} onChange={setSundayOpeningHours} />
         </StackRow>
+      </FormFieldLabel>
+
+      <FormFieldLabel>
+        <ErrorTypography errorMessage={sundayErrorMessage} />
       </FormFieldLabel>
 
       <StackRow>
