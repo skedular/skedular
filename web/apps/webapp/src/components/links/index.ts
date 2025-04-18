@@ -55,3 +55,5 @@ export const getOrganizationMarketplaceBaseLink = (id: string) => `${getOrganiza
 export const getOrganizationProductBaseLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}`;
 export const getOrganizationProductAddLink = (id: string) => `${getOrganizationBaseLink(id)}/products/add`;
 export const getOrganizationBookingProductLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}/book`;
+
+export const getOrganizationSsoSignInBaseLink = (id: string) => `/organizations/${id}/sso-signin?redirectUrl=${window.location.href}`;

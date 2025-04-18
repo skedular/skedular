@@ -34,7 +34,7 @@ const RootQuery = graphql`
   }
 `;
 
-const AdminPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
+const OrganizationAdminPage = ({ queryReference, onReloadRequired, organizationId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationAdmin_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -70,13 +70,13 @@ const AdminPage = ({ queryReference, onReloadRequired, organizationId }: Props) 
   );
 };
 
-const MemoAdminPage = memo(AdminPage);
+const MemoOrganizationAdminPage = memo(OrganizationAdminPage);
 
-const AdminPageWithRelay = () => {
+const OrganizationAdminPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationAdmin_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(nanoid());
   const [, startTransition] = useTransition();
-  const { organizationId, teamId } = useParams();
+  const { organizationId } = useParams();
   let finalOrganizationId = '';
 
   if (typeof organizationId === 'string') {
@@ -114,9 +114,9 @@ const AdminPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoAdminPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
+      <MemoOrganizationAdminPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationId={finalOrganizationId} />
     </ErrorBoundary>
   );
 };
 
-export default memo(AdminPageWithRelay);
+export default memo(OrganizationAdminPageWithRelay);

@@ -21,6 +21,7 @@ import type { JSX, PropsWithChildren } from 'react';
 import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { getOrganizationSsoSignInBaseLink } from '../links';
 
 type Props = {
   queryReference: PreloadedQuery<rootShell_rootQuery, Record<string, unknown>>;
@@ -30,6 +31,7 @@ type Props = {
   hideWelcomeMessage?: boolean;
   showBreadcrumps?: boolean;
   breadcrumbs?: React.ReactNode | JSX.Element;
+  organizationId: string;
 };
 
 const RootQuery = graphql`
@@ -57,6 +59,8 @@ const RootQuery = graphql`
       id
     }
 
+    organizationRequiredSsoTokenValid(id: $organizationId) @include(if: $organizationExists)
+
     ...appBar_query
     ...leftSideNavigationMenu_query
     ...observability_query
@@ -74,6 +78,7 @@ const RootShell = ({
   hideWelcomeMessage,
   showBreadcrumps,
   breadcrumbs,
+  organizationId,
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const inMsTeams = useContext(InMsTeamsContext);
@@ -150,6 +155,11 @@ const RootShell = ({
 
   if (!rootData.me || !areCustomerRecordsSync()) {
     return <Loading message="Kindly hold on as we proceed to activate your account..." />;
+  }
+
+  if (rootData.organizationRequiredSsoTokenValid) {
+    router.push(getOrganizationSsoSignInBaseLink(organizationId));
+    return <></>;
   }
 
   return (
@@ -259,6 +269,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
         hideWelcomeMessage={hideWelcomeMessage}
         showBreadcrumps={showBreadcrumps}
         breadcrumbs={breadcrumbs}
+        organizationId={finalOrganizationId}
       >
         {children}
       </MemoRootShell>
