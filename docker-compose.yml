@@ -5,6 +5,7 @@ volumes:
   skedular_postgres_data:
   skedular_redis_data:
   skedular_kafka1_data:
+  skedular_keycloak_data:
 
 services:
   dozzle:
@@ -161,5 +162,24 @@ services:
       - 14250:14250
       - 14268:14268
       - 14269:14269
+    networks:
+      - skedular_network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    profiles:
+      - core
+      - all
+    ports:
+      - "8090:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KEYCLOAK_IMPORT: /opt/keycloak/data/import/realm.json
+      KEYCLOAK_IMPORT_STRATEGY: OVERWRITE_EXISTING
+    command: [ "start-dev", "--import-realm" ]
+    volumes:
+      - skedular_keycloak_data:/opt/keycloak/data
+      - ./keyckloak.json:/opt/keycloak/data/import/realm.json
     networks:
       - skedular_network

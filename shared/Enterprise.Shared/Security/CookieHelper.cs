@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using Enterprise.Shared.Configurations;
+using SimpleBase;
 
 namespace Enterprise.Shared.Security;
 
@@ -51,12 +52,12 @@ public class CookieHelper : ICookieHelper
             }
         }
 
-        return Convert.ToBase64String(msEncrypt.ToArray());
+        return Base58.Bitcoin.Encode(msEncrypt.ToArray());
     }
 
     public string Decrypt(string cipherText)
     {
-        var cipherBytes = Convert.FromBase64String(cipherText);
+        var cipherBytes = Base58.Bitcoin.Decode(cipherText);
 
         using var aesAlg = Aes.Create();
         aesAlg.Key = _key;

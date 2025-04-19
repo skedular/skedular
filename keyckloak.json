@@ -1,0 +1,99 @@
+[
+  {
+    "id": "skedular",
+    "realm": "skedular",
+    "enabled": true,
+    "registrationEmailAsUsername": true,
+    "loginWithEmailAllowed": true,
+    "clients": [
+      {
+        "clientId": "http://127.0.0.1:10200/organization/api/v1",
+        "name": "skedularapp",
+        "enabled": true,
+        "publicClient": true,
+        "redirectUris": ["http://localhost:10200/*", "http://127.0.0.1:10200/*", "http://127.0.0.1:15000/*", "http://localhost:15000/*"],
+        "webOrigins": ["http://127.0.0.1:15000", "http://127.0.0.1:10200", "http://localhost:15000", "http://localhost:10200"],
+        "directAccessGrantsEnabled": true,
+        "rootUrl": "http://127.0.0.1:10200/",
+        "adminUrl": "http://127.0.0.1:10200/organization/api/v1/acs",
+        "baseUrl": "http://127.0.0.1:10200/",
+        "standardFlowEnabled": true,
+        "surrogateAuthRequired": false,
+        "alwaysDisplayInConsole": false,
+        "clientAuthenticatorType": "client-secret",
+        "notBefore": 0,
+        "bearerOnly": false,
+        "consentRequired": false,
+        "implicitFlowEnabled": false,
+        "serviceAccountsEnabled": false,
+        "frontchannelLogout": true,
+        "protocol": "saml",
+        "attributes": {
+          "saml.assertion.signature": "true",
+          "saml.force.post.binding": "true",
+          "saml.encrypt": "false",
+          "post.logout.redirect.uris": "+",
+          "saml_idp_initiated_sso_url_name": "http://127.0.0.1:10200/organization/api/v1/acs",
+          "saml.server.signature": "true",
+          "saml.server.signature.keyinfo.ext": "false",
+          "realm_client": "false",
+          "saml.artifact.binding": "false",
+          "saml.signature.algorithm": "RSA_SHA256",
+          "saml_force_name_id_format": "false",
+          "saml.client.signature": "false",
+          "saml.authnstatement": "true",
+          "display.on.consent.screen": "false",
+          "saml_name_id_format": "email",
+          "saml.allow.ecp.flow": "false",
+          "saml_signature_canonicalization_method": "http://www.w3.org/2001/10/xml-exc-c14n#",
+          "saml.onetimeuse.condition": "false",
+          "saml.server.signature.keyinfo.xmlSigKeyInfoKeyNameTransformer": "NONE"
+        },
+        "authenticationFlowBindingOverrides": {},
+        "fullScopeAllowed": true,
+        "nodeReRegistrationTimeout": -1,
+        "defaultClientScopes": ["saml_organization", "role_list"],
+        "optionalClientScopes": [],
+        "access": {
+          "view": true,
+          "configure": true,
+          "manage": true
+        }
+      }
+    ],
+    "users": [
+      {
+        "username": "kirill",
+        "enabled": true,
+        "emailVerified": true,
+        "email": "kirill@skedular.local",
+        "firstName": "Kirill",
+        "lastName": "Ivanov",
+        "credentials": [
+          {
+            "type": "password",
+            "value": "password",
+            "temporary": false
+          }
+        ],
+        "realmRoles": []
+      },
+      {
+        "username": "morteza",
+        "enabled": true,
+        "emailVerified": true,
+        "email": "morteza.alizadeh@gmail.com",
+        "firstName": "Morteza",
+        "lastName": "Alizadeh",
+        "credentials": [
+          {
+            "type": "password",
+            "value": "password",
+            "temporary": false
+          }
+        ],
+        "realmRoles": []
+      }
+    ]
+  }
+]

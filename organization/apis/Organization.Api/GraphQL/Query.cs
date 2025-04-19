@@ -83,7 +83,7 @@ public class Query(IMapper mapper)
         string id,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
-        await organizationSsoService.IsSsoLoginRequired(id, cancellationToken);
+        await organizationSsoService.IsSsoLoginRequiredAsync(id, cancellationToken);
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> OrganizationAsync(

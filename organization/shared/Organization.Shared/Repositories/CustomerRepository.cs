@@ -12,8 +12,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
-    Task<ICollection<Customer>> GetAllAsync(CancellationToken cancellationToken);
-    Customer Add(Customer customer);
+    void Add(Customer customer);
     Customer Update(Customer customer);
     Customer Remove(Customer customer);
 }
@@ -88,18 +87,11 @@ public class CustomerRepository(OrganizationDbContext dbContext, TimeProvider ti
     public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>
         await s_getByEmailQueryAsync(DbContext, email, cancellationToken);
 
-    public async Task<ICollection<Customer>> GetAllAsync(CancellationToken cancellationToken) =>
-        await DbContext.Customer
-            .AddDependentObjects()
-            .Where(query => !query.DeletedAt.HasValue)
-            .OrderBy(query => query.Id)
-            .ToListAsync(cancellationToken);
-
-    public Customer Add(Customer customer)
+    public void Add(Customer customer)
     {
         var now = TimeProvider.GetUtcNow();
         customer.CreatedAt = now;
-        return DbContext.Customer.Add(customer).Entity;
+        DbContext.Customer.Add(customer);
     }
 
     public Customer Update(Customer customer)

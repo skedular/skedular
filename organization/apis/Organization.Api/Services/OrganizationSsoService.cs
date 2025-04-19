@@ -14,7 +14,7 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationSsoService
 {
-    Task<bool> IsSsoLoginRequired(string id, CancellationToken cancellationToken);
+    Task<bool> IsSsoLoginRequiredAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> UpdateSsoSettingsAsync(OrganizationSsoSetting ssoSetting, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> RemoveSsoSettingsAsync(string organizationId, CancellationToken cancellationToken);
     Task<string> SsoLoginAsync(string id, string redirectUrl, CancellationToken cancellationToken);
@@ -34,7 +34,7 @@ public class OrganizationSsoService(
     TimeProvider timeProvider,
     IContext context) : IOrganizationSsoService
 {
-    public async Task<bool> IsSsoLoginRequired(string id, CancellationToken cancellationToken)
+    public async Task<bool> IsSsoLoginRequiredAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
