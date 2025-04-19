@@ -52,7 +52,7 @@ public class BillingGrpcService(
         grpcAuthenticator.VerifyAndEnrich(billingConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(
-            await organizationBillingService.SetBillingInfoAsync(
+            await organizationBillingService.UpdateBillingInfoAsync(
                 request.OrganizationId,
                 request.Email,
                 request.AddressLine1,

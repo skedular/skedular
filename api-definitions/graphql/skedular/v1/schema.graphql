@@ -156,6 +156,24 @@ type CurrencyDetails {
   type: Currency!
 }
 
+type CustomerBillingContactDetails {
+  addressLine1: String
+  addressLine2: String
+  city: String
+  companyName: String
+  country: String
+  email: String
+  id: ID!
+  province: String
+  suburb: String
+  zipcode: String
+}
+
+type CustomerBillingContactDetailsPayload {
+  clientMutationId: String
+  customerBillingContactDetails: CustomerBillingContactDetails!
+}
+
 type CustomerConnection {
   edges: [CustomerEdge!]!
   pageInfo: PageInfo!
@@ -406,9 +424,9 @@ type Mutation {
   removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload @cost(weight: "10")
-  setOrganizationBillingInfo(input: SetOrganizationBillingInfoInput!): OrganizationBillingInfoPayload @cost(weight: "10")
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload @cost(weight: "10")
   updateBooking(input: UpdateBookingInput!): BookingPayload @cost(weight: "10")
+  updateCustomerBillingContactDetails(input: UpdateCustomerBillingContactDetailsInput!): CustomerBillingContactDetailsPayload @cost(weight: "10")
   updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload @cost(weight: "10")
   updateLocation(input: UpdateLocationInput!): LocationPayload @cost(weight: "10")
@@ -417,6 +435,7 @@ type Mutation {
   updateLocationTag(input: UpdateLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload @cost(weight: "10")
+  updateOrganizationBillingContactDetails(input: UpdateOrganizationBillingContactDetailsInput!): OrganizationBillingContactDetailsPayload @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload @cost(weight: "10")
@@ -520,7 +539,7 @@ type OrganizationAvailableResources {
   resourcesCount: Int!
 }
 
-type OrganizationBillingInfo {
+type OrganizationBillingContactDetails {
   addressLine1: String
   addressLine2: String
   city: String
@@ -532,9 +551,9 @@ type OrganizationBillingInfo {
   zipcode: String
 }
 
-type OrganizationBillingInfoPayload {
+type OrganizationBillingContactDetailsPayload {
   clientMutationId: String
-  organizationBillingInfo: OrganizationBillingInfo!
+  organizationBillingContactDetails: OrganizationBillingContactDetails!
 }
 
 type OrganizationBookingPermissions {
@@ -825,6 +844,7 @@ type Query {
   me: CustomerDetails @cost(weight: "10")
   msTeamsCustomerRecordSynced: Boolean! @cost(weight: "10")
   msTeamsVersion: Version!
+  myBillingContactDetails: CustomerBillingContactDetails! @cost(weight: "10")
   myLocations(organizationId: String): [LocationDetails!] @cost(weight: "10")
   myNotifications(after: String before: String first: Int last: Int orderBy: [NotificationOrderInput!] where: MyNotificationWhereInput!): NotificationConnection! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
@@ -834,7 +854,7 @@ type Query {
   openingHoursMinutesStep: Int!
   organization(id: String!): OrganizationDetails @cost(weight: "10")
   organizationAnalytics(from: DateTime! organizationId: String! until: DateTime!): OrganizationAnalytics @cost(weight: "10")
-  organizationBillingInfo(organizationId: String!): OrganizationBillingInfo @cost(weight: "10")
+  organizationBillingContactDetails(organizationId: String!): OrganizationBillingContactDetails! @cost(weight: "10")
   organizationBookingPermissions(organizationId: String!): OrganizationBookingPermissions! @cost(weight: "10")
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
@@ -1634,19 +1654,6 @@ input SetCustomerDefaultOrganizationInput {
   organizationId: String!
 }
 
-input SetOrganizationBillingInfoInput {
-  addressLine1: String
-  addressLine2: String
-  city: String
-  clientMutationId: String
-  country: String
-  email: String
-  organizationId: String!
-  province: String
-  suburb: String
-  zipcode: String
-}
-
 input SubmitCustomerFeedbackInput {
   channel: FeedbackChannelType!
   clientMutationId: String
@@ -1696,6 +1703,19 @@ input UpdateCustomTagInput {
   description: String
   id: String!
   name: String!
+}
+
+input UpdateCustomerBillingContactDetailsInput {
+  addressLine1: String
+  addressLine2: String
+  city: String
+  clientMutationId: String
+  companyName: String
+  country: String
+  email: String
+  province: String
+  suburb: String
+  zipcode: String
 }
 
 input UpdateCustomerDetailsInput {
@@ -1752,6 +1772,19 @@ input UpdateMyCustomerDetailsInput {
   phoneNumber: String
   timezone: String
   title: String
+}
+
+input UpdateOrganizationBillingContactDetailsInput {
+  addressLine1: String
+  addressLine2: String
+  city: String
+  clientMutationId: String
+  country: String
+  email: String
+  organizationId: String!
+  province: String
+  suburb: String
+  zipcode: String
 }
 
 input UpdateOrganizationInput {

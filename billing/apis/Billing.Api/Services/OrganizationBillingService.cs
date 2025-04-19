@@ -12,7 +12,7 @@ public interface IOrganizationBillingService
 {
     Task<Organization> GetBillingInfoById(string organizationId, CancellationToken cancellationToken);
 
-    Task<Organization> SetBillingInfoAsync(
+    Task<Organization> UpdateBillingInfoAsync(
         string organizationId,
         string? email,
         string? addressLine1,
@@ -52,7 +52,7 @@ public class OrganizationBillingService(
         return mapper.MapTo(organization);
     }
 
-    public async Task<Organization> SetBillingInfoAsync(
+    public async Task<Organization> UpdateBillingInfoAsync(
         string organizationId,
         string? email,
         string? addressLine1,

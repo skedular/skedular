@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<789e89348e10db34da88e9e9e4f232aa>>
+ * @generated SignedSource<<b72be86e518f161b710cf66b0473521f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,7 +68,7 @@ export type organizationAdmin_query$data = {
     };
     readonly website: string | null | undefined;
   } | null | undefined;
-  readonly organizationBillingInfo: {
+  readonly organizationBillingContactDetails: {
     readonly addressLine1: string | null | undefined;
     readonly addressLine2: string | null | undefined;
     readonly city: string | null | undefined;
@@ -78,7 +78,7 @@ export type organizationAdmin_query$data = {
     readonly province: string | null | undefined;
     readonly suburb: string | null | undefined;
     readonly zipcode: string | null | undefined;
-  } | null | undefined;
+  };
   readonly organizationIndustryMainCategoriesReferences: ReadonlyArray<{
     readonly subCategories: ReadonlyArray<{
       readonly id: string;
@@ -411,9 +411,9 @@ return {
           "variableName": "organizationId"
         }
       ],
-      "concreteType": "OrganizationBillingInfo",
+      "concreteType": "OrganizationBillingContactDetails",
       "kind": "LinkedField",
-      "name": "organizationBillingInfo",
+      "name": "organizationBillingContactDetails",
       "plural": false,
       "selections": [
         (v0/*: any*/),
@@ -497,6 +497,6 @@ return {
 };
 })();
 
-(node as any).hash = "07baa72e8c7cee16b1937ebbae88b952";
+(node as any).hash = "904d09c99a088157b655fc8562b5cac5";
 
 export default node;

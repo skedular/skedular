@@ -44,7 +44,7 @@ import type { organizationAdmin_query$key } from '@/queries/__generated__/organi
 import type { organizationAdmin_removeCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_removeCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdmin_removeOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationSsoSettingsMutation.graphql';
-import type { organizationAdmin_setOrganizationBillingInfoMutation } from '@/queries/__generated__/organizationAdmin_setOrganizationBillingInfoMutation.graphql';
+import type { organizationAdmin_updateOrganizationBillingContactDetailsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationBillingContactDetailsMutation.graphql';
 import type {
   organizationAdmin_updateOrganizationMutation,
   OrganizationMemberVisibilityPolicy,
@@ -226,7 +226,7 @@ const OrganizationAdmin = ({
             name
           }
         }
-        organizationBillingInfo(organizationId: $organizationId) {
+        organizationBillingContactDetails(organizationId: $organizationId) {
           id
           email
           addressLine1
@@ -358,10 +358,10 @@ const OrganizationAdmin = ({
     }
   `);
 
-  const [commitSetOrganizationBillingInfo] = useMutation<organizationAdmin_setOrganizationBillingInfoMutation>(graphql`
-    mutation organizationAdmin_setOrganizationBillingInfoMutation($input: SetOrganizationBillingInfoInput!) @raw_response_type {
-      setOrganizationBillingInfo(input: $input) {
-        organizationBillingInfo {
+  const [commitUpdateOrganizationBillingContactDetails] = useMutation<organizationAdmin_updateOrganizationBillingContactDetailsMutation>(graphql`
+    mutation organizationAdmin_updateOrganizationBillingContactDetailsMutation($input: UpdateOrganizationBillingContactDetailsInput!) @raw_response_type {
+      updateOrganizationBillingContactDetails(input: $input) {
+        organizationBillingContactDetails {
           id
           email
           addressLine1
@@ -649,14 +649,14 @@ const OrganizationAdmin = ({
     billingZipcode,
     billingCountry,
   }: OrganizationBillingDetails) => {
-    if (!rootData.organizationBillingInfo) {
+    if (!rootData.organizationBillingContactDetails) {
       return;
     }
 
-    const organizationBillingInfo = rootData.organizationBillingInfo;
+    const organizationBillingContactDetails = rootData.organizationBillingContactDetails;
     const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing...`} />, infoNotificationOptions);
 
-    commitSetOrganizationBillingInfo({
+    commitUpdateOrganizationBillingContactDetails({
       variables: {
         input: {
           clientMutationId: nanoid(),
@@ -693,9 +693,9 @@ const OrganizationAdmin = ({
         });
       },
       optimisticResponse: {
-        setOrganizationBillingInfo: {
-          organizationBillingInfo: {
-            id: organizationBillingInfo.id,
+        updateOrganizationBillingContactDetails: {
+          organizationBillingContactDetails: {
+            id: organizationBillingContactDetails.id,
             email: billingEmail,
             addressLine1: billingAddressLine1,
             addressLine2: billingAddressLine2,
@@ -1419,7 +1419,7 @@ const OrganizationAdmin = ({
     return <></>;
   }
 
-  if (!rootData.organizationBillingInfo) {
+  if (!rootData.organizationBillingContactDetails) {
     return <></>;
   }
 
@@ -1575,15 +1575,15 @@ const OrganizationAdmin = ({
 
   const organization = rootData.organization;
 
-  const organizationBillingInfo = rootData.organizationBillingInfo;
-  const billingEmail = organizationBillingInfo.email ? organizationBillingInfo.email : '';
-  const billingAddressLine1 = organizationBillingInfo.addressLine1 ? organizationBillingInfo.addressLine1 : '';
-  const billingAddressLine2 = organizationBillingInfo.addressLine2 ? organizationBillingInfo.addressLine2 : '';
-  const billingSuburb = organizationBillingInfo.suburb ? organizationBillingInfo.suburb : '';
-  const billingCity = organizationBillingInfo.city ? organizationBillingInfo.city : '';
-  const billingProvince = organizationBillingInfo.province ? organizationBillingInfo.province : '';
-  const billingZipcode = organizationBillingInfo.zipcode ? organizationBillingInfo.zipcode : '';
-  const billingCountry = organizationBillingInfo.country ? organizationBillingInfo.country : '';
+  const organizationBillingContactDetails = rootData.organizationBillingContactDetails;
+  const billingEmail = organizationBillingContactDetails.email ? organizationBillingContactDetails.email : '';
+  const billingAddressLine1 = organizationBillingContactDetails.addressLine1 ? organizationBillingContactDetails.addressLine1 : '';
+  const billingAddressLine2 = organizationBillingContactDetails.addressLine2 ? organizationBillingContactDetails.addressLine2 : '';
+  const billingSuburb = organizationBillingContactDetails.suburb ? organizationBillingContactDetails.suburb : '';
+  const billingCity = organizationBillingContactDetails.city ? organizationBillingContactDetails.city : '';
+  const billingProvince = organizationBillingContactDetails.province ? organizationBillingContactDetails.province : '';
+  const billingZipcode = organizationBillingContactDetails.zipcode ? organizationBillingContactDetails.zipcode : '';
+  const billingCountry = organizationBillingContactDetails.country ? organizationBillingContactDetails.country : '';
   const paymentMethodExist =
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails && rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
   const activeOffering = rootData.organization ? rootData.organization.activeOffering : null;

@@ -7,8 +7,10 @@ namespace Billing.Api.Mappers;
 
 public interface IMapper
 {
-    OrganizationBillingInfo MapTo(Organization src);
-    OrganizationBillingInfoPayload MapTo(Organization src, string? clientMutationId);
+    OrganizationBillingContactDetails MapTo(Organization src);
+    CustomerBillingContactDetails MapTo(Customer src);
+    OrganizationBillingContactDetailsPayload MapTo(Organization src, string? clientMutationId);
+    CustomerBillingContactDetailsPayload MapTo(Customer src, string? clientMutationId);
     Customer MapTo(Shared.Database.Entities.Customer src);
     Organization MapTo(Shared.Database.Entities.Organization src);
     global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationBillingInfo MapToGrpcResponse(Organization src);
@@ -16,7 +18,7 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
-    public OrganizationBillingInfo MapTo(Organization src) =>
+    public OrganizationBillingContactDetails MapTo(Organization src) =>
         new()
         {
             Id = $"organization-billing-{src.Id}",
@@ -30,8 +32,25 @@ public class Mapper : IMapper
             Country = src.BillingContactCountry
         };
 
-    public OrganizationBillingInfoPayload MapTo(Organization src, string? clientMutationId) =>
-        new() { ClientMutationId = clientMutationId, OrganizationBillingInfo = MapTo(src) };
+    public CustomerBillingContactDetails MapTo(Customer src) =>
+        new()
+        {
+            Id = $"customer-billing-{src.Id}",
+            Email = src.BillingContactEmail,
+            AddressLine1 = src.BillingContactAddressLine1,
+            AddressLine2 = src.BillingContactAddressLine2,
+            Suburb = src.BillingContactSuburb,
+            City = src.BillingContactCity,
+            Province = src.BillingContactProvince,
+            Zipcode = src.BillingContactZipcode,
+            Country = src.BillingContactCountry
+        };
+
+    public OrganizationBillingContactDetailsPayload MapTo(Organization src, string? clientMutationId) =>
+        new() { ClientMutationId = clientMutationId, OrganizationBillingContactDetails = MapTo(src) };
+
+    public CustomerBillingContactDetailsPayload MapTo(Customer src, string? clientMutationId) =>
+        new() { ClientMutationId = clientMutationId, CustomerBillingContactDetails = MapTo(src) };
 
     public Customer MapTo(Shared.Database.Entities.Customer src) =>
         new()

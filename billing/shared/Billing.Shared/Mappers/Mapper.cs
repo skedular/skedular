@@ -9,6 +9,7 @@ public interface IMapper
 {
     OrganizationOfferingBilling MapTo(OrganizationOffering src);
     OrganizationBillingContact MapTo(Organization src);
+    CustomerBillingContact MapTo(Customer src);
 }
 
 public class Mapper : IMapper
@@ -26,6 +27,21 @@ public class Mapper : IMapper
         new()
         {
             OrganizationId = src.Id,
+            Email = src.BillingContactEmail.ToSafeString(),
+            AddressLine1 = src.BillingContactAddressLine1.ToSafeString(),
+            AddressLine2 = src.BillingContactAddressLine2.ToSafeString(),
+            Suburb = src.BillingContactSuburb.ToSafeString(),
+            City = src.BillingContactCity.ToSafeString(),
+            Province = src.BillingContactProvince.ToSafeString(),
+            Zipcode = src.BillingContactZipcode.ToSafeString(),
+            Country = src.BillingContactCountry.ToSafeString()
+        };
+
+    public CustomerBillingContact MapTo(Customer src) =>
+        new()
+        {
+            CustomerId = src.Id,
+            CompanyName = src.BillingContactCompanyName.ToSafeString(),
             Email = src.BillingContactEmail.ToSafeString(),
             AddressLine1 = src.BillingContactAddressLine1.ToSafeString(),
             AddressLine2 = src.BillingContactAddressLine2.ToSafeString(),

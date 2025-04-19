@@ -3,11 +3,8 @@
   mutation: Mutation
 }
 
-type Mutation {
-  setOrganizationBillingInfo(input: SetOrganizationBillingInfoInput!): OrganizationBillingInfoPayload @cost(weight: "10")
-}
-
-type OrganizationBillingInfo {
+type CustomerBillingContactDetails {
+  companyName: String
   email: String
   addressLine1: String
   addressLine2: String
@@ -19,15 +16,38 @@ type OrganizationBillingInfo {
   id: ID!
 }
 
-type OrganizationBillingInfoPayload {
+type CustomerBillingContactDetailsPayload {
   clientMutationId: String
-  organizationBillingInfo: OrganizationBillingInfo!
+  customerBillingContactDetails: CustomerBillingContactDetails!
+}
+
+type Mutation {
+  updateOrganizationBillingContactDetails(input: UpdateOrganizationBillingContactDetailsInput!): OrganizationBillingContactDetailsPayload @cost(weight: "10")
+  updateCustomerBillingContactDetails(input: UpdateCustomerBillingContactDetailsInput!): CustomerBillingContactDetailsPayload @cost(weight: "10")
+}
+
+type OrganizationBillingContactDetails {
+  email: String
+  addressLine1: String
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String
+  country: String
+  id: ID!
+}
+
+type OrganizationBillingContactDetailsPayload {
+  clientMutationId: String
+  organizationBillingContactDetails: OrganizationBillingContactDetails!
 }
 
 type Query {
   billingVersion: Version!
   billingCustomerRecordSynced: Boolean! @cost(weight: "10")
-  organizationBillingInfo(organizationId: String!): OrganizationBillingInfo @cost(weight: "10")
+  organizationBillingContactDetails(organizationId: String!): OrganizationBillingContactDetails! @cost(weight: "10")
+  myBillingContactDetails: CustomerBillingContactDetails! @cost(weight: "10")
 }
 
 type Version {
@@ -37,7 +57,20 @@ type Version {
   revision: Int!
 }
 
-input SetOrganizationBillingInfoInput {
+input UpdateCustomerBillingContactDetailsInput {
+  clientMutationId: String
+  companyName: String
+  email: String
+  addressLine1: String
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String
+  country: String
+}
+
+input UpdateOrganizationBillingContactDetailsInput {
   clientMutationId: String
   organizationId: String!
   email: String
