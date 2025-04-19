@@ -9,6 +9,7 @@ enum Type {
   BillingOrganizationOfferingUpserted = 0;
   BillingOrganizationOfferingDeleted = 1;
   OrganizationBillingInfoUpdated = 2;
+  CustomerBillingInfoUpdated = 3;
 }
 
 message Event {
@@ -27,8 +28,11 @@ message Metadata {
 }
 
 message Data {
-  OrganizationOfferingBilling organizationOfferingBilling = 1;
-  OrganizationBillingInfo organizationBillingInfo = 2;
+  oneof payload {
+    OrganizationOfferingBilling organizationOfferingBilling = 1;
+    OrganizationBillingContact organizationBillingContact = 2;
+    CustomerBillingContact customerBillingContact = 3;
+  }
 }
 
 message OrganizationOfferingBilling {
@@ -38,14 +42,27 @@ message OrganizationOfferingBilling {
   google.protobuf.Timestamp invoiceDate = 4;
 }
 
-message OrganizationBillingInfo {
+message OrganizationBillingContact {
   string organizationId = 1;
-  string billingContactEmail = 2;
-  string billingContactAddressLine1 = 3;
-  string billingContactAddressLine2 = 4;
-  string billingContactSuburb = 5;
-  string billingContactCity = 6;
-  string billingContactProvince = 7;
-  string billingContactZipcode = 8;
-  string billingContactCountry = 9;
+  string email = 2;
+  string addressLine1 = 3;
+  string addressLine2 = 4;
+  string suburb = 5;
+  string city = 6;
+  string province = 7;
+  string zipcode = 8;
+  string country = 9;
+}
+
+message CustomerBillingContact {
+  string customerId = 1;
+  string companyName = 2;
+  string email = 3;
+  string addressLine1 = 4;
+  string addressLine2 = 5;
+  string suburb = 6;
+  string city = 7;
+  string province = 8;
+  string zipcode = 9;
+  string country = 10;
 }

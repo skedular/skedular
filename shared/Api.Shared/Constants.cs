@@ -8,9 +8,9 @@ public static class Constants
 
     public const int MaxKafkaTopicNameLength = 249;
 
-    public const int MaxTitleLength = 100;
+    public const int MaxPersonTitleLength = 100;
 
-    public const int MaxDesignationLength = 100;
+    public const int MaxPersonDesignationLength = 100;
 
     public const int MaxGivenNameLength = 100;
 

@@ -115,7 +115,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.Email = src.Profile.Email.ToSafeString();
-        dest.Designation = src.Profile.Title.ToSafeString().Truncate(Api.Shared.Constants.MaxDesignationLength);
+        dest.Designation = src.Profile.Title.ToSafeString().Truncate(Api.Shared.Constants.MaxPersonDesignationLength);
         dest.Name = src.Profile.RealName.ToSafeString().Truncate(Api.Shared.Constants.MaxPersonNameLength);
         dest.GivenName = src.Profile.FirstName.ToSafeString().Truncate(Api.Shared.Constants.MaxGivenNameLength);
         dest.FamilyName = src.Profile.LastName.ToSafeString().Truncate(Api.Shared.Constants.MaxFamilyNameLength);

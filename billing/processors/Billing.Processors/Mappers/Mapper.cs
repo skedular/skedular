@@ -137,6 +137,11 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Customer MergeTo(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
     {
         dest.Id = src.Id;
+        dest.Title = src.Title;
+        dest.Name = src.Name;
+        dest.GivenName = src.GivenName;
+        dest.MiddleName = src.MiddleName;
+        dest.FamilyName = src.FamilyName;
         dest.Identities = identities;
         return dest;
     }
@@ -249,6 +254,11 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Id = src.Id,
+            Title = src.Title,
+            Name = src.Name,
+            GivenName = src.GivenName,
+            MiddleName = src.MiddleName,
+            FamilyName = src.FamilyName,
             Identities = MapTo(src.Identities).ToList()
         };
 

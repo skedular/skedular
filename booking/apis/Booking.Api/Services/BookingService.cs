@@ -329,8 +329,8 @@ public class BookingService(
             var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
             organizationIds = organizationCustomerPairs.Keys.ToList();
 
-            if (searchCriteria.CustomerIds.Any(
-                    customerId => !organizationCustomerPairs.Keys.Any(item => organizationCustomerPairs[item].Contains(customerId))))
+            if (searchCriteria.CustomerIds.Any(customerId =>
+                    !organizationCustomerPairs.Keys.Any(item => organizationCustomerPairs[item].Contains(customerId))))
             {
                 throw new Unauthorized();
             }
@@ -753,15 +753,9 @@ public class BookingService(
         ICollection<Resource> resources,
         CancellationToken cancellationToken)
     {
-        if (booking.Resources.Count != 0)
+        if (booking.Resources.Count != 0 || (booking.Organization is not null && (booking.Location is not null || booking.Team is not null)))
         {
-            // Only use default values if given booking has no attachment to any of the resources available through default values
-            return (organization, location, team, resources);
-        }
-
-        if (booking.Organization is not null && (booking.Location is not null || booking.Team is not null))
-        {
-            // Only use default values if given booking has no attachment to any of the resources available through default values
+            // Only use default values if a given booking has no attachment to any of the resources available through default values
             return (organization, location, team, resources);
         }
 

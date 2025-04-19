@@ -40,6 +40,11 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Id = src.Id,
+            Title = src.Title,
+            Name = src.Name,
+            GivenName = src.GivenName,
+            MiddleName = src.MiddleName,
+            FamilyName = src.FamilyName,
             Identities = MapTo(src.Identities).ToList()
         };
 

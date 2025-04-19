@@ -24,14 +24,14 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
     static BillingV1KeyReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChRiaWxsaW5nX3YxX2tleS5wcm90bxIHYmlsbGluZyI9CgNLZXkSFgoOb3Jn",
+            "ChRiaWxsaW5nX3YxX2tleS5wcm90bxIHYmlsbGluZyJRCgNLZXkSFgoOb3Jn",
             "YW5pemF0aW9uSWQYASABKAkSHgoWb3JnYW5pemF0aW9uT2ZmZXJpbmdJZBgC",
-            "IAEoCUI0qgIxQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5C",
-            "aWxsaW5nLlYxLktleWIGcHJvdG8z"));
+            "IAEoCRISCgpjdXN0b21lcklkGAMgASgJQjSqAjFBcGkuU2hhcmVkLkNsaWVu",
+            "dHMuRXZlbnRzLlNrZWR1bGFyLkJpbGxpbmcuVjEuS2V5YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Key.Key.Parser, new[]{ "OrganizationId", "OrganizationOfferingId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Billing.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.Billing.V1.Key.Key.Parser, new[]{ "OrganizationId", "OrganizationOfferingId", "CustomerId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -75,6 +75,7 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
     public Key(Key other) : this() {
       organizationId_ = other.organizationId_;
       organizationOfferingId_ = other.organizationOfferingId_;
+      customerId_ = other.customerId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -108,6 +109,18 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
       }
     }
 
+    /// <summary>Field number for the "customerId" field.</summary>
+    public const int CustomerIdFieldNumber = 3;
+    private string customerId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string CustomerId {
+      get { return customerId_; }
+      set {
+        customerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -125,6 +138,7 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
       }
       if (OrganizationId != other.OrganizationId) return false;
       if (OrganizationOfferingId != other.OrganizationOfferingId) return false;
+      if (CustomerId != other.CustomerId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -134,6 +148,7 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
       int hash = 1;
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
       if (OrganizationOfferingId.Length != 0) hash ^= OrganizationOfferingId.GetHashCode();
+      if (CustomerId.Length != 0) hash ^= CustomerId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -160,6 +175,10 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
         output.WriteRawTag(18);
         output.WriteString(OrganizationOfferingId);
       }
+      if (CustomerId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(CustomerId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -178,6 +197,10 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
         output.WriteRawTag(18);
         output.WriteString(OrganizationOfferingId);
       }
+      if (CustomerId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(CustomerId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -193,6 +216,9 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
       }
       if (OrganizationOfferingId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationOfferingId);
+      }
+      if (CustomerId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(CustomerId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -211,6 +237,9 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
       }
       if (other.OrganizationOfferingId.Length != 0) {
         OrganizationOfferingId = other.OrganizationOfferingId;
+      }
+      if (other.CustomerId.Length != 0) {
+        CustomerId = other.CustomerId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -239,6 +268,10 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
             OrganizationOfferingId = input.ReadString();
             break;
           }
+          case 26: {
+            CustomerId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -264,6 +297,10 @@ namespace Api.Shared.Clients.Events.Skedular.Billing.V1.Key {
           }
           case 18: {
             OrganizationOfferingId = input.ReadString();
+            break;
+          }
+          case 26: {
+            CustomerId = input.ReadString();
             break;
           }
         }

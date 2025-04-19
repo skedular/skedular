@@ -8,7 +8,7 @@ namespace Billing.Shared.Mappers;
 public interface IMapper
 {
     OrganizationOfferingBilling MapTo(OrganizationOffering src);
-    OrganizationBillingInfo MapTo(Organization src);
+    OrganizationBillingContact MapTo(Organization src);
 }
 
 public class Mapper : IMapper
@@ -22,17 +22,17 @@ public class Mapper : IMapper
             InvoiceDate = Timestamp.FromDateTimeOffset(src.InvoiceDate!.Value)
         };
 
-    public OrganizationBillingInfo MapTo(Organization src) =>
+    public OrganizationBillingContact MapTo(Organization src) =>
         new()
         {
             OrganizationId = src.Id,
-            BillingContactEmail = src.BillingContactEmail.ToSafeString(),
-            BillingContactAddressLine1 = src.BillingContactAddressLine1.ToSafeString(),
-            BillingContactAddressLine2 = src.BillingContactAddressLine2.ToSafeString(),
-            BillingContactSuburb = src.BillingContactSuburb.ToSafeString(),
-            BillingContactCity = src.BillingContactCity.ToSafeString(),
-            BillingContactProvince = src.BillingContactProvince.ToSafeString(),
-            BillingContactZipcode = src.BillingContactZipcode.ToSafeString(),
-            BillingContactCountry = src.BillingContactCountry.ToSafeString()
+            Email = src.BillingContactEmail.ToSafeString(),
+            AddressLine1 = src.BillingContactAddressLine1.ToSafeString(),
+            AddressLine2 = src.BillingContactAddressLine2.ToSafeString(),
+            Suburb = src.BillingContactSuburb.ToSafeString(),
+            City = src.BillingContactCity.ToSafeString(),
+            Province = src.BillingContactProvince.ToSafeString(),
+            Zipcode = src.BillingContactZipcode.ToSafeString(),
+            Country = src.BillingContactCountry.ToSafeString()
         };
 }

@@ -6,14 +6,12 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Kafka.Produce;
 using Event = Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Event;
 using Organization = Billing.Shared.Models.Organization;
-using OrganizationOffering = Billing.Shared.Models.OrganizationOffering;
 using Type = Api.Shared.Clients.Events.Skedular.Billing.V1.Value.Type;
 
 namespace Billing.Shared.Publishers;
 
 public interface IBillingPublisher
 {
-    Task PublishBillingOrganizationsOfferingsAsync(IEnumerable<OrganizationOffering> organizationOfferings, CancellationToken cancellationToken);
     Task PublishOrganizationsBillingInfoAsync(IEnumerable<Organization> organizations, CancellationToken cancellationToken);
 }
 
@@ -24,25 +22,6 @@ public class BillingPublisher(
     IKafkaPublisher<Key, Event> publisher)
     : IBillingPublisher
 {
-    public async Task PublishBillingOrganizationsOfferingsAsync(
-        IEnumerable<OrganizationOffering> organizationOfferings,
-        CancellationToken cancellationToken) =>
-        await Task.WhenAll(organizationOfferings.Select(async organizationOffering =>
-        {
-            var key = new Key { OrganizationOfferingId = organizationOffering.Id };
-            var @event = new Event
-            {
-                Metadata = Event.NewMetadata(
-                    applicationConfiguration.DomainSource,
-                    applicationConfiguration.AppSource,
-                    Type.BillingOrganizationOfferingUpserted,
-                    context.GetCorrelationId()),
-                Data = new Data { OrganizationOfferingBilling = mapper.MapTo(organizationOffering) }
-            };
-
-            await publisher.PublishAsync(key, @event, cancellationToken);
-        }));
-
     public async Task PublishOrganizationsBillingInfoAsync(IEnumerable<Organization> organizations, CancellationToken cancellationToken) =>
         await Task.WhenAll(organizations.Select(async organization =>
         {
@@ -54,7 +33,7 @@ public class BillingPublisher(
                     applicationConfiguration.AppSource,
                     Type.OrganizationBillingInfoUpdated,
                     context.GetCorrelationId()),
-                Data = new Data { OrganizationBillingInfo = mapper.MapTo(organization) }
+                Data = new Data { OrganizationBillingContact = mapper.MapTo(organization) }
             };
 
             await publisher.PublishAsync(key, @event, cancellationToken);

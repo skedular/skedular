@@ -37,7 +37,7 @@ public class TenantMemberConfiguration : IEntityTypeConfiguration<AzureTenantMem
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
-        builder.Property(item => item.Designation).HasMaxLength(Constants.MaxDesignationLength);
+        builder.Property(item => item.Designation).HasMaxLength(Constants.MaxPersonDesignationLength);
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxPersonNameLength);
         builder.Property(item => item.GivenName).HasMaxLength(Constants.MaxGivenNameLength);
         builder.Property(item => item.FamilyName).HasMaxLength(Constants.MaxFamilyNameLength);

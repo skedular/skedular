@@ -38,7 +38,7 @@ public class WorkspaceMemberConfiguration : IEntityTypeConfiguration<WorkspaceMe
     {
         builder.ConfigureEntityBaseWithDeleted();
         builder.Property(item => item.Email).HasMaxLength(Api.Shared.Constants.MaxEmailLength);
-        builder.Property(item => item.Designation).HasMaxLength(Api.Shared.Constants.MaxDesignationLength);
+        builder.Property(item => item.Designation).HasMaxLength(Api.Shared.Constants.MaxPersonDesignationLength);
         builder.Property(item => item.Name).HasMaxLength(Api.Shared.Constants.MaxPersonNameLength);
         builder.Property(item => item.GivenName).HasMaxLength(Api.Shared.Constants.MaxGivenNameLength);
         builder.Property(item => item.FamilyName).HasMaxLength(Api.Shared.Constants.MaxFamilyNameLength);

@@ -57,7 +57,7 @@ public class BillingOutboxPublisher(
                         applicationConfiguration.AppSource,
                         Type.OrganizationBillingInfoUpdated,
                         context.GetCorrelationId()),
-                    Data = new Data { OrganizationBillingInfo = mapper.MapTo(organization) }
+                    Data = new Data { OrganizationBillingContact = mapper.MapTo(organization) }
                 },
                 unitOfWork);
         }

@@ -6,4 +6,5 @@ option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Billing.V1.Key";
 message Key {
     string organizationId = 1;
     string organizationOfferingId = 2;
+    string customerId = 3;
 }

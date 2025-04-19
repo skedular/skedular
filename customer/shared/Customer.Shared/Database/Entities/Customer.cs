@@ -51,8 +51,8 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder.Property(item => item.Designation).HasMaxLength(Constants.MaxDesignationLength);
-        builder.Property(item => item.Title).HasMaxLength(Constants.MaxTitleLength);
+        builder.Property(item => item.Designation).HasMaxLength(Constants.MaxPersonDesignationLength);
+        builder.Property(item => item.Title).HasMaxLength(Constants.MaxPersonTitleLength);
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxPersonNameLength);
         builder.Property(item => item.GivenName).HasMaxLength(Constants.MaxGivenNameLength);
         builder.Property(item => item.MiddleName).HasMaxLength(Constants.MaxMiddleNameLength);

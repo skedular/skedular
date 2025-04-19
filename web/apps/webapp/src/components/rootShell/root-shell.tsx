@@ -197,9 +197,7 @@ const RootShell = ({
               </CardContent>
             </Card>
           )}
-          {!rootData.isOrganizationSsoTokenValid && !inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && (
-            <OrganizationOnboarding />
-          )}
+          {!rootData.isOrganizationSsoTokenValid && !inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && <OrganizationOnboarding />}
           {!rootData.isOrganizationSsoTokenValid && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />}
           {!rootData.isOrganizationSsoTokenValid && rootData.myOrganizations.length > 0 && <>{children}</>}
         </Box>
