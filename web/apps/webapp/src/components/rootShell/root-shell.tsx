@@ -63,7 +63,7 @@ const RootQuery = graphql`
       id
     }
 
-    organizationRequiresValidSsoToken(id: $organizationId) @include(if: $organizationExists)
+    isOrganizationSsoTokenValid(id: $organizationId) @include(if: $organizationExists)
     organization(id: $organizationId) @include(if: $organizationExists) {
       logoUrl
       name
@@ -180,7 +180,7 @@ const RootShell = ({
             showBreadcrumps={showBreadcrumps}
             breadcrumbs={breadcrumbs}
           />
-          {rootData.organizationRequiresValidSsoToken && (
+          {rootData.isOrganizationSsoTokenValid && (
             <Card sx={{ textAlign: 'center', backgroundColor: paletteMode === 'dark' ? emerald : coal }}>
               <CardContent>
                 <StackRow>
@@ -197,11 +197,11 @@ const RootShell = ({
               </CardContent>
             </Card>
           )}
-          {!rootData.organizationRequiresValidSsoToken && !inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && (
+          {!rootData.isOrganizationSsoTokenValid && !inMsTeams && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount === 0 && (
             <OrganizationOnboarding />
           )}
-          {!rootData.organizationRequiresValidSsoToken && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />}
-          {!rootData.organizationRequiresValidSsoToken && rootData.myOrganizations.length > 0 && <>{children}</>}
+          {!rootData.isOrganizationSsoTokenValid && rootData.myOrganizations.length === 0 && rootData.pendingInvitationsCount > 0 && <Notifications />}
+          {!rootData.isOrganizationSsoTokenValid && rootData.myOrganizations.length > 0 && <>{children}</>}
         </Box>
       </Box>
     </>

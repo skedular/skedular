@@ -79,7 +79,7 @@ public class Query(IMapper mapper)
         mapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken));
 
     [UseResolverScope]
-    public async Task<bool> OrganizationRequiresValidSsoTokenAsync(
+    public async Task<bool> IsOrganizationSsoTokenValidAsync(
         string id,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>

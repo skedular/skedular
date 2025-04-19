@@ -811,6 +811,7 @@ type Query {
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput!): OrganizationTagConnection! @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")
+  isOrganizationSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
   location(id: String!): LocationDetails @cost(weight: "10")
   locationAnalytics(from: DateTime! locationId: String! until: DateTime!): LocationAnalytics @cost(weight: "10")
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -842,7 +843,6 @@ type Query {
   organizationMemberVisibilityPolicies: [OrganizationMemberVisibilityPolicyDetails!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!]! @cost(weight: "10")
-  organizationRequiresValidSsoToken(id: String!): Boolean! @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): OrganizationConnection! @cost(weight: "10")
   organizationTypes: [OrganizationTypeDetails!]!

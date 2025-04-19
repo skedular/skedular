@@ -264,7 +264,7 @@ type Query {
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
-  organizationRequiresValidSsoToken(id: String!): Boolean! @cost(weight: "10")
+  isOrganizationSsoTokenValid(id: String!): Boolean! @cost(weight: "10")
   organization(id: String!): OrganizationDetails @cost(weight: "10")
   organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): OrganizationConnection! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")

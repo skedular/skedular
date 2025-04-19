@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<66031048545fa834646fbce56e0d4673>>
+ * @generated SignedSource<<9dea9b674cb540c40c043c3d680ddf1e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,6 +21,7 @@ export type rootShell_rootQuery$data = {
   readonly billingCustomerRecordSynced: boolean;
   readonly bookingCustomerRecordSynced: boolean;
   readonly isAzureTenantInstalled: boolean;
+  readonly isOrganizationSsoTokenValid?: boolean;
   readonly locationCustomerRecordSynced: boolean;
   readonly marketplaceCustomerRecordSynced: boolean;
   readonly me: {
@@ -36,7 +37,6 @@ export type rootShell_rootQuery$data = {
     readonly name: string;
   } | null | undefined;
   readonly organizationCustomerRecordSynced: boolean;
-  readonly organizationRequiresValidSsoToken?: boolean;
   readonly paymentCustomerRecordSynced: boolean;
   readonly pendingInvitationsCount: number;
   readonly slackCustomerRecordSynced: boolean;
@@ -174,7 +174,7 @@ v18 = {
   "alias": null,
   "args": (v17/*: any*/),
   "kind": "ScalarField",
-  "name": "organizationRequiresValidSsoToken",
+  "name": "isOrganizationSsoTokenValid",
   "storageKey": null
 },
 v19 = {
@@ -452,16 +452,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "85314deaf1e3aae984ae7b7a3df29ec3",
+    "cacheID": "43d434add20b845ae2a1cfe37f2a33a9",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  pendingInvitationsCount\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  organizationRequiresValidSsoToken(id: $organizationId) @include(if: $organizationExists)\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    logoUrl\n    name\n    id\n  }\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n  ...observability_query\n}\n\nfragment appBar_query on Query {\n  me {\n    id\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  pendingInvitationsCount\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenuContent_query on Query {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    type {\n      type\n    }\n    canModify\n    canViewAnalytics\n    activeOffering {\n      free\n      earlyBird\n      id\n    }\n  }\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mobileLeftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
+    "text": "query rootShell_rootQuery(\n  $organizationId: String!\n  $organizationExists: Boolean!\n) {\n  me {\n    id\n  }\n  myOrganizations {\n    id\n  }\n  billingCustomerRecordSynced\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  notificationCustomerRecordSynced\n  organizationCustomerRecordSynced\n  paymentCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  pendingInvitationsCount\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  isOrganizationSsoTokenValid(id: $organizationId) @include(if: $organizationExists)\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    logoUrl\n    name\n    id\n  }\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n  ...observability_query\n}\n\nfragment appBar_query on Query {\n  me {\n    id\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations {\n    id\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  pendingInvitationsCount\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenuContent_query on Query {\n  organization(id: $organizationId) @include(if: $organizationExists) {\n    id\n    type {\n      type\n    }\n    canModify\n    canViewAnalytics\n    activeOffering {\n      free\n      earlyBird\n      id\n    }\n  }\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mobileLeftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0b30b2d72553e3b7abad01375c908ae3";
+(node as any).hash = "6f992bebeea81ddd1688a78c03765795";
 
 export default node;
