@@ -11,6 +11,7 @@ public interface ICachedCustomerService
 {
     Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     Task<(Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
+    void CleanCache();
 }
 
 public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper mapper, IContext context, IMemoryCache memoryCache)
@@ -36,6 +37,14 @@ public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 
         return await GetByVerifiableTokenAsync(context.GetVerifiableToken(), cancellationToken);
+    }
+
+    public void CleanCache()
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        memoryCache.Remove($"customer-verifiabletoken-{verifiableToken}");
     }
 
     private async Task<(Customer, Shared.Database.Entities.Customer)> GetByVerifiableTokenAsync(

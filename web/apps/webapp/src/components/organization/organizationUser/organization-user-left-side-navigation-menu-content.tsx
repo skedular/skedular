@@ -1,6 +1,11 @@
 import { BodyIconTypography } from '@/components/commons';
-import { EditIcon, ProfileIcon } from '@/components/icons';
-import { getOrganizationUserManageBaseLink, getOrganizationUserManageTeamsBaseLink, getOrganizationUserProfileBaseLink } from '@/components/links';
+import { BillingAndPaymentIcon, EditIcon, ProfileIcon } from '@/components/icons';
+import {
+  getOrganizationUserBillingAndPaymentBaseLink,
+  getOrganizationUserManageBaseLink,
+  getOrganizationUserManageTeamsBaseLink,
+  getOrganizationUserProfileBaseLink,
+} from '@/components/links';
 import { PaletteModeContext } from '@/libs/providers';
 import {
   getSelectedListItemBorderRadius,
@@ -10,6 +15,7 @@ import {
   secondDrawerExpandedDrawerWidth,
   secondDrawerExpandedDrawerWidthPx,
 } from '@/libs/theme';
+import type { organizationUserLeftSideNavigationMenuContent_query$key } from '@/queries/__generated__/organizationUserLeftSideNavigationMenuContent_query.graphql';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -17,15 +23,28 @@ import ListItemButton from '@mui/material/ListItemButton';
 import NextLink from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext } from 'react';
+import { graphql, useFragment } from 'react-relay';
 
 type Props = {
+  rootDataRelay: organizationUserLeftSideNavigationMenuContent_query$key;
   organizationId: string;
   customerId: string;
   collapsed?: boolean;
   hideIcons?: boolean;
 };
 
-const OrganizationUserLeftSideNavigationMenuContent = ({ organizationId, customerId, collapsed, hideIcons }: Props) => {
+const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organizationId, customerId, collapsed, hideIcons }: Props) => {
+  const rootData = useFragment<organizationUserLeftSideNavigationMenuContent_query$key>(
+    graphql`
+      fragment organizationUserLeftSideNavigationMenuContent_query on Query {
+        me {
+          id
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
@@ -62,6 +81,7 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ organizationId, custome
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const porofileLink = getOrganizationUserProfileBaseLink(organizationId, customerId);
   const manageTeamsLink = getOrganizationUserManageTeamsBaseLink(organizationId, customerId);
+  const billingAndPaymentLink = getOrganizationUserBillingAndPaymentBaseLink(organizationId, customerId);
   const manageUserLink = getOrganizationUserManageBaseLink(organizationId, customerId);
 
   return (
@@ -113,6 +133,30 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ organizationId, custome
           </ListItemButton>
         </Link>
       </ListItem>
+
+      {customerId === rootData.me?.id && (
+        <ListItem disablePadding>
+          <Link component={NextLink} href={billingAndPaymentLink}>
+            <ListItemButton selected={fullPath === billingAndPaymentLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === billingAndPaymentLink) }}>
+              {collapsed && (
+                <BodyIconTypography
+                  startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
+                  invertDefaultColor={fullPath === billingAndPaymentLink && paletteMode === 'dark'}
+                />
+              )}
+              {!collapsed && (
+                <BodyIconTypography
+                  label="Billing & Payment"
+                  startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
+                  spacing={3}
+                  invertDefaultColor={fullPath === billingAndPaymentLink && paletteMode === 'dark'}
+                  noWrap
+                />
+              )}
+            </ListItemButton>
+          </Link>
+        </ListItem>
+      )}
 
       <ListItem disablePadding>
         <Link component={NextLink} href={manageUserLink}>

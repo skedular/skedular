@@ -32,7 +32,7 @@ public class Query(IMapper mapper)
         [Service] IOrganizationBillingService organizationBillingService,
         CancellationToken cancellationToken)
     {
-        var organization = await organizationBillingService.GetBillingInfoById(organizationId, cancellationToken);
+        var organization = await organizationBillingService.GetByOrganizationIdAsync(organizationId, cancellationToken);
         return mapper.MapTo(organization);
     }
 
@@ -41,7 +41,7 @@ public class Query(IMapper mapper)
         [Service] ICustomerBillingService customerBillingService,
         CancellationToken cancellationToken)
     {
-        var customer = await customerBillingService.GetMyBillingContact(cancellationToken);
+        var customer = await customerBillingService.GetMyBillingContactAsync(cancellationToken);
         return mapper.MapTo(customer);
     }
 }

@@ -107,25 +107,25 @@ const organizationSchema = object({
 });
 
 type OrganizationBillingDetails = {
-  billingEmail: string;
-  billingAddressLine1: string | null;
-  billingAddressLine2: string | null;
-  billingSuburb: string | null;
-  billingCity: string | null;
-  billingProvince: string | null;
-  billingZipcode: string | null;
-  billingCountry: string | null;
+  email: string;
+  addressLine1: string | null;
+  addressLine2: string | null;
+  suburb: string | null;
+  city: string | null;
+  province: string | null;
+  zipcode: string | null;
+  country: string | null;
 };
 
 const organizationBillingSchema = object({
-  billingEmail: string().email(({ value }) => `${value} is not a valid email`),
-  billingAddressLine1: string().nullable(),
-  billingAddressLine2: string().nullable(),
-  billingSuburb: string().nullable(),
-  billingCity: string().nullable(),
-  billingProvince: string().nullable(),
-  billingZipcode: string().nullable(),
-  billingCountry: string().nullable(),
+  email: string().email(({ value }) => `${value} is not a valid email`),
+  addressLine1: string().nullable(),
+  addressLine2: string().nullable(),
+  suburb: string().nullable(),
+  city: string().nullable(),
+  province: string().nullable(),
+  zipcode: string().nullable(),
+  country: string().nullable(),
 });
 
 type OrganziationSsoSettingsDetails = {
@@ -639,21 +639,12 @@ const OrganizationAdmin = ({
     });
   };
 
-  const handleOrganizationBillingDetailUpdateClick = ({
-    billingEmail,
-    billingAddressLine1,
-    billingAddressLine2,
-    billingSuburb,
-    billingCity,
-    billingProvince,
-    billingZipcode,
-    billingCountry,
-  }: OrganizationBillingDetails) => {
-    if (!rootData.organizationBillingContactDetails) {
+  const handleOrganizationBillingDetailUpdateClick = ({ email, addressLine1, addressLine2, suburb, city, province, zipcode, country }: OrganizationBillingDetails) => {
+    const billingDetails = rootData.organizationBillingContactDetails;
+    if (!billingDetails) {
       return;
     }
 
-    const organizationBillingContactDetails = rootData.organizationBillingContactDetails;
     const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing...`} />, infoNotificationOptions);
 
     commitUpdateOrganizationBillingContactDetails({
@@ -661,14 +652,14 @@ const OrganizationAdmin = ({
         input: {
           clientMutationId: nanoid(),
           organizationId: organization.id,
-          email: billingEmail,
-          addressLine1: billingAddressLine1,
-          addressLine2: billingAddressLine2,
-          suburb: billingSuburb,
-          city: billingCity,
-          province: billingProvince,
-          zipcode: billingZipcode,
-          country: billingCountry,
+          email,
+          addressLine1,
+          addressLine2,
+          suburb,
+          city,
+          province,
+          zipcode,
+          country,
         },
       },
       onCompleted: (_, errors) => {
@@ -695,15 +686,15 @@ const OrganizationAdmin = ({
       optimisticResponse: {
         updateOrganizationBillingContactDetails: {
           organizationBillingContactDetails: {
-            id: organizationBillingContactDetails.id,
-            email: billingEmail,
-            addressLine1: billingAddressLine1,
-            addressLine2: billingAddressLine2,
-            suburb: billingSuburb,
-            city: billingCity,
-            province: billingProvince,
-            zipcode: billingZipcode,
-            country: billingCountry,
+            id: billingDetails.id,
+            email,
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
           },
         },
       },
@@ -1575,15 +1566,16 @@ const OrganizationAdmin = ({
 
   const organization = rootData.organization;
 
-  const organizationBillingContactDetails = rootData.organizationBillingContactDetails;
-  const billingEmail = organizationBillingContactDetails.email ? organizationBillingContactDetails.email : '';
-  const billingAddressLine1 = organizationBillingContactDetails.addressLine1 ? organizationBillingContactDetails.addressLine1 : '';
-  const billingAddressLine2 = organizationBillingContactDetails.addressLine2 ? organizationBillingContactDetails.addressLine2 : '';
-  const billingSuburb = organizationBillingContactDetails.suburb ? organizationBillingContactDetails.suburb : '';
-  const billingCity = organizationBillingContactDetails.city ? organizationBillingContactDetails.city : '';
-  const billingProvince = organizationBillingContactDetails.province ? organizationBillingContactDetails.province : '';
-  const billingZipcode = organizationBillingContactDetails.zipcode ? organizationBillingContactDetails.zipcode : '';
-  const billingCountry = organizationBillingContactDetails.country ? organizationBillingContactDetails.country : '';
+  const billingContactDetails = rootData.organizationBillingContactDetails;
+  const email = billingContactDetails.email ? billingContactDetails.email : '';
+  const addressLine1 = billingContactDetails.addressLine1 ? billingContactDetails.addressLine1 : '';
+  const addressLine2 = billingContactDetails.addressLine2 ? billingContactDetails.addressLine2 : '';
+  const suburb = billingContactDetails.suburb ? billingContactDetails.suburb : '';
+  const city = billingContactDetails.city ? billingContactDetails.city : '';
+  const province = billingContactDetails.province ? billingContactDetails.province : '';
+  const zipcode = billingContactDetails.zipcode ? billingContactDetails.zipcode : '';
+  const country = billingContactDetails.country ? billingContactDetails.country : '';
+
   const paymentMethodExist =
     rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails && rootDataOrganizationPaymentMethodsDetails.organizationPaymentMethodsDetails.length > 0;
   const activeOffering = rootData.organization ? rootData.organization.activeOffering : null;
@@ -1671,14 +1663,14 @@ const OrganizationAdmin = ({
             <Form
               onSubmit={handleOrganizationBillingDetailUpdateClick}
               initialValues={{
-                billingEmail,
-                billingAddressLine1,
-                billingAddressLine2,
-                billingSuburb,
-                billingCity,
-                billingProvince,
-                billingZipcode,
-                billingCountry,
+                email,
+                addressLine1,
+                addressLine2,
+                suburb,
+                city,
+                province,
+                zipcode,
+                country,
               }}
               validate={validateOrganizationBilling}
               render={({ handleSubmit }) => (
@@ -1696,35 +1688,35 @@ const OrganizationAdmin = ({
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Email">
-                      <TextField name="billingEmail" required={requiredOrganizationBillingFields.billingEmail} helperText="Email to send invoice to" />
+                      <TextField name="email" required={requiredOrganizationBillingFields.email} helperText="Email to send invoice to" />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Address line 1">
-                      <TextField name="billingAddressLine1" required={requiredOrganizationBillingFields.billingAddressLine1} />
+                      <TextField name="addressLine1" required={requiredOrganizationBillingFields.addressLine1} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Address line 2">
-                      <TextField name="billingAddressLine2" required={requiredOrganizationBillingFields.billingAddressLine2} />
+                      <TextField name="addressLine2" required={requiredOrganizationBillingFields.addressLine2} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Suburb">
-                      <TextField name="billingSuburb" required={requiredOrganizationBillingFields.billingSuburb} />
+                      <TextField name="suburb" required={requiredOrganizationBillingFields.suburb} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="City">
-                      <TextField name="billingCity" required={requiredOrganizationBillingFields.billingCity} />
+                      <TextField name="city" required={requiredOrganizationBillingFields.city} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Province">
-                      <TextField name="billingProvince" required={requiredOrganizationBillingFields.billingProvince} />
+                      <TextField name="province" required={requiredOrganizationBillingFields.province} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Zipcode">
-                      <TextField name="billingZipcode" required={requiredOrganizationBillingFields.billingZipcode} />
+                      <TextField name="zipcode" required={requiredOrganizationBillingFields.zipcode} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Country">
-                      <SingleChoiceCountry name="billingCountry" required={requiredOrganizationBillingFields.billingCountry} />
+                      <SingleChoiceCountry name="country" required={requiredOrganizationBillingFields.country} />
                     </FormFieldLabel>
                   </StackColumn>
 

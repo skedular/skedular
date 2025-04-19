@@ -1,3 +1,4 @@
+using Api.Shared.Services.Grpc.Skedular.Billing.V1;
 using Api.Shared.Services.Models;
 using Billing.Api.GraphQL;
 using Billing.Shared.Models;
@@ -10,10 +11,10 @@ public interface IMapper
     OrganizationBillingContactDetails MapTo(Organization src);
     CustomerBillingContactDetails MapTo(Customer src);
     OrganizationBillingContactDetailsPayload MapTo(Organization src, string? clientMutationId);
-    CustomerBillingContactDetailsPayload MapTo(Customer src, string? clientMutationId);
+    MyBillingContactDetailsPayload MapTo(Customer src, string? clientMutationId);
     Customer MapTo(Shared.Database.Entities.Customer src);
     Organization MapTo(Shared.Database.Entities.Organization src);
-    global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationBillingInfo MapToGrpcResponse(Organization src);
+    OrganizationBillingInfo MapToGrpcResponse(Organization src);
 }
 
 public class Mapper : IMapper
@@ -36,6 +37,7 @@ public class Mapper : IMapper
         new()
         {
             Id = $"customer-billing-{src.Id}",
+            CompanyName = src.BillingContactCompanyName,
             Email = src.BillingContactEmail,
             AddressLine1 = src.BillingContactAddressLine1,
             AddressLine2 = src.BillingContactAddressLine2,
@@ -49,7 +51,7 @@ public class Mapper : IMapper
     public OrganizationBillingContactDetailsPayload MapTo(Organization src, string? clientMutationId) =>
         new() { ClientMutationId = clientMutationId, OrganizationBillingContactDetails = MapTo(src) };
 
-    public CustomerBillingContactDetailsPayload MapTo(Customer src, string? clientMutationId) =>
+    public MyBillingContactDetailsPayload MapTo(Customer src, string? clientMutationId) =>
         new() { ClientMutationId = clientMutationId, CustomerBillingContactDetails = MapTo(src) };
 
     public Customer MapTo(Shared.Database.Entities.Customer src) =>
@@ -64,6 +66,15 @@ public class Mapper : IMapper
             GivenName = src.GivenName,
             MiddleName = src.MiddleName,
             FamilyName = src.FamilyName,
+            BillingContactCompanyName = src.BillingContactCompanyName,
+            BillingContactEmail = src.BillingContactEmail,
+            BillingContactAddressLine1 = src.BillingContactAddressLine1,
+            BillingContactAddressLine2 = src.BillingContactAddressLine2,
+            BillingContactSuburb = src.BillingContactSuburb,
+            BillingContactCity = src.BillingContactCity,
+            BillingContactProvince = src.BillingContactProvince,
+            BillingContactZipcode = src.BillingContactZipcode,
+            BillingContactCountry = src.BillingContactCountry,
             Identities = MapTo(src.Identities).ToList()
         };
 
@@ -95,7 +106,7 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public global::Api.Shared.Services.Grpc.Skedular.Billing.V1.OrganizationBillingInfo MapToGrpcResponse(Organization src) =>
+    public OrganizationBillingInfo MapToGrpcResponse(Organization src) =>
         new()
         {
             Email = src.BillingContactEmail.ToSafeString(),

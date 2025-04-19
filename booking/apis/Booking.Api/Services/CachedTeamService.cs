@@ -8,7 +8,6 @@ namespace Booking.Api.Services;
 public interface ICachedTeamService
 {
     Task<Team> GetByIdAsync(string id, CancellationToken cancellationToken);
-    void CleanCache(string id);
 }
 
 public class CachedTeamService(IRepositoryFactory repositoryFactory, IMemoryCache memoryCache) : ICachedTeamService
@@ -36,12 +35,5 @@ public class CachedTeamService(IRepositoryFactory repositoryFactory, IMemoryCach
         }
 
         return team;
-    }
-
-    public void CleanCache(string id)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-
-        memoryCache.Remove($"team-id-{id}");
     }
 }

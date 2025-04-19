@@ -8,7 +8,7 @@ namespace Billing.Api.Services;
 
 public interface ICustomerBillingService
 {
-    Task<Customer> GetMyBillingContact(CancellationToken cancellationToken);
+    Task<Customer> GetMyBillingContactAsync(CancellationToken cancellationToken);
 
     Task<Customer> UpdateMyBillingInfoAsync(
         string? companyName,
@@ -31,7 +31,7 @@ public class CustomerBillingService(
     IBillingOutboxPublisher billingOutboxPublisher)
     : ICustomerBillingService
 {
-    public async Task<Customer> GetMyBillingContact(CancellationToken cancellationToken)
+    public async Task<Customer> GetMyBillingContactAsync(CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
 
@@ -69,6 +69,8 @@ public class CustomerBillingService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        cachedCustomerService.CleanCache();
 
         return customer;
     }

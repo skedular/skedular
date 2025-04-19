@@ -1,86 +1,86 @@
 ﻿schema {
-  query: Query
-  mutation: Mutation
+    query: Query
+    mutation: Mutation
 }
 
 type CustomerBillingContactDetails {
-  companyName: String
-  email: String
-  addressLine1: String
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String
-  country: String
-  id: ID!
-}
-
-type CustomerBillingContactDetailsPayload {
-  clientMutationId: String
-  customerBillingContactDetails: CustomerBillingContactDetails!
+    companyName: String
+    email: String
+    addressLine1: String
+    addressLine2: String
+    suburb: String
+    city: String
+    province: String
+    zipcode: String
+    country: String
+    id: ID!
 }
 
 type Mutation {
-  updateOrganizationBillingContactDetails(input: UpdateOrganizationBillingContactDetailsInput!): OrganizationBillingContactDetailsPayload @cost(weight: "10")
-  updateCustomerBillingContactDetails(input: UpdateCustomerBillingContactDetailsInput!): CustomerBillingContactDetailsPayload @cost(weight: "10")
+    updateOrganizationBillingContactDetails(input: UpdateOrganizationBillingContactDetailsInput!): OrganizationBillingContactDetailsPayload @cost(weight: "10")
+    updateMyBillingContactDetails(input: UpdateMyBillingContactDetailsInput!): MyBillingContactDetailsPayload @cost(weight: "10")
+}
+
+type MyBillingContactDetailsPayload {
+    clientMutationId: String
+    customerBillingContactDetails: CustomerBillingContactDetails!
 }
 
 type OrganizationBillingContactDetails {
-  email: String
-  addressLine1: String
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String
-  country: String
-  id: ID!
+    email: String
+    addressLine1: String
+    addressLine2: String
+    suburb: String
+    city: String
+    province: String
+    zipcode: String
+    country: String
+    id: ID!
 }
 
 type OrganizationBillingContactDetailsPayload {
-  clientMutationId: String
-  organizationBillingContactDetails: OrganizationBillingContactDetails!
+    clientMutationId: String
+    organizationBillingContactDetails: OrganizationBillingContactDetails!
 }
 
 type Query {
-  billingVersion: Version!
-  billingCustomerRecordSynced: Boolean! @cost(weight: "10")
-  organizationBillingContactDetails(organizationId: String!): OrganizationBillingContactDetails! @cost(weight: "10")
-  myBillingContactDetails: CustomerBillingContactDetails! @cost(weight: "10")
+    billingVersion: Version!
+    billingCustomerRecordSynced: Boolean! @cost(weight: "10")
+    organizationBillingContactDetails(organizationId: String!): OrganizationBillingContactDetails! @cost(weight: "10")
+    myBillingContactDetails: CustomerBillingContactDetails! @cost(weight: "10")
 }
 
 type Version {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
 }
 
-input UpdateCustomerBillingContactDetailsInput {
-  clientMutationId: String
-  companyName: String
-  email: String
-  addressLine1: String
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String
-  country: String
+input UpdateMyBillingContactDetailsInput {
+    clientMutationId: String
+    companyName: String
+    email: String
+    addressLine1: String
+    addressLine2: String
+    suburb: String
+    city: String
+    province: String
+    zipcode: String
+    country: String
 }
 
 input UpdateOrganizationBillingContactDetailsInput {
-  clientMutationId: String
-  organizationId: String!
-  email: String
-  addressLine1: String
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String
-  country: String
+    clientMutationId: String
+    organizationId: String!
+    email: String
+    addressLine1: String
+    addressLine2: String
+    suburb: String
+    city: String
+    province: String
+    zipcode: String
+    country: String
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

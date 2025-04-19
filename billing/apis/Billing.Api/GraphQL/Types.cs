@@ -45,8 +45,8 @@ public class UpdateOrganizationBillingContactDetailsInput
     [GraphQLName("country")] public string? Country { get; set; }
 }
 
-[GraphQLName("CustomerBillingContactDetailsPayload")]
-public class CustomerBillingContactDetailsPayload
+[GraphQLName("MyBillingContactDetailsPayload")]
+public class MyBillingContactDetailsPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
@@ -69,8 +69,8 @@ public class CustomerBillingContactDetails : Node
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
-[GraphQLName("UpdateCustomerBillingContactDetailsInput")]
-public class UpdateCustomerBillingContactDetailsInput
+[GraphQLName("UpdateMyBillingContactDetailsInput")]
+public class UpdateMyBillingContactDetailsInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("companyName")] public string? CompanyName { get; set; }

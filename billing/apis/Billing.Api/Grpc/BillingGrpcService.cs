@@ -42,7 +42,7 @@ public class BillingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(billingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await organizationBillingService.GetBillingInfoById(request.OrganizationId, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await organizationBillingService.GetByOrganizationIdAsync(request.OrganizationId, context.CancellationToken));
     }
 
     public override async Task<OrganizationBillingInfo> SetOrganizationBillingInfo(
@@ -52,7 +52,7 @@ public class BillingGrpcService(
         grpcAuthenticator.VerifyAndEnrich(billingConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(
-            await organizationBillingService.UpdateBillingInfoAsync(
+            await organizationBillingService.UpdateAsync(
                 request.OrganizationId,
                 request.Email,
                 request.AddressLine1,

@@ -10,9 +10,9 @@ namespace Billing.Api.Services;
 
 public interface IOrganizationBillingService
 {
-    Task<Organization> GetBillingInfoById(string organizationId, CancellationToken cancellationToken);
+    Task<Organization> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 
-    Task<Organization> UpdateBillingInfoAsync(
+    Task<Organization> UpdateAsync(
         string organizationId,
         string? email,
         string? addressLine1,
@@ -35,7 +35,7 @@ public class OrganizationBillingService(
     IBillingOutboxPublisher billingOutboxPublisher)
     : IOrganizationBillingService
 {
-    public async Task<Organization> GetBillingInfoById(string organizationId, CancellationToken cancellationToken)
+    public async Task<Organization> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, cancellationToken);
@@ -52,7 +52,7 @@ public class OrganizationBillingService(
         return mapper.MapTo(organization);
     }
 
-    public async Task<Organization> UpdateBillingInfoAsync(
+    public async Task<Organization> UpdateAsync(
         string organizationId,
         string? email,
         string? addressLine1,

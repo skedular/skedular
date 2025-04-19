@@ -60,6 +60,7 @@ export { default as CustomerIcon, default as ProfileIcon } from '@mui/icons-mate
 export { default as InviteMemberIcon } from '@mui/icons-material/PersonAdd';
 export { default as InvitePeopleIcon } from '@mui/icons-material/PersonAddAlt1';
 export { default as OpeningHoursIcon } from '@mui/icons-material/QueryBuilder';
+export { default as BillingIcon } from '@mui/icons-material/Receipt';
 export { default as RemoveIcon } from '@mui/icons-material/Remove';
 export { default as CustomOpeningHoursIcon } from '@mui/icons-material/Schedule';
 export { default as SearchRoundedIcon } from '@mui/icons-material/SearchRounded';

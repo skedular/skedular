@@ -14,7 +14,7 @@ public class Mutation(IMapper mapper)
         [Service] IOrganizationBillingService organizationBillingService,
         CancellationToken cancellationToken)
     {
-        var organization = await organizationBillingService.UpdateBillingInfoAsync(
+        var organization = await organizationBillingService.UpdateAsync(
             input.OrganizationId,
             input.Email,
             input.AddressLine1,
@@ -28,10 +28,10 @@ public class Mutation(IMapper mapper)
 
         return mapper.MapTo(organization, input.ClientMutationId);
     }
-    
+
     [UseResolverScope]
-    public async Task<CustomerBillingContactDetailsPayload?> UpdateCustomerBillingContactDetailsAsync(
-        UpdateCustomerBillingContactDetailsInput input,
+    public async Task<MyBillingContactDetailsPayload?> UpdateMyBillingContactDetailsAsync(
+        UpdateMyBillingContactDetailsInput input,
         [Service] ICustomerBillingService customerBillingService,
         CancellationToken cancellationToken)
     {
@@ -49,5 +49,4 @@ public class Mutation(IMapper mapper)
 
         return mapper.MapTo(customer, input.ClientMutationId);
     }
-
 }

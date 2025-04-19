@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<41d21cf7a4a6d8dc6615d0fd5ebf7e36>>
+ * @generated SignedSource<<aefe7ef5cddee0ce38688abe6c218e52>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -56,6 +56,18 @@ export type organizationUser_query$data = {
   readonly me: {
     readonly id: string;
   } | null | undefined;
+  readonly myBillingContactDetails: {
+    readonly addressLine1: string | null | undefined;
+    readonly addressLine2: string | null | undefined;
+    readonly city: string | null | undefined;
+    readonly companyName: string | null | undefined;
+    readonly country: string | null | undefined;
+    readonly email: string | null | undefined;
+    readonly id: string;
+    readonly province: string | null | undefined;
+    readonly suburb: string | null | undefined;
+    readonly zipcode: string | null | undefined;
+  };
   readonly organizationMembers: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -67,7 +79,7 @@ export type organizationUser_query$data = {
     }>;
     readonly totalCount: number | null | undefined;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"teamCard_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationUserLeftSideNavigationMenuContent_query" | "teamCard_query">;
   readonly " $fragmentType": "organizationUser_query";
 };
 export type organizationUser_query$key = {
@@ -87,38 +99,45 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "photoUrl",
+  "name": "email",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "photoUrl",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "givenName",
+  "name": "name",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "middleName",
+  "name": "givenName",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "familyName",
+  "name": "middleName",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "familyName",
+  "storageKey": null
+},
+v7 = {
   "fields": [
     {
       "kind": "Variable",
@@ -134,21 +153,21 @@ v6 = {
   "kind": "ObjectValue",
   "name": "where"
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "uniqueId",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -227,14 +246,8 @@ return {
       "plural": false,
       "selections": [
         (v0/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "email",
-          "storageKey": null
-        },
         (v1/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -249,10 +262,10 @@ return {
           "name": "title",
           "storageKey": null
         },
-        (v2/*: any*/),
         (v3/*: any*/),
         (v4/*: any*/),
         (v5/*: any*/),
+        (v6/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -278,14 +291,14 @@ return {
           "name": "orderBy",
           "variableName": "teamsSortingValues"
         },
-        (v6/*: any*/)
+        (v7/*: any*/)
       ],
       "concreteType": "TeamConnection",
       "kind": "LinkedField",
       "name": "__organizationUser_customerTeams_connection",
       "plural": false,
       "selections": [
-        (v7/*: any*/),
+        (v8/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -303,7 +316,7 @@ return {
               "plural": false,
               "selections": [
                 (v0/*: any*/),
-                (v2/*: any*/),
+                (v3/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -312,7 +325,7 @@ return {
                   "name": "organization",
                   "plural": false,
                   "selections": [
-                    (v8/*: any*/)
+                    (v9/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -332,7 +345,7 @@ return {
                       "name": "organizationMember",
                       "plural": false,
                       "selections": [
-                        (v8/*: any*/),
+                        (v9/*: any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -341,12 +354,12 @@ return {
                           "name": "customer",
                           "plural": false,
                           "selections": [
-                            (v8/*: any*/),
-                            (v3/*: any*/),
+                            (v9/*: any*/),
                             (v4/*: any*/),
                             (v5/*: any*/),
-                            (v2/*: any*/),
-                            (v1/*: any*/)
+                            (v6/*: any*/),
+                            (v3/*: any*/),
+                            (v2/*: any*/)
                           ],
                           "storageKey": null
                         }
@@ -406,21 +419,21 @@ return {
           ],
           "storageKey": null
         },
-        (v9/*: any*/)
+        (v10/*: any*/)
       ],
       "storageKey": null
     },
     {
       "alias": null,
       "args": [
-        (v6/*: any*/)
+        (v7/*: any*/)
       ],
       "concreteType": "OrganizationMemberConnection",
       "kind": "LinkedField",
       "name": "organizationMembers",
       "plural": false,
       "selections": [
-        (v7/*: any*/),
+        (v8/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -458,7 +471,76 @@ return {
           ],
           "storageKey": null
         },
-        (v9/*: any*/)
+        (v10/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CustomerBillingContactDetails",
+      "kind": "LinkedField",
+      "name": "myBillingContactDetails",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "companyName",
+          "storageKey": null
+        },
+        (v1/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "addressLine1",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "addressLine2",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "suburb",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "city",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "province",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "zipcode",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "country",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -466,6 +548,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "teamCard_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "organizationUserLeftSideNavigationMenuContent_query"
     }
   ],
   "type": "Query",
@@ -473,6 +560,6 @@ return {
 };
 })();
 
-(node as any).hash = "5ea5bcc32e6b5938ec7cfae4e6b07cdd";
+(node as any).hash = "e90b4b86b826ccdbff0af5ef526964d4";
 
 export default node;
