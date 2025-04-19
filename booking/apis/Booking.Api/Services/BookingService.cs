@@ -48,7 +48,6 @@ public class BookingService(
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-
         if (!string.IsNullOrWhiteSpace(booking.Id))
         {
             var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
@@ -754,7 +753,13 @@ public class BookingService(
         ICollection<Resource> resources,
         CancellationToken cancellationToken)
     {
-        if (booking.Organization is not null && booking.Location is not null && booking.Team is not null && booking.Resources.Count != 0)
+        if (booking.Resources.Count != 0)
+        {
+            // Only use default values if given booking has no attachment to any of the resources available through default values
+            return (organization, location, team, resources);
+        }
+
+        if (booking.Organization is not null && (booking.Location is not null || booking.Team is not null))
         {
             // Only use default values if given booking has no attachment to any of the resources available through default values
             return (organization, location, team, resources);

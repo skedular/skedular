@@ -14,12 +14,12 @@ import {
 } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { CustomTagIcon, LocationIcon, ZoneIcon } from '@/components/icons';
-import { infoNotificationOptions, NotificationContent } from '@/components/notification';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DefaultSelect } from '@/components/styled';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, UpdateGlobalReloadIdContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { isMidnight, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
+import { getCustomerFullName, isMidnight, joinErrors, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { bookProduct_addBookingMutation } from '@/queries/__generated__/bookProduct_addBookingMutation.graphql';
 import type { bookProduct_availableResources_query$key } from '@/queries/__generated__/bookProduct_availableResources_query.graphql';
 import type { bookProduct_availableResources_refetchableFragment } from '@/queries/__generated__/bookProduct_availableResources_refetchableFragment.graphql';
@@ -46,6 +46,7 @@ type Props = {
   rootDataRelay: bookProduct_query$key;
   rootDataAvailableResourcesRelay: bookProduct_availableResources_query$key;
   onReloadRequired?: () => void;
+  connectionIds: string[];
   organizationId: string;
   defaultDate?: Dayjs;
 };
@@ -97,7 +98,7 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
-const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDate }: Props) => {
+const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectionIds, organizationId, defaultDate }: Props) => {
   const rootData = useFragment<bookProduct_query$key>(
     graphql`
       fragment bookProduct_query on Query {
@@ -125,6 +126,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
           recurrenceWindowDays
           requireConsecutiveDays
           maxBookingSpreadDays
+          latestProductVersionId
         }
         openingHoursMinutesStep
       }
@@ -168,7 +170,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
           id
           from
           until
-          notes
           type
           customer {
             uniqueId
@@ -179,14 +180,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
             photoUrl
           }
           organization {
-            uniqueId
-            name
-          }
-          location {
-            uniqueId
-            name
-          }
-          team {
             uniqueId
             name
           }
@@ -414,7 +407,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
     router.back();
   };
 
-  const handleAddClick = ({ date }: BookingDetails) => {
+  const handleAddClick = ({ date, quantity, resources: resourceIds }: BookingDetails) => {
     if (!rootData.me) {
       return;
     }
@@ -433,6 +426,88 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, defaultDa
     const customerId = rootData.me?.id;
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
     const type = 'WorkingFromOffice';
+
+    commitAddBooking({
+      variables: {
+        connectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          id,
+          customerId,
+          from,
+          until,
+          organizationId,
+          resourceIds,
+          type,
+          productVersionIds: Array(quantity).fill(product.latestProductVersionId),
+        },
+      },
+      onCompleted: (response, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        const booking = response.addBooking?.booking!;
+        let message = `Booking made for ${getCustomerFullName(booking.customer)} to work`;
+
+        if (booking.resources.length > 0) {
+          message += ` at resource "${booking.resources.map(({ name }) => name).join(', ')}"`;
+
+          const zones = booking.resources.flatMap(({ zones }) => zones);
+          if (zones.length > 0) {
+            const uniqueZones = Array.from(zones.reduce((map, zone) => map.set(zone.uniqueId, zone), new Map()).values());
+
+            message += ` in "${uniqueZones.map(({ name }) => name).join(', ')}"`;
+          }
+        }
+
+        message += ` on ${toShortDate(booking.from)}.`;
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={message} />,
+        });
+
+        UpdateGlobalReloadId();
+        router.back();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        addBooking: {
+          booking: {
+            id,
+            from,
+            until,
+            type,
+            customer: {
+              uniqueId: rootData.me.id,
+              name: '',
+              givenName: '',
+              middleName: '',
+              familyName: '',
+              photoUrl: '',
+            },
+            organization: organizationId
+              ? {
+                  uniqueId: organizationId,
+                  name: '',
+                }
+              : null,
+            resources: [],
+          },
+        },
+      },
+    });
   };
 
   const handleLocationChanged = (event: SelectChangeEvent<unknown>) => {

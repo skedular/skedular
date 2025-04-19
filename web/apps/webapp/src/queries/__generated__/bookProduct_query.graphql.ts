@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ab0c71befa75ef5c37ca7f1324f72d97>>
+ * @generated SignedSource<<6d463d1681ad9c21b906470633ea7566>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,6 +26,7 @@ export type bookProduct_query$data = {
     readonly currencyToDisplay: string;
     readonly description: string | null | undefined;
     readonly id: string;
+    readonly latestProductVersionId: string;
     readonly maxBookingSpreadDays: number | null | undefined;
     readonly maxDurationMinutes: number | null | undefined;
     readonly minDurationMinutes: number | null | undefined;
@@ -199,6 +200,13 @@ return {
           "kind": "ScalarField",
           "name": "maxBookingSpreadDays",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "latestProductVersionId",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -216,6 +224,6 @@ return {
 };
 })();
 
-(node as any).hash = "6ee2acaee4d9499c6e439dd6de1245ee";
+(node as any).hash = "12dbf5be71fd525ddb9d3a5d08fbc3f2";
 
 export default node;

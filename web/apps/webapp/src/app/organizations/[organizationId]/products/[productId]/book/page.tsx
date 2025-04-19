@@ -67,7 +67,7 @@ const OrganizationProductBookPage = ({ queryReference, onReloadRequired, organiz
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <BookProduct rootDataRelay={rootData} rootDataAvailableResourcesRelay={rootData} onReloadRequired={onReloadRequired} organizationId={organizationId} />
+      <BookProduct rootDataRelay={rootData} rootDataAvailableResourcesRelay={rootData} onReloadRequired={onReloadRequired} connectionIds={[]} organizationId={organizationId} />
     </RootShell>
   );
 };

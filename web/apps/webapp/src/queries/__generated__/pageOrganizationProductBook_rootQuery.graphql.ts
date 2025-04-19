@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<884a5b5370b5a3d2656c815cb7d29ea2>>
+ * @generated SignedSource<<5562238879c3171ea34965e64a7e485c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -245,6 +245,13 @@ return {
             "kind": "ScalarField",
             "name": "maxBookingSpreadDays",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "latestProductVersionId",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -344,12 +351,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "beb850669d2f81042c0ed608b12c2c0e",
+    "cacheID": "36af0aafb9e77a2ea47dddfce4fbfd57",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProductBook_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationId: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    location {\n      uniqueId\n      name\n    }\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currencyToDisplay\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n  }\n  openingHoursMinutesStep\n}\n"
+    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationId: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationId: $organizationId, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    uniqueId\n    name\n    location {\n      uniqueId\n      name\n    }\n    customTags {\n      uniqueId\n      name\n      color\n    }\n    zones {\n      uniqueId\n      name\n      color\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currencyToDisplay\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    latestProductVersionId\n  }\n  openingHoursMinutesStep\n}\n"
   }
 };
 })();

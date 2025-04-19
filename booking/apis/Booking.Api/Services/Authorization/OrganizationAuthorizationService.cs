@@ -37,10 +37,12 @@ public class OrganizationAuthorizationService(ICachedCustomerService cachedCusto
         };
 
     public bool CanAddBooking(Organization organization, Customer customer) =>
+        organization.Type == OrganizationTypeConstants.Marketplace ||
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+            or OrganizationMemberRoleConstants.Member
         };
 
     public bool CanUpdateBooking(Organization organization, Customer customer) =>

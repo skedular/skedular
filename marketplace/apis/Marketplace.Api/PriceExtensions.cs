@@ -15,8 +15,8 @@ public static class PriceExtensions
     public static string ToCurrencyToDisplay(this Currency currency) =>
         currency switch
         {
-            Currency.Nzd => "NZ",
-            Currency.Usd => "US",
+            Currency.Nzd => "NZ$",
+            Currency.Usd => "US$",
             _ => throw new ArgumentOutOfRangeException()
         };
 

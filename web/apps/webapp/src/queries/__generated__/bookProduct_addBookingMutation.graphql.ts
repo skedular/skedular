@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f95ea847e82b1a433fa686db7e2475a9>>
+ * @generated SignedSource<<0b7103fdcad2dc985a5353ba3b883a2e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,11 +41,6 @@ export type bookProduct_addBookingMutation$data = {
       };
       readonly from: any;
       readonly id: string;
-      readonly location: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
-      readonly notes: string | null | undefined;
       readonly organization: {
         readonly name: string;
         readonly uniqueId: string;
@@ -65,10 +60,6 @@ export type bookProduct_addBookingMutation$data = {
           readonly uniqueId: string;
         }>;
       }>;
-      readonly team: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly type: BookingType;
       readonly until: any;
     };
@@ -87,11 +78,6 @@ export type bookProduct_addBookingMutation$rawResponse = {
       };
       readonly from: any;
       readonly id: string;
-      readonly location: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
-      readonly notes: string | null | undefined;
       readonly organization: {
         readonly name: string;
         readonly uniqueId: string;
@@ -111,10 +97,6 @@ export type bookProduct_addBookingMutation$rawResponse = {
           readonly uniqueId: string;
         }>;
       }>;
-      readonly team: {
-        readonly name: string;
-        readonly uniqueId: string;
-      } | null | undefined;
       readonly type: BookingType;
       readonly until: any;
     };
@@ -160,23 +142,19 @@ v3 = {
   "name": "name",
   "storageKey": null
 },
-v4 = [
-  (v2/*: any*/),
-  (v3/*: any*/)
-],
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v6 = [
+v5 = [
   (v2/*: any*/),
   (v3/*: any*/),
-  (v5/*: any*/)
+  (v4/*: any*/)
 ],
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingDetails",
@@ -203,13 +181,6 @@ v7 = {
       "args": null,
       "kind": "ScalarField",
       "name": "until",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "notes",
       "storageKey": null
     },
     {
@@ -267,27 +238,10 @@ v7 = {
       "kind": "LinkedField",
       "name": "organization",
       "plural": false,
-      "selections": (v4/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Booking_LocationDetails",
-      "kind": "LinkedField",
-      "name": "location",
-      "plural": false,
-      "selections": (v4/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Booking_TeamDetails",
-      "kind": "LinkedField",
-      "name": "team",
-      "plural": false,
-      "selections": (v4/*: any*/),
+      "selections": [
+        (v2/*: any*/),
+        (v3/*: any*/)
+      ],
       "storageKey": null
     },
     {
@@ -300,7 +254,7 @@ v7 = {
       "selections": [
         (v2/*: any*/),
         (v3/*: any*/),
-        (v5/*: any*/),
+        (v4/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -308,7 +262,7 @@ v7 = {
           "kind": "LinkedField",
           "name": "customTags",
           "plural": true,
-          "selections": (v6/*: any*/),
+          "selections": (v5/*: any*/),
           "storageKey": null
         },
         {
@@ -318,7 +272,7 @@ v7 = {
           "kind": "LinkedField",
           "name": "zones",
           "plural": true,
-          "selections": (v6/*: any*/),
+          "selections": (v5/*: any*/),
           "storageKey": null
         }
       ],
@@ -342,7 +296,7 @@ return {
         "name": "addBooking",
         "plural": false,
         "selections": [
-          (v7/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
@@ -364,7 +318,7 @@ return {
         "name": "addBooking",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -392,16 +346,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e92c60afac575d2cd8d78ddb4d9f3088",
+    "cacheID": "10f15f59d4ffafcbce0a56bb194d88b8",
     "id": null,
     "metadata": {},
     "name": "bookProduct_addBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      location {\n        uniqueId\n        name\n      }\n      team {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      type\n      customer {\n        uniqueId\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      organization {\n        uniqueId\n        name\n      }\n      resources {\n        uniqueId\n        name\n        color\n        customTags {\n          uniqueId\n          name\n          color\n        }\n        zones {\n          uniqueId\n          name\n          color\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ec06f5f185371581c7e1597804b770e8";
+(node as any).hash = "923456a17be2595f886761e105080c5e";
 
 export default node;
