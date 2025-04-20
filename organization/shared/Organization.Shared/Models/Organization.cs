@@ -16,7 +16,7 @@ public class Organization : ModelBaseWithDeleted
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
 
-    public Address? PhysicalAddress { get; set; }
+    public Address PhysicalAddress { get; set; }
 
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public TermsOfUse? TermsOfUse { get; set; }

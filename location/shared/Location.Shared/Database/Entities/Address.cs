@@ -9,14 +9,13 @@ namespace Location.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Address : EntityBase
 {
-    public string? FormattedAddress { get; set; }
-    public string? AddressLine1 { get; set; }
+    public string AddressLine1 { get; set; }
     public string? AddressLine2 { get; set; }
-    public string? Suburb { get; set; }
-    public string? City { get; set; }
+    public string Suburb { get; set; }
+    public string City { get; set; }
     public string? Province { get; set; }
-    public string? Zipcode { get; set; }
-    public string? Country { get; set; }
+    public string Zipcode { get; set; }
+    public string Country { get; set; }
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
 
@@ -30,7 +29,6 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
     {
         builder.ConfigureEntityBase();
 
-        builder.Property(item => item.FormattedAddress).HasMaxLength(Constants.MaxFormattedAddressLength);
         builder.Property(item => item.AddressLine1).HasMaxLength(Constants.MaxAddressLineLength);
         builder.Property(item => item.AddressLine2).HasMaxLength(Constants.MaxAddressLineLength);
         builder.Property(item => item.Suburb).HasMaxLength(Constants.MaxSuburbLength);

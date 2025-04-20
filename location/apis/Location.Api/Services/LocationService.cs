@@ -109,12 +109,10 @@ public class LocationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var locationEntity = mapper.MapTo(location, organization, organizationTags);
-        var physicalAddress = location.PhysicalAddress is null ? null : mapper.MapTo(location.PhysicalAddress, locationEntity);
-        if (physicalAddress is not null)
-        {
-            physicalAddress.Id = randomHelper.Generate();
-            _ = repositoryFactory.AddressRepository.Add(physicalAddress);
-        }
+
+        var physicalAddress = mapper.MapTo(location.PhysicalAddress, locationEntity);
+        physicalAddress.Id = randomHelper.Generate();
+        _ = repositoryFactory.AddressRepository.Add(physicalAddress);
 
         locationEntity.OpeningHours = OpeningHours.Default;
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
@@ -282,18 +280,14 @@ public class LocationService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        Address? physicalAddress = null;
-        if (location.PhysicalAddress is null && existingLocation.PhysicalAddress is not null)
-        {
-            repositoryFactory.AddressRepository.Remove(existingLocation.PhysicalAddress);
-        }
-        else if (location.PhysicalAddress is not null && existingLocation.PhysicalAddress is null)
+        Address physicalAddress;
+        if (existingLocation.PhysicalAddress is null)
         {
             physicalAddress = mapper.MapTo(location.PhysicalAddress, existingLocation);
             physicalAddress.Id = randomHelper.Generate();
             repositoryFactory.AddressRepository.Add(physicalAddress);
         }
-        else if (location.PhysicalAddress is not null && existingLocation.PhysicalAddress is not null)
+        else
         {
             physicalAddress = mapper.MergeToEntity(location.PhysicalAddress, existingLocation.PhysicalAddress, existingLocation);
             repositoryFactory.AddressRepository.Update(physicalAddress);

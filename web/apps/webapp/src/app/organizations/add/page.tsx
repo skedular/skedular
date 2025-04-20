@@ -1,5 +1,6 @@
 'use client';
 
+import { getOrganizationBaseLink } from '@/components/links';
 import { AddOrganization } from '@/components/organization/addOrganization';
 import { RootShell } from '@/components/rootShell';
 import { useRouter } from 'next/navigation';
@@ -8,8 +9,8 @@ import { memo } from 'react';
 const AddOrganizationPage = () => {
   const router = useRouter();
 
-  const handleAdded = () => {
-    router.back();
+  const handleAdded = (id: string) => {
+    router.push(getOrganizationBaseLink(id));
   };
 
   const handleCancelled = () => {

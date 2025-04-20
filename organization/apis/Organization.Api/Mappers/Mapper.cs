@@ -47,7 +47,7 @@ public interface IMapper
         Shared.Models.Organization src,
         Shared.Database.Entities.Organization dest,
         ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories,
-        Address? physicalAddress);
+        Address physicalAddress);
 
     Shared.Models.TermsOfUse? MapTo(TermsOfUse? src);
     Customer? MapTo(Shared.Database.Entities.Customer? src);
@@ -219,7 +219,7 @@ public class Mapper : IMapper
         Shared.Models.Organization src,
         Shared.Database.Entities.Organization dest,
         ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories,
-        Address? physicalAddress)
+        Address physicalAddress)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -741,7 +741,6 @@ public class Mapper : IMapper
 
     public Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Organization organization)
     {
-        dest.FormattedAddress = src.FormattedAddress;
         dest.AddressLine1 = src.AddressLine1;
         dest.AddressLine2 = src.AddressLine2;
         dest.Suburb = src.Suburb;
@@ -1164,13 +1163,12 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private static Shared.Models.Address? MapTo(Address? src, Shared.Models.Organization organization) =>
+    private static Shared.Models.Address MapTo(Address? src, Shared.Models.Organization organization) =>
         src is null
-            ? null
+            ? new Shared.Models.Address()
             : new Shared.Models.Address
             {
                 Id = src.Id,
-                FormattedAddress = src.FormattedAddress,
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,
@@ -1183,12 +1181,9 @@ public class Mapper : IMapper
                 Organization = organization
             };
 
-    private static Shared.Models.Address? MapTo(AddressDetails? src, Shared.Models.Organization organization) =>
-        src is null
-            ? null
-            : new Shared.Models.Address
+    private static Shared.Models.Address MapTo(AddressDetailsInput src, Shared.Models.Organization organization) =>
+            new()
             {
-                FormattedAddress = src.FormattedAddress,
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,
@@ -1199,18 +1194,16 @@ public class Mapper : IMapper
                 Organization = organization
             };
 
-    private static AddressDetails? MapToGraphQl(Shared.Models.Address? src) =>
-        src is null
-            ? null
-            : new AddressDetails
-            {
-                FormattedAddress = src.FormattedAddress,
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country
-            };
+    private static AddressDetails MapToGraphQl(Shared.Models.Address src) =>
+        new()
+        {
+            FormattedAddress = src.FormattedAddress,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country
+        };
 }

@@ -6,6 +6,9 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Marketplace.Shared.Models;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+// ReSharper disable ClassNeverInstantiated.Global
+
 namespace Marketplace.Api.GraphQL;
 
 [GraphQLName("CurrencyDetails")]

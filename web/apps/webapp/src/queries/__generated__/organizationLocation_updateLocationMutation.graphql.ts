@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9088a1922cc24fd020b943d2dffd5816>>
+ * @generated SignedSource<<cd9fae82c1a1660e1298a48d20979c54>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,18 +15,17 @@ export type UpdateLocationInput = {
   id: string;
   locationTagIds: ReadonlyArray<string>;
   name: string;
-  physicalAddress?: LocationAddressDetailsInput | null | undefined;
+  physicalAddress: LocationAddressDetailsInput;
   timezone?: string | null | undefined;
 };
 export type LocationAddressDetailsInput = {
-  addressLine1?: string | null | undefined;
+  addressLine1: string;
   addressLine2?: string | null | undefined;
-  city?: string | null | undefined;
-  country?: string | null | undefined;
-  formattedAddress?: string | null | undefined;
+  city: string;
+  country: string;
   province?: string | null | undefined;
-  suburb?: string | null | undefined;
-  zipcode?: string | null | undefined;
+  suburb: string;
+  zipcode: string;
 };
 export type organizationLocation_updateLocationMutation$variables = {
   input: UpdateLocationInput;
@@ -89,8 +88,14 @@ export type organizationLocation_updateLocationMutation$data = {
         };
       };
       readonly physicalAddress: {
-        readonly formattedAddress: string | null | undefined;
-      } | null | undefined;
+        readonly addressLine1: string;
+        readonly addressLine2: string | null | undefined;
+        readonly city: string;
+        readonly country: string;
+        readonly province: string | null | undefined;
+        readonly suburb: string;
+        readonly zipcode: string;
+      };
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -153,8 +158,14 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
         };
       };
       readonly physicalAddress: {
-        readonly formattedAddress: string | null | undefined;
-      } | null | undefined;
+        readonly addressLine1: string;
+        readonly addressLine2: string | null | undefined;
+        readonly city: string;
+        readonly country: string;
+        readonly province: string | null | undefined;
+        readonly suburb: string;
+        readonly zipcode: string;
+      };
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -267,7 +278,49 @@ v3 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "formattedAddress",
+                "name": "addressLine1",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "addressLine2",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "suburb",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "city",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "province",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "zipcode",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "country",
                 "storageKey": null
               }
             ],
@@ -416,16 +469,16 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "9eb01dcb5f9975ef9a4e8bb8c5803550",
+    "cacheID": "aeed19523c20b341dabd31055bb09bda",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        formattedAddress\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2b540befcd9df6646bead55987d80403";
+(node as any).hash = "0916c4f1f774f82e352ee8eef5a64a04";
 
 export default node;

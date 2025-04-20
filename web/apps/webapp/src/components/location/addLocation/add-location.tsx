@@ -1,5 +1,5 @@
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
-import { SingleChoinceTimezone } from '@/components/forms';
+import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
@@ -48,16 +48,28 @@ type LocationDetails = {
   name: string;
   about: string | null;
   timezone: string;
-  physicalAddress: string | null;
   locationTagIds: string[];
+  addressLine1: string;
+  addressLine2: string | null;
+  suburb: string;
+  city: string;
+  province: string | null;
+  zipcode: string;
+  country: string;
 };
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
-  physicalAddress: string().nullable(),
   locationTagIds: array().nullable(),
+  addressLine1: string().required('Address line 1 is required'),
+  addressLine2: string().nullable(),
+  suburb: string().required('Suburb is required'),
+  city: string().required('City is required'),
+  province: string().nullable(),
+  zipcode: string().required('Zipcode is required'),
+  country: string().required('Country is required'),
 });
 
 const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded, onCancel, addLabel, showDismiss }: Props) => {
@@ -72,7 +84,13 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
           about
           timezone
           physicalAddress {
-            formattedAddress
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
           }
           locationTags {
             uniqueId
@@ -115,7 +133,7 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
     });
   };
 
-  const handleLocationAddClick = ({ name, about, timezone, physicalAddress, locationTagIds }: LocationDetails) => {
+  const handleLocationAddClick = ({ name, about, timezone, addressLine1, addressLine2, suburb, city, province, zipcode, country, locationTagIds }: LocationDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
 
@@ -129,7 +147,13 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
           organizationId,
           timezone,
           physicalAddress: {
-            formattedAddress: physicalAddress,
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
           },
           locationTagIds,
         },
@@ -188,7 +212,13 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
             about,
             timezone,
             physicalAddress: {
-              formattedAddress: physicalAddress,
+              addressLine1,
+              addressLine2,
+              suburb,
+              city,
+              province,
+              zipcode,
+              country,
             },
             locationTags: [],
           },
@@ -207,8 +237,14 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
               name: '',
               about: '',
               timezone: '',
-              physicalAddress: '',
               locationTagIds: [],
+              addressLine1: '',
+              addressLine2: '',
+              suburb: '',
+              city: '',
+              province: '',
+              zipcode: '',
+              country: '',
             }}
             validate={validateLocationDetails}
             render={({ handleSubmit }) => (
@@ -232,15 +268,43 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
                     <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
                   </FormFieldLabel>
 
-                  <FormFieldLabel label="Physical Address">
-                    <TextField name="physicalAddress" required={requiredFields.physicalAddress} multiline rows={5} />
-                  </FormFieldLabel>
-
                   {rootData.organization?.type.type === 'Marketplace' && (
                     <FormFieldLabel label="Location Tags">
                       <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
                     </FormFieldLabel>
                   )}
+
+                  <SectionIconTypography label="Address" />
+                  <BodyIconTypography label="Edit your location address" />
+                  <Divider />
+
+                  <FormFieldLabel label="Address Line 1">
+                    <TextField name="addressLine1" required={requiredFields.addressLine1} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Address Line 2">
+                    <TextField name="addressLine2" required={requiredFields.addressLine2} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Suburb">
+                    <TextField name="suburb" required={requiredFields.suburb} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="City">
+                    <TextField name="city" required={requiredFields.city} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Province">
+                    <TextField name="province" required={requiredFields.province} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Zipcode">
+                    <TextField name="zipcode" required={requiredFields.zipcode} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Country">
+                    <SingleChoiceCountry name="country" required={requiredFields.country} />
+                  </FormFieldLabel>
                 </StackColumn>
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>

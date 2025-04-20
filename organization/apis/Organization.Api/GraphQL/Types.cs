@@ -6,6 +6,7 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Organization.Shared.Models;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 // ReSharper disable ClassNeverInstantiated.Global
 
 namespace Organization.Api.GraphQL;
@@ -43,7 +44,26 @@ public class AddOrganizationInput
     [GraphQLName("industrySubCategoryIds")]
     public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
 
-    [GraphQLName("physicalAddress")] public AddressDetails? PhysicalAddress { get; set; }
+    [GraphQLName("physicalAddress")] public AddressDetailsInput PhysicalAddress { get; set; }
+}
+
+[GraphQLName("UpdateOrganizationInput")]
+public class UpdateOrganizationInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("about")] public string? About { get; set; }
+    [GraphQLName("website")] public string? Website { get; set; }
+    [GraphQLName("type")] public OrganizationType Type { get; set; }
+
+    [GraphQLName("memberVisibilityPolicy")]
+    public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
+
+    [GraphQLName("industrySubCategoryIds")]
+    public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
+
+    [GraphQLName("physicalAddress")] public AddressDetailsInput PhysicalAddress { get; set; }
 }
 
 [GraphQLName("CancelInvitationToJoinOrganizationInput")]
@@ -172,7 +192,7 @@ public class OrganizationDetails : Node
     [GraphQLName("industrySubCategories")]
     public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> IndustrySubCategories { get; set; } = [];
 
-    [GraphQLName("physicalAddress")] public AddressDetails? PhysicalAddress { get; set; }
+    [GraphQLName("physicalAddress")] public AddressDetails PhysicalAddress { get; set; }
 
     [GraphQLName("availableOfferings")] public IEnumerable<OrganizationOfferingDetails> AvailableOfferings { get; set; } = [];
     [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; }
@@ -307,25 +327,6 @@ public class RejectInvitationToJoinOrganizationInput
 public class RejectInvitationToJoinOrganizationPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-}
-
-[GraphQLName("UpdateOrganizationInput")]
-public class UpdateOrganizationInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("website")] public string? Website { get; set; }
-    [GraphQLName("type")] public OrganizationType Type { get; set; }
-
-    [GraphQLName("memberVisibilityPolicy")]
-    public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
-
-    [GraphQLName("industrySubCategoryIds")]
-    public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
-
-    [GraphQLName("physicalAddress")] public AddressDetails? PhysicalAddress { get; set; }
 }
 
 [GraphQLName("UpdateOrganizationOfferingInput")]
@@ -651,11 +652,23 @@ public class LocationTagOrganizationTagWhereInput
 public class AddressDetails
 {
     [GraphQLName("formattedAddress")] public string? FormattedAddress { get; set; }
-    [GraphQLName("addressLine1")] public string? AddressLine1 { get; set; }
+    [GraphQLName("addressLine1")] public required string AddressLine1 { get; set; }
     [GraphQLName("addressLine2")] public string? AddressLine2 { get; set; }
-    [GraphQLName("suburb")] public string? Suburb { get; set; }
-    [GraphQLName("city")] public string? City { get; set; }
+    [GraphQLName("suburb")] public required string Suburb { get; set; }
+    [GraphQLName("city")] public required string City { get; set; }
     [GraphQLName("province")] public string? Province { get; set; }
-    [GraphQLName("zipcode")] public string? Zipcode { get; set; }
-    [GraphQLName("country")] public string? Country { get; set; }
+    [GraphQLName("zipcode")] public required string Zipcode { get; set; }
+    [GraphQLName("country")] public required string Country { get; set; }
+}
+
+[GraphQLName("OrganizationAddressDetailsInput")]
+public class AddressDetailsInput
+{
+    [GraphQLName("addressLine1")] public required string AddressLine1 { get; set; }
+    [GraphQLName("addressLine2")] public string? AddressLine2 { get; set; }
+    [GraphQLName("suburb")] public required string Suburb { get; set; }
+    [GraphQLName("city")] public required string City { get; set; }
+    [GraphQLName("province")] public string? Province { get; set; }
+    [GraphQLName("zipcode")] public required string Zipcode { get; set; }
+    [GraphQLName("country")] public required string Country { get; set; }
 }

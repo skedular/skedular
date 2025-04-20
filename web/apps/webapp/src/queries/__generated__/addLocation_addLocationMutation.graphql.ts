@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<176601f95d708bc6bb0d3c1e78dfbf3e>>
+ * @generated SignedSource<<c3801d987c474550eb30049d7c13dd7c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,18 +16,17 @@ export type AddLocationInput = {
   locationTagIds: ReadonlyArray<string>;
   name: string;
   organizationId: string;
-  physicalAddress?: LocationAddressDetailsInput | null | undefined;
+  physicalAddress: LocationAddressDetailsInput;
   timezone?: string | null | undefined;
 };
 export type LocationAddressDetailsInput = {
-  addressLine1?: string | null | undefined;
+  addressLine1: string;
   addressLine2?: string | null | undefined;
-  city?: string | null | undefined;
-  country?: string | null | undefined;
-  formattedAddress?: string | null | undefined;
+  city: string;
+  country: string;
   province?: string | null | undefined;
-  suburb?: string | null | undefined;
-  zipcode?: string | null | undefined;
+  suburb: string;
+  zipcode: string;
 };
 export type addLocation_addLocationMutation$variables = {
   input: AddLocationInput;
@@ -44,8 +43,14 @@ export type addLocation_addLocationMutation$data = {
       }>;
       readonly name: string;
       readonly physicalAddress: {
-        readonly formattedAddress: string | null | undefined;
-      } | null | undefined;
+        readonly addressLine1: string;
+        readonly addressLine2: string | null | undefined;
+        readonly city: string;
+        readonly country: string;
+        readonly province: string | null | undefined;
+        readonly suburb: string;
+        readonly zipcode: string;
+      };
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -62,8 +67,14 @@ export type addLocation_addLocationMutation$rawResponse = {
       }>;
       readonly name: string;
       readonly physicalAddress: {
-        readonly formattedAddress: string | null | undefined;
-      } | null | undefined;
+        readonly addressLine1: string;
+        readonly addressLine2: string | null | undefined;
+        readonly city: string;
+        readonly country: string;
+        readonly province: string | null | undefined;
+        readonly suburb: string;
+        readonly zipcode: string;
+      };
       readonly timezone: string | null | undefined;
     };
   } | null | undefined;
@@ -146,7 +157,49 @@ v2 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "formattedAddress",
+                "name": "addressLine1",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "addressLine2",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "suburb",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "city",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "province",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "zipcode",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "country",
                 "storageKey": null
               }
             ],
@@ -203,16 +256,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "403b145808e05e0a5735bfc2c9846a47",
+    "cacheID": "2907b46b07a82f83b2dbfdf81318df20",
     "id": null,
     "metadata": {},
     "name": "addLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        formattedAddress\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n      locationTags {\n        uniqueId\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "35a4b1987e4ef49ff75eec5242f93628";
+(node as any).hash = "5f27e762f85d4274dd05d4e60261ea37";
 
 export default node;

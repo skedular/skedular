@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9cd2c5948c49b83eee8f4913e1b2167e>>
+ * @generated SignedSource<<7323eadc0c19cf1993e0c52e5fe87492>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,8 +68,14 @@ export type organizationLocation_query$data = {
       };
     };
     readonly physicalAddress: {
-      readonly formattedAddress: string | null | undefined;
-    } | null | undefined;
+      readonly addressLine1: string;
+      readonly addressLine2: string | null | undefined;
+      readonly city: string;
+      readonly country: string;
+      readonly province: string | null | undefined;
+      readonly suburb: string;
+      readonly zipcode: string;
+    };
     readonly timezone: string | null | undefined;
   } | null | undefined;
   readonly me: {
@@ -260,7 +266,49 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "formattedAddress",
+              "name": "addressLine1",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "addressLine2",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "suburb",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "city",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "province",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "zipcode",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "country",
               "storageKey": null
             }
           ],
@@ -414,6 +462,6 @@ return {
 };
 })();
 
-(node as any).hash = "8405503920333354fc354339e679e2a8";
+(node as any).hash = "052f9b0cd121faf86dc247f2c37a1326";
 
 export default node;

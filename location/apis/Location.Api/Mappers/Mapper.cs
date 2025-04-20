@@ -41,7 +41,7 @@ public interface IMapper
     Shared.Database.Entities.Location MergeTo(
         Shared.Models.Location src,
         Shared.Database.Entities.Location dest,
-        Address? physicalAddress,
+        Address physicalAddress,
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags);
 
     Shared.Models.Resource MapTo(Resource src);
@@ -158,7 +158,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Location MergeTo(
         Shared.Models.Location src,
         Shared.Database.Entities.Location dest,
-        Address? physicalAddress,
+        Address physicalAddress,
         ICollection<Shared.Database.Entities.OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
@@ -310,7 +310,6 @@ public class Mapper : IMapper
 
     public Address MergeToEntity(Shared.Models.Address src, Address dest, Shared.Database.Entities.Location location)
     {
-        dest.FormattedAddress = src.FormattedAddress;
         dest.AddressLine1 = src.AddressLine1;
         dest.AddressLine2 = src.AddressLine2;
         dest.Suburb = src.Suburb;
@@ -529,21 +528,18 @@ public class Mapper : IMapper
             Color = src.Color
         };
 
-    private static Shared.Models.Address? MapTo(AddressDetails? src, Shared.Models.Location location) =>
-        src is null
-            ? null
-            : new Shared.Models.Address
-            {
-                FormattedAddress = src.FormattedAddress,
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country,
-                Location = location
-            };
+    private static Shared.Models.Address MapTo(AddressDetailsInput src, Shared.Models.Location location) =>
+        new()
+        {
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country,
+            Location = location
+        };
 
     private static OrganizationCustomTag MapToGrpcResponseOrganizationCustomTag(OrganizationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
@@ -697,28 +693,25 @@ public class Mapper : IMapper
         return new Edge<Shared.Models.Resource>(resource, src.Cursor);
     }
 
-    private static AddressDetails? MapToGraphQl(Shared.Models.Address? src) =>
-        src is null
-            ? null
-            : new AddressDetails
-            {
-                FormattedAddress = src.FormattedAddress,
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country
-            };
+    private static AddressDetails MapToGraphQl(Shared.Models.Address src) =>
+        new()
+        {
+            FormattedAddress = src.FormattedAddress,
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country
+        };
 
-    private static Shared.Models.Address? MapTo(Address? src, Shared.Models.Location location) =>
+    private static Shared.Models.Address MapTo(Address? src, Shared.Models.Location location) =>
         src is null
-            ? null
+            ? new Shared.Models.Address()
             : new Shared.Models.Address
             {
                 Id = src.Id,
-                FormattedAddress = src.FormattedAddress,
                 AddressLine1 = src.AddressLine1,
                 AddressLine2 = src.AddressLine2,
                 Suburb = src.Suburb,

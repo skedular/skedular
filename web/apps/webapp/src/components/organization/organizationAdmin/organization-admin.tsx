@@ -95,6 +95,13 @@ type OrganizationDetails = {
   type: string;
   memberVisibilityPolicy: string;
   industrySubCategoryIds: string[];
+  addressLine1: string;
+  addressLine2: string | null;
+  suburb: string;
+  city: string;
+  province: string | null;
+  zipcode: string;
+  country: string;
 };
 
 const organizationSchema = object({
@@ -104,6 +111,13 @@ const organizationSchema = object({
   type: string().required('Organization type is required'),
   memberVisibilityPolicy: string().required('Member visibility policy is required'),
   industrySubCategoryIds: array().nullable(),
+  addressLine1: string().required('Address line 1 is required'),
+  addressLine2: string().nullable(),
+  suburb: string().required('Suburb is required'),
+  city: string().required('City is required'),
+  province: string().nullable(),
+  zipcode: string().required('Zipcode is required'),
+  country: string().required('Country is required'),
 });
 
 type OrganizationBillingDetails = {
@@ -192,6 +206,15 @@ const OrganizationAdmin = ({
           industrySubCategories {
             id
             name
+          }
+          physicalAddress {
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
           }
           hasAttachedPaymentMethod
           activeOffering {
@@ -332,6 +355,15 @@ const OrganizationAdmin = ({
           industrySubCategories {
             id
             name
+          }
+          physicalAddress {
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
           }
         }
       }
@@ -571,7 +603,21 @@ const OrganizationAdmin = ({
     });
   }, [refetchOrganizationPaymentMethodsDetails]);
 
-  const handleOrganizationDetailUpdateClick = ({ name, about, website, type, memberVisibilityPolicy, industrySubCategoryIds }: OrganizationDetails) => {
+  const handleOrganizationDetailUpdateClick = ({
+    name,
+    about,
+    website,
+    type,
+    memberVisibilityPolicy,
+    industrySubCategoryIds,
+    addressLine1,
+    addressLine2,
+    suburb,
+    city,
+    province,
+    zipcode,
+    country,
+  }: OrganizationDetails) => {
     if (!rootData.organization) {
       return;
     }
@@ -591,6 +637,15 @@ const OrganizationAdmin = ({
           type: type as OrganizationType,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
           memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
+          physicalAddress: {
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
+          },
         },
       },
       onCompleted: (_, errors) => {
@@ -633,6 +688,15 @@ const OrganizationAdmin = ({
               .flatMap((mainCategory) => mainCategory.subCategories)
               .filter(({ id }) => selectedIndustrySubCategoryIds.find((selectedIndustrySubCategoryId) => selectedIndustrySubCategoryId === id))
               .map(({ id, name }) => ({ id, name })),
+            physicalAddress: {
+              addressLine1,
+              addressLine2,
+              suburb,
+              city,
+              province,
+              zipcode,
+              country,
+            },
           },
         },
       },
@@ -1600,6 +1664,13 @@ const OrganizationAdmin = ({
                 type: organization.type.type,
                 memberVisibilityPolicy: organization.memberVisibilityPolicy.type,
                 industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
+                addressLine1: organization.physicalAddress.addressLine1,
+                addressLine2: organization.physicalAddress.addressLine2,
+                suburb: organization.physicalAddress.suburb,
+                city: organization.physicalAddress.city,
+                province: organization.physicalAddress.province,
+                zipcode: organization.physicalAddress.zipcode,
+                country: organization.physicalAddress.country,
               }}
               validate={validateOrganizationDetails}
               render={({ handleSubmit }) => (
@@ -1646,6 +1717,38 @@ const OrganizationAdmin = ({
                         name="industrySubCategoryIds"
                         required={requiredOrganizationDetailsFields.industrySubCategoryIds}
                       />
+                    </FormFieldLabel>
+
+                    <SectionIconTypography label="Address" />
+                    <BodyIconTypography label="Edit your organization address" />
+                    <Divider />
+
+                    <FormFieldLabel label="Address Line 1">
+                      <TextField name="addressLine1" required={requiredOrganizationDetailsFields.addressLine1} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Address Line 2">
+                      <TextField name="addressLine2" required={requiredOrganizationDetailsFields.addressLine2} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Suburb">
+                      <TextField name="suburb" required={requiredOrganizationDetailsFields.suburb} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="City">
+                      <TextField name="city" required={requiredOrganizationDetailsFields.city} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Province">
+                      <TextField name="province" required={requiredOrganizationDetailsFields.province} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Zipcode">
+                      <TextField name="zipcode" required={requiredOrganizationDetailsFields.zipcode} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Country">
+                      <SingleChoiceCountry name="country" required={requiredOrganizationDetailsFields.country} />
                     </FormFieldLabel>
                   </StackColumn>
 

@@ -60,13 +60,13 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "bWVzdGFtcBI6ChNvcGVuaW5nSG91cnNEZXRhaWxzGAIgASgLMh0ubG9jYXRp",
             "b24uT3BlbmluZ0hvdXJzRGV0YWlscyJWChNPcGVuaW5nSG91cnNEZXRhaWxz",
             "Eg4KBmNsb3NlZBgBIAEoCBISCgpvcGVuQWxsRGF5GAIgASgIEgwKBGZyb20Y",
-            "AyABKAkSDQoFdW50aWwYBCABKAkirQEKB0FkZHJlc3MSCgoCaWQYASABKAkS",
-            "GAoQZm9ybWF0dGVkQWRkcmVzcxgCIAEoCRIUCgxhZGRyZXNzTGluZTEYAyAB",
-            "KAkSFAoMYWRkcmVzc0xpbmUyGAQgASgJEg4KBnN1YnVyYhgFIAEoCRIMCgRj",
-            "aXR5GAYgASgJEhAKCHByb3ZpbmNlGAcgASgJEg8KB3ppcGNvZGUYCCABKAkS",
-            "DwoHY291bnRyeRgJIAEoCSoxCgRUeXBlEhQKEExvY2F0aW9uVXBzZXJ0ZWQQ",
-            "ABITCg9Mb2NhdGlvbkRlbGV0ZWQQAUI3qgI0QXBpLlNoYXJlZC5DbGllbnRz",
-            "LkV2ZW50cy5Ta2VkdWxhci5Mb2NhdGlvbi5WMS5WYWx1ZWIGcHJvdG8z"));
+            "AyABKAkSDQoFdW50aWwYBCABKAkikwEKB0FkZHJlc3MSCgoCaWQYASABKAkS",
+            "FAoMYWRkcmVzc0xpbmUxGAIgASgJEhQKDGFkZHJlc3NMaW5lMhgDIAEoCRIO",
+            "CgZzdWJ1cmIYBCABKAkSDAoEY2l0eRgFIAEoCRIQCghwcm92aW5jZRgGIAEo",
+            "CRIPCgd6aXBjb2RlGAcgASgJEg8KB2NvdW50cnkYCCABKAkqMQoEVHlwZRIU",
+            "ChBMb2NhdGlvblVwc2VydGVkEAASEwoPTG9jYXRpb25EZWxldGVkEAFCN6oC",
+            "NEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuTG9jYXRpb24u",
+            "VjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -79,7 +79,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.WeekOpeningHours.Parser, new[]{ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.VariedDateOpeningHours.Parser, new[]{ "Date", "OpeningHoursDetails" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails.Parser, new[]{ "Closed", "OpenAllDay", "From", "Until" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Address), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Address.Parser, new[]{ "Id", "FormattedAddress", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Address), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Address.Parser, new[]{ "Id", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country" }, null, null, null, null)
           }));
     }
     #endregion
@@ -3348,7 +3348,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Address(Address other) : this() {
       id_ = other.id_;
-      formattedAddress_ = other.formattedAddress_;
       addressLine1_ = other.addressLine1_;
       addressLine2_ = other.addressLine2_;
       suburb_ = other.suburb_;
@@ -3377,20 +3376,8 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "formattedAddress" field.</summary>
-    public const int FormattedAddressFieldNumber = 2;
-    private string formattedAddress_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string FormattedAddress {
-      get { return formattedAddress_; }
-      set {
-        formattedAddress_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "addressLine1" field.</summary>
-    public const int AddressLine1FieldNumber = 3;
+    public const int AddressLine1FieldNumber = 2;
     private string addressLine1_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3402,7 +3389,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     }
 
     /// <summary>Field number for the "addressLine2" field.</summary>
-    public const int AddressLine2FieldNumber = 4;
+    public const int AddressLine2FieldNumber = 3;
     private string addressLine2_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3414,7 +3401,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     }
 
     /// <summary>Field number for the "suburb" field.</summary>
-    public const int SuburbFieldNumber = 5;
+    public const int SuburbFieldNumber = 4;
     private string suburb_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3426,7 +3413,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     }
 
     /// <summary>Field number for the "city" field.</summary>
-    public const int CityFieldNumber = 6;
+    public const int CityFieldNumber = 5;
     private string city_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3438,7 +3425,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     }
 
     /// <summary>Field number for the "province" field.</summary>
-    public const int ProvinceFieldNumber = 7;
+    public const int ProvinceFieldNumber = 6;
     private string province_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3450,7 +3437,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     }
 
     /// <summary>Field number for the "zipcode" field.</summary>
-    public const int ZipcodeFieldNumber = 8;
+    public const int ZipcodeFieldNumber = 7;
     private string zipcode_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3462,7 +3449,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     }
 
     /// <summary>Field number for the "country" field.</summary>
-    public const int CountryFieldNumber = 9;
+    public const int CountryFieldNumber = 8;
     private string country_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3489,7 +3476,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         return true;
       }
       if (Id != other.Id) return false;
-      if (FormattedAddress != other.FormattedAddress) return false;
       if (AddressLine1 != other.AddressLine1) return false;
       if (AddressLine2 != other.AddressLine2) return false;
       if (Suburb != other.Suburb) return false;
@@ -3505,7 +3491,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (FormattedAddress.Length != 0) hash ^= FormattedAddress.GetHashCode();
       if (AddressLine1.Length != 0) hash ^= AddressLine1.GetHashCode();
       if (AddressLine2.Length != 0) hash ^= AddressLine2.GetHashCode();
       if (Suburb.Length != 0) hash ^= Suburb.GetHashCode();
@@ -3535,36 +3520,32 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (FormattedAddress.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(FormattedAddress);
-      }
       if (AddressLine1.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteString(AddressLine1);
       }
       if (AddressLine2.Length != 0) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(26);
         output.WriteString(AddressLine2);
       }
       if (Suburb.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(34);
         output.WriteString(Suburb);
       }
       if (City.Length != 0) {
-        output.WriteRawTag(50);
+        output.WriteRawTag(42);
         output.WriteString(City);
       }
       if (Province.Length != 0) {
-        output.WriteRawTag(58);
+        output.WriteRawTag(50);
         output.WriteString(Province);
       }
       if (Zipcode.Length != 0) {
-        output.WriteRawTag(66);
+        output.WriteRawTag(58);
         output.WriteString(Zipcode);
       }
       if (Country.Length != 0) {
-        output.WriteRawTag(74);
+        output.WriteRawTag(66);
         output.WriteString(Country);
       }
       if (_unknownFields != null) {
@@ -3581,36 +3562,32 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (FormattedAddress.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(FormattedAddress);
-      }
       if (AddressLine1.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(18);
         output.WriteString(AddressLine1);
       }
       if (AddressLine2.Length != 0) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(26);
         output.WriteString(AddressLine2);
       }
       if (Suburb.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(34);
         output.WriteString(Suburb);
       }
       if (City.Length != 0) {
-        output.WriteRawTag(50);
+        output.WriteRawTag(42);
         output.WriteString(City);
       }
       if (Province.Length != 0) {
-        output.WriteRawTag(58);
+        output.WriteRawTag(50);
         output.WriteString(Province);
       }
       if (Zipcode.Length != 0) {
-        output.WriteRawTag(66);
+        output.WriteRawTag(58);
         output.WriteString(Zipcode);
       }
       if (Country.Length != 0) {
-        output.WriteRawTag(74);
+        output.WriteRawTag(66);
         output.WriteString(Country);
       }
       if (_unknownFields != null) {
@@ -3625,9 +3602,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       int size = 0;
       if (Id.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (FormattedAddress.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(FormattedAddress);
       }
       if (AddressLine1.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AddressLine1);
@@ -3664,9 +3638,6 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
       if (other.Id.Length != 0) {
         Id = other.Id;
-      }
-      if (other.FormattedAddress.Length != 0) {
-        FormattedAddress = other.FormattedAddress;
       }
       if (other.AddressLine1.Length != 0) {
         AddressLine1 = other.AddressLine1;
@@ -3713,34 +3684,30 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 18: {
-            FormattedAddress = input.ReadString();
-            break;
-          }
-          case 26: {
             AddressLine1 = input.ReadString();
             break;
           }
-          case 34: {
+          case 26: {
             AddressLine2 = input.ReadString();
             break;
           }
-          case 42: {
+          case 34: {
             Suburb = input.ReadString();
             break;
           }
-          case 50: {
+          case 42: {
             City = input.ReadString();
             break;
           }
-          case 58: {
+          case 50: {
             Province = input.ReadString();
             break;
           }
-          case 66: {
+          case 58: {
             Zipcode = input.ReadString();
             break;
           }
-          case 74: {
+          case 66: {
             Country = input.ReadString();
             break;
           }
@@ -3768,34 +3735,30 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             break;
           }
           case 18: {
-            FormattedAddress = input.ReadString();
-            break;
-          }
-          case 26: {
             AddressLine1 = input.ReadString();
             break;
           }
-          case 34: {
+          case 26: {
             AddressLine2 = input.ReadString();
             break;
           }
-          case 42: {
+          case 34: {
             Suburb = input.ReadString();
             break;
           }
-          case 50: {
+          case 42: {
             City = input.ReadString();
             break;
           }
-          case 58: {
+          case 50: {
             Province = input.ReadString();
             break;
           }
-          case 66: {
+          case 58: {
             Zipcode = input.ReadString();
             break;
           }
-          case 74: {
+          case 66: {
             Country = input.ReadString();
             break;
           }

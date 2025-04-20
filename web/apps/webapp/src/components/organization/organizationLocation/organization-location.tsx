@@ -11,7 +11,7 @@ import {
   StackRow,
 } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
-import { SingleChoinceTimezone } from '@/components/forms';
+import { SingleChoiceCountry, SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -70,16 +70,28 @@ type LocationDetails = {
   name: string;
   about: string | null;
   timezone: string;
-  physicalAddress: string;
   locationTagIds: string[];
+  addressLine1: string;
+  addressLine2: string | null;
+  suburb: string;
+  city: string;
+  province: string | null;
+  zipcode: string;
+  country: string;
 };
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
-  physicalAddress: string().nullable(),
   locationTagIds: array().nullable(),
+  addressLine1: string().required('Address line 1 is required'),
+  addressLine2: string().nullable(),
+  suburb: string().required('Suburb is required'),
+  city: string().required('City is required'),
+  province: string().nullable(),
+  zipcode: string().required('Zipcode is required'),
+  country: string().required('Country is required'),
 });
 
 type ResourceTypeDetails = {
@@ -145,7 +157,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           about
           timezone
           physicalAddress {
-            formattedAddress
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
           }
           locationTags {
             uniqueId
@@ -266,7 +284,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           about
           timezone
           physicalAddress {
-            formattedAddress
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
           }
           locationTags {
             uniqueId
@@ -449,7 +473,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           about
           timezone
           physicalAddress {
-            formattedAddress
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
           }
           locationTags {
             uniqueId
@@ -515,7 +545,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const validateLocationDetails = makeValidate(locationSchema);
-  const requiredLocationDetailsFields = makeRequired(locationSchema);
+  const requiredFields = makeRequired(locationSchema);
 
   const [resourceNameSearchText, setResourceNameSearchText] = useState<string>('');
   const [resourceCustomTagIds, setResourceCustomTagIds] = useState<string[]>([]);
@@ -573,7 +603,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
     [refetchResources],
   );
 
-  const handleLocationDetailUpdateClick = ({ name, about, timezone, physicalAddress, locationTagIds }: LocationDetails) => {
+  const handleLocationDetailUpdateClick = ({ name, about, timezone, addressLine1, addressLine2, suburb, city, province, zipcode, country, locationTagIds }: LocationDetails) => {
     const location = rootData.location;
     if (!location) {
       return;
@@ -590,7 +620,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
           about,
           timezone,
           physicalAddress: {
-            formattedAddress: physicalAddress,
+            addressLine1,
+            addressLine2,
+            suburb,
+            city,
+            province,
+            zipcode,
+            country,
           },
           locationTagIds,
         },
@@ -624,7 +660,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
             about,
             timezone,
             physicalAddress: {
-              formattedAddress: physicalAddress,
+              addressLine1,
+              addressLine2,
+              suburb,
+              city,
+              province,
+              zipcode,
+              country,
             },
             locationTags: location.locationTags,
             openingHours: location.openingHours,
@@ -1259,8 +1301,14 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                 name: location.name,
                 about: location.about,
                 timezone: location.timezone ?? '',
-                physicalAddress: location.physicalAddress?.formattedAddress,
                 locationTagIds: location.locationTags.map((item) => item.uniqueId),
+                addressLine1: location.physicalAddress.addressLine1,
+                addressLine2: location.physicalAddress.addressLine2,
+                suburb: location.physicalAddress.suburb,
+                city: location.physicalAddress.city,
+                province: location.physicalAddress.province,
+                zipcode: location.physicalAddress.zipcode,
+                country: location.physicalAddress.country,
               }}
               validate={validateLocationDetails}
               render={({ handleSubmit }) => (
@@ -1288,31 +1336,54 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredLocationDetailsFields.name} />
+                      <TextField name="name" required={requiredFields.name} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="About">
-                      <TextField name="about" required={requiredLocationDetailsFields.about} multiline rows={3} />
+                      <TextField name="about" required={requiredFields.about} multiline rows={3} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Timezone">
-                      <SingleChoinceTimezone name="timezone" required={requiredLocationDetailsFields.timezone} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Physical Address">
-                      <TextField name="physicalAddress" required={requiredLocationDetailsFields.physicalAddress} multiline rows={5} />
+                      <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
                     </FormFieldLabel>
 
                     {rootData.organization?.type.type === 'Marketplace' && (
                       <FormFieldLabel label="Location Tags">
-                        <MultipleChoicesLocationTags
-                          rootDataRelay={rootData}
-                          name="locationTagIds"
-                          required={requiredLocationDetailsFields.locationTagIds}
-                          organizationId={organizationId}
-                        />
+                        <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
                       </FormFieldLabel>
                     )}
+
+                    <SectionIconTypography label="Address" />
+                    <BodyIconTypography label="Edit your location address" />
+                    <Divider />
+
+                    <FormFieldLabel label="Address Line 1">
+                      <TextField name="addressLine1" required={requiredFields.addressLine1} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Address Line 2">
+                      <TextField name="addressLine2" required={requiredFields.addressLine2} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Suburb">
+                      <TextField name="suburb" required={requiredFields.suburb} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="City">
+                      <TextField name="city" required={requiredFields.city} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Province">
+                      <TextField name="province" required={requiredFields.province} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Zipcode">
+                      <TextField name="zipcode" required={requiredFields.zipcode} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Country">
+                      <SingleChoiceCountry name="country" required={requiredFields.country} />
+                    </FormFieldLabel>
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>

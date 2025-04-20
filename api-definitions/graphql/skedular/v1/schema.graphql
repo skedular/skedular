@@ -273,14 +273,14 @@ type InviteCustomersToJoinTeamPayload {
 }
 
 type LocationAddressDetails {
-  addressLine1: String
+  addressLine1: String!
   addressLine2: String
-  city: String
-  country: String
+  city: String!
+  country: String!
   formattedAddress: String
   province: String
-  suburb: String
-  zipcode: String
+  suburb: String!
+  zipcode: String!
 }
 
 type LocationAnalytics {
@@ -314,7 +314,7 @@ type LocationDetails {
   name: String!
   openingHours: OpeningHours!
   organization: Location_OrganizationDetails!
-  physicalAddress: LocationAddressDetails
+  physicalAddress: LocationAddressDetails!
   resources: [ResourceDetails!]!
   resourceTypes: [Location_OrganizationTagDetails!]!
   roomCapacity: Int!
@@ -535,14 +535,14 @@ type OrganizationActiveOfferingDetails {
 }
 
 type OrganizationAddressDetails {
-  addressLine1: String
+  addressLine1: String!
   addressLine2: String
-  city: String
-  country: String
+  city: String!
+  country: String!
   formattedAddress: String
   province: String
-  suburb: String
-  zipcode: String
+  suburb: String!
+  zipcode: String!
 }
 
 type OrganizationAnalytics {
@@ -629,7 +629,7 @@ type OrganizationDetails {
   members: [OrganizationMemberDetails!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   name: String!
-  physicalAddress: OrganizationAddressDetails
+  physicalAddress: OrganizationAddressDetails!
   resourceTypes: [OrganizationTagDetails!]!
   ssoSettings: OrganizationSsoSettingsDetails
   termsOfUse: OrganizationTermsOfUse
@@ -1174,7 +1174,7 @@ input AddLocationInput {
   locationTagIds: [String!]!
   name: String!
   organizationId: String!
-  physicalAddress: LocationAddressDetailsInput
+  physicalAddress: LocationAddressDetailsInput!
   timezone: String
 }
 
@@ -1195,7 +1195,7 @@ input AddOrganizationInput {
   industrySubCategoryIds: [String!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
-  physicalAddress: OrganizationAddressDetailsInput
+  physicalAddress: OrganizationAddressDetailsInput!
   termsOfUseId: String!
   type: OrganizationType!
   website: String
@@ -1512,14 +1512,13 @@ input InviteCustomersToJoinTeamInput {
 }
 
 input LocationAddressDetailsInput {
-  addressLine1: String
+  addressLine1: String!
   addressLine2: String
-  city: String
-  country: String
-  formattedAddress: String
+  city: String!
+  country: String!
   province: String
-  suburb: String
-  zipcode: String
+  suburb: String!
+  zipcode: String!
 }
 
 input LocationOrderInput {
@@ -1557,14 +1556,13 @@ input OpeningHoursDetailsInput {
 }
 
 input OrganizationAddressDetailsInput {
-  addressLine1: String
+  addressLine1: String!
   addressLine2: String
-  city: String
-  country: String
-  formattedAddress: String
+  city: String!
+  country: String!
   province: String
-  suburb: String
-  zipcode: String
+  suburb: String!
+  zipcode: String!
 }
 
 input OrganizationAvailableResourcesWhereInput {
@@ -1758,7 +1756,7 @@ input UpdateLocationInput {
   id: String!
   locationTagIds: [String!]!
   name: String!
-  physicalAddress: LocationAddressDetailsInput
+  physicalAddress: LocationAddressDetailsInput!
   timezone: String
 }
 
@@ -1828,7 +1826,7 @@ input UpdateOrganizationInput {
   industrySubCategoryIds: [String!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
-  physicalAddress: OrganizationAddressDetailsInput
+  physicalAddress: OrganizationAddressDetailsInput!
   type: OrganizationType!
   website: String
 }

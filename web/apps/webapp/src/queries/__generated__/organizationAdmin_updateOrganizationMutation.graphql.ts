@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9a425fc7ce4f6b4d04492d0ba313215f>>
+ * @generated SignedSource<<a0a70a1c18e17a6a227d1b322ae9bd6d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,19 +18,18 @@ export type UpdateOrganizationInput = {
   industrySubCategoryIds: ReadonlyArray<string>;
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;
   name: string;
-  physicalAddress?: OrganizationAddressDetailsInput | null | undefined;
+  physicalAddress: OrganizationAddressDetailsInput;
   type: OrganizationType;
   website?: string | null | undefined;
 };
 export type OrganizationAddressDetailsInput = {
-  addressLine1?: string | null | undefined;
+  addressLine1: string;
   addressLine2?: string | null | undefined;
-  city?: string | null | undefined;
-  country?: string | null | undefined;
-  formattedAddress?: string | null | undefined;
+  city: string;
+  country: string;
   province?: string | null | undefined;
-  suburb?: string | null | undefined;
-  zipcode?: string | null | undefined;
+  suburb: string;
+  zipcode: string;
 };
 export type organizationAdmin_updateOrganizationMutation$variables = {
   input: UpdateOrganizationInput;
@@ -49,6 +48,15 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly type: OrganizationMemberVisibilityPolicy;
       };
       readonly name: string;
+      readonly physicalAddress: {
+        readonly addressLine1: string;
+        readonly addressLine2: string | null | undefined;
+        readonly city: string;
+        readonly country: string;
+        readonly province: string | null | undefined;
+        readonly suburb: string;
+        readonly zipcode: string;
+      };
       readonly type: {
         readonly name: string;
         readonly type: OrganizationType;
@@ -71,6 +79,15 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly type: OrganizationMemberVisibilityPolicy;
       };
       readonly name: string;
+      readonly physicalAddress: {
+        readonly addressLine1: string;
+        readonly addressLine2: string | null | undefined;
+        readonly city: string;
+        readonly country: string;
+        readonly province: string | null | undefined;
+        readonly suburb: string;
+        readonly zipcode: string;
+      };
       readonly type: {
         readonly name: string;
         readonly type: OrganizationType;
@@ -188,6 +205,66 @@ v4 = [
               (v2/*: any*/)
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationAddressDetails",
+            "kind": "LinkedField",
+            "name": "physicalAddress",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "addressLine1",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "addressLine2",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "suburb",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "city",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "province",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "zipcode",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "country",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -214,16 +291,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "179daaf38085bf0118ee1e2d9ac87fb5",
+    "cacheID": "5c7a75828a63560dff9712094c47780e",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "82b6528f6ade57938b40727609561f91";
+(node as any).hash = "04370cfaf18ba604396fb88868377941";
 
 export default node;

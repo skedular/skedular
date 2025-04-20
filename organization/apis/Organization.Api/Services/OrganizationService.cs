@@ -369,18 +369,14 @@ public class OrganizationService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        Address? physicalAddress = null;
-        if (organization.PhysicalAddress is null && existingOrganization.PhysicalAddress is not null)
-        {
-            repositoryFactory.AddressRepository.Remove(existingOrganization.PhysicalAddress);
-        }
-        else if (organization.PhysicalAddress is not null && existingOrganization.PhysicalAddress is null)
+        Address physicalAddress;
+        if (existingOrganization.PhysicalAddress is null)
         {
             physicalAddress = mapper.MapTo(organization.PhysicalAddress, existingOrganization);
             physicalAddress.Id = randomHelper.Generate();
             repositoryFactory.AddressRepository.Add(physicalAddress);
         }
-        else if (organization.PhysicalAddress is not null && existingOrganization.PhysicalAddress is not null)
+        else
         {
             physicalAddress = mapper.MergeToEntity(organization.PhysicalAddress, existingOrganization.PhysicalAddress, existingOrganization);
             repositoryFactory.AddressRepository.Update(physicalAddress);

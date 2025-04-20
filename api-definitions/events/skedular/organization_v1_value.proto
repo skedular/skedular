@@ -108,12 +108,11 @@ message OrganizationSsoSettings {
 
 message Address {
   string id = 1;
-  string formattedAddress = 2;
-  string addressLine1 = 3;
-  string addressLine2 = 4;
-  string suburb = 5;
-  string city = 6;
-  string province = 7;
-  string zipcode = 8;
-  string country = 9;
+  string addressLine1 = 2;
+  string addressLine2 = 3;
+  string suburb = 4;
+  string city = 5;
+  string province = 6;
+  string zipcode = 7;
+  string country = 8;
 }

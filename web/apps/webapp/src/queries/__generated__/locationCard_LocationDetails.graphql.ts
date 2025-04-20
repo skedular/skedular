@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f5329bc187df7f0bc48457ae210eaedd>>
+ * @generated SignedSource<<1ece8db263c19d266ec5d60b47cab74e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,8 +25,15 @@ export type locationCard_LocationDetails$data = {
     readonly uniqueId: string;
   };
   readonly physicalAddress: {
+    readonly addressLine1: string;
+    readonly addressLine2: string | null | undefined;
+    readonly city: string;
+    readonly country: string;
     readonly formattedAddress: string | null | undefined;
-  } | null | undefined;
+    readonly province: string | null | undefined;
+    readonly suburb: string;
+    readonly zipcode: string;
+  };
   readonly resources: ReadonlyArray<{
     readonly id: string;
   }>;
@@ -129,6 +136,55 @@ return {
           "kind": "ScalarField",
           "name": "formattedAddress",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "addressLine1",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "addressLine2",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "suburb",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "city",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "province",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "zipcode",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "country",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -172,6 +228,6 @@ return {
 };
 })();
 
-(node as any).hash = "884d0eadbea1789841da4ece4d434369";
+(node as any).hash = "802957d98d83ad30234c0017b30a4bdb";
 
 export default node;

@@ -45,7 +45,6 @@ public static class Constants
     public const int MaxTagTypeLength = 50;
     public const int MaxColorValueLength = 32;
 
-    public const int MaxFormattedAddressLength = 1000;
     public const int MaxAddressLineLength = 200;
     public const int MaxSuburbLength = 100;
     public const int MaxCityLength = 100;

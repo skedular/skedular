@@ -10,13 +10,13 @@ type DesksOccupancyPercentage {
 
 type LocationAddressDetails {
   formattedAddress: String
-  addressLine1: String
+  addressLine1: String!
   addressLine2: String
-  suburb: String
-  city: String
+  suburb: String!
+  city: String!
   province: String
-  zipcode: String
-  country: String
+  zipcode: String!
+  country: String!
 }
 
 type LocationAnalytics {
@@ -50,7 +50,7 @@ type LocationDetails {
   canDelete: Boolean!
   canViewAnalytics: Boolean!
   resources: [ResourceDetails!]!
-  physicalAddress: LocationAddressDetails
+  physicalAddress: LocationAddressDetails!
   customTags: [Location_OrganizationTagDetails!]!
   zones: [Location_OrganizationTagDetails!]!
   resourceTypes: [Location_OrganizationTagDetails!]!
@@ -202,7 +202,7 @@ input AddLocationInput {
   about: String
   organizationId: String!
   timezone: String
-  physicalAddress: LocationAddressDetailsInput
+  physicalAddress: LocationAddressDetailsInput!
   locationTagIds: [String!]!
 }
 
@@ -242,14 +242,13 @@ input DeleteResourcesInput {
 }
 
 input LocationAddressDetailsInput {
-  formattedAddress: String
-  addressLine1: String
+  addressLine1: String!
   addressLine2: String
-  suburb: String
-  city: String
+  suburb: String!
+  city: String!
   province: String
-  zipcode: String
-  country: String
+  zipcode: String!
+  country: String!
 }
 
 input LocationOrderInput {
@@ -291,7 +290,7 @@ input UpdateLocationInput {
   name: String!
   about: String
   timezone: String
-  physicalAddress: LocationAddressDetailsInput
+  physicalAddress: LocationAddressDetailsInput!
   locationTagIds: [String!]!
 }
 

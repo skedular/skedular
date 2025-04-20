@@ -101,6 +101,13 @@ const LocationCard = ({
         }
         physicalAddress {
           formattedAddress
+          addressLine1
+          addressLine2
+          suburb
+          city
+          province
+          zipcode
+          country
         }
         hasFutureBooking
         canModify
