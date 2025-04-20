@@ -5,20 +5,9 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Location.Shared.Models;
 
+// ReSharper disable ClassNeverInstantiated.Global
+
 namespace Location.Api.GraphQL;
-
-[GraphQLName("AcceptInvitationToJoinLocationInput")]
-public class AcceptInvitationToJoinLocationInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-}
-
-[GraphQLName("AcceptInvitationToJoinLocationPayload")]
-public class AcceptInvitationToJoinLocationPayload
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-}
 
 [GraphQLName("AddLocationInput")]
 public class AddLocationInput
@@ -29,21 +18,8 @@ public class AddLocationInput
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
-    [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
+    [GraphQLName("physicalAddress")] public AddressDetails? PhysicalAddress { get; set; }
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
-}
-
-[GraphQLName("CancelInvitationToJoinLocationInput")]
-public class CancelInvitationToJoinLocationInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-}
-
-[GraphQLName("CancelInvitationToJoinLocationPayload")]
-public class CancelInvitationToJoinLocationPayload
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }
 
 [GraphQLName("DeleteLocationInput")]
@@ -70,23 +46,6 @@ public class LocationAnalytics
 [GraphQLName("LocationConnection")]
 public class LocationConnection : Enterprise.Shared.GraphQL.Types.Connection<LocationEdge>;
 
-[GraphQLName("LocationCustomerDetails")]
-public class LocationCustomerDetails
-{
-    [GraphQLName("uniqueId")] [ID] public required string UniqueId { get; set; }
-    [GraphQLName("name")] public string? Name { get; set; }
-    [GraphQLName("givenName")] public string? GivenName { get; set; }
-    [GraphQLName("middleName")] public string? MiddleName { get; set; }
-    [GraphQLName("familyName")] public string? FamilyName { get; set; }
-    [GraphQLName("photoUrl")] public string? PhotoUrl { get; set; }
-    [GraphQLName("photoUrl24")] public string? PhotoUrl24 { get; set; }
-    [GraphQLName("photoUrl32")] public string? PhotoUrl32 { get; set; }
-    [GraphQLName("photoUrl48")] public string? PhotoUrl48 { get; set; }
-    [GraphQLName("photoUrl72")] public string? PhotoUrl72 { get; set; }
-    [GraphQLName("photoUrl192")] public string? PhotoUrl192 { get; set; }
-    [GraphQLName("photoUrl512")] public string? PhotoUrl512 { get; set; }
-}
-
 [GraphQLName("LocationDailyBookingsTotal")]
 public class LocationDailyBookingsTotal
 {
@@ -109,7 +68,7 @@ public class LocationDetails : Node
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
     [GraphQLName("resources")] public IEnumerable<ResourceDetails> Resources { get; set; } = [];
-    [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
+    [GraphQLName("physicalAddress")] public AddressDetails? PhysicalAddress { get; set; }
     [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
     [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
     [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
@@ -169,12 +128,12 @@ public class UpdateLocationInput
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
-    [GraphQLName("physicalAddress")] public LocationAddressDetails? PhysicalAddress { get; set; }
+    [GraphQLName("physicalAddress")] public AddressDetails? PhysicalAddress { get; set; }
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
 }
 
 [GraphQLName("LocationAddressDetails")]
-public class LocationAddressDetails
+public class AddressDetails
 {
     [GraphQLName("formattedAddress")] public string? FormattedAddress { get; set; }
     [GraphQLName("addressLine1")] public string? AddressLine1 { get; set; }
@@ -329,13 +288,6 @@ public class ResourceWhereInput
     [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
     [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
     [GraphQLName("productTagIds")] public IEnumerable<string>? ProductTagIds { get; set; }
-}
-
-[GraphQLName("ResourcesOccupancyPercentage")]
-public class ResourcesOccupancyPercentage
-{
-    [GraphQLName("date")] public DateTimeOffset Date { get; set; }
-    [GraphQLName("percentage")] public float Percentage { get; set; }
 }
 
 [GraphQLName("OpeningHoursDetails")]

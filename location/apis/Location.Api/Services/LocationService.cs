@@ -283,7 +283,6 @@ public class LocationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         Address? physicalAddress = null;
-
         if (location.PhysicalAddress is null && existingLocation.PhysicalAddress is not null)
         {
             repositoryFactory.AddressRepository.Remove(existingLocation.PhysicalAddress);

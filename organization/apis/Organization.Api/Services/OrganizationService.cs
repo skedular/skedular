@@ -13,6 +13,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Address = Organization.Shared.Database.Entities.Address;
 using Booking = Organization.Shared.Database.Entities.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using IndustrySubCategory = Organization.Shared.Database.Entities.IndustrySubCategory;
@@ -113,6 +114,13 @@ public class OrganizationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var organizationEntity = mapper.MapTo(organization, termsOfUse, industrySubCategories);
+
+        var physicalAddress = organization.PhysicalAddress is null ? null : mapper.MapTo(organization.PhysicalAddress, organizationEntity);
+        if (physicalAddress is not null)
+        {
+            physicalAddress.Id = randomHelper.Generate();
+            _ = repositoryFactory.AddressRepository.Add(physicalAddress);
+        }
 
         var organizationMembers = new List<OrganizationMember>();
         if (customerEntity is not null)
@@ -361,6 +369,23 @@ public class OrganizationService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
+        Address? physicalAddress = null;
+        if (organization.PhysicalAddress is null && existingOrganization.PhysicalAddress is not null)
+        {
+            repositoryFactory.AddressRepository.Remove(existingOrganization.PhysicalAddress);
+        }
+        else if (organization.PhysicalAddress is not null && existingOrganization.PhysicalAddress is null)
+        {
+            physicalAddress = mapper.MapTo(organization.PhysicalAddress, existingOrganization);
+            physicalAddress.Id = randomHelper.Generate();
+            repositoryFactory.AddressRepository.Add(physicalAddress);
+        }
+        else if (organization.PhysicalAddress is not null && existingOrganization.PhysicalAddress is not null)
+        {
+            physicalAddress = mapper.MergeToEntity(organization.PhysicalAddress, existingOrganization.PhysicalAddress, existingOrganization);
+            repositoryFactory.AddressRepository.Update(physicalAddress);
+        }
+
         var industrySubCategoryIds = organization.IndustrySubCategories.Select(item => item.Id).ToList();
         var industrySubCategoryEntities = industrySubCategoryIds.Count == 0
             ? []
@@ -373,19 +398,15 @@ public class OrganizationService(
                 .ToListAsync(cancellationToken);
 
         organization = mapper.MapTo(
-            repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)));
+            repositoryFactory.OrganizationRepository.Update(
+                mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities, physicalAddress)));
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        if (customer is null)
-        {
-            return organization;
-        }
-
-        if (organizationAuthorizationService.CanViewMemberPersonalDetails(existingOrganization, customer))
+        if (customer is null || organizationAuthorizationService.CanViewMemberPersonalDetails(existingOrganization, customer))
         {
             return organization;
         }

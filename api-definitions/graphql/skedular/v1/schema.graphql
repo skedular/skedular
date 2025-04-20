@@ -534,6 +534,17 @@ type OrganizationActiveOfferingDetails {
   unitPrice: Int!
 }
 
+type OrganizationAddressDetails {
+  addressLine1: String
+  addressLine2: String
+  city: String
+  country: String
+  formattedAddress: String
+  province: String
+  suburb: String
+  zipcode: String
+}
+
 type OrganizationAnalytics {
   dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
   memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
@@ -618,6 +629,7 @@ type OrganizationDetails {
   members: [OrganizationMemberDetails!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicyDetails!
   name: String!
+  physicalAddress: OrganizationAddressDetails
   resourceTypes: [OrganizationTagDetails!]!
   ssoSettings: OrganizationSsoSettingsDetails
   termsOfUse: OrganizationTermsOfUse
@@ -1183,6 +1195,7 @@ input AddOrganizationInput {
   industrySubCategoryIds: [String!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
+  physicalAddress: OrganizationAddressDetailsInput
   termsOfUseId: String!
   type: OrganizationType!
   website: String
@@ -1543,6 +1556,17 @@ input OpeningHoursDetailsInput {
   until: String
 }
 
+input OrganizationAddressDetailsInput {
+  addressLine1: String
+  addressLine2: String
+  city: String
+  country: String
+  formattedAddress: String
+  province: String
+  suburb: String
+  zipcode: String
+}
+
 input OrganizationAvailableResourcesWhereInput {
   from: DateTime!
   organizationId: String!
@@ -1804,6 +1828,7 @@ input UpdateOrganizationInput {
   industrySubCategoryIds: [String!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   name: String!
+  physicalAddress: OrganizationAddressDetailsInput
   type: OrganizationType!
   website: String
 }

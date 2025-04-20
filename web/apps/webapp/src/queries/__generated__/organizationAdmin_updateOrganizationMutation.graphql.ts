@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9d8a6ff2353b25f1262e7e5fd9cf8b82>>
+ * @generated SignedSource<<9a425fc7ce4f6b4d04492d0ba313215f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,8 +18,19 @@ export type UpdateOrganizationInput = {
   industrySubCategoryIds: ReadonlyArray<string>;
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;
   name: string;
+  physicalAddress?: OrganizationAddressDetailsInput | null | undefined;
   type: OrganizationType;
   website?: string | null | undefined;
+};
+export type OrganizationAddressDetailsInput = {
+  addressLine1?: string | null | undefined;
+  addressLine2?: string | null | undefined;
+  city?: string | null | undefined;
+  country?: string | null | undefined;
+  formattedAddress?: string | null | undefined;
+  province?: string | null | undefined;
+  suburb?: string | null | undefined;
+  zipcode?: string | null | undefined;
 };
 export type organizationAdmin_updateOrganizationMutation$variables = {
   input: UpdateOrganizationInput;

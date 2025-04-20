@@ -35,7 +35,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "b3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvbkgAElIKHGludml0YXRpb25Ub0pv",
             "aW5Pcmdhbml6YXRpb24YAiABKAsyKi5vcmdhbml6YXRpb24uSW52aXRhdGlv",
             "blRvSm9pbk9yZ2FuaXphdGlvbkgAEioKCG9mZmVyaW5nGAMgASgLMhYub3Jn",
-            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCKIAwoMT3JnYW5pemF0",
+            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCK4AwoMT3JnYW5pemF0",
             "aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5w",
             "cm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEo",
             "CRIPCgdsb2dvVXJsGAUgASgJEg8KB3dlYnNpdGUYBiABKAkSMQoHbWVtYmVy",
@@ -44,43 +44,49 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "cmVUZW5hbnRJZHMYCSADKAkSHwoEdGFncxgKIAMoCzIRLm9yZ2FuaXphdGlv",
             "bi5UYWcSOgoLc3NvU2V0dGluZ3MYCyABKAsyJS5vcmdhbml6YXRpb24uT3Jn",
             "YW5pemF0aW9uU3NvU2V0dGluZ3MSDAoEdHlwZRgMIAEoCRIeChZtZW1iZXJW",
-            "aXNpYmlsaXR5UG9saWN5GA0gASgJInwKEk9yZ2FuaXphdGlvbk1lbWJlchIK",
-            "CgJpZBgBIAEoCRISCgpjdXN0b21lcklkGAIgASgJEiAKBHJvbGUYAyABKA4y",
-            "Ei5vcmdhbml6YXRpb24uUm9sZRIkCgZzdGF0dXMYBCABKA4yFC5vcmdhbml6",
-            "YXRpb24uU3RhdHVzItEBCghPZmZlcmluZxIKCgJpZBgBIAEoCRIMCgRjb2Rl",
-            "GAIgASgJEikKBXN0YXJ0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz",
-            "dGFtcBInCgNlbmQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1w",
-            "EhEKCWF1dG9SZW5ldxgFIAEoCBIRCgl1bml0UHJpY2UYBiABKAUSGQoRYWN0",
-            "aXZlQ3VzdG9tZXJJZHMYByADKAkSFgoOb3JnYW5pemF0aW9uSWQYCCABKAki",
-            "FgoITG9jYXRpb24SCgoCaWQYASABKAkimQEKHEludml0YXRpb25Ub0pvaW5P",
-            "cmdhbml6YXRpb24SCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhou",
-            "Z29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIWCg5vcmdhbml6YXRpb25JZBgD",
-            "IAEoCRITCgtpbnZpdGVkQnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSABKAki",
-            "UQoDVGFnEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3JpcHRp",
-            "b24YAyABKAkSDAoEdHlwZRgEIAEoCRINCgVjb2xvchgFIAEoCSJrChdPcmdh",
-            "bml6YXRpb25Tc29TZXR0aW5ncxIKCgJpZBgBIAEoCRIQCghFbnRpdHlJZBgC",
-            "IAEoCRIQCghMb2dpblVybBgDIAEoCRIgChhBcHBGZWRlcmF0aW9uTWV0YWRh",
-            "dGFVcmwYBCABKAkqrQEKBFR5cGUSGAoUT3JnYW5pemF0aW9uVXBzZXJ0ZWQQ",
-            "ABIXChNPcmdhbml6YXRpb25EZWxldGVkEAESKAokSW52aXRhdGlvblRvSm9p",
-            "bk9yZ2FuaXphdGlvblVwc2VydGVkEAISJwojSW52aXRhdGlvblRvSm9pbk9y",
-            "Z2FuaXphdGlvbkRlbGV0ZWQQAxIfChtPcmdhbml6YXRpb25PZmZlcmluZ1Vw",
-            "ZGF0ZWQQBCowCgRSb2xlEgkKBU93bmVyEAASEQoNQWRtaW5pc3RyYXRvchAB",
-            "EgoKBk1lbWJlchACKiIKBlN0YXR1cxIKCgZBY3RpdmUQABIMCghJbmFjdGl2",
-            "ZRABQjuqAjhBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLk9y",
-            "Z2FuaXphdGlvbi5WMS5WYWx1ZWIGcHJvdG8z"));
+            "aXNpYmlsaXR5UG9saWN5GA0gASgJEi4KD3BoeXNpY2FsQWRkcmVzcxgOIAEo",
+            "CzIVLm9yZ2FuaXphdGlvbi5BZGRyZXNzInwKEk9yZ2FuaXphdGlvbk1lbWJl",
+            "chIKCgJpZBgBIAEoCRISCgpjdXN0b21lcklkGAIgASgJEiAKBHJvbGUYAyAB",
+            "KA4yEi5vcmdhbml6YXRpb24uUm9sZRIkCgZzdGF0dXMYBCABKA4yFC5vcmdh",
+            "bml6YXRpb24uU3RhdHVzItEBCghPZmZlcmluZxIKCgJpZBgBIAEoCRIMCgRj",
+            "b2RlGAIgASgJEikKBXN0YXJ0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
+            "bWVzdGFtcBInCgNlbmQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
+            "YW1wEhEKCWF1dG9SZW5ldxgFIAEoCBIRCgl1bml0UHJpY2UYBiABKAUSGQoR",
+            "YWN0aXZlQ3VzdG9tZXJJZHMYByADKAkSFgoOb3JnYW5pemF0aW9uSWQYCCAB",
+            "KAkiFgoITG9jYXRpb24SCgoCaWQYASABKAkimQEKHEludml0YXRpb25Ub0pv",
+            "aW5Pcmdhbml6YXRpb24SCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgL",
+            "MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIWCg5vcmdhbml6YXRpb25J",
+            "ZBgDIAEoCRITCgtpbnZpdGVkQnlJZBgEIAEoCRIRCglpbnZpdGVlSWQYBSAB",
+            "KAkiUQoDVGFnEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3Jp",
+            "cHRpb24YAyABKAkSDAoEdHlwZRgEIAEoCRINCgVjb2xvchgFIAEoCSJrChdP",
+            "cmdhbml6YXRpb25Tc29TZXR0aW5ncxIKCgJpZBgBIAEoCRIQCghFbnRpdHlJ",
+            "ZBgCIAEoCRIQCghMb2dpblVybBgDIAEoCRIgChhBcHBGZWRlcmF0aW9uTWV0",
+            "YWRhdGFVcmwYBCABKAkirQEKB0FkZHJlc3MSCgoCaWQYASABKAkSGAoQZm9y",
+            "bWF0dGVkQWRkcmVzcxgCIAEoCRIUCgxhZGRyZXNzTGluZTEYAyABKAkSFAoM",
+            "YWRkcmVzc0xpbmUyGAQgASgJEg4KBnN1YnVyYhgFIAEoCRIMCgRjaXR5GAYg",
+            "ASgJEhAKCHByb3ZpbmNlGAcgASgJEg8KB3ppcGNvZGUYCCABKAkSDwoHY291",
+            "bnRyeRgJIAEoCSqtAQoEVHlwZRIYChRPcmdhbml6YXRpb25VcHNlcnRlZBAA",
+            "EhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQARIoCiRJbnZpdGF0aW9uVG9Kb2lu",
+            "T3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhInCiNJbnZpdGF0aW9uVG9Kb2luT3Jn",
+            "YW5pemF0aW9uRGVsZXRlZBADEh8KG09yZ2FuaXphdGlvbk9mZmVyaW5nVXBk",
+            "YXRlZBAEKjAKBFJvbGUSCQoFT3duZXIQABIRCg1BZG1pbmlzdHJhdG9yEAES",
+            "CgoGTWVtYmVyEAIqIgoGU3RhdHVzEgoKBkFjdGl2ZRAAEgwKCEluYWN0aXZl",
+            "EAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3Jn",
+            "YW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "InvitationToJoinOrganization", "Offering" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "Type", "MemberVisibilityPolicy" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "Type", "MemberVisibilityPolicy", "PhysicalAddress" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember.Parser, new[]{ "Id", "CustomerId", "Role", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.InvitationToJoinOrganization.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "InvitedById", "InviteeId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "Type", "Color" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings.Parser, new[]{ "Id", "EntityId", "LoginUrl", "AppFederationMetadataUrl" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings.Parser, new[]{ "Id", "EntityId", "LoginUrl", "AppFederationMetadataUrl" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address.Parser, new[]{ "Id", "FormattedAddress", "AddressLine1", "AddressLine2", "Suburb", "City", "Province", "Zipcode", "Country" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1149,6 +1155,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       ssoSettings_ = other.ssoSettings_ != null ? other.ssoSettings_.Clone() : null;
       type_ = other.type_;
       memberVisibilityPolicy_ = other.memberVisibilityPolicy_;
+      physicalAddress_ = other.physicalAddress_ != null ? other.physicalAddress_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1311,6 +1318,18 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "physicalAddress" field.</summary>
+    public const int PhysicalAddressFieldNumber = 14;
+    private global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address physicalAddress_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address PhysicalAddress {
+      get { return physicalAddress_; }
+      set {
+        physicalAddress_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1339,6 +1358,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (!object.Equals(SsoSettings, other.SsoSettings)) return false;
       if (Type != other.Type) return false;
       if (MemberVisibilityPolicy != other.MemberVisibilityPolicy) return false;
+      if (!object.Equals(PhysicalAddress, other.PhysicalAddress)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1359,6 +1379,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (ssoSettings_ != null) hash ^= SsoSettings.GetHashCode();
       if (Type.Length != 0) hash ^= Type.GetHashCode();
       if (MemberVisibilityPolicy.Length != 0) hash ^= MemberVisibilityPolicy.GetHashCode();
+      if (physicalAddress_ != null) hash ^= PhysicalAddress.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1420,6 +1441,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(106);
         output.WriteString(MemberVisibilityPolicy);
       }
+      if (physicalAddress_ != null) {
+        output.WriteRawTag(114);
+        output.WriteMessage(PhysicalAddress);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1473,6 +1498,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(106);
         output.WriteString(MemberVisibilityPolicy);
       }
+      if (physicalAddress_ != null) {
+        output.WriteRawTag(114);
+        output.WriteMessage(PhysicalAddress);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1515,6 +1544,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       if (MemberVisibilityPolicy.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(MemberVisibilityPolicy);
+      }
+      if (physicalAddress_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(PhysicalAddress);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1569,6 +1601,12 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       if (other.MemberVisibilityPolicy.Length != 0) {
         MemberVisibilityPolicy = other.MemberVisibilityPolicy;
+      }
+      if (other.physicalAddress_ != null) {
+        if (physicalAddress_ == null) {
+          PhysicalAddress = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address();
+        }
+        PhysicalAddress.MergeFrom(other.PhysicalAddress);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1650,6 +1688,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             MemberVisibilityPolicy = input.ReadString();
             break;
           }
+          case 114: {
+            if (physicalAddress_ == null) {
+              PhysicalAddress = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address();
+            }
+            input.ReadMessage(PhysicalAddress);
+            break;
+          }
         }
       }
     #endif
@@ -1728,6 +1773,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 106: {
             MemberVisibilityPolicy = input.ReadString();
+            break;
+          }
+          case 114: {
+            if (physicalAddress_ == null) {
+              PhysicalAddress = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address();
+            }
+            input.ReadMessage(PhysicalAddress);
             break;
           }
         }
@@ -3709,6 +3761,500 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 34: {
             AppFederationMetadataUrl = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class Address : pb::IMessage<Address>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<Address> _parser = new pb::MessageParser<Address>(() => new Address());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<Address> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[10]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Address() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Address(Address other) : this() {
+      id_ = other.id_;
+      formattedAddress_ = other.formattedAddress_;
+      addressLine1_ = other.addressLine1_;
+      addressLine2_ = other.addressLine2_;
+      suburb_ = other.suburb_;
+      city_ = other.city_;
+      province_ = other.province_;
+      zipcode_ = other.zipcode_;
+      country_ = other.country_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public Address Clone() {
+      return new Address(this);
+    }
+
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private string id_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Id {
+      get { return id_; }
+      set {
+        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "formattedAddress" field.</summary>
+    public const int FormattedAddressFieldNumber = 2;
+    private string formattedAddress_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string FormattedAddress {
+      get { return formattedAddress_; }
+      set {
+        formattedAddress_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "addressLine1" field.</summary>
+    public const int AddressLine1FieldNumber = 3;
+    private string addressLine1_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AddressLine1 {
+      get { return addressLine1_; }
+      set {
+        addressLine1_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "addressLine2" field.</summary>
+    public const int AddressLine2FieldNumber = 4;
+    private string addressLine2_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AddressLine2 {
+      get { return addressLine2_; }
+      set {
+        addressLine2_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "suburb" field.</summary>
+    public const int SuburbFieldNumber = 5;
+    private string suburb_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Suburb {
+      get { return suburb_; }
+      set {
+        suburb_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "city" field.</summary>
+    public const int CityFieldNumber = 6;
+    private string city_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string City {
+      get { return city_; }
+      set {
+        city_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "province" field.</summary>
+    public const int ProvinceFieldNumber = 7;
+    private string province_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Province {
+      get { return province_; }
+      set {
+        province_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "zipcode" field.</summary>
+    public const int ZipcodeFieldNumber = 8;
+    private string zipcode_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Zipcode {
+      get { return zipcode_; }
+      set {
+        zipcode_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "country" field.</summary>
+    public const int CountryFieldNumber = 9;
+    private string country_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Country {
+      get { return country_; }
+      set {
+        country_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as Address);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(Address other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Id != other.Id) return false;
+      if (FormattedAddress != other.FormattedAddress) return false;
+      if (AddressLine1 != other.AddressLine1) return false;
+      if (AddressLine2 != other.AddressLine2) return false;
+      if (Suburb != other.Suburb) return false;
+      if (City != other.City) return false;
+      if (Province != other.Province) return false;
+      if (Zipcode != other.Zipcode) return false;
+      if (Country != other.Country) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
+      if (FormattedAddress.Length != 0) hash ^= FormattedAddress.GetHashCode();
+      if (AddressLine1.Length != 0) hash ^= AddressLine1.GetHashCode();
+      if (AddressLine2.Length != 0) hash ^= AddressLine2.GetHashCode();
+      if (Suburb.Length != 0) hash ^= Suburb.GetHashCode();
+      if (City.Length != 0) hash ^= City.GetHashCode();
+      if (Province.Length != 0) hash ^= Province.GetHashCode();
+      if (Zipcode.Length != 0) hash ^= Zipcode.GetHashCode();
+      if (Country.Length != 0) hash ^= Country.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (FormattedAddress.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(FormattedAddress);
+      }
+      if (AddressLine1.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(AddressLine1);
+      }
+      if (AddressLine2.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(AddressLine2);
+      }
+      if (Suburb.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Suburb);
+      }
+      if (City.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(City);
+      }
+      if (Province.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Province);
+      }
+      if (Zipcode.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(Zipcode);
+      }
+      if (Country.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(Country);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (FormattedAddress.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(FormattedAddress);
+      }
+      if (AddressLine1.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(AddressLine1);
+      }
+      if (AddressLine2.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(AddressLine2);
+      }
+      if (Suburb.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Suburb);
+      }
+      if (City.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(City);
+      }
+      if (Province.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Province);
+      }
+      if (Zipcode.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(Zipcode);
+      }
+      if (Country.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(Country);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
+      }
+      if (FormattedAddress.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(FormattedAddress);
+      }
+      if (AddressLine1.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AddressLine1);
+      }
+      if (AddressLine2.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AddressLine2);
+      }
+      if (Suburb.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Suburb);
+      }
+      if (City.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(City);
+      }
+      if (Province.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Province);
+      }
+      if (Zipcode.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Zipcode);
+      }
+      if (Country.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Country);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(Address other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Id.Length != 0) {
+        Id = other.Id;
+      }
+      if (other.FormattedAddress.Length != 0) {
+        FormattedAddress = other.FormattedAddress;
+      }
+      if (other.AddressLine1.Length != 0) {
+        AddressLine1 = other.AddressLine1;
+      }
+      if (other.AddressLine2.Length != 0) {
+        AddressLine2 = other.AddressLine2;
+      }
+      if (other.Suburb.Length != 0) {
+        Suburb = other.Suburb;
+      }
+      if (other.City.Length != 0) {
+        City = other.City;
+      }
+      if (other.Province.Length != 0) {
+        Province = other.Province;
+      }
+      if (other.Zipcode.Length != 0) {
+        Zipcode = other.Zipcode;
+      }
+      if (other.Country.Length != 0) {
+        Country = other.Country;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            FormattedAddress = input.ReadString();
+            break;
+          }
+          case 26: {
+            AddressLine1 = input.ReadString();
+            break;
+          }
+          case 34: {
+            AddressLine2 = input.ReadString();
+            break;
+          }
+          case 42: {
+            Suburb = input.ReadString();
+            break;
+          }
+          case 50: {
+            City = input.ReadString();
+            break;
+          }
+          case 58: {
+            Province = input.ReadString();
+            break;
+          }
+          case 66: {
+            Zipcode = input.ReadString();
+            break;
+          }
+          case 74: {
+            Country = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            FormattedAddress = input.ReadString();
+            break;
+          }
+          case 26: {
+            AddressLine1 = input.ReadString();
+            break;
+          }
+          case 34: {
+            AddressLine2 = input.ReadString();
+            break;
+          }
+          case 42: {
+            Suburb = input.ReadString();
+            break;
+          }
+          case 50: {
+            City = input.ReadString();
+            break;
+          }
+          case 58: {
+            Province = input.ReadString();
+            break;
+          }
+          case 66: {
+            Zipcode = input.ReadString();
+            break;
+          }
+          case 74: {
+            Country = input.ReadString();
             break;
           }
         }

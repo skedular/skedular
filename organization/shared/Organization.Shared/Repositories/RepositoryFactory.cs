@@ -8,6 +8,7 @@ namespace Organization.Shared.Repositories;
 public interface IRepositoryFactory
 {
     IUnitOfWork UnitOfWork { get; }
+    IAddressRepository AddressRepository { get; }
     IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
     IAzureTenantRepository AzureTenantRepository { get; }
     IAzureTenantMemberRepository AzureTenantMemberRepository { get; }
@@ -38,6 +39,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
+        AddressRepository = new AddressRepository(_dbContext, timeProvider);
         AzureInstallStateUserIdLookupRepository = new AzureInstallStateUserIdLookupRepository(_dbContext, timeProvider);
         AzureTenantRepository = new AzureTenantRepository(_dbContext, timeProvider);
         AzureTenantMemberRepository = new AzureTenantMemberRepository(_dbContext, timeProvider);
@@ -66,6 +68,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     }
 
     public IUnitOfWork UnitOfWork => _dbContext;
+    public IAddressRepository AddressRepository { get; }
     public IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
     public IAzureTenantRepository AzureTenantRepository { get; }
     public IAzureTenantMemberRepository AzureTenantMemberRepository { get; }

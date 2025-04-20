@@ -10,6 +10,7 @@ namespace Organization.Shared.Database;
 public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> options, CustomDbContextOptions customDbContextOptions)
     : DbContextBase<OrganizationDbContext>(options, customDbContextOptions)
 {
+    public DbSet<Address> Address { get; set; }
     public DbSet<AzureInstallStateUserIdLookup> AzureInstallStateUserIdLookup { get; set; }
     public DbSet<AzureTenant> AzureTenant { get; set; }
     public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }

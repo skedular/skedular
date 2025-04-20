@@ -4,6 +4,7 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Organization.Shared.Models;
+using Address = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
 using OrganizationSsoSetting = Organization.Shared.Models.OrganizationSsoSetting;
@@ -41,7 +42,8 @@ public class Mapper : IMapper
                 AutoRenew = organizationOffering.AutoRenew,
                 UnitPrice = organizationOffering.UnitPrice
             },
-            SsoSettings = MapTo(src.OrganizationSsoSettings)
+            SsoSettings = MapTo(src.OrganizationSsoSettings),
+            PhysicalAddress = MapTo(src.PhysicalAddress)
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
@@ -98,5 +100,21 @@ public class Mapper : IMapper
                 EntityId = src.EntityId.ToSafeString(),
                 LoginUrl = src.LoginUrl.ToSafeString(),
                 AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString()
+            };
+
+    private static Address? MapTo(Models.Address? src) =>
+        src is null
+            ? null
+            : new Address
+            {
+                Id = src.Id,
+                FormattedAddress = src.FormattedAddress.ToSafeString(),
+                AddressLine1 = src.AddressLine1.ToSafeString(),
+                AddressLine2 = src.AddressLine2.ToSafeString(),
+                Suburb = src.Suburb.ToSafeString(),
+                City = src.City.ToSafeString(),
+                Province = src.Province.ToSafeString(),
+                Zipcode = src.Zipcode.ToSafeString(),
+                Country = src.Country.ToSafeString()
             };
 }

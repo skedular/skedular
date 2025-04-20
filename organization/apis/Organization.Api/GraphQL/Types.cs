@@ -6,6 +6,8 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Organization.Shared.Models;
 
+// ReSharper disable ClassNeverInstantiated.Global
+
 namespace Organization.Api.GraphQL;
 
 [GraphQLName("AcceptInvitationToJoinOrganizationInput")]
@@ -40,6 +42,8 @@ public class AddOrganizationInput
 
     [GraphQLName("industrySubCategoryIds")]
     public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
+
+    [GraphQLName("physicalAddress")] public AddressDetails? PhysicalAddress { get; set; }
 }
 
 [GraphQLName("CancelInvitationToJoinOrganizationInput")]
@@ -167,6 +171,8 @@ public class OrganizationDetails : Node
 
     [GraphQLName("industrySubCategories")]
     public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> IndustrySubCategories { get; set; } = [];
+
+    [GraphQLName("physicalAddress")] public AddressDetails? PhysicalAddress { get; set; }
 
     [GraphQLName("availableOfferings")] public IEnumerable<OrganizationOfferingDetails> AvailableOfferings { get; set; } = [];
     [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; }
@@ -318,6 +324,8 @@ public class UpdateOrganizationInput
 
     [GraphQLName("industrySubCategoryIds")]
     public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
+
+    [GraphQLName("physicalAddress")] public AddressDetails? PhysicalAddress { get; set; }
 }
 
 [GraphQLName("UpdateOrganizationOfferingInput")]
@@ -637,4 +645,17 @@ public class LocationTagOrganizationTagWhereInput
 {
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
+}
+
+[GraphQLName("OrganizationAddressDetails")]
+public class AddressDetails
+{
+    [GraphQLName("formattedAddress")] public string? FormattedAddress { get; set; }
+    [GraphQLName("addressLine1")] public string? AddressLine1 { get; set; }
+    [GraphQLName("addressLine2")] public string? AddressLine2 { get; set; }
+    [GraphQLName("suburb")] public string? Suburb { get; set; }
+    [GraphQLName("city")] public string? City { get; set; }
+    [GraphQLName("province")] public string? Province { get; set; }
+    [GraphQLName("zipcode")] public string? Zipcode { get; set; }
+    [GraphQLName("country")] public string? Country { get; set; }
 }

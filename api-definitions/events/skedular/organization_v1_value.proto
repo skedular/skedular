@@ -49,6 +49,7 @@ message Organization {
   OrganizationSsoSettings ssoSettings = 11;
   string type = 12;
   string memberVisibilityPolicy = 13;
+  Address physicalAddress = 14;
 }
 
 enum Role {
@@ -103,4 +104,16 @@ message OrganizationSsoSettings {
   string EntityId = 2;
   string LoginUrl = 3;
   string AppFederationMetadataUrl = 4;
+}
+
+message Address {
+  string id = 1;
+  string formattedAddress = 2;
+  string addressLine1 = 3;
+  string addressLine2 = 4;
+  string suburb = 5;
+  string city = 6;
+  string province = 7;
+  string zipcode = 8;
+  string country = 9;
 }

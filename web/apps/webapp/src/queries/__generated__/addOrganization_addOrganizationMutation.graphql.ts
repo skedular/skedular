@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2d0333d042fa8c59fb4c092895388982>>
+ * @generated SignedSource<<e4536cd31e3d7f5153880f8d6d5e35e7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,9 +19,20 @@ export type AddOrganizationInput = {
   industrySubCategoryIds: ReadonlyArray<string>;
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;
   name: string;
+  physicalAddress?: OrganizationAddressDetailsInput | null | undefined;
   termsOfUseId: string;
   type: OrganizationType;
   website?: string | null | undefined;
+};
+export type OrganizationAddressDetailsInput = {
+  addressLine1?: string | null | undefined;
+  addressLine2?: string | null | undefined;
+  city?: string | null | undefined;
+  country?: string | null | undefined;
+  formattedAddress?: string | null | undefined;
+  province?: string | null | undefined;
+  suburb?: string | null | undefined;
+  zipcode?: string | null | undefined;
 };
 export type addOrganization_addOrganizationMutation$variables = {
   input: AddOrganizationInput;

@@ -33,6 +33,10 @@ public class Organization : EntityBaseWithDeleted
     public virtual ICollection<AzureTenant> AzureTenants { get; set; } = [];
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public virtual ICollection<Tag> Tags { get; set; } = [];
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? PhysicalAddressId { get; set; }
+    public virtual Address? PhysicalAddress { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -54,6 +58,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);
+        builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.PhysicalAddressId);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.About);

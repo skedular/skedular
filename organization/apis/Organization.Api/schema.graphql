@@ -67,6 +67,17 @@ type OrganizationActiveOfferingDetails {
   id: ID!
 }
 
+type OrganizationAddressDetails {
+  formattedAddress: String
+  addressLine1: String
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String
+  country: String
+}
+
 type OrganizationAnalytics {
   memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
   dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
@@ -110,6 +121,7 @@ type OrganizationDetails {
   agreedToTermsOfUse: Boolean!
   termsOfUse: OrganizationTermsOfUse
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  physicalAddress: OrganizationAddressDetails
   availableOfferings: [OrganizationOfferingDetails!]!
   activeOffering: OrganizationActiveOfferingDetails!
   hasFutureBooking: Boolean!
@@ -339,6 +351,7 @@ input AddOrganizationInput {
   agreedToTermsOfUse: Boolean!
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
+  physicalAddress: OrganizationAddressDetailsInput
 }
 
 input AddProductTagInput {
@@ -447,6 +460,17 @@ input LocationTagOrganizationTagWhereInput {
   nameContains: String
 }
 
+input OrganizationAddressDetailsInput {
+  formattedAddress: String
+  addressLine1: String
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String
+  country: String
+}
+
 input OrganizationMemberOrderInput {
   direction: OrderDirection!
   field: OrganizationMemberOrderField!
@@ -517,6 +541,7 @@ input UpdateOrganizationInput {
   type: OrganizationType!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   industrySubCategoryIds: [String!]!
+  physicalAddress: OrganizationAddressDetailsInput
 }
 
 input UpdateOrganizationOfferingInput {

@@ -318,6 +318,8 @@ public class Mapper : IMapper
         dest.Province = src.Province;
         dest.Zipcode = src.Zipcode;
         dest.Country = src.Country;
+        dest.Latitude = src.Latitude;
+        dest.Longitude = src.Longitude;
         dest.Location = location;
         return dest;
     }
@@ -527,7 +529,7 @@ public class Mapper : IMapper
             Color = src.Color
         };
 
-    private static Shared.Models.Address? MapTo(LocationAddressDetails? src, Shared.Models.Location location) =>
+    private static Shared.Models.Address? MapTo(AddressDetails? src, Shared.Models.Location location) =>
         src is null
             ? null
             : new Shared.Models.Address
@@ -695,10 +697,10 @@ public class Mapper : IMapper
         return new Edge<Shared.Models.Resource>(resource, src.Cursor);
     }
 
-    private static LocationAddressDetails? MapToGraphQl(Shared.Models.Address? src) =>
+    private static AddressDetails? MapToGraphQl(Shared.Models.Address? src) =>
         src is null
             ? null
-            : new LocationAddressDetails
+            : new AddressDetails
             {
                 FormattedAddress = src.FormattedAddress,
                 AddressLine1 = src.AddressLine1,
@@ -724,6 +726,8 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
+                Latitude = src.Latitude,
+                Longitude = src.Longitude,
                 Location = location
             };
 
