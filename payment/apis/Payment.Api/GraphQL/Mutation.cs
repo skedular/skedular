@@ -11,12 +11,10 @@ public class Mutation(StripeConfiguration stripeConfiguration)
     [UseResolverScope]
     public async Task<AddOrganizationPaymentMethodIntentResponse?> AddOrganizationPaymentMethodIntentAsync(
         AddOrganizationPaymentMethodIntentInput input,
-        [Service] IPaymentService paymentService,
+        [Service] IOrganizationPaymentService organizationPaymentService,
         CancellationToken cancellationToken)
     {
-        var clientSecret = await paymentService.AddOrganizationPaymentMethodIntentAsync(
-            input.OrganizationId,
-            cancellationToken);
+        var clientSecret = await organizationPaymentService.AddPaymentMethodIntentAsync(input.OrganizationId, cancellationToken);
         return new AddOrganizationPaymentMethodIntentResponse
         {
             ClientMutationId = input.ClientMutationId, ClientSecret = clientSecret, PublishedKeys = stripeConfiguration.PublishableKey
@@ -26,10 +24,20 @@ public class Mutation(StripeConfiguration stripeConfiguration)
     [UseResolverScope]
     public async Task<RemoveOrganizationPaymentMethodResponse?> RemoveOrganizationPaymentMethodAsync(
         RemoveOrganizationPaymentMethodInput input,
-        [Service] IPaymentService paymentService,
+        [Service] IOrganizationPaymentService organizationPaymentService,
         CancellationToken cancellationToken)
     {
-        await paymentService.RemoveOrganizationPaymentMethodAsync(input.Id, cancellationToken);
+        await organizationPaymentService.RemovePaymentMethodAsync(input.Id, cancellationToken);
         return new RemoveOrganizationPaymentMethodResponse { ClientMutationId = input.ClientMutationId };
+    }
+
+    [UseResolverScope]
+    public async Task<AddOrganizationStripeConnectAccountResponse?> AddOrganizationStripeConnectAccountAsync(
+        AddOrganizationStripeConnectAccountInput input,
+        [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        CancellationToken cancellationToken)
+    {
+        await organizationStripeConnectAccountService.AddAsync(input.OrganizationId, cancellationToken);
+        return new AddOrganizationStripeConnectAccountResponse { ClientMutationId = input.ClientMutationId };
     }
 }

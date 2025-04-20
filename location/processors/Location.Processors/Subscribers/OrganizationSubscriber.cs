@@ -119,8 +119,7 @@ public class OrganizationSubscriber(
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
             addedItems.Add(
-                repositoryFactory.OrganizationMemberRepository.Add(
-                    mapper.MapToEntity(organizationMember, existingOrganization, customer)));
+                repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(organizationMember, existingOrganization, customer)));
         }
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);

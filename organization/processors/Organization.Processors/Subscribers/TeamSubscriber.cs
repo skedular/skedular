@@ -1,4 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
+using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Organization.Processors.Mappers;
 using Organization.Shared.Repositories;
@@ -8,10 +9,7 @@ using Type = Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type;
 
 namespace Organization.Processors.Subscribers;
 
-public class TeamSubscriber(
-    ILogger<TeamSubscriber> logger,
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
+public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -20,46 +18,35 @@ public class TeamSubscriber(
             case Type.TeamUpserted:
                 {
                     var team = mapper.MapTo(@event);
-                    if (string.IsNullOrWhiteSpace(@event.Data.Team.OrganizationId))
+                    if (string.IsNullOrWhiteSpace(team.Organization.Id))
                     {
-                        break;
+                        await HandleTeamDeletedEventAsync(team, cancellationToken);
                     }
-
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, cancellationToken);
-                    ArgumentNullException.ThrowIfNull(existingOrganization);
-
-                    var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(
-                        team.Id,
-                        existingOrganization,
-                        cancellationToken);
-                    if (existingTeam.EventRaisedAt > team.EventRaisedAt)
+                    else
                     {
-                        logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
+                        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(team.Organization.Id, cancellationToken);
+                        if (organization is null)
+                        {
+                            throw new OrganizationNotFound();
+                        }
 
-                        return EventSubscriberResults.Success;
+                        var existingTeam = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, organization, cancellationToken);
+                        if (existingTeam.EventRaisedAt > team.EventRaisedAt)
+                        {
+                            logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
+
+                            return EventSubscriberResults.Success;
+                        }
+
+                        await HandleTeamUpsertedEventAsync(team, existingTeam, organization, cancellationToken);
                     }
-
-                    await HandleTeamUpsertedEventAsync(team, existingTeam, existingOrganization, cancellationToken);
                 }
                 break;
 
             case Type.TeamDeleted:
                 {
                     var team = mapper.MapTo(@event);
-                    var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
-                    if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
-                    {
-                        logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
-
-                        return EventSubscriberResults.Success;
-                    }
-
-                    if (existingTeam is null)
-                    {
-                        return EventSubscriberResults.Success;
-                    }
-
-                    await HandleTeamDeletedEventAsync(existingTeam, cancellationToken);
+                    await HandleTeamDeletedEventAsync(team, cancellationToken);
                 }
                 break;
 
@@ -73,35 +60,30 @@ public class TeamSubscriber(
 
     private async Task HandleTeamUpsertedEventAsync(
         Shared.Models.Team team,
-        Team? existingTeam,
+        Team existingTeam,
         Shared.Database.Entities.Organization existingOrganization,
         CancellationToken cancellationToken)
     {
-        if (existingTeam is not null && string.IsNullOrWhiteSpace(team.Organization.Id))
-        {
-            // If team already exist and is now detached from organization, delete it
-            _ = repositoryFactory.TeamRepository.Remove(existingTeam);
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(team.Organization.Id))
-        {
-            // Team not attached to any organization, ignoring it
-            return;
-        }
-
-        _ = existingTeam is null
-            ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team, existingOrganization))
-            : repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam,
-                existingOrganization));
+        _ = repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam, existingOrganization));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleTeamDeletedEventAsync(Team existingTeam, CancellationToken cancellationToken)
+    private async Task HandleTeamDeletedEventAsync(Shared.Models.Team team, CancellationToken cancellationToken)
     {
+        var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
+        if (existingTeam is not null && existingTeam.EventRaisedAt > team.EventRaisedAt)
+        {
+            logger.LogInformation("Ignoring Team event. Event timestamp is older that what is already processed.");
+
+            return;
+        }
+
+        if (existingTeam is null)
+        {
+            return;
+        }
+
         _ = repositoryFactory.TeamRepository.Remove(existingTeam);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

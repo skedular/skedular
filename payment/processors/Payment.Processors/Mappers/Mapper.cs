@@ -23,10 +23,11 @@ public interface IMapper
 
     Shared.Database.Entities.Identity MapToEntity(Identity src, Shared.Database.Entities.Customer? customer);
 
-    Shared.Database.Entities.Identity MergeToEntity(Identity src, Shared.Database.Entities.Identity dest,
+    Shared.Database.Entities.Identity MergeToEntity(
+        Identity src,
+        Shared.Database.Entities.Identity dest,
         Shared.Database.Entities.Customer? customer);
 
-    Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
     OrganizationMember MapToEntity(
@@ -40,9 +41,7 @@ public interface IMapper
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
 
-    OrganizationOffering MapToEntity(
-        Shared.Models.OrganizationOffering src,
-        Shared.Database.Entities.Organization organization);
+    OrganizationOffering MapToEntity(Shared.Models.OrganizationOffering src, Shared.Database.Entities.Organization organization);
 
     OrganizationOffering MergeToEntity(
         Shared.Models.OrganizationOffering src,
@@ -154,7 +153,9 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Identity MapToEntity(Identity src, Shared.Database.Entities.Customer? customer) =>
         MergeToEntity(src, new Shared.Database.Entities.Identity(), customer);
 
-    public Shared.Database.Entities.Identity MergeToEntity(Identity src, Shared.Database.Entities.Identity dest,
+    public Shared.Database.Entities.Identity MergeToEntity(
+        Identity src,
+        Shared.Database.Entities.Identity dest,
         Shared.Database.Entities.Customer? customer)
     {
         dest.Id = src.Id;
@@ -165,8 +166,6 @@ public class Mapper : IMapper
 
         return dest;
     }
-
-    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
 
     public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {

@@ -7,8 +7,8 @@ namespace Location.Shared.Repositories;
 
 public interface IBookingRepository : IRepository<Booking>
 {
+    Task<Booking> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Booking?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Booking Add(Booking booking);
     Booking Update(Booking booking);
     Booking Remove(Booking booking);
 }
@@ -16,17 +16,17 @@ public interface IBookingRepository : IRepository<Booking>
 public class BookingRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Booking>(dbContext, timeProvider), IBookingRepository
 {
+    public override async Task<Booking> UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    {
+        await base.UpsertNakedAsync(id, cancellationToken);
+
+        return (await GetByIdAsync(id, cancellationToken))!;
+    }
+
     public async Task<Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
             .Include(query => query.Location)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
-    public Booking Add(Booking booking)
-    {
-        var now = TimeProvider.GetUtcNow();
-        booking.CreatedAt = now;
-        return DbContext.Booking.Add(booking).Entity;
-    }
 
     public Booking Update(Booking booking)
     {

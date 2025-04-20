@@ -8,6 +8,7 @@ namespace Payment.Shared.Repositories;
 
 public interface IOrganizationRepository : IRepository<Organization>
 {
+    Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
     Task<Organization?> GetByIdAsync(
@@ -16,7 +17,6 @@ public interface IOrganizationRepository : IRepository<Organization>
         bool includeAllOfferings,
         CancellationToken cancellationToken);
 
-    Organization Add(Organization organization);
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
 }
@@ -31,8 +31,8 @@ internal static class OrganizationExtensions
     {
         var updatedQuery = originalQuery
             .Include(query => query.OrganizationSsoSettings)
-            .Include(query => query.OrganizationMembers.Where(
-                organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
+            .Include(query =>
+                query.OrganizationMembers.Where(organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities);
 
@@ -57,6 +57,13 @@ internal static class OrganizationExtensions
 public class OrganizationRepository(PaymentDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<PaymentDbContext, Organization>(dbContext, timeProvider), IOrganizationRepository
 {
+    public override async Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken)
+    {
+        await base.UpsertNakedAsync(id, cancellationToken);
+
+        return (await GetByIdAsync(id, true, true, cancellationToken))!;
+    }
+
     public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await GetByIdAsync(id, false, false, cancellationToken);
 
@@ -68,13 +75,6 @@ public class OrganizationRepository(PaymentDbContext dbContext, TimeProvider tim
         await DbContext.Organization
             .AddDependentObjects(includeDeletedOrganizationMembers, includeAllOfferings)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
-    public Organization Add(Organization organization)
-    {
-        var now = TimeProvider.GetUtcNow();
-        organization.CreatedAt = now;
-        return DbContext.Organization.Add(organization).Entity;
-    }
 
     public Organization Update(Organization organization)
     {

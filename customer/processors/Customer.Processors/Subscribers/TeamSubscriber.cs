@@ -5,6 +5,7 @@ using Customer.Shared.Database.Entities;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
 using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;
@@ -108,9 +109,11 @@ public class TeamSubscriber(
         var updatedItems = new List<TeamMember>();
         foreach (var teamMember in teamMembers.Where(teamMember => team.TeamMembers.Any(item => item.Id == teamMember.Id)))
         {
-            var customer =
-                await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken);
-            ArgumentNullException.ThrowIfNull(customer);
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
 
             OrganizationMember? organizationMember = null;
             if (teamMember.OrganizationMember is not null)
@@ -145,7 +148,10 @@ public class TeamSubscriber(
         foreach (var teamMember in team.TeamMembers.Where(teamMember => teamMembers.All(item => item.Id != teamMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(teamMember.Customer.Id, cancellationToken);
-            ArgumentNullException.ThrowIfNull(customer);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
 
             OrganizationMember? organizationMember = null;
             if (teamMember.OrganizationMember is not null)
@@ -190,7 +196,10 @@ public class TeamSubscriber(
                 .FirstAsync(cancellationToken);
 
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
-            ArgumentNullException.ThrowIfNull(customer);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
 
             var existingTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
             customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != existingTeam.Id).ToList();
@@ -210,7 +219,10 @@ public class TeamSubscriber(
         foreach (var customerId in customerIds)
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
-            ArgumentNullException.ThrowIfNull(customer);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
 
             customer.PreferredTeams = customer.PreferredTeams.Where(item => item.Id != team.Id).ToList();
             _ = repositoryFactory.CustomerRepository.Update(customer);

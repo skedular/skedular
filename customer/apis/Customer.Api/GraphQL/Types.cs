@@ -5,9 +5,6 @@ using HotChocolate;
 using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace Customer.Api.GraphQL;
 
 [GraphQLName("AddCustomerPreferredLocationInput")]

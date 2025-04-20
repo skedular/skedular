@@ -8,10 +8,7 @@ using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace Notification.Processors.Subscribers;
 
-public class CustomerSubscriber(
-    ILogger<CustomerSubscriber> logger,
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory)
+public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -59,31 +56,16 @@ public class CustomerSubscriber(
 
     private async Task HandleCustomerUpsertedEventAsync(
         Customer customer,
-        Shared.Database.Entities.Customer? existingCustomer,
+        Shared.Database.Entities.Customer existingCustomer,
         CancellationToken cancellationToken)
     {
-        if (existingCustomer is null)
-        {
-            var identities = mapper.MapToEntity(customer.Identities, null).ToList();
-            existingCustomer = mapper.MapToEntity(customer, identities);
-
-            identities.ForEach(identity => identity.Customer = existingCustomer);
-            repositoryFactory.IdentityRepository.AddRange(identities);
-            existingCustomer.Identities = identities;
-            _ = repositoryFactory.CustomerRepository.Add(existingCustomer);
-        }
-        else
-        {
-            _ = RebuildIdentities(customer, existingCustomer);
-            repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
-        }
+        _ = RebuildIdentities(customer, existingCustomer);
+        repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleCustomerDeletedEventAsync(
-        Shared.Database.Entities.Customer existingCustomer,
-        CancellationToken cancellationToken)
+    private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.CustomerRepository.Remove(existingCustomer);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -91,14 +73,11 @@ public class CustomerSubscriber(
 
     private Shared.Database.Entities.Customer RebuildIdentities(Customer customer, Shared.Database.Entities.Customer existingCustomer)
     {
-        var itemsToRemove = existingCustomer.Identities
-            .Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
+        var itemsToRemove = existingCustomer.Identities.Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
         var updatedItems = existingCustomer.Identities
             .Where(identity => customer.Identities.Any(item => item.Id == identity.Id))
-            .Select(identity => repositoryFactory.IdentityRepository.Update(mapper.MergeToEntity(
-                customer.Identities.First(item => item.Id == identity.Id),
-                identity,
-                existingCustomer)))
+            .Select(identity => repositoryFactory.IdentityRepository.Update(
+                mapper.MergeToEntity(customer.Identities.First(item => item.Id == identity.Id), identity, existingCustomer)))
             .ToList();
         var addedItems = customer.Identities
             .Where(identity => existingCustomer.Identities.All(item => item.Id != identity.Id))

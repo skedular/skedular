@@ -54,7 +54,10 @@ public class AddResourceButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        ArgumentNullException.ThrowIfNull(customer);
+        if (customer is null)
+        {
+            throw new CustomerNotFound();
+        }
 
         var resourceType = new InputBlock
         {

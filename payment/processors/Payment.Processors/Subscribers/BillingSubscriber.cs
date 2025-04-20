@@ -50,20 +50,19 @@ public class BillingSubscriber(
             return;
         }
 
-        if (await repositoryFactory
-                .OrganizationOfferingStripePaymentIntentRepository.Query(
-                    new Specification<OrganizationOfferingStripePaymentIntent>
-                    {
-                        Criteria = query => query.OrganizationOffering.Id == organizationOfferingBilling.OfferingId
-                    }).AnyAsync(cancellationToken))
+        if (await repositoryFactory.OrganizationOfferingStripePaymentIntentRepository.Query(
+                new Specification<OrganizationOfferingStripePaymentIntent>
+                {
+                    Criteria = query => query.OrganizationOffering.Id == organizationOfferingBilling.OfferingId
+                }).AnyAsync(cancellationToken))
         {
             return;
         }
 
-        var organizationOffering = await repositoryFactory
-            .OrganizationOfferingRepository.Query(
-                new Specification<OrganizationOffering> { Criteria = query => query.Id == organizationOfferingBilling.OfferingId }.ApplyOrderBy(
-                    query => query.Id)).FirstOrDefaultAsync(cancellationToken);
+        var organizationOffering = await repositoryFactory.OrganizationOfferingRepository
+            .Query(new Specification<OrganizationOffering> { Criteria = query => query.Id == organizationOfferingBilling.OfferingId }
+                .ApplyOrderBy(query => query.Id))
+            .FirstOrDefaultAsync(cancellationToken);
         if (organizationOffering is null)
         {
             logger.LogError(
@@ -73,10 +72,10 @@ public class BillingSubscriber(
             return;
         }
 
-        var organization = await repositoryFactory
-            .OrganizationRepository.Query(
-                new Specification<Organization> { Criteria = query => query.Id == organizationOfferingBilling.OrganizationId }.ApplyOrderBy(query =>
-                    query.Id)).FirstOrDefaultAsync(cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository
+            .Query(new Specification<Organization> { Criteria = query => query.Id == organizationOfferingBilling.OrganizationId }
+                .ApplyOrderBy(query => query.Id))
+            .FirstOrDefaultAsync(cancellationToken);
         if (organization is null)
         {
             logger.LogError("no organization exist with given organization Id: {OrganizationId}", organizationOfferingBilling.OrganizationId);
@@ -84,14 +83,13 @@ public class BillingSubscriber(
             return;
         }
 
-        var organizationStripePaymentMethods = await repositoryFactory
-            .OrganizationStripePaymentMethodRepository.Query(
-                new Specification<OrganizationStripePaymentMethod>
-                {
-                    Criteria = query =>
-                        query.Organization.Id == organizationOfferingBilling.OrganizationId &&
-                        query.Status == OrganizationStripePaymentMethodStatus.Confirmed
-                }).ToListAsync(cancellationToken);
+        var organizationStripePaymentMethods = await repositoryFactory.OrganizationStripePaymentMethodRepository.Query(
+            new Specification<OrganizationStripePaymentMethod>
+            {
+                Criteria = query =>
+                    query.Organization.Id == organizationOfferingBilling.OrganizationId &&
+                    query.Status == OrganizationStripePaymentMethodStatus.Confirmed
+            }).ToListAsync(cancellationToken);
         if (organizationStripePaymentMethods.Count == 0)
         {
             logger.LogError(

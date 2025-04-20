@@ -8,10 +8,7 @@ using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace MsTeams.Processors.Subscribers;
 
-public class CustomerSubscriber(
-    ILogger<CustomerSubscriber> logger,
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory)
+public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -76,8 +73,7 @@ public class CustomerSubscriber(
 
     private Shared.Database.Entities.Customer RebuildIdentities(Customer customer, Shared.Database.Entities.Customer existingCustomer)
     {
-        var itemsToRemove = existingCustomer.Identities
-            .Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
+        var itemsToRemove = existingCustomer.Identities.Where(identity => customer.Identities.All(item => item.Id != identity.Id)).ToList();
         var updatedItems = existingCustomer.Identities
             .Where(identity => customer.Identities.Any(item => item.Id == identity.Id))
             .Select(identity => repositoryFactory.IdentityRepository.Update(mapper.MergeToEntity(

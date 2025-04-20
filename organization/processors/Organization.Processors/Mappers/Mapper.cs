@@ -45,14 +45,10 @@ public interface IMapper
         Shared.Database.Entities.Location dest,
         Shared.Database.Entities.Organization organization);
 
-    Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization organization);
-
     Shared.Database.Entities.Team MergeToEntity(
         Team src,
         Shared.Database.Entities.Team dest,
         Shared.Database.Entities.Organization organization);
-
-    Shared.Database.Entities.Booking MapToEntity(Booking src, Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
@@ -212,9 +208,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Team MapToEntity(Team src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.Team(), organization);
-
     public Shared.Database.Entities.Team MergeToEntity(
         Team src,
         Shared.Database.Entities.Team dest,
@@ -225,9 +218,6 @@ public class Mapper : IMapper
         dest.Organization = organization;
         return dest;
     }
-
-    public Shared.Database.Entities.Booking MapToEntity(Booking src, Shared.Database.Entities.Organization organization) =>
-        MergeToEntity(src, new Shared.Database.Entities.Booking(), organization);
 
     public Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
@@ -353,7 +343,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    private OrganizationMember MergeToEntity(
+    private static OrganizationMember MergeToEntity(
         Shared.Models.OrganizationMember src,
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,

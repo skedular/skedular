@@ -55,6 +55,8 @@ public static class Extensions
             .AddSingleton(stripeConfiguration)
             .AddScoped<ICreatable<Customer, CustomerCreateOptions>, CustomerService>()
             .AddScoped<IUpdatable<Customer, CustomerUpdateOptions>, CustomerService>()
+            .AddScoped<ICreatable<Account, AccountCreateOptions>, AccountService>()
+            .AddScoped<IUpdatable<Account, AccountUpdateOptions>, AccountService>()
             .AddScoped<ICreatable<PaymentIntent, PaymentIntentCreateOptions>, PaymentIntentService>()
             .AddScoped<ICreatable<SetupIntent, SetupIntentCreateOptions>, SetupIntentService>()
             .AddScoped<IRetrievable<SetupIntent, SetupIntentGetOptions>, SetupIntentService>()

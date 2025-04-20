@@ -4,6 +4,7 @@ using Customer.Processors.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Microsoft.EntityFrameworkCore;
 using Organization = Customer.Shared.Database.Entities.Organization;
@@ -26,9 +27,7 @@ public class OrganizationSubscriber(
             case Type.OrganizationUpserted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                        organization.Id,
-                        cancellationToken);
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
                     if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
@@ -80,7 +79,6 @@ public class OrganizationSubscriber(
         CancellationToken cancellationToken)
     {
         existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
-
         existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         _ = RebuildOrganizationSsoSettings(organization, existingOrganization);
@@ -113,7 +111,10 @@ public class OrganizationSubscriber(
                      organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(organizationMember.Customer.Id, cancellationToken);
-            ArgumentNullException.ThrowIfNull(customer);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
 
             var updatedOrganizationMember = mapper.MergeToEntity(
                 organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
@@ -128,10 +129,12 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in organization.OrganizationMembers
                      .Where(organizationMember => organizationMembers.All(item => item.Id != organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(
-                organizationMember.Customer.Id,
-                cancellationToken);
-            ArgumentNullException.ThrowIfNull(customer);
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(organizationMember.Customer.Id, cancellationToken);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
+
             addedItems.Add(
                 repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(organizationMember, existingOrganization, customer)));
         }
@@ -158,9 +161,11 @@ public class OrganizationSubscriber(
                         .AddInclude(query => query.Customer))
                 .FirstAsync(cancellationToken);
 
-            var customer =
-                await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
-            ArgumentNullException.ThrowIfNull(customer);
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(member.Customer.Id, cancellationToken);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
 
             var existingOrganizationId = customer.DefaultOrganization?.Id;
 
@@ -206,7 +211,10 @@ public class OrganizationSubscriber(
         foreach (var customerId in customerIds)
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
-            ArgumentNullException.ThrowIfNull(customer);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
 
             customer.DefaultOrganization = null;
             _ = repositoryFactory.CustomerRepository.Update(customer);

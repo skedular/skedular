@@ -6,6 +6,8 @@ public class CustomerNotFound() : Exception("Customer not found");
 
 public class OrganizationNotFound() : Exception("Organization not found");
 
+public class OrganizationNameIsInvalid() : Exception("Organization name is invalid");
+
 public class OrganizationSsoIsNotYetSetup() : Exception("Organization SSO is not yet setup");
 
 public class OrganizationMemberNotFound() : Exception("Organization member not found");

@@ -3,6 +3,7 @@ using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Customer.Processors.Mappers;
 using Customer.Shared.Database.Entities;
 using Customer.Shared.Repositories;
+using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Kafka.Consume;
 using Location = Customer.Shared.Database.Entities.Location;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type;
@@ -22,10 +23,7 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
 
                     var location = mapper.MapTo(@event);
                     var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
-                    var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(
-                        location.Id,
-                        organization,
-                        cancellationToken);
+                    var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, organization, cancellationToken);
                     if (existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Location event. Event timestamp is older that what is already processed.");
@@ -114,7 +112,10 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
         foreach (var customerId in customerIds)
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken);
-            ArgumentNullException.ThrowIfNull(customer);
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
 
             customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != location.Id).ToList();
             customer.PreferredResources =

@@ -15,7 +15,6 @@ public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
-    ICreatable<Customer, CustomerCreateOptions> stripeCustomerCreateService,
     IUpdatable<Customer, CustomerUpdateOptions> stripeCustomerUpdateService)
     : IEventSubscriber<Key, Event>
 {
@@ -26,29 +25,22 @@ public class OrganizationSubscriber(
             case Type.OrganizationUpserted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, true, true, cancellationToken);
-                    if (existingOrganization is not null &&
-                        existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
+                    if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleOrganizationUpsertedEventAsync(
-                        @event,
-                        organization,
-                        existingOrganization,
-                        cancellationToken);
+                    await HandleOrganizationUpsertedEventAsync(@event, organization, existingOrganization, cancellationToken);
                 }
                 break;
 
             case Type.OrganizationDeleted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
                     if (existingOrganization is not null &&
                         existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
@@ -78,30 +70,17 @@ public class OrganizationSubscriber(
     private async Task HandleOrganizationUpsertedEventAsync(
         Event @event,
         Shared.Models.Organization organization,
-        Organization? existingOrganization,
+        Organization existingOrganization,
         CancellationToken cancellationToken)
     {
-        if (existingOrganization is null)
-        {
-            existingOrganization = mapper.MapToEntity(organization);
-            var stripeCreatedCustomer = await stripeCustomerCreateService.CreateAsync(
-                new CustomerCreateOptions { Name = existingOrganization.Name },
-                new RequestOptions { IdempotencyKey = organization.Id },
-                cancellationToken);
-            existingOrganization.StripeCustomerId = stripeCreatedCustomer.Id;
-            existingOrganization = repositoryFactory.OrganizationRepository.Add(existingOrganization);
-        }
-        else
-        {
-            existingOrganization = mapper.MergeToEntity(organization, existingOrganization);
-            var stripeUpdatedCustomer = await stripeCustomerUpdateService.UpdateAsync(
-                existingOrganization.StripeCustomerId,
-                new CustomerUpdateOptions { Name = existingOrganization.Name },
-                new RequestOptions { IdempotencyKey = @event.Metadata.Id },
-                cancellationToken);
-            existingOrganization.StripeCustomerId = stripeUpdatedCustomer.Id;
-            existingOrganization = repositoryFactory.OrganizationRepository.Update(existingOrganization);
-        }
+        existingOrganization = mapper.MergeToEntity(organization, existingOrganization);
+        var stripeUpdatedCustomer = await stripeCustomerUpdateService.UpdateAsync(
+            existingOrganization.StripeCustomerId,
+            new CustomerUpdateOptions { Name = existingOrganization.Name },
+            new RequestOptions { IdempotencyKey = @event.Metadata.Id },
+            cancellationToken);
+        existingOrganization.StripeCustomerId = stripeUpdatedCustomer.Id;
+        existingOrganization = repositoryFactory.OrganizationRepository.Update(existingOrganization);
 
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         existingOrganization = await RebuildOrganizationOfferingAsync(organization, existingOrganization, cancellationToken);
@@ -130,12 +109,9 @@ public class OrganizationSubscriber(
             .ToList();
         var updatedItems = new List<OrganizationMember>();
         foreach (var organizationMember in organizationMembers
-                     .Where(organizationMember =>
-                         organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
+                     .Where(organizationMember => organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                organizationMember.Customer.Id,
-                cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
             var updatedOrganizationMember = mapper.MergeToEntity(
                 organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
                 organizationMember,
@@ -146,15 +122,13 @@ public class OrganizationSubscriber(
         }
 
         var addedItems = new List<OrganizationMember>();
-        foreach (var organizationMember in organization.OrganizationMembers.Where(organizationMember =>
-                     organizationMembers.All(item => item.Id != organizationMember.Id)))
+        foreach (var organizationMember in organization.OrganizationMembers
+                     .Where(organizationMember => organizationMembers.All(item => item.Id != organizationMember.Id)))
         {
             var customer =
-                await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id,
-                    cancellationToken);
+                await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
             addedItems.Add(
-                repositoryFactory.OrganizationMemberRepository.Add(
-                    mapper.MapToEntity(organizationMember, existingOrganization, customer)));
+                repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(organizationMember, existingOrganization, customer)));
         }
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);
@@ -172,25 +146,22 @@ public class OrganizationSubscriber(
             existingOrganization.Id,
             cancellationToken);
         var itemsToRemove = organizationOfferings
-            .Where(organizationOffering =>
-                organization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id)).ToList();
+            .Where(organizationOffering => organization.OrganizationOfferings.All(item => item.Id != organizationOffering.Id)).ToList();
         var updatedItems = organizationOfferings
             .Where(organizationOffering =>
-                organization.OrganizationOfferings.Any(item => item.Id == organizationOffering.Id)).Select(
-                organizationOffering =>
-                {
-                    var mappedUpdatedOffering = mapper.MergeToEntity(
-                        organization.OrganizationOfferings.First(item => item.Id == organizationOffering.Id),
-                        organizationOffering, existingOrganization);
-                    mappedUpdatedOffering.DeletedAt = null;
-                    return repositoryFactory.OrganizationOfferingRepository.Update(mappedUpdatedOffering);
-                }).ToList();
+                organization.OrganizationOfferings.Any(item => item.Id == organizationOffering.Id)).Select(organizationOffering =>
+            {
+                var mappedUpdatedOffering = mapper.MergeToEntity(
+                    organization.OrganizationOfferings.First(item => item.Id == organizationOffering.Id),
+                    organizationOffering, existingOrganization);
+                mappedUpdatedOffering.DeletedAt = null;
+                return repositoryFactory.OrganizationOfferingRepository.Update(mappedUpdatedOffering);
+            }).ToList();
         var addedItems = organization.OrganizationOfferings
             .Where(organizationOffering =>
-                organizationOfferings.All(item => item.Id != organizationOffering.Id)).Select(
-                organizationOffering =>
-                    repositoryFactory.OrganizationOfferingRepository.Add(
-                        mapper.MapToEntity(organizationOffering, existingOrganization))).ToList();
+                organizationOfferings.All(item => item.Id != organizationOffering.Id)).Select(organizationOffering =>
+                repositoryFactory.OrganizationOfferingRepository.Add(
+                    mapper.MapToEntity(organizationOffering, existingOrganization))).ToList();
 
         repositoryFactory.OrganizationOfferingRepository.RemoveRange(itemsToRemove);
         existingOrganization.OrganizationOfferings = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();

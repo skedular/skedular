@@ -36,11 +36,9 @@ public class PaymentSubscriber(
     private async Task HandleOrganizationPaymentMethodsUpdatedEventAsync(Event @event, CancellationToken cancellationToken)
     {
         var organizationPaymentMethod = @event.Data.OrganizationPaymentMethod;
-        var organization = await repositoryFactory.OrganizationRepository
-            .Query(new Specification<Shared.Database.Entities.Organization>
-            {
-                Criteria = query => query.Id == organizationPaymentMethod.OrganizationId
-            }).FirstAsync(cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.Query(
+                new Specification<Shared.Database.Entities.Organization> { Criteria = query => query.Id == organizationPaymentMethod.OrganizationId })
+            .FirstAsync(cancellationToken);
 
         var organizationId = organization.Id;
 
@@ -54,8 +52,7 @@ public class PaymentSubscriber(
                 return;
             }
 
-            var attachedPaymentMethodStateChanged = organization.HasAttachedPaymentMethod !=
-                                                    organizationPaymentMethod.HasAttachedPaymentMethod;
+            var attachedPaymentMethodStateChanged = organization.HasAttachedPaymentMethod != organizationPaymentMethod.HasAttachedPaymentMethod;
             if (attachedPaymentMethodStateChanged)
             {
                 organization.HasAttachedPaymentMethod = organizationPaymentMethod.HasAttachedPaymentMethod;
@@ -92,14 +89,13 @@ public class PaymentSubscriber(
                 repositoryFactory.OrganizationOfferingRepository.Remove(organizationOffering);
             }
 
-            // Looking for an existing offering to avoid creating duplicated offering as well as making sure we are not
-            // losing track of active users against free offering
+            // Looking for an existing offering to avoid creating a duplicated offering as well as making sure we are not
+            // losing track of active users against a free offering
             var existingFreeOffering = await repositoryFactory.OrganizationOfferingRepository
                 .Query(new Specification<OrganizationOffering>
                     {
                         Criteria = query =>
-                            query.Organization.Id == organizationId && query.Start <= now && query.End >= now &&
-                            query.Code == OfferingCode.FreeTierV1
+                            query.Organization.Id == organizationId && query.Start <= now && query.End >= now && query.Code == OfferingCode.FreeTierV1
                     }
                     .ApplyOrderBy(query => query.Id))
                 .FirstOrDefaultAsync(cancellationToken);
@@ -126,7 +122,7 @@ public class PaymentSubscriber(
         }
         finally
         {
-            // Always publish latest saved organization state. Since we do not use Outbox here, there is a chance we
+            // Always publish the latest saved organization state. Since we do not use Outbox here, there is a chance we
             // might have failed to do previous steps and this run is the result of replaying the event from retry topic
             organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
             await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization!)], cancellationToken);

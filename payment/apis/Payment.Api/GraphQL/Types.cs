@@ -3,7 +3,6 @@ using HotChocolate;
 using HotChocolate.Types.Relay;
 
 // ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Payment.Api.GraphQL;
 
@@ -46,6 +45,19 @@ public class RemoveOrganizationPaymentMethodInput
 
 [GraphQLName("RemoveOrganizationPaymentMethodResponse")]
 public class RemoveOrganizationPaymentMethodResponse
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+}
+
+[GraphQLName("AddOrganizationStripeConnectAccountInput")]
+public class AddOrganizationStripeConnectAccountInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+}
+
+[GraphQLName("AddOrganizationStripeConnectAccountResponse")]
+public class AddOrganizationStripeConnectAccountResponse
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 }

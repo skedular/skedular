@@ -62,7 +62,6 @@ public class LocationSubscriber(
         CancellationToken cancellationToken)
     {
         _ = repositoryFactory.LocationRepository.Update(mapper.MergeToEntity(location, existingLocation));
-
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 

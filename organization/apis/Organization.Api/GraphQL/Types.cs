@@ -6,9 +6,6 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Organization.Shared.Models;
 
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace Organization.Api.GraphQL;
 
 [GraphQLName("AcceptInvitationToJoinOrganizationInput")]
@@ -34,7 +31,10 @@ public class AddOrganizationInput
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("type")] public OrganizationType Type { get; set; }
-    [GraphQLName("memberVisibilityPolicy")] public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
+
+    [GraphQLName("memberVisibilityPolicy")]
+    public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
+
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUseId")] public string TermsOfUseId { get; set; } = string.Empty;
 
@@ -158,7 +158,10 @@ public class OrganizationDetails : Node
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
     [GraphQLName("type")] public OrganizationTypeDetails Type { get; set; }
-    [GraphQLName("memberVisibilityPolicy")] public OrganizationMemberVisibilityPolicyDetails MemberVisibilityPolicy { get; set; }
+
+    [GraphQLName("memberVisibilityPolicy")]
+    public OrganizationMemberVisibilityPolicyDetails MemberVisibilityPolicy { get; set; }
+
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }
 
@@ -309,7 +312,9 @@ public class UpdateOrganizationInput
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("type")] public OrganizationType Type { get; set; }
-    [GraphQLName("memberVisibilityPolicy")] public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
+
+    [GraphQLName("memberVisibilityPolicy")]
+    public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
 
     [GraphQLName("industrySubCategoryIds")]
     public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];

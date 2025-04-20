@@ -6,9 +6,6 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Team.Shared.Models;
 
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace Team.Api.GraphQL;
 
 [GraphQLName("AcceptInvitationToJoinTeamInput")]

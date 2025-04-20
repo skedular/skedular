@@ -61,8 +61,7 @@ public class TeamSubscriber(
                     var existingNotification = await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
                         notification.SourceId,
                         cancellationToken);
-                    if (existingNotification is not null &&
-                        existingNotification.EventRaisedAt > notification.EventRaisedAt)
+                    if (existingNotification is not null && existingNotification.EventRaisedAt > notification.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Notification event. Event timestamp is older that what is already processed.");
 
@@ -79,11 +78,9 @@ public class TeamSubscriber(
                     var existingNotification = await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
                         notification.SourceId,
                         cancellationToken);
-                    if (existingNotification is not null &&
-                        existingNotification.EventRaisedAt > notification.EventRaisedAt)
+                    if (existingNotification is not null && existingNotification.EventRaisedAt > notification.EventRaisedAt)
                     {
-                        logger.LogInformation(
-                            "Ignoring Notification event. Event timestamp is older that what is already processed.");
+                        logger.LogInformation("Ignoring Notification event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
@@ -103,13 +100,10 @@ public class TeamSubscriber(
 
     private async Task HandleTeamUpsertedEventAsync(
         Shared.Models.Team team,
-        Team? existingTeam,
+        Team existingTeam,
         CancellationToken cancellationToken)
     {
-        _ = existingTeam is null
-            ? repositoryFactory.TeamRepository.Add(mapper.MapToEntity(team))
-            : repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam));
-
+        _ = repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 

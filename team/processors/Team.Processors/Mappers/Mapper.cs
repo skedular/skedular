@@ -33,7 +33,6 @@ public interface IMapper
     IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src, Shared.Database.Entities.Customer? customer);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
-    Shared.Database.Entities.Booking MapToEntity(Booking src, Shared.Database.Entities.Team team);
     Shared.Database.Entities.Booking MergeToEntity(Booking src, Shared.Database.Entities.Booking dest, Shared.Database.Entities.Team team);
     IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src);
 
@@ -241,9 +240,6 @@ public class Mapper : IMapper
 
         return dest;
     }
-
-    public Shared.Database.Entities.Booking MapToEntity(Booking src, Shared.Database.Entities.Team team) =>
-        MergeToEntity(src, new Shared.Database.Entities.Booking(), team);
 
     public Shared.Database.Entities.Booking MergeToEntity(
         Booking src,

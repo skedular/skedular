@@ -5,9 +5,6 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Notification.Shared.Models;
 
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace Notification.Api.GraphQL;
 
 [GraphQLName("Notification")]

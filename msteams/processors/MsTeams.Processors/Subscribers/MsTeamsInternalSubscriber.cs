@@ -27,9 +27,7 @@ public class MsTeamsInternalSubscriber(
         return EventSubscriberResults.Success;
     }
 
-    private async Task HandleRefreshAzureTenantTeamsAndChannelsEventAsync(
-        string tenantId,
-        CancellationToken cancellationToken)
+    private async Task HandleRefreshAzureTenantTeamsAndChannelsEventAsync(string tenantId, CancellationToken cancellationToken)
     {
         var existingTenant = await repositoryFactory.AzureTenantRepository.GetByIdAsync(tenantId, cancellationToken);
         if (existingTenant is null)
@@ -44,10 +42,7 @@ public class MsTeamsInternalSubscriber(
         var updatedTeams = existingTenant.AzureTenantTeams
             .Where(azureTenantTeam => azureTenantTeams.Any(item => item.Id == azureTenantTeam.Id))
             .Select(azureTenantTeam => repositoryFactory.AzureTenantTeamRepository.Update(
-                mapper.MergeToEntity(
-                    azureTenantTeams.First(item => item.Id == azureTenantTeam.Id),
-                    azureTenantTeam,
-                    existingTenant)))
+                mapper.MergeToEntity(azureTenantTeams.First(item => item.Id == azureTenantTeam.Id), azureTenantTeam, existingTenant)))
             .ToList();
         var addedTeams = azureTenantTeams
             .Where(azureTenantTeam => existingTenant.AzureTenantTeams.All(item => item.Id != azureTenantTeam.Id))
@@ -64,8 +59,7 @@ public class MsTeamsInternalSubscriber(
                 .Where(azureTenantTeamChannel => azureTenantTeamChannels.All(item => item.Id != azureTenantTeamChannel.Id))
                 .ToList();
             var updatedChannels = existingAzureTenantTeam.AzureTenantTeamChannels
-                .Where(azureTenantTeamChannel =>
-                    azureTenantTeamChannels.Any(item => item.Id == azureTenantTeamChannel.Id))
+                .Where(azureTenantTeamChannel => azureTenantTeamChannels.Any(item => item.Id == azureTenantTeamChannel.Id))
                 .Select(azureTenantTeamChannel => repositoryFactory.AzureTenantTeamChannelRepository.Update(
                     mapper.MergeToEntity(
                         azureTenantTeamChannels.First(item => item.Id == azureTenantTeamChannel.Id),

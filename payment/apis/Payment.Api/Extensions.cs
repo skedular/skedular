@@ -14,7 +14,8 @@ public static class Extensions
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<IOrganizationService, OrganizationService>()
-            .AddScoped<IPaymentService, PaymentService>()
+            .AddScoped<IOrganizationPaymentService, OrganizationPaymentService>()
+            .AddScoped<IOrganizationStripeConnectAccountService, OrganizationStripeConnectAccountService>()
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>

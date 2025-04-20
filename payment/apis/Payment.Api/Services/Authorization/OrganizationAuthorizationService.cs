@@ -8,6 +8,7 @@ public interface IOrganizationAuthorizationService
 {
     bool CanViewPaymentMethod(Organization organization, Customer customer);
     bool CanManagePaymentMethod(Organization organization, Customer customer);
+    bool CanManageStripeConnectAccount(Organization organization, Customer customer);
 }
 
 public class OrganizationAuthorizationService : IOrganizationAuthorizationService
@@ -16,15 +17,20 @@ public class OrganizationAuthorizationService : IOrganizationAuthorizationServic
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
         };
 
     public bool CanManagePaymentMethod(Organization organization, Customer customer) =>
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+        };
+
+    public bool CanManageStripeConnectAccount(Organization organization, Customer customer) => 
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customer.Id) is
+        {
+            Status: OrganizationMemberStatusConstants.Active,
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
         };
 }

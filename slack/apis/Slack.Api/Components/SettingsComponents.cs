@@ -1,3 +1,4 @@
+using Enterprise.Shared.Exceptions;
 using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
@@ -29,7 +30,10 @@ public class SettingsComponents(ICustomerService customerService, ILocationServi
     {
         pageContext = pageContext.PushCurrentPageToVisitedPagesAndClone();
         var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        ArgumentNullException.ThrowIfNull(customer);
+        if (customer is null)
+        {
+            throw new CustomerNotFound();
+        }
 
         if (customer.IsPreferredLocationOnboardingDone.HasValue && customer.IsPreferredLocationOnboardingDone.Value)
         {
@@ -70,7 +74,11 @@ public class SettingsComponents(ICustomerService customerService, ILocationServi
     {
         pageContext = pageContext.PushCurrentPageToVisitedPagesAndClone();
         var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        ArgumentNullException.ThrowIfNull(customer);
+        if (customer is null)
+        {
+            throw new CustomerNotFound();
+        }
+
         if (customer.IsPreferredZoneOnboardingDone.HasValue && customer.IsPreferredZoneOnboardingDone.Value)
         {
             return [];

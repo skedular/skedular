@@ -2,9 +2,6 @@ using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Relay;
 
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace Billing.Api.GraphQL;
 
 [GraphQLName("OrganizationBillingContactDetailsPayload")]

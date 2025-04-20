@@ -63,7 +63,6 @@ public class TeamSubscriber(
     private async Task HandleTeamUpsertedEventAsync(Shared.Models.Team team, Team existingTeam, CancellationToken cancellationToken)
     {
         _ = repositoryFactory.TeamRepository.Update(mapper.MergeToEntity(team, existingTeam));
-
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 

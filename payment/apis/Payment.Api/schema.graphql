@@ -9,9 +9,14 @@ type AddOrganizationPaymentMethodIntentResponse {
   clientSecret: String!
 }
 
+type AddOrganizationStripeConnectAccountResponse {
+  clientMutationId: String
+}
+
 type Mutation {
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodResponse @cost(weight: "10")
+  addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): AddOrganizationStripeConnectAccountResponse @cost(weight: "10")
 }
 
 type OrganizationPaymentMethod {
@@ -45,6 +50,11 @@ type Version {
 }
 
 input AddOrganizationPaymentMethodIntentInput {
+  clientMutationId: String
+  organizationId: String!
+}
+
+input AddOrganizationStripeConnectAccountInput {
   clientMutationId: String
   organizationId: String!
 }

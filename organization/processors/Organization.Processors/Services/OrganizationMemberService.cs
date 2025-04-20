@@ -11,10 +11,8 @@ public interface IOrganizationMemberService
     Task AddMembersAsync(string organizationId, IReadOnlyCollection<OrganizationMember> members, CancellationToken cancellationToken);
 }
 
-public class OrganizationMemberService(
-    IRepositoryFactory repositoryFactory,
-    IMapper mapper,
-    IOrganizationPublisher organizationPublisher) : IOrganizationMemberService
+public class OrganizationMemberService(IRepositoryFactory repositoryFactory, IMapper mapper, IOrganizationPublisher organizationPublisher)
+    : IOrganizationMemberService
 {
     public async Task AddMembersAsync(string organizationId, IReadOnlyCollection<OrganizationMember> members, CancellationToken cancellationToken)
     {

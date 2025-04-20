@@ -5,7 +5,7 @@ using Payment.Api.Services;
 namespace Payment.Api.Controllers;
 
 [ApiController]
-public class PaymentController(IPaymentService paymentService) : PaymentControllerBase
+public class PaymentController(IOrganizationPaymentService organizationPaymentService) : PaymentControllerBase
 {
     public override async Task<IActionResult> AddOrganizationPaymentMethod(
         // ReSharper disable InconsistentNaming
@@ -14,7 +14,7 @@ public class PaymentController(IPaymentService paymentService) : PaymentControll
         string redirect_status,
         // ReSharper restore InconsistentNaming
         CancellationToken cancellationToken = default) =>
-        Redirect(await paymentService.AddOrganizationPaymentMethodAsync(
+        Redirect(await organizationPaymentService.AddPaymentMethodAsync(
             setup_intent,
             setup_intent_client_secret,
             redirect_status,

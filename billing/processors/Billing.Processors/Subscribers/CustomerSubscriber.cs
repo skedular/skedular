@@ -8,10 +8,7 @@ using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace Billing.Processors.Subscribers;
 
-public class CustomerSubscriber(
-    ILogger<CustomerSubscriber> logger,
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory)
+public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)

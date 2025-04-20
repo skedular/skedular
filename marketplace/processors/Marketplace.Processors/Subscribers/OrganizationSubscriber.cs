@@ -67,7 +67,6 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
         CancellationToken cancellationToken)
     {
         existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
-
         existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         _ = RebuildOrganizationSsoSettings(organization, existingOrganization);
@@ -97,9 +96,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
         foreach (var organizationMember in organizationMembers.Where(organizationMember =>
                      organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                organizationMember.Customer.Id,
-                cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
             var updatedOrganizationMember = mapper.MergeToEntity(
                 organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
                 organizationMember,
@@ -115,8 +112,7 @@ public class OrganizationSubscriber(ILogger<OrganizationSubscriber> logger, IMap
         {
             var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
             addedItems.Add(
-                repositoryFactory.OrganizationMemberRepository.Add(
-                    mapper.MapToEntity(organizationMember, existingOrganization, customer)));
+                repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(organizationMember, existingOrganization, customer)));
         }
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);

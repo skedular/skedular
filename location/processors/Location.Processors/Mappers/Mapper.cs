@@ -24,11 +24,6 @@ public interface IMapper
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
 
-    Shared.Database.Entities.Booking MapToEntity(
-        Booking src,
-        Shared.Database.Entities.Location location,
-        ICollection<Resource> resources);
-
     Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
@@ -213,9 +208,6 @@ public class Mapper : IMapper
 
         return dest;
     }
-
-    public Shared.Database.Entities.Booking MapToEntity(Booking src, Shared.Database.Entities.Location location, ICollection<Resource> resources) =>
-        MergeToEntity(src, new Shared.Database.Entities.Booking(), location, resources);
 
     public Shared.Database.Entities.Booking MergeToEntity(
         Booking src,

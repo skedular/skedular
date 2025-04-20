@@ -28,36 +28,30 @@ public class BookingSubscriber(
             case Type.BookingUpserted:
                 {
                     var booking = mapper.MapTo(@event);
-                    var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
-                    if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
+                    if (string.IsNullOrWhiteSpace(booking.Organization.Id))
                     {
-                        logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
-
-                        return EventSubscriberResults.Success;
+                        await HandleBookingDeletedEventAsync(booking, cancellationToken);
                     }
+                    else
+                    {
+                        var existingBooking = await repositoryFactory.BookingRepository.UpsertNakedAsync(booking.Id, cancellationToken);
+                        if (existingBooking.EventRaisedAt > booking.EventRaisedAt)
+                        {
+                            logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
 
-                    await TrackActiveMembersAsync(@event, cancellationToken);
-                    await HandleBookingUpsertedEventAsync(booking, existingBooking, cancellationToken);
+                            return EventSubscriberResults.Success;
+                        }
+
+                        await TrackActiveMembersAsync(@event, cancellationToken);
+                        await HandleBookingUpsertedEventAsync(booking, existingBooking, cancellationToken);
+                    }
                 }
                 break;
 
             case Type.BookingDeleted:
                 {
                     var booking = mapper.MapTo(@event);
-                    var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
-                    if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
-                    {
-                        logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
-
-                        return EventSubscriberResults.Success;
-                    }
-
-                    if (existingBooking is null)
-                    {
-                        return EventSubscriberResults.Success;
-                    }
-
-                    await HandleBookingDeletedEventAsync(existingBooking, cancellationToken);
+                    await HandleBookingDeletedEventAsync(booking, cancellationToken);
                 }
                 break;
         }
@@ -72,7 +66,7 @@ public class BookingSubscriber(
 
         if (string.IsNullOrWhiteSpace(customerId))
         {
-            // Booking not attached to customer for whatever reason, ignoring it
+            // The booking is not attached to any customer for whatever reason, ignoring it
             return;
         }
 
@@ -99,7 +93,7 @@ public class BookingSubscriber(
         var organizationMember = organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId);
         if (organizationMember is null)
         {
-            // Customer not found, ignoring it
+            // Customer isn't found ignoring it
             return;
         }
 
@@ -126,38 +120,35 @@ public class BookingSubscriber(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking? existingBooking, CancellationToken cancellationToken)
+    private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking existingBooking, CancellationToken cancellationToken)
     {
-        if (existingBooking is not null && string.IsNullOrWhiteSpace(booking.Organization.Id))
-        {
-            // If booking already exist and is now detached from organization, delete it
-            _ = repositoryFactory.BookingRepository.Remove(existingBooking);
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(booking.Organization.Id))
-        {
-            // Booking not attached to any organization, ignoring it
-            return;
-        }
-
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(booking.Organization.Id, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
         }
 
-        _ = existingBooking is null
-            ? repositoryFactory.BookingRepository.Add(mapper.MapToEntity(booking, organization))
-            : repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, organization));
+        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, organization));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task HandleBookingDeletedEventAsync(Booking existingBooking, CancellationToken cancellationToken)
+    private async Task HandleBookingDeletedEventAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
+        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
+        if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
+        {
+            logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
+
+            return;
+        }
+
+        if (existingBooking is null)
+        {
+            return;
+        }
+
+
         _ = repositoryFactory.BookingRepository.Remove(existingBooking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

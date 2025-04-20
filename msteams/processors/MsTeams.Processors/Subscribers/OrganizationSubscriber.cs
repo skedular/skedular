@@ -25,9 +25,7 @@ public class OrganizationSubscriber(
             case Type.OrganizationUpserted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
-                        organization.Id,
-                        cancellationToken);
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
                     if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
@@ -42,10 +40,8 @@ public class OrganizationSubscriber(
             case Type.OrganizationDeleted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization =
-                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
-                    if (existingOrganization is not null &&
-                        existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
+                    if (existingOrganization is not null && existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
 
@@ -84,7 +80,6 @@ public class OrganizationSubscriber(
         }
 
         existingOrganization.AzureTenants = azureTenants;
-
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         _ = RebuildOrganizationSsoSettings(organization, existingOrganization);
 
@@ -117,9 +112,7 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in organizationMembers.Where(organizationMember =>
                      organization.OrganizationMembers.Any(item => item.Id == organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                organizationMember.Customer.Id,
-                cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
             var updatedOrganizationMember = mapper.MergeToEntity(
                 organization.OrganizationMembers.First(item => item.Id == organizationMember.Id),
                 organizationMember,
@@ -133,12 +126,9 @@ public class OrganizationSubscriber(
         foreach (var organizationMember in organization.OrganizationMembers
                      .Where(organizationMember => organizationMembers.All(item => item.Id != organizationMember.Id)))
         {
-            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(
-                organizationMember.Customer.Id,
-                cancellationToken);
+            var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(organizationMember.Customer.Id, cancellationToken);
             addedItems.Add(
-                repositoryFactory.OrganizationMemberRepository.Add(
-                    mapper.MapToEntity(organizationMember, existingOrganization, customer)));
+                repositoryFactory.OrganizationMemberRepository.Add(mapper.MapToEntity(organizationMember, existingOrganization, customer)));
         }
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);

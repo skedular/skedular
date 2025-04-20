@@ -5,9 +5,6 @@ using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Location.Shared.Models;
 
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace Location.Api.GraphQL;
 
 [GraphQLName("AcceptInvitationToJoinLocationInput")]

@@ -727,7 +727,10 @@ public class HomePage(
         CancellationToken cancellationToken)
     {
         var customer = await customerService.GetAsync(workspaceMember, cancellationToken);
-        ArgumentNullException.ThrowIfNull(customer);
+        if (customer is null)
+        {
+            throw new CustomerNotFound();
+        }
 
         pageContext = pageContext.Clone();
         ArgumentNullException.ThrowIfNull(pageContext.HomePage);

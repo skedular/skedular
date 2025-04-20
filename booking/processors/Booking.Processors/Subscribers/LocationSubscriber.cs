@@ -29,10 +29,7 @@ public class LocationSubscriber(
 
                     var location = mapper.MapTo(@event);
                     var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
-                    var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(
-                        location.Id,
-                        organization,
-                        cancellationToken);
+                    var existingLocation = await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, organization, cancellationToken);
                     if (existingLocation.EventRaisedAt > location.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Location event. Event timestamp is older that what is already processed.");
@@ -137,20 +134,16 @@ public class LocationSubscriber(
             .Select(existingResource =>
             {
                 var filteredOrganizationTags = organizationTags
-                    .Where(tag =>
-                        location.Resources
-                            .First(item => item.Id == existingResource.Id).OrganizationTags
-                            .Any(organizationTag => organizationTag.Id == tag.Id))
+                    .Where(tag => location.Resources
+                        .First(item => item.Id == existingResource.Id).OrganizationTags
+                        .Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
 
                 var resource = location.Resources.First(item => item.Id == existingResource.Id);
 
-                if (resource.IsAvailableHoursOverridden != existingResource.IsAvailableHoursOverridden)
-                {
-                    resourceIdsToRegenerateBookingSlots.Add(resource.Id);
-                }
-                else if (!resource.AvailableHours.IsEqual(existingResource.AvailableHours))
+                if (resource.IsAvailableHoursOverridden != existingResource.IsAvailableHoursOverridden ||
+                    !resource.AvailableHours.IsEqual(existingResource.AvailableHours))
                 {
                     resourceIdsToRegenerateBookingSlots.Add(resource.Id);
                 }

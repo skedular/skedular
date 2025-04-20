@@ -37,8 +37,7 @@ public class OrganizationSubscriber(
                 {
                     var organization = mapper.MapTo(@event);
                     var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
-                    if (existingOrganization is not null &&
-                        existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                    if (existingOrganization is not null && existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
 
@@ -60,8 +59,7 @@ public class OrganizationSubscriber(
                     var existingNotification = await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
                         notification.SourceId,
                         cancellationToken);
-                    if (existingNotification is not null &&
-                        existingNotification.EventRaisedAt > notification.EventRaisedAt)
+                    if (existingNotification is not null && existingNotification.EventRaisedAt > notification.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Notification event. Event timestamp is older that what is already processed.");
 
@@ -75,12 +73,10 @@ public class OrganizationSubscriber(
             case Type.InvitationToJoinOrganizationDeleted:
                 {
                     var notification = mapper.MapInvitationToJoinOrganizationToNotification(@event);
-                    var existingNotification =
-                        await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
-                            notification.SourceId,
-                            cancellationToken);
-                    if (existingNotification is not null &&
-                        existingNotification.EventRaisedAt > notification.EventRaisedAt)
+                    var existingNotification = await repositoryFactory.NotificationRepository.GetBySourceIdAsync(
+                        notification.SourceId,
+                        cancellationToken);
+                    if (existingNotification is not null && existingNotification.EventRaisedAt > notification.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Notification event. Event timestamp is older that what is already processed.");
 
@@ -105,12 +101,10 @@ public class OrganizationSubscriber(
 
     private async Task HandleOrganizationUpsertedEventAsync(
         Shared.Models.Organization organization,
-        Organization? existingOrganization,
+        Organization existingOrganization,
         CancellationToken cancellationToken)
     {
-        existingOrganization = existingOrganization is null
-            ? repositoryFactory.OrganizationRepository.Add(mapper.MapToEntity(organization))
-            : repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
+        existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
 
         _ = RebuildOrganizationSsoSettings(organization, existingOrganization);
 
@@ -141,8 +135,7 @@ public class OrganizationSubscriber(
             : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(notification.Organization.Id, cancellationToken);
 
         _ = existingNotification is null
-            ? repositoryFactory.NotificationRepository.Add(
-                mapper.MapToEntity(notification, invitedBy, invitee, organization, null, null))
+            ? repositoryFactory.NotificationRepository.Add(mapper.MapToEntity(notification, invitedBy, invitee, organization, null, null))
             : repositoryFactory.NotificationRepository.Update(
                 mapper.MergeToEntity(notification, existingNotification, invitedBy, invitee, organization, null, null));
 

@@ -60,9 +60,7 @@ public class CustomerSubscriber(ILogger<CustomerSubscriber> logger, IMapper mapp
         CancellationToken cancellationToken)
     {
         _ = RebuildIdentities(customer, existingCustomer);
-        _ = repositoryFactory.CustomerRepository.Update(
-            mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities)
-        );
+        _ = repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
