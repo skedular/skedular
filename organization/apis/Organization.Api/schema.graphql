@@ -121,6 +121,7 @@ type OrganizationDetails {
   agreedToTermsOfUse: Boolean!
   termsOfUse: OrganizationTermsOfUse
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  contactEmail: String
   physicalAddress: OrganizationAddressDetails!
   availableOfferings: [OrganizationOfferingDetails!]!
   activeOffering: OrganizationActiveOfferingDetails!
@@ -347,6 +348,7 @@ input AddOrganizationInput {
   about: String
   website: String
   type: OrganizationType!
+  contactEmail: String
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   agreedToTermsOfUse: Boolean!
   termsOfUseId: String!
@@ -538,6 +540,7 @@ input UpdateOrganizationInput {
   about: String
   website: String
   type: OrganizationType!
+  contactEmail: String
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
   industrySubCategoryIds: [String!]!
   physicalAddress: OrganizationAddressDetailsInput!

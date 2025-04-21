@@ -16,6 +16,7 @@ public class Location : EntityBaseWithDeleted
     public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
     public DateTimeOffset? DailyRoomCountLastRecordedAt { get; set; }
     public OpeningHours? OpeningHours { get; set; }
+    public string? ContactEmail { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? PhysicalAddressId { get; set; }
@@ -40,6 +41,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
         builder.Property(item => item.OpeningHours).HasColumnType("jsonb");
+        builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
 
         builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Location).HasForeignKey<Location>(item => item.PhysicalAddressId);
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations);

@@ -11,6 +11,7 @@ public class Location : ModelBaseWithDeleted
     public DateTimeOffset? DailyDeskCountLastRecordedAt { get; set; }
     public DateTimeOffset? DailyRoomCountLastRecordedAt { get; set; }
     public OpeningHours? OpeningHours { get; set; }
+    public string? ContactEmail { get; set; }
 
     public Address PhysicalAddress { get; set; }
 

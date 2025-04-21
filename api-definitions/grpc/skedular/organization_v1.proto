@@ -70,6 +70,7 @@ message Admin_AddInput {
     string offeringCode = 9;
     string type = 10;
     string memberVisibilityPolicy = 11;
+    string contactEmail = 12;
 }
 
 message Organization {
@@ -89,6 +90,7 @@ message Organization {
     repeated ResourceType resourceTypes = 14;
     string type = 15;
     string memberVisibilityPolicy = 16;
+    string contactEmail = 17;
 }
 
 message IndustrySubCategory {

@@ -10,7 +10,7 @@ namespace Organization.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Organization : EntityBaseWithDeleted
 {
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; }
     public string? About { get; set; }
     public string? Website { get; set; }
     public bool AgreedToTermsOfUse { get; set; }
@@ -20,6 +20,7 @@ public class Organization : EntityBaseWithDeleted
     public bool HasAttachedPaymentMethod { get; set; }
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
+    public string? ContactEmail { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
@@ -55,6 +56,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
             .Property(item => item.MemberVisibilityPolicy)
             .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
             .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
+        builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);

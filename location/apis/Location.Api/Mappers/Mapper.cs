@@ -102,6 +102,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            ContactEmail = src.ContactEmail,
             OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization),
             Tags = MapTo(src.OrganizationTags).ToList()
@@ -150,6 +151,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            ContactEmail = src.ContactEmail,
             OpeningHours = src.OpeningHours,
             Organization = organization,
             OrganizationTags = organizationTags
@@ -165,6 +167,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Timezone = src.Timezone;
+        dest.ContactEmail = src.ContactEmail;
         dest.OpeningHours = src.OpeningHours;
         dest.PhysicalAddress = physicalAddress;
         dest.OrganizationTags = organizationTags;
@@ -180,6 +183,7 @@ public class Mapper : IMapper
                 Name = src.Name,
                 About = src.About,
                 Timezone = src.Timezone,
+                ContactEmail = src.ContactEmail,
                 OpeningHours = MapTo(src.OpeningHours),
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
@@ -349,6 +353,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            ContactEmail = src.ContactEmail,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -366,6 +371,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            ContactEmail = src.ContactEmail,
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
@@ -416,6 +422,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            ContactEmail = src.ContactEmail,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -428,6 +435,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
+            ContactEmail = src.ContactEmail.ToSafeString(),
             OpeningHours = MapToGrpcResponse(src.OpeningHours),
             OrganizationId = src.Organization.Id,
             Permissions = new Permissions
@@ -455,6 +463,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            ContactEmail = src.ContactEmail,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
@@ -466,6 +475,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
+            ContactEmail = src.ContactEmail,
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };

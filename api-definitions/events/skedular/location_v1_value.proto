@@ -41,6 +41,7 @@ message Location {
   repeated string tagIds = 8;
   OpeningHours openingHours = 9;
   Address physicalAddress = 10;
+  string contactEmail = 11;
 }
 
 message Resource {

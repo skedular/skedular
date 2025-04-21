@@ -144,6 +144,7 @@ public class Mapper : IMapper
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),
+            ContactEmail = src.ContactEmail,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
@@ -209,6 +210,7 @@ public class Mapper : IMapper
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),
+            ContactEmail = src.ContactEmail,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             TermsOfUse = termsOfUse,
             IndustrySubCategories = industrySubCategories,
@@ -228,6 +230,7 @@ public class Mapper : IMapper
         dest.AgreedToTermsOfUse = src.AgreedToTermsOfUse;
         dest.LogoUrl = src.LogoUrl;
         dest.Type = src.Type.ToOrganizationType();
+        dest.ContactEmail = src.ContactEmail;
         dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
         dest.IndustrySubCategories = industrySubCategories;
         dest.PhysicalAddress = physicalAddress;
@@ -318,8 +321,8 @@ public class Mapper : IMapper
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
-            MemberVisibilityPolicy =
-                new OrganizationMemberVisibilityPolicyDetails
+            ContactEmail = src.ContactEmail,
+            MemberVisibilityPolicy = new OrganizationMemberVisibilityPolicyDetails
                 {
                     Type = src.MemberVisibilityPolicy, Name = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicyName()
                 },
@@ -375,6 +378,7 @@ public class Mapper : IMapper
             About = src.About,
             Website = src.Website,
             Type = src.Type,
+            ContactEmail = src.ContactEmail,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
@@ -395,6 +399,7 @@ public class Mapper : IMapper
             About = src.About,
             Website = src.Website,
             Type = src.Type,
+            ContactEmail = src.ContactEmail,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
@@ -414,6 +419,7 @@ public class Mapper : IMapper
             About = src.About,
             Website = src.Website,
             Type = src.Type.ToOrganizationType(),
+            ContactEmail = src.ContactEmail,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             TermsOfUse = string.IsNullOrWhiteSpace(src.TermsOfUseId) ? null : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
@@ -432,6 +438,7 @@ public class Mapper : IMapper
             About = src.About.ToSafeString(),
             Website = src.Website.ToSafeString(),
             Type = src.Type.ToOrganizationType(),
+            ContactEmail = src.ContactEmail.ToSafeString(),
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cd9fae82c1a1660e1298a48d20979c54>>
+ * @generated SignedSource<<a06bf9625389d20d1aae226d25c46363>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 export type UpdateLocationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
+  contactEmail?: string | null | undefined;
   id: string;
   locationTagIds: ReadonlyArray<string>;
   name: string;

@@ -21,6 +21,20 @@ public class AddLocationInput
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("physicalAddress")] public AddressDetailsInput PhysicalAddress { get; set; }
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
+    [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
+}
+
+[GraphQLName("UpdateLocationInput")]
+public class UpdateLocationInput
+{
+    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("about")] public string? About { get; set; }
+    [GraphQLName("timezone")] public string? Timezone { get; set; }
+    [GraphQLName("physicalAddress")] public AddressDetailsInput PhysicalAddress { get; set; }
+    [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
+    [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
 }
 
 [GraphQLName("DeleteLocationInput")]
@@ -74,6 +88,7 @@ public class LocationDetails : Node
     [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
     [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
     [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
+    [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 
@@ -119,18 +134,6 @@ public class LocationWhereInput
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
     [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
-}
-
-[GraphQLName("UpdateLocationInput")]
-public class UpdateLocationInput
-{
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("timezone")] public string? Timezone { get; set; }
-    [GraphQLName("physicalAddress")] public AddressDetailsInput PhysicalAddress { get; set; }
-    [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
 }
 
 [GraphQLName("LocationAddressDetails")]

@@ -55,6 +55,7 @@ type LocationDetails {
   zones: [Location_OrganizationTagDetails!]!
   resourceTypes: [Location_OrganizationTagDetails!]!
   locationTags: [Location_OrganizationTagDetails!]!
+  contactEmail: String
   id: ID!
 }
 
@@ -204,6 +205,7 @@ input AddLocationInput {
   timezone: String
   physicalAddress: LocationAddressDetailsInput!
   locationTagIds: [String!]!
+  contactEmail: String
 }
 
 input AddResourceInput {
@@ -292,6 +294,7 @@ input UpdateLocationInput {
   timezone: String
   physicalAddress: LocationAddressDetailsInput!
   locationTagIds: [String!]!
+  contactEmail: String
 }
 
 input UpdateLocationOpeningHoursInput {

@@ -50,6 +50,7 @@ message Organization {
   string type = 12;
   string memberVisibilityPolicy = 13;
   Address physicalAddress = 14;
+  string contactEmail = 15;
 }
 
 enum Role {
