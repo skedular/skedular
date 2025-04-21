@@ -1216,6 +1216,7 @@ input AddOrganizationPaymentMethodIntentInput {
 
 input AddOrganizationStripeConnectAccountInput {
   clientMutationId: String
+  name: String!
   organizationId: String!
 }
 

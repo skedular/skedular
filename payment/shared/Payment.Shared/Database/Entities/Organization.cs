@@ -17,14 +17,15 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
 
-    public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
-    public virtual ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
-    public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
-
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? PhysicalAddressId { get; set; }
     public virtual Address? PhysicalAddress { get; set; }
+
+    public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
+    public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
+    public virtual ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
+    public virtual ICollection<OrganizationStripeConnectAccount> OrganizationStripeConnectAccounts { get; set; } = [];
+    public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

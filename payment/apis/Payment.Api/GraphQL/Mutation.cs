@@ -37,7 +37,7 @@ public class Mutation(StripeConfiguration stripeConfiguration)
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
     {
-        await organizationStripeConnectAccountService.AddAsync(input.OrganizationId, cancellationToken);
+        await organizationStripeConnectAccountService.AddAsync(input.OrganizationId, input.Name, cancellationToken);
         return new AddOrganizationStripeConnectAccountResponse { ClientMutationId = input.ClientMutationId };
     }
 }

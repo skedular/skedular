@@ -57,6 +57,7 @@ input AddOrganizationPaymentMethodIntentInput {
 input AddOrganizationStripeConnectAccountInput {
   clientMutationId: String
   organizationId: String!
+  name: String!
 }
 
 input RemoveOrganizationPaymentMethodInput {

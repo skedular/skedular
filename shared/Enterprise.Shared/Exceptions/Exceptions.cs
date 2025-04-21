@@ -8,6 +8,12 @@ public class OrganizationNotFound() : Exception("Organization not found");
 
 public class OrganizationNameIsInvalid() : Exception("Organization name is invalid");
 
+public class OrganizationPhysicalAddressNotSet() : Exception("Organization address is not set");
+
+public class OrganizationContactEmailNotSet() : Exception("Organization contact email is not set");
+
+public class OrganizationContactPhoneNotSet() : Exception("Organization contact phone is not set");
+
 public class OrganizationSsoIsNotYetSetup() : Exception("Organization SSO is not yet setup");
 
 public class OrganizationMemberNotFound() : Exception("Organization member not found");

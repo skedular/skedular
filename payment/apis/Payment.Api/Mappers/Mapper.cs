@@ -1,8 +1,11 @@
+using Enterprise.Shared;
 using Payment.Api.GraphQL;
 using Payment.Shared.Models;
 using Stripe;
 using Customer = Payment.Shared.Models.Customer;
 using Identity = Payment.Shared.Database.Entities.Identity;
+using Organization = Payment.Shared.Database.Entities.Organization;
+using OrganizationStripeConnectAccount = Payment.Shared.Database.Entities.OrganizationStripeConnectAccount;
 
 namespace Payment.Api.Mappers;
 
@@ -15,9 +18,9 @@ public interface IMapper
         Shared.Database.Entities.OrganizationStripePaymentMethod dest);
 
     Customer MapTo(Shared.Database.Entities.Customer src);
-
-    IEnumerable<OrganizationStripePaymentMethod> MapTo(
-        IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src);
+    IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src);
+    AccountCreateOptions MapTo(Organization src);
+    OrganizationStripeConnectAccount MapTo(Account src, string name, Organization organization);
 }
 
 public class Mapper : IMapper
@@ -58,12 +61,41 @@ public class Mapper : IMapper
             Identities = MapTo(src.Identities).ToList()
         };
 
-    public IEnumerable<OrganizationStripePaymentMethod> MapTo(
-        IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src) =>
+    public IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src) =>
         src.Select(MapTo);
 
-    private static OrganizationStripePaymentMethod
-        MapTo(Shared.Database.Entities.OrganizationStripePaymentMethod src) =>
+    public AccountCreateOptions MapTo(Organization src) =>
+        new()
+        {
+            Company = new AccountCompanyOptions
+            {
+                Name = src.Name,
+                Address = new AddressOptions
+                {
+                    Line1 = src.PhysicalAddress?.AddressLine1.ToSafeString(),
+                    Line2 = src.PhysicalAddress?.AddressLine2.ToSafeString(),
+                    City = src.PhysicalAddress?.City.ToSafeString(),
+                    State = src.PhysicalAddress?.Province.ToSafeString(),
+                    PostalCode = src.PhysicalAddress?.Zipcode.ToSafeString(),
+                    Country = src.PhysicalAddress?.Country.ToSafeString()
+                },
+                Phone = src.ContactPhone
+            },
+            Email = src.ContactEmail
+        };
+
+    public OrganizationStripeConnectAccount MapTo(Account src, string name, Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            Name = name,
+            ChargesEnabled = src.ChargesEnabled,
+            PayoutsEnabled = src.PayoutsEnabled,
+            Type = src.Type,
+            Organization = organization
+        };
+
+    private static OrganizationStripePaymentMethod MapTo(Shared.Database.Entities.OrganizationStripePaymentMethod src) =>
         new()
         {
             Id = src.Id,

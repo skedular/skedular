@@ -55,6 +55,7 @@ public class AddOrganizationStripeConnectAccountInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("organizationId")] public required string OrganizationId { get; set; }
+    [GraphQLName("name")] public required string Name { get; set; }
 }
 
 [GraphQLName("AddOrganizationStripeConnectAccountResponse")]

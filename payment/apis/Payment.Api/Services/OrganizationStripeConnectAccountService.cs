@@ -1,5 +1,6 @@
+using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
-using Enterprise.Shared.Random;
+using Payment.Api.Mappers;
 using Payment.Api.Services.Authorization;
 using Payment.Shared.Repositories;
 using Stripe;
@@ -8,18 +9,22 @@ namespace Payment.Api.Services;
 
 public interface IOrganizationStripeConnectAccountService
 {
-    Task AddAsync(string id, CancellationToken cancellationToken);
+    Task AddAsync(string id, string name, CancellationToken cancellationToken);
 }
 
 public class OrganizationStripeConnectAccountService(
+    IDbTransactionBuilder transactionBuilder,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
     ICreatable<Account, AccountCreateOptions> stripeAccountCreateService,
-    IRandomHelper randomHelper) : IOrganizationStripeConnectAccountService
+    IMapper mapper) : IOrganizationStripeConnectAccountService
 {
-    public async Task AddAsync(string id, CancellationToken cancellationToken)
+    public async Task AddAsync(string id, string name, CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(id, false, false, cancellationToken);
         if (organization is null)
@@ -37,10 +42,28 @@ public class OrganizationStripeConnectAccountService(
             throw new OrganizationNameIsInvalid();
         }
 
-        await stripeAccountCreateService.CreateAsync(
-            new AccountCreateOptions { Company = new AccountCompanyOptions { Name = organization.Name } },
-            new RequestOptions { IdempotencyKey = randomHelper.Generate() }, cancellationToken);
+        if (string.IsNullOrWhiteSpace(organization.ContactEmail))
+        {
+            throw new OrganizationContactEmailNotSet();
+        }
 
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(organization.ContactPhone))
+        {
+            throw new OrganizationContactPhoneNotSet();
+        }
+
+        if (organization.PhysicalAddress is null)
+        {
+            throw new OrganizationPhysicalAddressNotSet();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        var account = await stripeAccountCreateService.CreateAsync(mapper.MapTo(organization), new RequestOptions(), cancellationToken);
+
+        repositoryFactory.OrganizationStripeConnectAccountRepository.Add(mapper.MapTo(account, name, organization));
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
     }
 }
