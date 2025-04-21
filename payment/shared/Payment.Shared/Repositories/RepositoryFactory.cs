@@ -17,6 +17,7 @@ public interface IRepositoryFactory
     IOrganizationStripePaymentMethodRepository OrganizationStripePaymentMethodRepository { get; }
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
+    IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
 }
 
 public class RepositoryFactory : IRepositoryFactory, IDisposable
@@ -38,6 +39,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
         OrganizationStripePaymentMethodRepository = new OrganizationStripePaymentMethodRepository(_dbContext, timeProvider);
         OrganizationStripeConnectAccountRepository = new OrganizationStripeConnectAccountRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
+        OrganizationStripeConnectAccountRefreshCodeRepository = new OrganizationStripeConnectAccountRefreshCodeRepository(_dbContext, timeProvider);
     }
 
     public void Dispose()
@@ -57,6 +59,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     public IOrganizationStripePaymentMethodRepository OrganizationStripePaymentMethodRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     public IOrganizationStripeConnectAccountRepository OrganizationStripeConnectAccountRepository { get; }
+    public IOrganizationStripeConnectAccountRefreshCodeRepository OrganizationStripeConnectAccountRefreshCodeRepository { get; }
 
     ~RepositoryFactory() => Dispose(false);
 

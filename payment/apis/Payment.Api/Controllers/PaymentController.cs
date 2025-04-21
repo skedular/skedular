@@ -27,10 +27,10 @@ public class PaymentController(
             cancellationToken));
 
     public override async Task<IActionResult> RefreshOrganizationStripeConnectAccountOnboarding(
-        string id,
+        string code,
         CancellationToken cancellationToken = default)
     {
-        var onboardingUrl = await organizationStripeConnectAccountService.GetNewOnboardingUrlAsync(id, cancellationToken);
+        var onboardingUrl = await organizationStripeConnectAccountService.GetNewOnboardingUrlAsync(code, cancellationToken);
         return Redirect(onboardingUrl);
     }
 

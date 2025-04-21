@@ -33,19 +33,19 @@ export class PaymentService {
     }
     /**
      * return OrganizationStripeConnectAccount onboarding refresh URL
-     * @param id
+     * @param code
      * @returns any should never be returned
      * @returns Error unexpected error
      * @throws ApiError
      */
     public refreshOrganizationStripeConnectAccountOnboarding(
-        id: string,
+        code: string,
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/payment/api/v1/organization-stripe-connect-account/{id}/refresh-onboarding-url',
-            path: {
-                'id': id,
+            url: '/payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url',
+            query: {
+                'code': code,
             },
             errors: {
                 302: `redirect to OrganizationStripeConnectAccounts new onboarding URL`,

@@ -67,3 +67,5 @@ public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
 public class ProductNotFound() : Exception("Product not found");
 
 public class OrganizationStripeConnectAccountNotFound() : Exception("Organization Stripe Connect Account not found");
+
+public class OrganizationStripeConnectAccountRefreshCodeNotFound() : Exception("Organization Stripe Connect Account refresh code not found");

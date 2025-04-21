@@ -1,7 +1,9 @@
+using Api.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Random;
 using Flurl;
 using HotChocolate.Types.Pagination;
 using Payment.Api.Mappers;
@@ -10,6 +12,7 @@ using Payment.Shared.Models;
 using Payment.Shared.Publishers;
 using Payment.Shared.Repositories;
 using Stripe;
+using OrganizationStripeConnectAccountRefreshCode = Payment.Shared.Database.Entities.OrganizationStripeConnectAccountRefreshCode;
 
 namespace Payment.Api.Services;
 
@@ -19,7 +22,7 @@ public interface IOrganizationStripeConnectAccountService
     Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string name, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<string> GetNewOnboardingUrlAsync(string id, CancellationToken cancellationToken);
+    Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken);
     Task CompleteOnboardAsync(Account stripeAccount, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int )> GetPaginatedTeamsAsync(
@@ -40,8 +43,12 @@ public class OrganizationStripeConnectAccountService(
     ICachedCustomerService cachedCustomerService,
     IMapper mapper,
     IPaymentOutboxPublisher paymentOutboxPublisher,
-    TimeProvider timeProvider) : IOrganizationStripeConnectAccountService
+    TimeProvider timeProvider,
+    IRandomHelper randomHelper) : IOrganizationStripeConnectAccountService
 {
+    private const string RefreshLinkBaseUrl = "payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url";
+    private const string OnboardingCompletedWebHookBaseUrl = "payment/api/v1/organization-stripe-connect-account/onboarding-completed";
+
     public async Task<OrganizationStripeConnectAccount> AddAsync(
         string organizationId,
         string name,
@@ -84,24 +91,19 @@ public class OrganizationStripeConnectAccountService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
+        var randomRefreshCode = randomHelper.Generate(size: Constants.MaxStripeConnectAccountRefreshCodeLength);
         var stripeConnectAccount = await accountCreateService.CreateAsync(mapper.MapTo(organization), new RequestOptions(), cancellationToken);
-        var strAccountLink = await accountLinkCreateService.CreateAsync(
-            new AccountLinkCreateOptions
-            {
-                Account = stripeConnectAccount.Id,
-                RefreshUrl = Url.Combine(
-                    applicationConfiguration.ApiBaseDomain,
-                    $"payment/api/v1/organization-stripe-connect-account/{stripeConnectAccount.Id}/refresh-onboarding-url"),
-                ReturnUrl = Url.Combine(
-                    applicationConfiguration.ApiBaseDomain,
-                    "payment/api/v1/organization-stripe-connect-account/onboarding-completed"),
-                Type = "account_onboarding"
-            },
-            new RequestOptions(),
-            cancellationToken);
+        var strAccountLink = await CreateLinkAsync(stripeConnectAccount.Id, randomRefreshCode, cancellationToken);
 
         var accountEntity = mapper.MapTo(stripeConnectAccount, name, organization);
         accountEntity.OnboardingUrl = strAccountLink.Url;
+
+        var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
+        {
+            Id = randomHelper.Generate(), Code = randomRefreshCode, OrganizationStripeConnectAccount = accountEntity
+        };
+
+        _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
         var account = repositoryFactory.OrganizationStripeConnectAccountRepository.Add(accountEntity);
         var mappedAccount = mapper.MapTo(account);
 
@@ -192,35 +194,37 @@ public class OrganizationStripeConnectAccountService(
         return mapper.MapTo(account);
     }
 
-    public async Task<string> GetNewOnboardingUrlAsync(string id, CancellationToken cancellationToken)
+    public async Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken)
     {
-        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
-        if (account is null)
-        {
-            throw new OrganizationStripeConnectAccountNotFound();
-        }
-        
-        var strAccountLink = await accountLinkCreateService.CreateAsync(
-            new AccountLinkCreateOptions
-            {
-                Account = account.Id,
-                RefreshUrl = Url.Combine(
-                    applicationConfiguration.ApiBaseDomain,
-                    $"payment/api/v1/organization-stripe-connect-account/{account.Id}/refresh-onboarding-url"),
-                ReturnUrl = Url.Combine(
-                    applicationConfiguration.ApiBaseDomain,
-                    "payment/api/v1/organization-stripe-connect-account/onboarding-completed"),
-                Type = "account_onboarding"
-            },
-            new RequestOptions(),
-            cancellationToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(code);
 
-        account.OnboardingUrl = strAccountLink.Url;;
-        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(account);
+        var accountRefreshCode =
+            await repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.GetByCodeAsync(code, cancellationToken);
+        if (accountRefreshCode is null)
+        {
+            throw new OrganizationStripeConnectAccountRefreshCodeNotFound();
+        }
+
+        var randomRefreshCode = randomHelper.Generate(size: Constants.MaxStripeConnectAccountRefreshCodeLength);
+        var strAccountLink = await CreateLinkAsync(accountRefreshCode.OrganizationStripeConnectAccount.Id, randomRefreshCode, cancellationToken);
+
+        accountRefreshCode.OrganizationStripeConnectAccount.OnboardingUrl = strAccountLink.Url;
+
+        var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
+        {
+            Id = randomHelper.Generate(),
+            Code = randomRefreshCode,
+            OrganizationStripeConnectAccount = accountRefreshCode.OrganizationStripeConnectAccount
+        };
+
+        _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Remove(accountRefreshCode);
+        _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
+        accountRefreshCode.OrganizationStripeConnectAccount =
+            repositoryFactory.OrganizationStripeConnectAccountRepository.Update(accountRefreshCode.OrganizationStripeConnectAccount);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        return account.OnboardingUrl;
+        return accountRefreshCode.OrganizationStripeConnectAccount.OnboardingUrl;
     }
 
     public async Task CompleteOnboardAsync(Account stripeAccount, CancellationToken cancellationToken)
@@ -276,4 +280,16 @@ public class OrganizationStripeConnectAccountService(
 
         return (paginatedInfo, mappedAccounts, totalCount);
     }
+
+    private async Task<AccountLink> CreateLinkAsync(string id, string randomRefreshCode, CancellationToken cancellationToken) =>
+        await accountLinkCreateService.CreateAsync(
+            new AccountLinkCreateOptions
+            {
+                Account = id,
+                RefreshUrl = Url.Combine(applicationConfiguration.ApiBaseDomain, RefreshLinkBaseUrl).SetQueryParam("code", randomRefreshCode),
+                ReturnUrl = Url.Combine(applicationConfiguration.ApiBaseDomain, OnboardingCompletedWebHookBaseUrl),
+                Type = "account_onboarding"
+            },
+            new RequestOptions(),
+            cancellationToken);
 }

@@ -44,7 +44,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
         /// </summary>
         /// <returns>should never be returned</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task RefreshOrganizationStripeConnectAccountOnboardingAsync(string id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task RefreshOrganizationStripeConnectAccountOnboardingAsync(string code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -190,10 +190,10 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
         /// </summary>
         /// <returns>should never be returned</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task RefreshOrganizationStripeConnectAccountOnboardingAsync(string id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task RefreshOrganizationStripeConnectAccountOnboardingAsync(string code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (id == null)
-                throw new System.ArgumentNullException("id");
+            if (code == null)
+                throw new System.ArgumentNullException("code");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -206,10 +206,11 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "payment/api/v1/organization-stripe-connect-account/{id}/refresh-onboarding-url"
-                    urlBuilder_.Append("payment/api/v1/organization-stripe-connect-account/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append("/refresh-onboarding-url");
+                    // Operation Path: "payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url"
+                    urlBuilder_.Append("payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url");
+                    urlBuilder_.Append('?');
+                    urlBuilder_.Append(System.Uri.EscapeDataString("code")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(code, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

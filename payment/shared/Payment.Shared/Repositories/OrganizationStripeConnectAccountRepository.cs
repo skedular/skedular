@@ -25,7 +25,7 @@ public interface IOrganizationStripeConnectAccountRepository : IRepository<Organ
         CancellationToken cancellationToken);
 }
 
-internal static class TeamExtensions
+internal static class OrganizationStripeConnectAccountExtensions
 {
     internal static IIncludableQueryable<OrganizationStripeConnectAccount, Customer> AddDependentObjects(
         this IQueryable<OrganizationStripeConnectAccount> originalQuery) =>

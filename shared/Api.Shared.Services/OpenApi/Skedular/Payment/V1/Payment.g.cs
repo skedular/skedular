@@ -43,8 +43,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Payment.V1
         /// return OrganizationStripeConnectAccount onboarding refresh URL
         /// </summary>
         /// <returns>should never be returned</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization-stripe-connect-account/{id}/refresh-onboarding-url")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RefreshOrganizationStripeConnectAccountOnboarding(string id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RefreshOrganizationStripeConnectAccountOnboarding([Microsoft.AspNetCore.Mvc.FromQuery] string code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// complete OrganizationStripeConnectAccount onboarding

@@ -111,4 +111,5 @@ public static class Constants
     public const int MaxStripeCurrencyLength = 10;
     public const int MaxStripeConnectAccountCompanyNameLength = 200;
     public const int MaxStripeBusinessTypeLength = 50;
+    public const int MaxStripeConnectAccountRefreshCodeLength = 50;
 }

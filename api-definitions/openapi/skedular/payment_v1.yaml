@@ -41,7 +41,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /payment/api/v1/organization-stripe-connect-account/{id}/refresh-onboarding-url:
+  /payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url:
     post:
       tags:
         - payment
@@ -50,8 +50,8 @@ paths:
       summary: return OrganizationStripeConnectAccount onboarding refresh URL
       operationId: refreshOrganizationStripeConnectAccountOnboarding
       parameters:
-        - in: path
-          name: id
+        - in: query
+          name: code
           schema:
             type: string
           required: true

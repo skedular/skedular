@@ -19,6 +19,7 @@ public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, Custom
     public DbSet<OrganizationOffering> OrganizationOffering { get; set; }
     public DbSet<OrganizationOfferingStripePaymentIntent> OrganizationOfferingStripePaymentIntent { get; set; }
     public DbSet<OrganizationStripeConnectAccount> OrganizationStripeConnectAccount { get; set; }
+    public DbSet<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCode { get; set; }
     public DbSet<OrganizationStripePaymentMethod> OrganizationStripePaymentMethod { get; set; }
 
     // ReSharper disable once UnusedType.Global
