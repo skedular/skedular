@@ -17,6 +17,7 @@ public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
+    ICreatable<Customer, CustomerCreateOptions> stripeCustomerCreateService,
     IUpdatable<Customer, CustomerUpdateOptions> stripeCustomerUpdateService)
     : IEventSubscriber<Key, Event>
 {
@@ -27,15 +28,21 @@ public class OrganizationSubscriber(
             case Type.OrganizationUpserted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
-                    if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                    var existingOrganization =
+                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, true, true, cancellationToken);
+                    if (existingOrganization is not null &&
+                        existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleOrganizationUpsertedEventAsync(organization, existingOrganization, cancellationToken);
+                    await HandleOrganizationUpsertedEventAsync(
+                        @event,
+                        organization,
+                        existingOrganization,
+                        cancellationToken);
                 }
                 break;
 
@@ -44,8 +51,7 @@ public class OrganizationSubscriber(
                     var organization = mapper.MapTo(@event);
                     var existingOrganization =
                         await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, false, false, cancellationToken);
-                    if (existingOrganization is not null &&
-                        existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                    if (existingOrganization is not null && existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
 
@@ -71,18 +77,32 @@ public class OrganizationSubscriber(
     }
 
     private async Task HandleOrganizationUpsertedEventAsync(
+        Event @event,
         Shared.Models.Organization organization,
-        Organization existingOrganization,
+        Organization? existingOrganization,
         CancellationToken cancellationToken)
     {
-        existingOrganization = mapper.MergeToEntity(organization, existingOrganization);
-        var stripeUpdatedCustomer = await stripeCustomerUpdateService.UpdateAsync(
-            existingOrganization.StripeCustomerId,
-            new CustomerUpdateOptions { Name = existingOrganization.Name },
-            new RequestOptions { IdempotencyKey = existingOrganization.Id },
-            cancellationToken);
-        existingOrganization.StripeCustomerId = stripeUpdatedCustomer.Id;
-        existingOrganization = repositoryFactory.OrganizationRepository.Update(existingOrganization);
+        if (existingOrganization is null)
+        {
+            existingOrganization = mapper.MapToEntity(organization);
+            var stripeCreatedCustomer = await stripeCustomerCreateService.CreateAsync(
+                new CustomerCreateOptions { Name = existingOrganization.Name },
+                new RequestOptions { IdempotencyKey = organization.Id },
+                cancellationToken);
+            existingOrganization.StripeCustomerId = stripeCreatedCustomer.Id;
+            existingOrganization = repositoryFactory.OrganizationRepository.Add(existingOrganization);
+        }
+        else
+        {
+            existingOrganization = mapper.MergeToEntity(organization, existingOrganization);
+            var stripeUpdatedCustomer = await stripeCustomerUpdateService.UpdateAsync(
+                existingOrganization.StripeCustomerId,
+                new CustomerUpdateOptions { Name = existingOrganization.Name },
+                new RequestOptions { IdempotencyKey = @event.Metadata.Id },
+                cancellationToken);
+            existingOrganization.StripeCustomerId = stripeUpdatedCustomer.Id;
+            existingOrganization = repositoryFactory.OrganizationRepository.Update(existingOrganization);
+        }
 
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         existingOrganization = await RebuildOrganizationOfferingAsync(organization, existingOrganization, cancellationToken);

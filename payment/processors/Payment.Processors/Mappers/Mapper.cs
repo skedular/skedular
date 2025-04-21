@@ -29,6 +29,7 @@ public interface IMapper
         Shared.Database.Entities.Identity dest,
         Shared.Database.Entities.Customer? customer);
 
+    Shared.Database.Entities.Organization MapToEntity(Organization src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
     OrganizationMember MapToEntity(
@@ -55,8 +56,9 @@ public interface IMapper
         Shared.Models.OrganizationSsoSetting src,
         OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
-    
+
     Shared.Database.Entities.Address MapTo(Address src, Shared.Database.Entities.Organization organization);
+
     Shared.Database.Entities.Address MergeTo(
         Address src,
         Shared.Database.Entities.Address dest,
@@ -177,6 +179,8 @@ public class Mapper : IMapper
         return dest;
     }
 
+    public Shared.Database.Entities.Organization MapToEntity(Organization src) => MergeToEntity(src, new Shared.Database.Entities.Organization());
+
     public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
     {
         dest.Id = src.Id;
@@ -245,7 +249,7 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Address MapTo(Address src, Shared.Database.Entities.Organization organization) => 
+    public Shared.Database.Entities.Address MapTo(Address src, Shared.Database.Entities.Organization organization) =>
         MergeTo(src, new Shared.Database.Entities.Address(), organization);
 
     public Shared.Database.Entities.Address MergeTo(
