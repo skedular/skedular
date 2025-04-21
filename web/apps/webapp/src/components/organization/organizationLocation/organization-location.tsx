@@ -1396,7 +1396,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, onReloadR
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Phone Number">
-                      <TextField name="contactEmail" required={requiredFields.contactPhone} />
+                      <TextField name="contactPhone" required={requiredFields.contactPhone} />
                     </FormFieldLabel>
 
                     <SectionIconTypography label="Address" />

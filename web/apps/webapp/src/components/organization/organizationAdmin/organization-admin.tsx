@@ -1746,7 +1746,7 @@ const OrganizationAdmin = ({
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Phone Number">
-                      <TextField name="contactEmail" required={requiredOrganizationDetailsFields.contactPhone} />
+                      <TextField name="contactPhone" required={requiredOrganizationDetailsFields.contactPhone} />
                     </FormFieldLabel>
 
                     <SectionIconTypography label="Address" />
