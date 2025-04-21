@@ -9,14 +9,12 @@ namespace Payment.Shared.Repositories;
 public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
-    Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
     Task<Organization?> GetByIdAsync(
         string id,
         bool includeDeletedOrganizationMembers,
         bool includeAllOfferings,
         CancellationToken cancellationToken);
-
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
 }
@@ -31,6 +29,7 @@ internal static class OrganizationExtensions
     {
         var updatedQuery = originalQuery
             .Include(query => query.OrganizationSsoSettings)
+            .Include(query => query.PhysicalAddress)
             .Include(query =>
                 query.OrganizationMembers.Where(organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
@@ -63,9 +62,6 @@ public class OrganizationRepository(PaymentDbContext dbContext, TimeProvider tim
 
         return (await GetByIdAsync(id, true, true, cancellationToken))!;
     }
-
-    public async Task<Organization?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await GetByIdAsync(id, false, false, cancellationToken);
 
     public async Task<Organization?> GetByIdAsync(
         string id,

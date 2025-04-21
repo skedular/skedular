@@ -410,6 +410,7 @@ public class Mapper : IMapper
             MemberVisibilityPolicy = src.MemberVisibilityPolicy,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
+
         organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
 
         return organization;
@@ -1179,9 +1180,9 @@ public class Mapper : IMapper
             Organization = organization
         };
 
-    private static Shared.Models.Address MapTo(Address? src, Shared.Models.Organization organization) =>
+    private static Shared.Models.Address? MapTo(Address? src, Shared.Models.Organization organization) =>
         src is null
-            ? new Shared.Models.Address()
+            ? null
             : new Shared.Models.Address
             {
                 Id = src.Id,
@@ -1198,28 +1199,40 @@ public class Mapper : IMapper
             };
 
     private static Shared.Models.Address MapTo(AddressDetailsInput src, Shared.Models.Organization organization) =>
-            new()
-            {
-                AddressLine1 = src.AddressLine1,
-                AddressLine2 = src.AddressLine2,
-                Suburb = src.Suburb,
-                City = src.City,
-                Province = src.Province,
-                Zipcode = src.Zipcode,
-                Country = src.Country,
-                Organization = organization
-            };
-
-    private static AddressDetails MapToGraphQl(Shared.Models.Address src) =>
         new()
         {
-            FormattedAddress = src.FormattedAddress,
             AddressLine1 = src.AddressLine1,
             AddressLine2 = src.AddressLine2,
             Suburb = src.Suburb,
             City = src.City,
             Province = src.Province,
             Zipcode = src.Zipcode,
-            Country = src.Country
+            Country = src.Country,
+            Organization = organization
         };
+
+    private static AddressDetails MapToGraphQl(Shared.Models.Address? src) =>
+        src is null
+            ? new AddressDetails
+            {
+                FormattedAddress = string.Empty,
+                AddressLine1 = string.Empty,
+                AddressLine2 = null,
+                Suburb = string.Empty,
+                City = string.Empty,
+                Province = null,
+                Zipcode = string.Empty,
+                Country = string.Empty
+            }
+            : new AddressDetails
+            {
+                FormattedAddress = src.FormattedAddress,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country
+            };
 }

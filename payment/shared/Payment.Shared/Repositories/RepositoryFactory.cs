@@ -7,6 +7,7 @@ namespace Payment.Shared.Repositories;
 public interface IRepositoryFactory
 {
     IUnitOfWork UnitOfWork { get; }
+    IAddressRepository AddressRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
     IOrganizationRepository OrganizationRepository { get; }
@@ -26,6 +27,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
+        AddressRepository = new AddressRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
@@ -43,6 +45,7 @@ public class RepositoryFactory : IRepositoryFactory, IDisposable
     }
 
     public IUnitOfWork UnitOfWork => _dbContext;
+    public IAddressRepository AddressRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }

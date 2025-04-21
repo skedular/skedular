@@ -14,7 +14,7 @@ public class Location : ModelBaseWithDeleted
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
 
-    public Address PhysicalAddress { get; set; }
+    public Address? PhysicalAddress { get; set; }
 
     public Organization Organization { get; set; }
     public ICollection<Resource> Resources { get; set; } = [];

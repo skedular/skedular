@@ -37,7 +37,7 @@ public class OrganizationPaymentService(
     public async Task<string> AddPaymentMethodIntentAsync(string id, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(id, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(id, false, false, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -140,8 +140,11 @@ public class OrganizationPaymentService(
         var organizationStripePaymentMethod = await repositoryFactory.OrganizationStripePaymentMethodRepository.Query(
             new Specification<OrganizationStripePaymentMethod> { Criteria = query => query.Id == paymentMethodId }
                 .AddInclude(query => query.Organization)).FirstAsync(cancellationToken);
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationStripePaymentMethod.Organization.Id, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(
+            organizationStripePaymentMethod.Organization.Id,
+            false,
+            false,
+            cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();
@@ -162,7 +165,7 @@ public class OrganizationPaymentService(
 
     private async Task PublishOrganizationPaymentMethodStateAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();

@@ -2,9 +2,10 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Enterprise.Shared.Kafka.Consume;
 using MsTeams.Processors.Mappers;
-using MsTeams.Shared.Database.Entities;
+using MsTeams.Shared.Models;
 using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
+using AzureTenant = MsTeams.Shared.Database.Entities.AzureTenant;
 using Organization = MsTeams.Shared.Database.Entities.Organization;
 using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
@@ -81,7 +82,7 @@ public class OrganizationSubscriber(
 
         existingOrganization.AzureTenants = azureTenants;
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
-        _ = RebuildOrganizationSsoSettings(organization, existingOrganization);
+        _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -137,40 +138,35 @@ public class OrganizationSubscriber(
         return existingOrganization;
     }
 
-    private Organization RebuildOrganizationSsoSettings(Shared.Models.Organization organization, Organization existingOrganization)
+    private Organization RebuildOrganizationSsoSettings(OrganizationSsoSetting? ssoSettings, Organization organization)
     {
-        switch (organization.OrganizationSsoSettings)
+        switch (ssoSettings)
         {
-            case null when existingOrganization.OrganizationSsoSettings is null:
+            case null when organization.OrganizationSsoSettings is null:
                 // No need to do anything
                 break;
 
-            case null when existingOrganization.OrganizationSsoSettings is not null:
-                repositoryFactory.OrganizationSsoSettingRepository.Remove(existingOrganization.OrganizationSsoSettings);
+            case null when organization.OrganizationSsoSettings is not null:
+                repositoryFactory.OrganizationSsoSettingRepository.Remove(organization.OrganizationSsoSettings);
                 break;
 
             default:
                 {
-                    if (organization.OrganizationSsoSettings is not null && existingOrganization.OrganizationSsoSettings is null)
+                    if (ssoSettings is not null && organization.OrganizationSsoSettings is null)
                     {
-                        repositoryFactory.OrganizationSsoSettingRepository.Add(
-                            mapper.MapTo(organization.OrganizationSsoSettings, existingOrganization));
+                        repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapTo(ssoSettings, organization));
                     }
-                    else if (organization.OrganizationSsoSettings is not null && existingOrganization.OrganizationSsoSettings is not null)
+                    else if (ssoSettings is not null && organization.OrganizationSsoSettings is not null)
                     {
-                        if (organization.OrganizationSsoSettings.Id == existingOrganization.OrganizationSsoSettings.Id)
+                        if (ssoSettings.Id == organization.OrganizationSsoSettings.Id)
                         {
                             repositoryFactory.OrganizationSsoSettingRepository.Update(
-                                mapper.MergeTo(
-                                    organization.OrganizationSsoSettings,
-                                    existingOrganization.OrganizationSsoSettings,
-                                    existingOrganization));
+                                mapper.MergeTo(ssoSettings, organization.OrganizationSsoSettings, organization));
                         }
                         else
                         {
-                            repositoryFactory.OrganizationSsoSettingRepository.Remove(existingOrganization.OrganizationSsoSettings);
-                            repositoryFactory.OrganizationSsoSettingRepository.Add(
-                                mapper.MapTo(organization.OrganizationSsoSettings, existingOrganization));
+                            repositoryFactory.OrganizationSsoSettingRepository.Remove(organization.OrganizationSsoSettings);
+                            repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapTo(ssoSettings, organization));
                         }
                     }
 
@@ -178,6 +174,6 @@ public class OrganizationSubscriber(
                 }
         }
 
-        return existingOrganization;
+        return organization;
     }
 }

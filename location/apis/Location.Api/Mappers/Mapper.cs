@@ -713,22 +713,34 @@ public class Mapper : IMapper
         return new Edge<Shared.Models.Resource>(resource, src.Cursor);
     }
 
-    private static AddressDetails MapToGraphQl(Shared.Models.Address src) =>
-        new()
-        {
-            FormattedAddress = src.FormattedAddress,
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country
-        };
-
-    private static Shared.Models.Address MapTo(Address? src, Shared.Models.Location location) =>
+    private static AddressDetails MapToGraphQl(Shared.Models.Address? src) =>
         src is null
-            ? new Shared.Models.Address()
+            ? new AddressDetails
+            {
+                FormattedAddress = string.Empty,
+                AddressLine1 = string.Empty,
+                AddressLine2 = null,
+                Suburb = string.Empty,
+                City = string.Empty,
+                Province = null,
+                Zipcode = string.Empty,
+                Country = string.Empty
+            }
+            : new AddressDetails
+            {
+                FormattedAddress = src.FormattedAddress,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country
+            };
+
+    private static Shared.Models.Address? MapTo(Address? src, Shared.Models.Location location) =>
+        src is null
+            ? null
             : new Shared.Models.Address
             {
                 Id = src.Id,

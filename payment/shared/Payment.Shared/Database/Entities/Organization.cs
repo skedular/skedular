@@ -14,11 +14,17 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string? StripeCustomerId { get; set; }
     public string Type { get; set; }
     public string MemberVisibilityPolicy { get; set; }
+    public string? ContactEmail { get; set; }
+    public string? ContactPhone { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
     public virtual ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? PhysicalAddressId { get; set; }
+    public virtual Address? PhysicalAddress { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -35,6 +41,10 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
             .Property(item => item.MemberVisibilityPolicy)
             .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
             .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
+        builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
+        builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
+
+        builder.HasOne(item => item.PhysicalAddress).WithOne(item => item.Organization).HasForeignKey<Organization>(item => item.PhysicalAddressId);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.StripeCustomerId);

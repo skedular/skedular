@@ -21,7 +21,7 @@ public class OrganizationStripeConnectAccountService(
     public async Task AddAsync(string id, CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(id, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(id, false, false, cancellationToken);
         if (organization is null)
         {
             throw new OrganizationNotFound();

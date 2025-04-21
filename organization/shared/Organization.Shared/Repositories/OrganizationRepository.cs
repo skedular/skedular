@@ -49,7 +49,6 @@ internal static class OrganizationExtensions
             .ThenInclude(query => query.Identities)
             .Include(query => query.TermsOfUse)
             .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.OrganizationSsoSettings)
             .Include(query => query.PhysicalAddress);
 
         return includeAllOfferings

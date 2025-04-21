@@ -107,16 +107,18 @@ public class Mapper : IMapper
     private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.OpeningHoursDetails MapToDefault() =>
         new() { Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty };
 
-    private static Address MapTo(Models.Address src) =>
-        new()
-        {
-            Id = src.Id,
-            AddressLine1 = src.AddressLine1.ToSafeString(),
-            AddressLine2 = src.AddressLine2.ToSafeString(),
-            Suburb = src.Suburb.ToSafeString(),
-            City = src.City.ToSafeString(),
-            Province = src.Province.ToSafeString(),
-            Zipcode = src.Zipcode.ToSafeString(),
-            Country = src.Country.ToSafeString()
-        };
+    private static Address? MapTo(Models.Address? src) =>
+        src is null
+            ? null
+            : new Address
+            {
+                Id = src.Id,
+                AddressLine1 = src.AddressLine1.ToSafeString(),
+                AddressLine2 = src.AddressLine2.ToSafeString(),
+                Suburb = src.Suburb.ToSafeString(),
+                City = src.City.ToSafeString(),
+                Province = src.Province.ToSafeString(),
+                Zipcode = src.Zipcode.ToSafeString(),
+                Country = src.Country.ToSafeString()
+            };
 }

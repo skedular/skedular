@@ -372,13 +372,13 @@ public class OrganizationService(
         Address physicalAddress;
         if (existingOrganization.PhysicalAddress is null)
         {
-            physicalAddress = mapper.MapTo(organization.PhysicalAddress, existingOrganization);
+            physicalAddress = mapper.MapTo(organization.PhysicalAddress!, existingOrganization);
             physicalAddress.Id = randomHelper.Generate();
             repositoryFactory.AddressRepository.Add(physicalAddress);
         }
         else
         {
-            physicalAddress = mapper.MergeToEntity(organization.PhysicalAddress, existingOrganization.PhysicalAddress, existingOrganization);
+            physicalAddress = mapper.MergeToEntity(organization.PhysicalAddress!, existingOrganization.PhysicalAddress, existingOrganization);
             repositoryFactory.AddressRepository.Update(physicalAddress);
         }
 

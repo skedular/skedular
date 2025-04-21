@@ -1,12 +1,14 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
 using Payment.Processors.Mappers;
-using Payment.Shared.Database.Entities;
+using Payment.Shared.Models;
 using Payment.Shared.Repositories;
 using Stripe;
+using Address = Payment.Shared.Models.Address;
 using Customer = Stripe.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Organization = Payment.Shared.Database.Entities.Organization;
+using OrganizationMember = Payment.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type;
 
 namespace Payment.Processors.Subscribers;
@@ -33,14 +35,15 @@ public class OrganizationSubscriber(
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleOrganizationUpsertedEventAsync(@event, organization, existingOrganization, cancellationToken);
+                    await HandleOrganizationUpsertedEventAsync(organization, existingOrganization, cancellationToken);
                 }
                 break;
 
             case Type.OrganizationDeleted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, cancellationToken);
+                    var existingOrganization =
+                        await repositoryFactory.OrganizationRepository.GetByIdAsync(organization.Id, false, false, cancellationToken);
                     if (existingOrganization is not null &&
                         existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
@@ -68,7 +71,6 @@ public class OrganizationSubscriber(
     }
 
     private async Task HandleOrganizationUpsertedEventAsync(
-        Event @event,
         Shared.Models.Organization organization,
         Organization existingOrganization,
         CancellationToken cancellationToken)
@@ -77,14 +79,15 @@ public class OrganizationSubscriber(
         var stripeUpdatedCustomer = await stripeCustomerUpdateService.UpdateAsync(
             existingOrganization.StripeCustomerId,
             new CustomerUpdateOptions { Name = existingOrganization.Name },
-            new RequestOptions { IdempotencyKey = @event.Metadata.Id },
+            new RequestOptions { IdempotencyKey = existingOrganization.Id },
             cancellationToken);
         existingOrganization.StripeCustomerId = stripeUpdatedCustomer.Id;
         existingOrganization = repositoryFactory.OrganizationRepository.Update(existingOrganization);
 
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         existingOrganization = await RebuildOrganizationOfferingAsync(organization, existingOrganization, cancellationToken);
-        _ = RebuildOrganizationSsoSettings(organization, existingOrganization);
+        existingOrganization = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
+        _ = RebuildOrganizationPhysicalAddress(organization.PhysicalAddress, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -169,40 +172,35 @@ public class OrganizationSubscriber(
         return existingOrganization;
     }
 
-    private Organization RebuildOrganizationSsoSettings(Shared.Models.Organization organization, Organization existingOrganization)
+    private Organization RebuildOrganizationSsoSettings(OrganizationSsoSetting? ssoSettings, Organization organization)
     {
-        switch (organization.OrganizationSsoSettings)
+        switch (ssoSettings)
         {
-            case null when existingOrganization.OrganizationSsoSettings is null:
+            case null when organization.OrganizationSsoSettings is null:
                 // No need to do anything
                 break;
 
-            case null when existingOrganization.OrganizationSsoSettings is not null:
-                repositoryFactory.OrganizationSsoSettingRepository.Remove(existingOrganization.OrganizationSsoSettings);
+            case null when organization.OrganizationSsoSettings is not null:
+                repositoryFactory.OrganizationSsoSettingRepository.Remove(organization.OrganizationSsoSettings);
                 break;
 
             default:
                 {
-                    if (organization.OrganizationSsoSettings is not null && existingOrganization.OrganizationSsoSettings is null)
+                    if (ssoSettings is not null && organization.OrganizationSsoSettings is null)
                     {
-                        repositoryFactory.OrganizationSsoSettingRepository.Add(
-                            mapper.MapTo(organization.OrganizationSsoSettings, existingOrganization));
+                        repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapTo(ssoSettings, organization));
                     }
-                    else if (organization.OrganizationSsoSettings is not null && existingOrganization.OrganizationSsoSettings is not null)
+                    else if (ssoSettings is not null && organization.OrganizationSsoSettings is not null)
                     {
-                        if (organization.OrganizationSsoSettings.Id == existingOrganization.OrganizationSsoSettings.Id)
+                        if (ssoSettings.Id == organization.OrganizationSsoSettings.Id)
                         {
                             repositoryFactory.OrganizationSsoSettingRepository.Update(
-                                mapper.MergeTo(
-                                    organization.OrganizationSsoSettings,
-                                    existingOrganization.OrganizationSsoSettings,
-                                    existingOrganization));
+                                mapper.MergeTo(ssoSettings, organization.OrganizationSsoSettings, organization));
                         }
                         else
                         {
-                            repositoryFactory.OrganizationSsoSettingRepository.Remove(existingOrganization.OrganizationSsoSettings);
-                            repositoryFactory.OrganizationSsoSettingRepository.Add(
-                                mapper.MapTo(organization.OrganizationSsoSettings, existingOrganization));
+                            repositoryFactory.OrganizationSsoSettingRepository.Remove(organization.OrganizationSsoSettings);
+                            repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapTo(ssoSettings, organization));
                         }
                     }
 
@@ -210,6 +208,44 @@ public class OrganizationSubscriber(
                 }
         }
 
-        return existingOrganization;
+        return organization;
+    }
+
+    private Organization RebuildOrganizationPhysicalAddress(Address? address, Organization organization)
+    {
+        switch (address)
+        {
+            case null when organization.PhysicalAddress is null:
+                // No need to do anything
+                break;
+
+            case null when organization.PhysicalAddress is not null:
+                repositoryFactory.AddressRepository.Remove(organization.PhysicalAddress);
+                break;
+
+            default:
+                {
+                    if (address is not null && organization.PhysicalAddress is null)
+                    {
+                        repositoryFactory.AddressRepository.Add(mapper.MapTo(address, organization));
+                    }
+                    else if (address is not null && organization.PhysicalAddress is not null)
+                    {
+                        if (address.Id == organization.PhysicalAddress.Id)
+                        {
+                            repositoryFactory.AddressRepository.Update(mapper.MergeTo(address, organization.PhysicalAddress, organization));
+                        }
+                        else
+                        {
+                            repositoryFactory.AddressRepository.Remove(organization.PhysicalAddress);
+                            repositoryFactory.AddressRepository.Add(mapper.MapTo(address, organization));
+                        }
+                    }
+
+                    break;
+                }
+        }
+
+        return organization;
     }
 }

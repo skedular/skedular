@@ -10,6 +10,7 @@ namespace Payment.Shared.Database;
 public class PaymentDbContext(DbContextOptions<PaymentDbContext> options, CustomDbContextOptions customDbContextOptions)
     : DbContextBase<PaymentDbContext>(options, customDbContextOptions)
 {
+    public DbSet<Address> Address { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Organization> Organization { get; set; }

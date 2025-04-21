@@ -2,6 +2,7 @@ using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Payment.Shared.Models;
+using Address = Payment.Shared.Models.Address;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Payment.Shared.Models.Identity;
 using Organization = Payment.Shared.Models.Organization;
@@ -54,6 +55,12 @@ public interface IMapper
         Shared.Models.OrganizationSsoSetting src,
         OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
+    
+    Shared.Database.Entities.Address MapTo(Address src, Shared.Database.Entities.Organization organization);
+    Shared.Database.Entities.Address MergeTo(
+        Address src,
+        Shared.Database.Entities.Address dest,
+        Shared.Database.Entities.Organization organization);
 }
 
 public class Mapper : IMapper
@@ -86,7 +93,10 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             Name = organizationAfterState.Name,
             Type = organizationAfterState.Type.ToOrganizationType(),
-            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy()
+            MemberVisibilityPolicy = organizationAfterState.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
+            ContactEmail = organizationAfterState.ContactEmail,
+            ContactPhone = organizationAfterState.ContactPhone,
+            PhysicalAddress = MapTo(organizationAfterState.PhysicalAddress)
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item =>
@@ -174,6 +184,8 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.Type = src.Type.ToOrganizationType();
         dest.MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy();
+        dest.ContactEmail = src.ContactEmail;
+        dest.ContactPhone = src.ContactPhone;
         return dest;
     }
 
@@ -232,4 +244,41 @@ public class Mapper : IMapper
 
         return dest;
     }
+
+    public Shared.Database.Entities.Address MapTo(Address src, Shared.Database.Entities.Organization organization) => 
+        MergeTo(src, new Shared.Database.Entities.Address(), organization);
+
+    public Shared.Database.Entities.Address MergeTo(
+        Address src,
+        Shared.Database.Entities.Address dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.AddressLine1 = src.AddressLine1;
+        dest.AddressLine2 = src.AddressLine2;
+        dest.Suburb = src.Suburb;
+        dest.City = src.City;
+        dest.Province = src.Province;
+        dest.Zipcode = src.Zipcode;
+        dest.Country = src.Country;
+        dest.Latitude = src.Latitude;
+        dest.Longitude = src.Longitude;
+        dest.Organization = organization;
+        return dest;
+    }
+
+    private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>
+        src is null
+            ? null
+            : new Address
+            {
+                Id = src.Id,
+                AddressLine1 = src.AddressLine1,
+                AddressLine2 = src.AddressLine2,
+                Suburb = src.Suburb,
+                City = src.City,
+                Province = src.Province,
+                Zipcode = src.Zipcode,
+                Country = src.Country
+            };
 }

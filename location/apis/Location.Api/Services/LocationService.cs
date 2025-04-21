@@ -110,9 +110,12 @@ public class LocationService(
 
         var locationEntity = mapper.MapTo(location, organization, organizationTags);
 
-        var physicalAddress = mapper.MapTo(location.PhysicalAddress, locationEntity);
-        physicalAddress.Id = randomHelper.Generate();
-        _ = repositoryFactory.AddressRepository.Add(physicalAddress);
+        var physicalAddress = location.PhysicalAddress is null ? null : mapper.MapTo(location.PhysicalAddress!, locationEntity);
+        if (physicalAddress is not null)
+        {
+            physicalAddress.Id = randomHelper.Generate();
+            _ = repositoryFactory.AddressRepository.Add(physicalAddress);
+        }
 
         locationEntity.OpeningHours = OpeningHours.Default;
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
@@ -283,13 +286,13 @@ public class LocationService(
         Address physicalAddress;
         if (existingLocation.PhysicalAddress is null)
         {
-            physicalAddress = mapper.MapTo(location.PhysicalAddress, existingLocation);
+            physicalAddress = mapper.MapTo(location.PhysicalAddress!, existingLocation);
             physicalAddress.Id = randomHelper.Generate();
             repositoryFactory.AddressRepository.Add(physicalAddress);
         }
         else
         {
-            physicalAddress = mapper.MergeToEntity(location.PhysicalAddress, existingLocation.PhysicalAddress, existingLocation);
+            physicalAddress = mapper.MergeToEntity(location.PhysicalAddress!, existingLocation.PhysicalAddress, existingLocation);
             repositoryFactory.AddressRepository.Update(physicalAddress);
         }
 

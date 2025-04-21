@@ -1,6 +1,7 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Customer.Processors.Mappers;
+using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
@@ -81,7 +82,7 @@ public class OrganizationSubscriber(
         existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
         existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
-        _ = RebuildOrganizationSsoSettings(organization, existingOrganization);
+        _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -248,40 +249,35 @@ public class OrganizationSubscriber(
         return existingOrganization;
     }
 
-    private Organization RebuildOrganizationSsoSettings(Shared.Models.Organization organization, Organization existingOrganization)
+    private Organization RebuildOrganizationSsoSettings(OrganizationSsoSetting? ssoSettings, Organization organization)
     {
-        switch (organization.OrganizationSsoSettings)
+        switch (ssoSettings)
         {
-            case null when existingOrganization.OrganizationSsoSettings is null:
+            case null when organization.OrganizationSsoSettings is null:
                 // No need to do anything
                 break;
 
-            case null when existingOrganization.OrganizationSsoSettings is not null:
-                repositoryFactory.OrganizationSsoSettingRepository.Remove(existingOrganization.OrganizationSsoSettings);
+            case null when organization.OrganizationSsoSettings is not null:
+                repositoryFactory.OrganizationSsoSettingRepository.Remove(organization.OrganizationSsoSettings);
                 break;
 
             default:
                 {
-                    if (organization.OrganizationSsoSettings is not null && existingOrganization.OrganizationSsoSettings is null)
+                    if (ssoSettings is not null && organization.OrganizationSsoSettings is null)
                     {
-                        repositoryFactory.OrganizationSsoSettingRepository.Add(
-                            mapper.MapTo(organization.OrganizationSsoSettings, existingOrganization));
+                        repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapTo(ssoSettings, organization));
                     }
-                    else if (organization.OrganizationSsoSettings is not null && existingOrganization.OrganizationSsoSettings is not null)
+                    else if (ssoSettings is not null && organization.OrganizationSsoSettings is not null)
                     {
-                        if (organization.OrganizationSsoSettings.Id == existingOrganization.OrganizationSsoSettings.Id)
+                        if (ssoSettings.Id == organization.OrganizationSsoSettings.Id)
                         {
                             repositoryFactory.OrganizationSsoSettingRepository.Update(
-                                mapper.MergeTo(
-                                    organization.OrganizationSsoSettings,
-                                    existingOrganization.OrganizationSsoSettings,
-                                    existingOrganization));
+                                mapper.MergeTo(ssoSettings, organization.OrganizationSsoSettings, organization));
                         }
                         else
                         {
-                            repositoryFactory.OrganizationSsoSettingRepository.Remove(existingOrganization.OrganizationSsoSettings);
-                            repositoryFactory.OrganizationSsoSettingRepository.Add(
-                                mapper.MapTo(organization.OrganizationSsoSettings, existingOrganization));
+                            repositoryFactory.OrganizationSsoSettingRepository.Remove(organization.OrganizationSsoSettings);
+                            repositoryFactory.OrganizationSsoSettingRepository.Add(mapper.MapTo(ssoSettings, organization));
                         }
                     }
 
@@ -289,6 +285,6 @@ public class OrganizationSubscriber(
                 }
         }
 
-        return existingOrganization;
+        return organization;
     }
 }
