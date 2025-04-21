@@ -10,7 +10,7 @@ namespace Payment.Api.Services;
 public interface ICachedCustomerService
 {
     Task<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
-    Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
+    Task<(Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken);
 }
 
 public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper mapper, IContext context, IMemoryCache memoryCache)
@@ -31,7 +31,7 @@ public class CachedCustomerService(IRepositoryFactory repositoryFactory, IMapper
         }
     }
 
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken)
+    public async Task<(Customer, Shared.Database.Entities.Customer)> GetAsync(CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.GetVerifiableToken());
 

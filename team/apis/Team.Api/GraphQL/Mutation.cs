@@ -29,6 +29,16 @@ public class Mutation(IMapper mapper)
     }
 
     [UseResolverScope]
+    public async Task<TeamPayload?> DeleteTeamAsync(
+        DeleteTeamInput input,
+        [Service] ITeamService teamService,
+        CancellationToken cancellationToken)
+    {
+        var team = await teamService.DeleteAsync(input.Id, cancellationToken);
+        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
+    }
+
+    [UseResolverScope]
     public async Task<TeamPayload?> UpdateTeamAndTeamMembersAsync(
         UpdateTeamAndTeamMembersInput input,
         [Service] ITeamService teamService,
@@ -58,16 +68,6 @@ public class Mutation(IMapper mapper)
     {
         var teamMember = await teamMemberService.AddAsync(input.Id, mapper.MapTo(input), cancellationToken);
         return new TeamMemberPayload { ClientMutationId = input.ClientMutationId, TeamMember = mapper.MapTo(teamMember) };
-    }
-
-    [UseResolverScope]
-    public async Task<TeamPayload?> DeleteTeamAsync(
-        DeleteTeamInput input,
-        [Service] ITeamService teamService,
-        CancellationToken cancellationToken)
-    {
-        var team = await teamService.DeleteAsync(input.Id, cancellationToken);
-        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = mapper.MapTo(team)! };
     }
 
     [UseResolverScope]

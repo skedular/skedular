@@ -39,6 +39,13 @@ namespace Api.Shared.Services.OpenApi.Skedular.Payment.V1
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization/add-payment-method")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AddOrganizationPaymentMethod([Microsoft.AspNetCore.Mvc.FromQuery] string setup_intent, [Microsoft.AspNetCore.Mvc.FromQuery] string setup_intent_client_secret, [Microsoft.AspNetCore.Mvc.FromQuery] string redirect_status, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
+        /// <summary>
+        /// republish all OrganizationStripeConnectAccounts
+        /// </summary>
+        /// <returns>the status of republishing all OrganizationStripeConnectAccounts</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization-stripe-connect-account/republish-all")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAllOrganizationStripeConnectAccounts(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.3.0.0 (NJsonSchema v11.2.0.0 (Newtonsoft.Json v13.0.0.0))")]

@@ -1,43 +1,64 @@
 ﻿using HotChocolate;
 using HotChocolate.Types;
+using Payment.Api.Mappers;
 using Payment.Api.Services;
 using Payment.Shared.Configurations;
 
 namespace Payment.Api.GraphQL;
 
 [MutationType]
-public class Mutation(StripeConfiguration stripeConfiguration)
+public class Mutation(StripeConfiguration stripeConfiguration, IMapper mapper)
 {
     [UseResolverScope]
-    public async Task<AddOrganizationPaymentMethodIntentResponse?> AddOrganizationPaymentMethodIntentAsync(
+    public async Task<AddOrganizationPaymentMethodIntentPayload?> AddOrganizationPaymentMethodIntentAsync(
         AddOrganizationPaymentMethodIntentInput input,
         [Service] IOrganizationPaymentService organizationPaymentService,
         CancellationToken cancellationToken)
     {
         var clientSecret = await organizationPaymentService.AddPaymentMethodIntentAsync(input.OrganizationId, cancellationToken);
-        return new AddOrganizationPaymentMethodIntentResponse
+        return new AddOrganizationPaymentMethodIntentPayload
         {
             ClientMutationId = input.ClientMutationId, ClientSecret = clientSecret, PublishedKeys = stripeConfiguration.PublishableKey
         };
     }
 
     [UseResolverScope]
-    public async Task<RemoveOrganizationPaymentMethodResponse?> RemoveOrganizationPaymentMethodAsync(
+    public async Task<RemoveOrganizationPaymentMethodPayload?> RemoveOrganizationPaymentMethodAsync(
         RemoveOrganizationPaymentMethodInput input,
         [Service] IOrganizationPaymentService organizationPaymentService,
         CancellationToken cancellationToken)
     {
         await organizationPaymentService.RemovePaymentMethodAsync(input.Id, cancellationToken);
-        return new RemoveOrganizationPaymentMethodResponse { ClientMutationId = input.ClientMutationId };
+        return new RemoveOrganizationPaymentMethodPayload { ClientMutationId = input.ClientMutationId };
     }
 
     [UseResolverScope]
-    public async Task<AddOrganizationStripeConnectAccountResponse?> AddOrganizationStripeConnectAccountAsync(
+    public async Task<OrganizationStripeConnectAccountPayload?> AddOrganizationStripeConnectAccountAsync(
         AddOrganizationStripeConnectAccountInput input,
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
     {
-        await organizationStripeConnectAccountService.AddAsync(input.OrganizationId, input.Name, cancellationToken);
-        return new AddOrganizationStripeConnectAccountResponse { ClientMutationId = input.ClientMutationId };
+        var account = await organizationStripeConnectAccountService.AddAsync(input.OrganizationId, input.Name, cancellationToken);
+        return new OrganizationStripeConnectAccountPayload { ClientMutationId = input.ClientMutationId, Account = mapper.MapTo(account) };
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationStripeConnectAccountPayload?> UpdateOrganizationStripeConnectAccountAsync(
+        UpdateOrganizationStripeConnectAccountInput input,
+        [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        CancellationToken cancellationToken)
+    {
+        var account = await organizationStripeConnectAccountService.UpdateAsync(input.Id, input.Name, cancellationToken);
+        return new OrganizationStripeConnectAccountPayload { ClientMutationId = input.ClientMutationId, Account = mapper.MapTo(account) };
+    }
+
+    [UseResolverScope]
+    public async Task<OrganizationStripeConnectAccountPayload?> DeleteOrganizationStripeConnectAccountAsync(
+        DeleteOrganizationStripeConnectAccountInput input,
+        [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        CancellationToken cancellationToken)
+    {
+        var account = await organizationStripeConnectAccountService.DeleteAsync(input.Id, cancellationToken);
+        return new OrganizationStripeConnectAccountPayload { ClientMutationId = input.ClientMutationId, Account = mapper.MapTo(account) };
     }
 }

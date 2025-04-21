@@ -11,6 +11,7 @@ public static class Extensions
 
     public static IServiceCollection AddServices(this IServiceCollection services) =>
         services
+            .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ICachedCustomerService, CachedCustomerService>()
             .AddScoped<IOrganizationService, OrganizationService>()

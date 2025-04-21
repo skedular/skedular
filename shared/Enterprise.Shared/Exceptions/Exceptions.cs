@@ -65,3 +65,5 @@ public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
     : Exception("Team Primary location organization does not match team organization");
 
 public class ProductNotFound() : Exception("Product not found");
+
+public class OrganizationStripeConnectAccountNotFound() : Exception("Organization Stripe Connect Account not found");

@@ -100,6 +100,9 @@ internal static class TeamExtensions
                 TeamOrderField.Name => orderField.Direction == OrderDirection.Ascending
                     ? query.ThenBy(x => x.Name)
                     : query.ThenByDescending(x => x.Name),
+                TeamOrderField.About => orderField.Direction == OrderDirection.Ascending
+                    ? query.ThenBy(x => x.About)
+                    : query.ThenByDescending(x => x.About),
                 _ => throw new ArgumentOutOfRangeException()
             }).ThenBy(query => query.Id);
     }

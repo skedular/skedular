@@ -1,4 +1,5 @@
 using Enterprise.Shared;
+using HotChocolate.Types.Pagination;
 using Payment.Api.GraphQL;
 using Payment.Shared.Models;
 using Stripe;
@@ -21,6 +22,9 @@ public interface IMapper
     IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src);
     AccountCreateOptions MapTo(Organization src);
     OrganizationStripeConnectAccount MapTo(Account src, string name, Organization organization);
+    Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
+    OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src);
+    OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
 }
 
 public class Mapper : IMapper
@@ -94,6 +98,33 @@ public class Mapper : IMapper
             Type = src.Type,
             Organization = organization
         };
+
+    public Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+            Name = src.Name,
+            ChargesEnabled = src.ChargesEnabled,
+            PayoutsEnabled = src.PayoutsEnabled,
+            Type = src.Type
+        };
+
+    public OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src) =>
+        src is null
+            ? null
+            : new OrganizationStripeConnectAccountDetails
+            {
+                Id = src.Id,
+                Name = src.Name,
+                ChargesEnabled = src.ChargesEnabled,
+                PayoutsEnabled = src.PayoutsEnabled,
+                Type = src.Type
+            };
+
+    public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
 
     private static OrganizationStripePaymentMethod MapTo(Shared.Database.Entities.OrganizationStripePaymentMethod src) =>
         new()

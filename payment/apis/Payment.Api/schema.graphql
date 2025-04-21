@@ -3,20 +3,18 @@
   mutation: Mutation
 }
 
-type AddOrganizationPaymentMethodIntentResponse {
+type AddOrganizationPaymentMethodIntentPayload {
   clientMutationId: String
   publishedKeys: String!
   clientSecret: String!
 }
 
-type AddOrganizationStripeConnectAccountResponse {
-  clientMutationId: String
-}
-
 type Mutation {
-  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse @cost(weight: "10")
-  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodResponse @cost(weight: "10")
-  addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): AddOrganizationStripeConnectAccountResponse @cost(weight: "10")
+  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload @cost(weight: "10")
+  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload @cost(weight: "10")
+  addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
+  updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
+  deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
 }
 
 type OrganizationPaymentMethod {
@@ -32,13 +30,46 @@ type OrganizationPaymentMethod {
   id: ID!
 }
 
+type OrganizationStripeConnectAccountConnection {
+  pageInfo: PageInfo!
+  edges: [OrganizationStripeConnectAccountEdge!]!
+  totalCount: Int
+}
+
+type OrganizationStripeConnectAccountDetails {
+  name: String!
+  chargesEnabled: Boolean!
+  payoutsEnabled: Boolean!
+  type: String!
+  id: ID!
+}
+
+type OrganizationStripeConnectAccountEdge {
+  node: OrganizationStripeConnectAccountDetails!
+  cursor: String!
+}
+
+type OrganizationStripeConnectAccountPayload {
+  clientMutationId: String
+  account: OrganizationStripeConnectAccountDetails!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
 type Query {
   paymentVersion: Version!
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!]! @cost(weight: "10")
+  organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
+  organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): OrganizationStripeConnectAccountConnection! @cost(weight: "10")
 }
 
-type RemoveOrganizationPaymentMethodResponse {
+type RemoveOrganizationPaymentMethodPayload {
   clientMutationId: String
 }
 
@@ -60,9 +91,39 @@ input AddOrganizationStripeConnectAccountInput {
   name: String!
 }
 
+input DeleteOrganizationStripeConnectAccountInput {
+  clientMutationId: String
+  id: String!
+}
+
+input OrganizationStripeConnectAccountOrderInput {
+  direction: OrderDirection!
+  field: OrganizationStripeConnectAccountOrderField!
+}
+
+input OrganizationStripeConnectAccountWhereInput {
+  organizationId: String!
+  nameContains: String
+}
+
 input RemoveOrganizationPaymentMethodInput {
   clientMutationId: String
   id: String!
+}
+
+input UpdateOrganizationStripeConnectAccountInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+}
+
+enum OrderDirection {
+  Ascending
+  Descending
+}
+
+enum OrganizationStripeConnectAccountOrderField {
+  Name
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

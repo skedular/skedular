@@ -24,7 +24,7 @@ public class OrganizationService(
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await cachedCustomerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization =
             await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
         if (organization is null)

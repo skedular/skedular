@@ -11,14 +11,10 @@ type AcceptInvitationToJoinTeamPayload {
   clientMutationId: String
 }
 
-type AddOrganizationPaymentMethodIntentResponse {
+type AddOrganizationPaymentMethodIntentPayload {
   clientMutationId: String
   clientSecret: String!
   publishedKeys: String!
-}
-
-type AddOrganizationStripeConnectAccountResponse {
-  clientMutationId: String
 }
 
 type BookingConnection {
@@ -372,8 +368,8 @@ type Mutation {
   addLocation(input: AddLocationInput!): LocationPayload @cost(weight: "10")
   addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload @cost(weight: "10")
-  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentResponse @cost(weight: "10")
-  addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): AddOrganizationStripeConnectAccountResponse @cost(weight: "10")
+  addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload @cost(weight: "10")
+  addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   addProduct(input: AddProductInput!): ProductPayload @cost(weight: "10")
   addProductTag(input: AddProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   addResource(input: AddResourceInput!): ResourcePayload @cost(weight: "10")
@@ -404,6 +400,7 @@ type Mutation {
   deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
+  deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   deleteProducts(input: DeleteProductsInput!): ProductsPayload @cost(weight: "10")
   deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload @cost(weight: "10")
@@ -421,7 +418,7 @@ type Mutation {
   removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload @cost(weight: "10")
   removeCustomerPreferredTeam(input: RemoveCustomerPreferredTeamInput!): CustomerPayload @cost(weight: "10")
   removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload @cost(weight: "10")
-  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodResponse @cost(weight: "10")
+  removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload @cost(weight: "10")
   removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
   removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload @cost(weight: "10")
   removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload @cost(weight: "10")
@@ -440,6 +437,7 @@ type Mutation {
   updateOrganizationBillingContactDetails(input: UpdateOrganizationBillingContactDetailsInput!): OrganizationBillingContactDetailsPayload @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): UpdateOrganizationSsoSettingsPayload @cost(weight: "10")
+  updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload @cost(weight: "10")
   updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload @cost(weight: "10")
@@ -736,6 +734,30 @@ type OrganizationSsoSettingsDetails {
   loginUrl: String!
 }
 
+type OrganizationStripeConnectAccountConnection {
+  edges: [OrganizationStripeConnectAccountEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int
+}
+
+type OrganizationStripeConnectAccountDetails {
+  chargesEnabled: Boolean!
+  id: ID!
+  name: String!
+  payoutsEnabled: Boolean!
+  type: String!
+}
+
+type OrganizationStripeConnectAccountEdge {
+  cursor: String!
+  node: OrganizationStripeConnectAccountDetails!
+}
+
+type OrganizationStripeConnectAccountPayload {
+  account: OrganizationStripeConnectAccountDetails!
+  clientMutationId: String
+}
+
 type OrganizationTagConnection {
   edges: [OrganizationTagEdge!]!
   pageInfo: PageInfo!
@@ -886,6 +908,8 @@ type Query {
   organizationPaymentMethodsDetails(organizationId: String!): [OrganizationPaymentMethod!]! @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): OrganizationConnection! @cost(weight: "10")
+  organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
+  organizationStripeConnectAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationStripeConnectAccountOrderInput!] where: OrganizationStripeConnectAccountWhereInput!): OrganizationStripeConnectAccountConnection! @cost(weight: "10")
   organizationTypes: [OrganizationTypeDetails!]!
   organizationVersion: Version!
   paymentCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -920,7 +944,7 @@ type RejectInvitationToJoinTeamPayload {
   clientMutationId: String
 }
 
-type RemoveOrganizationPaymentMethodResponse {
+type RemoveOrganizationPaymentMethodPayload {
   clientMutationId: String
 }
 
@@ -1468,6 +1492,11 @@ input DeleteOrganizationInput {
   id: String!
 }
 
+input DeleteOrganizationStripeConnectAccountInput {
+  clientMutationId: String
+  id: String!
+}
+
 input DeleteProductTagInput {
   clientMutationId: String
   id: String!
@@ -1594,6 +1623,16 @@ input OrganizationMemberWhereInput {
 input OrganizationOrderInput {
   direction: OrderDirection!
   field: OrganizationOrderField!
+}
+
+input OrganizationStripeConnectAccountOrderInput {
+  direction: OrderDirection!
+  field: OrganizationStripeConnectAccountOrderField!
+}
+
+input OrganizationStripeConnectAccountWhereInput {
+  nameContains: String
+  organizationId: String!
 }
 
 input OrganizationTagOrderInput {
@@ -1858,6 +1897,12 @@ input UpdateOrganizationSsoSettingsInput {
   organizationId: String!
 }
 
+input UpdateOrganizationStripeConnectAccountInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+}
+
 input UpdateProductInput {
   bookAllLocationResources: Boolean!
   clientMutationId: String
@@ -2049,6 +2094,10 @@ enum OrganizationMemberVisibilityPolicy {
 }
 
 enum OrganizationOrderField {
+  Name
+}
+
+enum OrganizationStripeConnectAccountOrderField {
   Name
 }
 

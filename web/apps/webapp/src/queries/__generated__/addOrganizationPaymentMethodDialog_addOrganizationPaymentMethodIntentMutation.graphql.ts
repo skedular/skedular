@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16b295d83a07f70d185b654617f1cef0>>
+ * @generated SignedSource<<8ee04f0e5d88bbf247f88bb58ecf96da>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -46,7 +46,7 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "AddOrganizationPaymentMethodIntentResponse",
+    "concreteType": "AddOrganizationPaymentMethodIntentPayload",
     "kind": "LinkedField",
     "name": "addOrganizationPaymentMethodIntent",
     "plural": false,

@@ -30,20 +30,30 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             "dC5EYXRhIp0BCghNZXRhZGF0YRIKCgJpZBgBIAEoCRIUCgxkb21haW5Tb3Vy",
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5w",
             "YXltZW50LlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
-            "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSJNCgREYXRhEkUKGW9y",
-            "Z2FuaXphdGlvblBheW1lbnRNZXRob2QYASABKAsyIi5wYXltZW50Lk9yZ2Fu",
-            "aXphdGlvblBheW1lbnRNZXRob2QiVQoZT3JnYW5pemF0aW9uUGF5bWVudE1l",
-            "dGhvZBIWCg5vcmdhbml6YXRpb25JZBgBIAEoCRIgChhoYXNBdHRhY2hlZFBh",
-            "eW1lbnRNZXRob2QYAiABKAgqLQoEVHlwZRIlCiFPcmdhbml6YXRpb25QYXlt",
-            "ZW50TWV0aG9kc1VwZGF0ZWQQAEI2qgIzQXBpLlNoYXJlZC5DbGllbnRzLkV2",
-            "ZW50cy5Ta2VkdWxhci5QYXltZW50LlYxLlZhbHVlYgZwcm90bzM="));
+            "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSKxAQoERGF0YRJHChlv",
+            "cmdhbml6YXRpb25QYXltZW50TWV0aG9kGAEgASgLMiIucGF5bWVudC5Pcmdh",
+            "bml6YXRpb25QYXltZW50TWV0aG9kSAASVQogb3JnYW5pemF0aW9uU3RyaXBl",
+            "Q29ubmVjdEFjY291bnQYAiABKAsyKS5wYXltZW50Lk9yZ2FuaXphdGlvblN0",
+            "cmlwZUNvbm5lY3RBY2NvdW50SABCCQoHcGF5bG9hZCJVChlPcmdhbml6YXRp",
+            "b25QYXltZW50TWV0aG9kEhYKDm9yZ2FuaXphdGlvbklkGAEgASgJEiAKGGhh",
+            "c0F0dGFjaGVkUGF5bWVudE1ldGhvZBgCIAEoCCLBAQogT3JnYW5pemF0aW9u",
+            "U3RyaXBlQ29ubmVjdEFjY291bnQSCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0",
+            "GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIWCg5vcmdhbml6",
+            "YXRpb25JZBgDIAEoCRIMCgRuYW1lGAQgASgJEhYKDmNoYXJnZXNFbmFibGVk",
+            "GAUgASgIEhYKDnBheW91dHNFbmFibGVkGAYgASgIEgwKBHR5cGUYByABKAkq",
+            "iAEKBFR5cGUSJQohT3JnYW5pemF0aW9uUGF5bWVudE1ldGhvZHNVcGRhdGVk",
+            "EAASLAooT3JnYW5pemF0aW9uU3RyaXBlQ29ubmVjdEFjY291bnRVcHNlcnRl",
+            "ZBABEisKJ09yZ2FuaXphdGlvblN0cmlwZUNvbm5lY3RBY2NvdW50RGVsZXRl",
+            "ZBACQjaqAjNBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLlBh",
+            "eW1lbnQuVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data.Parser, new[]{ "OrganizationPaymentMethod" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod.Parser, new[]{ "OrganizationId", "HasAttachedPaymentMethod" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data.Parser, new[]{ "OrganizationPaymentMethod", "OrganizationStripeConnectAccount" }, new[]{ "Payload" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod.Parser, new[]{ "OrganizationId", "HasAttachedPaymentMethod" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "Name", "ChargesEnabled", "PayoutsEnabled", "Type" }, null, null, null, null)
           }));
     }
     #endregion
@@ -52,6 +62,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
   #region Enums
   public enum Type {
     [pbr::OriginalName("OrganizationPaymentMethodsUpdated")] OrganizationPaymentMethodsUpdated = 0,
+    [pbr::OriginalName("OrganizationStripeConnectAccountUpserted")] OrganizationStripeConnectAccountUpserted = 1,
+    [pbr::OriginalName("OrganizationStripeConnectAccountDeleted")] OrganizationStripeConnectAccountDeleted = 2,
   }
 
   #endregion
@@ -737,7 +749,15 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Data(Data other) : this() {
-      organizationPaymentMethod_ = other.organizationPaymentMethod_ != null ? other.organizationPaymentMethod_.Clone() : null;
+      switch (other.PayloadCase) {
+        case PayloadOneofCase.OrganizationPaymentMethod:
+          OrganizationPaymentMethod = other.OrganizationPaymentMethod.Clone();
+          break;
+        case PayloadOneofCase.OrganizationStripeConnectAccount:
+          OrganizationStripeConnectAccount = other.OrganizationStripeConnectAccount.Clone();
+          break;
+      }
+
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -749,14 +769,47 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
 
     /// <summary>Field number for the "organizationPaymentMethod" field.</summary>
     public const int OrganizationPaymentMethodFieldNumber = 1;
-    private global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod organizationPaymentMethod_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod OrganizationPaymentMethod {
-      get { return organizationPaymentMethod_; }
+      get { return payloadCase_ == PayloadOneofCase.OrganizationPaymentMethod ? (global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod) payload_ : null; }
       set {
-        organizationPaymentMethod_ = value;
+        payload_ = value;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.OrganizationPaymentMethod;
       }
+    }
+
+    /// <summary>Field number for the "organizationStripeConnectAccount" field.</summary>
+    public const int OrganizationStripeConnectAccountFieldNumber = 2;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount OrganizationStripeConnectAccount {
+      get { return payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount ? (global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount) payload_ : null; }
+      set {
+        payload_ = value;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.OrganizationStripeConnectAccount;
+      }
+    }
+
+    private object payload_;
+    /// <summary>Enum of possible cases for the "payload" oneof.</summary>
+    public enum PayloadOneofCase {
+      None = 0,
+      OrganizationPaymentMethod = 1,
+      OrganizationStripeConnectAccount = 2,
+    }
+    private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PayloadOneofCase PayloadCase {
+      get { return payloadCase_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearPayload() {
+      payloadCase_ = PayloadOneofCase.None;
+      payload_ = null;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -775,6 +828,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         return true;
       }
       if (!object.Equals(OrganizationPaymentMethod, other.OrganizationPaymentMethod)) return false;
+      if (!object.Equals(OrganizationStripeConnectAccount, other.OrganizationStripeConnectAccount)) return false;
+      if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -782,7 +837,9 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (organizationPaymentMethod_ != null) hash ^= OrganizationPaymentMethod.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.OrganizationPaymentMethod) hash ^= OrganizationPaymentMethod.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) hash ^= OrganizationStripeConnectAccount.GetHashCode();
+      hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -801,9 +858,13 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (organizationPaymentMethod_ != null) {
+      if (payloadCase_ == PayloadOneofCase.OrganizationPaymentMethod) {
         output.WriteRawTag(10);
         output.WriteMessage(OrganizationPaymentMethod);
+      }
+      if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) {
+        output.WriteRawTag(18);
+        output.WriteMessage(OrganizationStripeConnectAccount);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -815,9 +876,13 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (organizationPaymentMethod_ != null) {
+      if (payloadCase_ == PayloadOneofCase.OrganizationPaymentMethod) {
         output.WriteRawTag(10);
         output.WriteMessage(OrganizationPaymentMethod);
+      }
+      if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) {
+        output.WriteRawTag(18);
+        output.WriteMessage(OrganizationStripeConnectAccount);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -829,8 +894,11 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (organizationPaymentMethod_ != null) {
+      if (payloadCase_ == PayloadOneofCase.OrganizationPaymentMethod) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationPaymentMethod);
+      }
+      if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(OrganizationStripeConnectAccount);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -844,12 +912,21 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (other == null) {
         return;
       }
-      if (other.organizationPaymentMethod_ != null) {
-        if (organizationPaymentMethod_ == null) {
-          OrganizationPaymentMethod = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod();
-        }
-        OrganizationPaymentMethod.MergeFrom(other.OrganizationPaymentMethod);
+      switch (other.PayloadCase) {
+        case PayloadOneofCase.OrganizationPaymentMethod:
+          if (OrganizationPaymentMethod == null) {
+            OrganizationPaymentMethod = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod();
+          }
+          OrganizationPaymentMethod.MergeFrom(other.OrganizationPaymentMethod);
+          break;
+        case PayloadOneofCase.OrganizationStripeConnectAccount:
+          if (OrganizationStripeConnectAccount == null) {
+            OrganizationStripeConnectAccount = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount();
+          }
+          OrganizationStripeConnectAccount.MergeFrom(other.OrganizationStripeConnectAccount);
+          break;
       }
+
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -870,10 +947,21 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (organizationPaymentMethod_ == null) {
-              OrganizationPaymentMethod = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod();
+            global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod subBuilder = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod();
+            if (payloadCase_ == PayloadOneofCase.OrganizationPaymentMethod) {
+              subBuilder.MergeFrom(OrganizationPaymentMethod);
             }
-            input.ReadMessage(OrganizationPaymentMethod);
+            input.ReadMessage(subBuilder);
+            OrganizationPaymentMethod = subBuilder;
+            break;
+          }
+          case 18: {
+            global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount subBuilder = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount();
+            if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) {
+              subBuilder.MergeFrom(OrganizationStripeConnectAccount);
+            }
+            input.ReadMessage(subBuilder);
+            OrganizationStripeConnectAccount = subBuilder;
             break;
           }
         }
@@ -896,10 +984,21 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            if (organizationPaymentMethod_ == null) {
-              OrganizationPaymentMethod = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod();
+            global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod subBuilder = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod();
+            if (payloadCase_ == PayloadOneofCase.OrganizationPaymentMethod) {
+              subBuilder.MergeFrom(OrganizationPaymentMethod);
             }
-            input.ReadMessage(OrganizationPaymentMethod);
+            input.ReadMessage(subBuilder);
+            OrganizationPaymentMethod = subBuilder;
+            break;
+          }
+          case 18: {
+            global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount subBuilder = new global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount();
+            if (payloadCase_ == PayloadOneofCase.OrganizationStripeConnectAccount) {
+              subBuilder.MergeFrom(OrganizationStripeConnectAccount);
+            }
+            input.ReadMessage(subBuilder);
+            OrganizationStripeConnectAccount = subBuilder;
             break;
           }
         }
@@ -1135,6 +1234,435 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
           }
           case 16: {
             HasAttachedPaymentMethod = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class OrganizationStripeConnectAccount : pb::IMessage<OrganizationStripeConnectAccount>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<OrganizationStripeConnectAccount> _parser = new pb::MessageParser<OrganizationStripeConnectAccount>(() => new OrganizationStripeConnectAccount());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<OrganizationStripeConnectAccount> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.PaymentV1ValueReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public OrganizationStripeConnectAccount() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public OrganizationStripeConnectAccount(OrganizationStripeConnectAccount other) : this() {
+      id_ = other.id_;
+      deletedAt_ = other.deletedAt_ != null ? other.deletedAt_.Clone() : null;
+      organizationId_ = other.organizationId_;
+      name_ = other.name_;
+      chargesEnabled_ = other.chargesEnabled_;
+      payoutsEnabled_ = other.payoutsEnabled_;
+      type_ = other.type_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public OrganizationStripeConnectAccount Clone() {
+      return new OrganizationStripeConnectAccount(this);
+    }
+
+    /// <summary>Field number for the "id" field.</summary>
+    public const int IdFieldNumber = 1;
+    private string id_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Id {
+      get { return id_; }
+      set {
+        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "deletedAt" field.</summary>
+    public const int DeletedAtFieldNumber = 2;
+    private global::Google.Protobuf.WellKnownTypes.Timestamp deletedAt_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Google.Protobuf.WellKnownTypes.Timestamp DeletedAt {
+      get { return deletedAt_; }
+      set {
+        deletedAt_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "organizationId" field.</summary>
+    public const int OrganizationIdFieldNumber = 3;
+    private string organizationId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string OrganizationId {
+      get { return organizationId_; }
+      set {
+        organizationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "name" field.</summary>
+    public const int NameFieldNumber = 4;
+    private string name_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Name {
+      get { return name_; }
+      set {
+        name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "chargesEnabled" field.</summary>
+    public const int ChargesEnabledFieldNumber = 5;
+    private bool chargesEnabled_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool ChargesEnabled {
+      get { return chargesEnabled_; }
+      set {
+        chargesEnabled_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "payoutsEnabled" field.</summary>
+    public const int PayoutsEnabledFieldNumber = 6;
+    private bool payoutsEnabled_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool PayoutsEnabled {
+      get { return payoutsEnabled_; }
+      set {
+        payoutsEnabled_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 7;
+    private string type_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Type {
+      get { return type_; }
+      set {
+        type_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as OrganizationStripeConnectAccount);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(OrganizationStripeConnectAccount other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Id != other.Id) return false;
+      if (!object.Equals(DeletedAt, other.DeletedAt)) return false;
+      if (OrganizationId != other.OrganizationId) return false;
+      if (Name != other.Name) return false;
+      if (ChargesEnabled != other.ChargesEnabled) return false;
+      if (PayoutsEnabled != other.PayoutsEnabled) return false;
+      if (Type != other.Type) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Id.Length != 0) hash ^= Id.GetHashCode();
+      if (deletedAt_ != null) hash ^= DeletedAt.GetHashCode();
+      if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
+      if (Name.Length != 0) hash ^= Name.GetHashCode();
+      if (ChargesEnabled != false) hash ^= ChargesEnabled.GetHashCode();
+      if (PayoutsEnabled != false) hash ^= PayoutsEnabled.GetHashCode();
+      if (Type.Length != 0) hash ^= Type.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (deletedAt_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(DeletedAt);
+      }
+      if (OrganizationId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(OrganizationId);
+      }
+      if (Name.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Name);
+      }
+      if (ChargesEnabled != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(ChargesEnabled);
+      }
+      if (PayoutsEnabled != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(PayoutsEnabled);
+      }
+      if (Type.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Type);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Id.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Id);
+      }
+      if (deletedAt_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(DeletedAt);
+      }
+      if (OrganizationId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(OrganizationId);
+      }
+      if (Name.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Name);
+      }
+      if (ChargesEnabled != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(ChargesEnabled);
+      }
+      if (PayoutsEnabled != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(PayoutsEnabled);
+      }
+      if (Type.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(Type);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Id.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
+      }
+      if (deletedAt_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeletedAt);
+      }
+      if (OrganizationId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(OrganizationId);
+      }
+      if (Name.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
+      }
+      if (ChargesEnabled != false) {
+        size += 1 + 1;
+      }
+      if (PayoutsEnabled != false) {
+        size += 1 + 1;
+      }
+      if (Type.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(OrganizationStripeConnectAccount other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Id.Length != 0) {
+        Id = other.Id;
+      }
+      if (other.deletedAt_ != null) {
+        if (deletedAt_ == null) {
+          DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+        }
+        DeletedAt.MergeFrom(other.DeletedAt);
+      }
+      if (other.OrganizationId.Length != 0) {
+        OrganizationId = other.OrganizationId;
+      }
+      if (other.Name.Length != 0) {
+        Name = other.Name;
+      }
+      if (other.ChargesEnabled != false) {
+        ChargesEnabled = other.ChargesEnabled;
+      }
+      if (other.PayoutsEnabled != false) {
+        PayoutsEnabled = other.PayoutsEnabled;
+      }
+      if (other.Type.Length != 0) {
+        Type = other.Type;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            if (deletedAt_ == null) {
+              DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(DeletedAt);
+            break;
+          }
+          case 26: {
+            OrganizationId = input.ReadString();
+            break;
+          }
+          case 34: {
+            Name = input.ReadString();
+            break;
+          }
+          case 40: {
+            ChargesEnabled = input.ReadBool();
+            break;
+          }
+          case 48: {
+            PayoutsEnabled = input.ReadBool();
+            break;
+          }
+          case 58: {
+            Type = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Id = input.ReadString();
+            break;
+          }
+          case 18: {
+            if (deletedAt_ == null) {
+              DeletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(DeletedAt);
+            break;
+          }
+          case 26: {
+            OrganizationId = input.ReadString();
+            break;
+          }
+          case 34: {
+            Name = input.ReadString();
+            break;
+          }
+          case 40: {
+            ChargesEnabled = input.ReadBool();
+            break;
+          }
+          case 48: {
+            PayoutsEnabled = input.ReadBool();
+            break;
+          }
+          case 58: {
+            Type = input.ReadString();
             break;
           }
         }

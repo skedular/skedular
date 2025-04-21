@@ -5,7 +5,7 @@ using Payment.Api.Services;
 namespace Payment.Api.Controllers;
 
 [ApiController]
-public class PaymentController(IOrganizationPaymentService organizationPaymentService) : PaymentControllerBase
+public class PaymentController(IOrganizationPaymentService organizationPaymentService, IWorkaroundService workaroundService) : PaymentControllerBase
 {
     public override async Task<IActionResult> AddOrganizationPaymentMethod(
         // ReSharper disable InconsistentNaming
@@ -19,4 +19,11 @@ public class PaymentController(IOrganizationPaymentService organizationPaymentSe
             setup_intent_client_secret,
             redirect_status,
             cancellationToken));
+
+    public override async Task<IActionResult> RepublishAllOrganizationStripeConnectAccounts(CancellationToken cancellationToken = default)
+    {
+        await workaroundService.RepublishAllOrganizationStripeConnectAccountsAsync(cancellationToken);
+
+        return Ok();
+    }
 }

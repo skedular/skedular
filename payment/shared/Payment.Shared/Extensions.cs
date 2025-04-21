@@ -34,7 +34,8 @@ public static class Extensions
             .AddScoped<IOrganizationStripeConnectAccountRepository, OrganizationStripeConnectAccountRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services;
+        services
+            .AddScoped<IPaymentPublisher, PaymentPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services

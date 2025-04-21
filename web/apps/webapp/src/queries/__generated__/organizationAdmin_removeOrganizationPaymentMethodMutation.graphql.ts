@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c7b6dbd49eef29f6016cf5ab35420d92>>
+ * @generated SignedSource<<696d4f9597fb970d8371f8c564d9962c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,7 +44,7 @@ v1 = [
         "variableName": "input"
       }
     ],
-    "concreteType": "RemoveOrganizationPaymentMethodResponse",
+    "concreteType": "RemoveOrganizationPaymentMethodPayload",
     "kind": "LinkedField",
     "name": "removeOrganizationPaymentMethod",
     "plural": false,
