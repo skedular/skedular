@@ -51,6 +51,7 @@ message Organization {
   string memberVisibilityPolicy = 13;
   Address physicalAddress = 14;
   string contactEmail = 15;
+  string contactPhone = 16;
 }
 
 enum Role {

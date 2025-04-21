@@ -35,7 +35,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "b3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvbkgAElIKHGludml0YXRpb25Ub0pv",
             "aW5Pcmdhbml6YXRpb24YAiABKAsyKi5vcmdhbml6YXRpb24uSW52aXRhdGlv",
             "blRvSm9pbk9yZ2FuaXphdGlvbkgAEioKCG9mZmVyaW5nGAMgASgLMhYub3Jn",
-            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCLOAwoMT3JnYW5pemF0",
+            "YW5pemF0aW9uLk9mZmVyaW5nSABCCQoHcGF5bG9hZCLkAwoMT3JnYW5pemF0",
             "aW9uEgoKAmlkGAEgASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5w",
             "cm90b2J1Zi5UaW1lc3RhbXASDAoEbmFtZRgDIAEoCRINCgVhYm91dBgEIAEo",
             "CRIPCgdsb2dvVXJsGAUgASgJEg8KB3dlYnNpdGUYBiABKAkSMQoHbWVtYmVy",
@@ -46,40 +46,40 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "YW5pemF0aW9uU3NvU2V0dGluZ3MSDAoEdHlwZRgMIAEoCRIeChZtZW1iZXJW",
             "aXNpYmlsaXR5UG9saWN5GA0gASgJEi4KD3BoeXNpY2FsQWRkcmVzcxgOIAEo",
             "CzIVLm9yZ2FuaXphdGlvbi5BZGRyZXNzEhQKDGNvbnRhY3RFbWFpbBgPIAEo",
-            "CSJ8ChJPcmdhbml6YXRpb25NZW1iZXISCgoCaWQYASABKAkSEgoKY3VzdG9t",
-            "ZXJJZBgCIAEoCRIgCgRyb2xlGAMgASgOMhIub3JnYW5pemF0aW9uLlJvbGUS",
-            "JAoGc3RhdHVzGAQgASgOMhQub3JnYW5pemF0aW9uLlN0YXR1cyLRAQoIT2Zm",
-            "ZXJpbmcSCgoCaWQYASABKAkSDAoEY29kZRgCIAEoCRIpCgVzdGFydBgDIAEo",
-            "CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZW5kGAQgASgLMhou",
-            "Z29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIRCglhdXRvUmVuZXcYBSABKAgS",
-            "EQoJdW5pdFByaWNlGAYgASgFEhkKEWFjdGl2ZUN1c3RvbWVySWRzGAcgAygJ",
-            "EhYKDm9yZ2FuaXphdGlvbklkGAggASgJIhYKCExvY2F0aW9uEgoKAmlkGAEg",
-            "ASgJIpkBChxJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uEgoKAmlkGAEg",
-            "ASgJEi0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l",
-            "c3RhbXASFgoOb3JnYW5pemF0aW9uSWQYAyABKAkSEwoLaW52aXRlZEJ5SWQY",
-            "BCABKAkSEQoJaW52aXRlZUlkGAUgASgJIlEKA1RhZxIKCgJpZBgBIAEoCRIM",
-            "CgRuYW1lGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEgwKBHR5cGUYBCAB",
-            "KAkSDQoFY29sb3IYBSABKAkiawoXT3JnYW5pemF0aW9uU3NvU2V0dGluZ3MS",
-            "CgoCaWQYASABKAkSEAoIRW50aXR5SWQYAiABKAkSEAoITG9naW5VcmwYAyAB",
-            "KAkSIAoYQXBwRmVkZXJhdGlvbk1ldGFkYXRhVXJsGAQgASgJIpMBCgdBZGRy",
-            "ZXNzEgoKAmlkGAEgASgJEhQKDGFkZHJlc3NMaW5lMRgCIAEoCRIUCgxhZGRy",
-            "ZXNzTGluZTIYAyABKAkSDgoGc3VidXJiGAQgASgJEgwKBGNpdHkYBSABKAkS",
-            "EAoIcHJvdmluY2UYBiABKAkSDwoHemlwY29kZRgHIAEoCRIPCgdjb3VudHJ5",
-            "GAggASgJKq0BCgRUeXBlEhgKFE9yZ2FuaXphdGlvblVwc2VydGVkEAASFwoT",
-            "T3JnYW5pemF0aW9uRGVsZXRlZBABEigKJEludml0YXRpb25Ub0pvaW5Pcmdh",
-            "bml6YXRpb25VcHNlcnRlZBACEicKI0ludml0YXRpb25Ub0pvaW5Pcmdhbml6",
-            "YXRpb25EZWxldGVkEAMSHwobT3JnYW5pemF0aW9uT2ZmZXJpbmdVcGRhdGVk",
-            "EAQqMAoEUm9sZRIJCgVPd25lchAAEhEKDUFkbWluaXN0cmF0b3IQARIKCgZN",
-            "ZW1iZXIQAioiCgZTdGF0dXMSCgoGQWN0aXZlEAASDAoISW5hY3RpdmUQAUI7",
-            "qgI4QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Pcmdhbml6",
-            "YXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
+            "CRIUCgxjb250YWN0UGhvbmUYECABKAkifAoST3JnYW5pemF0aW9uTWVtYmVy",
+            "EgoKAmlkGAEgASgJEhIKCmN1c3RvbWVySWQYAiABKAkSIAoEcm9sZRgDIAEo",
+            "DjISLm9yZ2FuaXphdGlvbi5Sb2xlEiQKBnN0YXR1cxgEIAEoDjIULm9yZ2Fu",
+            "aXphdGlvbi5TdGF0dXMi0QEKCE9mZmVyaW5nEgoKAmlkGAEgASgJEgwKBGNv",
+            "ZGUYAiABKAkSKQoFc3RhcnQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGlt",
+            "ZXN0YW1wEicKA2VuZBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
+            "bXASEQoJYXV0b1JlbmV3GAUgASgIEhEKCXVuaXRQcmljZRgGIAEoBRIZChFh",
+            "Y3RpdmVDdXN0b21lcklkcxgHIAMoCRIWCg5vcmdhbml6YXRpb25JZBgIIAEo",
+            "CSIWCghMb2NhdGlvbhIKCgJpZBgBIAEoCSKZAQocSW52aXRhdGlvblRvSm9p",
+            "bk9yZ2FuaXphdGlvbhIKCgJpZBgBIAEoCRItCglkZWxldGVkQXQYAiABKAsy",
+            "Gi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhYKDm9yZ2FuaXphdGlvbklk",
+            "GAMgASgJEhMKC2ludml0ZWRCeUlkGAQgASgJEhEKCWludml0ZWVJZBgFIAEo",
+            "CSJRCgNUYWcSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlw",
+            "dGlvbhgDIAEoCRIMCgR0eXBlGAQgASgJEg0KBWNvbG9yGAUgASgJImsKF09y",
+            "Z2FuaXphdGlvblNzb1NldHRpbmdzEgoKAmlkGAEgASgJEhAKCEVudGl0eUlk",
+            "GAIgASgJEhAKCExvZ2luVXJsGAMgASgJEiAKGEFwcEZlZGVyYXRpb25NZXRh",
+            "ZGF0YVVybBgEIAEoCSKTAQoHQWRkcmVzcxIKCgJpZBgBIAEoCRIUCgxhZGRy",
+            "ZXNzTGluZTEYAiABKAkSFAoMYWRkcmVzc0xpbmUyGAMgASgJEg4KBnN1YnVy",
+            "YhgEIAEoCRIMCgRjaXR5GAUgASgJEhAKCHByb3ZpbmNlGAYgASgJEg8KB3pp",
+            "cGNvZGUYByABKAkSDwoHY291bnRyeRgIIAEoCSqtAQoEVHlwZRIYChRPcmdh",
+            "bml6YXRpb25VcHNlcnRlZBAAEhcKE09yZ2FuaXphdGlvbkRlbGV0ZWQQARIo",
+            "CiRJbnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uVXBzZXJ0ZWQQAhInCiNJ",
+            "bnZpdGF0aW9uVG9Kb2luT3JnYW5pemF0aW9uRGVsZXRlZBADEh8KG09yZ2Fu",
+            "aXphdGlvbk9mZmVyaW5nVXBkYXRlZBAEKjAKBFJvbGUSCQoFT3duZXIQABIR",
+            "Cg1BZG1pbmlzdHJhdG9yEAESCgoGTWVtYmVyEAIqIgoGU3RhdHVzEgoKBkFj",
+            "dGl2ZRAAEgwKCEluYWN0aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5F",
+            "dmVudHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "InvitationToJoinOrganization", "Offering" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "Type", "MemberVisibilityPolicy", "PhysicalAddress", "ContactEmail" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "Type", "MemberVisibilityPolicy", "PhysicalAddress", "ContactEmail", "ContactPhone" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember.Parser, new[]{ "Id", "CustomerId", "Role", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
@@ -1157,6 +1157,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       memberVisibilityPolicy_ = other.memberVisibilityPolicy_;
       physicalAddress_ = other.physicalAddress_ != null ? other.physicalAddress_.Clone() : null;
       contactEmail_ = other.contactEmail_;
+      contactPhone_ = other.contactPhone_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1343,6 +1344,18 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "contactPhone" field.</summary>
+    public const int ContactPhoneFieldNumber = 16;
+    private string contactPhone_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ContactPhone {
+      get { return contactPhone_; }
+      set {
+        contactPhone_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1373,6 +1386,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (MemberVisibilityPolicy != other.MemberVisibilityPolicy) return false;
       if (!object.Equals(PhysicalAddress, other.PhysicalAddress)) return false;
       if (ContactEmail != other.ContactEmail) return false;
+      if (ContactPhone != other.ContactPhone) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1395,6 +1409,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (MemberVisibilityPolicy.Length != 0) hash ^= MemberVisibilityPolicy.GetHashCode();
       if (physicalAddress_ != null) hash ^= PhysicalAddress.GetHashCode();
       if (ContactEmail.Length != 0) hash ^= ContactEmail.GetHashCode();
+      if (ContactPhone.Length != 0) hash ^= ContactPhone.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1464,6 +1479,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(122);
         output.WriteString(ContactEmail);
       }
+      if (ContactPhone.Length != 0) {
+        output.WriteRawTag(130, 1);
+        output.WriteString(ContactPhone);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1525,6 +1544,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(122);
         output.WriteString(ContactEmail);
       }
+      if (ContactPhone.Length != 0) {
+        output.WriteRawTag(130, 1);
+        output.WriteString(ContactPhone);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1573,6 +1596,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       if (ContactEmail.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ContactEmail);
+      }
+      if (ContactPhone.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(ContactPhone);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1636,6 +1662,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       if (other.ContactEmail.Length != 0) {
         ContactEmail = other.ContactEmail;
+      }
+      if (other.ContactPhone.Length != 0) {
+        ContactPhone = other.ContactPhone;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1728,6 +1757,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             ContactEmail = input.ReadString();
             break;
           }
+          case 130: {
+            ContactPhone = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -1817,6 +1850,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 122: {
             ContactEmail = input.ReadString();
+            break;
+          }
+          case 130: {
+            ContactPhone = input.ReadString();
             break;
           }
         }

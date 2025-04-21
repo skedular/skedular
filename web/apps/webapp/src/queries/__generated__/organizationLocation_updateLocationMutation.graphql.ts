@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a06bf9625389d20d1aae226d25c46363>>
+ * @generated SignedSource<<b1ddb412ad0289e6cee054bfb48d2717>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type UpdateLocationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
+  contactPhone?: string | null | undefined;
   id: string;
   locationTagIds: ReadonlyArray<string>;
   name: string;

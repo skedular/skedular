@@ -21,6 +21,7 @@ public class Organization : EntityBaseWithDeleted
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
     public string? ContactEmail { get; set; }
+    public string? ContactPhone { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
@@ -57,6 +58,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
             .HasMaxLength(Constants.MaxOrganizationMemberVisibilityPolicyLength)
             .HasDefaultValue(OrganizationMemberVisibilityPolicyConstants.FullAccess);
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
+        builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);

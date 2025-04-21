@@ -35,6 +35,7 @@ public class AddOrganizationInput
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("type")] public OrganizationType Type { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
+    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 
     [GraphQLName("memberVisibilityPolicy")]
     public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
@@ -58,6 +59,7 @@ public class UpdateOrganizationInput
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("type")] public OrganizationType Type { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
+    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 
     [GraphQLName("memberVisibilityPolicy")]
     public OrganizationMemberVisibilityPolicy MemberVisibilityPolicy { get; set; }
@@ -195,6 +197,7 @@ public class OrganizationDetails : Node
     public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> IndustrySubCategories { get; set; } = [];
 
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
+    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 
     [GraphQLName("physicalAddress")] public AddressDetails PhysicalAddress { get; set; }
 

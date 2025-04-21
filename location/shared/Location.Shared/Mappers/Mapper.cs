@@ -24,6 +24,7 @@ public class Mapper : IMapper
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
             ContactEmail = src.ContactEmail.ToSafeString(),
+            ContactPhone = src.ContactPhone.ToSafeString(),
             OrganizationId = src.Organization.Id,
             OpeningHours = MapTo(src.OpeningHours),
             PhysicalAddress = MapTo(src.PhysicalAddress)

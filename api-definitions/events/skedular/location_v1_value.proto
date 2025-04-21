@@ -42,6 +42,7 @@ message Location {
   OpeningHours openingHours = 9;
   Address physicalAddress = 10;
   string contactEmail = 11;
+  string contactPhone = 12;
 }
 
 message Resource {

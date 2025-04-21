@@ -56,6 +56,7 @@ type LocationDetails {
   resourceTypes: [Location_OrganizationTagDetails!]!
   locationTags: [Location_OrganizationTagDetails!]!
   contactEmail: String
+  contactPhone: String
   id: ID!
 }
 
@@ -206,6 +207,7 @@ input AddLocationInput {
   physicalAddress: LocationAddressDetailsInput!
   locationTagIds: [String!]!
   contactEmail: String
+  contactPhone: String
 }
 
 input AddResourceInput {
@@ -295,6 +297,7 @@ input UpdateLocationInput {
   physicalAddress: LocationAddressDetailsInput!
   locationTagIds: [String!]!
   contactEmail: String
+  contactPhone: String
 }
 
 input UpdateLocationOpeningHoursInput {

@@ -16,6 +16,7 @@ public class Organization : ModelBaseWithDeleted
     public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public DateTimeOffset? DailyMemberCountLastRecordedAt { get; set; }
     public string? ContactEmail { get; set; }
+    public string? ContactPhone { get; set; }
 
     public Address PhysicalAddress { get; set; }
 

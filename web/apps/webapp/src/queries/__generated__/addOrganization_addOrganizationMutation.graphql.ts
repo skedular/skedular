@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b3482c92c15b37e0daf986e4cb0320e1>>
+ * @generated SignedSource<<6182792470cd939752c8b9b58a03429a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type AddOrganizationInput = {
   agreedToTermsOfUse: boolean;
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
+  contactPhone?: string | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;

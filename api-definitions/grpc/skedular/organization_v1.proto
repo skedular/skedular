@@ -71,6 +71,7 @@ message Admin_AddInput {
     string type = 10;
     string memberVisibilityPolicy = 11;
     string contactEmail = 12;
+    string contactPhone = 13;
 }
 
 message Organization {
@@ -91,6 +92,7 @@ message Organization {
     string type = 15;
     string memberVisibilityPolicy = 16;
     string contactEmail = 17;
+    string contactPhone = 18;
 }
 
 message IndustrySubCategory {

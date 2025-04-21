@@ -22,6 +22,7 @@ public class AddLocationInput
     [GraphQLName("physicalAddress")] public AddressDetailsInput PhysicalAddress { get; set; }
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
+    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 }
 
 [GraphQLName("UpdateLocationInput")]
@@ -35,6 +36,7 @@ public class UpdateLocationInput
     [GraphQLName("physicalAddress")] public AddressDetailsInput PhysicalAddress { get; set; }
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
+    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 }
 
 [GraphQLName("DeleteLocationInput")]
@@ -89,6 +91,7 @@ public class LocationDetails : Node
     [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
     [GraphQLName("locationTags")] public IEnumerable<OrganizationTagDetails> LocationTags { get; set; } = [];
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
+    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 

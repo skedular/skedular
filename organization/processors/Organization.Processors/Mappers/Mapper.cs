@@ -247,6 +247,7 @@ public class Mapper : IMapper
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
+            ContactPhone = src.ContactPhone,
             MemberVisibilityPolicy = src.MemberVisibilityPolicy.ToOrganizationMemberVisibilityPolicy(),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,

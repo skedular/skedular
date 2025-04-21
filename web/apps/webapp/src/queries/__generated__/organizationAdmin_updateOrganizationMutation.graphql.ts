@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8e30dbd945106267ece2d2436c9833f7>>
+ * @generated SignedSource<<4cca0b8dbbbbebeb6107c59c1fb8e549>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type UpdateOrganizationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
+  contactPhone?: string | null | undefined;
   id: string;
   industrySubCategoryIds: ReadonlyArray<string>;
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy;

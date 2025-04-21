@@ -77,6 +77,7 @@ message Admin_AddInput {
     string timezone = 5;
     repeated string locationTagIds = 6;
     string contactEmail = 7;
+    string contactPhone = 8;
 }
 
 message LocationConnection {
@@ -104,6 +105,7 @@ message Location {
     repeated OrganizationLocationTag locationTags = 11;
     OpeningHours openingHours = 12;
     string contactEmail = 13;
+    string contactPhone = 14;
 }
 
 message Admin_GetInput {
@@ -193,6 +195,7 @@ message AddInput {
     string timezone = 5;
     repeated string locationTagIds = 6;
     string contactEmail = 7;
+    string contactPhone = 8;
 }
 
 message UpdateInput {
@@ -203,6 +206,7 @@ message UpdateInput {
     string timezone = 5;
     repeated string locationTagIds = 6;
     string contactEmail = 7;
+    string contactPhone = 8;
 }
 
 message RemoveInput {

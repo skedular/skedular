@@ -307,6 +307,7 @@ type LocationDetails {
   canModify: Boolean!
   canViewAnalytics: Boolean!
   contactEmail: String
+  contactPhone: String
   customTags: [Location_OrganizationTagDetails!]!
   deskCapacity: Int!
   hasFutureBooking: Boolean!
@@ -620,6 +621,7 @@ type OrganizationDetails {
   canModify: Boolean!
   canViewAnalytics: Boolean!
   contactEmail: String
+  contactPhone: String
   hasAttachedPaymentMethod: Boolean!
   hasFutureBooking: Boolean!
   hasLocation: Boolean!
@@ -1173,6 +1175,7 @@ input AddLocationInput {
   about: String
   clientMutationId: String
   contactEmail: String
+  contactPhone: String
   id: String
   locationTagIds: [String!]!
   name: String!
@@ -1195,6 +1198,7 @@ input AddOrganizationInput {
   agreedToTermsOfUse: Boolean!
   clientMutationId: String
   contactEmail: String
+  contactPhone: String
   id: String
   industrySubCategoryIds: [String!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
@@ -1758,6 +1762,7 @@ input UpdateLocationInput {
   about: String
   clientMutationId: String
   contactEmail: String
+  contactPhone: String
   id: String!
   locationTagIds: [String!]!
   name: String!
@@ -1828,6 +1833,7 @@ input UpdateOrganizationInput {
   about: String
   clientMutationId: String
   contactEmail: String
+  contactPhone: String
   id: String!
   industrySubCategoryIds: [String!]!
   memberVisibilityPolicy: OrganizationMemberVisibilityPolicy!
