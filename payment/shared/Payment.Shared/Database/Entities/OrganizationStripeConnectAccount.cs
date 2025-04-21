@@ -13,6 +13,16 @@ public class OrganizationStripeConnectAccount : EntityBaseWithDeleted
     public bool ChargesEnabled { get; set; }
     public bool PayoutsEnabled { get; set; }
     public string Type { get; set; }
+    public string Country { get; set; }
+    public string DefaultCurrency { get; set; }
+    public string BusinessType { get; set; }
+    public string CompanyName { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+    public string CapabilitiesCardPayments { get; set; }
+    public string CapabilitiesTransfers { get; set; }
+    public string OnboardingUrl { get; set; }
+    public DateTimeOffset? OnboardingCompletedAt { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; } = string.Empty;
@@ -28,11 +38,28 @@ public class OrganizationStripeConnectAccountConfiguration : IEntityTypeConfigur
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxStripeConnectAccountNameLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxStripeConnectAccountTypeLength);
+        builder.Property(item => item.Country).HasMaxLength(Constants.MaxCountryLength);
+        builder.Property(item => item.DefaultCurrency).HasMaxLength(Constants.MaxStripeCurrencyLength);
+        builder.Property(item => item.BusinessType).HasMaxLength(Constants.MaxStripeBusinessTypeLength);
+        builder.Property(item => item.CompanyName).HasMaxLength(Constants.MaxStripeConnectAccountCompanyNameLength);
+        builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
+        builder.Property(item => item.Phone).HasMaxLength(Constants.MaxPhoneNumberLength);
+        builder.Property(item => item.CapabilitiesCardPayments).HasMaxLength(Constants.MaxStripeCapabilitiesStatusLength);
+        builder.Property(item => item.CapabilitiesTransfers).HasMaxLength(Constants.MaxStripeCapabilitiesStatusLength);
+        builder.Property(item => item.OnboardingUrl).HasMaxLength(Constants.MaxUrlLength);
 
         builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationStripeConnectAccounts).HasForeignKey(item => item.OrganizationId);
 
         builder.HasIndex(item => item.ChargesEnabled);
         builder.HasIndex(item => item.PayoutsEnabled);
         builder.HasIndex(item => item.Type);
+        builder.HasIndex(item => item.Country);
+        builder.HasIndex(item => item.DefaultCurrency);
+        builder.HasIndex(item => item.BusinessType);
+        builder.HasIndex(item => item.Email);
+        builder.HasIndex(item => item.Phone);
+        builder.HasIndex(item => item.CapabilitiesTransfers);
+        builder.HasIndex(item => item.CapabilitiesCardPayments);
+        builder.HasIndex(item => item.OnboardingCompletedAt);
     }
 }

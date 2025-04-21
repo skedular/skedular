@@ -90,6 +90,19 @@ public class OrganizationStripeConnectAccountDetails : Node
     [GraphQLName("chargesEnabled")] public bool ChargesEnabled { get; set; }
     [GraphQLName("payoutsEnabled")] public bool PayoutsEnabled { get; set; }
     [GraphQLName("type")] public string Type { get; set; }
+    [GraphQLName("country")] public string Country { get; set; }
+    [GraphQLName("defaultCurrency")] public string DefaultCurrency { get; set; }
+    [GraphQLName("businessType")] public string BusinessType { get; set; }
+    [GraphQLName("companyName")] public string CompanyName { get; set; }
+    [GraphQLName("email")] public string Email { get; set; }
+    [GraphQLName("phone")] public string Phone { get; set; }
+    [GraphQLName("capabilitiesTransfers")] public string CapabilitiesTransfers { get; set; }
+
+    [GraphQLName("capabilitiesCardPayments")]
+    public string CapabilitiesCardPayments { get; set; }
+
+    [GraphQLName("onboardingUrl")] public string OnboardingUrl { get; set; }
+    [GraphQLName("onboardingCompletedAt")] public DateTimeOffset? OnboardingCompletedAt { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 

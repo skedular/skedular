@@ -22,6 +22,7 @@ public interface IMapper
     IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src);
     AccountCreateOptions MapTo(Organization src);
     OrganizationStripeConnectAccount MapTo(Account src, string name, Organization organization);
+    OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest);
     Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
     OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src);
     OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src);
@@ -85,7 +86,15 @@ public class Mapper : IMapper
                 },
                 Phone = src.ContactPhone
             },
-            Email = src.ContactEmail
+            Email = src.ContactEmail,
+            Capabilities =
+                new AccountCapabilitiesOptions
+                {
+                    CardPayments = new AccountCapabilitiesCardPaymentsOptions { Requested = true },
+                    Transfers = new AccountCapabilitiesTransfersOptions { Requested = true }
+                },
+            Type = "standard",
+            Metadata = new Dictionary<string, string> { { "organizationId", src.Id }, { "name", src.Name.ToSafeString() } }
         };
 
     public OrganizationStripeConnectAccount MapTo(Account src, string name, Organization organization) =>
@@ -95,9 +104,34 @@ public class Mapper : IMapper
             Name = name,
             ChargesEnabled = src.ChargesEnabled,
             PayoutsEnabled = src.PayoutsEnabled,
-            Type = src.Type,
+            Type = src.Type.ToSafeString(),
+            Country = src.Country.ToSafeString(),
+            DefaultCurrency = src.DefaultCurrency.ToSafeString(),
+            BusinessType = src.BusinessType.ToSafeString(),
+            CompanyName = src.Company is null ? string.Empty : src.Company.Name.ToSafeString(),
+            Email = src.Email.ToSafeString(),
+            Phone = src.Company is null ? string.Empty : src.Company.Phone.ToSafeString(),
+            CapabilitiesCardPayments = src.Capabilities.CardPayments.ToSafeString(),
+            CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString(),
             Organization = organization
         };
+
+    public OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest)
+    {
+        dest.Id = src.Id;
+        dest.ChargesEnabled = src.ChargesEnabled;
+        dest.PayoutsEnabled = src.PayoutsEnabled;
+        dest.Type = src.Type.ToSafeString();
+        dest.Country = src.Country.ToSafeString();
+        dest.DefaultCurrency = src.DefaultCurrency.ToSafeString();
+        dest.BusinessType = src.BusinessType.ToSafeString();
+        dest.CompanyName = src.Company is null ? string.Empty : src.Company.Name.ToSafeString();
+        dest.Email = src.Email.ToSafeString();
+        dest.Phone = src.Company is null ? string.Empty : src.Company.Phone.ToSafeString();
+        dest.CapabilitiesCardPayments = src.Capabilities.CardPayments.ToSafeString();
+        dest.CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString();
+        return dest;
+    }
 
     public Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src) =>
         new()
@@ -109,7 +143,17 @@ public class Mapper : IMapper
             Name = src.Name,
             ChargesEnabled = src.ChargesEnabled,
             PayoutsEnabled = src.PayoutsEnabled,
-            Type = src.Type
+            Type = src.Type,
+            Country = src.Country,
+            DefaultCurrency = src.DefaultCurrency,
+            BusinessType = src.BusinessType,
+            CompanyName = src.CompanyName,
+            Email = src.Email,
+            Phone = src.Phone,
+            CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+            CapabilitiesTransfers = src.CapabilitiesTransfers,
+            OnboardingUrl = src.OnboardingUrl,
+            OnboardingCompletedAt = src.OnboardingCompletedAt
         };
 
     public OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src) =>
@@ -121,7 +165,17 @@ public class Mapper : IMapper
                 Name = src.Name,
                 ChargesEnabled = src.ChargesEnabled,
                 PayoutsEnabled = src.PayoutsEnabled,
-                Type = src.Type
+                Type = src.Type,
+                Country = src.Country,
+                DefaultCurrency = src.DefaultCurrency,
+                BusinessType = src.BusinessType,
+                CompanyName = src.CompanyName,
+                Email = src.Email,
+                Phone = src.Phone,
+                CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+                CapabilitiesTransfers = src.CapabilitiesTransfers,
+                OnboardingUrl = src.OnboardingUrl,
+                OnboardingCompletedAt = src.OnboardingCompletedAt
             };
 
     public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);

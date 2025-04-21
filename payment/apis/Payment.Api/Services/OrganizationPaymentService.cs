@@ -27,9 +27,9 @@ public class OrganizationPaymentService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
-    ICreatable<SetupIntent, SetupIntentCreateOptions> stripeSetupIntentCreateService,
-    IRetrievable<SetupIntent, SetupIntentGetOptions> stripeSetupIntentRetrievableService,
-    IRetrievable<PaymentMethod, PaymentMethodGetOptions> stripePaymentMethodRetrievableService,
+    ICreatable<SetupIntent, SetupIntentCreateOptions> setupIntentCreateService,
+    IRetrievable<SetupIntent, SetupIntentGetOptions> setupIntentRetrievableService,
+    IRetrievable<PaymentMethod, PaymentMethodGetOptions> paymentMethodRetrievableService,
     IRandomHelper randomHelper,
     IPaymentOutboxPublisher paymentOutboxPublisher,
     IMapper mapper) : IOrganizationPaymentService
@@ -48,7 +48,7 @@ public class OrganizationPaymentService(
             throw new Unauthorized();
         }
 
-        var setupIntent = await stripeSetupIntentCreateService.CreateAsync(
+        var setupIntent = await setupIntentCreateService.CreateAsync(
             new SetupIntentCreateOptions { Customer = organization.StripeCustomerId, PaymentMethodTypes = ["card"] },
             new RequestOptions(), cancellationToken);
 
@@ -105,11 +105,11 @@ public class OrganizationPaymentService(
         redirectUrl = redirectUrl.SetQueryParam("add-payment-method-status", "added");
         organizationStripePaymentMethod.Status = OrganizationStripePaymentMethodStatus.Confirmed;
 
-        var setupIntent = await stripeSetupIntentRetrievableService.GetAsync(setupIntentId, cancellationToken: cancellationToken);
+        var setupIntent = await setupIntentRetrievableService.GetAsync(setupIntentId, cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(setupIntent);
         ArgumentNullException.ThrowIfNull(setupIntent.PaymentMethodId);
 
-        var paymentMethod = await stripePaymentMethodRetrievableService.GetAsync(setupIntent.PaymentMethodId, cancellationToken: cancellationToken);
+        var paymentMethod = await paymentMethodRetrievableService.GetAsync(setupIntent.PaymentMethodId, cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(paymentMethod);
         ArgumentNullException.ThrowIfNull(paymentMethod.Card);
 

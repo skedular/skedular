@@ -45,4 +45,14 @@ message OrganizationStripeConnectAccount {
   bool chargesEnabled = 5;
   bool payoutsEnabled = 6;
   string type = 7;
+  string country = 8;
+  string defaultCurrency = 9;
+  string businessType = 10;
+  string companyName = 11;
+  string email = 12;
+  string phone = 13;
+  string capabilitiesTransfers = 14;
+  string capabilitiesCardPayments = 15;
+  string onboardingUrl = 16;
+  google.protobuf.Timestamp onboardingCompletedAt = 17;
 }

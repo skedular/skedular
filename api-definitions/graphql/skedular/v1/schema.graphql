@@ -741,10 +741,20 @@ type OrganizationStripeConnectAccountConnection {
 }
 
 type OrganizationStripeConnectAccountDetails {
+  businessType: String!
+  capabilitiesCardPayments: String!
+  capabilitiesTransfers: String!
   chargesEnabled: Boolean!
+  companyName: String!
+  country: String!
+  defaultCurrency: String!
+  email: String!
   id: ID!
   name: String!
+  onboardingCompletedAt: DateTime
+  onboardingUrl: String!
   payoutsEnabled: Boolean!
+  phone: String!
   type: String!
 }
 

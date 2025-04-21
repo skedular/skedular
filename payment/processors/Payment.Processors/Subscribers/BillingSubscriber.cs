@@ -18,7 +18,7 @@ namespace Payment.Processors.Subscribers;
 public class BillingSubscriber(
     ILogger<BillingSubscriber> logger,
     IRepositoryFactory repositoryFactory,
-    ICreatable<PaymentIntent, PaymentIntentCreateOptions> stripePaymentIntentCreateService)
+    ICreatable<PaymentIntent, PaymentIntentCreateOptions> paymentIntentCreateService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -100,7 +100,7 @@ public class BillingSubscriber(
         // TODO: 20240601 : Morteza: Need to implement default payment methods in future
         var organizationStripePaymentMethod = organizationStripePaymentMethods.First();
         var amount = organizationOfferingBilling.TotalCost;
-        var paymentIntent = await stripePaymentIntentCreateService.CreateAsync(
+        var paymentIntent = await paymentIntentCreateService.CreateAsync(
             new PaymentIntentCreateOptions
             {
                 Customer = organization.StripeCustomerId,

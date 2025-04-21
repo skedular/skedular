@@ -5,12 +5,14 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
+import { OnboardingService } from './services/OnboardingService';
 import { OrganizationService } from './services/OrganizationService';
 import { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 import { PaymentService } from './services/PaymentService';
 import { PaymentMethodService } from './services/PaymentMethodService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularBillingClient {
+    public readonly onboarding: OnboardingService;
     public readonly organization: OrganizationService;
     public readonly organizationStripeConnectAccounts: OrganizationStripeConnectAccountsService;
     public readonly payment: PaymentService;
@@ -28,6 +30,7 @@ export class SkedularBillingClient {
             HEADERS: config?.HEADERS,
             ENCODE_PATH: config?.ENCODE_PATH,
         });
+        this.onboarding = new OnboardingService(this.request);
         this.organization = new OrganizationService(this.request);
         this.organizationStripeConnectAccounts = new OrganizationStripeConnectAccountsService(this.request);
         this.payment = new PaymentService(this.request);

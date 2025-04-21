@@ -17,8 +17,8 @@ public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
-    ICreatable<Customer, CustomerCreateOptions> stripeCustomerCreateService,
-    IUpdatable<Customer, CustomerUpdateOptions> stripeCustomerUpdateService)
+    ICreatable<Customer, CustomerCreateOptions> customerCreateService,
+    IUpdatable<Customer, CustomerUpdateOptions> customerUpdateService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -85,7 +85,7 @@ public class OrganizationSubscriber(
         if (existingOrganization is null)
         {
             existingOrganization = mapper.MapToEntity(organization);
-            var stripeCreatedCustomer = await stripeCustomerCreateService.CreateAsync(
+            var stripeCreatedCustomer = await customerCreateService.CreateAsync(
                 new CustomerCreateOptions { Name = existingOrganization.Name },
                 new RequestOptions { IdempotencyKey = organization.Id },
                 cancellationToken);
@@ -95,7 +95,7 @@ public class OrganizationSubscriber(
         else
         {
             existingOrganization = mapper.MergeToEntity(organization, existingOrganization);
-            var stripeUpdatedCustomer = await stripeCustomerUpdateService.UpdateAsync(
+            var stripeUpdatedCustomer = await customerUpdateService.UpdateAsync(
                 existingOrganization.StripeCustomerId,
                 new CustomerUpdateOptions { Name = existingOrganization.Name },
                 new RequestOptions { IdempotencyKey = @event.Metadata.Id },

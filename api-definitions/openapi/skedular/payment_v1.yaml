@@ -41,6 +41,68 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /payment/api/v1/organization-stripe-connect-account/{id}/refresh-onboarding-url:
+    post:
+      tags:
+        - payment
+        - organizationStripeConnectAccounts
+        - onboarding
+      summary: return OrganizationStripeConnectAccount onboarding refresh URL
+      operationId: refreshOrganizationStripeConnectAccountOnboarding
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "200":
+          description: should never be returned
+        "302":
+          description: redirect to OrganizationStripeConnectAccounts new onboarding URL
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /payment/api/v1/organization-stripe-connect-account/onboarding-completed:
+    post:
+      tags:
+        - payment
+        - organizationStripeConnectAccounts
+        - onboarding
+      summary: complete OrganizationStripeConnectAccount onboarding
+      operationId: organizationStripeConnectAccountOnboardingCompleted
+      parameters:
+        - in: header
+          name: x-stripe-signature
+          schema:
+            type: string
+          required: false
+          description: Stripe webhook signature
+      requestBody:
+        description: raw JSON string
+        required: false
+        content:
+          application/json:
+            schema:
+              type: string
+
+      responses:
+        "200":
+          description: the status of OrganizationStripeConnectAccounts onboarding completed
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
   /payment/api/v1/organization-stripe-connect-account/republish-all:
     put:
       tags:

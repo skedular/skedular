@@ -40,6 +40,22 @@ namespace Api.Shared.Services.OpenApi.Skedular.Payment.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AddOrganizationPaymentMethod([Microsoft.AspNetCore.Mvc.FromQuery] string setup_intent, [Microsoft.AspNetCore.Mvc.FromQuery] string setup_intent_client_secret, [Microsoft.AspNetCore.Mvc.FromQuery] string redirect_status, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
+        /// return OrganizationStripeConnectAccount onboarding refresh URL
+        /// </summary>
+        /// <returns>should never be returned</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization-stripe-connect-account/{id}/refresh-onboarding-url")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RefreshOrganizationStripeConnectAccountOnboarding(string id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// complete OrganizationStripeConnectAccount onboarding
+        /// </summary>
+        /// <param name="x_stripe_signature">Stripe webhook signature</param>
+        /// <param name="body">raw JSON string</param>
+        /// <returns>the status of OrganizationStripeConnectAccounts onboarding completed</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization-stripe-connect-account/onboarding-completed")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> OrganizationStripeConnectAccountOnboardingCompleted([Microsoft.AspNetCore.Mvc.FromHeader(Name = "x-stripe-signature")] string? x_stripe_signature, [Microsoft.AspNetCore.Mvc.FromBody] string? body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
         /// republish all OrganizationStripeConnectAccounts
         /// </summary>
         /// <returns>the status of republishing all OrganizationStripeConnectAccounts</returns>

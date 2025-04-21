@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Payment.Shared.Database;
@@ -12,9 +13,11 @@ using Payment.Shared.Database;
 namespace Payment.Shared.Database.Migrations
 {
     [DbContext(typeof(PaymentDbContext))]
-    partial class PaymentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250421103437_AddAdditionalFieldToStripeConnectAccount")]
+    partial class AddAdditionalFieldToStripeConnectAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -519,11 +522,6 @@ namespace Payment.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("BusinessType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("CapabilitiesCardPayments")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -536,11 +534,6 @@ namespace Payment.Shared.Database.Migrations
 
                     b.Property<bool>("ChargesEnabled")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Country")
                         .IsRequired()
@@ -557,11 +550,6 @@ namespace Payment.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(320)
-                        .HasColumnType("character varying(320)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -586,11 +574,6 @@ namespace Payment.Shared.Database.Migrations
                     b.Property<bool>("PayoutsEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
-
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -604,8 +587,6 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BusinessType");
-
                     b.HasIndex("CapabilitiesCardPayments");
 
                     b.HasIndex("CapabilitiesTransfers");
@@ -616,11 +597,7 @@ namespace Payment.Shared.Database.Migrations
 
                     b.HasIndex("CreatedAt");
 
-                    b.HasIndex("DefaultCurrency");
-
                     b.HasIndex("DeletedAt");
-
-                    b.HasIndex("Email");
 
                     b.HasIndex("ModifiedAt");
 
@@ -629,8 +606,6 @@ namespace Payment.Shared.Database.Migrations
                     b.HasIndex("OrganizationId");
 
                     b.HasIndex("PayoutsEnabled");
-
-                    b.HasIndex("Phone");
 
                     b.HasIndex("Type");
 
