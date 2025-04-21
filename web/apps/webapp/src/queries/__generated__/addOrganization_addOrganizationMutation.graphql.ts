@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6182792470cd939752c8b9b58a03429a>>
+ * @generated SignedSource<<a692a065f00e1bd9571614453101b46e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -42,6 +42,8 @@ export type addOrganization_addOrganizationMutation$data = {
   readonly addOrganization: {
     readonly organization: {
       readonly about: string | null | undefined;
+      readonly contactEmail: string | null | undefined;
+      readonly contactPhone: string | null | undefined;
       readonly id: string;
       readonly memberVisibilityPolicy: {
         readonly name: string;
@@ -69,6 +71,8 @@ export type addOrganization_addOrganizationMutation$rawResponse = {
   readonly addOrganization: {
     readonly organization: {
       readonly about: string | null | undefined;
+      readonly contactEmail: string | null | undefined;
+      readonly contactPhone: string | null | undefined;
       readonly id: string;
       readonly memberVisibilityPolicy: {
         readonly name: string;
@@ -191,6 +195,20 @@ v3 = [
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "contactEmail",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "contactPhone",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "OrganizationAddressDetails",
             "kind": "LinkedField",
             "name": "physicalAddress",
@@ -273,16 +291,16 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "2a2c866fad4f8e5f79f3df767dee4bbc",
+    "cacheID": "c8555a6cf18d1624d911cc91bdc20671",
     "id": null,
     "metadata": {},
     "name": "addOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
+    "text": "mutation addOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      contactEmail\n      contactPhone\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "553212c4480087e6b45e1bb86e24339c";
+(node as any).hash = "ded96bbae86c60a5d3e6b99435598d14";
 
 export default node;

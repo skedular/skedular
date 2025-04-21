@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c5a26f5cecdda56ed85f653c199ea23a>>
+ * @generated SignedSource<<d88befe66489320a04a7bd7671250631>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -45,6 +45,8 @@ export type organizationAdmin_query$data = {
       readonly unitPrice: number;
     }>;
     readonly canModify: boolean;
+    readonly contactEmail: string | null | undefined;
+    readonly contactPhone: string | null | undefined;
     readonly hasAttachedPaymentMethod: boolean;
     readonly id: string;
     readonly industrySubCategories: ReadonlyArray<{
@@ -344,6 +346,20 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "contactEmail",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "contactPhone",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "OrganizationAddressDetails",
           "kind": "LinkedField",
           "name": "physicalAddress",
@@ -531,6 +547,6 @@ return {
 };
 })();
 
-(node as any).hash = "23e991aa779d9d1210adf978259ee665";
+(node as any).hash = "4daddf9c18502fe49ed3223e3c4ce396";
 
 export default node;

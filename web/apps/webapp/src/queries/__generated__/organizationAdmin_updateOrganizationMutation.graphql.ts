@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4cca0b8dbbbbebeb6107c59c1fb8e549>>
+ * @generated SignedSource<<18d94b73553941f5710e344ebe1f2437>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,6 +40,8 @@ export type organizationAdmin_updateOrganizationMutation$data = {
   readonly updateOrganization: {
     readonly organization: {
       readonly about: string | null | undefined;
+      readonly contactEmail: string | null | undefined;
+      readonly contactPhone: string | null | undefined;
       readonly id: string;
       readonly industrySubCategories: ReadonlyArray<{
         readonly id: string;
@@ -71,6 +73,8 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
   readonly updateOrganization: {
     readonly organization: {
       readonly about: string | null | undefined;
+      readonly contactEmail: string | null | undefined;
+      readonly contactPhone: string | null | undefined;
       readonly id: string;
       readonly industrySubCategories: ReadonlyArray<{
         readonly id: string;
@@ -211,6 +215,20 @@ v4 = [
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "contactEmail",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "contactPhone",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "OrganizationAddressDetails",
             "kind": "LinkedField",
             "name": "physicalAddress",
@@ -293,16 +311,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "5c7a75828a63560dff9712094c47780e",
+    "cacheID": "7aed8d2faa8c23a7be4302f00b810d10",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      memberVisibilityPolicy {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "04370cfaf18ba604396fb88868377941";
+(node as any).hash = "59ef6b57c67443dec32a427137409ad5";
 
 export default node;

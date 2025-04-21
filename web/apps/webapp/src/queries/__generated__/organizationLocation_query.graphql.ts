@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7323eadc0c19cf1993e0c52e5fe87492>>
+ * @generated SignedSource<<3bb80959c28e0a84d37ffd7b878d9b09>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,8 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationLocation_query$data = {
   readonly location: {
     readonly about: string | null | undefined;
+    readonly contactEmail: string | null | undefined;
+    readonly contactPhone: string | null | undefined;
     readonly id: string;
     readonly locationTags: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -257,6 +259,20 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "contactEmail",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "contactPhone",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "LocationAddressDetails",
           "kind": "LinkedField",
           "name": "physicalAddress",
@@ -462,6 +478,6 @@ return {
 };
 })();
 
-(node as any).hash = "052f9b0cd121faf86dc247f2c37a1326";
+(node as any).hash = "b0dcec1505edcc59aae6bc5131262c32";
 
 export default node;

@@ -49,6 +49,8 @@ type LocationDetails = {
   about: string | null;
   timezone: string;
   locationTagIds: string[];
+  contactEmail: string | null;
+  contactPhone: string | null;
   addressLine1: string;
   addressLine2: string | null;
   suburb: string;
@@ -63,6 +65,10 @@ const locationSchema = object({
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
   locationTagIds: array().nullable(),
+  contactEmail: string()
+    .nullable()
+    .email(({ value }) => `${value} is not a valid email`),
+  contactPhone: string().nullable(),
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
   suburb: string().required('Suburb is required'),
@@ -83,6 +89,8 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
           name
           about
           timezone
+          contactEmail
+          contactPhone
           physicalAddress {
             addressLine1
             addressLine2
@@ -133,7 +141,21 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
     });
   };
 
-  const handleLocationAddClick = ({ name, about, timezone, addressLine1, addressLine2, suburb, city, province, zipcode, country, locationTagIds }: LocationDetails) => {
+  const handleLocationAddClick = ({
+    name,
+    about,
+    timezone,
+    contactEmail,
+    contactPhone,
+    addressLine1,
+    addressLine2,
+    suburb,
+    city,
+    province,
+    zipcode,
+    country,
+    locationTagIds,
+  }: LocationDetails) => {
     const id = nanoid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
 
@@ -146,6 +168,8 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
           about,
           organizationId,
           timezone,
+          contactEmail,
+          contactPhone,
           physicalAddress: {
             addressLine1,
             addressLine2,
@@ -211,6 +235,8 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
             name,
             about,
             timezone,
+            contactEmail,
+            contactPhone,
             physicalAddress: {
               addressLine1,
               addressLine2,
@@ -238,6 +264,8 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
               about: '',
               timezone: '',
               locationTagIds: [],
+              contactEmail: '',
+              contactPhone: '',
               addressLine1: '',
               addressLine2: '',
               suburb: '',
@@ -273,6 +301,18 @@ const AddLocation = ({ queryReference, onReloadRequired, organizationId, onAdded
                       <MultipleChoicesLocationTags rootDataRelay={rootData} name="locationTagIds" required={requiredFields.locationTagIds} organizationId={organizationId} />
                     </FormFieldLabel>
                   )}
+
+                  <SectionIconTypography label="Contact Details" />
+                  <BodyIconTypography label="Edit your location contact details" />
+                  <Divider />
+
+                  <FormFieldLabel label="Email">
+                    <TextField name="contactEmail" required={requiredFields.contactEmail} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Phone Number">
+                    <TextField name="contactEmail" required={requiredFields.contactPhone} />
+                  </FormFieldLabel>
 
                   <SectionIconTypography label="Address" />
                   <BodyIconTypography label="Edit your location address" />

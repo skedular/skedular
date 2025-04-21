@@ -60,6 +60,8 @@ type OrganizationDetails = {
   type: string;
   memberVisibilityPolicy: string;
   industrySubCategoryIds: string[];
+  contactEmail: string;
+  contactPhone: string | null;
   addressLine1: string;
   addressLine2: string | null;
   suburb: string;
@@ -77,6 +79,10 @@ const organizationSchema = object({
   type: string().required('Organization type is required'),
   memberVisibilityPolicy: string().required('Member visibility policy is required'),
   industrySubCategoryIds: array().nullable(),
+  contactEmail: string()
+    .email(({ value }) => `${value} is not a valid email`)
+    .required('Contact email is required'),
+  contactPhone: string().nullable(),
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
   suburb: string().required('Suburb is required'),
@@ -105,6 +111,8 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
             type
             name
           }
+          contactEmail
+          contactPhone
           physicalAddress {
             addressLine1
             addressLine2
@@ -139,6 +147,8 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
     type,
     memberVisibilityPolicy,
     industrySubCategoryIds,
+    contactEmail,
+    contactPhone,
     addressLine1,
     addressLine2,
     suburb,
@@ -163,6 +173,8 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: industrySubCategoryIds ?? [],
           memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
+          contactEmail,
+          contactPhone,
           physicalAddress: {
             addressLine1,
             addressLine2,
@@ -235,6 +247,8 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               type: type as OrganizationMemberVisibilityPolicy,
               name: '',
             },
+            contactEmail,
+            contactPhone,
             physicalAddress: {
               addressLine1,
               addressLine2,
@@ -262,6 +276,8 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
               website: null,
               type: '',
               memberVisibilityPolicy: '',
+              contactEmail: '',
+              contactPhone: '',
               addressLine1: '',
               addressLine2: '',
               suburb: '',
@@ -302,6 +318,18 @@ const AddOrganization = ({ queryReference, onReloadRequired, showCancel, onAdded
 
                   <FormFieldLabel label="Industry">
                     <OrganizationMultipleChoicesIndustries rootDataRelay={rootData} name="industrySubCategoryIds" required={requiredFields.industrySubCategoryIds} />
+                  </FormFieldLabel>
+
+                  <SectionIconTypography label="Contact Details" />
+                  <BodyIconTypography label="Edit your organization contact details" />
+                  <Divider />
+
+                  <FormFieldLabel label="Email">
+                    <TextField name="contactEmail" required={requiredFields.contactEmail} />
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Phone Number">
+                    <TextField name="contactEmail" required={requiredFields.contactPhone} />
                   </FormFieldLabel>
 
                   <SectionIconTypography label="Address" />

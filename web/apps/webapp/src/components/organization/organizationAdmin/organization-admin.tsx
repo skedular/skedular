@@ -95,6 +95,8 @@ type OrganizationDetails = {
   type: string;
   memberVisibilityPolicy: string;
   industrySubCategoryIds: string[];
+  contactEmail: string;
+  contactPhone: string | null;
   addressLine1: string;
   addressLine2: string | null;
   suburb: string;
@@ -111,6 +113,10 @@ const organizationSchema = object({
   type: string().required('Organization type is required'),
   memberVisibilityPolicy: string().required('Member visibility policy is required'),
   industrySubCategoryIds: array().nullable(),
+  contactEmail: string()
+    .email(({ value }) => `${value} is not a valid email`)
+    .required('Contact email is required'),
+  contactPhone: string().nullable(),
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
   suburb: string().required('Suburb is required'),
@@ -207,6 +213,8 @@ const OrganizationAdmin = ({
             id
             name
           }
+          contactEmail
+          contactPhone
           physicalAddress {
             addressLine1
             addressLine2
@@ -356,6 +364,8 @@ const OrganizationAdmin = ({
             id
             name
           }
+          contactEmail
+          contactPhone
           physicalAddress {
             addressLine1
             addressLine2
@@ -610,6 +620,8 @@ const OrganizationAdmin = ({
     type,
     memberVisibilityPolicy,
     industrySubCategoryIds,
+    contactEmail,
+    contactPhone,
     addressLine1,
     addressLine2,
     suburb,
@@ -637,6 +649,8 @@ const OrganizationAdmin = ({
           type: type as OrganizationType,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
           memberVisibilityPolicy: memberVisibilityPolicy as OrganizationMemberVisibilityPolicy,
+          contactEmail,
+          contactPhone,
           physicalAddress: {
             addressLine1,
             addressLine2,
@@ -688,6 +702,8 @@ const OrganizationAdmin = ({
               .flatMap((mainCategory) => mainCategory.subCategories)
               .filter(({ id }) => selectedIndustrySubCategoryIds.find((selectedIndustrySubCategoryId) => selectedIndustrySubCategoryId === id))
               .map(({ id, name }) => ({ id, name })),
+            contactEmail,
+            contactPhone,
             physicalAddress: {
               addressLine1,
               addressLine2,
@@ -1664,6 +1680,8 @@ const OrganizationAdmin = ({
                 type: organization.type.type,
                 memberVisibilityPolicy: organization.memberVisibilityPolicy.type,
                 industrySubCategoryIds: organization.industrySubCategories.map(({ id }) => id),
+                contactEmail: organization.contactEmail,
+                contactPhone: organization.contactPhone,
                 addressLine1: organization.physicalAddress.addressLine1,
                 addressLine2: organization.physicalAddress.addressLine2,
                 suburb: organization.physicalAddress.suburb,
@@ -1717,6 +1735,18 @@ const OrganizationAdmin = ({
                         name="industrySubCategoryIds"
                         required={requiredOrganizationDetailsFields.industrySubCategoryIds}
                       />
+                    </FormFieldLabel>
+
+                    <SectionIconTypography label="Contact Details" />
+                    <BodyIconTypography label="Edit your organization contact details" />
+                    <Divider />
+
+                    <FormFieldLabel label="Email">
+                      <TextField name="contactEmail" required={requiredOrganizationDetailsFields.contactEmail} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Phone Number">
+                      <TextField name="contactEmail" required={requiredOrganizationDetailsFields.contactPhone} />
                     </FormFieldLabel>
 
                     <SectionIconTypography label="Address" />
