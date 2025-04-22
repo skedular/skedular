@@ -14,6 +14,11 @@ resource "stripe_webhook_endpoint" "webhook" {
   url         = "https://${module.shared_common.api_domain_name}/payment/api/v1/stripe/webhook"
   description = "Stripe Webhook for Skedular"
   enabled_events = [
+    "account.application.authorized",
+    "account.application.deauthorized",
+    "account.external_account.created",
+    "account.external_account.updated",
+    "account.external_account.deleted",
     "account.updated"
   ]
 }

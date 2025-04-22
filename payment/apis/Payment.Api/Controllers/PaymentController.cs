@@ -44,9 +44,16 @@ public class PaymentController(
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
             _ = EventUtility.ParseEvent(json, false);
-            var stripeEvent = EventUtility.ConstructEvent(json, stripe_Signature, stripe_Signature, throwOnApiVersionMismatch: false);
+            var stripeEvent = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.WebhookKey, throwOnApiVersionMismatch: false);
             switch (stripeEvent.Type)
             {
+                case EventTypes.AccountApplicationAuthorized:
+                case EventTypes.AccountApplicationDeauthorized:
+                case EventTypes.AccountExternalAccountCreated:
+                case EventTypes.AccountExternalAccountDeleted:
+                case EventTypes.AccountExternalAccountUpdated:
+                    break;
+
                 case EventTypes.AccountUpdated:
                     var stripeAccount = stripeEvent.Data.Object as Account;
                     ArgumentNullException.ThrowIfNull(stripeAccount);

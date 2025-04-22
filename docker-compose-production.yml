@@ -161,6 +161,7 @@ services:
       Team__ApiKey: ${STAGING_SKEDULAR_TEAM_APIKEY}
       Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__WebhookKey: ${STAGING_SKEDULAR_STRIPE_WEBHOOK_KEY}
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -249,6 +250,7 @@ services:
       Team__GrpcUrl: http://staging-apis-01:10502
       Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__WebhookKey: ${STAGING_SKEDULAR_STRIPE_WEBHOOK_KEY}
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -340,6 +342,7 @@ services:
       Team__GrpcUrl: http://staging-apis-01:10502
       Stripe__PublishableKey: ${STAGING_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${STAGING_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__WebhookKey: ${STAGING_SKEDULAR_STRIPE_WEBHOOK_KEY}
       Slack__AppId: A05H0126U7Q
       Slack__ClientId: "118234978193.5578036232262"
       Slack__ClientSecret: ${STAGING_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -459,6 +462,7 @@ services:
       Team__ApiKey: ${PRODUCTION_SKEDULAR_TEAM_APIKEY}
       Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__WebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_WEBHOOK_KEY}
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -547,6 +551,7 @@ services:
       Team__GrpcUrl: http://prod-apis-01:10502
       Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__WebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_WEBHOOK_KEY}
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
@@ -638,6 +643,7 @@ services:
       Team__GrpcUrl: http://prod-apis-01:10502
       Stripe__PublishableKey: ${PRODUCTION_SKEDULAR_STRIPE_PUBLISH_KEY}
       Stripe__SecretKey: ${PRODUCTION_SKEDULAR_STRIPE_SECRET_KEY}
+      Stripe__WebhookKey: ${PRODUCTION_SKEDULAR_STRIPE_WEBHOOK_KEY}
       Slack__AppId: A05H015F9QE
       Slack__ClientId: "118234978193.5578039519830"
       Slack__ClientSecret: ${PRODUCTION_SKEDULAR_SLACK_CLIENT_SECRET}
