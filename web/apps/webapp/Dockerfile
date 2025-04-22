@@ -12,18 +12,7 @@ COPY web /src/web
 WORKDIR /src/web
 
 # This is to only allow build process pass, so we can validate the compilation of the project when PR raised
-ENV BILLING_ENDPOINT="https://localhost/"
-ENV BOOKING_ENDPOINT="https://localhost/"
-ENV CUSTOMER_ENDPOINT="https://localhost/"
 ENV GATEWAY_ENDPOINT="https://localhost/"
-ENV LOCATION_ENDPOINT="https://localhost/"
-ENV NOTIFICATION_ENDPOINT="https://localhost/"
-ENV ORGANIZATION_ENDPOINT="https://localhost/"
-ENV PAYMENT_ENDPOINT="https://localhost/"
-ENV SLACK_ENDPOINT="https://localhost/"
-ENV TEAM_ENDPOINT="https://localhost/"
-ENV MSTEAMS_ENDPOINT="https://localhost/"
-ENV MARKETPLACE_ENDPOINT="https://localhost/"
 ENV WORKOS_API_KEY="sk_test_Sz3IQjepeSWaI4cMS4ms4sMuU"
 ENV WORKOS_CLIENT_ID="client_Sz3IQjepeSWaI4cMS4ms4sMuU"
 

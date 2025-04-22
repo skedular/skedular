@@ -22,17 +22,6 @@ declare global {
       AZURE_AD_CLIENT_SECRET: string;
       SLACK_CLIENT_SECRET: string;
       GATEWAY_ENDPOINT: string;
-      CUSTOMER_ENDPOINT: string;
-      LOCATION_ENDPOINT: string;
-      NOTIFICATION_ENDPOINT: string;
-      ORGANIZATION_ENDPOINT: string;
-      SLACK_ENDPOINT: string;
-      TEAM_ENDPOINT: string;
-      BOOKING_ENDPOINT: string;
-      PAYMENT_ENDPOINT: string;
-      BILLING_ENDPOINT: string;
-      MSTEAMS_ENDPOINT: string;
-      MARKETPLACE_ENDPOINT: string;
     }
   }
 }
