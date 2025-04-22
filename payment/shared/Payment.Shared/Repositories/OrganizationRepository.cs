@@ -38,8 +38,7 @@ internal static class OrganizationExtensions
 
         return includeAllOfferings
             ? updatedQuery
-                .Include(query => query.OrganizationOfferings
-                    .OrderByDescending(organizationOffering => organizationOffering.End))
+                .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
                 .ThenInclude(query => query.OrganizationOfferingStripePaymentIntents)
                 .Include(query => query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod =>
                     !organizationStripePaymentMethod.DeletedAt.HasValue))
@@ -49,8 +48,8 @@ internal static class OrganizationExtensions
                     .OrderByDescending(organizationOffering => organizationOffering.End)
                     .Take(1))
                 .ThenInclude(query => query.OrganizationOfferingStripePaymentIntents)
-                .Include(query => query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod =>
-                    !organizationStripePaymentMethod.DeletedAt.HasValue));
+                .Include(query => query.OrganizationStripePaymentMethods
+                    .Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue));
     }
 }
 

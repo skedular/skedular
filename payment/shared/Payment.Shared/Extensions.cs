@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Payment.Shared.Mappers;
 using Payment.Shared.Publishers;
 using Payment.Shared.Repositories;
+using Payment.Shared.Services;
 using Stripe;
 using StripeConfiguration = Payment.Shared.Configurations.StripeConfiguration;
 
@@ -14,7 +15,8 @@ public static class Extensions
         services.AddSingleton<IMapper, Mapper>();
 
     public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services;
+        services
+            .AddScoped<IStripeConnectAccountLinkService, StripeConnectAccountLinkService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

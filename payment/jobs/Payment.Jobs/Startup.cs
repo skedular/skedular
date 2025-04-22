@@ -33,7 +33,8 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
             .AddPublishers()
             .AddOutboxPublishers()
             .AddJobs()
-            .AddServices();
+            .AddServices()
+            .AddStripe(Configuration);
     }
 
     public override void Configure(IApplicationBuilder app) =>

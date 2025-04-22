@@ -1661,7 +1661,7 @@ const OrganizationMarketplaceSetup = ({
                 </Grid>
 
                 <Grid>
-                  <NewStripeConnectAccountButton organizationId={organizationId}  />
+                  <NewStripeConnectAccountButton organizationId={organizationId} />
                 </Grid>
               </GridContainer>
               <Divider />

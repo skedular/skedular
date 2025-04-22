@@ -1,20 +1,14 @@
-using Api.Shared;
-using Api.Shared.Services.OpenApi.Skedular.Payment.V1;
-using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
 using Enterprise.Shared.Pagination;
-using Enterprise.Shared.Random;
-using Flurl;
 using HotChocolate.Types.Pagination;
-using Microsoft.AspNetCore.Mvc;
 using Payment.Api.Mappers;
 using Payment.Api.Services.Authorization;
 using Payment.Shared.Models;
 using Payment.Shared.Publishers;
 using Payment.Shared.Repositories;
+using Payment.Shared.Services;
 using Stripe;
-using OrganizationStripeConnectAccountRefreshCode = Payment.Shared.Database.Entities.OrganizationStripeConnectAccountRefreshCode;
 
 namespace Payment.Api.Services;
 
@@ -35,29 +29,16 @@ public interface IOrganizationStripeConnectAccountService
 }
 
 public class OrganizationStripeConnectAccountService(
-    ApplicationConfiguration applicationConfiguration,
     IDbTransactionBuilder transactionBuilder,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
     ICreatable<Account, AccountCreateOptions> accountCreateService,
-    ICreatable<AccountLink, AccountLinkCreateOptions> accountLinkCreateService,
     ICachedCustomerService cachedCustomerService,
     IMapper mapper,
     IPaymentOutboxPublisher paymentOutboxPublisher,
-    IRandomHelper randomHelper) : IOrganizationStripeConnectAccountService
+    IStripeConnectAccountLinkService stripeConnectAccountLinkService) : IOrganizationStripeConnectAccountService
 {
-    private readonly Lazy<string> _refreshLinkBaseUrl = new(() =>
-    {
-        var method = typeof(PaymentControllerBase).GetMethod(nameof(PaymentControllerBase.RefreshOrganizationStripeConnectAccountOnboarding));
-        ArgumentNullException.ThrowIfNull(method);
-
-        var routeAttribute = method.GetCustomAttributes(typeof(RouteAttribute), true).Cast<RouteAttribute>().First();
-        ArgumentNullException.ThrowIfNull(routeAttribute);
-
-        return routeAttribute.Template;
-    });
-
     public async Task<OrganizationStripeConnectAccount> AddAsync(
         string organizationId,
         string nickname,
@@ -100,18 +81,15 @@ public class OrganizationStripeConnectAccountService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var randomRefreshCode = randomHelper.Generate(size: Constants.MaxStripeConnectAccountRefreshCodeLength);
         var stripeConnectAccount =
             await accountCreateService.CreateAsync(mapper.MapTo(organization, nickname), new RequestOptions(), cancellationToken);
-        var strAccountLink = await CreateLinkAsync(stripeConnectAccount.Id, organization.Id, randomRefreshCode, cancellationToken);
-
         var accountEntity = mapper.MapTo(stripeConnectAccount, nickname, organization);
-        accountEntity.OnboardingUrl = strAccountLink.Url;
-
-        var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
-        {
-            Id = randomHelper.Generate(), Code = randomRefreshCode, OrganizationStripeConnectAccount = accountEntity
-        };
+        var (accountRefreshCodeEntity, url) = await stripeConnectAccountLinkService.CreateLinkAsync(
+            stripeConnectAccount.Id,
+            organization.Id,
+            accountEntity,
+            cancellationToken);
+        accountEntity.OnboardingUrl = url;
 
         _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
         var account = repositoryFactory.OrganizationStripeConnectAccountRepository.Add(accountEntity);
@@ -244,21 +222,13 @@ public class OrganizationStripeConnectAccountService(
             throw new OrganizationStripeConnectAccountRefreshCodeNotFound();
         }
 
-        var randomRefreshCode = randomHelper.Generate(size: Constants.MaxStripeConnectAccountRefreshCodeLength);
-        var strAccountLink = await CreateLinkAsync(
+        var (accountRefreshCodeEntity, url) = await stripeConnectAccountLinkService.CreateLinkAsync(
             accountRefreshCode.OrganizationStripeConnectAccount.Id,
             accountRefreshCode.OrganizationStripeConnectAccount.Organization.Id,
-            randomRefreshCode,
+            accountRefreshCode.OrganizationStripeConnectAccount,
             cancellationToken);
 
-        accountRefreshCode.OrganizationStripeConnectAccount.OnboardingUrl = strAccountLink.Url;
-
-        var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
-        {
-            Id = randomHelper.Generate(),
-            Code = randomRefreshCode,
-            OrganizationStripeConnectAccount = accountRefreshCode.OrganizationStripeConnectAccount
-        };
+        accountRefreshCode.OrganizationStripeConnectAccount.OnboardingUrl = url;
 
         _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Remove(accountRefreshCode);
         _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);
@@ -301,18 +271,4 @@ public class OrganizationStripeConnectAccountService(
 
         return (paginatedInfo, mappedAccounts, totalCount);
     }
-
-    private async Task<AccountLink>
-        CreateLinkAsync(string id, string organizationId, string randomRefreshCode, CancellationToken cancellationToken) =>
-        await accountLinkCreateService.CreateAsync(
-            new AccountLinkCreateOptions
-            {
-                Account = id,
-                RefreshUrl =
-                    Url.Combine(applicationConfiguration.ApiBaseDomain, _refreshLinkBaseUrl.Value).SetQueryParam("code", randomRefreshCode),
-                ReturnUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, organizationId, "stripe-connect-accounts", id),
-                Type = "account_onboarding"
-            },
-            new RequestOptions(),
-            cancellationToken);
 }
