@@ -26,7 +26,6 @@ public interface IOrganizationStripeConnectAccountService
     Task<ICollection<OrganizationStripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken);
-    Task ProcessStripeEventAsync(Account stripeAccount, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int )> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
@@ -46,7 +45,6 @@ public class OrganizationStripeConnectAccountService(
     ICachedCustomerService cachedCustomerService,
     IMapper mapper,
     IPaymentOutboxPublisher paymentOutboxPublisher,
-    TimeProvider timeProvider,
     IRandomHelper randomHelper) : IOrganizationStripeConnectAccountService
 {
     private readonly Lazy<string> _refreshLinkBaseUrl = new(() =>
@@ -270,28 +268,6 @@ public class OrganizationStripeConnectAccountService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return accountRefreshCode.OrganizationStripeConnectAccount.OnboardingUrl;
-    }
-
-    public async Task ProcessStripeEventAsync(Account stripeAccount, CancellationToken cancellationToken)
-    {
-        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(stripeAccount.Id, cancellationToken);
-        if (account is null)
-        {
-            return;
-        }
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        account = mapper.MergeTo(stripeAccount, account);
-
-        account.OnboardingCompletedAt = timeProvider.GetUtcNow();
-        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(account);
-        var mappedAccount = mapper.MapTo(account);
-
-        paymentOutboxPublisher.PublishOrganizationStripeConnectAccounts([mappedAccount], repositoryFactory.UnitOfWork);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedTeamsAsync(

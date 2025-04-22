@@ -752,7 +752,6 @@ type OrganizationStripeConnectAccountDetails {
   email: String!
   id: ID!
   name: String!
-  onboardingCompletedAt: DateTime
   onboardingUrl: String!
   payoutsEnabled: Boolean!
   phone: String!

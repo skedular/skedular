@@ -9,40 +9,18 @@ namespace Slack.Shared.Publishers;
 
 public interface ISlackInternalPublisher
 {
-    Task PublishRefreshWorkspaceAsync(
-        IEnumerable<string> workspaceIds,
-        CancellationToken cancellationToken);
-
-    Task PublishRefreshWorkspaceMembersAsync(
-        IEnumerable<string> workspaceIds,
-        CancellationToken cancellationToken);
-
-    Task PublishRefreshWorkspaceChannelsAsync(
-        IEnumerable<string> workspaceIds,
-        CancellationToken cancellationToken);
-
-    Task PublishSendWorkspaceLocationDailyUpdateMessageAsync(
-        IEnumerable<string> locationIds,
-        CancellationToken cancellationToken);
-
-    Task PublishSendWorkspaceTeamDailyUpdateMessageAsync(
-        IEnumerable<string> teamIds,
-        CancellationToken cancellationToken);
-
-    Task PublishUpdateWorkspaceMemberProfileStatusAsync(
-        IEnumerable<string> workspaceMemberIds,
-        CancellationToken cancellationToken);
+    Task PublishRefreshWorkspaceAsync(IEnumerable<string> workspaceIds, CancellationToken cancellationToken);
+    Task PublishRefreshWorkspaceMembersAsync(IEnumerable<string> workspaceIds, CancellationToken cancellationToken);
+    Task PublishRefreshWorkspaceChannelsAsync(IEnumerable<string> workspaceIds, CancellationToken cancellationToken);
+    Task PublishSendWorkspaceLocationDailyUpdateMessageAsync(IEnumerable<string> locationIds, CancellationToken cancellationToken);
+    Task PublishSendWorkspaceTeamDailyUpdateMessageAsync(IEnumerable<string> teamIds, CancellationToken cancellationToken);
+    Task PublishUpdateWorkspaceMemberProfileStatusAsync(IEnumerable<string> workspaceMemberIds, CancellationToken cancellationToken);
 }
 
-public class SlackInternalPublisher(
-    ApplicationConfiguration applicationConfiguration,
-    IContext context,
-    IKafkaPublisher<Key, Event> publisher)
+public class SlackInternalPublisher(ApplicationConfiguration applicationConfiguration, IContext context, IKafkaPublisher<Key, Event> publisher)
     : ISlackInternalPublisher
 {
-    public async Task PublishRefreshWorkspaceAsync(
-        IEnumerable<string> workspaceIds,
-        CancellationToken cancellationToken) =>
+    public async Task PublishRefreshWorkspaceAsync(IEnumerable<string> workspaceIds, CancellationToken cancellationToken) =>
         await Task.WhenAll(workspaceIds.Select(async workspaceId =>
         {
             var key = new Key { WorkspaceId = workspaceId };
@@ -59,9 +37,7 @@ public class SlackInternalPublisher(
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
 
-    public async Task PublishRefreshWorkspaceMembersAsync(
-        IEnumerable<string> workspaceIds,
-        CancellationToken cancellationToken) =>
+    public async Task PublishRefreshWorkspaceMembersAsync(IEnumerable<string> workspaceIds, CancellationToken cancellationToken) =>
         await Task.WhenAll(workspaceIds.Select(async workspaceId =>
         {
             var key = new Key { WorkspaceId = workspaceId };
@@ -78,9 +54,7 @@ public class SlackInternalPublisher(
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
 
-    public async Task PublishRefreshWorkspaceChannelsAsync(
-        IEnumerable<string> workspaceIds,
-        CancellationToken cancellationToken) =>
+    public async Task PublishRefreshWorkspaceChannelsAsync(IEnumerable<string> workspaceIds, CancellationToken cancellationToken) =>
         await Task.WhenAll(workspaceIds.Select(async workspaceId =>
         {
             var key = new Key { WorkspaceId = workspaceId };
@@ -97,9 +71,7 @@ public class SlackInternalPublisher(
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
 
-    public async Task PublishSendWorkspaceLocationDailyUpdateMessageAsync(
-        IEnumerable<string> locationIds,
-        CancellationToken cancellationToken) =>
+    public async Task PublishSendWorkspaceLocationDailyUpdateMessageAsync(IEnumerable<string> locationIds, CancellationToken cancellationToken) =>
         await Task.WhenAll(locationIds.Select(async locationId =>
         {
             var key = new Key { LocationId = locationId };
@@ -116,9 +88,7 @@ public class SlackInternalPublisher(
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
 
-    public async Task PublishSendWorkspaceTeamDailyUpdateMessageAsync(
-        IEnumerable<string> teamIds,
-        CancellationToken cancellationToken) =>
+    public async Task PublishSendWorkspaceTeamDailyUpdateMessageAsync(IEnumerable<string> teamIds, CancellationToken cancellationToken) =>
         await Task.WhenAll(teamIds.Select(async teamId =>
         {
             var key = new Key { TeamId = teamId };
@@ -135,9 +105,7 @@ public class SlackInternalPublisher(
             await publisher.PublishAsync(key, @event, cancellationToken);
         }));
 
-    public async Task PublishUpdateWorkspaceMemberProfileStatusAsync(
-        IEnumerable<string> workspaceMemberIds,
-        CancellationToken cancellationToken) =>
+    public async Task PublishUpdateWorkspaceMemberProfileStatusAsync(IEnumerable<string> workspaceMemberIds, CancellationToken cancellationToken) =>
         await Task.WhenAll(workspaceMemberIds.Select(async workspaceMemberId =>
         {
             var key = new Key { WorkspaceMemberId = workspaceMemberId };

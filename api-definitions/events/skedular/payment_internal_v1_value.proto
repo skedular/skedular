@@ -1,0 +1,30 @@
+syntax = "proto3";
+package paymentinternal;
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value";
+
+enum Type { 
+  StripeConnectAccountWebhookEventReceived = 0;
+}
+
+message Event {
+  Metadata metadata = 1;
+  Data data = 2;
+}
+
+message Metadata {
+  string id = 1;
+  string domainSource = 2;
+  string appSource = 3;
+  Type type = 4;
+  google.protobuf.Timestamp time = 5;
+  string correlationId = 6;
+}
+
+message Data {
+  oneof payload {
+    string stripeConnectAccountWebhookEventPayload = 1;
+  }
+}

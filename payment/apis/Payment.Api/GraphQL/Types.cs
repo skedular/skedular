@@ -116,7 +116,6 @@ public class OrganizationStripeConnectAccountDetails : Node
     public string CapabilitiesCardPayments { get; set; }
 
     [GraphQLName("onboardingUrl")] public string OnboardingUrl { get; set; }
-    [GraphQLName("onboardingCompletedAt")] public DateTimeOffset? OnboardingCompletedAt { get; set; }
     [GraphQLName("id")] [ID] public required string Id { get; set; }
 }
 

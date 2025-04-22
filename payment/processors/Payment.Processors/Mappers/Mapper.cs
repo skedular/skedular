@@ -1,14 +1,17 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
-using Payment.Shared.Models;
+using Enterprise.Shared;
+using Stripe;
 using Address = Payment.Shared.Models.Address;
+using Customer = Payment.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Payment.Shared.Models.Identity;
 using Organization = Payment.Shared.Models.Organization;
 using OrganizationMember = Payment.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Payment.Shared.Database.Entities.OrganizationOffering;
 using OrganizationSsoSetting = Payment.Shared.Database.Entities.OrganizationSsoSetting;
+using OrganizationStripeConnectAccount = Payment.Shared.Database.Entities.OrganizationStripeConnectAccount;
 
 namespace Payment.Processors.Mappers;
 
@@ -63,6 +66,9 @@ public interface IMapper
         Address src,
         Shared.Database.Entities.Address dest,
         Shared.Database.Entities.Organization organization);
+
+    OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest);
+    Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
 }
 
 public class Mapper : IMapper
@@ -270,6 +276,46 @@ public class Mapper : IMapper
         dest.Organization = organization;
         return dest;
     }
+
+    public OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest)
+    {
+        dest.Id = src.Id;
+        dest.ChargesEnabled = src.ChargesEnabled;
+        dest.PayoutsEnabled = src.PayoutsEnabled;
+        dest.Type = src.Type.ToSafeString();
+        dest.Country = src.Country.ToSafeString();
+        dest.DefaultCurrency = src.DefaultCurrency.ToSafeString();
+        dest.BusinessType = src.BusinessType.ToSafeString();
+        dest.CompanyName = src.Company is null ? string.Empty : src.Company.Name.ToSafeString();
+        dest.Email = src.Email.ToSafeString();
+        dest.Phone = src.Company is null ? string.Empty : src.Company.Phone.ToSafeString();
+        dest.CapabilitiesCardPayments = src.Capabilities.CardPayments.ToSafeString();
+        dest.CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString();
+        return dest;
+    }
+
+    public Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+            Name = src.Name,
+            ChargesEnabled = src.ChargesEnabled,
+            PayoutsEnabled = src.PayoutsEnabled,
+            Type = src.Type,
+            Country = src.Country,
+            DefaultCurrency = src.DefaultCurrency,
+            BusinessType = src.BusinessType,
+            CompanyName = src.CompanyName,
+            Email = src.Email,
+            Phone = src.Phone,
+            CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+            CapabilitiesTransfers = src.CapabilitiesTransfers,
+            OnboardingUrl = src.OnboardingUrl,
+            Organization = new Organization { Id = src.Organization.Id }
+        };
 
     private static Address? MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Address? src) =>
         src is null

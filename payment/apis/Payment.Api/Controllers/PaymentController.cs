@@ -1,6 +1,7 @@
 using Api.Shared.Services.OpenApi.Skedular.Payment.V1;
 using Microsoft.AspNetCore.Mvc;
 using Payment.Api.Services;
+using Payment.Shared.Publishers;
 using Stripe;
 using StripeConfiguration = Payment.Shared.Configurations.StripeConfiguration;
 
@@ -12,6 +13,7 @@ public class PaymentController(
     IWorkaroundService workaroundService,
     IOrganizationPaymentService organizationPaymentService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+    IPaymentInternalPublisher paymentInternalPublisher,
     ILogger<PaymentController> logger) : PaymentControllerBase
 {
     public override async Task<IActionResult> AddOrganizationPaymentMethod(
@@ -43,7 +45,6 @@ public class PaymentController(
         try
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
-            _ = EventUtility.ParseEvent(json, false);
             var stripeEvent = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.WebhookKey, throwOnApiVersionMismatch: false);
             switch (stripeEvent.Type)
             {
@@ -52,14 +53,11 @@ public class PaymentController(
                 case EventTypes.AccountExternalAccountCreated:
                 case EventTypes.AccountExternalAccountDeleted:
                 case EventTypes.AccountExternalAccountUpdated:
-                    break;
-
                 case EventTypes.AccountUpdated:
                     var stripeAccount = stripeEvent.Data.Object as Account;
                     ArgumentNullException.ThrowIfNull(stripeAccount);
 
-                    await organizationStripeConnectAccountService.ProcessStripeEventAsync(stripeAccount, cancellationToken);
-
+                    await paymentInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(stripeAccount.Id, json, cancellationToken);
                     break;
             }
 

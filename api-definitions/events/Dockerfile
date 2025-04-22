@@ -322,6 +322,29 @@ RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
     --protobuf-schema-file-path /events/skedular/payment_v1_value.proto \
     --output-file-path /output/Skedular/Payment/V1/PaymentValueMetadata.g.cs
 
+RUN mkdir -p /output/Skedular/PaymentInternal/V1
+RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/PaymentInternal/V1 --csharp_opt=file_extension=.g.cs payment_internal_v1_key.proto
+RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/PaymentInternal/V1 --csharp_opt=file_extension=.g.cs payment_internal_v1_value.proto
+RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
+    --namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key \
+    --event-type Key \
+    --topic-name payment.v1.internal \
+    --retry-topic-name-prefix payment.v1.internal.retry \
+    --retry-topic-count 1 \
+    --dead-letter-topic-name payment.v1.internal.deadletter \
+    --generate-metadata-function-helper False \
+    --protobuf-schema-file-path /events/skedular/payment_internal_v1_key.proto \
+    --output-file-path /output/Skedular/PaymentInternal/V1/PaymentInternalKeyMetadata.g.cs
+RUN /app/publish/Skedularctl protobuf-event-metadata-generate \
+    --namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value \
+    --event-type Event \
+    --topic-name payment.v1.internal \
+    --retry-topic-name-prefix payment.v1.internal.retry \
+    --retry-topic-count 1 \
+    --dead-letter-topic-name payment.v1.internal.deadletter \
+    --protobuf-schema-file-path /events/skedular/payment_internal_v1_value.proto \
+    --output-file-path /output/Skedular/PaymentInternal/V1/PaymentInternalValueMetadata.g.cs
+
 RUN mkdir -p /output/Skedular/SlackInternal/V1
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/SlackInternal/V1 --csharp_opt=file_extension=.g.cs slack_internal_v1_key.proto
 RUN protoc -I=/events/skedular --csharp_out=/output/Skedular/SlackInternal/V1 --csharp_opt=file_extension=.g.cs slack_internal_v1_value.proto

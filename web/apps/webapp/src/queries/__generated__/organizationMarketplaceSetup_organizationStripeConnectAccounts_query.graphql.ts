@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<74c6903606fc58609c5cc3cf2d86fedb>>
+ * @generated SignedSource<<09352788b6a1ebe97bffcea75b7c3597>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,6 @@ export type organizationMarketplaceSetup_organizationStripeConnectAccounts_query
         readonly email: string;
         readonly id: string;
         readonly name: string;
-        readonly onboardingCompletedAt: any | null | undefined;
         readonly onboardingUrl: string;
         readonly phone: string;
       };
@@ -211,13 +210,6 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "onboardingCompletedAt",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
                   "name": "__typename",
                   "storageKey": null
                 }
@@ -280,6 +272,6 @@ return {
 };
 })();
 
-(node as any).hash = "a1f876adb1754f29f07641044f7f0953";
+(node as any).hash = "2abd8cc1fd7c07f1ce3e98ad3a28ecb6";
 
 export default node;

@@ -54,5 +54,4 @@ message OrganizationStripeConnectAccount {
   string capabilitiesTransfers = 14;
   string capabilitiesCardPayments = 15;
   string onboardingUrl = 16;
-  google.protobuf.Timestamp onboardingCompletedAt = 17;
 }

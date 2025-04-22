@@ -26,6 +26,10 @@ public class Startup(IConfiguration configuration, IWebHostEnvironment webHostEn
         services
             .AddKafka()
             .AddKafkaReliableEventConsumers<
+                PaymentInternalSubscriber,
+                Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)

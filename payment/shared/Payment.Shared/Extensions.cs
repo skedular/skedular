@@ -36,7 +36,8 @@ public static class Extensions
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
-            .AddScoped<IPaymentPublisher, PaymentPublisher>();
+            .AddScoped<IPaymentPublisher, PaymentPublisher>()
+            .AddScoped<IPaymentInternalPublisher, PaymentInternalPublisher>();
 
     public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
         services

@@ -14,28 +14,28 @@ using NanoidDotNet;
 
 #nullable enable
 
-namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value;
+namespace Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value;
 
 public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
-    topicName: "payment.v1.event",
+    topicName: "payment.v1.internal",
     topicPartitionCount: 3,
-    retryTopicNamePrefix: "payment.v1.event.retry",
+    retryTopicNamePrefix: "payment.v1.internal.retry",
     retryTopicCount: 1,
     retryTopicPartitionCount: 3,
-    deadLetterTopicName: "payment.v1.event.deadletter",
+    deadLetterTopicName: "payment.v1.internal.deadletter",
     deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package payment;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.Payment.V1.Value\";enum Type {   OrganizationPaymentMethodsUpdated = 0;  OrganizationStripeConnectAccountUpserted = 1;  OrganizationStripeConnectAccountDeleted = 2;}message Event {  Metadata metadata = 1;  Data data = 2;}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}message Data {  oneof payload {    OrganizationPaymentMethod organizationPaymentMethod = 1;    OrganizationStripeConnectAccount organizationStripeConnectAccount = 2;  }}message OrganizationPaymentMethod {  string organizationId = 1;  bool hasAttachedPaymentMethod = 2;}message OrganizationStripeConnectAccount {  string id = 1;  google.protobuf.Timestamp deletedAt = 2;  string organizationId = 3;  string name = 4;  bool chargesEnabled = 5;  bool payoutsEnabled = 6;  string type = 7;  string country = 8;  string defaultCurrency = 9;  string businessType = 10;  string companyName = 11;  string email = 12;  string phone = 13;  string capabilitiesTransfers = 14;  string capabilitiesCardPayments = 15;  string onboardingUrl = 16;}")]
+    protobufSchema: "syntax = \"proto3\";package paymentinternal;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value\";enum Type {   StripeConnectAccountWebhookEventReceived = 0;}message Event {  Metadata metadata = 1;  Data data = 2;}message Metadata {  string id = 1;  string domainSource = 2;  string appSource = 3;  Type type = 4;  google.protobuf.Timestamp time = 5;  string correlationId = 6;}message Data {  oneof payload {    string stripeConnectAccountWebhookEventPayload = 1;  }}")]
 public partial class Event : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =
         new(@"^[a-z0-9\.\-_]+$", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
 
-    private const string TopicName = "payment.v1.event";
-    private const string RetryTopicNamePrefix = "payment.v1.event.retry";
+    private const string TopicName = "payment.v1.internal";
+    private const string RetryTopicNamePrefix = "payment.v1.internal.retry";
     private const int RetryTopicCount = 1;
-    private const string DeadLetterTopicName = "payment.v1.event.deadletter";
+    private const string DeadLetterTopicName = "payment.v1.internal.deadletter";
 
     public static Metadata NewMetadata(
         string domainSource,

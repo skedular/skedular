@@ -227,7 +227,6 @@ const OrganizationMarketplaceSetup = ({
               email
               phone
               onboardingUrl
-              onboardingCompletedAt
             }
           }
         }
@@ -1662,7 +1661,7 @@ const OrganizationMarketplaceSetup = ({
                 </Grid>
 
                 <Grid>
-                  <NewStripeConnectAccountButton organizationId={organizationId} connectionIds={organizationStripeConnectAccountsConnectionIds} />
+                  <NewStripeConnectAccountButton organizationId={organizationId}  />
                 </Grid>
               </GridContainer>
               <Divider />
