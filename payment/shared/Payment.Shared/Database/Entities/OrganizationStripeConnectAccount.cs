@@ -22,6 +22,7 @@ public class OrganizationStripeConnectAccount : EntityBaseWithDeleted
     public string CapabilitiesCardPayments { get; set; }
     public string CapabilitiesTransfers { get; set; }
     public string OnboardingUrl { get; set; }
+    public DateTimeOffset? OnboardingCompletedAt { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; } = string.Empty;
@@ -61,5 +62,6 @@ public class OrganizationStripeConnectAccountConfiguration : IEntityTypeConfigur
         builder.HasIndex(item => item.Phone);
         builder.HasIndex(item => item.CapabilitiesTransfers);
         builder.HasIndex(item => item.CapabilitiesCardPayments);
+        builder.HasIndex(item => item.OnboardingCompletedAt);
     }
 }

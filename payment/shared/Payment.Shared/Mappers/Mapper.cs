@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Payment.V1.Value;
 using Enterprise.Shared;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Payment.Shared.Mappers;
 
@@ -27,6 +28,8 @@ public class Mapper : IMapper
             Phone = src.Phone.ToSafeString(),
             CapabilitiesCardPayments = src.CapabilitiesCardPayments.ToSafeString(),
             CapabilitiesTransfers = src.CapabilitiesTransfers.ToSafeString(),
-            OnboardingUrl = src.OnboardingUrl.ToSafeString()
+            OnboardingUrl = src.OnboardingUrl.ToSafeString(),
+            OnboardingCompletedAt = src.OnboardingCompletedAt is null ? null : Timestamp.FromDateTimeOffset(src.OnboardingCompletedAt.Value),
+            OnboardingCompleted = src.OnboardingCompleted
         };
 }

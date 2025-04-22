@@ -36,7 +36,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             "Q29ubmVjdEFjY291bnQYAiABKAsyKS5wYXltZW50Lk9yZ2FuaXphdGlvblN0",
             "cmlwZUNvbm5lY3RBY2NvdW50SABCCQoHcGF5bG9hZCJVChlPcmdhbml6YXRp",
             "b25QYXltZW50TWV0aG9kEhYKDm9yZ2FuaXphdGlvbklkGAEgASgJEiAKGGhh",
-            "c0F0dGFjaGVkUGF5bWVudE1ldGhvZBgCIAEoCCKMAwogT3JnYW5pemF0aW9u",
+            "c0F0dGFjaGVkUGF5bWVudE1ldGhvZBgCIAEoCCLkAwogT3JnYW5pemF0aW9u",
             "U3RyaXBlQ29ubmVjdEFjY291bnQSCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0",
             "GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIWCg5vcmdhbml6",
             "YXRpb25JZBgDIAEoCRIMCgRuYW1lGAQgASgJEhYKDmNoYXJnZXNFbmFibGVk",
@@ -45,11 +45,13 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             "YnVzaW5lc3NUeXBlGAogASgJEhMKC2NvbXBhbnlOYW1lGAsgASgJEg0KBWVt",
             "YWlsGAwgASgJEg0KBXBob25lGA0gASgJEh0KFWNhcGFiaWxpdGllc1RyYW5z",
             "ZmVycxgOIAEoCRIgChhjYXBhYmlsaXRpZXNDYXJkUGF5bWVudHMYDyABKAkS",
-            "FQoNb25ib2FyZGluZ1VybBgQIAEoCSqIAQoEVHlwZRIlCiFPcmdhbml6YXRp",
-            "b25QYXltZW50TWV0aG9kc1VwZGF0ZWQQABIsCihPcmdhbml6YXRpb25TdHJp",
-            "cGVDb25uZWN0QWNjb3VudFVwc2VydGVkEAESKwonT3JnYW5pemF0aW9uU3Ry",
-            "aXBlQ29ubmVjdEFjY291bnREZWxldGVkEAJCNqoCM0FwaS5TaGFyZWQuQ2xp",
-            "ZW50cy5FdmVudHMuU2tlZHVsYXIuUGF5bWVudC5WMS5WYWx1ZWIGcHJvdG8z"));
+            "FQoNb25ib2FyZGluZ1VybBgQIAEoCRI5ChVvbmJvYXJkaW5nQ29tcGxldGVk",
+            "QXQYESABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhsKE29uYm9h",
+            "cmRpbmdDb21wbGV0ZWQYEiABKAgqiAEKBFR5cGUSJQohT3JnYW5pemF0aW9u",
+            "UGF5bWVudE1ldGhvZHNVcGRhdGVkEAASLAooT3JnYW5pemF0aW9uU3RyaXBl",
+            "Q29ubmVjdEFjY291bnRVcHNlcnRlZBABEisKJ09yZ2FuaXphdGlvblN0cmlw",
+            "ZUNvbm5lY3RBY2NvdW50RGVsZXRlZBACQjaqAjNBcGkuU2hhcmVkLkNsaWVu",
+            "dHMuRXZlbnRzLlNrZWR1bGFyLlBheW1lbnQuVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -57,7 +59,7 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.Data.Parser, new[]{ "OrganizationPaymentMethod", "OrganizationStripeConnectAccount" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationPaymentMethod.Parser, new[]{ "OrganizationId", "HasAttachedPaymentMethod" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "Name", "ChargesEnabled", "PayoutsEnabled", "Type", "Country", "DefaultCurrency", "BusinessType", "CompanyName", "Email", "Phone", "CapabilitiesTransfers", "CapabilitiesCardPayments", "OnboardingUrl" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount), global::Api.Shared.Clients.Events.Skedular.Payment.V1.Value.OrganizationStripeConnectAccount.Parser, new[]{ "Id", "DeletedAt", "OrganizationId", "Name", "ChargesEnabled", "PayoutsEnabled", "Type", "Country", "DefaultCurrency", "BusinessType", "CompanyName", "Email", "Phone", "CapabilitiesTransfers", "CapabilitiesCardPayments", "OnboardingUrl", "OnboardingCompletedAt", "OnboardingCompleted" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1298,6 +1300,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       capabilitiesTransfers_ = other.capabilitiesTransfers_;
       capabilitiesCardPayments_ = other.capabilitiesCardPayments_;
       onboardingUrl_ = other.onboardingUrl_;
+      onboardingCompletedAt_ = other.onboardingCompletedAt_ != null ? other.onboardingCompletedAt_.Clone() : null;
+      onboardingCompleted_ = other.onboardingCompleted_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1499,6 +1503,30 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "onboardingCompletedAt" field.</summary>
+    public const int OnboardingCompletedAtFieldNumber = 17;
+    private global::Google.Protobuf.WellKnownTypes.Timestamp onboardingCompletedAt_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Google.Protobuf.WellKnownTypes.Timestamp OnboardingCompletedAt {
+      get { return onboardingCompletedAt_; }
+      set {
+        onboardingCompletedAt_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "onboardingCompleted" field.</summary>
+    public const int OnboardingCompletedFieldNumber = 18;
+    private bool onboardingCompleted_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool OnboardingCompleted {
+      get { return onboardingCompleted_; }
+      set {
+        onboardingCompleted_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1530,6 +1558,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (CapabilitiesTransfers != other.CapabilitiesTransfers) return false;
       if (CapabilitiesCardPayments != other.CapabilitiesCardPayments) return false;
       if (OnboardingUrl != other.OnboardingUrl) return false;
+      if (!object.Equals(OnboardingCompletedAt, other.OnboardingCompletedAt)) return false;
+      if (OnboardingCompleted != other.OnboardingCompleted) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1553,6 +1583,8 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       if (CapabilitiesTransfers.Length != 0) hash ^= CapabilitiesTransfers.GetHashCode();
       if (CapabilitiesCardPayments.Length != 0) hash ^= CapabilitiesCardPayments.GetHashCode();
       if (OnboardingUrl.Length != 0) hash ^= OnboardingUrl.GetHashCode();
+      if (onboardingCompletedAt_ != null) hash ^= OnboardingCompletedAt.GetHashCode();
+      if (OnboardingCompleted != false) hash ^= OnboardingCompleted.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1635,6 +1667,14 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         output.WriteRawTag(130, 1);
         output.WriteString(OnboardingUrl);
       }
+      if (onboardingCompletedAt_ != null) {
+        output.WriteRawTag(138, 1);
+        output.WriteMessage(OnboardingCompletedAt);
+      }
+      if (OnboardingCompleted != false) {
+        output.WriteRawTag(144, 1);
+        output.WriteBool(OnboardingCompleted);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1709,6 +1749,14 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
         output.WriteRawTag(130, 1);
         output.WriteString(OnboardingUrl);
       }
+      if (onboardingCompletedAt_ != null) {
+        output.WriteRawTag(138, 1);
+        output.WriteMessage(OnboardingCompletedAt);
+      }
+      if (OnboardingCompleted != false) {
+        output.WriteRawTag(144, 1);
+        output.WriteBool(OnboardingCompleted);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1766,6 +1814,12 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
       if (OnboardingUrl.Length != 0) {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(OnboardingUrl);
+      }
+      if (onboardingCompletedAt_ != null) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(OnboardingCompletedAt);
+      }
+      if (OnboardingCompleted != false) {
+        size += 2 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1829,6 +1883,15 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
       }
       if (other.OnboardingUrl.Length != 0) {
         OnboardingUrl = other.OnboardingUrl;
+      }
+      if (other.onboardingCompletedAt_ != null) {
+        if (onboardingCompletedAt_ == null) {
+          OnboardingCompletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+        }
+        OnboardingCompletedAt.MergeFrom(other.OnboardingCompletedAt);
+      }
+      if (other.OnboardingCompleted != false) {
+        OnboardingCompleted = other.OnboardingCompleted;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1916,6 +1979,17 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
             OnboardingUrl = input.ReadString();
             break;
           }
+          case 138: {
+            if (onboardingCompletedAt_ == null) {
+              OnboardingCompletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(OnboardingCompletedAt);
+            break;
+          }
+          case 144: {
+            OnboardingCompleted = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -2000,6 +2074,17 @@ namespace Api.Shared.Clients.Events.Skedular.Payment.V1.Value {
           }
           case 130: {
             OnboardingUrl = input.ReadString();
+            break;
+          }
+          case 138: {
+            if (onboardingCompletedAt_ == null) {
+              OnboardingCompletedAt = new global::Google.Protobuf.WellKnownTypes.Timestamp();
+            }
+            input.ReadMessage(OnboardingCompletedAt);
+            break;
+          }
+          case 144: {
+            OnboardingCompleted = input.ReadBool();
             break;
           }
         }

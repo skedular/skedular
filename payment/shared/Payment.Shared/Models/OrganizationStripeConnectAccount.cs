@@ -17,6 +17,8 @@ public class OrganizationStripeConnectAccount : ModelBaseWithDeleted
     public string CapabilitiesTransfers { get; set; } = string.Empty;
     public string CapabilitiesCardPayments { get; set; } = string.Empty;
     public string OnboardingUrl { get; set; } = string.Empty;
+    public DateTimeOffset? OnboardingCompletedAt { get; set; }
+    public bool OnboardingCompleted => OnboardingCompletedAt.HasValue;
 
     public Organization Organization { get; set; }
 }

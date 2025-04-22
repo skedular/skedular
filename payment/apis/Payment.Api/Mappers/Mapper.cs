@@ -139,6 +139,7 @@ public class Mapper : IMapper
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
+            OnboardingCompletedAt = src.OnboardingCompletedAt,
             Organization = new Shared.Models.Organization { Id = src.Organization.Id }
         };
 
@@ -160,7 +161,9 @@ public class Mapper : IMapper
                 Phone = src.Phone,
                 CapabilitiesCardPayments = src.CapabilitiesCardPayments,
                 CapabilitiesTransfers = src.CapabilitiesTransfers,
-                OnboardingUrl = src.OnboardingUrl
+                OnboardingUrl = src.OnboardingUrl,
+                OnboardingCompletedAt = src.OnboardingCompletedAt,
+                OnboardingCompleted = src.OnboardingCompleted,
             };
 
     public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);

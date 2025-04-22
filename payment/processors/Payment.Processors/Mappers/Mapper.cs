@@ -314,6 +314,7 @@ public class Mapper : IMapper
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
+            OnboardingCompletedAt = src.OnboardingCompletedAt,
             Organization = new Organization { Id = src.Organization.Id }
         };
 

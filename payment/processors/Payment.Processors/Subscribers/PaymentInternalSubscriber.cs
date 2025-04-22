@@ -1,6 +1,7 @@
 ﻿using Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Key;
 using Enterprise.Shared.Kafka.Consume;
 using Payment.Processors.Mappers;
+using Payment.Shared.Database.Entities;
 using Payment.Shared.Publishers;
 using Payment.Shared.Repositories;
 using Stripe;
@@ -9,7 +10,11 @@ using Type = Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value.Type;
 
 namespace Payment.Processors.Subscribers;
 
-public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMapper mapper, IPaymentPublisher paymentPublisher)
+public class PaymentInternalSubscriber(
+    IRepositoryFactory repositoryFactory,
+    IMapper mapper,
+    IPaymentPublisher paymentPublisher,
+    TimeProvider timeProvider)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -29,14 +34,23 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
         var stripeEvent = EventUtility.ParseEvent(json, false);
         ArgumentNullException.ThrowIfNull(stripeEvent);
 
+        var stripeAccount = stripeEvent.Data.Object as Account;
+        ArgumentNullException.ThrowIfNull(stripeAccount);
+
+        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(stripeAccount.Id, cancellationToken);
+        if (account is null)
+        {
+            return;
+        }
+
         switch (stripeEvent.Type)
         {
             case EventTypes.AccountApplicationAuthorized:
-                HandleAccountApplicationAuthorized(stripeEvent);
+                await HandleAccountApplicationAuthorizedAsync(account, cancellationToken);
                 break;
 
             case EventTypes.AccountApplicationDeauthorized:
-                await HandleAccountApplicationDeauthorizedAsync(stripeEvent, cancellationToken);
+                await HandleAccountApplicationDeauthorizedAsync(account, cancellationToken);
                 break;
 
             case EventTypes.AccountExternalAccountCreated:
@@ -52,33 +66,26 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
                 break;
 
             case EventTypes.AccountUpdated:
-                await HandleAccountUpdatedAsync(stripeEvent, cancellationToken);
+                await HandleAccountUpdatedAsync(stripeAccount, account, cancellationToken);
                 break;
         }
     }
 
-    private void HandleAccountApplicationAuthorized(Stripe.Event stripeEvent)
+    private async Task HandleAccountApplicationAuthorizedAsync(OrganizationStripeConnectAccount account, CancellationToken cancellationToken)
     {
-        var stripeAccount = stripeEvent.Data.Object as Account;
-        ArgumentNullException.ThrowIfNull(stripeAccount);
-    }
-
-    private async Task HandleAccountApplicationDeauthorizedAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
-    {
-        var stripeAccount = stripeEvent.Data.Object as Account;
-        ArgumentNullException.ThrowIfNull(stripeAccount);
-        
-        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(stripeAccount.Id, cancellationToken);
-        if (account is null)
-        {
-            return;
-        }
-
-        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Remove(account);
-
-        await paymentPublisher.PublishOrganizationStripeConnectAccountsAsync([mapper.MapTo(account)], cancellationToken);
+        account.OnboardingCompletedAt = timeProvider.GetUtcNow();
+        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(account);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await paymentPublisher.PublishOrganizationStripeConnectAccountsAsync([mapper.MapTo(account)], cancellationToken);
+    }
+
+    private async Task HandleAccountApplicationDeauthorizedAsync(OrganizationStripeConnectAccount account, CancellationToken cancellationToken)
+    {
+        account = repositoryFactory.OrganizationStripeConnectAccountRepository.Remove(account);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await paymentPublisher.PublishOrganizationStripeConnectAccountsAsync([mapper.MapTo(account)], cancellationToken);
     }
 
     private void HandleAccountExternalAccountCreated(Stripe.Event stripeEvent)
@@ -102,21 +109,11 @@ public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMa
     }
 
 
-    private async Task HandleAccountUpdatedAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
+    private async Task HandleAccountUpdatedAsync(Account stripeAccount, OrganizationStripeConnectAccount account, CancellationToken cancellationToken)
     {
-        var stripeAccount = stripeEvent.Data.Object as Account;
-        ArgumentNullException.ThrowIfNull(stripeAccount);
-
-        var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(stripeAccount.Id, cancellationToken);
-        if (account is null)
-        {
-            return;
-        }
-
         account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(mapper.MergeTo(stripeAccount, account));
 
-        await paymentPublisher.PublishOrganizationStripeConnectAccountsAsync([mapper.MapTo(account)], cancellationToken);
-
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await paymentPublisher.PublishOrganizationStripeConnectAccountsAsync([mapper.MapTo(account)], cancellationToken);
     }
 }
