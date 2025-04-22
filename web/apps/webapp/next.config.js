@@ -51,6 +51,10 @@ const nextConfig = {
         source: "/api/billing/:path*",
         destination: new URL(":path*", process.env.BILLING_ENDPOINT).href,
       },
+      {
+        source: "/api/marketplace/:path*",
+        destination: new URL(":path*", process.env.MARKETPLACE_ENDPOINT).href,
+      },
     ];
   },
 };

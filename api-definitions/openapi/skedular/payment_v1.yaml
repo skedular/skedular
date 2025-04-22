@@ -69,14 +69,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
-  /payment/api/v1/organization-stripe-connect-account/onboarding-completed:
-    get:
+  /payment/api/v1/stripe/webhook:
+    post:
       tags:
         - payment
-        - organizationStripeConnectAccounts
-        - onboarding
-      summary: complete OrganizationStripeConnectAccount onboarding
-      operationId: organizationStripeConnectAccountOnboardingCompleted
+        - stripe
+        - webhook
+      summary: Stripe Webhook
+      operationId: processStripeEvent
       parameters:
         - in: header
           name: Stripe-Signature
@@ -94,7 +94,7 @@ paths:
 
       responses:
         "200":
-          description: the status of OrganizationStripeConnectAccounts onboarding completed
+          description: the status of processing the Stripe event
 
         default:
           description: unexpected error

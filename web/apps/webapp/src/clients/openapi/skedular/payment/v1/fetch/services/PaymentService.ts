@@ -53,20 +53,20 @@ export class PaymentService {
         });
     }
     /**
-     * complete OrganizationStripeConnectAccount onboarding
+     * Stripe Webhook
      * @param stripeSignature Stripe webhook signature
      * @param requestBody raw JSON string
-     * @returns any the status of OrganizationStripeConnectAccounts onboarding completed
+     * @returns any the status of processing the Stripe event
      * @returns Error unexpected error
      * @throws ApiError
      */
-    public organizationStripeConnectAccountOnboardingCompleted(
+    public processStripeEvent(
         stripeSignature?: string,
         requestBody?: string,
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
-            method: 'GET',
-            url: '/payment/api/v1/organization-stripe-connect-account/onboarding-completed',
+            method: 'POST',
+            url: '/payment/api/v1/stripe/webhook',
             headers: {
                 'Stripe-Signature': stripeSignature,
             },

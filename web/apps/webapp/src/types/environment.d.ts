@@ -1,4 +1,4 @@
-export {};
+export { };
 
 declare global {
   namespace NodeJS {
@@ -32,6 +32,7 @@ declare global {
       PAYMENT_ENDPOINT: string;
       BILLING_ENDPOINT: string;
       MSTEAMS_ENDPOINT: string;
+      MARKETPLACE_ENDPOINT: string;
     }
   }
 }

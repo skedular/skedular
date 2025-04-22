@@ -19,3 +19,5 @@ export { OrganizationService } from './services/OrganizationService';
 export { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 export { PaymentService } from './services/PaymentService';
 export { PaymentMethodService } from './services/PaymentMethodService';
+export { StripeService } from './services/StripeService';
+export { WebhookService } from './services/WebhookService';

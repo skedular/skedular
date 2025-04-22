@@ -34,7 +34,7 @@ public class PaymentController(
         return Redirect(onboardingUrl);
     }
 
-    public override async Task<IActionResult> OrganizationStripeConnectAccountOnboardingCompleted(
+    public override async Task<IActionResult> ProcessStripeEvent(
         // ReSharper disable once InconsistentNaming
         string? stripe_Signature,
         string? body,

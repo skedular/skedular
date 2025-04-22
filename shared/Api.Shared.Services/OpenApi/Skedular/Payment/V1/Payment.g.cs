@@ -47,13 +47,13 @@ namespace Api.Shared.Services.OpenApi.Skedular.Payment.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RefreshOrganizationStripeConnectAccountOnboarding([Microsoft.AspNetCore.Mvc.FromQuery] string code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// complete OrganizationStripeConnectAccount onboarding
+        /// Stripe Webhook
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <param name="body">raw JSON string</param>
-        /// <returns>the status of OrganizationStripeConnectAccounts onboarding completed</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization-stripe-connect-account/onboarding-completed")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> OrganizationStripeConnectAccountOnboardingCompleted([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, [Microsoft.AspNetCore.Mvc.FromBody] string? body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        /// <returns>the status of processing the Stripe event</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/stripe/webhook")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripeEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, [Microsoft.AspNetCore.Mvc.FromBody] string? body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// republish all OrganizationStripeConnectAccounts

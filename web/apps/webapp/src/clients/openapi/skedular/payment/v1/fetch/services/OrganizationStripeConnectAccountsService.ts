@@ -29,28 +29,6 @@ export class OrganizationStripeConnectAccountsService {
         });
     }
     /**
-     * complete OrganizationStripeConnectAccount onboarding
-     * @param stripeSignature Stripe webhook signature
-     * @param requestBody raw JSON string
-     * @returns any the status of OrganizationStripeConnectAccounts onboarding completed
-     * @returns Error unexpected error
-     * @throws ApiError
-     */
-    public organizationStripeConnectAccountOnboardingCompleted(
-        stripeSignature?: string,
-        requestBody?: string,
-    ): CancelablePromise<any | Error> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/payment/api/v1/organization-stripe-connect-account/onboarding-completed',
-            headers: {
-                'Stripe-Signature': stripeSignature,
-            },
-            body: requestBody,
-            mediaType: 'application/json',
-        });
-    }
-    /**
      * republish all OrganizationStripeConnectAccounts
      * @returns any the status of republishing all OrganizationStripeConnectAccounts
      * @returns Error unexpected error

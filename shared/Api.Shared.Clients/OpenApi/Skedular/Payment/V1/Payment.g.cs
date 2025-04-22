@@ -48,13 +48,13 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// complete OrganizationStripeConnectAccount onboarding
+        /// Stripe Webhook
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <param name="body">raw JSON string</param>
-        /// <returns>the status of OrganizationStripeConnectAccounts onboarding completed</returns>
+        /// <returns>the status of processing the Stripe event</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task OrganizationStripeConnectAccountOnboardingCompletedAsync(string? stripe_Signature = null, string? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task ProcessStripeEventAsync(string? stripe_Signature = null, string? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -270,13 +270,13 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// complete OrganizationStripeConnectAccount onboarding
+        /// Stripe Webhook
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <param name="body">raw JSON string</param>
-        /// <returns>the status of OrganizationStripeConnectAccounts onboarding completed</returns>
+        /// <returns>the status of processing the Stripe event</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task OrganizationStripeConnectAccountOnboardingCompletedAsync(string? stripe_Signature = null, string? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task ProcessStripeEventAsync(string? stripe_Signature = null, string? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -291,12 +291,12 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
                     var content_ = new System.Net.Http.StringContent(json_);
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "payment/api/v1/organization-stripe-connect-account/onboarding-completed"
-                    urlBuilder_.Append("payment/api/v1/organization-stripe-connect-account/onboarding-completed");
+                    // Operation Path: "payment/api/v1/stripe/webhook"
+                    urlBuilder_.Append("payment/api/v1/stripe/webhook");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 

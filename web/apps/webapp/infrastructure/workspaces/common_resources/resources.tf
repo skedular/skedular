@@ -229,6 +229,11 @@ resource "vercel_project" "default" {
       key    = "MSTEAMS_ENDPOINT"
       value  = "https://${module.shared_common.api_domain_name}/msteams/api/"
       target = ["development", "preview", "production"]
+    },
+    {
+      key    = "MARKETPLACE_ENDPOINT"
+      value  = "https://${module.shared_common.api_domain_name}/marketplace/api/"
+      target = ["development", "preview", "production"]
     }
   ]
 }

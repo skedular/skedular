@@ -10,6 +10,8 @@ import { OrganizationService } from './services/OrganizationService';
 import { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
 import { PaymentService } from './services/PaymentService';
 import { PaymentMethodService } from './services/PaymentMethodService';
+import { StripeService } from './services/StripeService';
+import { WebhookService } from './services/WebhookService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularBillingClient {
     public readonly onboarding: OnboardingService;
@@ -17,6 +19,8 @@ export class SkedularBillingClient {
     public readonly organizationStripeConnectAccounts: OrganizationStripeConnectAccountsService;
     public readonly payment: PaymentService;
     public readonly paymentMethod: PaymentMethodService;
+    public readonly stripe: StripeService;
+    public readonly webhook: WebhookService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -35,6 +39,8 @@ export class SkedularBillingClient {
         this.organizationStripeConnectAccounts = new OrganizationStripeConnectAccountsService(this.request);
         this.payment = new PaymentService(this.request);
         this.paymentMethod = new PaymentMethodService(this.request);
+        this.stripe = new StripeService(this.request);
+        this.webhook = new WebhookService(this.request);
     }
 }
 
