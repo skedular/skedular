@@ -11,7 +11,8 @@ public class PaymentController(
     StripeConfiguration stripeConfiguration,
     IWorkaroundService workaroundService,
     IOrganizationPaymentService organizationPaymentService,
-    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService) : PaymentControllerBase
+    IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+    ILogger<PaymentController> logger) : PaymentControllerBase
 {
     public override async Task<IActionResult> AddOrganizationPaymentMethod(
         // ReSharper disable InconsistentNaming
@@ -37,23 +38,38 @@ public class PaymentController(
     public override async Task<IActionResult> ProcessStripeEvent(
         // ReSharper disable once InconsistentNaming
         string? stripe_Signature,
-        string? body,
         CancellationToken cancellationToken = default)
     {
-        _ = EventUtility.ParseEvent(body);
-        var stripeEvent = EventUtility.ConstructEvent(body, stripe_Signature, stripeConfiguration.SecretKey);
-        switch (stripeEvent.Type)
+        try
         {
-            case EventTypes.AccountUpdated:
-                var stripeAccount = stripeEvent.Data.Object as Account;
-                ArgumentNullException.ThrowIfNull(stripeAccount);
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
+            _ = EventUtility.ParseEvent(json);
+            var stripeEvent = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.SecretKey);
+            switch (stripeEvent.Type)
+            {
+                case EventTypes.AccountUpdated:
+                    var stripeAccount = stripeEvent.Data.Object as Account;
+                    ArgumentNullException.ThrowIfNull(stripeAccount);
 
-                await organizationStripeConnectAccountService.CompleteOnboardAsync(stripeAccount, cancellationToken);
+                    await organizationStripeConnectAccountService.ProcessStripeEventAsync(stripeAccount, cancellationToken);
 
-                break;
+                    break;
+            }
+
+            return Ok();
         }
+        catch (StripeException ex)
+        {
+            logger.LogError(ex, "Failed to process Stripe event.");
 
-        return Ok();
+            return BadRequest();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to process Stripe event.");
+
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
 
     public override async Task<IActionResult> RepublishAllOrganizationStripeConnectAccounts(CancellationToken cancellationToken = default)

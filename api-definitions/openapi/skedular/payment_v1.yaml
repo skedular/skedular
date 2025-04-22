@@ -84,13 +84,6 @@ paths:
             type: string
           required: false
           description: Stripe webhook signature
-      requestBody:
-        description: raw JSON string
-        required: false
-        content:
-          application/json:
-            schema:
-              type: string
 
       responses:
         "200":

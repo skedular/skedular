@@ -51,10 +51,9 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
         /// Stripe Webhook
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
-        /// <param name="body">raw JSON string</param>
         /// <returns>the status of processing the Stripe event</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task ProcessStripeEventAsync(string? stripe_Signature = null, string? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task ProcessStripeEventAsync(string? stripe_Signature = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -273,10 +272,9 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
         /// Stripe Webhook
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
-        /// <param name="body">raw JSON string</param>
         /// <returns>the status of processing the Stripe event</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task ProcessStripeEventAsync(string? stripe_Signature = null, string? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task ProcessStripeEventAsync(string? stripe_Signature = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -287,10 +285,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
 
                     if (stripe_Signature != null)
                         request_.Headers.TryAddWithoutValidation("Stripe-Signature", ConvertToString(stripe_Signature, System.Globalization.CultureInfo.InvariantCulture));
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
+                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("POST");
 
                     var urlBuilder_ = new System.Text.StringBuilder();

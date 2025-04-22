@@ -10,14 +10,12 @@ export class WebhookService {
     /**
      * Stripe Webhook
      * @param stripeSignature Stripe webhook signature
-     * @param requestBody raw JSON string
      * @returns any the status of processing the Stripe event
      * @returns Error unexpected error
      * @throws ApiError
      */
     public processStripeEvent(
         stripeSignature?: string,
-        requestBody?: string,
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
             method: 'POST',
@@ -25,8 +23,6 @@ export class WebhookService {
             headers: {
                 'Stripe-Signature': stripeSignature,
             },
-            body: requestBody,
-            mediaType: 'application/json',
         });
     }
 }

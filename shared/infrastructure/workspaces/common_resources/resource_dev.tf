@@ -25,12 +25,3 @@ resource "cloudflare_record" "cloudflare_dns_records_dev" {
   proxied = false
   ttl     = 600
 }
-
-resource "stripe_webhook_endpoint" "webhook_dev" {
-  count       = local.is_staging ? length(local.dns_records_dev) : 0
-  url         = "https://${element(local.dns_records_dev, count.index)}.${module.common.cloudflare_webapp_domain_name}/api/payment/v1/stripe/webhook"
-  description = "Stripe Webhook for Skedular - ${element(local.dns_records_dev, count.index)}"
-  enabled_events = [
-    "account.updated"
-  ]
-}

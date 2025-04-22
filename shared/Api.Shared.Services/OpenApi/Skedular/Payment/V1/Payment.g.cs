@@ -50,10 +50,9 @@ namespace Api.Shared.Services.OpenApi.Skedular.Payment.V1
         /// Stripe Webhook
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>
-        /// <param name="body">raw JSON string</param>
         /// <returns>the status of processing the Stripe event</returns>
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/stripe/webhook")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripeEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, [Microsoft.AspNetCore.Mvc.FromBody] string? body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripeEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// republish all OrganizationStripeConnectAccounts

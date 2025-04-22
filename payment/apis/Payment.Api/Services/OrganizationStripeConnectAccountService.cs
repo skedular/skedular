@@ -1,4 +1,5 @@
 using Api.Shared;
+using Api.Shared.Services.OpenApi.Skedular.Payment.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Exceptions;
@@ -6,6 +7,7 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using Flurl;
 using HotChocolate.Types.Pagination;
+using Microsoft.AspNetCore.Mvc;
 using Payment.Api.Mappers;
 using Payment.Api.Services.Authorization;
 using Payment.Shared.Models;
@@ -24,7 +26,7 @@ public interface IOrganizationStripeConnectAccountService
     Task<ICollection<OrganizationStripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken);
-    Task CompleteOnboardAsync(Account stripeAccount, CancellationToken cancellationToken);
+    Task ProcessStripeEventAsync(Account stripeAccount, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int )> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
@@ -47,7 +49,16 @@ public class OrganizationStripeConnectAccountService(
     TimeProvider timeProvider,
     IRandomHelper randomHelper) : IOrganizationStripeConnectAccountService
 {
-    private const string RefreshLinkBaseUrl = "payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url";
+    private readonly Lazy<string> _refreshLinkBaseUrl = new(() =>
+    {
+        var method = typeof(PaymentControllerBase).GetMethod(nameof(PaymentControllerBase.RefreshOrganizationStripeConnectAccountOnboarding));
+        ArgumentNullException.ThrowIfNull(method);
+
+        var routeAttribute = method.GetCustomAttributes(typeof(RouteAttribute), true).Cast<RouteAttribute>().First();
+        ArgumentNullException.ThrowIfNull(routeAttribute);
+
+        return routeAttribute.Template;
+    });
 
     public async Task<OrganizationStripeConnectAccount> AddAsync(
         string organizationId,
@@ -261,12 +272,12 @@ public class OrganizationStripeConnectAccountService(
         return accountRefreshCode.OrganizationStripeConnectAccount.OnboardingUrl;
     }
 
-    public async Task CompleteOnboardAsync(Account stripeAccount, CancellationToken cancellationToken)
+    public async Task ProcessStripeEventAsync(Account stripeAccount, CancellationToken cancellationToken)
     {
         var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(stripeAccount.Id, cancellationToken);
         if (account is null)
         {
-            throw new OrganizationStripeConnectAccountNotFound();
+            return;
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -321,7 +332,8 @@ public class OrganizationStripeConnectAccountService(
             new AccountLinkCreateOptions
             {
                 Account = id,
-                RefreshUrl = Url.Combine(applicationConfiguration.ApiBaseDomain, RefreshLinkBaseUrl).SetQueryParam("code", randomRefreshCode),
+                RefreshUrl =
+                    Url.Combine(applicationConfiguration.ApiBaseDomain, _refreshLinkBaseUrl.Value).SetQueryParam("code", randomRefreshCode),
                 ReturnUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, organizationId, "stripe-connect-accounts", id),
                 Type = "account_onboarding"
             },
