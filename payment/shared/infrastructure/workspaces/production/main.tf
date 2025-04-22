@@ -8,7 +8,8 @@ module "common_resources" {
   source = "../common_resources"
 
   providers = {
-    aws = aws
+    aws    = aws
+    stripe = stripe
   }
 
   environment = local.environment
