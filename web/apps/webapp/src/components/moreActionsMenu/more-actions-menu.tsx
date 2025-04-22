@@ -52,6 +52,8 @@ export enum MoreActionsMenuOptionType {
   DeleteProduct,
   ActivateProduct,
   DeactivateProduct,
+  EditOrganizationStripeConnectAccount,
+  DeleteOrganizationStripeConnectAccount,
 }
 
 export type MoreActionsMenuItemType = {
@@ -252,6 +254,16 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   [MoreActionsMenuOptionType.DeactivateProduct]: {
     id: MoreActionsMenuOptionType.DeactivateProduct,
     label: 'Dectivate Product',
+  },
+  [MoreActionsMenuOptionType.EditOrganizationStripeConnectAccount]: {
+    id: MoreActionsMenuOptionType.EditOrganizationStripeConnectAccount,
+    label: 'Edit Stripe Connect Account',
+    icon: <EditIcon />,
+  },
+  [MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount]: {
+    id: MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount,
+    label: 'Remove Stripe Connect Account',
+    icon: <DeleteIcon color="warning" />,
   },
 };
 

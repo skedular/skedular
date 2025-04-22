@@ -36,14 +36,15 @@ public class PaymentController(
 
     public override async Task<IActionResult> OrganizationStripeConnectAccountOnboardingCompleted(
         // ReSharper disable once InconsistentNaming
-        string? x_stripe_signature,
+        string? stripe_Signature,
         string? body,
         CancellationToken cancellationToken = default)
     {
-        var stripeEvent = EventUtility.ConstructEvent(body, x_stripe_signature, stripeConfiguration.SecretKey);
+        _ = EventUtility.ParseEvent(body);
+        var stripeEvent = EventUtility.ConstructEvent(body, stripe_Signature, stripeConfiguration.SecretKey);
         switch (stripeEvent.Type)
         {
-            case "account.updated":
+            case EventTypes.AccountUpdated:
                 var stripeAccount = stripeEvent.Data.Object as Account;
                 ArgumentNullException.ThrowIfNull(stripeAccount);
 

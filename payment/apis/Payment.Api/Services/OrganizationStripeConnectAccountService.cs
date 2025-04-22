@@ -18,9 +18,10 @@ namespace Payment.Api.Services;
 
 public interface IOrganizationStripeConnectAccountService
 {
-    Task<OrganizationStripeConnectAccount> AddAsync(string organizationId, string name, CancellationToken cancellationToken);
-    Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string name, CancellationToken cancellationToken);
+    Task<OrganizationStripeConnectAccount> AddAsync(string organizationId, string nickname, CancellationToken cancellationToken);
+    Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string nickname, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount> DeleteAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<OrganizationStripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<string> GetNewOnboardingUrlAsync(string code, CancellationToken cancellationToken);
     Task CompleteOnboardAsync(Account stripeAccount, CancellationToken cancellationToken);
@@ -47,15 +48,14 @@ public class OrganizationStripeConnectAccountService(
     IRandomHelper randomHelper) : IOrganizationStripeConnectAccountService
 {
     private const string RefreshLinkBaseUrl = "payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url";
-    private const string OnboardingCompletedWebHookBaseUrl = "payment/api/v1/organization-stripe-connect-account/onboarding-completed";
 
     public async Task<OrganizationStripeConnectAccount> AddAsync(
         string organizationId,
-        string name,
+        string nickname,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
-        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(nickname);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(organizationId, false, false, cancellationToken);
@@ -92,10 +92,11 @@ public class OrganizationStripeConnectAccountService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var randomRefreshCode = randomHelper.Generate(size: Constants.MaxStripeConnectAccountRefreshCodeLength);
-        var stripeConnectAccount = await accountCreateService.CreateAsync(mapper.MapTo(organization), new RequestOptions(), cancellationToken);
-        var strAccountLink = await CreateLinkAsync(stripeConnectAccount.Id, randomRefreshCode, cancellationToken);
+        var stripeConnectAccount =
+            await accountCreateService.CreateAsync(mapper.MapTo(organization, nickname), new RequestOptions(), cancellationToken);
+        var strAccountLink = await CreateLinkAsync(stripeConnectAccount.Id, organization.Id, randomRefreshCode, cancellationToken);
 
-        var accountEntity = mapper.MapTo(stripeConnectAccount, name, organization);
+        var accountEntity = mapper.MapTo(stripeConnectAccount, nickname, organization);
         accountEntity.OnboardingUrl = strAccountLink.Url;
 
         var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
@@ -115,10 +116,10 @@ public class OrganizationStripeConnectAccountService(
         return mappedAccount;
     }
 
-    public async Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string name, CancellationToken cancellationToken)
+    public async Task<OrganizationStripeConnectAccount> UpdateAsync(string id, string nickname, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(nickname);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken);
@@ -134,7 +135,7 @@ public class OrganizationStripeConnectAccountService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        account.Name = name;
+        account.Name = nickname;
         account = repositoryFactory.OrganizationStripeConnectAccountRepository.Update(account);
         var mappedAccount = mapper.MapTo(account);
 
@@ -175,6 +176,35 @@ public class OrganizationStripeConnectAccountService(
         return deletedAccount;
     }
 
+    public async Task<ICollection<OrganizationStripeConnectAccount>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var accounts = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdsAsync(ids, cancellationToken);
+        var organizationIds = accounts.Select(item => item.Organization.Id).ToList();
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsAsync(organizationIds, cancellationToken);
+
+        if (existingOrganizations.Any(existingOrganization =>
+                !organizationAuthorizationService.CanManageStripeConnectAccount(existingOrganization, customer)))
+        {
+            throw new Unauthorized();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        repositoryFactory.OrganizationStripeConnectAccountRepository.RemoveRange(accounts);
+        var deletedAccounts = accounts.Select(mapper.MapTo).ToList();
+
+        paymentOutboxPublisher.PublishOrganizationStripeConnectAccounts(deletedAccounts, repositoryFactory.UnitOfWork);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        return deletedAccounts;
+    }
+
     public async Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
@@ -206,7 +236,11 @@ public class OrganizationStripeConnectAccountService(
         }
 
         var randomRefreshCode = randomHelper.Generate(size: Constants.MaxStripeConnectAccountRefreshCodeLength);
-        var strAccountLink = await CreateLinkAsync(accountRefreshCode.OrganizationStripeConnectAccount.Id, randomRefreshCode, cancellationToken);
+        var strAccountLink = await CreateLinkAsync(
+            accountRefreshCode.OrganizationStripeConnectAccount.Id,
+            accountRefreshCode.OrganizationStripeConnectAccount.Organization.Id,
+            randomRefreshCode,
+            cancellationToken);
 
         accountRefreshCode.OrganizationStripeConnectAccount.OnboardingUrl = strAccountLink.Url;
 
@@ -281,13 +315,14 @@ public class OrganizationStripeConnectAccountService(
         return (paginatedInfo, mappedAccounts, totalCount);
     }
 
-    private async Task<AccountLink> CreateLinkAsync(string id, string randomRefreshCode, CancellationToken cancellationToken) =>
+    private async Task<AccountLink>
+        CreateLinkAsync(string id, string organizationId, string randomRefreshCode, CancellationToken cancellationToken) =>
         await accountLinkCreateService.CreateAsync(
             new AccountLinkCreateOptions
             {
                 Account = id,
                 RefreshUrl = Url.Combine(applicationConfiguration.ApiBaseDomain, RefreshLinkBaseUrl).SetQueryParam("code", randomRefreshCode),
-                ReturnUrl = Url.Combine(applicationConfiguration.ApiBaseDomain, OnboardingCompletedWebHookBaseUrl),
+                ReturnUrl = Url.Combine(applicationConfiguration.WebAppBaseDomain, organizationId, "stripe-connect-accounts", id),
                 Type = "account_onboarding"
             },
             new RequestOptions(),

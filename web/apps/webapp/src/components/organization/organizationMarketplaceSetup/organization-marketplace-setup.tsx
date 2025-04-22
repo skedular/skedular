@@ -11,21 +11,25 @@ import { EditOrganizationProductTagDialog } from '@/components/organization/edit
 import { NewProductButton } from '@/components/product/addProduct';
 import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
+import { NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
 import type { organizationMarketplaceSetup_activateProductsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_activateProductsMutation.graphql';
 import type { organizationMarketplaceSetup_deactivateProductsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deactivateProductsMutation.graphql';
-import type { organizationMarketplaceSetup_deleteLocationTagSMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteLocationTagSMutation.graphql';
-import type { organizationMarketplaceSetup_deleteProductSMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductSMutation.graphql';
-import type { organizationMarketplaceSetup_deleteProductTagSMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagSMutation.graphql';
+import type { organizationMarketplaceSetup_deleteLocationTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteLocationTagsMutation.graphql';
+import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
+import type { organizationMarketplaceSetup_deleteProductsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductsMutation.graphql';
+import type { organizationMarketplaceSetup_deleteProductTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagsMutation.graphql';
 import type { organizationMarketplaceSetup_locationTags_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_locationTags_query.graphql';
 import type { organizationMarketplaceSetup_locationTags_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_locationTags_refetchableFragment.graphql';
-import type { organizationMarketplaceSetup_productTags_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_productTags_query.graphql';
-import type { organizationMarketplaceSetup_productTags_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_productTags_refetchableFragment.graphql';
+import type { organizationMarketplaceSetup_organizationStripeConnectAccounts_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_organizationStripeConnectAccounts_query.graphql';
+import type { organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment.graphql';
 import type { organizationMarketplaceSetup_products_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_products_query.graphql';
 import type { organizationMarketplaceSetup_products_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_products_refetchableFragment.graphql';
+import type { organizationMarketplaceSetup_productTags_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_productTags_query.graphql';
+import type { organizationMarketplaceSetup_productTags_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_productTags_refetchableFragment.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -33,6 +37,7 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
+import { getCountryCode } from 'countries-list';
 import { nanoid } from 'nanoid';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
@@ -44,6 +49,7 @@ type Props = {
   rootDataProductsRelay: organizationMarketplaceSetup_products_query$key;
   rootDataProductTagsRelay: organizationMarketplaceSetup_productTags_query$key;
   rootDataLocationTagsRelay: organizationMarketplaceSetup_locationTags_query$key;
+  rootDataOrganizationStripeConnectAccountsRelay: organizationMarketplaceSetup_organizationStripeConnectAccounts_query$key;
   onReloadRequired: () => void;
   organizationId: string;
 };
@@ -74,7 +80,25 @@ type LocationTagRowType = {
   description: string | null | undefined;
 };
 
-const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTagsRelay, rootDataLocationTagsRelay, onReloadRequired, organizationId }: Props) => {
+type OrganizationStripeConnectAccountRowType = {
+  id: string;
+  name: string;
+  country: string;
+  defaultCurrency: string;
+  businessType: string;
+  companyName: string;
+  email: string;
+  phone: string;
+};
+
+const OrganizationMarketplaceSetup = ({
+  rootDataProductsRelay,
+  rootDataProductTagsRelay,
+  rootDataLocationTagsRelay,
+  rootDataOrganizationStripeConnectAccountsRelay,
+  onReloadRequired,
+  organizationId,
+}: Props) => {
   const [rootDataProducts, refetchProducts] = useRefetchableFragment<organizationMarketplaceSetup_products_refetchableFragment, organizationMarketplaceSetup_products_query$key>(
     graphql`
       fragment organizationMarketplaceSetup_products_query on Query
@@ -176,8 +200,44 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     rootDataLocationTagsRelay,
   );
 
-  const [commitDeleteProduct] = useMutation<organizationMarketplaceSetup_deleteProductSMutation>(graphql`
-    mutation organizationMarketplaceSetup_deleteProductSMutation($connectionIds: [ID!]!, $input: DeleteProductsInput!) {
+  const [rootDataOrganizationStripeConnectAccounts, refetchOrganizationStripeConnectAccounts] = useRefetchableFragment<
+    organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment,
+    organizationMarketplaceSetup_organizationStripeConnectAccounts_query$key
+  >(
+    graphql`
+      fragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
+      @refetchable(queryName: "organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment") {
+        organizationStripeConnectAccounts(
+          first: $count
+          after: $cursor
+          where: { organizationId: $organizationId, nameContains: $organizationStripeConnectAccountNameSearchText }
+          orderBy: [{ direction: Ascending, field: Name }]
+        ) @connection(key: "organizationMarketplaceSetup_organizationStripeConnectAccounts") {
+          __id
+          totalCount
+          edges {
+            node {
+              id
+              name
+              country
+              defaultCurrency
+              businessType
+              companyName
+              email
+              phone
+              onboardingUrl
+              onboardingCompletedAt
+            }
+          }
+        }
+      }
+    `,
+    rootDataOrganizationStripeConnectAccountsRelay,
+  );
+
+  const [commitDeleteProduct] = useMutation<organizationMarketplaceSetup_deleteProductsMutation>(graphql`
+    mutation organizationMarketplaceSetup_deleteProductsMutation($connectionIds: [ID!]!, $input: DeleteProductsInput!) {
       deleteProducts(input: $input) {
         products {
           id @deleteEdge(connections: $connectionIds)
@@ -186,8 +246,8 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     }
   `);
 
-  const [commitDeleteProductTags] = useMutation<organizationMarketplaceSetup_deleteProductTagSMutation>(graphql`
-    mutation organizationMarketplaceSetup_deleteProductTagSMutation($connectionIds: [ID!]!, $input: DeleteProductTagsInput!) {
+  const [commitDeleteProductTags] = useMutation<organizationMarketplaceSetup_deleteProductTagsMutation>(graphql`
+    mutation organizationMarketplaceSetup_deleteProductTagsMutation($connectionIds: [ID!]!, $input: DeleteProductTagsInput!) {
       deleteProductTags(input: $input) {
         organizationTags {
           id @deleteEdge(connections: $connectionIds)
@@ -196,10 +256,20 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     }
   `);
 
-  const [commitDeleteLocationTags] = useMutation<organizationMarketplaceSetup_deleteLocationTagSMutation>(graphql`
-    mutation organizationMarketplaceSetup_deleteLocationTagSMutation($connectionIds: [ID!]!, $input: DeleteLocationTagsInput!) {
+  const [commitDeleteLocationTags] = useMutation<organizationMarketplaceSetup_deleteLocationTagsMutation>(graphql`
+    mutation organizationMarketplaceSetup_deleteLocationTagsMutation($connectionIds: [ID!]!, $input: DeleteLocationTagsInput!) {
       deleteLocationTags(input: $input) {
         organizationTags {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteOrganizationStripeConnectAccounts] = useMutation<organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation>(graphql`
+    mutation organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation($connectionIds: [ID!]!, $input: DeleteOrganizationStripeConnectAccountsInput!) {
+      deleteOrganizationStripeConnectAccounts(input: $input) {
+        accounts {
           id @deleteEdge(connections: $connectionIds)
         }
       }
@@ -355,6 +425,41 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
       });
     },
     [refetchLocationTags],
+  );
+
+  const [organizationStripeConnectAccountNameSearchText, setOrganizationStripeConnectAccountNameSearchText] = useState<string>('');
+  const [seledctedOrganizationStripeConnectAccounts, setSeledctedOrganizationStripeConnectAccounts] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
+  const [selectedOrganizationStripeConnectAccountId, setSelectedOrganizationStripeConnectAccountId] = useState<null | string>(null);
+  const [organizationStripeConnectAccountMoreActionsAnchorEl, setOrganizationStripeConnectAccountMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
+  const organizationStripeConnectAccountMoreActionsMenuOpen = Boolean(organizationStripeConnectAccountMoreActionsAnchorEl);
+  const [isEditOrganizationStripeConnectAccountDialogOpen, setIsEditOrganizationStripeConnectAccountDialogOpen] = useState(false);
+  const organizationStripeConnectAccounts = useMemo(
+    () => rootDataOrganizationStripeConnectAccounts.organizationStripeConnectAccounts.edges.map(({ node }) => node),
+    [rootDataOrganizationStripeConnectAccounts.organizationStripeConnectAccounts],
+  );
+  const organizationStripeConnectAccountsConnectionIds = useMemo(
+    () => [rootDataOrganizationStripeConnectAccounts.organizationStripeConnectAccounts.__id],
+    [rootDataOrganizationStripeConnectAccounts.organizationStripeConnectAccounts],
+  );
+  const organizationStripeConnectAccountMoreActionsOption: MoreActionsMenuItemType[] = [
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditOrganizationStripeConnectAccount],
+    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount],
+  ];
+
+  const handleRefetchOrganizationStripeConnectAccounts = useCallback(
+    (organizationStripeConnectAccountNameSearchText: string) => {
+      startTransition(() => {
+        refetchOrganizationStripeConnectAccounts(
+          {
+            organizationStripeConnectAccountNameSearchText,
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [refetchOrganizationStripeConnectAccounts],
   );
 
   useEffect(() => {
@@ -866,6 +971,117 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     });
   };
 
+  const handleOrganizationStripeConnectAccountsSearchTextChange = (str: string) => {
+    setOrganizationStripeConnectAccountNameSearchText(str);
+
+    handleRefetchOrganizationStripeConnectAccounts(str);
+  };
+
+  const handleSelectedOrganizationStripeConnectAccountsChanged = (newRowSelectionModel: GridRowSelectionModel) => {
+    setSeledctedOrganizationStripeConnectAccounts(newRowSelectionModel);
+  };
+
+  const handleOrganizationStripeConnectAccountMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
+    setOrganizationStripeConnectAccountMoreActionsAnchorEl(null);
+
+    switch (id) {
+      case MoreActionsMenuOptionType.EditOrganizationStripeConnectAccount:
+        setIsEditOrganizationStripeConnectAccountDialogOpen(true);
+        break;
+
+      case MoreActionsMenuOptionType.DeleteOrganizationStripeConnectAccount:
+        handleRemoveOrganizationStripeConnectAccountClick();
+        break;
+    }
+  };
+
+  const handleEditOrganizationStripeConnectAccountClick = () => {
+    setIsEditOrganizationStripeConnectAccountDialogOpen(false);
+  };
+
+  const handleEditOrganizationStripeConnectAccountCancel = () => {
+    setIsEditOrganizationStripeConnectAccountDialogOpen(false);
+  };
+
+  const handleRemoveOrganizationStripeConnectAccountsClick = () => {
+    const toastId = themedToast(<NotificationContent content="Removing Stripe Connect accounts ..." />, infoNotificationOptions);
+
+    commitDeleteOrganizationStripeConnectAccounts({
+      variables: {
+        connectionIds: organizationStripeConnectAccountsConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: seledctedOrganizationStripeConnectAccounts.ids
+            .values()
+            .map((id) => id as string)
+            .toArray(),
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove Stripe Connect accounts. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Stripe Connect accounts removed.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove Stripe Connect accounts. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleRemoveOrganizationStripeConnectAccountClick = () => {
+    if (!selectedOrganizationStripeConnectAccountId) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content="Removing Stripe Connect account ..." />, infoNotificationOptions);
+
+    commitDeleteOrganizationStripeConnectAccounts({
+      variables: {
+        connectionIds: organizationStripeConnectAccountsConnectionIds,
+        input: {
+          clientMutationId: nanoid(),
+          ids: [selectedOrganizationStripeConnectAccountId],
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove Stripe Connect account. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location tag removed.`} />,
+        });
+
+        setSelectedOrganizationStripeConnectAccountId(null);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to remove Stripe Connect account. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   const handleCloseClick = () => {
     router.push(getOrganizationBaseLink(organizationId));
   };
@@ -1109,6 +1325,96 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
     },
   ];
 
+  const organizationStripeConnectAccountRows: OrganizationStripeConnectAccountRowType[] = organizationStripeConnectAccounts.map((organizationStripeConnectAccount) => ({
+    id: organizationStripeConnectAccount.id,
+    name: organizationStripeConnectAccount.name,
+    country: getCountryCode(organizationStripeConnectAccount.country) as string,
+    defaultCurrency: organizationStripeConnectAccount.defaultCurrency,
+    businessType: organizationStripeConnectAccount.businessType,
+    companyName: organizationStripeConnectAccount.companyName,
+    email: organizationStripeConnectAccount.email,
+    phone: organizationStripeConnectAccount.phone,
+  }));
+
+  const organizationStripeConnectAccountColumns: GridColDef<(typeof organizationStripeConnectAccountRows)[number]>[] = [
+    {
+      field: 'name',
+      headerName: 'Name',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
+    },
+    {
+      field: 'companyName',
+      headerName: 'Company Name',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'businessType',
+      headerName: 'Business Type',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 150,
+    },
+    {
+      field: 'country',
+      headerName: 'Country',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
+    },
+    {
+      field: 'defaultCurrency',
+      headerName: 'Currency',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
+    },
+    {
+      field: 'phone',
+      headerName: 'Phone',
+      editable: false,
+      renderCell: (params) => <SmallIconTypography label={params.value} />,
+      display: 'flex',
+      minWidth: 100,
+    },
+    {
+      field: 'More Actions',
+      headerName: '',
+      editable: false,
+      sortable: false,
+      display: 'flex',
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+          <IconButton
+            onClick={(event: React.MouseEvent<HTMLElement>) => {
+              setSelectedOrganizationStripeConnectAccountId(params.id as string);
+              setOrganizationStripeConnectAccountMoreActionsAnchorEl(event.currentTarget);
+            }}
+          >
+            <EllipseMenuIcon />
+          </IconButton>
+        </Box>
+      ),
+      flex: 1,
+    },
+  ];
+
   return (
     <>
       <Box sx={{ display: 'flex' }}>
@@ -1342,6 +1648,92 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
                 localeText={{ noRowsLabel: 'No location tag found' }}
               />
             </StackRow>
+
+            <StackColumn
+              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
+              ref={(divElement) => {
+                sectionRefs.current['stripe-connect-accounts-setup'] = divElement;
+              }}
+            >
+              <GridContainer sx={{ justifyContent: 'space-between' }}>
+                <Grid>
+                  <SectionIconTypography label="Stripe Connect Accounts" />
+                  <BodyIconTypography label="Edit your organization Stripe Connect accounts details" />
+                </Grid>
+
+                <Grid>
+                  <NewStripeConnectAccountButton organizationId={organizationId} connectionIds={organizationStripeConnectAccountsConnectionIds} />
+                </Grid>
+              </GridContainer>
+              <Divider />
+            </StackColumn>
+
+            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+              <PushToRight />
+              <Search
+                size="small"
+                placeholder="Search for accounts"
+                defaultValue={organizationStripeConnectAccountNameSearchText}
+                onChange={handleOrganizationStripeConnectAccountsSearchTextChange}
+              />
+            </GridContainer>
+
+            {seledctedOrganizationStripeConnectAccounts.ids.size > 0 && (
+              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+                <Box
+                  sx={{
+                    backgroundColor: 'white',
+                    padding: defaultGridActionPadding,
+                    border: 1,
+                    borderColor: (theme) => theme.palette.divider,
+                    borderRadius: 2,
+                    flexGrow: 1,
+                  }}
+                >
+                  <StackRow sx={{ alignItems: 'center' }}>
+                    <SmallIconTypography label={`${seledctedOrganizationStripeConnectAccounts.ids.size} records selected`} />
+                    <PushToRight />
+                    <Button
+                      size="medium"
+                      variant="contained"
+                      color="warning"
+                      startIcon={<DeleteIcon />}
+                      onClick={handleRemoveOrganizationStripeConnectAccountsClick}
+                      sx={{ textTransform: 'none' }}
+                    >
+                      Remove Stripe Connect Account
+                    </Button>
+                  </StackRow>
+                </Box>
+              </StackRow>
+            )}
+
+            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
+              <DataGrid
+                checkboxSelection
+                rowSelectionModel={seledctedOrganizationStripeConnectAccounts}
+                onRowSelectionModelChange={handleSelectedOrganizationStripeConnectAccountsChanged}
+                rows={organizationStripeConnectAccountRows}
+                columns={organizationStripeConnectAccountColumns}
+                hideFooterPagination={organizationStripeConnectAccountRows.length <= 10}
+                initialState={{
+                  pagination: {
+                    rowCount: organizationStripeConnectAccountRows.length,
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                pageSizeOptions={[10]}
+                ignoreDiacritics
+                disableRowSelectionOnClick
+                getRowHeight={() => 'auto'}
+                rowSpacingType="margin"
+                getRowSpacing={() => ({ top: 3, bottom: 3 })}
+                sx={defaultGridStyle}
+                localeText={{ noRowsLabel: 'No Stripe Connect account found' }}
+              />
+            </StackRow>
           </AppBarWithStackColumn>
         </Box>
       </Box>
@@ -1365,6 +1757,13 @@ const OrganizationMarketplaceSetup = ({ rootDataProductsRelay, rootDataProductTa
         open={locationTagMoreActionsMenuOpen}
         onMenuItemClick={handleLocationTagMoreActionsMenuItemClick}
         options={locationTagMoreActionsOption}
+      />
+
+      <MoreActionsMenu
+        anchorEl={organizationStripeConnectAccountMoreActionsAnchorEl}
+        open={organizationStripeConnectAccountMoreActionsMenuOpen}
+        onMenuItemClick={handleOrganizationStripeConnectAccountMoreActionsMenuItemClick}
+        options={organizationStripeConnectAccountMoreActionsOption}
       />
 
       {selectedProductTagId && (

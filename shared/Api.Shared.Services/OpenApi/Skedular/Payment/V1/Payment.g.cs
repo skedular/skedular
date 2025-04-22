@@ -43,17 +43,17 @@ namespace Api.Shared.Services.OpenApi.Skedular.Payment.V1
         /// return OrganizationStripeConnectAccount onboarding refresh URL
         /// </summary>
         /// <returns>should never be returned</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url")]
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RefreshOrganizationStripeConnectAccountOnboarding([Microsoft.AspNetCore.Mvc.FromQuery] string code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// complete OrganizationStripeConnectAccount onboarding
         /// </summary>
-        /// <param name="x_stripe_signature">Stripe webhook signature</param>
+        /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <param name="body">raw JSON string</param>
         /// <returns>the status of OrganizationStripeConnectAccounts onboarding completed</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization-stripe-connect-account/onboarding-completed")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> OrganizationStripeConnectAccountOnboardingCompleted([Microsoft.AspNetCore.Mvc.FromHeader(Name = "x-stripe-signature")] string? x_stripe_signature, [Microsoft.AspNetCore.Mvc.FromBody] string? body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("payment/api/v1/organization-stripe-connect-account/onboarding-completed")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> OrganizationStripeConnectAccountOnboardingCompleted([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, [Microsoft.AspNetCore.Mvc.FromBody] string? body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// republish all OrganizationStripeConnectAccounts

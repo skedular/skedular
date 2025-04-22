@@ -84,6 +84,7 @@ type RowType = {
   customTags: ReadonlyArray<CustomTagDetails>;
   zones: ReadonlyArray<ZoneDetails>;
   teammates: ReadonlyArray<CustomerDetails>;
+  date: string;
 };
 
 const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, to, locationIds, teamIds, viewMode }: Props) => {

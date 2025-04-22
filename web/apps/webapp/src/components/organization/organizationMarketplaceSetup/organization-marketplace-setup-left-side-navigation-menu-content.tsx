@@ -1,9 +1,10 @@
 import { BodyIconTypography } from '@/components/commons';
-import { LocationTagIcon, ProductIcon, ProductTagIcon } from '@/components/icons';
+import { LocationTagIcon, ProductIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
 import {
   getOrganizationMarketplaceSetupLocationTagsBaseLink,
   getOrganizationMarketplaceSetupProductsBaseLink,
   getOrganizationMarketplaceSetupProductTagsBaseLink,
+  getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
 } from '@/components/links';
 import { PaletteModeContext } from '@/libs/providers';
 import {
@@ -66,6 +67,7 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
   const productsLink = getOrganizationMarketplaceSetupProductsBaseLink(organizationId);
   const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(organizationId);
   const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(organizationId);
+  const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(organizationId);
 
   return (
     <List
@@ -129,6 +131,31 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
                 startElement={!hideIcons && <LocationTagIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === locationTagsLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={stripeConnectAccountsLink}>
+          <ListItemButton
+            selected={fullPath === stripeConnectAccountsLink}
+            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === stripeConnectAccountsLink) }}
+          >
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <StripeConnectAccountIcon color="inherit" />}
+                invertDefaultColor={fullPath === stripeConnectAccountsLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Stripe Connect Account"
+                startElement={!hideIcons && <StripeConnectAccountIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === stripeConnectAccountsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

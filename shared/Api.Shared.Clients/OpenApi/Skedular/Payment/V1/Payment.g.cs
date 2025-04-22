@@ -50,11 +50,11 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
         /// <summary>
         /// complete OrganizationStripeConnectAccount onboarding
         /// </summary>
-        /// <param name="x_stripe_signature">Stripe webhook signature</param>
+        /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <param name="body">raw JSON string</param>
         /// <returns>the status of OrganizationStripeConnectAccounts onboarding completed</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task OrganizationStripeConnectAccountOnboardingCompletedAsync(string? x_stripe_signature = null, string? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task OrganizationStripeConnectAccountOnboardingCompletedAsync(string? stripe_Signature = null, string? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -201,8 +201,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
@@ -273,11 +272,11 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
         /// <summary>
         /// complete OrganizationStripeConnectAccount onboarding
         /// </summary>
-        /// <param name="x_stripe_signature">Stripe webhook signature</param>
+        /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <param name="body">raw JSON string</param>
         /// <returns>the status of OrganizationStripeConnectAccounts onboarding completed</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task OrganizationStripeConnectAccountOnboardingCompletedAsync(string? x_stripe_signature = null, string? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task OrganizationStripeConnectAccountOnboardingCompletedAsync(string? stripe_Signature = null, string? body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -286,13 +285,13 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Payment.V1
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
 
-                    if (x_stripe_signature != null)
-                        request_.Headers.TryAddWithoutValidation("x-stripe-signature", ConvertToString(x_stripe_signature, System.Globalization.CultureInfo.InvariantCulture));
+                    if (stripe_Signature != null)
+                        request_.Headers.TryAddWithoutValidation("Stripe-Signature", ConvertToString(stripe_Signature, System.Globalization.CultureInfo.InvariantCulture));
                     var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, JsonSerializerSettings);
                     var content_ = new System.Net.Http.StringContent(json_);
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 

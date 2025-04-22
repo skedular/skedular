@@ -201,9 +201,7 @@ public class TagService(
             throw new Unauthorized();
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(
-            repositoryFactory.UnitOfWork,
-            cancellationToken);
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.TagRepository.RemoveRange(tags);
         var deletedTags = tags.Select(mapper.MapTo).ToList();
@@ -220,12 +218,11 @@ public class TagService(
         return deletedTags;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)>
-        GetPaginatedTagsAsync(
-            PaginationInputParam paginationInputParam,
-            TagSearchCriteria searchCriteria,
-            ICollection<TagOrder> orderByFields,
-            CancellationToken cancellationToken)
+    public async Task<(PaginatedInfo, ICollection<Edge<Tag>>, int)> GetPaginatedTagsAsync(
+        PaginationInputParam paginationInputParam,
+        TagSearchCriteria searchCriteria,
+        ICollection<TagOrder> orderByFields,
+        CancellationToken cancellationToken)
     {
         var (customer, _) = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdAsync(searchCriteria.OrganizationId, cancellationToken);
@@ -272,11 +269,9 @@ public class TagService(
         var matchingTagFound = await repositoryFactory.TagRepository
             .Query(new Specification<Shared.Database.Entities.Tag>
             {
-                Criteria = query => !query.DeletedAt.HasValue &&
-                                    query.Organization.Id == organizationId &&
-                                    query.Type == tagType &&
-                                    EF.Functions.ILike(query.Name, tagName) &&
-                                    query.Id != tagId
+                Criteria = query =>
+                    !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.Type == tagType &&
+                    EF.Functions.ILike(query.Name, tagName) && query.Id != tagId
             }).AnyAsync(cancellationToken);
         if (matchingTagFound)
         {

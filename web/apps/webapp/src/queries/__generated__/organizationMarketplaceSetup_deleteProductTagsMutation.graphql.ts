@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d9dc8b9d6782661ebf7447909bed99cf>>
+ * @generated SignedSource<<63a92dd463f59df2005eb281ca49c4e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,24 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type DeleteProductsInput = {
+export type DeleteProductTagsInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationMarketplaceSetup_deleteProductSMutation$variables = {
+export type organizationMarketplaceSetup_deleteProductTagsMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: DeleteProductsInput;
+  input: DeleteProductTagsInput;
 };
-export type organizationMarketplaceSetup_deleteProductSMutation$data = {
-  readonly deleteProducts: {
-    readonly products: ReadonlyArray<{
+export type organizationMarketplaceSetup_deleteProductTagsMutation$data = {
+  readonly deleteProductTags: {
+    readonly organizationTags: ReadonlyArray<{
       readonly id: string;
     }>;
   } | null | undefined;
 };
-export type organizationMarketplaceSetup_deleteProductSMutation = {
-  response: organizationMarketplaceSetup_deleteProductSMutation$data;
-  variables: organizationMarketplaceSetup_deleteProductSMutation$variables;
+export type organizationMarketplaceSetup_deleteProductTagsMutation = {
+  response: organizationMarketplaceSetup_deleteProductTagsMutation$data;
+  variables: organizationMarketplaceSetup_deleteProductTagsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,22 +61,22 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMarketplaceSetup_deleteProductSMutation",
+    "name": "organizationMarketplaceSetup_deleteProductTagsMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "ProductsPayload",
+        "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
-        "name": "deleteProducts",
+        "name": "deleteProductTags",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "ProductDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "products",
+            "name": "organizationTags",
             "plural": true,
             "selections": [
               (v2/*: any*/)
@@ -94,22 +94,22 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMarketplaceSetup_deleteProductSMutation",
+    "name": "organizationMarketplaceSetup_deleteProductTagsMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "ProductsPayload",
+        "concreteType": "OrganizationTagsPayload",
         "kind": "LinkedField",
-        "name": "deleteProducts",
+        "name": "deleteProductTags",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "ProductDetails",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "products",
+            "name": "organizationTags",
             "plural": true,
             "selections": [
               (v2/*: any*/),
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d80468ec902c6942502ff1cc66b7c3dd",
+    "cacheID": "fe232e8824b357469302be6ab32f3513",
     "id": null,
     "metadata": {},
-    "name": "organizationMarketplaceSetup_deleteProductSMutation",
+    "name": "organizationMarketplaceSetup_deleteProductTagsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_deleteProductSMutation(\n  $input: DeleteProductsInput!\n) {\n  deleteProducts(input: $input) {\n    products {\n      id\n    }\n  }\n}\n"
+    "text": "mutation organizationMarketplaceSetup_deleteProductTagsMutation(\n  $input: DeleteProductTagsInput!\n) {\n  deleteProductTags(input: $input) {\n    organizationTags {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b73dda7170a376f100eade8827b98a9b";
+(node as any).hash = "cfa4eca0ba377f275bf8666469bb8437";
 
 export default node;

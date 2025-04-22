@@ -20,6 +20,7 @@ public class OrganizationStripeConnectAccountRefreshCodeRepository(PaymentDbCont
     public async Task<OrganizationStripeConnectAccountRefreshCode?> GetByCodeAsync(string code, CancellationToken cancellationToken) =>
         await DbContext.OrganizationStripeConnectAccountRefreshCode
             .Include(query => query.OrganizationStripeConnectAccount)
+            .ThenInclude(query => query.Organization)
             .FirstOrDefaultAsync(query => query.Code == code, cancellationToken);
 
     public OrganizationStripeConnectAccountRefreshCode Add(OrganizationStripeConnectAccountRefreshCode organizationStripeConnectAccountRefreshCode)

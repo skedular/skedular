@@ -14,7 +14,7 @@ type Props = {
 };
 
 const NewProductButton = ({ organizationId, fullWidth, label, hideIcon, variant, size }: Props) => (
-  <Button href={getOrganizationProductAddLink(organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth}>
+  <Button href={getOrganizationProductAddLink(organizationId)} variant={variant ?? 'text'} fullWidth={fullWidth} sx={{ textTransform: 'none' }}>
     {size === 'small' && <SmallIconTypography label={label ?? 'Add Product'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
     {size === 'medium' && <BodyIconTypography label={label ?? 'Add Product'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
     {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Product'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}

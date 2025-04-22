@@ -26,7 +26,7 @@ type Props = {
   queryReference: PreloadedQuery<addProduct_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationId: string;
-  onAdded: (locationId: string) => void;
+  onAdded: (productId: string) => void;
   onCancel: () => void;
 };
 

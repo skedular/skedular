@@ -21,6 +21,7 @@ import WbIridescent from '@mui/icons-material/WbIridescent';
 import type { SxProps, Theme } from '@mui/system';
 import TooltipIcon from './tooltip-icon';
 
+export { default as StripeConnectAccountIcon } from '@mui/icons-material/AccountBalanceWallet';
 export { default as AddIcon, default as NewIcon } from '@mui/icons-material/AddCircle';
 export { default as AnalyticsIcon } from '@mui/icons-material/Analytics';
 export { default as CollpaseDrawerIcon } from '@mui/icons-material/ArrowBackIos';

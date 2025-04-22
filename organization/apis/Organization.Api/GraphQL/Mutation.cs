@@ -189,7 +189,7 @@ public class Mutation(IMapper mapper)
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
     {
-        var tags = await tagService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(mapper.MapTo).ToArray()! };
     }
 
@@ -253,7 +253,7 @@ public class Mutation(IMapper mapper)
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
     {
-        var tags = await tagService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
     }
 
@@ -295,7 +295,7 @@ public class Mutation(IMapper mapper)
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
     {
-        var tags = await tagService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
     }
 
@@ -337,7 +337,7 @@ public class Mutation(IMapper mapper)
         [Service] ITagService tagService,
         CancellationToken cancellationToken)
     {
-        var tags = await tagService.DeleteAsync(input.Ids.ToList(), cancellationToken);
+        var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
     }
 }

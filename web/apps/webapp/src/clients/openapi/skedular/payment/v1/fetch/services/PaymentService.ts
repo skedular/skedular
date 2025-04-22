@@ -42,7 +42,7 @@ export class PaymentService {
         code: string,
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
-            method: 'POST',
+            method: 'GET',
             url: '/payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url',
             query: {
                 'code': code,
@@ -54,21 +54,21 @@ export class PaymentService {
     }
     /**
      * complete OrganizationStripeConnectAccount onboarding
-     * @param xStripeSignature Stripe webhook signature
+     * @param stripeSignature Stripe webhook signature
      * @param requestBody raw JSON string
      * @returns any the status of OrganizationStripeConnectAccounts onboarding completed
      * @returns Error unexpected error
      * @throws ApiError
      */
     public organizationStripeConnectAccountOnboardingCompleted(
-        xStripeSignature?: string,
+        stripeSignature?: string,
         requestBody?: string,
     ): CancelablePromise<any | Error> {
         return this.httpRequest.request({
-            method: 'POST',
+            method: 'GET',
             url: '/payment/api/v1/organization-stripe-connect-account/onboarding-completed',
             headers: {
-                'x-stripe-signature': xStripeSignature,
+                'Stripe-Signature': stripeSignature,
             },
             body: requestBody,
             mediaType: 'application/json',

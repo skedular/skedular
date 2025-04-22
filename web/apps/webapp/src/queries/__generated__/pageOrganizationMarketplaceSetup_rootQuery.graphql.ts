@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a6cb21ed86a7b3ea6e98e92a1d2105c8>>
+ * @generated SignedSource<<1ae1fb8ebcc27b5ff4d47c0ebe06c5b1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type pageOrganizationMarketplaceSetup_rootQuery$variables = {
   locationTagNameSearchText?: string | null | undefined;
   organizationId: string;
+  organizationStripeConnectAccountNameSearchText?: string | null | undefined;
   productNameSearchText?: string | null | undefined;
   productTagNameSearchText?: string | null | undefined;
 };
@@ -20,7 +21,7 @@ export type pageOrganizationMarketplaceSetup_rootQuery$data = {
   readonly organization: {
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_locationTags_query" | "organizationMarketplaceSetup_productTags_query" | "organizationMarketplaceSetup_products_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_locationTags_query" | "organizationMarketplaceSetup_organizationStripeConnectAccounts_query" | "organizationMarketplaceSetup_productTags_query" | "organizationMarketplaceSetup_products_query">;
 };
 export type pageOrganizationMarketplaceSetup_rootQuery = {
   response: pageOrganizationMarketplaceSetup_rootQuery$data;
@@ -41,38 +42,43 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "productNameSearchText"
+  "name": "organizationStripeConnectAccountNameSearchText"
 },
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
+  "name": "productNameSearchText"
+},
+v4 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
   "name": "productTagNameSearchText"
 },
-v4 = [
+v5 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "organizationId"
   }
 ],
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v6 = [
-  (v5/*: any*/)
+v7 = [
+  (v6/*: any*/)
 ],
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "kind": "Literal",
   "name": "orderBy",
   "value": [
@@ -82,8 +88,8 @@ v8 = {
     }
   ]
 },
-v9 = [
-  (v8/*: any*/),
+v10 = [
+  (v9/*: any*/),
   {
     "fields": [
       {
@@ -112,35 +118,35 @@ v9 = [
     "name": "where"
   }
 ],
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "description",
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v14 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -165,7 +171,7 @@ v14 = {
   ],
   "storageKey": null
 },
-v15 = {
+v16 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -177,17 +183,17 @@ v15 = {
     }
   ]
 },
-v16 = [
+v17 = [
   "where",
   "orderBy"
 ],
-v17 = {
+v18 = {
   "kind": "Variable",
   "name": "organizationId",
   "variableName": "organizationId"
 },
-v18 = [
-  (v8/*: any*/),
+v19 = [
+  (v9/*: any*/),
   {
     "fields": [
       {
@@ -195,14 +201,14 @@ v18 = [
         "name": "nameContains",
         "variableName": "productTagNameSearchText"
       },
-      (v17/*: any*/)
+      (v18/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v19 = [
-  (v10/*: any*/),
+v20 = [
+  (v11/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -219,9 +225,9 @@ v19 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
-          (v5/*: any*/),
-          (v11/*: any*/),
+          (v8/*: any*/),
+          (v6/*: any*/),
+          (v12/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -229,19 +235,19 @@ v19 = [
             "name": "color",
             "storageKey": null
           },
-          (v12/*: any*/)
+          (v13/*: any*/)
         ],
         "storageKey": null
       },
-      (v13/*: any*/)
+      (v14/*: any*/)
     ],
     "storageKey": null
   },
-  (v14/*: any*/),
-  (v15/*: any*/)
+  (v15/*: any*/),
+  (v16/*: any*/)
 ],
-v20 = [
-  (v8/*: any*/),
+v21 = [
+  (v9/*: any*/),
   {
     "fields": [
       {
@@ -249,7 +255,22 @@ v20 = [
         "name": "nameContains",
         "variableName": "locationTagNameSearchText"
       },
-      (v17/*: any*/)
+      (v18/*: any*/)
+    ],
+    "kind": "ObjectValue",
+    "name": "where"
+  }
+],
+v22 = [
+  (v9/*: any*/),
+  {
+    "fields": [
+      {
+        "kind": "Variable",
+        "name": "nameContains",
+        "variableName": "organizationStripeConnectAccountNameSearchText"
+      },
+      (v18/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
@@ -261,7 +282,8 @@ return {
       (v0/*: any*/),
       (v1/*: any*/),
       (v2/*: any*/),
-      (v3/*: any*/)
+      (v3/*: any*/),
+      (v4/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -269,12 +291,12 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v5/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
-        "selections": (v6/*: any*/),
+        "selections": (v7/*: any*/),
         "storageKey": null
       },
       {
@@ -291,6 +313,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "organizationMarketplaceSetup_locationTags_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "organizationMarketplaceSetup_organizationStripeConnectAccounts_query"
       }
     ],
     "type": "Query",
@@ -300,35 +327,36 @@ return {
   "operation": {
     "argumentDefinitions": [
       (v1/*: any*/),
-      (v2/*: any*/),
       (v3/*: any*/),
-      (v0/*: any*/)
+      (v4/*: any*/),
+      (v0/*: any*/),
+      (v2/*: any*/)
     ],
     "kind": "Operation",
     "name": "pageOrganizationMarketplaceSetup_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v5/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
-          (v7/*: any*/)
+          (v6/*: any*/),
+          (v8/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v9/*: any*/),
+        "args": (v10/*: any*/),
         "concreteType": "ProductConnection",
         "kind": "LinkedField",
         "name": "products",
         "plural": false,
         "selections": [
-          (v10/*: any*/),
+          (v11/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -345,7 +373,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
+                  (v8/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -353,8 +381,8 @@ return {
                     "name": "inactive",
                     "storageKey": null
                   },
-                  (v5/*: any*/),
-                  (v11/*: any*/),
+                  (v6/*: any*/),
+                  (v12/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -369,7 +397,7 @@ return {
                     "kind": "LinkedField",
                     "name": "priceUnit",
                     "plural": false,
-                    "selections": (v6/*: any*/),
+                    "selections": (v7/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -439,23 +467,23 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v12/*: any*/)
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v13/*: any*/)
+              (v14/*: any*/)
             ],
             "storageKey": null
           },
-          (v14/*: any*/),
-          (v15/*: any*/)
+          (v15/*: any*/),
+          (v16/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v9/*: any*/),
-        "filters": (v16/*: any*/),
+        "args": (v10/*: any*/),
+        "filters": (v17/*: any*/),
         "handle": "connection",
         "key": "organizationMarketplaceSetup_products",
         "kind": "LinkedHandle",
@@ -463,18 +491,18 @@ return {
       },
       {
         "alias": null,
-        "args": (v18/*: any*/),
+        "args": (v19/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "productTags",
         "plural": false,
-        "selections": (v19/*: any*/),
+        "selections": (v20/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v18/*: any*/),
-        "filters": (v16/*: any*/),
+        "args": (v19/*: any*/),
+        "filters": (v17/*: any*/),
         "handle": "connection",
         "key": "organizationMarketplaceSetup_productTags",
         "kind": "LinkedHandle",
@@ -482,36 +510,141 @@ return {
       },
       {
         "alias": null,
-        "args": (v20/*: any*/),
+        "args": (v21/*: any*/),
         "concreteType": "OrganizationTagConnection",
         "kind": "LinkedField",
         "name": "locationTags",
         "plural": false,
-        "selections": (v19/*: any*/),
+        "selections": (v20/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v20/*: any*/),
-        "filters": (v16/*: any*/),
+        "args": (v21/*: any*/),
+        "filters": (v17/*: any*/),
         "handle": "connection",
         "key": "organizationMarketplaceSetup_locationTags",
         "kind": "LinkedHandle",
         "name": "locationTags"
+      },
+      {
+        "alias": null,
+        "args": (v22/*: any*/),
+        "concreteType": "OrganizationStripeConnectAccountConnection",
+        "kind": "LinkedField",
+        "name": "organizationStripeConnectAccounts",
+        "plural": false,
+        "selections": [
+          (v11/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationStripeConnectAccountEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OrganizationStripeConnectAccountDetails",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v8/*: any*/),
+                  (v6/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "country",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "defaultCurrency",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "businessType",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "companyName",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "email",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "phone",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "onboardingUrl",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "onboardingCompletedAt",
+                    "storageKey": null
+                  },
+                  (v13/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v14/*: any*/)
+            ],
+            "storageKey": null
+          },
+          (v15/*: any*/),
+          (v16/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v22/*: any*/),
+        "filters": (v17/*: any*/),
+        "handle": "connection",
+        "key": "organizationMarketplaceSetup_organizationStripeConnectAccounts",
+        "kind": "LinkedHandle",
+        "name": "organizationStripeConnectAccounts"
       }
     ]
   },
   "params": {
-    "cacheID": "1036085a62c51bd84591d276412aacd1",
+    "cacheID": "8853117976a40d2f20f0d0e6a06ff67c",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationMarketplaceSetup_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationId: String!\n  $productNameSearchText: String\n  $productTagNameSearchText: String\n  $locationTagNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_products_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_locationTags_query\n}\n\nfragment organizationMarketplaceSetup_locationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId, nameContains: $locationTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  productTags(where: {organizationId: $organizationId, nameContains: $productTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_products_query on Query {\n  products(where: {organizationIds: [$organizationId], nameContains: $productNameSearchText, includeInactive: true}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        priceToDisplay\n        priceUnit {\n          name\n        }\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceWindowDays\n        requireConsecutiveDays\n        maxBookingSpreadDays\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationId: String!\n  $productNameSearchText: String\n  $productTagNameSearchText: String\n  $locationTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n) {\n  organization(id: $organizationId) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_products_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_locationTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n}\n\nfragment organizationMarketplaceSetup_locationTags_query on Query {\n  locationTags(where: {organizationId: $organizationId, nameContains: $locationTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationId: $organizationId, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        email\n        phone\n        onboardingUrl\n        onboardingCompletedAt\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  productTags(where: {organizationId: $organizationId, nameContains: $productTagNameSearchText}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        description\n        color\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_products_query on Query {\n  products(where: {organizationIds: [$organizationId], nameContains: $productNameSearchText, includeInactive: true}, orderBy: [{direction: Ascending, field: Name}]) {\n    totalCount\n    edges {\n      node {\n        id\n        inactive\n        name\n        description\n        priceToDisplay\n        priceUnit {\n          name\n        }\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        bookAllLocationResources\n        recurrenceWindowDays\n        requireConsecutiveDays\n        maxBookingSpreadDays\n        organization {\n          uniqueId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4985605f4484f038f0013a521b422c80";
+(node as any).hash = "9c64b9a7ba629572d02c518fdea50558";
 
 export default node;

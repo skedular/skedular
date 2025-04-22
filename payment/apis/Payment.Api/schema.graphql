@@ -15,6 +15,7 @@ type Mutation {
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
   deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
+  deleteOrganizationStripeConnectAccounts(input: DeleteOrganizationStripeConnectAccountsInput!): OrganizationStripeConnectAccountsPayload @cost(weight: "10")
 }
 
 type OrganizationPaymentMethod {
@@ -64,6 +65,11 @@ type OrganizationStripeConnectAccountPayload {
   account: OrganizationStripeConnectAccountDetails!
 }
 
+type OrganizationStripeConnectAccountsPayload {
+  clientMutationId: String
+  accounts: [OrganizationStripeConnectAccountDetails!]!
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -104,6 +110,11 @@ input AddOrganizationStripeConnectAccountInput {
 input DeleteOrganizationStripeConnectAccountInput {
   clientMutationId: String
   id: String!
+}
+
+input DeleteOrganizationStripeConnectAccountsInput {
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input OrganizationStripeConnectAccountOrderInput {

@@ -401,6 +401,7 @@ type Mutation {
   deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload @cost(weight: "10")
   deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload @cost(weight: "10")
+  deleteOrganizationStripeConnectAccounts(input: DeleteOrganizationStripeConnectAccountsInput!): OrganizationStripeConnectAccountsPayload @cost(weight: "10")
   deleteProducts(input: DeleteProductsInput!): ProductsPayload @cost(weight: "10")
   deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload @cost(weight: "10")
   deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload @cost(weight: "10")
@@ -765,6 +766,11 @@ type OrganizationStripeConnectAccountEdge {
 
 type OrganizationStripeConnectAccountPayload {
   account: OrganizationStripeConnectAccountDetails!
+  clientMutationId: String
+}
+
+type OrganizationStripeConnectAccountsPayload {
+  accounts: [OrganizationStripeConnectAccountDetails!]!
   clientMutationId: String
 }
 
@@ -1505,6 +1511,11 @@ input DeleteOrganizationInput {
 input DeleteOrganizationStripeConnectAccountInput {
   clientMutationId: String
   id: String!
+}
+
+input DeleteOrganizationStripeConnectAccountsInput {
+  clientMutationId: String
+  ids: [String!]!
 }
 
 input DeleteProductTagInput {

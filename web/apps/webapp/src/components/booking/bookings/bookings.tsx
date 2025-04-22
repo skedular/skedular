@@ -87,6 +87,7 @@ type RowType = {
   customTags: ReadonlyArray<CustomTagDetails>;
   zones: ReadonlyArray<ZoneDetails>;
   canJoinBooking: Boolean;
+  date: string;
 };
 
 const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationId, from, to, locationIds, teamIds, customerIds, viewMode }: Props) => {

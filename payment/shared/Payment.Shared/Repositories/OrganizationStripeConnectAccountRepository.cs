@@ -1,3 +1,4 @@
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
@@ -13,10 +14,12 @@ namespace Payment.Shared.Repositories;
 public interface IOrganizationStripeConnectAccountRepository : IRepository<OrganizationStripeConnectAccount>
 {
     Task<OrganizationStripeConnectAccount?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<OrganizationStripeConnectAccount>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<OrganizationStripeConnectAccount>> GetAllAsync(CancellationToken cancellationToken);
     OrganizationStripeConnectAccount Add(OrganizationStripeConnectAccount organizationStripeConnectAccount);
     OrganizationStripeConnectAccount Update(OrganizationStripeConnectAccount organizationStripeConnectAccount);
     OrganizationStripeConnectAccount Remove(OrganizationStripeConnectAccount organizationStripeConnectAccount);
+    void RemoveRange(ICollection<OrganizationStripeConnectAccount> organizationStripeConnectAccounts);
 
     Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(
         PaginationInputParam paginationInputParam,
@@ -83,6 +86,9 @@ public class OrganizationStripeConnectAccountRepository(PaymentDbContext dbConte
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
+    public async Task<ICollection<OrganizationStripeConnectAccount>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+        await DbContext.OrganizationStripeConnectAccount.Where(query => ids.Contains(query.Id)).AddDependentObjects().ToListAsync(cancellationToken);
+
     public async Task<ICollection<OrganizationStripeConnectAccount>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.OrganizationStripeConnectAccount
             .Where(query => !query.DeletedAt.HasValue)
@@ -108,6 +114,13 @@ public class OrganizationStripeConnectAccountRepository(PaymentDbContext dbConte
         var now = TimeProvider.GetUtcNow();
         organizationStripeConnectAccount.DeletedAt = now;
         return DbContext.OrganizationStripeConnectAccount.Update(organizationStripeConnectAccount).Entity;
+    }
+
+    public void RemoveRange(ICollection<OrganizationStripeConnectAccount> organizationStripeConnectAccounts)
+    {
+        var now = TimeProvider.GetUtcNow();
+        organizationStripeConnectAccounts.ForEach(organizationStripeConnectAccount => organizationStripeConnectAccount.DeletedAt = now);
+        DbContext.OrganizationStripeConnectAccount.UpdateRange(organizationStripeConnectAccounts);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<OrganizationStripeConnectAccount>>, int)> GetPaginatedAccountsAsync(

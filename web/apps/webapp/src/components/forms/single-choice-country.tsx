@@ -1,6 +1,7 @@
 import { BodyIconTypography } from '@/components/commons';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { countries as countriesList } from 'countries-list';
+import type { TCountryCode } from 'countries-list';
+import { countries as countriesList, getCountryCode } from 'countries-list';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
 
@@ -10,11 +11,12 @@ type Props = {
 };
 
 interface CountryDetails {
+  code: TCountryCode;
   name: string;
 }
 
 const SingleChoiceCountry = ({ name, required }: Props) => {
-  const countries = useMemo<CountryDetails[]>(() => Object.entries(countriesList).map(([, { name }]) => ({ name })), []);
+  const countries = useMemo<CountryDetails[]>(() => Object.entries(countriesList).map(([, { name }]) => ({ code: getCountryCode(name) as TCountryCode, name })), []);
   const filter = createFilterOptions<CountryDetails>();
 
   return (
@@ -23,7 +25,7 @@ const SingleChoiceCountry = ({ name, required }: Props) => {
       multiple={false}
       required={required}
       options={countries}
-      getOptionValue={(option) => (option as CountryDetails).name}
+      getOptionValue={(option) => (option as CountryDetails).code}
       getOptionLabel={(option: string | CountryDetails) => (option as CountryDetails).name}
       renderOption={(props, option) => {
         const castedOption = option as CountryDetails;

@@ -56,9 +56,15 @@ export const getOrganizationMarketplaceSetupBaseLink = (id: string) => `${getOrg
 export const getOrganizationMarketplaceSetupProductsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-setup?section=products-setup`;
 export const getOrganizationMarketplaceSetupProductTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-setup?section=product-tags-setup`;
 export const getOrganizationMarketplaceSetupLocationTagsBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-setup?section=location-tags-setup`;
+export const getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink = (id: string) =>
+  `${getOrganizationBaseLink(id)}/marketplace-setup?section=stripe-connect-accounts-setup`;
 export const getOrganizationMarketplaceBaseLink = (id: string) => `${getOrganizationBaseLink(id)}/marketplace-public`;
 export const getOrganizationProductBaseLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}`;
 export const getOrganizationProductAddLink = (id: string) => `${getOrganizationBaseLink(id)}/products/add`;
 export const getOrganizationBookingProductLink = (id: string, productId: string) => `${getOrganizationBaseLink(id)}/products/${productId}/book`;
 
 export const getOrganizationSsoSignInBaseLink = (id: string) => `/organizations/${id}/sso-signin?redirectUrl=${window.location.href}`;
+
+export const getOrganizationStripeConnectAccountBaseLink = (id: string, stripeConnectAccountId: string) =>
+  `${getOrganizationBaseLink(id)}/stripe-connect-accounts/${stripeConnectAccountId}`;
+export const getOrganizationStripeConnectAccountAddLink = (id: string) => `${getOrganizationBaseLink(id)}/stripe-connect-accounts/add`;

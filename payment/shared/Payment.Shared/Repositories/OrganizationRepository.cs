@@ -14,6 +14,7 @@ public interface IOrganizationRepository : IRepository<Organization>
         bool includeAllOfferings,
         CancellationToken cancellationToken);
 
+    Task<ICollection<Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Organization Add(Organization organization);
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
@@ -64,6 +65,12 @@ public class OrganizationRepository(PaymentDbContext dbContext, TimeProvider tim
         await DbContext.Organization
             .AddDependentObjects(includeDeletedOrganizationMembers, includeAllOfferings)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<Organization>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+        await DbContext.Organization
+            .Where(query => ids.Contains(query.Id))
+            .AddDependentObjects(false, false)
+            .ToListAsync(cancellationToken);
 
     public Organization Add(Organization organization)
     {

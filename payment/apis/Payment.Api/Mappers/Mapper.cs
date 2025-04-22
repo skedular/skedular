@@ -20,7 +20,7 @@ public interface IMapper
 
     Customer MapTo(Shared.Database.Entities.Customer src);
     IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src);
-    AccountCreateOptions MapTo(Organization src);
+    AccountCreateOptions MapTo(Organization src, string nickname);
     OrganizationStripeConnectAccount MapTo(Account src, string name, Organization organization);
     OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest);
     Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src);
@@ -69,7 +69,7 @@ public class Mapper : IMapper
     public IEnumerable<OrganizationStripePaymentMethod> MapTo(IEnumerable<Shared.Database.Entities.OrganizationStripePaymentMethod> src) =>
         src.Select(MapTo);
 
-    public AccountCreateOptions MapTo(Organization src) =>
+    public AccountCreateOptions MapTo(Organization src, string nickname) =>
         new()
         {
             Company = new AccountCompanyOptions
@@ -86,6 +86,7 @@ public class Mapper : IMapper
                 },
                 Phone = src.ContactPhone
             },
+            BusinessType = "company",
             Email = src.ContactEmail,
             Capabilities =
                 new AccountCapabilitiesOptions
@@ -94,7 +95,10 @@ public class Mapper : IMapper
                     Transfers = new AccountCapabilitiesTransfersOptions { Requested = true }
                 },
             Type = "standard",
-            Metadata = new Dictionary<string, string> { { "organizationId", src.Id }, { "name", src.Name.ToSafeString() } }
+            Metadata = new Dictionary<string, string>
+            {
+                { "organizationId", src.Id }, { "organizationName", src.Name.ToSafeString() }, { "nickname", nickname }
+            }
         };
 
     public OrganizationStripeConnectAccount MapTo(Account src, string name, Organization organization) =>
@@ -153,7 +157,8 @@ public class Mapper : IMapper
             CapabilitiesCardPayments = src.CapabilitiesCardPayments,
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
-            OnboardingCompletedAt = src.OnboardingCompletedAt
+            OnboardingCompletedAt = src.OnboardingCompletedAt,
+            Organization = new Shared.Models.Organization { Id = src.Organization.Id }
         };
 
     public OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src) =>

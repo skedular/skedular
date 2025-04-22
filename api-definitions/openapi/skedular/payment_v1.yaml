@@ -42,7 +42,7 @@ paths:
                 $ref: "#/components/schemas/Error"
 
   /payment/api/v1/organization-stripe-connect-account/refresh-onboarding-url:
-    post:
+    get:
       tags:
         - payment
         - organizationStripeConnectAccounts
@@ -70,7 +70,7 @@ paths:
                 $ref: "#/components/schemas/Error"
 
   /payment/api/v1/organization-stripe-connect-account/onboarding-completed:
-    post:
+    get:
       tags:
         - payment
         - organizationStripeConnectAccounts
@@ -79,7 +79,7 @@ paths:
       operationId: organizationStripeConnectAccountOnboardingCompleted
       parameters:
         - in: header
-          name: x-stripe-signature
+          name: Stripe-Signature
           schema:
             type: string
           required: false
