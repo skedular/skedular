@@ -144,3 +144,14 @@ module "marketplace" {
   organization_name = module.common.organization_name
   environment       = var.environment
 }
+
+module "payment" {
+  source = "../modules/payment"
+
+  providers = {
+    aws = aws
+  }
+
+  organization_name = module.common.organization_name
+  environment       = var.environment
+}
