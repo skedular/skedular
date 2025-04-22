@@ -72,14 +72,6 @@ resource "aws_ssm_parameter" "stripe_pay_as_you_go_v1_product_unit_amount" {
   tags  = local.tags
 }
 
-resource "stripe_webhook_endpoint" "webhook" {
-  url         = "https://${module.common.api_domain_name}/payment/api/v1/stripe/webhook"
-  description = "Stripe Webhook for Skedular"
-  enabled_events = [
-    "account.updated"
-  ]
-}
-
 data "cloudflare_zone" "public_website" {
   name = module.common.cloudflare_public_website_domain_name
 }
