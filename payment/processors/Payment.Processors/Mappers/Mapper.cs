@@ -279,7 +279,7 @@ public class Mapper : IMapper
 
     public OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest)
     {
-        dest.Id = src.Id;
+        dest.StripeAccountId = src.Id;
         dest.ChargesEnabled = src.ChargesEnabled;
         dest.PayoutsEnabled = src.PayoutsEnabled;
         dest.Type = src.Type.ToSafeString();

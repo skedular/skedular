@@ -9,11 +9,7 @@ using Type = Api.Shared.Clients.Events.Skedular.PaymentInternal.V1.Value.Type;
 
 namespace Payment.Processors.Subscribers;
 
-public class PaymentInternalSubscriber(
-    IRepositoryFactory repositoryFactory,
-    IMapper mapper,
-    IPaymentPublisher paymentPublisher,
-    TimeProvider timeProvider)
+public class PaymentInternalSubscriber(IRepositoryFactory repositoryFactory, IMapper mapper, IPaymentPublisher paymentPublisher)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
